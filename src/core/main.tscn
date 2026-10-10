@@ -1,59 +1,54 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene format=3 uid="uid://dfsafggxeousv"]
 
-[ext_resource type="Script" path="res://src/core/main.gd" id="1_main"]
-[ext_resource type="PackedScene" path="res://src/levels/cave/cave_map.tscn" id="2_map"]
+[ext_resource type="Script" uid="uid://b38vrnrlviw78" path="res://src/core/main.gd" id="1_main"]
+[ext_resource type="PackedScene" uid="uid://cfh5rileqwxv6" path="res://src/levels/cave/cave_map.tscn" id="2_map"]
 [ext_resource type="PackedScene" path="res://src/gameplay/player/player.tscn" id="3_player"]
 [ext_resource type="PackedScene" path="res://src/debug/cave_demo/cave_demo.tscn" id="4_debug"]
 [ext_resource type="PackedScene" path="res://src/debug/cave_demo/debug_overlay.tscn" id="5_overlay"]
 
-[node name="MainGame" type="Node"]
+[node name="MainGame" type="Node" unique_id=1512212887]
 process_mode = 3
 script = ExtResource("1_main")
 
-[node name="Systems" type="Node" parent="."]
+[node name="Systems" type="Node" parent="." unique_id=601625153]
 process_mode = 1
 
-[node name="CaveDemoController" parent="Systems" instance=ExtResource("4_debug")]
+[node name="CaveDemoController" parent="Systems" unique_id=1305977206 instance=ExtResource("4_debug")]
 
-[node name="World" type="Node2D" parent="."]
+[node name="World" type="Node2D" parent="." unique_id=1438876914]
 process_mode = 1
 texture_filter = 1
 
-[node name="LevelRoot" type="Node2D" parent="World"]
+[node name="LevelRoot" type="Node2D" parent="World" unique_id=854878944]
 
-[node name="CaveMap" parent="World/LevelRoot" instance=ExtResource("2_map")]
+[node name="CaveMap" parent="World/LevelRoot" unique_id=1715541921 instance=ExtResource("2_map")]
 
-[node name="EntityRoot" type="Node2D" parent="World"]
+[node name="EntityRoot" type="Node2D" parent="World" unique_id=133438663]
 
-[node name="Player" parent="World/EntityRoot" instance=ExtResource("3_player")]
+[node name="Player" parent="World/EntityRoot" unique_id=5727926 instance=ExtResource("3_player")]
 
-[node name="EffectRoot" type="Node2D" parent="World"]
+[node name="EffectRoot" type="Node2D" parent="World" unique_id=466167947]
 
-[node name="HudLayer" type="CanvasLayer" parent="."]
+[node name="HudLayer" type="CanvasLayer" parent="." unique_id=1632522303]
 process_mode = 3
 layer = 10
-follow_viewport_enabled = false
 
-[node name="PopupLayer" type="CanvasLayer" parent="."]
+[node name="PopupLayer" type="CanvasLayer" parent="." unique_id=1264054503]
 process_mode = 3
 layer = 20
-follow_viewport_enabled = false
 
-[node name="PauseLayer" type="CanvasLayer" parent="."]
+[node name="PauseLayer" type="CanvasLayer" parent="." unique_id=285099421]
 process_mode = 2
 layer = 30
-follow_viewport_enabled = false
 visible = false
 
-[node name="TransitionLayer" type="CanvasLayer" parent="."]
+[node name="TransitionLayer" type="CanvasLayer" parent="." unique_id=189435559]
 process_mode = 3
 layer = 40
-follow_viewport_enabled = false
 visible = false
 
-[node name="DebugLayer" type="CanvasLayer" parent="."]
+[node name="DebugLayer" type="CanvasLayer" parent="." unique_id=1808229942]
 process_mode = 3
 layer = 50
-follow_viewport_enabled = false
 
-[node name="DebugOverlay" parent="DebugLayer" instance=ExtResource("5_overlay")]
+[node name="DebugOverlay" parent="DebugLayer" unique_id=1492469890 instance=ExtResource("5_overlay")]

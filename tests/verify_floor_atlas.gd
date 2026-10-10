@@ -1,5 +1,6 @@
 extends SceneTree
 
+const GRID := preload("res://src/resources/tilesets/cave_grid.gd")
 const TILE_SIZE := 32
 const ATLAS_MARGIN := Vector2i(9, 9)
 const ATLAS_SEPARATION := Vector2i(9, 9)
@@ -25,14 +26,14 @@ func _verify() -> void:
 	var cave_map: CaveMap = scene.get_active_level()
 	var failures: Array[String] = []
 	var original_layout := "--original-layout" in OS.get_cmdline_user_args()
-	var expected_count := 7005 if original_layout else 7013
+	var expected_count := 6305 if original_layout else 6309
 	var expected_masks: Dictionary = EXPECTED_MAP_MASK_COUNTS if original_layout else {1:14,2:13,3:397,4:14,5:246,7:20,8:13,10:248,11:19,12:397,13:20,14:19,15:5593}
 	var floor_layer: TileMapLayer = cave_map.floor_layer
 	var river_layer: TileMapLayer = cave_map.river_layer
 	var script_constants: Dictionary = cave_map.get_script().get_script_constant_map()
 	var mask_to_atlas: Dictionary = script_constants["MASK_TO_ATLAS"]
-	var floor_source_id: int = floor_layer.tile_set.get_source_id(0)
-	var floor_source: TileSetAtlasSource = floor_layer.tile_set.get_source(floor_source_id) as TileSetAtlasSource
+	var legacy_tileset: TileSet = load("res://src/resources/tilesets/cave_floor.tres")
+	var floor_source: TileSetAtlasSource = legacy_tileset.get_source(0) as TileSetAtlasSource
 	var expected_by_mask: Dictionary = {}
 	for y in range(4):
 		for x in range(4):
@@ -44,12 +45,12 @@ func _verify() -> void:
 				failures.append("atlas tile (%d,%d) was not added to the TileSet" % [x, y])
 	if expected_by_mask.size() != 16:
 		failures.append("atlas table must cover all 16 corner masks")
-	if floor_layer.position != Vector2(16.0, 16.0):
-		failures.append("floor layer must be offset by half a tile")
-	if floor_layer.tile_set.get_source(floor_source_id).use_texture_padding:
+	if floor_layer.position != Vector2.ZERO:
+		failures.append("editable floor must use the logical grid origin")
+	if floor_source.use_texture_padding:
 		failures.append("floor atlas texture padding must be disabled")
 	if floor_layer.get_used_cells().size() != expected_count:
-		failures.append("unexpected number of rendered floor candidates")
+		failures.append("unexpected number of editable ground cells")
 	if river_layer.get_used_cells().size() != 232:
 		failures.append("river should remain 232 cells")
 	if FileAccess.get_sha256("res://assets/map/cave/cave_floor_atlas.png").to_lower() != EXPECTED_ATLAS_SHA256:
@@ -93,15 +94,36 @@ func _verify() -> void:
 
 	var actual_masks: Dictionary = {}
 	var actual_mask_counts: Dictionary = {}
-	for cell: Vector2i in floor_layer.get_used_cells():
+	var legacy_candidates: Dictionary = {}
+	for cell: Vector2i in cave_map.walkable_cells:
+		for offset: Vector2i in [Vector2i.ZERO, Vector2i.LEFT, Vector2i.UP, Vector2i(-1, -1)]:
+			legacy_candidates[cell + offset] = true
+		if floor_layer.get_cell_atlas_coords(cell) != GRID.atlas_coords(GRID.neighbor_mask(cell, cave_map.walkable_cells)):
+			failures.append("wrong editable ground variant at %s" % cell)
+	for cell: Vector2i in legacy_candidates:
 		var mask: int = cave_map.corner_mask(cell)
 		actual_masks[mask] = true
 		actual_mask_counts[mask] = int(actual_mask_counts.get(mask, 0)) + 1
-		if mask == 0 or floor_layer.get_cell_atlas_coords(cell) != mask_to_atlas[mask]:
-			failures.append("wrong atlas tile at candidate %s (mask %d)" % [cell, mask])
-			break
 	if actual_mask_counts != expected_masks:
 		failures.append("actual map mask counts do not match the expected geometry: %s" % [actual_mask_counts])
+	# Compare complete raster images against the original half-offset atlas composition.
+	# This checks the new tiles and outside-edge decoration independently of their generator.
+	var bounds := cave_map.map_bounds.grow(1)
+	var size := bounds.size * TILE_SIZE
+	var legacy_image := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
+	var editable_image := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
+	legacy_image.fill(Color.BLACK)
+	editable_image.fill(Color.BLACK)
+	for cell: Vector2i in legacy_candidates:
+		var atlas_cell: Vector2i = mask_to_atlas[cave_map.corner_mask(cell)]
+		var source_origin := ATLAS_MARGIN + atlas_cell * (Vector2i.ONE * TILE_SIZE + ATLAS_SEPARATION)
+		legacy_image.blit_rect(processed_image, Rect2i(source_origin, Vector2i.ONE * TILE_SIZE), (cell - bounds.position) * TILE_SIZE + Vector2i(16, 16))
+	for layer: TileMapLayer in [floor_layer, cave_map.border_layer]:
+		var image: Image = (layer.tile_set.get_source(0) as TileSetAtlasSource).texture.get_image()
+		for cell: Vector2i in layer.get_used_cells():
+			editable_image.blit_rect(image, Rect2i(layer.get_cell_atlas_coords(cell) * TILE_SIZE, Vector2i.ONE * TILE_SIZE), (cell - bounds.position) * TILE_SIZE)
+	if legacy_image.get_data() != editable_image.get_data():
+		failures.append("editable map pixels differ from the original atlas composition")
 
 	var original_cells: Dictionary = cave_map.walkable_cells
 	for mask in range(16):
@@ -128,7 +150,7 @@ func _verify() -> void:
 	if failures.is_empty():
 		var masks: Array = actual_masks.keys()
 		masks.sort()
-		print("PASS: all 16 atlas masks; actual map mask counts=", actual_mask_counts, "; floor candidates verified; river=232; narrow passage passable; camera centered.")
+		print("PASS: all 16 atlas masks; actual map mask counts=", actual_mask_counts, "; editable map pixels identical; river=232; narrow passage passable; camera centered.")
 		quit()
 	else:
 		for failure: String in failures:

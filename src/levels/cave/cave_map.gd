@@ -1,14 +1,21 @@
+@tool
 class_name CaveMap
 extends Node2D
 
 const ATLAS := preload("res://src/resources/tilesets/cave_atlas.gd")
 const MASK_TO_ATLAS := ATLAS.MASK_TO_ATLAS
+const GRID := preload("res://src/resources/tilesets/cave_grid.gd")
 
 enum WallMode { OFF, TEXTURED, FLAT }
 
-@export_file("*.json") var layout_path := "res://src/levels/cave/cave_layout.json"
+@export var spawn_cell := Vector2i(63, 76):
+	set(value):
+		spawn_cell = value
+		if is_node_ready() and Engine.is_editor_hint():
+			_queue_refresh()
 
 @onready var floor_layer: TileMapLayer = $FloorLayer
+@onready var border_layer: TileMapLayer = $BorderLayer
 @onready var river_layer: TileMapLayer = $RiverLayer
 @onready var walls: CaveWallOutline = $WallOutline
 
@@ -17,13 +24,64 @@ var walkable_cells: Dictionary = {}
 var map_bounds := Rect2i()
 var tile_size := ATLAS.TILE_SIZE
 var wall_mode := WallMode.TEXTURED
-var spawn_cell := Vector2i.ZERO
 var load_error: Error = OK
+var _refresh_queued := false
+var _refreshing := false
 
 func _ready() -> void:
-	load_error = load_layout(layout_path)
-	if load_error != OK:
-		push_error("Could not build cave layout: %s (error %d)" % [layout_path, load_error])
+	if Engine.is_editor_hint():
+		floor_layer.changed.connect(_queue_refresh)
+		floor_layer.connect("cells_changed", _queue_refresh)
+		walls.settings_changed.connect(_queue_refresh)
+	load_error = refresh_from_tiles()
+	if load_error != OK and not Engine.is_editor_hint():
+		push_error("CaveMap needs valid ground tiles and a spawn_cell on the floor")
+
+func _queue_refresh() -> void:
+	if _refreshing or _refresh_queued:
+		return
+	_refresh_queued = true
+	call_deferred("refresh_from_tiles")
+
+func refresh_from_tiles() -> Error:
+	_refresh_queued = false
+	if not is_node_ready() or floor_layer.tile_set == null:
+		return ERR_UNCONFIGURED
+	if floor_layer.tile_set.tile_size != Vector2i(ATLAS.TILE_SIZE, ATLAS.TILE_SIZE):
+		return ERR_INVALID_DATA
+	_refreshing = true
+	walkable_cells = {}
+	for cell: Vector2i in floor_layer.get_used_cells():
+		if floor_layer.get_cell_tile_data(cell) != null:
+			walkable_cells[cell] = true
+	tile_size = floor_layer.tile_set.tile_size.x
+	_update_floor_borders()
+	map_bounds = _measure_map_bounds()
+	walls.build(walkable_cells, tile_size, walls.get_settings())
+	set_wall_mode(wall_mode)
+	_refreshing = false
+	load_error = OK if walkable_cells.has(spawn_cell) else ERR_INVALID_DATA
+	if Engine.is_editor_hint():
+		update_configuration_warnings()
+	return load_error
+
+func _update_floor_borders() -> void:
+	var border_candidates: Dictionary = {}
+	for cell: Vector2i in walkable_cells:
+		var coords: Vector2i = GRID.atlas_coords(GRID.neighbor_mask(cell, walkable_cells))
+		if floor_layer.get_cell_atlas_coords(cell) != coords or floor_layer.get_cell_alternative_tile(cell) != 0:
+			floor_layer.set_cell(cell, 0, coords)
+		for offset: Vector2i in GRID.NEIGHBORS:
+			if not walkable_cells.has(cell + offset):
+				border_candidates[cell + offset] = true
+	border_layer.clear()
+	for cell: Vector2i in border_candidates:
+		border_layer.set_cell(cell, 0, GRID.atlas_coords(GRID.neighbor_mask(cell, walkable_cells)))
+
+func _get_configuration_warnings() -> PackedStringArray:
+	if is_node_ready() and not walkable_cells.has(spawn_cell):
+		return PackedStringArray(["spawn_cell 必须位于 FloorLayer 的地板格上。"])
+	return PackedStringArray()
 
 func load_layout(path: String) -> Error:
 	var file := FileAccess.open(path, FileAccess.READ)
@@ -44,32 +102,23 @@ func load_layout(path: String) -> Error:
 	if not next_cells.has(next_spawn):
 		return ERR_INVALID_DATA
 	layout_data = data
-	layout_path = path
-	walkable_cells = next_cells
 	spawn_cell = next_spawn
 	tile_size = int(data.tile_size)
+	# JSON is an explicit import operation; normal startup uses the saved scene cells.
+	_refreshing = true
 	floor_layer.clear()
 	river_layer.clear()
-	floor_layer.position = Vector2.ONE * tile_size * 0.5
-	var floor_candidates: Dictionary = {}
-	for cell: Vector2i in walkable_cells:
-		for offset in [Vector2i.ZERO, Vector2i.LEFT, Vector2i.UP, Vector2i(-1, -1)]:
-			floor_candidates[cell + offset] = true
-	for cell: Vector2i in floor_candidates:
-		var mask := corner_mask(cell)
-		if mask != 0:
-			floor_layer.set_cell(cell, 0, MASK_TO_ATLAS[mask])
+	for cell: Vector2i in next_cells:
+		floor_layer.set_cell(cell, 0, GRID.atlas_coords(GRID.neighbor_mask(cell, next_cells)))
 	for river: Array in data.rivers:
 		for y in range(int(river[1]), int(river[1] + river[3])):
 			for x in range(int(river[0]), int(river[0] + river[2])):
 				var cell := Vector2i(x, y)
-				if walkable_cells.has(cell):
+				if next_cells.has(cell):
 					river_layer.set_cell(cell, 0, Vector2i.ZERO)
-	map_bounds = _measure_map_bounds()
-	walls.build(walkable_cells, tile_size, data.wall_prototype)
-	set_wall_mode(wall_mode)
-	load_error = OK
-	return OK
+	walls.build(next_cells, tile_size, data.wall_prototype)
+	_refreshing = false
+	return refresh_from_tiles()
 
 func cell_to_world(cell: Vector2) -> Vector2:
 	return to_global(cell * tile_size)
@@ -101,6 +150,7 @@ func set_wall_mode(mode: int) -> void:
 	walls.visible = wall_mode != WallMode.OFF
 	walls.flat_floor = wall_mode == WallMode.FLAT
 	floor_layer.visible = wall_mode != WallMode.FLAT
+	border_layer.visible = wall_mode != WallMode.FLAT
 	river_layer.z_index = -4 if wall_mode == WallMode.FLAT else -8
 	walls.queue_redraw()
 

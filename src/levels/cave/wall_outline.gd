@@ -1,12 +1,31 @@
+@tool
 class_name CaveWallOutline
 extends Node2D
 
+signal settings_changed
+
 # Geometry is anchored at the walkable floor boundary; walls occupy solid space.
 var tile_size := 32
-var wall_height := 48
-var cap_size := 4
-var side_size := 6
-var front_size := 5
+@export_range(0, 128, 1) var wall_height := 48:
+	set(value):
+		if wall_height != value:
+			wall_height = value
+			settings_changed.emit()
+@export_range(0, 32, 1) var cap_size := 4:
+	set(value):
+		if cap_size != value:
+			cap_size = value
+			settings_changed.emit()
+@export_range(0, 32, 1) var side_size := 6:
+	set(value):
+		if side_size != value:
+			side_size = value
+			settings_changed.emit()
+@export_range(0, 32, 1) var front_size := 5:
+	set(value):
+		if front_size != value:
+			front_size = value
+			settings_changed.emit()
 const FACE_COLOR := Color("716c61")
 const CAP_COLOR := Color("aaa28b")
 const SIDE_COLOR := Color("494b48")
@@ -19,6 +38,9 @@ var west_edges: Array[Vector2i] = []
 var east_edges: Array[Vector2i] = []
 var conflicts: Array[Vector2i] = []
 var flat_floor := false
+
+func get_settings() -> Dictionary:
+	return {"height_pixels": wall_height, "cap_pixels": cap_size, "side_pixels": side_size, "front_pixels": front_size}
 
 func build(walkable: Dictionary, cell_size: int, settings: Dictionary) -> void:
 	tile_size = cell_size

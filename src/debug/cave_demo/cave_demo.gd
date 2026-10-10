@@ -24,6 +24,8 @@ func start() -> void:
 	if _started:
 		return
 	_started = true
+	_overlay.speed_multiplier_selected.connect(set_player_speed_multiplier)
+	set_player_speed_multiplier(1.0)
 	set_wall_mode(CaveMap.WallMode.TEXTURED)
 	print("Cave ready: %d walkable cells, %d river cells, %d wall conflicts" % [
 		_level.walkable_cells.size(), _level.river_layer.get_used_cells().size(), _level.walls.conflicts.size()
@@ -32,6 +34,10 @@ func start() -> void:
 
 func get_overlay() -> CaveDebugOverlay:
 	return _overlay
+
+func set_player_speed_multiplier(multiplier: float) -> void:
+	_player.set_speed_multiplier(multiplier)
+	_overlay.set_speed_multiplier(_player.speed_multiplier)
 
 func set_wall_mode(mode: int) -> void:
 	_level.set_wall_mode(mode)

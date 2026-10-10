@@ -6,6 +6,7 @@
 
 - 使用 Godot 4.7 系列打开根目录的 project.godot，F5 启动洞穴试玩入口。
 - WASD / 方向键移动；F2 切换石砖墙体、纯色轮廓和关闭墙体；M 切换全图与跟随镜头。
+- 右下角“开发者工具”可在运行中选择玩家移速 1×、2×、4×、8×，每次启动默认 1×。倍率基于 Player 的 speed（默认 122 px/s），不累乘、不写回场景；恢复 1× 即恢复基础速度。移动查询按小步执行，避免高倍率跳过不可走区域。
 - 默认启动 src/core/main.tscn，根节点为 MainGame；World/LevelRoot 挂载 CaveMap，World/EntityRoot 挂载 Player，World/EffectRoot 预留世界特效。
 - Systems/CaveDemoController 是独立调试组件，通过 configure 接收地图、玩家和 DebugOverlay；src/debug/cave_demo/cave_demo.tscn 现在是该组件的场景，不是游戏入口。
 - 当前试玩提示属于 DebugLayer/DebugOverlay；HudLayer 预留正式游戏 HUD，PopupLayer 预留弹窗，PauseLayer 与 TransitionLayer 为空且默认隐藏。
@@ -31,6 +32,8 @@ godot --headless --path . --script res://tools/map/import_cave_layout.gd -- --la
 ```
 
 相关实现依据：[TileMapLayer 数据与 changed signal](https://docs.godotengine.org/en/stable/classes/class_tilemaplayer.html)、[Terrain 编辑](https://docs.godotengine.org/en/stable/tutorials/2d/using_tilesets.html#creating-terrain-sets-autotiling)、[在编辑器中运行 @tool](https://docs.godotengine.org/en/stable/tutorials/plugins/running_code_in_the_editor.html)。
+
+移速工具使用 [OptionButton 的 item_selected signal](https://docs.godotengine.org/en/stable/classes/class_optionbutton.html#class-optionbutton-signal-item-selected) 将选择交给调试控制器，再通过玩家公开接口设置倍率。屏幕空白和提示使用 [Control.MOUSE_FILTER_IGNORE](https://docs.godotengine.org/en/stable/classes/class_control.html#enum-control-mousefilter)，只有工具区域接收鼠标。
 
 ## 数据与资源
 

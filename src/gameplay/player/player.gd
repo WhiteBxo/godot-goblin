@@ -8,6 +8,14 @@ extends CharacterBody2D
 
 var walkability_query: Callable
 var overview_enabled := false
+var speed_multiplier := 1.0
+
+func set_speed_multiplier(multiplier: float) -> void:
+	if multiplier in [1.0, 2.0, 4.0, 8.0]:
+		speed_multiplier = multiplier
+
+func get_movement_speed() -> float:
+	return speed * speed_multiplier
 
 func configure(query: Callable) -> void:
 	walkability_query = query
@@ -18,7 +26,13 @@ func _physics_process(delta: float) -> void:
 func move_direction(direction: Vector2, delta: float) -> void:
 	if direction == Vector2.ZERO or not walkability_query.is_valid():
 		return
-	var motion := direction.normalized() * speed * delta
+	var motion := direction.normalized() * get_movement_speed() * delta
+	# 小步查询，避免高倍率或低帧率时跳过墙体与地板空隙。
+	var steps := maxi(1, ceili(motion.length() / maxf(1.0, minf(body_half_size.x, body_half_size.y))))
+	for step in range(steps):
+		_move_step(motion / steps)
+
+func _move_step(motion: Vector2) -> void:
 	var target := global_position + Vector2(motion.x, 0.0)
 	if can_stand_at(target):
 		global_position.x = target.x

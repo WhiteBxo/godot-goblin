@@ -1,15 +1,33 @@
 class_name CaveDebugOverlay
 extends Control
 
+signal speed_multiplier_selected(multiplier: float)
+
+const SPEED_MULTIPLIERS := [1, 2, 4, 8]
+
 @onready var hint: Label = $Hint
+@onready var speed_selector: OptionButton = $DeveloperTools/Tools/SpeedSelector
 
 var _comparison: Control
+
+func _ready() -> void:
+	for multiplier: int in SPEED_MULTIPLIERS:
+		speed_selector.add_item("玩家移速 %d×" % multiplier, multiplier)
+	speed_selector.item_selected.connect(_on_speed_selected)
+
+func set_speed_multiplier(multiplier: float) -> void:
+	speed_selector.select(speed_selector.get_item_index(int(multiplier)))
+
+func _on_speed_selected(index: int) -> void:
+	speed_multiplier_selected.emit(float(speed_selector.get_item_id(index)))
+	speed_selector.release_focus()
 
 func set_hint(text: String) -> void:
 	hint.text = text
 
 func show_atlas_comparison(original: Texture2D, processed: Texture2D) -> void:
 	hint.hide()
+	$DeveloperTools.hide()
 	if is_instance_valid(_comparison):
 		_comparison.queue_free()
 	_comparison = Control.new()

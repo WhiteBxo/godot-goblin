@@ -52,6 +52,31 @@ func _verify() -> void:
 	check(not game.get_node("TransitionLayer").visible, "Transition layer initially hidden")
 	check(overlay.mouse_filter == Control.MOUSE_FILTER_IGNORE, "Debug overlay does not intercept mouse input")
 	check(overlay.hint.mouse_filter == Control.MOUSE_FILTER_IGNORE, "Debug hint does not intercept mouse input")
+	check(overlay.speed_selector.item_count == 4, "Developer tools offer four speed multipliers")
+	var base_speed := player.speed
+	var saved_query := player.walkability_query
+	var saved_position := player.global_position
+	player.configure(func(_position: Vector2, _half_size: Vector2) -> bool: return true)
+	for index in range(4):
+		overlay.speed_selector.select(index)
+		overlay.speed_selector.item_selected.emit(index)
+		var multiplier := float(overlay.speed_selector.get_item_id(index))
+		player.global_position = Vector2.ZERO
+		player.move_direction(Vector2.RIGHT, 0.1)
+		check(is_equal_approx(player.global_position.x, base_speed * multiplier * 0.1), "Selected multiplier changes actual movement: %s" % multiplier)
+		check(is_equal_approx(player.speed, base_speed), "Multiplier preserves base speed")
+	tools.set_player_speed_multiplier(1.0)
+	check(is_equal_approx(player.get_movement_speed(), base_speed), "Returning to 1x restores base speed without accumulation")
+	tools.set_player_speed_multiplier(3.0)
+	check(is_equal_approx(player.speed_multiplier, 1.0) and overlay.speed_selector.selected == 0, "Unsupported multiplier leaves player and UI unchanged")
+	tools.set_player_speed_multiplier(8.0)
+	player.global_position = Vector2.ZERO
+	player.configure(func(position: Vector2, _half_size: Vector2) -> bool: return position.x < 20.0 or position.x > 40.0)
+	player.move_direction(Vector2.RIGHT, 0.1)
+	check(player.global_position.x < 20.0, "8x movement cannot jump over an unwalkable gap")
+	tools.set_player_speed_multiplier(1.0)
+	player.configure(saved_query)
+	player.global_position = saved_position
 	var overlay_origin := overlay.get_global_transform_with_canvas().origin
 	world.position = Vector2(300.0, -150.0)
 	check(player.global_position.is_equal_approx(level.get_spawn_position()), "World movement keeps player at map spawn")
@@ -70,6 +95,10 @@ func _verify() -> void:
 	check(player.global_position.is_equal_approx(paused_position), "World stops player processing while paused")
 	check(not player.can_process(), "Player inherits World pause")
 	check(tools.can_process() and overlay.can_process(), "Debug controller and display continue during pause")
+	overlay.speed_selector.select(2)
+	overlay.speed_selector.item_selected.emit(2)
+	check(is_equal_approx(player.get_movement_speed(), base_speed * 4.0), "Speed tool remains usable while paused")
+	tools.set_player_speed_multiplier(1.0)
 	var previous_mode := level.wall_mode
 	_send_action("debug_cycle_walls", true)
 	_send_action("debug_cycle_walls", false)

@@ -21,3 +21,31 @@ offset_bottom = 60.0
 theme_override_colors/font_color = Color(0.9, 0.92, 0.86, 1)
 theme_override_font_sizes/font_size = 16
 text = "WASD / 方向键移动"
+
+[node name="DeveloperTools" type="PanelContainer" parent="."]
+layout_mode = 0
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -178.0
+offset_top = -84.0
+offset_right = -12.0
+offset_bottom = -12.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="Tools" type="VBoxContainer" parent="DeveloperTools"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="DeveloperTools/Tools"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 16
+text = "开发者工具"
+
+[node name="SpeedSelector" type="OptionButton" parent="DeveloperTools/Tools"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+focus_mode = 0

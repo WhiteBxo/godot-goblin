@@ -6,7 +6,7 @@ signal settings_changed
 
 # Geometry is anchored at the walkable floor boundary; walls occupy solid space.
 var tile_size := 32
-@export_range(0, 128, 1) var wall_height := 48:
+@export_range(0, 128, 1) var wall_height := 56:
 	set(value):
 		if wall_height != value:
 			wall_height = value
@@ -44,7 +44,7 @@ func get_settings() -> Dictionary:
 
 func build(walkable: Dictionary, cell_size: int, settings: Dictionary) -> void:
 	tile_size = cell_size
-	wall_height = int(settings.get("height_pixels", 48))
+	wall_height = int(settings.get("height_pixels", 56))
 	cap_size = int(settings.get("cap_pixels", 4))
 	side_size = int(settings.get("side_pixels", 6))
 	front_size = int(settings.get("front_pixels", 5))

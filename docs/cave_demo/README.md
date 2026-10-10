@@ -8,12 +8,12 @@
 - WASD / 方向键移动；F2 切换石砖墙体、纯色轮廓和关闭墙体；M 切换全图与跟随镜头。
 - 右下角“开发者工具”可在运行中选择玩家移速 1×、2×、4×、8×，每次启动默认 1×。倍率基于 Player 的 speed（默认 122 px/s），不累乘、不写回场景；恢复 1× 即恢复基础速度。移动查询按小步执行，避免高倍率跳过不可走区域。
 - 默认启动 src/core/main.tscn，根节点为 MainGame；World/LevelRoot 挂载 CaveMap，World/EntityRoot 挂载 Player，World/EffectRoot 预留世界特效。
-- Systems/CaveDemoController 是独立调试组件，通过 configure 接收地图、玩家和 DebugOverlay；src/debug/cave_demo/cave_demo.tscn 现在是该组件的场景，不是游戏入口。
+- Debug 运行时，MainGame 在 Systems 中创建通用 DeveloperTools 和洞穴专属 CaveDemoController，在 DebugLayer 中创建 DeveloperPanel 和 DebugOverlay。Release 不创建这些节点。src/debug/cave_demo/cave_demo.tscn 是调试组件的场景，不是游戏入口。
 - 当前试玩提示属于 DebugLayer/DebugOverlay；HudLayer 预留正式游戏 HUD，PopupLayer 预留弹窗，PauseLayer 与 TransitionLayer 为空且默认隐藏。
-- 主场景通过 get_active_level()、get_player()、get_debug_tools() 提供引用；初始化顺序为选择布局、绑定移动查询、设置出生点与跟随镜头、启动调试控制。
+- 主场景通过 get_active_level()、get_player()、get_debug_tools() 和 get_demo_tools() 提供引用；后两个 getter 分别返回通用和洞穴专属调试组件，工具关闭或 Release 时返回 null。初始化顺序为选择布局、绑定移动查询、设置出生点与跟随镜头、启动可选调试组件，正常启动不依赖调试组件。
 - CaveMap 负责 FloorLayer、RiverLayer、派生的 BorderLayer 和 WallOutline；Player 通过入口传入的 Callable 查询可行走位置；调试提示由 DebugOverlay 的公开方法更新。
 - 保留原来的轴向移动和身体四角格子检测。此次没有引入新的物理碰撞规则，门、箱子等动态碰撞另作功能开发。
-- 主项目沿用 Forward Plus 和 Windows D3D12。地图和角色场景使用 nearest 过滤；视口为 960×540。
+- 主项目沿用 Forward Plus 和 Windows D3D12。地图和角色场景使用 nearest 过滤；设计视口为 640×360，默认窗口为 1280×720，canvas_items + keep + integer 使用 2 倍整数缩放。保留 transform pixel snap，关闭 vertex pixel snap；相机平滑沿用当前玩家场景配置。
 
 ## 在编辑器中画地图
 
@@ -78,12 +78,34 @@ godot --path . -- --capture-atlas-compare
 
 截图默认写入 user://captures；可添加 --capture-dir=res://.godot/verification 指定本地验收输出。
 
+截图入口会隐藏通用开发者面板；图集对比使用 MarginContainer、HBoxContainer 和 VBoxContainer，根据视口自动安排两个完整预览。截图和 --original-layout 参数仅在 Debug 构建生效。
+
+出生和切换视角时调用 Camera2D.reset_smoothing() 并更新滚动位置，立即对准目标；普通移动继续使用玩家场景中的平滑设置。[相机 API](https://docs.godotengine.org/en/4.7/classes/class_camera2d.html#class-camera2d-method-reset-smoothing)
+
+## 通用开发者工具
+
+DeveloperTools 通过 configure(set_multiplier, get_multiplier, panel) 接收两个 Callable 和 DeveloperPanel，不依赖 CavePlayer 或 CaveMap 类型。新角色只需提供倍率设置和读取接口；setter 应接受 1、2、4、8，getter 返回实际生效的倍率。配置成功返回 OK，依赖缺失或工具关闭返回 ERR_UNCONFIGURED 并隐藏面板。重新 configure 会断开旧面板的 signal 并切换目标，初始倍率恢复 1×。
+
+面板的 speed_multiplier_selected signal 交给 DeveloperTools.set_player_speed_multiplier()，组件校验允许倍率后调用 setter，再通过 getter 同步显示。MainGame 注入玩家公开接口；CaveDemoController 只管理洞穴专属调试行为。组件场景挂 Systems 并使用 Always，面板挂 DebugLayer；全屏根 Control 忽略鼠标，只有面板区域接收输入。
+
+DebugRuntime.is_enabled() 同时检查 debug feature 和开发开关；Release 无法通过开发开关启用工具。DebugRuntime.apply_release_policy() 在 MainGame 启动时停止第三方 MCPRuntimeProbe 的处理，不改写 autoload 配置或插件源码。
+
+```text
+godot --headless --path . --script res://tests/verify_developer_tools.gd
+godot --headless --path . --script res://tests/verify_debug_build.gd
+```
+
+构建边界测试需分别在 Debug 和 Release export template 执行；只用编辑器运行 PCK 仍带 debug feature，不能作为 Release 验收。依据：[Feature tags](https://docs.godotengine.org/en/4.7/tutorials/export/feature_tags.html)、[Containers](https://docs.godotengine.org/en/4.7/tutorials/ui/gui_containers.html)、[pixel snap 限制](https://docs.godotengine.org/en/4.7/classes/class_projectsettings.html#class-projectsettings-property-rendering-2d-snap-snap-2d-transforms-to-pixel)。
+
+本轮真实构建验收在临时项目副本中将 verify_debug_build.gd 的检查改为等价 Node 入口场景，然后分别导出 Debug 和 Release EXE；正式主场景和导出配置未替换为测试入口。两种构建均验证出生与移动；Debug 验证倍率和旧布局，Release 验证调试节点缺席、调试按键无效、旧布局参数无效及 MCP 轮询停止。
+
 屏幕层的 layer 分别为 10、20、30、40、50，关闭 follow_viewport_enabled。MainGame 和调试组件使用 Always，Systems 与 World 使用 Pausable，PauseLayer 使用 WhenPaused；此次没有新增暂停操作入口或转场功能。
 
 手动验收：穿过河道和顶部单格绕道，靠近墙脚确认没有越界；连续按 M 返回跟随后继续移动，镜头应重新跟随；F2 切换不应改变通行规则。
 
 ## 接入验证记录
 
+- 通用开发工具与近期设置修正：MainGame 71 项、独立工具 11 项检查通过；640×360 和默认 1280×720 的运行界面、鼠标打开下拉框与原生选项选择通过，真实 Debug / Release EXE 构建边界检查通过。原有编辑器退出的资源清理警告和导出 Callable 警告仍存在，运行时验收没有这些警告。
 - 可编辑地图：28 项运行时检查、18 项真实编辑器检查通过，覆盖格子序列化、手工增删、Undo/Redo、Terrain 画笔、通行与墙体同步、参数预览及保存重开。
 - 新旧布局的整张地板像素与原半格拼接结果一致，实际 D3D12 通道和全图截图也与原基线完全一致。
 - 可编辑地图的无缓存副本与 PCK 启动通过，PCK 的通道截图与改动前基线完全一致。

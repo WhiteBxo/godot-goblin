@@ -17,6 +17,9 @@ func set_speed_multiplier(multiplier: float) -> void:
 func get_movement_speed() -> float:
 	return speed * speed_multiplier
 
+func get_speed_multiplier() -> float:
+	return speed_multiplier
+
 func configure(query: Callable) -> void:
 	walkability_query = query
 
@@ -49,6 +52,8 @@ func follow_player() -> void:
 	camera.position = Vector2.ZERO
 	camera.zoom = Vector2.ONE
 	camera.make_current()
+	camera.reset_smoothing()
+	camera.force_update_scroll()
 
 func show_overview(bounds: Rect2, viewport_size: Vector2) -> void:
 	center_camera_on(bounds.get_center())
@@ -60,3 +65,5 @@ func center_camera_on(world_position: Vector2) -> void:
 	camera.top_level = true
 	camera.global_position = world_position
 	camera.zoom = Vector2.ONE
+	camera.reset_smoothing()
+	camera.force_update_scroll()

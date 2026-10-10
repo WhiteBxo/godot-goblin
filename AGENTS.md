@@ -49,7 +49,8 @@
 ```text
 MainGame
 ├─ Systems
-│  └─ CaveDemoController
+│  ├─ DeveloperTools（Debug 运行时创建）
+│  └─ CaveDemoController（洞穴专属 Debug 组件）
 ├─ World
 │  ├─ LevelRoot
 │  ├─ EntityRoot
@@ -59,13 +60,17 @@ MainGame
 ├─ PauseLayer
 ├─ TransitionLayer
 └─ DebugLayer
-   └─ DebugOverlay
+   ├─ DeveloperPanel（Debug 运行时创建）
+   └─ DebugOverlay（洞穴专属 Debug 显示）
 ```
 
 - 新内容按职责挂到对应容器，避免重新堆到主场景根节点。
 - `Systems` 放场景内的管理与协调组件；`World` 是世界坐标容器，地图放 `LevelRoot`，动态实体放 `EntityRoot`，世界特效放 `EffectRoot`。
 - `HudLayer` 放正式游戏 HUD，`PopupLayer` 放背包和对话等通用弹窗，暂停界面放 `PauseLayer`，屏幕转场放 `TransitionLayer`。
 - 调试控制组件归 `Systems`，调试显示归 `DebugLayer`，代码按功能放在 `src/debug/`。
+- 正式关卡初始化不能依赖调试组件。通用开发工具放 `src/debug/developer_tools/`，通过 Callable 或公开接口注入操作目标；洞穴布局对比、墙体切换和截图留在洞穴专属调试组件。
+- 使用 `OS.has_feature("debug")` 区分开发与 Release；Release 不创建调试节点、不响应调试按键或截图/布局参数。开发时可在内存中将 `debug/developer_tools/enabled` 设为 false 关闭工具，不能借此在 Release 启用工具。
+- 第三方开发插件的 runtime 边界优先在项目侧管理；MainGame 启动 Release 时停止 MCPRuntimeProbe 的处理，避免无 debugger 时逐帧轮询，不修改插件源码。
 - `MainGame` 负责取得引用和初始化，通过公开 getter 提供当前关卡、玩家和调试组件；跨模块不要依赖其内部节点路径。
 - 初始化顺序为选择布局、绑定玩家移动查询、设置出生点与跟随镜头、启动调试组件。
 - 五个屏幕层都使用 `CanvasLayer`，关闭 `follow_viewport_enabled`；按 HUD、弹窗、暂停、转场、调试分别固定 `layer` 为 10、20、30、40、50。

@@ -3,8 +3,6 @@
 [ext_resource type="Script" uid="uid://b38vrnrlviw78" path="res://src/core/main.gd" id="1_main"]
 [ext_resource type="PackedScene" uid="uid://cfh5rileqwxv6" path="res://src/levels/cave/cave_map.tscn" id="2_map"]
 [ext_resource type="PackedScene" path="res://src/gameplay/player/player.tscn" id="3_player"]
-[ext_resource type="PackedScene" path="res://src/debug/cave_demo/cave_demo.tscn" id="4_debug"]
-[ext_resource type="PackedScene" path="res://src/debug/cave_demo/debug_overlay.tscn" id="5_overlay"]
 
 [node name="MainGame" type="Node" unique_id=1512212887]
 process_mode = 3
@@ -12,8 +10,6 @@ script = ExtResource("1_main")
 
 [node name="Systems" type="Node" parent="." unique_id=601625153]
 process_mode = 1
-
-[node name="CaveDemoController" parent="Systems" unique_id=1305977206 instance=ExtResource("4_debug")]
 
 [node name="World" type="Node2D" parent="." unique_id=1438876914]
 process_mode = 1
@@ -50,5 +46,3 @@ visible = false
 [node name="DebugLayer" type="CanvasLayer" parent="." unique_id=1808229942]
 process_mode = 3
 layer = 50
-
-[node name="DebugOverlay" parent="DebugLayer" unique_id=1492469890 instance=ExtResource("5_overlay")]

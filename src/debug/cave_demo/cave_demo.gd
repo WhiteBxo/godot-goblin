@@ -1,6 +1,8 @@
 class_name CaveDemoController
 extends Node
 
+signal capture_started
+
 const ORIGINAL_LAYOUT := "res://src/levels/cave/cave_layout_original.json"
 
 var _level: CaveMap
@@ -13,19 +15,17 @@ func configure(level: CaveMap, player: CavePlayer, overlay: CaveDebugOverlay) ->
 	_player = player
 	_overlay = overlay
 
-func prepare_level() -> Error:
+func apply_layout_override() -> Error:
 	if _level == null or _player == null or _overlay == null:
 		return ERR_UNCONFIGURED
-	if "--original-layout" in OS.get_cmdline_user_args():
+	if DebugRuntime.is_enabled() and "--original-layout" in OS.get_cmdline_user_args():
 		return _level.load_layout(ORIGINAL_LAYOUT)
 	return _level.load_error
 
 func start() -> void:
-	if _started:
+	if _started or not DebugRuntime.is_enabled():
 		return
 	_started = true
-	_overlay.speed_multiplier_selected.connect(set_player_speed_multiplier)
-	set_player_speed_multiplier(1.0)
 	set_wall_mode(CaveMap.WallMode.TEXTURED)
 	print("Cave ready: %d walkable cells, %d river cells, %d wall conflicts" % [
 		_level.walkable_cells.size(), _level.river_layer.get_used_cells().size(), _level.walls.conflicts.size()
@@ -35,24 +35,24 @@ func start() -> void:
 func get_overlay() -> CaveDebugOverlay:
 	return _overlay
 
-func set_player_speed_multiplier(multiplier: float) -> void:
-	_player.set_speed_multiplier(multiplier)
-	_overlay.set_speed_multiplier(_player.speed_multiplier)
-
 func set_wall_mode(mode: int) -> void:
+	if not DebugRuntime.is_enabled():
+		return
 	_level.set_wall_mode(mode)
 	_overlay.set_hint("WASD / 方向键移动   F2 切换墙体   M 全图\n当前：%s   墙高 %dpx" % [
 		_level.get_wall_mode_name(), _level.walls.wall_height
 	])
 
 func toggle_overview() -> void:
+	if not DebugRuntime.is_enabled():
+		return
 	if _player.overview_enabled:
 		_player.follow_player()
 	else:
 		_player.show_overview(_level.get_world_bounds().grow(64.0), get_viewport().get_visible_rect().size)
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not _started:
+	if not _started or not DebugRuntime.is_enabled():
 		return
 	if event.is_action_pressed("debug_cycle_walls"):
 		set_wall_mode((_level.wall_mode + 1) % 3)
@@ -90,6 +90,7 @@ func _capture_atlas_comparison() -> void:
 	_capture_viewport("atlas_processing_comparison.png")
 
 func _capture_viewport(filename: String) -> void:
+	capture_started.emit()
 	var directory := "user://captures"
 	for argument in OS.get_cmdline_user_args():
 		if argument.begins_with("--capture-dir="):

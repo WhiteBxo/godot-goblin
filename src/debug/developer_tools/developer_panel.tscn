@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://c5s3jhsy6br5o"]
+
+[ext_resource type="Script" path="res://src/debug/developer_tools/developer_panel.gd" id="1_panel"]
+
+[node name="DeveloperPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_panel")
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 0
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -178.0
+offset_top = -84.0
+offset_right = -12.0
+offset_bottom = -12.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="Tools" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="Panel/Tools"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 16
+text = "开发者工具"
+
+[node name="SpeedSelector" type="OptionButton" parent="Panel/Tools"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+focus_mode = 0

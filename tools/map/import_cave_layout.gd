@@ -23,7 +23,7 @@ func _import_layout() -> void:
 		quit(1)
 		return
 	await process_frame
-	var output_uid := ResourceLoader.get_resource_uid(output) if FileAccess.file_exists(output) else ResourceUID.INVALID_ID
+	var output_uid := _existing_scene_uid(output)
 	var packed := PackedScene.new()
 	error = packed.pack(map)
 	if error == OK:
@@ -34,3 +34,12 @@ func _import_layout() -> void:
 	map.queue_free()
 	await process_frame
 	quit(0 if error == OK else 1)
+
+func _existing_scene_uid(path: String) -> int:
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return ResourceUID.INVALID_ID
+	# Read the saved UID directly: CLI runs may not have this scene in the UID cache.
+	var pattern := RegEx.create_from_string('uid="(uid://[^"]+)"')
+	var match := pattern.search(file.get_line())
+	return ResourceUID.text_to_id(match.get_string(1)) if match != null else ResourceUID.INVALID_ID

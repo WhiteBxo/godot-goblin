@@ -1,12 +1,12 @@
-[gd_resource type="TileSet" load_steps=3 format=3]
+[gd_resource type="TileSet" format=3 uid="uid://b3ul6t7i6upi2"]
 
-[ext_resource type="Texture2D" path="res://assets/map/cave/cave_floor_processed.png" id="1_texture"]
+[ext_resource type="Texture2D" uid="uid://8pirbuihv7bp" path="res://assets/map/cave/cave_floor_processed.png" id="1_texture"]
 
 [sub_resource type="TileSetAtlasSource" id="Atlas"]
 texture = ExtResource("1_texture")
-texture_region_size = Vector2i(32, 32)
 margins = Vector2i(9, 9)
 separation = Vector2i(9, 9)
+texture_region_size = Vector2i(32, 32)
 use_texture_padding = false
 0:0/0 = 0
 1:0/0 = 0

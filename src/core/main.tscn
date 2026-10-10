@@ -1,0 +1,16 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/core/main.gd" id="1_main"]
+[ext_resource type="PackedScene" path="res://src/levels/cave/cave_map.tscn" id="2_map"]
+[ext_resource type="PackedScene" path="res://src/gameplay/player/player.tscn" id="3_player"]
+[ext_resource type="PackedScene" path="res://src/UI/hud/cave_hud.tscn" id="4_hud"]
+
+[node name="Main" type="Node2D"]
+texture_filter = 1
+script = ExtResource("1_main")
+
+[node name="CaveMap" parent="." instance=ExtResource("2_map")]
+
+[node name="Player" parent="." instance=ExtResource("3_player")]
+
+[node name="Hud" parent="." instance=ExtResource("4_hud")]

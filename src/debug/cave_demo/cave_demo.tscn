@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://src/core/main.tscn" id="1_main"]
+[ext_resource type="Script" path="res://src/debug/cave_demo/cave_demo.gd" id="2_debug"]
+
+[node name="CaveDemo" instance=ExtResource("1_main")]
+script = ExtResource("2_debug")

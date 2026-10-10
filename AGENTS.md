@@ -40,6 +40,37 @@
 - 普通玩法逻辑放在对应场景中；确有跨场景生命周期需求的共享状态才使用 autoload。
 - 调试、截图和素材处理流程放在调试场景或工具中，避免混入正式游戏入口。
 
+## 主场景架构
+
+主场景是 `src/core/main.tscn`，根节点和 script class 为 `MainGame`，类型为 `Node`。
+
+```text
+MainGame
+├─ Systems
+│  └─ CaveDemoController
+├─ World
+│  ├─ LevelRoot
+│  ├─ EntityRoot
+│  └─ EffectRoot
+├─ HudLayer
+├─ PopupLayer
+├─ PauseLayer
+├─ TransitionLayer
+└─ DebugLayer
+   └─ DebugOverlay
+```
+
+- 新内容按职责挂到对应容器，避免重新堆到主场景根节点。
+- `Systems` 放场景内的管理与协调组件；`World` 是世界坐标容器，地图放 `LevelRoot`，动态实体放 `EntityRoot`，世界特效放 `EffectRoot`。
+- `HudLayer` 放正式游戏 HUD，`PopupLayer` 放背包和对话等通用弹窗，暂停界面放 `PauseLayer`，屏幕转场放 `TransitionLayer`。
+- 调试控制组件归 `Systems`，调试显示归 `DebugLayer`，代码按功能放在 `src/debug/`。
+- `MainGame` 负责取得引用和初始化，通过公开 getter 提供当前关卡、玩家和调试组件；跨模块不要依赖其内部节点路径。
+- 初始化顺序为选择布局、绑定玩家移动查询、设置出生点与跟随镜头、启动调试组件。
+- 五个屏幕层都使用 `CanvasLayer`，关闭 `follow_viewport_enabled`；按 HUD、弹窗、暂停、转场、调试分别固定 `layer` 为 10、20、30、40、50。
+- `MainGame` 使用 `Always`，`Systems` 和 `World` 使用 `Pausable`；`Systems` 中确需暂停期间工作的组件单独使用 `Always`。
+- 普通屏幕层使用 `Always`，`PauseLayer` 使用 `WhenPaused`；空的屏幕层不应截获输入，非交互调试 Control 使用 `MOUSE_FILTER_IGNORE`。
+- 主场景框架保留各容器生命周期，既有插件 autoload 不迁入 `Systems`；暂停菜单、转场动画等按具体任务实现。
+
 ## 命名与格式
 
 - 新文件、目录、变量和 function 使用 `snake_case`；现有 `src/UI/` 保留大小写，引用必须一致。

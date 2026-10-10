@@ -12,12 +12,12 @@ func check(condition: bool, description: String) -> void:
 		failures.append(description)
 
 func _verify() -> void:
-	var scene: Node = load("res://src/debug/cave_demo/cave_demo.tscn").instantiate()
+	var scene: Node = load("res://src/core/main.tscn").instantiate()
 	root.add_child(scene)
 	await process_frame
-	var cave_map: CaveMap = scene.cave_map
+	var cave_map: CaveMap = scene.get_active_level()
 	var cells: Dictionary = cave_map.walkable_cells
-	var player: Node2D = scene.player
+	var player: Node2D = scene.get_player()
 	player.set_physics_process(false)
 	check(cave_map.walls.conflicts.is_empty(), "Raised walls must not overlap walkable floor")
 	var original: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://src/levels/cave/cave_layout_original.json"))
@@ -71,7 +71,7 @@ func _verify() -> void:
 	check(player.position.y < 70 * 32 + 9, "Collision stops too far from wall foot")
 	check(cave_map.river_layer.get_used_cells().size() == 232, "River remains 232 cells")
 	for mode in range(3):
-		scene.set_wall_mode(mode)
+		scene.get_debug_tools().set_wall_mode(mode)
 		check(cells == cave_map.walkable_cells, "View toggle changes collision")
 	# The map may be placed away from the world origin without changing grid rules.
 	var old_map_position := cave_map.position
@@ -84,9 +84,9 @@ func _verify() -> void:
 	player.global_position = cave_map.get_spawn_position()
 	# Overview must release the top-level camera again when returning to follow mode.
 	for cycle in range(2):
-		scene.toggle_overview()
+		scene.get_debug_tools().toggle_overview()
 		check(player.overview_enabled and player.camera.top_level, "Overview detaches the camera")
-		scene.toggle_overview()
+		scene.get_debug_tools().toggle_overview()
 		player.move_direction(Vector2.RIGHT, 1.0 / 60.0)
 		check(not player.overview_enabled and not player.camera.top_level, "Follow mode restores parent transform")
 		check(player.camera.global_position.is_equal_approx(player.global_position), "Camera follows after overview toggle")

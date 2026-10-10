@@ -19,10 +19,10 @@ func _initialize() -> void:
 	call_deferred("_verify")
 
 func _verify() -> void:
-	var scene: Node = (load("res://src/debug/cave_demo/cave_demo.tscn") as PackedScene).instantiate()
+	var scene: Node = (load("res://src/core/main.tscn") as PackedScene).instantiate()
 	root.add_child(scene)
 	await process_frame
-	var cave_map: CaveMap = scene.cave_map
+	var cave_map: CaveMap = scene.get_active_level()
 	var failures: Array[String] = []
 	var original_layout := "--original-layout" in OS.get_cmdline_user_args()
 	var expected_count := 7005 if original_layout else 7013
@@ -118,8 +118,8 @@ func _verify() -> void:
 			failures.append("corner sampling failed for mask %d" % mask)
 	cave_map.walkable_cells = original_cells
 
-	var player: CharacterBody2D = scene.player
-	var camera: Camera2D = scene.player.camera
+	var player: CharacterBody2D = scene.get_player()
+	var camera: Camera2D = scene.get_player().camera
 	if not player.can_stand_at(Vector2(90.5, 0.5 if original_layout else -1.5) * 32.0):
 		failures.append("one-cell-wide top passage should stay passable")
 	if not camera.global_position.is_equal_approx(player.global_position):

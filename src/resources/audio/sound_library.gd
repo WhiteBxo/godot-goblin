@@ -13,6 +13,16 @@ func register_all(audio: AudioManager) -> PackedStringArray:
 	for entry in entries:
 		var id := str(entry.get("id", ""))
 		var streams: Array = entry.get("streams", [])
+		if entry.has("path"):
+			var path: Variant = entry["path"]
+			if not _audio_path_exists(entry):
+				errors.append("Invalid or missing audio path: %s (%s)" % [id, path])
+				continue
+			var loaded := load(path) as AudioStream
+			if loaded == null:
+				errors.append("Failed to load AudioStream: %s (%s)" % [id, path])
+				continue
+			streams = [loaded]
 		if id.is_empty() or streams.is_empty():
 			errors.append("Invalid sound entry: " + id)
 			continue
@@ -22,10 +32,15 @@ func register_all(audio: AudioManager) -> PackedStringArray:
 			if stream == null:
 				errors.append("Missing AudioStream: " + variant)
 				continue
-			if audio.register_sound(variant, stream) != OK:
+			var bgm_config: Dictionary = {}
+			# Existing WAV loop labels are metadata; preserve their imported behavior.
+			if entry.has("loop_offset") or ((entry.has("path") or stream is AudioStreamOggVorbis) and entry.has("loop")):
+				bgm_config = {"loop": entry.get("loop", true), "loop_offset": entry.get("loop_offset", 0.0)}
+			if audio.register_sound(variant, stream, bgm_config) != OK:
 				errors.append(audio.last_error)
+				continue
 			if index == 0 and variant != id:
-				audio.register_sound(id, stream)
+				audio.register_sound(id, stream, bgm_config)
 	return errors
 
 
@@ -33,6 +48,8 @@ func choose_variant(id: String, previous: String = "") -> String:
 	for entry in entries:
 		if entry.get("id", "") != id:
 			continue
+		if entry.has("path"):
+			return id if _audio_path_exists(entry) else ""
 		var streams: Array = entry.get("streams", [])
 		var choices: Array[String] = []
 		for index in range(streams.size()):
@@ -44,6 +61,11 @@ func choose_variant(id: String, previous: String = "") -> String:
 		if streams.size() == 1 and streams[0] is AudioStream:
 			return id
 	return ""
+
+
+func _audio_path_exists(entry: Dictionary) -> bool:
+	var path: Variant = entry.get("path")
+	return not entry.has("streams") and path is String and path.begins_with("res://") and ResourceLoader.exists(path, "AudioStream")
 
 
 static func variant_id(id: String, index: int, count: int) -> String:

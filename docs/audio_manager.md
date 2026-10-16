@@ -6,7 +6,7 @@
 
 ## 资源与 API
 
-在场景 Inspector 的 `sounds` 字典配置 `逻辑 ID -> AudioStream`，或使用 `register_sound` 注入。场景中的直接资源引用可由导出器跟踪；同一个目录可供音乐、SFX 和 UI 使用，路由由调用的 API 决定。运行时注册的文件和旧 JSON 中动态路径仍须显式纳入导出资源。正式目录目前为空，新增剧情 ID 时须由宿主注册对应资源。
+在场景 Inspector 的 `sounds` 字典配置 `逻辑 ID -> AudioStream`，或使用 `register_sound` 注入。集中资源表位于 `src/resources/audio/sound_library.tres`，新增剧情 ID 时由宿主注册对应资源。场景中的直接资源引用可由导出器跟踪；同一个目录可供音乐、SFX 和 UI 使用，路由由调用的 API 决定。运行时注册的文件和旧 JSON 中动态路径仍须显式纳入导出资源。
 
 ```gdscript
 var audio := game.get_audio_manager()
@@ -17,12 +17,12 @@ var handle := audio.play_sfx("story.knock")
 audio.stop_sound(handle, 0.3)
 ```
 
-示例路径需要替换为实际素材。音乐是否循环由 AudioStream 的导入设置或 Resource loop 属性决定，服务不修改共享流资源；未开启循环的曲目自然结束后停止。
+示例路径需要替换为实际素材。未传循环配置时保留 AudioStream 导入设置；配置 BGM 循环时仅修改独立资源副本。未开启循环的曲目自然结束后停止。
 
 | API | 行为 |
 | --- | --- |
-| `register_sound(id, stream) -> Error` | 注册或替换逻辑 ID；空 ID/null 拒绝；已播放声音继续使用原流 |
-| `play_bgm(id, fade_seconds = 0.5, volume_db = 0) -> Error` | 无音乐时淡入；不同曲目先淡出旧曲再淡入新曲，每段各耗时 fade_seconds；0 立即切换 |
+| `register_sound(id, stream, bgm_config = {}) -> Error` | 注册或替换逻辑 ID；空 ID/null 拒绝；可选 BGM 原生循环配置见下；已播放声音继续使用原流 |
+| `play_bgm(id, fade_seconds = 0.5, volume_db = 0, restart = false) -> Error` | 无音乐时淡入；不同曲目先淡出旧曲再淡入新曲，每段各耗时 fade_seconds；0 立即切换；restart 显式从 Intro 重播 |
 | `fade_bgm(volume_db, seconds) -> Error` | 调整当前音乐音量；可压低、恢复或淡至静音；不停止播放 |
 | `stop_bgm(fade_seconds = 0)` | 淡出后停止并释放当前流；0 立即停止 |
 | `play_sfx(id, owner = null, volume_db = 0) -> int` | SFX Bus，返回正数播放 handle，失败返回 0 |
@@ -39,6 +39,50 @@ audio.stop_sound(handle, 0.3)
 播放器池预建 8 个 AudioStreamPlayer，Inspector 可配置为 1～32。一个 handle 对应一个播放器，可重叠播放同一音效。池满跳过新请求，保留已播放声音；不扩张、不抢占。自然结束、显式停止和演出收尾均归还池槽；停止会清除流和旧淡出 Tween，复用时重置路由、音量和 process mode。handle 单调增长，旧 handle 不会停止后来复用同一播放器的声音。
 
 AudioManager 使用 Always：BGM、BGM Tween 和 UI 在暂停时继续；SFX 播放器使用 Pausable，其淡出 Tween 绑定播放器，一起暂停/恢复。演出取消即时停止所属 SFX，即使世界已暂停。服务退出清理播放和 Tween。
+
+## BGM Intro + Loop
+
+集中配置仍使用 `src/resources/audio/sound_library.tres` 的 `entries`，在宿主调用 `register_all(audio)` 时注册。支持直接资源引用（推荐，可自动跟踪导出）或下面的路径字典；字典也可来自 JSON 解析后赋给 `entries`，无需修改剧情 JSON：
+
+```json
+{
+  "id": "shop_bgm",
+  "path": "res://assets/audio/bgm/shop.ogg",
+  "loop": true,
+  "loop_offset": 12.345
+}
+```
+
+该示例素材需自行提供，`path` 资源需显式纳入导出。直接资源引用的条目写为 `{"id": "shop_bgm", "streams": [ExtResource("shop_music")], "loop": true, "loop_offset": 12.345}`，并按现有资源表声明对应 `ext_resource`。`path` 和 `streams` 不能同时提供。
+
+也可由现有代码注入配置：
+
+```gdscript
+audio.register_sound("shop_bgm", shop_stream, {"loop": true, "loop_offset": 12.345})
+audio.play_bgm("shop_bgm", 0.5) # 首次从 0 开始；重复请求只调整音量
+audio.play_bgm("shop_bgm", 0.5, 0.0, true) # 显式从 Intro 重播
+```
+
+- `loop=true`、`loop_offset=0.0`（默认）为整首循环；正偏移为一次 Intro 后循环后半段；`loop=false` 播放一次后自然结束。新配置省略 `loop` 时默认为 true。
+- 偏移单位为秒，必须是有限数且 `0 <= loop_offset < stream.get_length()`，包括 `loop=false` 时也检查。非法配置返回错误和诊断，保留同 ID 原先注册内容及正在播放的音乐。
+- 配置仅用于 `play_bgm`：复制 `AudioStreamOggVorbis` 的顶层 Resource，设置 `loop` / `loop_offset`，清零 `beat_count`，确保文件结尾就是 Loop End。音频线程原生跳转，不用 Timer、`_process()` 或 `finished` 重启。现有 `finished` 回调只清理自然结束的非循环曲目状态。
+- 同 ID 且同资源的普通请求保留播放位置；停止后重播、切换曲目或切回都会从 Intro 开始。`restart=true` 也使用原有淡出/淡入流程。
+- 显式循环配置仅支持 Ogg Vorbis；其他格式返回错误并 `push_warning`，不静默忽略偏移。未配置的旧资源保留原导入行为，SFX/UI/环境音仍使用原始资源。旧 WAV 条目中的 `loop` 标签仍是素材元数据；增加 `loop_offset` 才会尝试新的 BGM 配置。Ogg 条目的 `loop` 或 `loop_offset` 均可启用配置。
+- 缺失路径、非音频资源、加载失败由 `register_all` 返回错误列表，调用方应检查；非法 BGM 配置同时写入 `last_error` 并发出警告。
+
+剧情继续使用原 `play_bgm` / `fade_bgm` / `stop_bgm` 指令和 ID。剧情需要显式重播同一首时可先 `stop_bgm` 再 `play_bgm`，无需扩展 JSON 参数。场景生命周期、总线、音量与淡变逻辑均保持原接口。
+
+依据 [Godot 4.7 AudioStreamOggVorbis](https://docs.godotengine.org/en/4.7/classes/class_audiostreamoggvorbis.html) 的 `loop`、秒制 `loop_offset` 和 `beat_count` 规则，以及 [Resource.duplicate](https://docs.godotengine.org/en/4.7/classes/class_resource.html#class-resource-method-duplicate) 的资源复制语义实现。代码不修复素材接缝，无缝听感仍取决于 REAPER 中的裁剪质量。
+
+### 验证与试听
+
+```sh
+godot --headless --path . --script res://tests/verify_bgm_loop.gd
+```
+
+测试使用本项目合成的 `tests/fixtures/bgm_intro_loop.ogg`（1.2 秒；0～0.4 秒 220 Hz Intro，后续 440 Hz Loop），观察真实解码播放位置跨文件结尾回跳，覆盖整首循环、两次后半段循环、不循环、重播/切回、淡变、非法输入、资源隔离和原剧情适配接口。素材生成方式见同目录 `bgm_intro_loop.md`。
+
+人工试听：在现有宿主注册该路径、`loop=true`、`loop_offset=0.4`，调用 `play_bgm`。应先听一次低音，再持续高音；重复调用保持高音，切回或显式重播再次出现低音。也可将示例配置放进自己的 `SoundLibrary` 后 F6 运行宿主。现有 `src/debug/audio/audio_demo.tscn` 的 F6 可继续验收淡变、总线和音效交互，其合成 WAV Demo 不用于验收 Ogg 接缝。
 
 ## StoryDirector 适配
 

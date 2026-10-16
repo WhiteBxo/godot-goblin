@@ -34,12 +34,13 @@ func _run() -> void:
 		var sprite := player.animated_sprite
 		for direction in ["down", "left", "right", "up"]:
 			_check(sprite.sprite_frames.get_frame_count("idle_" + direction) == 1, "One neutral idle frame: " + direction)
-			_check(sprite.sprite_frames.get_frame_count("walk_" + direction) == 4, "Complete alternating step cycle: " + direction)
+			_check(sprite.sprite_frames.get_frame_count("walk_" + direction) == 8, "Eight distinct walk phases: " + direction)
 		var directions := {"down": "move_down", "left": "move_left", "right": "move_right", "up": "move_up"}
 		for direction: String in directions:
 			Input.action_press(directions[direction])
 			await _frames(1)
 			_check(player.velocity.length() > 0.0 and player.velocity.length() < player.speed, "Movement accelerates smoothly")
+			_check(sprite.speed_scale < player.animation_speed, "Step cadence slows down during acceleration")
 			await _frames(20)
 			_check(is_equal_approx(player.velocity.length(), player.speed), "Cardinal reaches configured speed")
 			_check(sprite.animation == StringName("walk_" + direction), "Movement selects facing animation: " + direction)
@@ -66,6 +67,14 @@ func _run() -> void:
 				await _frames(20)
 		Input.action_press("move_right")
 		await _frames(10)
+		sprite.set_frame_and_progress(5, 0.3)
+		Input.action_release("move_right")
+		Input.action_press("move_up")
+		await _frames(1)
+		_check(sprite.animation == &"walk_up" and sprite.frame >= 5, "Turning keeps the current step phase")
+		Input.action_release("move_up")
+		Input.action_press("move_right")
+		await _frames(1)
 		player.set_movement_enabled(false)
 		var locked_position := player.global_position
 		await _frames(10)

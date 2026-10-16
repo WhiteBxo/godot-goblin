@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://src/gameplay/player/player.gd" id="1_player"]
-[ext_resource type="SpriteFrames" path="res://src/gameplay/player/player_frames.tres" id="2_frames"]
+[ext_resource type="SpriteFrames" path="res://src/gameplay/player/player_walk_frames.tres" id="2_frames"]
+[ext_resource type="Material" path="res://src/gameplay/player/player_sprite_material.tres" id="3_material"]
 
 [sub_resource type="CapsuleShape2D" id="Feet"]
 radius = 5.0
@@ -16,9 +17,10 @@ motion_mode = 1
 script = ExtResource("1_player")
 
 [node name="Visual" type="Node2D" parent="."]
-scale = Vector2(0.1, 0.1)
+scale = Vector2(0.13, 0.13)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Visual"]
+material = ExtResource("3_material")
 sprite_frames = ExtResource("2_frames")
 animation = &"idle_down"
 offset = Vector2(0, -144)

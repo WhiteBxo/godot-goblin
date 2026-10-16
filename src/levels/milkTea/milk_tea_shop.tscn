@@ -6,13 +6,13 @@
 [ext_resource type="Script" uid="uid://dkbll2phdrmcl" path="res://src/gameplay/interaction/interaction_point.gd" id="4_3hpft"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vw2ab"]
-size = Vector2(1672, 120)
+size = Vector2(1672, 190)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v1cj1"]
-size = Vector2(95, 941)
+size = Vector2(130, 941)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_31k1o"]
-size = Vector2(82, 941)
+size = Vector2(120, 941)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1vk20"]
 size = Vector2(1672, 21)
@@ -64,15 +64,15 @@ position = Vector2(836, 560)
 collision_mask = 2
 
 [node name="NorthWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1457378286]
-position = Vector2(836, 60)
+position = Vector2(836, 95)
 shape = SubResource("RectangleShape2D_vw2ab")
 
 [node name="WestWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1449910695]
-position = Vector2(47.5, 470.5)
+position = Vector2(65, 470.5)
 shape = SubResource("RectangleShape2D_v1cj1")
 
 [node name="EastWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=65941821]
-position = Vector2(1631, 470.5)
+position = Vector2(1612, 470.5)
 shape = SubResource("RectangleShape2D_31k1o")
 
 [node name="SouthBoundary" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1114317820]

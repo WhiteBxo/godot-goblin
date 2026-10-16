@@ -2,7 +2,9 @@ class_name MilkTeaShop
 extends Node2D
 
 ## Pixels inset from the background edges: left, top, right, bottom.
-@export var boundary_insets := Vector4(95.0, 120.0, 82.0, 21.0)
+@export var boundary_insets := Vector4(130.0, 190.0, 120.0, 21.0)
+## Exclude the painted outer frame from the camera without changing furniture coordinates.
+@export var camera_insets := Vector4(100.0, 80.0, 92.0, 0.0)
 
 func _ready() -> void:
 	_fit_boundaries()
@@ -10,6 +12,13 @@ func _ready() -> void:
 func get_world_bounds() -> Rect2:
 	var background: Sprite2D = $Background
 	return background.global_transform * background.get_rect()
+
+func get_camera_bounds() -> Rect2:
+	var background: Sprite2D = $Background
+	var bounds := background.get_rect()
+	bounds.position += Vector2(camera_insets.x, camera_insets.y)
+	bounds.size -= Vector2(camera_insets.x + camera_insets.z, camera_insets.y + camera_insets.w)
+	return background.global_transform * bounds
 
 func _fit_boundaries() -> void:
 	var background: Sprite2D = $Background

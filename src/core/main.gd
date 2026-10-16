@@ -16,7 +16,7 @@ func _ready() -> void:
 	if _shop_level != null:
 		_shop_player = $World/EntityRoot/Player as ShopPlayer
 		_shop_player.global_position = _shop_level.get_spawn_position()
-		_shop_player.configure_camera(_shop_level.get_world_bounds())
+		_shop_player.configure_camera(_shop_level.get_camera_bounds())
 		var ui: ShopUI = preload("res://src/UI/milk_tea/shop_ui.tscn").instantiate()
 		$HudLayer.add_child(ui)
 		ui.set_popup_layer($PopupLayer)

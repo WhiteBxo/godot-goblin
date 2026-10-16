@@ -1,7 +1,7 @@
 class_name BoundedFollowCamera
 extends Camera2D
 
-@export_range(0.1, 4.0, 0.05) var preferred_zoom := 0.75
+@export_range(0.1, 4.0, 0.05) var preferred_zoom := 0.5
 
 var _world_bounds := Rect2()
 

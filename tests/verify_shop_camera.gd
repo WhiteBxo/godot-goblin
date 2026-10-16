@@ -30,9 +30,12 @@ func _run() -> void:
 	var player := game.get_player() as ShopPlayer
 	var camera := player.camera
 	var bounds := level.get_world_bounds()
+	var camera_bounds := level.get_camera_bounds()
 	_check(bounds.size == Vector2(1672, 941), "Bounds come from the replacement texture")
+	_check(camera_bounds.position == Vector2(100, 80) and camera_bounds.size == Vector2(1480, 861), "Camera excludes the painted outer frame")
+	_check(camera.zoom == Vector2(0.5, 0.5), "Default view is 50 percent wider than the old zoom")
 	_check(camera.is_current() and camera.get_parent() == player, "The active camera follows the player")
-	_check_view(camera, bounds, "Spawn view stays within the background")
+	_check_view(camera, camera_bounds, "Spawn view excludes the outer frame")
 	var start_center := camera.get_screen_center_position()
 	Input.action_press("move_right")
 	await _frames(25)
@@ -45,7 +48,7 @@ func _run() -> void:
 		player.global_position = target
 		for frame in range(20):
 			await _frames(1)
-			_check_view(camera, bounds, "Smoothed corner view stays inside the image")
+			_check_view(camera, camera_bounds, "Smoothed corner view excludes the outer frame")
 	# There must be no path around either side wall through the bottom floor strip.
 	var starts := [Vector2(150, 870), Vector2(1550, 870), Vector2(300, 870), Vector2(1500, 170)]
 	var actions := ["move_left", "move_right", "move_down", "move_up"]
@@ -59,23 +62,23 @@ func _run() -> void:
 		var sprite_rect := Rect2(player.animated_sprite.offset - texture.get_size() * 0.5, texture.get_size())
 		var visible_player: Rect2 = player.animated_sprite.global_transform * sprite_rect
 		_check(bounds.encloses(visible_player), "The entire character stays inside the background: " + actions[index])
-		_check_view(camera, bounds, "Boundary view stays inside the background")
+		_check_view(camera, camera_bounds, "Boundary view excludes the outer frame")
 	# Viewport resizing must increase zoom when one dimension exceeds the map.
 	for window_size in [Vector2i(1800, 500), Vector2i(500, 1400), Vector2i(1280, 720)]:
 		root.size = window_size
 		await _frames(4)
-		_check_view(camera, bounds, "Resized view stays inside the background")
+		_check_view(camera, camera_bounds, "Resized view excludes the outer frame")
 	# A translated level uses world coordinates for both limits and collisions.
 	level.position = Vector2(2400, -1300)
 	player.global_position = level.get_spawn_position()
 	player.velocity = Vector2.ZERO
-	player.configure_camera(level.get_world_bounds())
+	player.configure_camera(level.get_camera_bounds())
 	await _frames(3)
-	_check_view(camera, level.get_world_bounds(), "Translated level keeps the view inside its background")
+	_check_view(camera, level.get_camera_bounds(), "Translated level keeps the outer frame off screen")
 	if "--capture" in OS.get_cmdline_user_args():
 		level.position = Vector2.ZERO
 		player.global_position = level.get_spawn_position()
-		player.configure_camera(level.get_world_bounds())
+		player.configure_camera(level.get_camera_bounds())
 		await _frames(3)
 		await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png("res://.godot/milk_tea_verification/follow_camera.png")

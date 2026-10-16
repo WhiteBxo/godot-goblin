@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://src/gameplay/player/shop_player.gd" id="1"]
-[ext_resource type="SpriteFrames" path="res://src/gameplay/player/player_frames.tres" id="2"]
+[ext_resource type="SpriteFrames" path="res://src/gameplay/player/player_walk_frames.tres" id="2"]
 [ext_resource type="Script" path="res://src/gameplay/player/bounded_follow_camera.gd" id="3_camera"]
+[ext_resource type="Material" path="res://src/gameplay/player/player_sprite_material.tres" id="4_material"]
 
 [sub_resource type="CapsuleShape2D" id="Feet"]
 radius = 10.0
@@ -22,9 +23,10 @@ polygon = PackedVector2Array(-18, -2, -12, -7, 12, -7, 18, -2, 12, 4, -12, 4)
 color = Color(0.08, 0.04, 0.03, 0.4)
 
 [node name="Visual" type="Node2D" parent="."]
-scale = Vector2(0.4, 0.4)
+scale = Vector2(0.52, 0.52)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Visual"]
+material = ExtResource("4_material")
 sprite_frames = ExtResource("2")
 animation = &"idle_down"
 offset = Vector2(0, -144)
@@ -35,7 +37,7 @@ shape = SubResource("Feet")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(0, -48)
-zoom = Vector2(0.75, 0.75)
+zoom = Vector2(0.5, 0.5)
 position_smoothing_enabled = true
 position_smoothing_speed = 8.0
 limit_smoothed = false

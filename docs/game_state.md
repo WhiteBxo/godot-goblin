@@ -29,14 +29,14 @@
 
 ## 后续接入
 
-未来的剧情协调组件可以订阅交互 signal，再按业务规则调用状态 API；GameState 不反向依赖交互点或主场景内部路径。示意代码：
+[StoryDirector（P0-2）](story_director.md) 已通过 MainGame 的交互路由接入，按 JSON 条件读取状态并在步骤中调用状态 API。GameState 不反向依赖交互点或主场景内部路径。其他协调组件也可以按以下方式使用：
 
 ```gdscript
-# 未来协调组件确认“查看订单”成功后：
+# 协调组件确认“查看订单”成功后：
 GameState.set_flag("day1.order_checked")
 GameState.set_variable("shop.customer_count", 3)
 if GameState.complete_event("day1.first_order"):
-	# 由调用方启动一次剧情演出。
+	# 首次完成通知由状态订阅者处理。
 	pass
 
 # UI 等订阅方：连接后先刷新一次，之后响应修改。

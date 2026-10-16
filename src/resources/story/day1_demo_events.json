@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "events": {
+    "day1.intro": {
+      "conditions": {"day": 1, "flags": {"day1.intro_finished": false}},
+      "steps": [
+        {"command": "dialogue", "id": "day1.opening"},
+        {"command": "wait", "seconds": 0.8},
+        {"command": "play_sfx", "path": "res://src/debug/story/strange_knock.tres"},
+        {"command": "dialogue", "id": "day1.reaction"},
+        {"command": "set_flag", "key": "day1.intro_finished", "value": true},
+        {"command": "set_stage", "value": "day1.investigate"}
+      ]
+    },
+    "day1.orders_before": {
+      "once": false,
+      "trigger": "orders",
+      "conditions": {"day": 1, "flags": {"day1.intro_finished": false}},
+      "steps": [{"command": "dialogue", "id": "day1.orders_before"}]
+    },
+    "day1.orders_after": {
+      "once": false,
+      "trigger": "orders",
+      "conditions": {"day": 1, "flags": {"day1.intro_finished": true}},
+      "steps": [
+        {"command": "dialogue", "id": "day1.orders_after"},
+        {"command": "set_flag", "key": "day1.order_checked", "when": {"choice": {"dialogue": "day1.orders_after", "line": "board", "id": "investigate"}}}
+      ]
+    }
+  }
+}

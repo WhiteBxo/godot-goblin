@@ -8,6 +8,8 @@ var _shop_player: ShopPlayer
 var _shop_ui: ShopUI
 var _shop_interaction: ShopInteraction
 var _dialogue_manager: DialogueManager
+var _story_director: StoryDirector
+var _input_locked: bool = false
 var _movement_before_dialogue: bool = true
 var _interaction_before_dialogue: bool = true
 
@@ -28,7 +30,7 @@ func _ready() -> void:
 		var interaction := ShopInteraction.new()
 		interaction.name = "ShopInteraction"
 		$Systems.add_child(interaction)
-		interaction.configure(_shop_player, ui, _shop_level.get_interaction_points())
+		interaction.configure(_shop_player, ui, _shop_level.get_interaction_points(), _route_story_interaction)
 		_shop_ui = ui
 		_shop_interaction = interaction
 		_create_dialogue_system()
@@ -58,6 +60,13 @@ func get_player() -> CharacterBody2D:
 func get_dialogue_manager() -> DialogueManager:
 	return _dialogue_manager
 
+func get_story_director() -> StoryDirector:
+	return _story_director
+
+func _route_story_interaction(id: StringName) -> bool:
+	# Only an absent route falls through to the existing ShopUI.
+	return _story_director.request_interaction(String(id)) != ERR_DOES_NOT_EXIST
+
 func _create_dialogue_system() -> void:
 	var ui: DialogueUI = preload("res://src/UI/dialogue/dialogue_ui.tscn").instantiate()
 	$PopupLayer.add_child(ui)
@@ -67,24 +76,42 @@ func _create_dialogue_system() -> void:
 	_dialogue_manager.configure(ui, _can_start_dialogue)
 	_dialogue_manager.dialogue_started.connect(_on_dialogue_started)
 	_dialogue_manager.dialogue_ended.connect(_on_dialogue_ended)
+	_story_director = StoryDirector.new()
+	_story_director.name = "StoryDirector"
+	$Systems.add_child(_story_director)
+	_story_director.configure(_dialogue_manager, _can_start_story)
+	_story_director.event_started.connect(func(_id: String) -> void: _refresh_input_lock())
+	_story_director.event_finished.connect(func(_id: String, _ok: bool, _reason: String) -> void: _refresh_input_lock())
 
-func _can_start_dialogue() -> bool:
+func _can_start_story() -> bool:
 	return not is_instance_valid(_shop_ui) or not _shop_ui.is_open()
 
+func _can_start_dialogue() -> bool:
+	return _can_start_story() and (not is_instance_valid(_story_director) or not _story_director.is_busy() or _story_director.is_starting_dialogue())
+
 func _on_dialogue_started(_id: String) -> void:
-	var player := get_player() as PlayerController
-	_movement_before_dialogue = player.movement_enabled
-	player.set_movement_enabled(false)
-	if is_instance_valid(_shop_interaction):
-		_interaction_before_dialogue = _shop_interaction.is_input_enabled()
-		_shop_interaction.set_input_enabled(false)
+	_refresh_input_lock()
 
 func _on_dialogue_ended(_id: String, _cancelled: bool) -> void:
+	_refresh_input_lock()
+
+func _refresh_input_lock() -> void:
+	var should_lock := (is_instance_valid(_dialogue_manager) and _dialogue_manager.is_active()) or (is_instance_valid(_story_director) and _story_director.is_busy())
+	if should_lock == _input_locked:
+		return
 	var player := get_player() as PlayerController
-	if is_instance_valid(player):
-		player.set_movement_enabled(_movement_before_dialogue)
-	if is_instance_valid(_shop_interaction):
-		_shop_interaction.set_input_enabled(_interaction_before_dialogue)
+	if should_lock:
+		_movement_before_dialogue = player.movement_enabled
+		player.set_movement_enabled(false)
+		if is_instance_valid(_shop_interaction):
+			_interaction_before_dialogue = _shop_interaction.is_input_enabled()
+			_shop_interaction.set_input_enabled(false)
+	else:
+		if is_instance_valid(player):
+			player.set_movement_enabled(_movement_before_dialogue)
+		if is_instance_valid(_shop_interaction):
+			_shop_interaction.set_input_enabled(_interaction_before_dialogue)
+	_input_locked = should_lock
 
 func get_debug_tools() -> DeveloperTools:
 	return _debug_tools

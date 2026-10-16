@@ -36,7 +36,7 @@ Signals：`dialogue_started(dialogue_id: String)`、`dialogue_ended(dialogue_id:
 
 开始 signal 先于第一行显示，方便宿主同步锁定输入。选择 signal 先于分支推进及可能的结束 signal；重复选择 dispatch 被阻止。自然结束 `cancelled = false`，Esc、UI 移除和 Manager 移除为 `true`。移除时仍发结束 signal 供宿主清理。Signal 回调宜执行状态更新；串联下一段对话时建议使用 `call_deferred`，避免同步生命周期回调中递归重入。
 
-未来剧情系统自行订阅 `choice_selected`，根据稳定的 choice ID 更新 GameState；Manager 不解释 flags、剧情条件或事件完成状态。
+[StoryDirector（P0-2）](story_director.md) 已订阅 `choice_selected`，通过 JSON 步骤的 `when.choice` 条件消费稳定的 choice ID；Manager 继续不解释 flags、剧情条件或事件完成状态。
 
 ## JSON 文案
 
@@ -75,7 +75,7 @@ Signals：`dialogue_started(dialogue_id: String)`、`dialogue_ended(dialogue_id:
 
 UI 复用 InputMap 的 `interact`、`ui_accept`、`ui_up/down`、`ui_cancel`，没有硬编码 gameplay 按键。默认 E、空格、Enter：第一次补全文本，再按推进；完整显示选项后用 ↑↓ 及确认键选择，也可点击按钮；Esc 中止。长按 echo 不推进，进入新行的当前帧不接受推进键。确认键在 dispatch 前消费，结束对话的同一按键不会落入场景交互。
 
-MainGame 复用 `PlayerController.set_movement_enabled` 保存并关闭移动，并用 ShopInteraction 新增的通用 `set_input_enabled` / `is_input_enabled` 关闭交互和提示。交互点直接发 signal 也受此开关保护。对话结束恢复各自原值，原先已禁用的控制不会被误启用。ShopUI 已打开时通过 `can_start` 拒绝启动对话，继续使用现有店铺弹窗锁定逻辑，不堆叠两个输入所有者。
+MainGame 复用 `PlayerController.set_movement_enabled` 保存并关闭移动，并用 ShopInteraction 新增的通用 `set_input_enabled` / `is_input_enabled` 关闭交互和提示。交互点直接发 signal 也受此开关保护。MainGame 统一以“对白活跃 OR StoryDirector 忙碌”计算锁定；最后一个输入所有者结束才恢复原值，演出停顿也保持锁定，原先已禁用的控制不会被误启用。ShopUI 已打开时通过 `can_start` 拒绝启动对话，继续使用现有店铺弹窗锁定逻辑，不堆叠两个输入所有者。
 
 UI 按 640×360 视口设计，底部面板距离边缘 12px，棕色、金色边框与奶茶店一致；头像缺省时回收空间，选项列表支持滚动。对话 UI 与独立场景使用随包分发的 [Fusion Pixel](../assets/fonts/fusion_pixel/README.md) 中文字体，避免依赖宿主系统 CJK fallback；保留完整简体字符版本、原始许可证和导入设置。
 

@@ -8,7 +8,7 @@ signal cancel_requested
 @export_range(1.0, 200.0) var characters_per_second: float = 32.0
 
 @onready var _speaker: Label = $Panel/Margin/Content/Speaker
-@onready var _portrait: TextureRect = $Panel/Margin/Content/Line/Portrait
+@onready var _portrait: TextureRect = $Portrait
 @onready var _text: RichTextLabel = $Panel/Margin/Content/Line/Text
 @onready var _choice_scroll: ScrollContainer = $Panel/Margin/Content/ChoiceScroll
 @onready var _choices: VBoxContainer = $Panel/Margin/Content/ChoiceScroll/Choices
@@ -72,6 +72,8 @@ func reveal_all() -> void:
 
 func close_dialogue() -> void:
 	hide()
+	_portrait.texture = null
+	_portrait.hide()
 	_revealing = false
 	_clear_choices()
 	if is_instance_valid(_previous_focus) and _previous_focus.is_visible_in_tree():

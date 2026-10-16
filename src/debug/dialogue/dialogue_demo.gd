@@ -17,6 +17,7 @@ func _ready() -> void:
 	_manager.choice_selected.connect(_on_choice)
 	$HudLayer/Screen/Menu/Greeting.pressed.connect(func() -> void: _manager.start_dialogue("demo.greeting"))
 	$HudLayer/Screen/Menu/Branching.pressed.connect(func() -> void: _manager.start_dialogue("demo.first_shift"))
+	$HudLayer/Screen/Menu/Portraits.pressed.connect(func() -> void: _manager.start_dialogue("demo.speaker_portraits"))
 	_manager.start_dialogue("demo.first_shift")
 
 

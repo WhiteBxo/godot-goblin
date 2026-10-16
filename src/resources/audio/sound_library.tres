@@ -1,0 +1,57 @@
+[gd_resource type="Resource" script_class="SoundLibrary" load_steps=33 format=3]
+
+[ext_resource type="Script" path="res://src/resources/audio/sound_library.gd" id="1"]
+[ext_resource type="AudioStream" path="res://assets/audio/ui/hover.wav" id="s1"]
+[ext_resource type="AudioStream" path="res://assets/audio/ui/confirm.wav" id="s2"]
+[ext_resource type="AudioStream" path="res://assets/audio/ui/cancel.wav" id="s3"]
+[ext_resource type="AudioStream" path="res://assets/audio/ui/dialogue_01.wav" id="s4"]
+[ext_resource type="AudioStream" path="res://assets/audio/ui/dialogue_02.wav" id="s5"]
+[ext_resource type="AudioStream" path="res://assets/audio/ui/dialogue_03.wav" id="s6"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/door_bell.wav" id="s7"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/order_open.wav" id="s8"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/tea_pour_01.wav" id="s9"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/tea_pour_02.wav" id="s10"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/sealer.wav" id="s11"]
+[ext_resource type="AudioStream" path="res://assets/audio/player/step_wood_01.wav" id="s12"]
+[ext_resource type="AudioStream" path="res://assets/audio/player/step_wood_02.wav" id="s13"]
+[ext_resource type="AudioStream" path="res://assets/audio/player/step_wood_03.wav" id="s14"]
+[ext_resource type="AudioStream" path="res://assets/audio/player/step_wood_04.wav" id="s15"]
+[ext_resource type="AudioStream" path="res://assets/audio/player/step_stone_01.wav" id="s16"]
+[ext_resource type="AudioStream" path="res://assets/audio/player/step_stone_02.wav" id="s17"]
+[ext_resource type="AudioStream" path="res://assets/audio/player/step_stone_03.wav" id="s18"]
+[ext_resource type="AudioStream" path="res://assets/audio/player/step_stone_04.wav" id="s19"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/knock_01.wav" id="s20"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/knock_02.wav" id="s21"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/impact.wav" id="s22"]
+[ext_resource type="AudioStream" path="res://assets/audio/ui/failure.wav" id="s23"]
+[ext_resource type="AudioStream" path="res://assets/audio/ambience/drip_01.wav" id="s24"]
+[ext_resource type="AudioStream" path="res://assets/audio/ambience/drip_02.wav" id="s25"]
+[ext_resource type="AudioStream" path="res://assets/audio/ambience/rock_scrape.wav" id="s26"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/goblin_01.wav" id="s27"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/goblin_02.wav" id="s28"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/goblin_03.wav" id="s29"]
+[ext_resource type="AudioStream" path="res://assets/audio/ambience/shop.wav" id="s30"]
+[ext_resource type="AudioStream" path="res://assets/audio/ambience/cave.wav" id="s31"]
+
+[resource]
+script = ExtResource("1")
+entries = Array[Dictionary]([
+{"id": "ui.hover", "label": "菜单悬停", "loop": false, "streams": [ExtResource("s1")]},
+{"id": "ui.confirm", "label": "确认操作", "loop": false, "streams": [ExtResource("s2")]},
+{"id": "ui.cancel", "label": "取消操作", "loop": false, "streams": [ExtResource("s3")]},
+{"id": "ui.dialogue", "label": "对话文字", "loop": false, "streams": [ExtResource("s4"), ExtResource("s5"), ExtResource("s6")]},
+{"id": "shop.door_bell", "label": "店门双音铃", "loop": false, "streams": [ExtResource("s7")]},
+{"id": "shop.order_open", "label": "展开纸质订单", "loop": false, "streams": [ExtResource("s8")]},
+{"id": "shop.tea_pour", "label": "倒入奶茶", "loop": false, "streams": [ExtResource("s9"), ExtResource("s10")]},
+{"id": "shop.sealer", "label": "封口机压合", "loop": false, "streams": [ExtResource("s11")]},
+{"id": "player.step_wood", "label": "木地板脚步", "loop": false, "streams": [ExtResource("s12"), ExtResource("s13"), ExtResource("s14"), ExtResource("s15")]},
+{"id": "player.step_stone", "label": "石地脚步", "loop": false, "streams": [ExtResource("s16"), ExtResource("s17"), ExtResource("s18"), ExtResource("s19")]},
+{"id": "story.knock", "label": "门后神秘三连敲", "loop": false, "streams": [ExtResource("s20"), ExtResource("s21")]},
+{"id": "story.impact", "label": "剧情冲击", "loop": false, "streams": [ExtResource("s22")]},
+{"id": "ui.failure", "label": "交互失败", "loop": false, "streams": [ExtResource("s23")]},
+{"id": "ambience.drip", "label": "远处滴水", "loop": false, "streams": [ExtResource("s24"), ExtResource("s25")]},
+{"id": "ambience.rock_scrape", "label": "岩石摩擦", "loop": false, "streams": [ExtResource("s26")]},
+{"id": "story.goblin", "label": "哥布林含糊嘀咕", "loop": false, "streams": [ExtResource("s27"), ExtResource("s28"), ExtResource("s29")]},
+{"id": "ambience.shop", "label": "奶茶店室内循环", "loop": true, "streams": [ExtResource("s30")]},
+{"id": "ambience.cave", "label": "地下洞穴循环", "loop": true, "streams": [ExtResource("s31")]}
+])

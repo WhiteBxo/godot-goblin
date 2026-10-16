@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ctkih46w5ebbc"
-path="res://.godot/imported/player_idle_atlas.png-7b465574a648167342b4841eb66af2f1.ctex"
+uid="uid://jq8jukhinxhe"
+path="res://.godot/imported/player_idle_sheet.png-c39605a229bfa4df2a6ec6190e1bc389.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/player/player_idle_atlas.png"
-dest_files=["res://.godot/imported/player_idle_atlas.png-7b465574a648167342b4841eb66af2f1.ctex"]
+source_file="res://assets/characters/player/player_idle_sheet.png"
+dest_files=["res://.godot/imported/player_idle_sheet.png-c39605a229bfa4df2a6ec6190e1bc389.ctex"]
 
 [params]
 

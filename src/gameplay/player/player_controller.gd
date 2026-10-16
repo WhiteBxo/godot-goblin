@@ -63,11 +63,11 @@ func _update_facing(direction: Vector2) -> void:
 		facing = Facing.UP if direction.y < 0.0 else Facing.DOWN
 
 func _update_animation(moving: bool, movement_ratio: float = 1.0) -> void:
-	var state := "walk" if moving else "idle"
+	var state := "run" if moving else "idle"
 	var animation := StringName("%s_%s" % [state, DIRECTION_NAMES[facing]])
 	animated_sprite.speed_scale = animation_speed * clampf(movement_ratio, 0.25, 1.0) if moving else animation_speed
 	# Preserve the step phase on turns; switch textures directly without crossfading.
-	if moving and animated_sprite.animation != animation and String(animated_sprite.animation).begins_with("walk_"):
+	if moving and animated_sprite.animation != animation and String(animated_sprite.animation).begins_with("run_"):
 		var phase := animated_sprite.frame + animated_sprite.frame_progress
 		animated_sprite.play(animation)
 		animated_sprite.set_frame_and_progress(int(phase), fposmod(phase, 1.0))

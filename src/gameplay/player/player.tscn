@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://src/gameplay/player/player.gd" id="1_player"]
-[ext_resource type="SpriteFrames" path="res://src/gameplay/player/player_walk_frames.tres" id="2_frames"]
+[ext_resource type="SpriteFrames" path="res://src/gameplay/player/player_run_frames.tres" id="2_frames"]
 [ext_resource type="Material" path="res://src/gameplay/player/player_sprite_material.tres" id="3_material"]
 
 [sub_resource type="CapsuleShape2D" id="Feet"]

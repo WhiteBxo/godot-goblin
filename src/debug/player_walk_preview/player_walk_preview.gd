@@ -1,7 +1,7 @@
 extends Control
 
 const DIRECTIONS: Array[String] = ["down", "left", "right", "up"]
-const FRAMES := preload("res://src/gameplay/player/player_walk_frames.tres")
+const FRAMES := preload("res://src/gameplay/player/player_run_frames.tres")
 const MATERIAL := preload("res://src/gameplay/player/player_sprite_material.tres")
 
 var _sprites: Array[AnimatedSprite2D] = []
@@ -21,7 +21,7 @@ func _ready() -> void:
 	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(background)
 	var title := Label.new()
-	title.text = "步态检查：第 3 / 7 帧为双脚并拢"
+	title.text = "四方向跑步检查：16 帧原始序列"
 	title.position = Vector2(20, 15)
 	add_child(title)
 	for index in range(4):
@@ -33,7 +33,7 @@ func _ready() -> void:
 		sprite.scale = Vector2.ONE * 0.7
 		sprite.offset = Vector2(0, -144)
 		sprite.speed_scale = 0.5
-		sprite.play("walk_" + DIRECTIONS[index])
+		sprite.play("run_" + DIRECTIONS[index])
 		add_child(sprite)
 		_sprites.append(sprite)
 		var label := Label.new()
@@ -59,7 +59,7 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	for index in range(_sprites.size()):
 		var frame := _sprites[index].frame
-		_labels[index].text = "%s  %d / 8\n%s" % [["下", "左", "右", "上"][index], frame + 1, "双脚并拢" if frame == 2 or frame == 6 else "迈步"]
+		_labels[index].text = "%s  %d / 16\n%s" % [["下", "左", "右", "上"][index], frame + 1, "跑步"]
 
 func _add_button(parent: HBoxContainer, text: String, action: Callable) -> Button:
 	var button := Button.new()
@@ -82,4 +82,4 @@ func _step(offset: int) -> void:
 	_play_button.text = "播放"
 	for sprite in _sprites:
 		sprite.pause()
-		sprite.set_frame_and_progress(posmod(sprite.frame + offset, 8), 0.0)
+		sprite.set_frame_and_progress(posmod(sprite.frame + offset, 16), 0.0)

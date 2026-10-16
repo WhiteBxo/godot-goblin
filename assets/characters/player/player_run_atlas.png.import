@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bsb1ylvokvpgc"
-path="res://.godot/imported/player_passing_atlas.png-6034130ce20a24cc7afdb20c23fc0e06.ctex"
+uid="uid://cuf1pdx80q7jn"
+path="res://.godot/imported/player_run_atlas.png-8e3979d532a6bd93cea9ef59c3f40caf.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/player/player_passing_atlas.png"
-dest_files=["res://.godot/imported/player_passing_atlas.png-6034130ce20a24cc7afdb20c23fc0e06.ctex"]
+source_file="res://assets/characters/player/player_run_atlas.png"
+dest_files=["res://.godot/imported/player_run_atlas.png-8e3979d532a6bd93cea9ef59c3f40caf.ctex"]
 
 [params]
 

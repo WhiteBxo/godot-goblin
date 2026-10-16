@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://src/gameplay/player/shop_player.gd" id="1"]
-[ext_resource type="SpriteFrames" path="res://src/gameplay/player/player_walk_frames.tres" id="2"]
+[ext_resource type="SpriteFrames" path="res://src/gameplay/player/player_run_frames.tres" id="2"]
 [ext_resource type="Script" path="res://src/gameplay/player/bounded_follow_camera.gd" id="3_camera"]
 [ext_resource type="Material" path="res://src/gameplay/player/player_sprite_material.tres" id="4_material"]
 

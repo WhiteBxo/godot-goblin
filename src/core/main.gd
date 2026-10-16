@@ -1,6 +1,7 @@
 class_name MainGame
 extends Node
 
+@onready var _audio_manager: AudioManager = $Systems/AudioManager
 @onready var _active_level: CaveMap = $World/LevelRoot.get_child(0) as CaveMap
 @onready var _player: CavePlayer = $World/EntityRoot/Player as CavePlayer
 var _shop_level: MilkTeaShop
@@ -61,6 +62,9 @@ func get_player() -> CharacterBody2D:
 func get_dialogue_manager() -> DialogueManager:
 	return _dialogue_manager
 
+func get_audio_manager() -> AudioManager:
+	return _audio_manager
+
 func get_story_director() -> StoryDirector:
 	return _story_director
 
@@ -90,6 +94,7 @@ func _create_dialogue_system() -> void:
 	_story_director.name = "StoryDirector"
 	$Systems.add_child(_story_director)
 	_story_director.configure(_dialogue_manager, _can_start_story)
+	_story_director.set_audio_adapter(StoryAudioAdapter.new(_audio_manager))
 	_story_director.event_started.connect(func(_id: String) -> void: _refresh_input_lock())
 	_story_director.event_finished.connect(func(_id: String, _ok: bool, _reason: String) -> void: _refresh_input_lock())
 

@@ -147,8 +147,12 @@ func _step(step: Variant, context: String) -> bool:
 			if not step.get("value") is String:
 				return _invalid(context, "set_stage requires a string value")
 		"play_sfx":
-			fields.append("path")
-			if not step.get("path") is String or not step["path"].begins_with("res://"):
+			fields.append_array(["path", "id"])
+			if step.has("id") == step.has("path"):
+				return _invalid(context, "play_sfx requires exactly one of id or path")
+			if step.has("id") and (not step["id"] is String or step["id"].is_empty()):
+				return _invalid(context, "play_sfx requires a non-empty id")
+			if step.has("path") and (not step["path"] is String or not step["path"].begins_with("res://")):
 				return _invalid(context, "play_sfx requires a res:// path")
 		_:
 			return _invalid(context, "Unknown command '%s'" % step["command"])

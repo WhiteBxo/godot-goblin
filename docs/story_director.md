@@ -17,6 +17,7 @@ if director.load_events("res://src/resources/story/day1_demo_events.json") == OK
 | API | 行为 |
 | --- | --- |
 | `configure(manager: DialogueManager, can_start: Callable = Callable())` | 注入场景内 Manager 和可选宿主准入检查；重新配置先取消旧演出 |
+| `set_audio_adapter(adapter: StoryAudioAdapter)` | 注入音频适配层；替换前取消旧演出；MainGame 默认接入 AudioManager |
 | `load_events(path: String = "") -> Error` | 空参数使用 `event_file`；完整验证后替换目录，失败保留旧数据；busy 时拒绝 |
 | `request_event(id: String) -> Error` | 同步检查并占用演出；`OK` 表示已接受，最终结果看 signal |
 | `request_interaction(interaction_id: String) -> Error` | JSON 顺序选择第一个符合条件且未完成的路由；无路由为 `ERR_DOES_NOT_EXIST` |
@@ -84,13 +85,13 @@ Signal 同步调用。收尾期间拒绝递归启动新事件，串联事件请�
 | `wait` | `seconds`：有限数字 ≥ 0 | 使用可停止的单次 Timer；0 在下一 process tick 继续 |
 | `set_flag` | `key`：命名空间字符串 | `value` 为 bool，默认 true；设置相同值视为成功 |
 | `set_stage` | `value`：字符串 | 调用 `set_story_stage`；相同阶段视为成功 |
-| `play_sfx` | `path`：`res://` 路径 | 非阻塞 AudioStreamPlayer；文件缺失或不是 AudioStream 时发 skipped 并继续 |
+| `play_sfx` | 非空 `id` 或 `res:// path`，二选一 | 经适配层非阻塞调用 AudioManager；旧 path 保持兼容；资源/服务缺失或池满发 skipped 并继续 |
 
 目录必须包含 `version: 1` 和 `events` 对象；事件必须有非空 `steps`。未知字段、未知指令、非法类型、负等待值及非法命名空间均拒绝，并报告事件/步骤位置。对白 ID 在 runtime 由 DialogueManager 验证，音效允许留空素材路径对应的占位文件名（路径本身必须是 `res://`）。现有导出 preset 的 `*.json` 已覆盖新数据；以后改用选择场景导出时，必须显式包含 JSON 及其动态引用的音效资源。
 
 ## 生命周期、输入与交互
 
-Director 每个 process tick 执行一个步骤；对白结束和 Timer timeout 只安排下一步，避免同步回调递归 dispatch。Timer 和 Director 随 `Systems` 暂停；没有悬挂的 `await` coroutine。取消停止 Timer、清除待执行步骤并停止所属音效；音效正常结束或演出收尾时释放。
+Director 每个 process tick 执行一个步骤；对白结束和 Timer timeout 只安排下一步，避免同步回调递归 dispatch。Timer 和 Director 随 `Systems` 暂停；没有悬挂的 `await` coroutine。取消停止 Timer、清除待执行步骤并经适配层停止所属音效；音效正常结束或演出收尾时归还 AudioManager 播放器池。独立场景 BGM 和其他 owner 的音效不受影响。详见 [AudioManager](audio_manager.md)。
 
 对白取消、UI/Manager/Director 移除、宿主场景退出和 GameState reset/restore 均安全取消。不失败回滚已执行的 flag/stage；最终成功标记应放在末尾。失败不记录事件完成，允许重试。缺失音效是唯一的资源容错步骤，缺失事件 JSON 或对白会报错。
 

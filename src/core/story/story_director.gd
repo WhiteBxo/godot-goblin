@@ -29,7 +29,7 @@ var _starting_dialogue: bool = false
 var _waiting_dialogue: String = ""
 var _choices: Dictionary = {}
 var _timer: Timer
-var _sounds: Array[AudioStreamPlayer] = []
+var _audio: StoryAudioAdapter
 
 
 func _ready() -> void:
@@ -55,6 +55,11 @@ func configure(manager: DialogueManager, can_start: Callable = Callable()) -> vo
 		_manager.dialogue_ended.connect(_on_dialogue_ended)
 		_manager.choice_selected.connect(_on_choice_selected)
 		_manager.tree_exiting.connect(_on_manager_exiting)
+
+
+func set_audio_adapter(adapter: StoryAudioAdapter) -> void:
+	cancel_event("Audio adapter replaced")
+	_audio = adapter
 
 
 func load_events(path: String = "") -> Error:
@@ -208,7 +213,7 @@ func _process(_delta: float) -> void:
 		"set_stage":
 			_state.set_story_stage(step["value"])
 		"play_sfx":
-			_play_sfx(step["path"])
+			_play_sfx(step)
 	if _is_current(generation):
 		_schedule_next()
 
@@ -224,25 +229,11 @@ func _schedule_next() -> void:
 	_pending = true
 
 
-func _play_sfx(path: String) -> void:
-	if not ResourceLoader.exists(path, "AudioStream"):
-		step_skipped.emit(_event_id, _index, "Optional sound missing: " + path)
-		return
-	var stream := load(path) as AudioStream
-	if stream == null:
-		step_skipped.emit(_event_id, _index, "Optional sound is not an AudioStream: " + path)
-		return
-	var sound := AudioStreamPlayer.new()
-	sound.stream = stream
-	add_child(sound)
-	_sounds.append(sound)
-	sound.finished.connect(_on_sound_finished.bind(sound))
-	sound.play()
-
-
-func _on_sound_finished(sound: AudioStreamPlayer) -> void:
-	_sounds.erase(sound)
-	sound.queue_free()
+func _play_sfx(step: Dictionary) -> void:
+	if _audio == null:
+		step_skipped.emit(_event_id, _index, "Optional audio adapter unavailable")
+	elif not _audio.play_sfx(step):
+		step_skipped.emit(_event_id, _index, _audio.last_error)
 
 
 func _on_dialogue_ended(id: String, cancelled: bool) -> void:
@@ -280,10 +271,8 @@ func _finish(succeeded: bool, reason: String = "") -> void:
 	if not _waiting_dialogue.is_empty() and is_instance_valid(_manager):
 		_manager.end_dialogue(true)
 	_waiting_dialogue = ""
-	for sound in _sounds:
-		sound.stop()
-		sound.queue_free()
-	_sounds.clear()
+	if _audio != null:
+		_audio.stop_owned()
 	if succeeded and _event.get("once", true):
 		_state.complete_event(id)
 	_event_id = ""

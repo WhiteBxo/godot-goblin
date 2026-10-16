@@ -13,7 +13,7 @@ func _ready() -> void:
 	_close.pressed.connect(close)
 
 func show_prompt(point: InteractionPoint) -> void:
-	_prompt.text = "按 E 交互 · " + point.display_name if point != null else ""
+	_prompt.text = "[E] " + point.display_name if point != null else ""
 	_prompt.visible = point != null and not is_open()
 
 func set_popup_layer(layer: CanvasLayer) -> void:

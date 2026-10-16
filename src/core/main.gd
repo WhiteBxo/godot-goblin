@@ -37,6 +37,10 @@ func _ready() -> void:
 		interaction.configure(_shop_player, ui, _shop_level.get_interaction_points(), _route_story_interaction)
 		_shop_ui = ui
 		_shop_interaction = interaction
+		var feedback := InteractionFeedback.new()
+		feedback.name = "InteractionFeedback"
+		$World/EffectRoot.add_child(feedback)
+		feedback.configure(interaction, _audio_manager)
 		_create_dialogue_system()
 		return
 	var error := _active_level.load_error
@@ -82,11 +86,11 @@ func get_story_director() -> StoryDirector:
 func get_actor_director() -> ActorDirector:
 	return _actor_director if is_instance_valid(_actor_director) else null
 
-func _route_story_interaction(id: StringName) -> bool:
+func _route_story_interaction(id: StringName) -> Error:
 	# An unavailable service or absent route falls through to the existing ShopUI.
 	if not is_instance_valid(_story_director):
-		return false
-	return _story_director.request_interaction(String(id)) != ERR_DOES_NOT_EXIST
+		return ERR_DOES_NOT_EXIST
+	return _story_director.request_interaction(String(id))
 
 func _create_dialogue_system() -> void:
 	_actor_director = ActorDirector.new()

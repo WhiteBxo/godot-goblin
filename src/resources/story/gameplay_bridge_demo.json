@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "events": {
+    "bridge.intro": {
+      "steps": [
+        {
+          "command": "play_bgm",
+          "id": "demo.music_a",
+          "fade": 0
+        },
+        {
+          "command": "dialogue",
+          "id": "bridge.instruction"
+        },
+        {
+          "command": "set_stage",
+          "value": "bridge.make_tea"
+        }
+      ]
+    },
+    "bridge.after_tea": {
+      "conditions": {
+        "stage": "bridge.make_tea",
+        "flags": {
+          "bridge.tea_done": true
+        },
+        "completed_events": [
+          "bridge.intro"
+        ]
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "bridge.thanks"
+        },
+        {
+          "command": "set_stage",
+          "value": "bridge.finished"
+        }
+      ]
+    }
+  }
+}

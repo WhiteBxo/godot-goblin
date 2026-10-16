@@ -40,6 +40,12 @@ func bind_manager(manager: UIManager) -> void:
 		if id == &"shop":
 			closed.emit())
 
+func bind_tea_making(tea: TeaMaking) -> void:
+	_popup.bind_tea_making(tea)
+	tea.configure(func() -> bool:
+		return is_open() and _popup.is_making_station() and _popup.can_process()
+		)
+
 func show_prompt(point: InteractionPoint) -> void:
 	_prompt.text = "[E] " + point.display_name if point != null else ""
 	_prompt.visible = point != null and not is_open()

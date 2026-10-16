@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "dialogues": {
+    "bridge.instruction": {
+      "start": "line",
+      "lines": {
+        "line": {
+          "speaker": "主角",
+          "text": "去奶茶制作台，按红茶、牛奶、珍珠的顺序制作一杯珍珠奶茶。"
+        }
+      }
+    },
+    "bridge.thanks": {
+      "start": "line",
+      "lines": {
+        "line": {
+          "speaker": "主角",
+          "text": "珍珠奶茶做好了，继续接下来的故事吧。"
+        }
+      }
+    }
+  }
+}

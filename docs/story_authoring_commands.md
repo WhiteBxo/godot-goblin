@@ -67,3 +67,13 @@ Dialogue ID、行 ID 非空，`start` 必须指向当前对话的行；`speaker`
 | 其他演示与测试 | 如 `demo.*` 音频、`test_position` 不属于正式注册表；只有目标宿主实际配置后才能引用 |
 
 此表是检索起点；每次编排重新核对目标场景实际注册和资源存在性，不把基线当全局常量。更多冲突/取消规则见 [StoryDirector](story_director.md#并行冲突与取消)，工作流见 [编排规范](story_authoring_workflow.md)。
+
+
+## Gameplay 模式字段
+
+Markdown Beat 可声明 `执行模式：自动演出 / 玩家操作`，玩家 Beat 必须声明 `玩法完成条件`。
+它们是编排字段，不是 Story command，不传给 StoryLibrary。Codex 在玩家边界结束当前短事件，
+生成六字段 phase 条目，并为下段事件生成 stage + completed_events + completion flag 准入条件。
+详见 [拆分、映射和验证规则](story_authoring_workflow.md#自动演出与玩家操作gameplay-bridge)。
+当前实现仅支持 `pearl_milk_tea` 一杯（红茶→牛奶→珍珠）；其他目标列 pending。
+成功事件收尾保留场景 BGM，SFX 仍清理；取消/失败仅停止仍属本事件的音乐。

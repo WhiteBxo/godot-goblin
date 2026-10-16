@@ -42,7 +42,7 @@ func present_line(speaker: String, text: String, portrait: Texture2D, choices: A
 	for index in range(choices.size()):
 		var button := Button.new()
 		button.text = choices[index]
-		button.custom_minimum_size.y = 28
+		button.custom_minimum_size.y = 20
 		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.pressed.connect(func() -> void: choice_requested.emit(index))

@@ -77,7 +77,7 @@ UI 复用 InputMap 的 `interact`、`ui_accept`、`ui_up/down`、`ui_cancel`，�
 
 MainGame 复用 `PlayerController.set_movement_enabled` 保存并关闭移动，并用 ShopInteraction 新增的通用 `set_input_enabled` / `is_input_enabled` 关闭交互和提示。交互点直接发 signal 也受此开关保护。MainGame 统一以“对白活跃 OR StoryDirector 忙碌”计算锁定；最后一个输入所有者结束才恢复原值，演出停顿也保持锁定，原先已禁用的控制不会被误启用。ShopUI 已打开时通过 `can_start` 拒绝启动对话，继续使用现有店铺弹窗锁定逻辑，不堆叠两个输入所有者。
 
-UI 按 640×360 视口设计，底部面板距离边缘 12px，棕色、金色边框与奶茶店一致；头像缺省时回收空间，选项列表支持滚动。对话 UI 与独立场景使用随包分发的 [Fusion Pixel](../assets/fonts/fusion_pixel/README.md) 中文字体，避免依赖宿主系统 CJK fallback；保留完整简体字符版本、原始许可证和导入设置。
+UI 按 640×360 视口设计，底部面板为 560×136px，水平居中、距底边 12px，棕色、金色边框与奶茶店一致。头像缩至 40×40px，缺省时回收空间；正文超出固定范围后支持鼠标滚轮和右侧滚动条阅读，不再撑大面板，新的一行从顶部开始显示。选项列表也支持滚动。对话 UI 与独立场景使用随包分发的 [Fusion Pixel](../assets/fonts/fusion_pixel/README.md) 中文字体，避免依赖宿主系统 CJK fallback；保留完整简体字符版本、原始许可证和导入设置。
 
 ## 试玩与自动化验证
 

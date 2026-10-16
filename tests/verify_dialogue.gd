@@ -48,6 +48,7 @@ func _run() -> void:
 	var state_before: Dictionary = root.get_node("GameState").call("to_dict")
 	_test_library()
 	await _test_flow()
+	await _test_compact_ui()
 	_test_edge_cases()
 	await _test_lifecycle()
 	await _test_demo()
@@ -151,6 +152,31 @@ func _test_flow() -> void:
 	_check(not _ui.is_revealing(), "Typewriter can finish naturally without a skip")
 	await _tap(KEY_ENTER)
 	_check(not _manager.is_active() and not _ends.back()["cancelled"], "Single-line dialogue ends normally")
+
+
+func _test_compact_ui() -> void:
+	var paragraphs: PackedStringArray = []
+	for index in range(30):
+		paragraphs.append("第 %d 行：长对话可以滚动阅读，面板保持固定大小。" % index)
+	var choices: Array[String] = ["第一个选项", "第二个选项"]
+	_ui.present_line("店员", "\n".join(paragraphs), load("res://src/resources/dialogue/demo_portrait.tres"), choices)
+	_ui.reveal_all()
+	await _frames()
+	var panel: Control = _ui.get_node("Panel")
+	var text: RichTextLabel = _ui.get_node("Panel/Margin/Content/Line/Text")
+	var scrollbar := text.get_v_scroll_bar()
+	_check(panel.size.x <= 560.0 and panel.size.y <= 140.0, "Panel stays compact with portrait, long text and two choices")
+	_check(text.scroll_active and scrollbar.max_value > scrollbar.page, "Long dialogue overflows into an active scrollbar")
+	_check(is_zero_approx(scrollbar.value), "Revealed text starts at the beginning for reading")
+	text.scroll_to_line(20)
+	await _frames()
+	_check(scrollbar.value > 0.0, "Long dialogue can scroll within the fixed text area")
+	_check(panel.size.y <= 140.0, "Scrolling does not enlarge the dialogue panel")
+	_ui.present_line("店员", "新的短对白。", null, [])
+	_ui.reveal_all()
+	await _frames()
+	_check(is_zero_approx(scrollbar.value), "A new line resets the previous scroll position")
+	_ui.close_dialogue()
 
 
 func _test_edge_cases() -> void:

@@ -11,7 +11,7 @@ Godot 4.7.2，运行 `src/core/main.tscn`（打开主场景后 F6，或直接 F5
 
 - `src/levels/milkTea/milk_tea_shop.tscn`：背景、出生点、15 个实体碰撞形状、三个交互组件实例，可直接在编辑器中修改。`get_world_bounds()` 提供背景世界范围；四面外墙在初始化时按图片尺寸与 `boundary_insets`（左、上、右、下）同步，并封闭底部侧墙缺口。
 - `src/gameplay/player/shop_player.*`：独立角色，`CharacterBody2D` 的 Floating 模式和 `move_and_slide()`。脚部横向胶囊碰撞体为 34 × 20 世界像素；新素材显示缩放为 0.52，角色约 110 像素高。动画按速度调整节奏并保留转向时的步态进度；nearest 与 alpha cutout 保持轮廓清晰。四向动画说明见 [玩家素材说明](../assets/characters/player/README.md)。
-- `src/gameplay/player/bounded_follow_camera.gd`：角色子节点上的跟随相机，位置平滑速度为 8，默认缩放 0.5。主场景注入 `get_camera_bounds()`；`camera_insets` 按左、上、右、下排除图片外圈装饰黑框，不修改背景像素和家具坐标。窗口变宽或变高时自动提高最小缩放，避免视野越界。
+- `src/gameplay/player/bounded_follow_camera.gd`：角色子节点上的跟随相机，位置平滑速度为 8，默认缩放 0.5。相机保留为玩家子节点，但启用 top_level 隔离父节点碰撞位移；在玩家移动后的物理帧先将目标限制到合法取景中心范围，再交给 Camera2D 平滑，并在误差小于 0.01 世界像素时结束平滑尾差，避免底边持续按 S 时出现像素抖动。主场景注入 `get_camera_bounds()`；`camera_insets` 按左、上、右、下排除图片外圈装饰黑框，不修改背景像素和家具坐标。窗口变宽或变高时自动提高最小缩放，避免视野越界。
 - `src/gameplay/interaction/interaction_point.*`：复用 `Area2D`，导出地点 ID、名称、说明；通过 `availability_changed` 和 `interacted` 信号通知协调组件。
 - `src/gameplay/interaction/shop_interaction.gd`：选择最近可交互地点，处理 E，并协调角色与 UI。新增地点可实例化组件，通过 `MilkTeaShop.get_interaction_points()` 自动接入。
 - `src/UI/milk_tea/shop_ui.*`：显示提示与信息弹窗，通过 `closed` 信号恢复角色。提示挂到 HudLayer，弹窗挂到 PopupLayer。
@@ -32,7 +32,7 @@ godot --path . --script res://tests/verify_player_visuals.gd
 
 验证实际输入移动、斜向速度、15 处物理碰撞、持续顶住柜台、基于实际物理空间的三个地点可达性、E 打开三个 UI、标题匹配、Esc 关闭、弹窗锁定移动和离开范围。渲染环境可追加 `-- --capture`，将场景和订单弹窗截图保存到 `.godot/milk_tea_verification/`。
 
-相机测试覆盖较宽取景、外圈黑框隔离、平滑过程中四角限制、角色全图不越界、底部绕墙缺口、宽屏/竖屏尺寸变化，以及关卡平移后的世界坐标。渲染环境追加 `-- --capture` 可保存 `follow_camera.png`。玩家测试还验证加速时的动画节奏、转向进度；渲染测试逐帧检查 68 个新素材姿势的硬透明度、跑步起伏和切帧隔离。
+相机测试覆盖较宽取景、外圈黑框隔离、平滑过程中四角限制、角色全图不越界、底部绕墙缺口、宽屏/竖屏尺寸变化，以及关卡平移后的世界坐标。底边回归覆盖中部和两角持续按 S，逐渲染帧确认相机中心与画布变换完全固定，并验证离开底边后恢复跟随。渲染环境追加 `-- --capture` 可保存 `follow_camera.png`。玩家测试还验证加速时的动画节奏、转向进度；渲染测试逐帧检查 68 个新素材姿势的硬透明度、跑步起伏和切帧隔离。
 
 手动验收：F5 从地毯走向三个金色标记，检查提示、E 打开内容、Esc / 按钮关闭；持续朝货架、制作设备、柜台和四侧外墙移动，应被阻挡且可沿边滑动。走动时镜头平滑跟随，接近四边后停止，不出现图片外的空白；改变窗口比例也应保持视野在背景内。
 

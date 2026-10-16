@@ -63,6 +63,27 @@ func _run() -> void:
 		var visible_player: Rect2 = player.animated_sprite.global_transform * sprite_rect
 		_check(bounds.encloses(visible_player), "The entire character stays inside the background: " + actions[index])
 		_check_view(camera, camera_bounds, "Boundary view excludes the outer frame")
+	# Hold S against the bottom at the center and both corners, sampling render frames.
+	for x in [150.0, 800.0, 1520.0]:
+		player.global_position = Vector2(x, 900)
+		player.velocity = Vector2.ZERO
+		Input.action_press("move_down")
+		await _frames(150)
+		var stable_center := camera.get_screen_center_position()
+		var stable_transform := root.canvas_transform
+		for frame in range(45):
+			await process_frame
+			_check(camera.get_screen_center_position() == stable_center, "Holding S at the bottom has no smoothing oscillation")
+			_check(root.canvas_transform == stable_transform, "Holding S keeps the rendered world transform fixed")
+			_check(camera.global_position.y <= camera_bounds.end.y - camera.get_viewport_rect().size.y / camera.zoom.y * 0.5 + 0.001, "Follow target itself stays inside camera limits")
+		Input.action_release("move_down")
+	player.global_position = Vector2(300, 900)
+	player.velocity = Vector2.ZERO
+	player.configure_camera(camera_bounds)
+	Input.action_press("move_up")
+	await _frames(120)
+	Input.action_release("move_up")
+	_check(camera.get_screen_center_position().y < stable_bottom_center_y(camera, camera_bounds) - 10.0, "Camera resumes following when leaving the bottom")
 	# Viewport resizing must increase zoom when one dimension exceeds the map.
 	for window_size in [Vector2i(1800, 500), Vector2i(500, 1400), Vector2i(1280, 720)]:
 		root.size = window_size
@@ -84,3 +105,6 @@ func _run() -> void:
 		root.get_texture().get_image().save_png("res://.godot/milk_tea_verification/follow_camera.png")
 	print("SHOP_CAMERA: ", "PASS" if _failures.is_empty() else "FAIL", " (follow, smoothing, four edges, whole sprite, viewport resizing, translated level)")
 	quit(0 if _failures.is_empty() else 1)
+
+func stable_bottom_center_y(camera: Camera2D, bounds: Rect2) -> float:
+	return bounds.end.y - camera.get_viewport_rect().size.y / camera.zoom.y * 0.5

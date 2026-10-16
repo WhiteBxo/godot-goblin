@@ -4,10 +4,25 @@ extends Camera2D
 @export_range(0.1, 4.0, 0.05) var preferred_zoom := 0.5
 
 var _world_bounds := Rect2()
+var _follow_offset := Vector2.ZERO
+var _settled := false
+
+@onready var _follow_target := get_parent() as Node2D
 
 func _ready() -> void:
+	_follow_offset = position
+	top_level = true
+	process_callback = Camera2D.CAMERA2D_PROCESS_PHYSICS
+	process_physics_priority = 1
 	get_viewport().size_changed.connect(_update_zoom)
 	zoom = Vector2.ONE * preferred_zoom
+
+func _physics_process(_delta: float) -> void:
+	_update_follow_target()
+	# End the smoothing tail exactly; pixel snapping can expose floating-point drift.
+	if not _settled and get_screen_center_position().distance_squared_to(global_position) < 0.0001:
+		reset_smoothing()
+		_settled = true
 
 func configure(world_bounds: Rect2) -> void:
 	_world_bounds = world_bounds
@@ -27,4 +42,17 @@ func _update_zoom() -> void:
 	var viewport_size := get_viewport_rect().size
 	var minimum_zoom := maxf(viewport_size.x / _world_bounds.size.x, viewport_size.y / _world_bounds.size.y)
 	zoom = Vector2.ONE * maxf(preferred_zoom, minimum_zoom)
+	_update_follow_target()
 	force_update_scroll()
+
+func _update_follow_target() -> void:
+	if not _world_bounds.has_area():
+		return
+	var half_view := get_viewport_rect().size / zoom * 0.5
+	var minimum := Vector2(limit_left, limit_top) + half_view
+	var maximum := Vector2(limit_right, limit_bottom) - half_view
+	# Clamp before smoothing so pushing a wall cannot keep pulling the camera outside.
+	var target := (_follow_target.global_position + _follow_offset).clamp(minimum, maximum.max(minimum))
+	if global_position.distance_squared_to(target) > 0.000001:
+		global_position = target
+		_settled = false

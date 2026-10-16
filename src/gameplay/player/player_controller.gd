@@ -72,6 +72,9 @@ func get_emote_offset() -> Vector2:
 		return Vector2(0, -48)
 	return to_local(animated_sprite.to_global(Vector2(0, animated_sprite.offset.y - texture.get_height() * 0.5))) + Vector2(0, -8)
 
+func get_facing_vector() -> Vector2:
+	return [Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT, Vector2.UP][facing]
+
 func get_movement_speed() -> float:
 	return speed
 

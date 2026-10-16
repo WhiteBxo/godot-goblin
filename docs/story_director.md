@@ -1,4 +1,6 @@
-# StoryDirector（P0-2）
+# StoryDirector / P0 Cinematic Integration
+
+自然语言编排入口见 [Story Authoring Workflow](story_authoring_workflow.md)，全部 JSON 指令/默认参数见 [编排指令速查](story_authoring_commands.md)。创作源保存在 `docs/design/`，运行时继续使用本页的原有系统与 Schema。
 
 `src/core/story/story_library.gd` 负责 JSON 加载和完整校验；`story_director.gd` 只调度步骤。MainGame 在 `Systems` 创建 StoryDirector，传入原有 DialogueManager；Director 通过 `/root/GameState` 取得已有 Autoload，不创建第二份状态。正式入口不加载第一天示例、不自动播放剧情。
 
@@ -17,6 +19,8 @@ if director.load_events("res://src/resources/story/day1_demo_events.json") == OK
 | API | 行为 |
 | --- | --- |
 | `configure(manager: DialogueManager, can_start: Callable = Callable())` | 注入场景内 Manager 和可选宿主准入检查；重新配置先取消旧演出 |
+| `configure_cinematic(actors: ActorDirector, cameras: CameraDirector = null)` | 注入现有演出服务；重新配置先取消旧演出；MainGame 默认接入自己的 Director |
+| `set_audio_adapter(adapter: StoryAudioAdapter)` | 注入音频适配层；替换前取消旧演出；MainGame 默认接入 AudioManager |
 | `load_events(path: String = "") -> Error` | 空参数使用 `event_file`；完整验证后替换目录，失败保留旧数据；busy 时拒绝 |
 | `request_event(id: String) -> Error` | 同步检查并占用演出；`OK` 表示已接受，最终结果看 signal |
 | `request_interaction(interaction_id: String) -> Error` | JSON 顺序选择第一个符合条件且未完成的路由；无路由为 `ERR_DOES_NOT_EXIST` |
@@ -84,15 +88,15 @@ Signal 同步调用。收尾期间拒绝递归启动新事件，串联事件请�
 | `wait` | `seconds`：有限数字 ≥ 0 | 使用可停止的单次 Timer；0 在下一 process tick 继续 |
 | `set_flag` | `key`：命名空间字符串 | `value` 为 bool，默认 true；设置相同值视为成功 |
 | `set_stage` | `value`：字符串 | 调用 `set_story_stage`；相同阶段视为成功 |
-| `play_sfx` | `path`：`res://` 路径 | 非阻塞 AudioStreamPlayer；文件缺失或不是 AudioStream 时发 skipped 并继续 |
+| `play_sfx` | 非空 `id` 或 `res:// path`，二选一 | 经适配层调用 AudioManager；默认非阻塞，`wait: true` 等自然结束；旧 path 保持兼容；资源/服务缺失或池满发 skipped 并继续 |
 
 目录必须包含 `version: 1` 和 `events` 对象；事件必须有非空 `steps`。未知字段、未知指令、非法类型、负等待值及非法命名空间均拒绝，并报告事件/步骤位置。对白 ID 在 runtime 由 DialogueManager 验证，音效允许留空素材路径对应的占位文件名（路径本身必须是 `res://`）。现有导出 preset 的 `*.json` 已覆盖新数据；以后改用选择场景导出时，必须显式包含 JSON 及其动态引用的音效资源。
 
 ## 生命周期、输入与交互
 
-Director 每个 process tick 执行一个步骤；对白结束和 Timer timeout 只安排下一步，避免同步回调递归 dispatch。Timer 和 Director 随 `Systems` 暂停；没有悬挂的 `await` coroutine。取消停止 Timer、清除待执行步骤并停止所属音效；音效正常结束或演出收尾时释放。
+Director 每个 process tick 执行一个步骤；对白结束和 Timer timeout 只安排下一步，避免同步回调递归 dispatch。Timer 和 Director 随 `Systems` 暂停；没有悬挂的 `await` coroutine。取消停止 Timer、清除待执行步骤并经适配层停止所属音效；音效正常结束或演出收尾时归还 AudioManager 播放器池。独立场景 BGM 和其他 owner 的音效不受影响。详见 [AudioManager](audio_manager.md)。
 
-对白取消、UI/Manager/Director 移除、宿主场景退出和 GameState reset/restore 均安全取消。不失败回滚已执行的 flag/stage；最终成功标记应放在末尾。失败不记录事件完成，允许重试。缺失音效是唯一的资源容错步骤，缺失事件 JSON 或对白会报错。
+对白取消、UI/Manager/Director 移除、宿主场景退出和 GameState reset/restore 均安全取消。不失败回滚已执行的 flag/stage；最终成功标记应放在末尾。失败不记录事件完成，允许重试。声音步骤（含 BGM）的缺失素材/服务采用可选资源容错，缺失事件 JSON 或对白会报错。
 
 MainGame 的 `_refresh_input_lock` 统一计算“对白活跃 OR 剧情忙碌”，只在首次锁定时保存移动和交互状态，整段演出结束后恢复原值。Director 不直接管理玩家输入。停顿中独立对白被宿主 guard 拒绝，ShopUI 已打开时剧情请求也被拒绝。
 
@@ -117,10 +121,79 @@ ShopInteraction 接受可选 Callable `event_handler(interaction_id) -> bool`，
 
 测试覆盖条件组合、校验失败保留旧数据、严格顺序、真实对白等待、选项条件、暂停、单次去重、重复事件、输入恢复、资源失败、取消、节点移除及真实订单/仓库/制作台路由。可在非 headless 运行测试时添加 `-- --capture`，在 `/private/tmp/story-demo-intro.png` 和 `story-demo-orders.png` 保存画面。
 
-## 添加演出指令
+## 演出 JSON 指令
 
-角色演出组件已实现，参见 [ActorDirector API、完成信号与 Demo](actor_director.md)。MainGame 通过 `get_actor_director()` 提供实例，默认注册 `player`，并把角色接管纳入现有输入锁。当前 JSON schema 尚未添加 `actor_move` 等命令；后续扩展应等待 ActorAction 的完成信号并在事件取消时取消所属句柄。
+MainGame 在现有 `Systems` 中创建各 Director，通过 `configure_cinematic` 注入，不增加 autoload。StoryDirector 只做逐步 dispatch 和结果管理；移动、碰撞、表情、镜头跟随、音频池与淡变仍由原 module 执行。未改动 DialogueManager 或 GameState。正式入口不加载 Demo。
 
-在 `StoryLibrary._step` 增加 command 和必要参数的类型/范围校验，在 `StoryDirector._process` 的 match 中调用独立 handler。同步指令执行后由现有尾部安排下一步；异步指令只在完成信号中调用 `_schedule_next`，取消路径须停止所属资源，并通过当前运行 generation 防止同步取消后继续执行。扩展时同时添加有效/无效数据测试及取消测试，避免把角色、镜头或 UI 的具体节点路径写入 Director。
+所有新演出指令允许 `wait: bool`，默认 **true**；原 `play_sfx` 默认 **false**。`dialogue` 始终等待自然结束，原 `wait` 步骤仍用 `seconds`，这两个旧指令不增加同名 bool 字段。`wait: false` 只启动动作，下一 process tick 执行下一步；Blocking 则等待该次 action 的完成 Signal，而不是估算耗时。
+
+| command | 参数（时间为秒，坐标为全局世界像素） |
+| --- | --- |
+| `actor_spawn` | `actor` 新 ID、`scene` 为 `res://` 下的 `.tscn`、`target`；根节点必须继承 PlayerController，NPC 应关闭 `accepts_player_input` |
+| `actor_move` | `actor`、`target`；`speed` 默认 120（像素/秒）、`timeout` 默认 15，均须正数；复用真实物理移动，不提供寻路 |
+| `actor_face` | `actor`、`direction: up/down/left/right` |
+| `actor_emote` | `actor`；`symbol` 默认 `!`、`duration` 默认 0.8（须 > 0） |
+| `actor_show` / `actor_hide` | `actor` |
+| `camera_focus` | `actor` 或 `target`，二选一；`duration` 默认 0.8；到位后继续跟踪存活目标 |
+| `camera_move` | `target`；`duration` 默认 0.8；保存位置快照，到位后保持构图 |
+| `camera_shake` | `intensity` 默认 2（逻辑视口像素）、`duration` 默认 0.3、`decay` 默认 1.5；三者均 ≥ 0，强度仍受 CameraDirector 上限限制 |
+| `camera_zoom` | 正数 `value`；`duration` 默认 0.5；实际缩放受地图边界限制 |
+| `camera_reset` | 无必填参数；立即恢复默认 Follow、preferred_zoom、零偏移 |
+| `play_bgm` | 注册的音频 `id`；`fade` 默认 0.5、`volume_db` 默认 0；等淡入完成，切换曲目时等淡出与淡入两段完成 |
+| `stop_bgm` | `fade` 默认 0；等淡出并停止完成 |
+| `fade_bgm` | `volume_db`；`fade` 默认 0.5；仅调整当前 BGM 音量 |
+
+`target` 为已注册 Marker2D 的 ID（如 `counter`），或 `[x, y]`。共同父场景使用 `ActorDirector.register_position` 组装角色和镜头共享的标记表；StoryDirector 通过公开 `get_position` 查询。JSON 不解析 NodePath。`actor_spawn.scene` 是资源路径，不是场景树路径。所有时间和数值必须有限，时间非负，未知字段继续严格拒绝；runtime 引用不存在、移动受阻或超时会失败，诊断包含事件和步骤位置。数据加载失败保留原目录。
+
+```json
+{"command": "actor_spawn", "actor": "customer", "scene": "res://src/debug/cinematic/customer.tscn", "target": "door"}
+{"command": "camera_focus", "actor": "customer", "duration": 1.2, "wait": false}
+{"command": "actor_move", "actor": "customer", "target": "counter", "speed": 90, "timeout": 7}
+{"command": "actor_emote", "actor": "customer", "symbol": "!", "duration": 1.2}
+{"command": "play_sfx", "id": "cinematic.rumble"}
+{"command": "camera_shake", "intensity": 2, "duration": 0.7}
+{"command": "camera_reset"}
+```
+
+以上每行为独立步骤对象；完整可直接加载的事件见 `src/resources/story/cinematic_opening.json`。对白目录为 `src/resources/dialogue/cinematic_opening.json`。
+
+## 并行、冲突与取消
+
+- **角色**：同角色 move/face/emote/show/hide 共用互斥槽。忙碌或重复 spawn 返回失败，并取消本段已启动的其他动作；不同角色可以并行。需要在移动后转向/表情时，保持 move 默认 `wait: true`。
+- **镜头**：位置、zoom、shake 三通道可以并行。JSON 同通道的新动作替换本段旧的 Non-blocking 动作，旧通知被断开；`camera_reset` 显式终止本段所有镜头动作。场景级相机在剧情期间由演出管理，外部直接打断正在等待的镜头动作会导致剧情失败并复位。
+- **BGM**：单一通道，新的有效音乐指令替换旧淡变；无效音频资源不打断正在播放的音乐。非阻塞 BGM 的旧完成通知不推进步骤。
+- **事件末尾**：等待本段未完成的角色/镜头动作再成功结束，避免 Non-blocking 位于最后一步时立刻被截断。非阻塞声音沿用旧行为，不延长事件；请用 `wait: true` 需要听完的音效或淡变。BGM 只等待过渡，不等待循环曲目自然结束。
+- **完成通知**：每个句柄关联 generation、原步骤和等待模式；先从跟踪表移除，再处理成功/失败。同步拒绝/零时长的结果也 deferred 发布，重复 Signal、已退休动作及上一代事件的回调均不能再次推进。
+- **取消与退出**：先递增 generation、停 Timer 和 dispatch，断开所属动作回调，再按句柄取消 ActorAction，停止所属声音，复位镜头。删除角色、Marker、演出服务、对白 UI、StoryDirector 或宿主场景，以及 GameState reset/restore 均安全取消；已完成 focus 的目标消失也通过 `camera_recovered` 取消。
+- **状态保留**：不回滚已经执行的 flag/stage、spawn、显隐、朝向和已走过的距离。取消已生成的角色会停在原地，生命周期仍归 ActorDirector；退出场景自动清理。Demo 重播前显式清理上一位顾客。无本段句柄的外部角色动作不受取消影响。
+- **音乐所有权**：正常结束、失败、取消时停止本段音效与仍归本段的 BGM；如果外部已经发起更新的音乐请求，保留它。没有音乐步骤的旧剧情也不会停止场景 BGM。需要长期场景音乐时由宿主启动，不绑定到剧情。
+- **输入**：各 Director 不操作输入锁。MainGame 继续统一计算对白 / 剧情 / player 接管的 OR，最后释放时恢复进入演出前的移动与交互状态，包括原本已禁用的情况。玩家中途删除时也安全释放交互锁；StoryDirector 被移除后，店铺交互安全 fallback 到原 ShopUI。
+
+Timer、ActorDirector、CameraDirector 随 Systems 暂停；AudioManager 保留原有策略，音乐淡变可在暂停中完成，但下一剧情步骤要等 Systems 恢复后执行。音效等待使用声音池的自然完成通知；循环音效若使用 `wait: true` 不会自然结束，作者应使用有限素材或显式取消。
+
+## Cinematic 开场 Demo 与自动化验证
+
+编辑器打开 `src/debug/cinematic/cinematic_demo.tscn`，F6；或执行：
+
+```sh
+/Applications/Godot.app/Contents/MacOS/Godot --path . res://src/debug/cinematic/cinematic_demo.tscn
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path . --log-file /private/tmp/cinematic.log --script res://tests/verify_cinematic_integration.gd
+# 实际渲染并保存 /private/tmp/cinematic-opening.png：
+/Applications/Godot.app/Contents/MacOS/Godot --path . --log-file /private/tmp/cinematic-visual.log --script res://tests/verify_cinematic_integration.gd -- --capture
+```
+
+1. 主角店内独白；每段阅读约 4 秒，E/空格/Enter 先显示全文、再按一次推进。总长约 24 秒；对白保留手动推进，可停留更久。
+2. 门铃响，主角面向右侧入口；镜头先展示门口，暖色顾客出现并沿过道走向柜台，镜头平滑跟踪。
+3. 顾客停下显示 `!`，地板下两声低沉敲击伴随轻震，随后主角反应对白。
+4. 音乐淡出、镜头恢复 Follow，WASD 移动与 E 店铺交互恢复。
+5. 随时点击“取消演出 / 恢复控制”；对白期间也可 Esc。检查顾客停止、表情消失、镜头复位且能移动。点击重播会清理旧顾客并重新加载同一段 JSON 流程。
+
+Demo 脚本只注册资源/Marker、加载目录、启动事件和提供重播/取消按钮，没有演出顺序。新增程序音调复用 AudioDemoTones，低沉敲击复用原 Story Demo 原创资源，无新增外部素材。Marker 坐标保存在 Demo 场景，未改动正式地图及其碰撞。
+
+新增测试覆盖完整 schema、阻塞和非阻塞的真实动作/顺序、末尾收束、重复通知、角色互斥、镜头替换/reset、BGM 淡入淡出、声音自然结束、缺失资源、重复请求、取消/重试、预先禁用输入、各服务/角色/目标删除、已完成 focus 目标丢失、场景退出和完整 20～30 秒演出。既有 Story Demo 与订单/仓库/制作台路由回归继续由 `verify_story_director.gd` 覆盖。
 
 实现依据 Godot 4.7 官方文档：[Node 的退出顺序与 process mode](https://docs.godotengine.org/en/4.7/classes/class_node.html)、[Timer 的停止和 timeout](https://docs.godotengine.org/en/4.7/classes/class_timer.html)、[JSON 解析和错误诊断](https://docs.godotengine.org/en/4.7/classes/class_json.html)、[AudioStreamPlayer 的 finished 与 stop](https://docs.godotengine.org/en/4.7/classes/class_audiostreamplayer.html)。Timer.stop 不发 timeout、AudioStreamPlayer.stop 不发 finished，因此取消显式清理；退出信号同步通知宿主释放锁。
+
+新增实现同样核对 [Signal 的连接、断开和绑定参数](https://docs.godotengine.org/en/4.7/classes/class_signal.html)、[Tween 的绑定、完成与 kill](https://docs.godotengine.org/en/4.7/classes/class_tween.html)、[PackedScene 实例化](https://docs.godotengine.org/en/4.7/classes/class_packedscene.html)：kill/stop 不作为自然完成，必须显式结算取消；节点退出和句柄回调按所属事件清理。
+
+本次使用 Godot 4.7.2 验证：新增集成测试通过（含真实物理、声音完成通知及完整开场时长），Metal Forward+ 窗口渲染和截图通过，开场实测约 24.5 秒。既有 `verify_story_director`（147）、`verify_actor_director`（165）、`verify_camera_director`（285）、`verify_audio_manager`（64）、`verify_dialogue`（75）、`verify_game_state`（120），以及 `verify_player`、`verify_milk_tea_shop`、`verify_shop_camera` 全部通过。相机回归中三处陈旧断言已改用实际公开跟随/缩放语义，未修改相机玩法实现。

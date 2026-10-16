@@ -87,7 +87,7 @@ await actors.actor_emote(&"customer_01", "!", 1.0).wait()
 # 中断时保存并传入原句柄：actors.cancel_action(move, "Story cancelled")
 ```
 
-未来 JSON 可以表达为 `{"command":"actor_move","actor":"customer_01","target":"counter","speed":80,"timeout":8}`，但当前 StoryLibrary 会拒绝这个尚未接入的 command。后续接入时只需在现有 StoryLibrary 中校验参数、StoryDirector 中保存 ActorAction 并监听 `finished`，按 `succeeded` 安排下一步或结束事件；复用现有 generation 校验，取消事件时取消其持有的动作。不能把 `target` 当作 NodePath 解析，也不应在 ActorDirector 内加入剧情状态处理。
+StoryDirector 现已接入全部 actor 指令，使用 ActorAction 的完成 Signal 和 generation 防护。JSON `target` 支持注册位置 ID 或 `[x, y]`，`actor_spawn` 额外使用 `scene` 资源路径；不解析 NodePath。共享位置表新增公开 `get_position(position_id) -> Marker2D`，供镜头解析相同的 Marker。完整语法、默认等待与取消边界见 [Cinematic Integration](story_director.md#演出-json-指令)。
 
 ## 移动、互斥和输入锁
 

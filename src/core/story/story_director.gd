@@ -29,7 +29,11 @@ var _starting_dialogue: bool = false
 var _waiting_dialogue: String = ""
 var _choices: Dictionary = {}
 var _timer: Timer
-var _sounds: Array[AudioStreamPlayer] = []
+var _audio: StoryAudioAdapter
+var _actors: ActorDirector
+var _cameras: CameraDirector
+var _actions: Dictionary = {}
+var _used_camera := false
 
 
 func _ready() -> void:
@@ -55,6 +59,36 @@ func configure(manager: DialogueManager, can_start: Callable = Callable()) -> vo
 		_manager.dialogue_ended.connect(_on_dialogue_ended)
 		_manager.choice_selected.connect(_on_choice_selected)
 		_manager.tree_exiting.connect(_on_manager_exiting)
+
+
+func set_audio_adapter(adapter: StoryAudioAdapter) -> void:
+	cancel_event("Audio adapter replaced")
+	_audio = adapter
+
+
+func configure_cinematic(actors: ActorDirector, cameras: CameraDirector = null) -> void:
+	cancel_event("Cinematic services replaced")
+	for service: Node in [_actors, _cameras]:
+		if is_instance_valid(service) and service.tree_exiting.is_connected(_on_service_exiting):
+			service.tree_exiting.disconnect(_on_service_exiting)
+	if is_instance_valid(_cameras) and _cameras.camera_recovered.is_connected(_on_camera_recovered):
+		_cameras.camera_recovered.disconnect(_on_camera_recovered)
+	_actors = actors
+	_cameras = cameras
+	for service: Node in [_actors, _cameras]:
+		if is_instance_valid(service):
+			service.tree_exiting.connect(_on_service_exiting)
+	if is_instance_valid(_cameras):
+		_cameras.camera_recovered.connect(_on_camera_recovered)
+
+
+func _on_service_exiting() -> void:
+	cancel_event("Cinematic service exited")
+
+
+func _on_camera_recovered(reason: String) -> void:
+	if _used_camera:
+		cancel_event(reason)
 
 
 func load_events(path: String = "") -> Error:
@@ -179,6 +213,10 @@ func _process(_delta: float) -> void:
 	_pending = false
 	var generation := _generation
 	if _index == _event["steps"].size():
+		# Drain visual actions launched without wait. Legacy SFX never delays the tail.
+		for data: Dictionary in _actions.values():
+			if data.kind != "audio":
+				return
 		_finish(true)
 		return
 	var step: Dictionary = _event["steps"][_index]
@@ -207,8 +245,15 @@ func _process(_delta: float) -> void:
 			_state.set_flag(step["key"], step.get("value", true))
 		"set_stage":
 			_state.set_story_stage(step["value"])
-		"play_sfx":
-			_play_sfx(step["path"])
+		"play_sfx", "play_bgm", "stop_bgm", "fade_bgm":
+			_dispatch_audio(step, generation)
+			return
+		"actor_spawn", "actor_move", "actor_face", "actor_emote", "actor_show", "actor_hide":
+			_dispatch_actor(step, generation)
+			return
+		"camera_focus", "camera_move", "camera_shake", "camera_zoom", "camera_reset":
+			_dispatch_camera(step, generation)
+			return
 	if _is_current(generation):
 		_schedule_next()
 
@@ -224,25 +269,131 @@ func _schedule_next() -> void:
 	_pending = true
 
 
-func _play_sfx(path: String) -> void:
-	if not ResourceLoader.exists(path, "AudioStream"):
-		step_skipped.emit(_event_id, _index, "Optional sound missing: " + path)
-		return
-	var stream := load(path) as AudioStream
-	if stream == null:
-		step_skipped.emit(_event_id, _index, "Optional sound is not an AudioStream: " + path)
-		return
-	var sound := AudioStreamPlayer.new()
-	sound.stream = stream
-	add_child(sound)
-	_sounds.append(sound)
-	sound.finished.connect(_on_sound_finished.bind(sound))
-	sound.play()
+func _target(value: Variant) -> Variant:
+	if value is Array:
+		return Vector2(value[0], value[1])
+	return StringName(value)
 
 
-func _on_sound_finished(sound: AudioStreamPlayer) -> void:
-	_sounds.erase(sound)
-	sound.queue_free()
+func _dispatch_actor(step: Dictionary, generation: int) -> void:
+	if not is_instance_valid(_actors):
+		_finish(false, "ActorDirector unavailable")
+		return
+	var action: ActorAction
+	var actor := StringName(step.actor)
+	match step.command:
+		"actor_spawn":
+			var scene: PackedScene
+			if ResourceLoader.exists(step.scene, "PackedScene"):
+				scene = load(step.scene) as PackedScene
+			action = _actors.actor_spawn(actor, scene, _target(step.target))
+		"actor_move": action = _actors.actor_move(actor, _target(step.target), step.get("speed", 120.0), step.get("timeout", 15.0))
+		"actor_face": action = _actors.actor_face(actor, StringName(step.direction))
+		"actor_emote": action = _actors.actor_emote(actor, step.get("symbol", "!"), step.get("duration", 0.8))
+		"actor_show": action = _actors.actor_show(actor)
+		"actor_hide": action = _actors.actor_hide(actor)
+	if not _is_current(generation):
+		if is_instance_valid(_actors):
+			_actors.cancel_action(action)
+		return
+	_track(action, "actor", step.get("wait", true), generation)
+
+
+func _camera_channel(command: String) -> String:
+	return command if command in ["camera_zoom", "camera_shake"] else "position"
+
+
+## Retire owned non-blocking requests before intentional channel replacement/reset.
+## External cancellation still fails the sequence through its normal result.
+func _retire_camera(command: String) -> void:
+	for action: RefCounted in _actions.keys():
+		var data: Dictionary = _actions[action]
+		if data.kind == "camera" and (command == "camera_reset" or data.channel == _camera_channel(command)):
+			_untrack(action)
+
+
+func _dispatch_camera(step: Dictionary, generation: int) -> void:
+	if not is_instance_valid(_cameras):
+		_finish(false, "CameraDirector unavailable")
+		return
+	var target: Variant
+	if step.has("actor"):
+		target = _actors.get_actor(StringName(step.actor)) if is_instance_valid(_actors) else null
+	elif step.has("target"):
+		target = _target(step.target)
+		if target is StringName:
+			target = _actors.get_position(target) if is_instance_valid(_actors) else null
+	if step.command in ["camera_focus", "camera_move"] and target == null:
+		_finish(false, "Camera target unavailable")
+		return
+	_retire_camera(step.command)
+	var action: CameraAction
+	_used_camera = true
+	match step.command:
+		"camera_focus": action = _cameras.camera_focus(target, step.get("duration", 0.8))
+		"camera_move": action = _cameras.camera_move(target.global_position if target is Node2D else target, step.get("duration", 0.8))
+		"camera_shake": action = _cameras.camera_shake(step.get("intensity", 2.0), step.get("duration", 0.3), step.get("decay", 1.5))
+		"camera_zoom": action = _cameras.camera_zoom(step.value, step.get("duration", 0.5))
+		"camera_reset": action = _cameras.camera_reset()
+	if _is_current(generation):
+		_track(action, "camera", step.get("wait", true), generation, _camera_channel(step.command))
+
+
+func _dispatch_audio(step: Dictionary, generation: int) -> void:
+	if _audio == null:
+		step_skipped.emit(_event_id, _index, "Optional audio adapter unavailable")
+		if _is_current(generation):
+			_schedule_next()
+		return
+	var action := _audio.request(step)
+	if not _audio.last_error.is_empty():
+		step_skipped.emit(_event_id, _index, _audio.last_error)
+	if _is_current(generation):
+		# A newer BGM transition intentionally replaces its predecessor.
+		if step.command != "play_sfx":
+			for old: RefCounted in _actions.keys():
+				if _actions[old].channel == "music":
+					_untrack(old)
+		_track(action, "audio", step.get("wait", step.command != "play_sfx"), generation, "sfx" if step.command == "play_sfx" else "music")
+
+
+func _track(action: RefCounted, kind: String, blocking: bool, generation: int, channel: String = "") -> void:
+	var callback := _on_action_finished.bind(generation)
+	_actions[action] = {"kind": kind, "wait": blocking, "index": _index, "callback": callback, "channel": channel}
+	action.finished.connect(callback)
+	if not blocking:
+		_schedule_next()
+
+
+func _untrack(action: RefCounted) -> void:
+	var callback: Callable = _actions[action].callback
+	_actions.erase(action)
+	if action.finished.is_connected(callback):
+		action.finished.disconnect(callback)
+
+
+func _on_action_finished(action: RefCounted, generation: int) -> void:
+	if not _is_current(generation) or not _actions.has(action):
+		return
+	var data: Dictionary = _actions[action]
+	_untrack(action) # Consume before signals or scheduling: duplicate notices are harmless.
+	var succeeded: bool = action.result == CameraAction.Result.COMPLETED if action is CameraAction else action.succeeded
+	if not succeeded:
+		_finish(false, "Action from steps[%d] failed: %s" % [data.index, action.reason])
+	elif data.wait and data.index == _index:
+		_schedule_next()
+	elif _index == _event["steps"].size():
+		_pending = true
+
+
+func _cancel_actions() -> void:
+	for action: RefCounted in _actions.keys():
+		_untrack(action)
+		if action is ActorAction and is_instance_valid(_actors):
+			_actors.cancel_action(action, "Story finished")
+	if _used_camera and is_instance_valid(_cameras):
+		_cameras.cancel_all("Story finished")
+	_used_camera = false
 
 
 func _on_dialogue_ended(id: String, cancelled: bool) -> void:
@@ -277,13 +428,12 @@ func _finish(succeeded: bool, reason: String = "") -> void:
 	_pending = false
 	set_process(false)
 	_timer.stop()
+	_cancel_actions()
 	if not _waiting_dialogue.is_empty() and is_instance_valid(_manager):
 		_manager.end_dialogue(true)
 	_waiting_dialogue = ""
-	for sound in _sounds:
-		sound.stop()
-		sound.queue_free()
-	_sounds.clear()
+	if _audio != null:
+		_audio.stop_owned()
 	if succeeded and _event.get("once", true):
 		_state.complete_event(id)
 	_event_id = ""

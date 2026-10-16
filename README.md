@@ -122,3 +122,5 @@ godot --headless --path . --script res://tests/verify_actor_director.gd
 | [字体说明](assets/fonts/fusion_pixel/README.md) | 像素字体来源与许可 |
 
 设计文档描述目标功能，模块说明包含历史验证记录；当前入口与配置以代码、场景和 `project.godot` 为准。素材来源及授权信息请查阅对应说明与许可证。
+
+剧情镜头系统的公开 API、Signal、独立 Demo 与验证方式见 [CameraDirector 说明](docs/camera_director.md)。

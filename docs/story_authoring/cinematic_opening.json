@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "source": "res://docs/design/cinematic_opening.md",
+  "source_sha256": "5996eb02f842f21b167f5339a7184ac4e642249c5f1a7e3662fd2cc82de03350",
+  "scene": "res://src/debug/cinematic/cinematic_demo.tscn",
+  "story": "res://src/resources/story/cinematic_opening.json",
+  "dialogue": "res://src/resources/dialogue/cinematic_opening.json",
+  "beats": [
+    {
+      "id": "quiet_shop",
+      "event": "cinematic.opening",
+      "start": 0,
+      "count": 4,
+      "dialogues": [
+        "cinematic.monologue"
+      ]
+    },
+    {
+      "id": "arrival",
+      "event": "cinematic.opening",
+      "start": 4,
+      "count": 10,
+      "dialogues": []
+    },
+    {
+      "id": "rumble",
+      "event": "cinematic.opening",
+      "start": 14,
+      "count": 4,
+      "dialogues": [
+        "cinematic.reaction"
+      ]
+    },
+    {
+      "id": "return_control",
+      "event": "cinematic.opening",
+      "start": 18,
+      "count": 3,
+      "dialogues": []
+    }
+  ],
+  "cases": [
+    {
+      "event": "cinematic.opening",
+      "timeout": 40,
+      "reading_seconds": 0.05,
+      "choices": {},
+      "expected_skips": []
+    }
+  ]
+}

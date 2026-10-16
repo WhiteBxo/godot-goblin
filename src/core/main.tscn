@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://b38vrnrlviw78" path="res://src/core/main.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://src/levels/milkTea/milk_tea_shop.tscn" id="2_map"]
 [ext_resource type="PackedScene" path="res://src/gameplay/player/shop_player.tscn" id="3_player"]
+[ext_resource type="PackedScene" path="res://src/core/audio/audio_manager.tscn" id="4_audio"]
 
 [node name="MainGame" type="Node" unique_id=1512212887]
 process_mode = 3
@@ -10,6 +11,8 @@ script = ExtResource("1_main")
 
 [node name="Systems" type="Node" parent="." unique_id=601625153]
 process_mode = 1
+
+[node name="AudioManager" parent="Systems" instance=ExtResource("4_audio")]
 
 [node name="World" type="Node2D" parent="." unique_id=1438876914]
 process_mode = 1

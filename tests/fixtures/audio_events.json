@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "events": {
+    "audio.owned": {"once": false, "steps": [
+      {"command": "play_sfx", "id": "demo.story"},
+      {"command": "play_sfx", "path": "res://src/debug/story/strange_knock.tres"},
+      {"command": "wait", "seconds": 2.0}
+    ]},
+    "audio.missing": {"once": false, "steps": [
+      {"command": "play_sfx", "id": "missing.sound"},
+      {"command": "play_sfx", "path": "res://missing.wav"},
+      {"command": "play_sfx", "path": "res://src/core/audio/audio_manager.tscn"},
+      {"command": "set_flag", "key": "audio.after_missing"}
+    ]},
+    "audio.finish": {"once": false, "steps": [
+      {"command": "play_sfx", "id": "demo.story"},
+      {"command": "wait", "seconds": 0.05}
+    ]}
+  }
+}

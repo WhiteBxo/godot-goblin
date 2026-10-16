@@ -83,13 +83,14 @@ mouse_filter = 2
 
 [node name="Panel" type="PanelContainer" parent="."]
 layout_mode = 1
-anchors_preset = 12
+anchors_preset = 7
+anchor_left = 0.5
 anchor_top = 1.0
-anchor_right = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = 12.0
-offset_top = -232.0
-offset_right = -12.0
+offset_left = -280.0
+offset_top = -148.0
+offset_right = 280.0
 offset_bottom = -12.0
 grow_horizontal = 2
 grow_vertical = 0
@@ -97,14 +98,14 @@ theme_override_styles/panel = SubResource("PanelStyle")
 
 [node name="Margin" type="MarginContainer" parent="Panel"]
 layout_mode = 2
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 6
 
 [node name="Content" type="VBoxContainer" parent="Panel/Margin"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 
 [node name="Speaker" type="Label" parent="Panel/Margin/Content"]
 layout_mode = 2
@@ -112,14 +113,14 @@ theme_override_colors/font_color = Color(1, 0.82, 0.48, 1)
 theme_override_font_sizes/font_size = 12
 
 [node name="Line" type="HBoxContainer" parent="Panel/Margin/Content"]
-custom_minimum_size = Vector2(0, 64)
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 12
 
 [node name="Portrait" type="TextureRect" parent="Panel/Margin/Content/Line"]
 visible = false
-custom_minimum_size = Vector2(64, 64)
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 size_flags_vertical = 0
 texture_filter = 1
@@ -131,11 +132,12 @@ layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 1
 theme_override_styles/normal = SubResource("EmptyStyle")
-scroll_following = true
+scroll_active = true
+scroll_following = false
 
 [node name="ChoiceScroll" type="ScrollContainer" parent="Panel/Margin/Content"]
 visible = false
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 horizontal_scroll_mode = 0
 follow_focus = true

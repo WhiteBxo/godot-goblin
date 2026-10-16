@@ -54,37 +54,42 @@ func _run() -> void:
 	await _frames(12)
 	# Every saved obstacle must physically block the actual player's foot shape.
 	for collider: CollisionShape2D in level.get_node("WallsAndFurniture").get_children():
-		var size: Vector2 = collider.shape.size
+		var size: Vector2 = collider.shape.size * collider.global_scale
 		var start := collider.global_position + Vector2(0, size.y * 0.5 + 22)
 		_check(player.test_move(Transform2D(0.0, start), Vector2(0, -44)), "Missing collision: " + collider.name)
 	# Push into the real counter for one second; the player must stay outside.
-	player.global_position = Vector2(800, 620)
+	player.global_position = level.to_global(Vector2(834, 400))
 	Input.action_press("move_down")
 	await _frames(60)
 	Input.action_release("move_down")
 	var counter: CollisionShape2D = level.get_node("WallsAndFurniture/FrontCounter")
 	var feet: CapsuleShape2D = player.get_node("CollisionShape2D").shape
-	var stop_y: float = counter.global_position.y - counter.shape.size.y * 0.5 - feet.radius
+	var stop_y: float = counter.global_position.y - counter.shape.size.y * counter.global_scale.y * 0.5 - feet.radius
 	_check(player.global_position.y <= stop_y + 0.1, "Player's feet must stay outside the counter")
 	# A diagonal approach must slide along the counter instead of sticking or crossing it.
 	player.velocity = Vector2.ZERO
-	player.global_position = Vector2(800, 620)
+	player.global_position = level.to_global(Vector2(834, 400))
 	Input.action_press("move_down")
 	Input.action_press("move_right")
 	await _frames(45)
 	Input.action_release("move_down")
 	Input.action_release("move_right")
-	_check(player.global_position.x > 870.0 and player.global_position.y <= stop_y + 0.1, "Diagonal movement slides along furniture")
+	_check(player.global_position.x > level.to_global(Vector2(895, 400)).x and player.global_position.y <= stop_y + 0.1, "Diagonal movement slides along furniture")
 	player.velocity = Vector2.ZERO
-	player.global_position = Vector2(120, 740)
+	player.global_position = level.to_global(Vector2(175, 570))
 	Input.action_press("move_left")
 	await _frames(30)
 	Input.action_release("move_left")
 	var west: CollisionShape2D = level.get_node("WallsAndFurniture/WestWall")
-	var stop_x: float = west.global_position.x + west.shape.size.x * 0.5 + feet.height * 0.5
+	var stop_x: float = west.global_position.x + west.shape.size.x * west.global_scale.x * 0.5 + feet.height * 0.5
 	_check(player.global_position.x >= stop_x and player.global_position.x < stop_x + 1.0, "Player stops at the actual west wall")
 	player.velocity = Vector2.ZERO
+	for door: AutomaticDoor in level.get_node("Doors").get_children():
+		door._set_open(true)
+	await _frames(3)
 	_check(_reachable(level, player), "All three interaction points must be reachable from spawn")
+	for door: AutomaticDoor in level.get_node("Doors").get_children():
+		door._set_open(false)
 	for point in level.get_interaction_points():
 		player.global_position = point.global_position
 		await _frames(3)
@@ -115,7 +120,7 @@ func _run() -> void:
 		await _key(KEY_E)
 		await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png("res://.godot/milk_tea_verification/orders.png")
-	print("MILK_TEA_SHOP: ", "PASS" if _failures.is_empty() else "FAIL", " (movement, 15 obstacles, reachability, 3 UIs, input and movement lock)")
+	print("MILK_TEA_SHOP: ", "PASS" if _failures.is_empty() else "FAIL", " (movement, saved obstacles, reachability, 3 UIs, input and movement lock)")
 	quit(0 if _failures.is_empty() else 1)
 
 func _e_event() -> InputEventKey:
@@ -138,7 +143,7 @@ func _reachable(level: MilkTeaShop, player: ShopPlayer) -> bool:
 		cursor += 1
 		for offset: Vector2i in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
 			var next := cell + offset
-			if visited.has(next) or next.x < 0 or next.y < 0 or next.x > 69 or next.y > 38:
+			if visited.has(next) or next.x < 0 or next.y < 0 or next.x > ceili(level.get_world_bounds().end.x / 24.0) or next.y > ceili(level.get_world_bounds().end.y / 24.0):
 				continue
 			query.transform = Transform2D(0.0, Vector2(next) * 24.0)
 			if space.intersect_shape(query, 1).is_empty() and not player.test_move(Transform2D(0.0, Vector2(cell) * 24.0), Vector2(offset) * 24.0):

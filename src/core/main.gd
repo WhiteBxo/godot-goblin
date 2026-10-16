@@ -26,7 +26,6 @@ func _ready() -> void:
 	if _shop_level != null:
 		_shop_player = $World/EntityRoot/Player as ShopPlayer
 		_shop_player.global_position = _shop_level.get_spawn_position()
-<<<<<<< HEAD
 		_shop_player.configure_camera(_shop_level.get_camera_bounds())
 		_create_camera_system(_shop_player.camera)
 		var ui: ShopUI = preload("res://src/UI/milk_tea/shop_ui.tscn").instantiate()
@@ -60,7 +59,7 @@ func get_active_level() -> Node2D:
 	return _shop_level if _shop_level != null else _active_level
 
 func get_player() -> CharacterBody2D:
-	return _shop_player if _shop_player != null else _player
+	return _shop_player if is_instance_valid(_shop_player) else (_player if is_instance_valid(_player) else null)
 
 func get_dialogue_manager() -> DialogueManager:
 	return _dialogue_manager
@@ -69,7 +68,7 @@ func get_audio_manager() -> AudioManager:
 	return _audio_manager
 
 func get_camera_director() -> CameraDirector:
-	return _camera_director
+	return _camera_director if is_instance_valid(_camera_director) else null
 
 func _create_camera_system(camera: BoundedFollowCamera) -> void:
 	_camera_director = CameraDirector.new()
@@ -78,13 +77,15 @@ func _create_camera_system(camera: BoundedFollowCamera) -> void:
 	_camera_director.configure(camera)
 
 func get_story_director() -> StoryDirector:
-	return _story_director
+	return _story_director if is_instance_valid(_story_director) else null
 
 func get_actor_director() -> ActorDirector:
-	return _actor_director
+	return _actor_director if is_instance_valid(_actor_director) else null
 
 func _route_story_interaction(id: StringName) -> bool:
-	# Only an absent route falls through to the existing ShopUI.
+	# An unavailable service or absent route falls through to the existing ShopUI.
+	if not is_instance_valid(_story_director):
+		return false
 	return _story_director.request_interaction(String(id)) != ERR_DOES_NOT_EXIST
 
 func _create_dialogue_system() -> void:
@@ -106,12 +107,20 @@ func _create_dialogue_system() -> void:
 	_story_director.name = "StoryDirector"
 	$Systems.add_child(_story_director)
 	_story_director.configure(_dialogue_manager, _can_start_story)
-	if is_instance_valid(_camera_director):
-		_story_director.event_finished.connect(func(_id: String, _ok: bool, _reason: String) -> void: _camera_director.cancel_all("Story finished"))
-		_story_director.tree_exiting.connect(_camera_director.cancel_all.bind("StoryDirector exited"))
+	_story_director.configure_cinematic(_actor_director, _camera_director)
+	_story_director.tree_exiting.connect(_on_story_exiting)
 	_story_director.set_audio_adapter(StoryAudioAdapter.new(_audio_manager))
 	_story_director.event_started.connect(func(_id: String) -> void: _refresh_input_lock())
-	_story_director.event_finished.connect(func(_id: String, _ok: bool, _reason: String) -> void: _refresh_input_lock())
+	_story_director.event_finished.connect(_on_story_finished)
+
+func _on_story_finished(_id: String, _ok: bool, _reason: String) -> void:
+	if is_instance_valid(_camera_director):
+		_camera_director.cancel_all("Story finished")
+	_refresh_input_lock()
+
+func _on_story_exiting() -> void:
+	if is_instance_valid(_camera_director):
+		_camera_director.cancel_all("StoryDirector exited")
 
 func _can_start_story() -> bool:
 	return not is_instance_valid(_shop_ui) or not _shop_ui.is_open()
@@ -139,8 +148,9 @@ func _refresh_input_lock() -> void:
 		return
 	var player := get_player() as PlayerController
 	if should_lock:
-		_movement_before_dialogue = player.movement_enabled
-		player.set_movement_enabled(false)
+		if is_instance_valid(player):
+			_movement_before_dialogue = player.movement_enabled
+			player.set_movement_enabled(false)
 		if is_instance_valid(_shop_interaction):
 			_interaction_before_dialogue = _shop_interaction.is_input_enabled()
 			_shop_interaction.set_input_enabled(false)

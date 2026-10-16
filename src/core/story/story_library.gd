@@ -147,13 +147,91 @@ func _step(step: Variant, context: String) -> bool:
 			if not step.get("value") is String:
 				return _invalid(context, "set_stage requires a string value")
 		"play_sfx":
-			fields.append_array(["path", "id"])
+			fields.append_array(["path", "id", "wait"])
+			if not step.get("wait", false) is bool:
+				return _invalid(context, "wait must be bool")
 			if step.has("id") == step.has("path"):
 				return _invalid(context, "play_sfx requires exactly one of id or path")
 			if step.has("id") and (not step["id"] is String or step["id"].is_empty()):
 				return _invalid(context, "play_sfx requires a non-empty id")
 			if step.has("path") and (not step["path"] is String or not step["path"].begins_with("res://")):
 				return _invalid(context, "play_sfx requires a res:// path")
+		"actor_spawn", "actor_move", "actor_face", "actor_emote", "actor_show", "actor_hide", "camera_focus", "camera_move", "camera_shake", "camera_zoom", "camera_reset", "play_bgm", "stop_bgm", "fade_bgm":
+			return _cinematic_step(step, context)
 		_:
 			return _invalid(context, "Unknown command '%s'" % step["command"])
+	return _keys(step, fields, context) and _conditions(step.get("when", {}), context)
+
+
+func _text(value: Variant) -> bool:
+	return value is String and not value.strip_edges().is_empty()
+
+
+func _target(value: Variant) -> bool:
+	return _text(value) or (value is Array and value.size() == 2 and _number(value[0]) and _number(value[1]))
+
+
+func _cinematic_step(step: Dictionary, context: String) -> bool:
+	var command: String = step.command
+	var fields: Array = ["command", "when", "wait"]
+	if not step.get("wait", true) is bool:
+		return _invalid(context, "wait must be bool")
+	if command.begins_with("actor_"):
+		fields.append("actor")
+		if not _text(step.get("actor")):
+			return _invalid(context, "actor requires a non-empty registered ID")
+	match command:
+		"actor_spawn", "actor_move":
+			fields.append("target")
+			if not _target(step.get("target")):
+				return _invalid(context, "target requires a position ID or finite [x, y]")
+			if command == "actor_spawn":
+				fields.append("scene")
+				if not _text(step.get("scene")) or not step.scene.begins_with("res://") or not step.scene.ends_with(".tscn"):
+					return _invalid(context, "scene requires a res:// .tscn path")
+			else:
+				fields.append_array(["speed", "timeout"])
+				for field: String in ["speed", "timeout"]:
+					if not _number(step.get(field, 1.0)) or step.get(field, 1.0) <= 0.0:
+						return _invalid(context, field + " must be finite and positive")
+		"actor_face":
+			fields.append("direction")
+			if step.get("direction") not in ["up", "down", "left", "right"]:
+				return _invalid(context, "direction must be up/down/left/right")
+		"actor_emote":
+			fields.append_array(["symbol", "duration"])
+			if not _text(step.get("symbol", "!")):
+				return _invalid(context, "symbol must be non-empty text")
+		"camera_focus":
+			fields.append_array(["actor", "target", "duration"])
+			if step.has("actor") == step.has("target") or (step.has("actor") and not _text(step.actor)) or (step.has("target") and not _target(step.target)):
+				return _invalid(context, "focus requires exactly one actor ID or target")
+		"camera_move":
+			fields.append_array(["target", "duration"])
+			if not _target(step.get("target")):
+				return _invalid(context, "camera_move requires a position ID or finite [x, y]")
+		"camera_shake":
+			fields.append_array(["intensity", "duration", "decay"])
+			for field: String in ["intensity", "decay"]:
+				if not _number(step.get(field, 1.0)) or step.get(field, 1.0) < 0.0:
+					return _invalid(context, field + " must be finite and nonnegative")
+		"camera_zoom":
+			fields.append_array(["value", "duration"])
+			if not _number(step.get("value")) or step.value <= 0.0:
+				return _invalid(context, "zoom value must be finite and positive")
+		"play_bgm":
+			fields.append_array(["id", "fade", "volume_db"])
+			if not _text(step.get("id")):
+				return _invalid(context, "play_bgm requires a non-empty audio ID")
+		"stop_bgm":
+			fields.append("fade")
+		"fade_bgm":
+			fields.append_array(["volume_db", "fade"])
+			if not _number(step.get("volume_db")):
+				return _invalid(context, "fade_bgm requires finite volume_db")
+	for field: String in ["duration", "fade", "volume_db"]:
+		if step.has(field) and (not _number(step[field]) or (field != "volume_db" and step[field] < 0.0)):
+			return _invalid(context, field + " must be finite; times must be nonnegative")
+	if command == "actor_emote" and step.get("duration", 0.8) <= 0.0:
+		return _invalid(context, "emote duration must be positive")
 	return _keys(step, fields, context) and _conditions(step.get("when", {}), context)

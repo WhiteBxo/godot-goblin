@@ -2,6 +2,8 @@ class_name AudioManager
 extends Node
 ## Scene-local, non-positional audio. Music is independent of sound ownership.
 
+signal sound_finished(handle: int, cancelled: bool)
+
 const SILENCE_DB: float = -80.0
 const INVALID_HANDLE: int = 0
 
@@ -13,6 +15,7 @@ var last_error: String = ""
 var _music: AudioStreamPlayer
 var _music_id: String = ""
 var _music_tween: Tween
+var _music_action: AudioAction
 var _players: Array[AudioStreamPlayer] = []
 var _active: Dictionary = {}
 var _next_handle: int = 1
@@ -51,9 +54,10 @@ func play_bgm(id: String, fade_seconds: float = 0.5, volume_db: float = 0.0) -> 
 	var stream := _resolve(id)
 	if stream == null:
 		return ERR_DOES_NOT_EXIST
-	_kill_music_tween()
 	if _music.playing and _music_id == id and _music.stream == stream:
 		return fade_bgm(volume_db, fade_seconds)
+	_kill_music_tween()
+	_music_action = AudioAction.new()
 	if _music.playing and fade_seconds > 0.0:
 		_music_tween = create_tween()
 		_music_tween.tween_property(_music, "volume_db", SILENCE_DB, fade_seconds)
@@ -62,8 +66,14 @@ func play_bgm(id: String, fade_seconds: float = 0.5, volume_db: float = 0.0) -> 
 	else:
 		_start_music(id, stream, SILENCE_DB if fade_seconds > 0.0 else clampf(volume_db, SILENCE_DB, 6.0))
 		if fade_seconds > 0.0:
-			fade_bgm(volume_db, fade_seconds)
+			_music_tween = create_tween()
+			_music_tween.tween_property(_music, "volume_db", clampf(volume_db, SILENCE_DB, 6.0), fade_seconds)
+	_watch_music_transition()
 	return OK
+
+
+func get_music_action() -> AudioAction:
+	return _music_action
 
 
 func fade_bgm(volume_db: float, seconds: float) -> Error:
@@ -71,11 +81,13 @@ func fade_bgm(volume_db: float, seconds: float) -> Error:
 		return ERR_INVALID_PARAMETER
 	last_error = ""
 	_kill_music_tween()
+	_music_action = AudioAction.new()
 	if seconds == 0.0:
 		_music.volume_db = clampf(volume_db, SILENCE_DB, 6.0)
 	else:
 		_music_tween = create_tween()
 		_music_tween.tween_property(_music, "volume_db", clampf(volume_db, SILENCE_DB, 6.0), seconds)
+	_watch_music_transition()
 	return OK
 
 
@@ -84,12 +96,15 @@ func stop_bgm(fade_seconds: float = 0.0) -> void:
 		return
 	last_error = ""
 	_kill_music_tween()
+	_music_action = AudioAction.new()
 	if fade_seconds > 0.0 and _music.playing:
 		_music_tween = create_tween()
 		_music_tween.tween_property(_music, "volume_db", SILENCE_DB, fade_seconds)
 		_music_tween.tween_callback(_stop_music)
 	else:
 		_stop_music()
+
+	_watch_music_transition()
 
 
 func play_sfx(id: String, owner: RefCounted = null, volume_db: float = 0.0) -> int:
@@ -113,7 +128,7 @@ func play_sfx_path(path: String, owner: RefCounted = null) -> int:
 	return _play_sound(stream, &"SFX", owner, 0.0)
 
 
-func stop_sound(handle: int, fade_seconds: float = 0.0) -> void:
+func stop_sound(handle: int, fade_seconds: float = 0.0, cancelled: bool = true) -> void:
 	if not _active.has(handle) or not _valid_fade(fade_seconds):
 		return
 	var voice: Dictionary = _active[handle]
@@ -131,6 +146,7 @@ func stop_sound(handle: int, fade_seconds: float = 0.0) -> void:
 	player.stop()
 	player.stream = null
 	_active.erase(handle)
+	sound_finished.emit(handle, cancelled)
 
 
 ## Null is reserved for unowned scene/UI sounds and never means "stop all".
@@ -138,7 +154,7 @@ func stop_owned(owner: RefCounted, fade_seconds: float = 0.0) -> void:
 	if owner == null:
 		return
 	for handle: int in _active.keys():
-		if _active[handle]["owner"] == owner:
+		if _active.has(handle) and _active[handle]["owner"] == owner:
 			stop_sound(handle, fade_seconds)
 
 
@@ -210,7 +226,7 @@ func _play_sound(stream: AudioStream, bus: StringName, owner: RefCounted, volume
 func _on_sound_finished(player: AudioStreamPlayer) -> void:
 	for handle: int in _active.keys():
 		if _active[handle]["player"] == player:
-			stop_sound(handle)
+			stop_sound(handle, 0.0, false)
 			return
 
 
@@ -233,7 +249,17 @@ func _on_music_finished() -> void:
 	_music_id = ""
 
 
+func _watch_music_transition() -> void:
+	if _music_tween != null and _music_tween.is_valid():
+		if not _music_tween.finished.is_connected(_music_action.settle.bind(true)):
+			_music_tween.finished.connect(_music_action.settle.bind(true))
+	else:
+		_music_action.settle(true)
+
+
 func _kill_music_tween() -> void:
+	if _music_action != null:
+		_music_action.settle(false, "Music transition replaced or cancelled")
 	if _music_tween != null:
 		_music_tween.kill()
 		_music_tween = null

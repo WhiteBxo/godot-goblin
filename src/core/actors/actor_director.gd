@@ -68,6 +68,11 @@ func register_position(position_id: StringName, marker: Marker2D) -> Error:
 	_positions[position_id] = weakref(marker)
 	return OK
 
+func get_position(position_id: StringName) -> Marker2D:
+	var reference: WeakRef = _positions.get(position_id)
+	var marker := reference.get_ref() as Marker2D if reference != null else null
+	return marker if is_instance_valid(marker) and marker.is_inside_tree() and not marker.is_queued_for_deletion() else null
+
 func unregister_position(position_id: StringName) -> void:
 	_positions.erase(position_id)
 

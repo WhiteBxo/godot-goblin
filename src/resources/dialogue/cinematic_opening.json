@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "dialogues": {
+    "cinematic.monologue": {
+      "start": "opening",
+      "lines": {
+        "opening": {
+          "speaker": "主角·内心",
+          "text": "午后了，店里还是这么安静。希望今天能有几位客人……至少让我付得起下个月的房租。"
+        }
+      }
+    },
+    "cinematic.reaction": {
+      "start": "reaction",
+      "lines": {
+        "reaction": {
+          "speaker": "主角",
+          "text": "……刚才的声音，是从地板下面传来的吗？别怕，先让我看看。"
+        }
+      }
+    }
+  }
+}

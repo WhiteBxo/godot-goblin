@@ -73,3 +73,9 @@ MainGame 注入 `StoryAudioAdapter.new(audio)`，Director 只调用适配层，�
 音频测试覆盖实际播放状态、淡入淡出中间值/终点、连续换曲、取消延迟停止、自然结束、池满、复用和旧 handle、owner 隔离、暂停语义、真实 Director 取消/退出/服务移除、缺失资源及独立 Demo。非 headless 运行测试时加 `-- --capture` 可保存 `/private/tmp/audio-demo.png`。自动化检查能确认播放调度与状态，最终听感按上述步骤人工验收。
 
 依据 Godot 4.7 官方文档：[AudioStreamPlayer](https://docs.godotengine.org/en/4.7/classes/class_audiostreamplayer.html) 的 `stop()` 不发 `finished`，因此显式回收；[Tween](https://docs.godotengine.org/en/4.7/classes/class_tween.html) 同一属性避免多个 Tween，替换时 kill、退出时随绑定节点清理；[Audio Bus](https://docs.godotengine.org/en/4.7/tutorials/audio/audio_buses.html) 默认布局和 Bus 路由；[Node process mode](https://docs.godotengine.org/en/4.7/classes/class_node.html) 与 [AudioStreamWAV](https://docs.godotengine.org/en/4.7/classes/class_audiostreamwav.html) 暂停和循环设置。
+
+## StoryDirector Cinematic 接入
+
+旧 play_bgm / fade_bgm / stop_bgm 返回类型不变，新增 `get_music_action() -> AudioAction` 返回最近一次有效音乐操作的独立结果。`completed / succeeded / reason` 可检查状态，`finished(action)` deferred 发布且只结算一次；自然淡变完成成功，替换、取消、服务退出失败。零时长同样返回可连接的结果；等待的是音乐过渡，不是循环曲目结束。
+
+新增 `sound_finished(handle, cancelled)` 在声音归还池后发出；自然结束 cancelled=false，stop/owner 清理为 true。适配层把声音 handle 转为 AudioAction，并在事件结束断开通知。JSON 新增 play_bgm / stop_bgm / fade_bgm 和可选 wait；原 play_sfx id/path 均兼容。声音缺失继续 skipped，默认 SFX 非阻塞、新 BGM 指令阻塞。场景 BGM 与新外部请求通过最近 action 身份和所属音效 owner 区分，详见 [演出调度与所有权](story_director.md#并行冲突与取消)。

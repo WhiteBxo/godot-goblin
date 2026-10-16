@@ -58,12 +58,12 @@ if back.result == CameraAction.Result.COMPLETED:
 
 位置（focus/move/follow）、缩放、震动为三个独立通道，可以并行。同通道新动作将旧动作标记 CANCELLED。reset/cancel_all 终止所有通道。需要按顺序演出时，请按返回的 action 等待；并行时按各自 action.id 区分，不能假定 Director 的下一个完成 signal 就是自己等待的动作。
 
-MainGame 已将现有 StoryDirector 的 event_finished（成功、失败、取消）和 tree_exiting 接到镜头清理，因此剧情取消或退出不会遗留 Cinematic。尚未向 StoryLibrary 的 JSON 指令表加入 camera 指令；后续在其校验表和现有 dispatch 中调用本服务并等待 CameraAction 即可，无需新建剧情调度器。镜头服务自身不锁定玩家；剧情仍由 MainGame 原有输入锁负责。
+MainGame 已通过 `configure_cinematic` 把 CameraDirector 接入 StoryDirector；JSON 支持 focus/move/shake/zoom/reset，默认等待对应 CameraAction。事件结束、失败、取消和退出都恢复默认镜头。位置 ID 通过 ActorDirector 的共享 Marker 表解析，无 NodePath。完整语法与同通道替换策略见 [Cinematic Integration](story_director.md#演出-json-指令)。
 
 ## 相机职责与边界
 
-- Follow 保留现有相机的父子关系、`position_smoothing_enabled`、8.0 平滑速度和默认 0.75 zoom。当前 BoundedFollowCamera 没有自定义 `_physics_process` 跟随，跟随来自玩家父节点及 Camera2D 内置处理。
-- Cinematic 将同一个相机设为 top_level，关闭内置位置平滑。Director 只 tween 进度并调用相机公开方法，相机计算最终位置；跟随和 Tween 不会竞争同一个 transform。回到 Follow 后恢复原有局部位置和内置平滑。
+- Follow 使用现有 BoundedFollowCamera 的世界坐标跟随实现：top_level 保持 true，在物理 tick 更新目标，保留 Camera2D 内置位置平滑与 preferred_zoom（当前默认为 0.5）。测试通过 get_follow_position 和 get_directed_zoom 验证，避免依赖旧局部坐标实现。
+- Cinematic 将同一个相机设为 top_level，关闭内置位置平滑。Director 只 tween 进度并调用相机公开方法，相机计算最终位置；跟随和 Tween 不会竞争同一个 transform。回到 Follow 后恢复原有世界坐标跟随和内置平滑。
 - Cinematic 的像素对齐在 zoom 后的视口空间执行；边界优先，极限位置允许不足一个像素的修正。平滑缩放仍会产生连续采样，不能保证任意分数 zoom 都呈现整数倍像素；沿用项目 nearest filter 和像素 snap 配置，不改动默认跟随手感。
 - 相机根据视口 / 整数背景边界动态计算最小缩放，再按当前可见世界半尺寸限制中心。窗口变化保留演出请求的 zoom，并重新约束实际 zoom 和位置；不会重新使用 preferred_zoom 覆盖正在执行的缩放。
 - Camera2D.offset 会绕过引擎 limits；震动因此同时约束当前平滑中心和跟随终点的可用偏移，并向零取整到视口像素。紧贴地图边缘时向外震动被裁掉；地图刚好填满视口时该方向没有震动空间。

@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "events": {
+    "cinematic.opening": {
+      "once": false,
+      "steps": [
+        {
+          "command": "actor_face",
+          "actor": "player",
+          "direction": "down"
+        },
+        {
+          "command": "play_bgm",
+          "id": "cinematic.room",
+          "fade": 0.5,
+          "volume_db": -24
+        },
+        {
+          "command": "dialogue",
+          "id": "cinematic.monologue"
+        },
+        {
+          "command": "wait",
+          "seconds": 1
+        },
+        {
+          "command": "play_sfx",
+          "id": "cinematic.bell",
+          "wait": true
+        },
+        {
+          "command": "actor_face",
+          "actor": "player",
+          "direction": "right"
+        },
+        {
+          "command": "camera_focus",
+          "target": "door",
+          "duration": 0.9
+        },
+        {
+          "command": "actor_spawn",
+          "actor": "customer",
+          "scene": "res://src/debug/cinematic/customer.tscn",
+          "target": "door"
+        },
+        {
+          "command": "camera_focus",
+          "actor": "customer",
+          "duration": 1.2,
+          "wait": false
+        },
+        {
+          "command": "actor_move",
+          "actor": "customer",
+          "target": "aisle",
+          "speed": 100,
+          "timeout": 6
+        },
+        {
+          "command": "actor_move",
+          "actor": "customer",
+          "target": "counter",
+          "speed": 90,
+          "timeout": 7
+        },
+        {
+          "command": "actor_face",
+          "actor": "customer",
+          "direction": "left"
+        },
+        {
+          "command": "actor_emote",
+          "actor": "customer",
+          "symbol": "!",
+          "duration": 1.2
+        },
+        {
+          "command": "wait",
+          "seconds": 1
+        },
+        {
+          "command": "play_sfx",
+          "id": "cinematic.rumble"
+        },
+        {
+          "command": "camera_shake",
+          "intensity": 2,
+          "duration": 0.7
+        },
+        {
+          "command": "wait",
+          "seconds": 1.5
+        },
+        {
+          "command": "dialogue",
+          "id": "cinematic.reaction"
+        },
+        {
+          "command": "wait",
+          "seconds": 1
+        },
+        {
+          "command": "stop_bgm",
+          "fade": 0.7
+        },
+        {
+          "command": "camera_reset"
+        }
+      ]
+    }
+  }
+}

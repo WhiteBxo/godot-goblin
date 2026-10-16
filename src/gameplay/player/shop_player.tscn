@@ -1,10 +1,11 @@
 [gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://src/gameplay/player/shop_player.gd" id="1"]
-[ext_resource type="Texture2D" path="res://assets/characters/player/goblin.png" id="2"]
+[ext_resource type="SpriteFrames" path="res://src/gameplay/player/player_frames.tres" id="2"]
 
-[sub_resource type="CircleShape2D" id="Feet"]
-radius = 14.0
+[sub_resource type="CapsuleShape2D" id="Feet"]
+radius = 8.0
+height = 28.0
 
 [node name="Player" type="CharacterBody2D" groups=["player"]]
 z_index = 10
@@ -13,15 +14,20 @@ collision_layer = 2
 collision_mask = 1
 motion_mode = 1
 script = ExtResource("1")
+speed = 240.0
 
 [node name="Shadow" type="Polygon2D" parent="."]
 polygon = PackedVector2Array(-18, -2, -12, -7, 12, -7, 18, -2, 12, 4, -12, 4)
 color = Color(0.08, 0.04, 0.03, 0.4)
 
-[node name="Sprite" type="Sprite2D" parent="."]
-position = Vector2(0, -25)
-scale = Vector2(2.5, 2.5)
-texture = ExtResource("2")
+[node name="Visual" type="Node2D" parent="."]
+scale = Vector2(0.24, 0.24)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Visual"]
+sprite_frames = ExtResource("2")
+animation = &"idle_down"
+offset = Vector2(0, -144)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5707964
 shape = SubResource("Feet")

@@ -45,7 +45,7 @@ godot --headless --path . --script res://tools/map/import_cave_layout.gd -- --la
 - 原图集每格 32×32，边距和间距为 9；NW、NE、SW、SE 分别为 1、2、4、8。MASK_TO_ATLAS 在 CaveAtlas 中定义，原 demo 的显示格偏移半格。
 - prepare_cave_grid.gd 将原图集四个 16×16 象限重新拼成标准 32×32 格，生成 cave_ground.png、cave_border.png 及对应的外部 TileSet。布局坐标与 FloorLayer 现在完全对齐，原地图像素不变。
 - 原图的虚空黑化处理提前生成 cave_floor_processed.png，外部 TileSet 位于 src/resources/tilesets/，游戏启动时直接读取这些资源。
-- river_source.png 为成员 demo 中保留的生成源图，river.png 是 nearest 缩小到 32×32 的派生图；玩家外观由原 demo 的绘制代码生成 goblin.png。
+- river_source.png 为成员 demo 中保留的生成源图，river.png 是 nearest 缩小到 32×32 的派生图；玩家现使用用户提供的四向精灵图，切帧说明见 [玩家素材说明](../../assets/characters/player/README.md)。
 - 素材来源和生成提示词见 source_demo.md，说明沿用成员文档。
 - export_presets.cfg 保留 JSON 导出过滤，并排除文档、离线工具与测试；运行时不依赖 .godot 缓存中的自定义文件。
 

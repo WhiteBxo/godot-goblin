@@ -10,7 +10,6 @@ const SOURCE_PATH := "res://assets/map/cave/cave_floor_atlas.png"
 const FLOOR_PATH := "res://assets/map/cave/cave_floor_processed.png"
 const RIVER_SOURCE_PATH := "res://assets/map/cave/river_source.png"
 const RIVER_PATH := "res://assets/map/cave/river.png"
-const PLAYER_PATH := "res://assets/characters/player/goblin.png"
 
 var floor_atlas_source_image: Image
 var floor_atlas_processed_image: Image
@@ -22,7 +21,7 @@ func _initialize() -> void:
 		quit(1)
 		return
 	river_image.resize(TILE_SIZE, TILE_SIZE, Image.INTERPOLATE_NEAREST)
-	for output in [[floor_image, FLOOR_PATH], [river_image, RIVER_PATH], [_make_player_image(), PLAYER_PATH]]:
+	for output in [[floor_image, FLOOR_PATH], [river_image, RIVER_PATH]]:
 		var error: Error = output[0].save_png(output[1])
 		if error != OK:
 			printerr("Could not save ", output[1], ": ", error)
@@ -34,7 +33,7 @@ func _initialize() -> void:
 	if _write_tileset("res://src/resources/tilesets/cave_river.tres", RIVER_PATH, false) != OK:
 		quit(1)
 		return
-	print("PASS: cave atlas, river, player sprite and external TileSets prepared")
+	print("PASS: cave atlas, river and external TileSets prepared")
 	quit()
 
 func _write_tileset(path: String, texture_path: String, floor_atlas: bool) -> Error:
@@ -120,25 +119,3 @@ func _blacken_void_region(tile_origin: Vector2i, seed: Vector2i) -> int:
 		for direction in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
 			queue.append(pixel + direction)
 	return changed
-
-func _make_player_image() -> Image:
-	var image := Image.create(20, 26, false, Image.FORMAT_RGBA8)
-	image.fill(Color(0, 0, 0, 0))
-	_draw_rect(image, Rect2i(5, 3, 10, 8), Color("26332c"))
-	_draw_rect(image, Rect2i(4, 5, 12, 8), Color("76a45f"))
-	_draw_rect(image, Rect2i(2, 7, 3, 4), Color("64934f"))
-	_draw_rect(image, Rect2i(15, 7, 3, 4), Color("64934f"))
-	_draw_rect(image, Rect2i(5, 5, 10, 8), Color("8fbd70"))
-	_draw_rect(image, Rect2i(6, 9, 2, 2), Color("26332c"))
-	_draw_rect(image, Rect2i(12, 9, 2, 2), Color("26332c"))
-	_draw_rect(image, Rect2i(7, 15, 6, 7), Color("8b633f"))
-	_draw_rect(image, Rect2i(5, 14, 10, 8), Color("c89355"))
-	_draw_rect(image, Rect2i(6, 22, 3, 3), Color("3a302b"))
-	_draw_rect(image, Rect2i(11, 22, 3, 3), Color("3a302b"))
-	_draw_rect(image, Rect2i(7, 15, 6, 2), Color("e1b96e"))
-	return image
-
-func _draw_rect(image: Image, rect: Rect2i, color: Color) -> void:
-	for y in range(rect.position.y, rect.end.y):
-		for x in range(rect.position.x, rect.end.x):
-			image.set_pixel(x, y, color)

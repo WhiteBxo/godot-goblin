@@ -46,10 +46,12 @@ func _run() -> void:
 	_check(is_equal_approx(player.velocity.length(), player.speed), "Cardinal speed must match speed")
 	Input.action_press("move_down")
 	await _frames(1)
-	_check(is_equal_approx(player.velocity.length(), player.speed), "Diagonal movement must not be faster")
+	_check(player.velocity.length() <= player.speed + 0.01, "Turning must not exceed movement speed")
+	await _frames(12)
+	_check(is_equal_approx(player.velocity.length(), player.speed), "Steady diagonal speed must match cardinal speed")
 	Input.action_release("move_right")
 	Input.action_release("move_down")
-	await _frames(1)
+	await _frames(12)
 	# Every saved obstacle must physically block the actual player's foot shape.
 	for collider: CollisionShape2D in level.get_node("WallsAndFurniture").get_children():
 		var size: Vector2 = collider.shape.size
@@ -60,7 +62,26 @@ func _run() -> void:
 	Input.action_press("move_down")
 	await _frames(60)
 	Input.action_release("move_down")
-	_check(player.global_position.y < 643, "Player must not pass through the counter")
+	var counter: CollisionShape2D = level.get_node("WallsAndFurniture/FrontCounter")
+	var feet: CapsuleShape2D = player.get_node("CollisionShape2D").shape
+	var stop_y: float = counter.global_position.y - counter.shape.size.y * 0.5 - feet.radius
+	_check(player.global_position.y <= stop_y + 0.1, "Player's feet must stay outside the counter")
+	# A diagonal approach must slide along the counter instead of sticking or crossing it.
+	player.velocity = Vector2.ZERO
+	player.global_position = Vector2(800, 620)
+	Input.action_press("move_down")
+	Input.action_press("move_right")
+	await _frames(45)
+	Input.action_release("move_down")
+	Input.action_release("move_right")
+	_check(player.global_position.x > 870.0 and player.global_position.y <= stop_y + 0.1, "Diagonal movement slides along furniture")
+	player.velocity = Vector2.ZERO
+	player.global_position = Vector2(120, 740)
+	Input.action_press("move_left")
+	await _frames(30)
+	Input.action_release("move_left")
+	_check(player.global_position.x >= 109.0 and player.global_position.x < 110.0, "Player stops at the actual west wall")
+	player.velocity = Vector2.ZERO
 	_check(_reachable(level, player), "All three interaction points must be reachable from spawn")
 	for point in level.get_interaction_points():
 		player.global_position = point.global_position

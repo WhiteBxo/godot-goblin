@@ -1,7 +1,6 @@
 class_name CavePlayer
-extends CharacterBody2D
+extends PlayerController
 
-@export var speed := 122.0
 @export var body_half_size := Vector2(7.0, 6.0)
 
 @onready var camera: Camera2D = $Camera2D
@@ -23,13 +22,11 @@ func get_speed_multiplier() -> float:
 func configure(query: Callable) -> void:
 	walkability_query = query
 
-func _physics_process(delta: float) -> void:
-	move_direction(Input.get_vector("move_left", "move_right", "move_up", "move_down"), delta)
-
-func move_direction(direction: Vector2, delta: float) -> void:
-	if direction == Vector2.ZERO or not walkability_query.is_valid():
+func _move_velocity(delta: float) -> void:
+	if not walkability_query.is_valid():
+		super._move_velocity(delta)
 		return
-	var motion := direction.normalized() * get_movement_speed() * delta
+	var motion := velocity * delta
 	# 小步查询，避免高倍率或低帧率时跳过墙体与地板空隙。
 	var steps := maxi(1, ceili(motion.length() / maxf(1.0, minf(body_half_size.x, body_half_size.y))))
 	for step in range(steps):
@@ -38,10 +35,14 @@ func move_direction(direction: Vector2, delta: float) -> void:
 func _move_step(motion: Vector2) -> void:
 	var target := global_position + Vector2(motion.x, 0.0)
 	if can_stand_at(target):
-		global_position.x = target.x
+		move_and_collide(Vector2(motion.x, 0.0))
+	else:
+		velocity.x = 0.0
 	target = global_position + Vector2(0.0, motion.y)
 	if can_stand_at(target):
-		global_position.y = target.y
+		move_and_collide(Vector2(0.0, motion.y))
+	else:
+		velocity.y = 0.0
 
 func can_stand_at(world_position: Vector2) -> bool:
 	return walkability_query.is_valid() and bool(walkability_query.call(world_position, body_half_size))

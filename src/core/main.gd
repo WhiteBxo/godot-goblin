@@ -8,6 +8,7 @@ var _shop_level: MilkTeaShop
 var _shop_player: ShopPlayer
 var _shop_ui: ShopUI
 var _shop_interaction: ShopInteraction
+var _tea_production: TeaProduction
 var _dialogue_manager: DialogueManager
 var _story_director: StoryDirector
 var _actor_director: ActorDirector
@@ -31,6 +32,11 @@ func _ready() -> void:
 		var ui: ShopUI = preload("res://src/UI/milk_tea/shop_ui.tscn").instantiate()
 		$HudLayer.add_child(ui)
 		ui.set_popup_layer($PopupLayer)
+		_tea_production = TeaProduction.new()
+		_tea_production.name = "TeaProduction"
+		$Systems.add_child(_tea_production)
+		ui.configure_production(_tea_production)
+		ui.make_requested.connect(func(recipe: Array[String]) -> void: ui.show_production_result(_tea_production.make_drink(recipe)))
 		var interaction := ShopInteraction.new()
 		interaction.name = "ShopInteraction"
 		$Systems.add_child(interaction)
@@ -61,6 +67,9 @@ func _ready() -> void:
 
 func get_active_level() -> Node2D:
 	return _shop_level if _shop_level != null else _active_level
+
+func get_tea_production() -> TeaProduction:
+	return _tea_production
 
 func get_player() -> CharacterBody2D:
 	return _shop_player if is_instance_valid(_shop_player) else (_player if is_instance_valid(_player) else null)

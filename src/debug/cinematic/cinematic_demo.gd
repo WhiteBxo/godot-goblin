@@ -2,6 +2,9 @@ extends Node
 ## Only composition, data registration and debug controls. Sequence lives in JSON.
 
 @export var autoplay := true
+@export_file("*.json") var dialogue_file := "res://src/resources/dialogue/cinematic_opening.json"
+@export_file("*.json") var story_file := "res://src/resources/story/cinematic_opening.json"
+@export var event_id := "cinematic.opening"
 @onready var _game: MainGame = $MainGame
 @onready var _status: Label = $DemoLayer/Panel/Content/Status
 var _director: StoryDirector
@@ -18,9 +21,9 @@ func _ready() -> void:
 	audio.register_sound("cinematic.bell", AudioDemoTones.tone(880.0, 0.45))
 	audio.register_sound("cinematic.room", AudioDemoTones.tone(164.81, 2.0, true))
 	audio.register_sound("cinematic.rumble", preload("res://src/debug/story/strange_knock.tres"))
-	var error := _game.get_dialogue_manager().load_dialogues("res://src/resources/dialogue/cinematic_opening.json")
+	var error := _game.get_dialogue_manager().load_dialogues(dialogue_file)
 	if error == OK:
-		error = _director.load_events("res://src/resources/story/cinematic_opening.json")
+		error = _director.load_events(story_file)
 	if error != OK:
 		_status.text = "加载失败：%s / %s" % [_director.last_error, _game.get_dialogue_manager().last_error]
 		return
@@ -30,6 +33,9 @@ func _ready() -> void:
 	$DemoLayer/Panel/Content/Buttons/Cancel.pressed.connect(func() -> void: _director.cancel_event("Demo cancel"))
 	if autoplay:
 		play()
+
+func get_story_authoring_game() -> MainGame:
+	return _game
 
 func play() -> void:
 	if _director.is_busy():
@@ -41,6 +47,6 @@ func play() -> void:
 		actors.actor_unregister(&"customer")
 		previous.queue_free()
 	_game.get_player().global_position = _game.get_active_level().get_spawn_position()
-	var error := _director.request_event("cinematic.opening")
+	var error := _director.request_event(event_id)
 	if error != OK:
 		_status.text = _director.last_error

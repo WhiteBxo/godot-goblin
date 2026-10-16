@@ -78,6 +78,13 @@ MainGame
 - 普通屏幕层使用 `Always`，`PauseLayer` 使用 `WhenPaused`；空的屏幕层不应截获输入，非交互调试 Control 使用 `MOUSE_FILTER_IGNORE`。
 - 主场景框架保留各容器生命周期，既有插件 autoload 不迁入 `Systems`；暂停菜单、转场动画等按具体任务实现。
 
+## 自然语言剧情编排
+
+- 用户给出 `docs/design/` 下的 Markdown 并要求「编排这段剧情」或修改局部 Beat 时，必须执行 [剧情编排工作流](docs/story_authoring_workflow.md)，按需核对 [全部指令及参数](docs/story_authoring_commands.md) 和 [StoryDirector](docs/story_director.md) 的实际 Loader / dispatch。
+- Markdown 是剧情唯一内容来源，先保留或更新原稿，再生成现有 v1 Dialogue / Story JSON 和 `docs/story_authoring/` 的 Beat 映射/验证清单；不得扩写对白、改变节奏或把顺序硬编码进 GDScript。
+- 自动匹配目标宿主实际注册的 Actor、Marker、音频和场景资源；明确的位置/资源可自主配置，无法确认的空间、关键素材或缺少的表现能力记录为 pending，不编造、不扩展通用系统。
+- 局部修改只调整对应 Beat 区间、关联对白和必要依赖；验证原加载器、全部引用和真实 StoryDirector 执行，再做相关回归。每次汇报简短变更、待确认项、Godot F6 入口及 commit。
+
 ## 命名与格式
 
 - 新文件、目录、变量和 function 使用 `snake_case`；现有 `src/UI/` 保留大小写，引用必须一致。

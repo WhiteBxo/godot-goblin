@@ -1,5 +1,7 @@
 # StoryDirector / P0 Cinematic Integration
 
+自然语言编排入口见 [Story Authoring Workflow](story_authoring_workflow.md)，全部 JSON 指令/默认参数见 [编排指令速查](story_authoring_commands.md)。创作源保存在 `docs/design/`，运行时继续使用本页的原有系统与 Schema。
+
 `src/core/story/story_library.gd` 负责 JSON 加载和完整校验；`story_director.gd` 只调度步骤。MainGame 在 `Systems` 创建 StoryDirector，传入原有 DialogueManager；Director 通过 `/root/GameState` 取得已有 Autoload，不创建第二份状态。正式入口不加载第一天示例、不自动播放剧情。
 
 ## 接入与公开接口

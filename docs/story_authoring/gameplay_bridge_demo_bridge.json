@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "source": "res://docs/design/gameplay_bridge_demo.md",
+  "source_sha256": "3817bfd46bd6a2b618bf9f1e627fbf1357207c957061fef667343ad5e9a2b121",
+  "scene": "res://src/debug/gameplay_bridge/gameplay_bridge_demo.tscn",
+  "story": "res://src/resources/story/gameplay_bridge_demo.json",
+  "dialogue": "res://src/resources/dialogue/gameplay_bridge_demo.json",
+  "phases": "res://src/resources/story/gameplay_bridge_demo_phases.json",
+  "beats": [
+    {
+      "id": "instruction",
+      "mode": "自动演出",
+      "event": "bridge.intro",
+      "start": 0,
+      "count": 3,
+      "dialogues": [
+        "bridge.instruction"
+      ]
+    },
+    {
+      "id": "make_tea",
+      "mode": "玩家操作",
+      "phase": {
+        "id": "bridge.make_tea",
+        "after_event": "bridge.intro",
+        "stage": "bridge.make_tea",
+        "recipe": "pearl_milk_tea",
+        "completion_flag": "bridge.tea_done",
+        "next_event": "bridge.after_tea"
+      }
+    },
+    {
+      "id": "thanks",
+      "mode": "自动演出",
+      "event": "bridge.after_tea",
+      "start": 0,
+      "count": 2,
+      "dialogues": [
+        "bridge.thanks"
+      ]
+    }
+  ],
+  "verification": "res://tests/verify_gameplay_bridge.gd"
+}

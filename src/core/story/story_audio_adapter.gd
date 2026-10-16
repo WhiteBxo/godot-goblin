@@ -26,10 +26,10 @@ func play_sfx(step: Dictionary) -> bool:
 	return handle != AudioManager.INVALID_HANDLE
 
 
-func stop_owned() -> void:
+func stop_owned(preserve_music: bool = false) -> void:
 	if is_instance_valid(_audio):
 		_audio.stop_owned(_owner)
-		if _music_action != null and _audio.is_inside_tree() and _audio.get_music_action() == _music_action:
+		if not preserve_music and _music_action != null and _audio.is_inside_tree() and _audio.get_music_action() == _music_action:
 			_audio.stop_bgm()
 	_music_action = null
 	_on_audio_exiting()

@@ -433,7 +433,7 @@ func _finish(succeeded: bool, reason: String = "") -> void:
 		_manager.end_dialogue(true)
 	_waiting_dialogue = ""
 	if _audio != null:
-		_audio.stop_owned()
+		_audio.stop_owned(succeeded)
 	if succeeded and _event.get("once", true):
 		_state.complete_event(id)
 	_event_id = ""

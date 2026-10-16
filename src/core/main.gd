@@ -14,6 +14,8 @@ var _dialogue_manager: DialogueManager
 var _story_director: StoryDirector
 var _actor_director: ActorDirector
 var _camera_director: CameraDirector
+var _tea_making: TeaMaking
+var _gameplay_bridge: GameplayBridge
 var _input_locked: bool = false
 var _movement_before_dialogue: bool = true
 var _interaction_before_dialogue: bool = true
@@ -51,6 +53,7 @@ func _ready() -> void:
 		$World/EffectRoot.add_child(feedback)
 		feedback.configure(interaction, _audio_manager)
 		_create_dialogue_system()
+		_create_gameplay_bridge()
 		return
 	var error := _active_level.load_error
 	if DebugRuntime.is_enabled():
@@ -153,8 +156,28 @@ func _on_story_exiting() -> void:
 	if is_instance_valid(_camera_director):
 		_camera_director.cancel_all("StoryDirector exited")
 
+func get_gameplay_bridge() -> GameplayBridge:
+	return _gameplay_bridge
+
+func get_tea_making() -> TeaMaking:
+	return _tea_making
+
+func get_shop_ui() -> ShopUI:
+	return _shop_ui
+
+func _create_gameplay_bridge() -> void:
+	_tea_making = TeaMaking.new()
+	_tea_making.name = "TeaMaking"
+	$Systems.add_child(_tea_making)
+	_shop_ui.bind_tea_making(_tea_making)
+	_gameplay_bridge = GameplayBridge.new()
+	_gameplay_bridge.name = "GameplayBridge"
+	$Systems.add_child(_gameplay_bridge)
+	_gameplay_bridge.configure(_story_director, _ui_manager, _tea_making)
+
 func _can_start_story() -> bool:
-	return not get_tree().paused and not _ui_manager.has_modal()
+	return (not get_tree().paused and not _ui_manager.has_modal()
+		and (not is_instance_valid(_gameplay_bridge) or _gameplay_bridge.allows_story_start()))
 
 func _can_start_dialogue() -> bool:
 	return _can_start_story() and (not is_instance_valid(_story_director) or not _story_director.is_busy() or _story_director.is_starting_dialogue())

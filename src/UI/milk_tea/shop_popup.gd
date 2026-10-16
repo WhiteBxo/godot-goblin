@@ -7,12 +7,43 @@ signal make_requested(recipe: Array[String])
 var _production: TeaProduction
 var _production_panel: TeaProductionPanel
 
+var _tea: TeaMaking
+var _station := false
+
 func _ready() -> void:
 	$Center/Panel/Margin/Content/Close.pressed.connect(func() -> void: close_requested.emit())
 
+func bind_tea_making(tea: TeaMaking) -> void:
+	_tea = tea
+	_tea.changed.connect(_refresh_recipe)
+	for ingredient: String in TeaMaking.LABELS:
+		var button := Button.new()
+		button.text = "加入" + TeaMaking.LABELS[ingredient]
+		button.pressed.connect(func() -> void:
+			if _tea.add_ingredient(ingredient) == ERR_INVALID_DATA:
+				$Center/Panel/Margin/Content/RecipeStatus.text = "顺序错误，请从红茶重新开始。"
+			)
+		$Center/Panel/Margin/Content/Ingredients.add_child(button)
+	_refresh_recipe()
+
+func is_making_station() -> bool:
+	return _station
+
+func _refresh_recipe() -> void:
+	$Center/Panel/Margin/Content/Ingredients.visible = _station
+	$Center/Panel/Margin/Content/RecipeStatus.visible = _station
+	$Center/Panel/Margin/Content/RecipeStatus.text = _tea.get_instruction() if is_instance_valid(_tea) else "当前没有制作目标。"
+	for button: Button in $Center/Panel/Margin/Content/Ingredients.get_children():
+		button.disabled = not is_instance_valid(_tea) or not _tea.is_active()
+
 func present(point: InteractionPoint) -> void:
+	_station = point.interaction_id == &"tea_station"
+	_refresh_recipe()
 	$Center/Panel/Margin/Content/Title.text = point.display_name
-	$Center/Panel/Margin/Content/DescriptionScroll/Description.text = point.description
+	$Center/Panel/Margin/Content/DescriptionScroll/Description.text = (
+		"固定配方：珍珠奶茶一杯\n按红茶 → 牛奶 → 珍珠依次投料。\n顺序错误会清空本杯进度；关窗可保留进度。\n仅当前玩法目标可制作，不消耗库存。"
+		if _station and is_instance_valid(_tea) else point.description
+	)
 	$Center/Panel/Margin/Content/DescriptionScroll.scroll_vertical = 0
 	if _production != null:
 		var crafting := point.interaction_id == &"tea_station"

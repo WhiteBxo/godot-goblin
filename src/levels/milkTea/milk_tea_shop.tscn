@@ -1,0 +1,170 @@
+[gd_scene format=3 uid="uid://db43al0ecqpdg"]
+
+[ext_resource type="Script" uid="uid://bvkqqmktf3g4o" path="res://src/levels/milkTea/milk_tea_shop.gd" id="1_p60we"]
+[ext_resource type="Texture2D" uid="uid://cv5fdbd4kec2u" path="res://assets/map/milkTea/milkTea.png" id="2_lhmet"]
+[ext_resource type="PackedScene" path="res://src/gameplay/interaction/interaction_point.tscn" id="3_xdoh7"]
+[ext_resource type="Script" uid="uid://dkbll2phdrmcl" path="res://src/gameplay/interaction/interaction_point.gd" id="4_3hpft"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vw2ab"]
+size = Vector2(1600, 72)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v1cj1"]
+size = Vector2(70, 770)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_31k1o"]
+size = Vector2(60, 770)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1vk20"]
+size = Vector2(1625, 30)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cup7g"]
+size = Vector2(308, 322)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xkshe"]
+size = Vector2(110, 454)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b3fqu"]
+size = Vector2(95, 88)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jv131"]
+size = Vector2(78, 143)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_884r0"]
+size = Vector2(65, 126)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bwreh"]
+size = Vector2(710, 323)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hqpul"]
+size = Vector2(193, 466)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xonnu"]
+size = Vector2(758, 148)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_68yew"]
+size = Vector2(65, 156)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h76gs"]
+size = Vector2(75, 156)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qr2j4"]
+size = Vector2(100, 191)
+
+[node name="MilkTeaShop" type="Node2D" unique_id=378149397]
+script = ExtResource("1_p60we")
+
+[node name="Background" type="Sprite2D" parent="." unique_id=661289050]
+texture = ExtResource("2_lhmet")
+centered = false
+
+[node name="Spawn" type="Marker2D" parent="." unique_id=297029601]
+position = Vector2(836, 560)
+
+[node name="WallsAndFurniture" type="StaticBody2D" parent="." unique_id=1232831600]
+collision_mask = 2
+
+[node name="NorthWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1457378286]
+position = Vector2(840, 36)
+shape = SubResource("RectangleShape2D_vw2ab")
+
+[node name="WestWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1449910695]
+position = Vector2(60, 445)
+shape = SubResource("RectangleShape2D_v1cj1")
+
+[node name="EastWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=65941821]
+position = Vector2(1620, 445)
+shape = SubResource("RectangleShape2D_31k1o")
+
+[node name="SouthBoundary" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1114317820]
+position = Vector2(837.5, 935)
+shape = SubResource("RectangleShape2D_1vk20")
+
+[node name="StorageShelves" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=355186072]
+position = Vector2(249, 236)
+shape = SubResource("RectangleShape2D_cup7g")
+
+[node name="StorageDivider" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1883009763]
+position = Vector2(458, 267)
+shape = SubResource("RectangleShape2D_xkshe")
+
+[node name="LeftCrates" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=137463749]
+position = Vector2(142.5, 474)
+shape = SubResource("RectangleShape2D_b3fqu")
+
+[node name="FruitCrates" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=676938331]
+position = Vector2(197, 579.5)
+shape = SubResource("RectangleShape2D_jv131")
+
+[node name="LeftPlant" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=757665547]
+position = Vector2(127.5, 611)
+shape = SubResource("RectangleShape2D_884r0")
+
+[node name="BackEquipment" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1533041308]
+position = Vector2(895, 236.5)
+shape = SubResource("RectangleShape2D_bwreh")
+
+[node name="RightEquipment" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=471349982]
+position = Vector2(1356.5, 308)
+shape = SubResource("RectangleShape2D_hqpul")
+
+[node name="FrontCounter" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=23079179]
+position = Vector2(834, 730)
+shape = SubResource("RectangleShape2D_xonnu")
+
+[node name="CounterWestPillar" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=658172220]
+position = Vector2(422.5, 728)
+shape = SubResource("RectangleShape2D_68yew")
+
+[node name="CounterEastPillar" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1516342152]
+position = Vector2(1250.5, 728)
+shape = SubResource("RectangleShape2D_h76gs")
+
+[node name="RightPlanters" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1420635402]
+position = Vector2(1540, 680.5)
+shape = SubResource("RectangleShape2D_qr2j4")
+
+[node name="InteractionPoints" type="Node2D" parent="." unique_id=1232960211]
+
+[node name="OrderBoard" type="Area2D" parent="InteractionPoints" unique_id=1304020900 instance=ExtResource("3_xdoh7")]
+position = Vector2(625, 609)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("4_3hpft")
+interaction_id = "orders"
+display_name = "订单板"
+description = "今日订单 #001
+珍珠奶茶 × 1 · 常温 · 少糖
+
+制作流程：查看订单 → 仓库备料 → 制作台调配。"
+
+[node name="Storage" type="Area2D" parent="InteractionPoints" unique_id=762435014 instance=ExtResource("3_xdoh7")]
+position = Vector2(300, 445)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("4_3hpft")
+interaction_id = "storage"
+display_name = "仓库"
+description = "原料库存
+红茶 12 份　牛奶 12 份
+珍珠 8 份　糖浆 10 份
+
+货架原料充足，可以开始今日营业。"
+
+[node name="TeaStation" type="Area2D" parent="InteractionPoints" unique_id=840788172 instance=ExtResource("3_xdoh7")]
+position = Vector2(1000, 446)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("4_3hpft")
+interaction_id = "tea_station"
+display_name = "奶茶制作台"
+description = "珍珠奶茶 · 配方
+红茶 × 1 + 牛奶 × 1 + 珍珠 × 1
+
+1. 加入茶底与牛奶
+2. 加入珍珠和糖浆，摇匀封杯
+
+MVP 展示界面，暂不消耗库存。"
+
+[node name="ShopCamera" type="Camera2D" parent="." unique_id=766857107]
+position = Vector2(836, 470.5)
+zoom = Vector2(0.375, 0.375)

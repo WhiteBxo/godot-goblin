@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://dfsafggxeousv"]
 
 [ext_resource type="Script" uid="uid://b38vrnrlviw78" path="res://src/core/main.gd" id="1_main"]
-[ext_resource type="PackedScene" uid="uid://cfh5rileqwxv6" path="res://src/levels/cave/cave_map.tscn" id="2_map"]
-[ext_resource type="PackedScene" path="res://src/gameplay/player/player.tscn" id="3_player"]
+[ext_resource type="PackedScene" path="res://src/levels/milkTea/milk_tea_shop.tscn" id="2_map"]
+[ext_resource type="PackedScene" path="res://src/gameplay/player/shop_player.tscn" id="3_player"]
 
 [node name="MainGame" type="Node" unique_id=1512212887]
 process_mode = 3
@@ -17,7 +17,7 @@ texture_filter = 1
 
 [node name="LevelRoot" type="Node2D" parent="World" unique_id=854878944]
 
-[node name="CaveMap" parent="World/LevelRoot" unique_id=1715541921 instance=ExtResource("2_map")]
+[node name="MilkTeaShop" parent="World/LevelRoot" unique_id=1715541921 instance=ExtResource("2_map")]
 
 [node name="EntityRoot" type="Node2D" parent="World" unique_id=133438663]
 

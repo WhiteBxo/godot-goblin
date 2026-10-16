@@ -1,8 +1,10 @@
 class_name MainGame
 extends Node
 
-@onready var _active_level: CaveMap = $World/LevelRoot/CaveMap
-@onready var _player: CavePlayer = $World/EntityRoot/Player
+@onready var _active_level: CaveMap = $World/LevelRoot.get_child(0) as CaveMap
+@onready var _player: CavePlayer = $World/EntityRoot/Player as CavePlayer
+var _shop_level: MilkTeaShop
+var _shop_player: ShopPlayer
 
 var _debug_tools: DeveloperTools
 var _demo_tools: CaveDemoController
@@ -10,6 +12,18 @@ var _debug_panel: DeveloperPanel
 
 func _ready() -> void:
 	DebugRuntime.apply_release_policy(get_tree())
+	_shop_level = $World/LevelRoot.get_child(0) as MilkTeaShop
+	if _shop_level != null:
+		_shop_player = $World/EntityRoot/Player as ShopPlayer
+		_shop_player.global_position = _shop_level.get_spawn_position()
+		var ui: ShopUI = preload("res://src/UI/milk_tea/shop_ui.tscn").instantiate()
+		$HudLayer.add_child(ui)
+		ui.set_popup_layer($PopupLayer)
+		var interaction := ShopInteraction.new()
+		interaction.name = "ShopInteraction"
+		$Systems.add_child(interaction)
+		interaction.configure(_shop_player, ui, _shop_level.get_interaction_points())
+		return
 	var error := _active_level.load_error
 	if DebugRuntime.is_enabled():
 		_create_debug_components()
@@ -25,11 +39,11 @@ func _ready() -> void:
 		_debug_tools.configure(_player.set_speed_multiplier, _player.get_speed_multiplier, _debug_panel)
 		_demo_tools.start()
 
-func get_active_level() -> CaveMap:
-	return _active_level
+func get_active_level() -> Node2D:
+	return _shop_level if _shop_level != null else _active_level
 
-func get_player() -> CavePlayer:
-	return _player
+func get_player() -> CharacterBody2D:
+	return _shop_player if _shop_player != null else _player
 
 func get_debug_tools() -> DeveloperTools:
 	return _debug_tools

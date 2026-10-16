@@ -1,9 +1,10 @@
 [gd_scene format=3 uid="uid://db43al0ecqpdg"]
 
 [ext_resource type="Script" uid="uid://bvkqqmktf3g4o" path="res://src/levels/milkTea/milk_tea_shop.gd" id="1_p60we"]
-[ext_resource type="Texture2D" path="res://assets/map/milkTea/shop_interior_open.png" id="2_map"]
+[ext_resource type="Texture2D" path="res://assets/map/milkTea/shop_interior_rooms.png" id="2_map"]
 [ext_resource type="PackedScene" path="res://src/gameplay/interaction/interaction_point.tscn" id="3_xdoh7"]
 [ext_resource type="PackedScene" path="res://src/gameplay/doors/automatic_door.tscn" id="4_door"]
+[ext_resource type="PackedScene" path="res://src/gameplay/rooms/room_reveal.tscn" id="5_room"]
 
 [sub_resource type="RectangleShape2D" id="Shape_NorthWall"]
 size = Vector2(1144, 48)
@@ -59,14 +60,14 @@ size = Vector2(12, 104)
 [sub_resource type="RectangleShape2D" id="Shape_BathroomNorthWall"]
 size = Vector2(170, 19)
 
-[sub_resource type="RectangleShape2D" id="Shape_BathroomSouthEastWall"]
-size = Vector2(31, 51)
+[sub_resource type="RectangleShape2D" id="Shape_BathroomEastWall"]
+size = Vector2(35, 113)
 
 [sub_resource type="RectangleShape2D" id="Shape_HallSouthDivider"]
 size = Vector2(37, 118)
 
-[sub_resource type="RectangleShape2D" id="Shape_HallRail"]
-size = Vector2(18, 100)
+[sub_resource type="RectangleShape2D" id="Shape_ServiceDivider"]
+size = Vector2(89, 122)
 
 [sub_resource type="RectangleShape2D" id="Shape_HallPlant"]
 size = Vector2(39, 41)
@@ -146,7 +147,6 @@ texture_filter = 1
 script = ExtResource("1_p60we")
 
 [node name="Background" type="Sprite2D" parent="." unique_id=661289050]
-scale = Vector2(0.8200238379, 0.8196371398)
 texture = ExtResource("2_map")
 centered = false
 
@@ -228,17 +228,17 @@ shape = SubResource("Shape_HallPanelEast")
 position = Vector2(223.0, 441.5)
 shape = SubResource("Shape_BathroomNorthWall")
 
-[node name="BathroomSouthEastWall" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(313.5, 638.5)
-shape = SubResource("Shape_BathroomSouthEastWall")
+[node name="BathroomEastWall" type="CollisionShape2D" parent="WallsAndFurniture"]
+position = Vector2(316.5, 555.5)
+shape = SubResource("Shape_BathroomEastWall")
 
 [node name="HallSouthDivider" type="CollisionShape2D" parent="WallsAndFurniture"]
 position = Vector2(630.5, 619.0)
 shape = SubResource("Shape_HallSouthDivider")
 
-[node name="HallRail" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(629.0, 510.0)
-shape = SubResource("Shape_HallRail")
+[node name="ServiceDivider" type="CollisionShape2D" parent="WallsAndFurniture"]
+position = Vector2(605.5, 439.0)
+shape = SubResource("Shape_ServiceDivider")
 
 [node name="HallPlant" type="CollisionShape2D" parent="WallsAndFurniture"]
 position = Vector2(587.5, 497.5)
@@ -338,17 +338,6 @@ shape = SubResource("Shape_LobbyBin")
 
 [node name="Doors" type="Node2D" parent="."]
 
-[node name="BedroomDoor" parent="Doors" instance=ExtResource("4_door")]
-position = Vector2(328, 424)
-door_width = 66.0
-door_height = 85.0
-
-[node name="BathroomDoor" parent="Doors" instance=ExtResource("4_door")]
-position = Vector2(323, 526)
-door_width = 82.0
-vertical = true
-door_color = Color(0.83, 0.81, 0.68, 1)
-
 [node name="CounterGate" parent="Doors" instance=ExtResource("4_door")]
 position = Vector2(654, 487)
 door_width = 78.0
@@ -359,6 +348,24 @@ position = Vector2(1088, 705)
 door_width = 68.0
 door_height = 104.0
 glass = true
+
+[node name="Rooms" type="Node2D" parent="."]
+
+[node name="Bedroom" parent="Rooms" instance=ExtResource("5_room")]
+
+[node name="Interior" parent="Rooms/Bedroom" index="0"]
+polygon = PackedVector2Array(150, 103, 394, 103, 394, 480, 334, 480, 334, 411, 150, 411)
+
+[node name="PlaceholderRoof" parent="Rooms/Bedroom/Occlusion" index="0"]
+polygon = PackedVector2Array(151, 104, 394, 104, 394, 411, 151, 411)
+
+[node name="Bathroom" parent="Rooms" instance=ExtResource("5_room")]
+
+[node name="Interior" parent="Rooms/Bathroom" index="0"]
+polygon = PackedVector2Array(150, 448, 299, 448, 299, 612, 334, 612, 334, 664, 150, 664)
+
+[node name="PlaceholderRoof" parent="Rooms/Bathroom/Occlusion" index="0"]
+polygon = PackedVector2Array(151, 450, 298, 450, 298, 664, 151, 664)
 
 [node name="InteractionPoints" type="Node2D" parent="." unique_id=1232960211]
 
@@ -392,3 +399,6 @@ description = "珍珠奶茶 · 配方
 2. 加入珍珠和糖浆，摇匀封杯
 
 MVP 展示界面，暂不消耗库存。"
+
+[editable path="Rooms/Bedroom"]
+[editable path="Rooms/Bathroom"]

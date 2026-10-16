@@ -24,7 +24,7 @@ func _run() -> void:
 	var level := main.get_active_level() as MilkTeaShop
 	var player := main.get_player() as ShopPlayer
 	var doors := level.get_node("Doors").get_children()
-	_check(doors.size() == 4, "Bedroom, bathroom, counter and entrance have separate doors")
+	_check(doors.size() == 2, "Only counter and entrance retain automatic doors")
 	for door: AutomaticDoor in doors:
 		var axis := Vector2.DOWN if door.vertical else Vector2.RIGHT
 		var normal := Vector2.RIGHT if door.vertical else Vector2.DOWN
@@ -71,5 +71,5 @@ func _run() -> void:
 		await _frames(3)
 		await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png("res://.godot/milk_tea_verification/new_shop.png")
-	print("SHOP_DOORS: ", "PASS" if _failures.is_empty() else "FAIL", " (4 doors, both directions, collision, occupancy, delayed close, re-entry)")
+	print("SHOP_DOORS: ", "PASS" if _failures.is_empty() else "FAIL", " (2 shop doors, both directions, collision, occupancy, delayed close, re-entry)")
 	quit(0 if _failures.is_empty() else 1)

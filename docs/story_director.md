@@ -119,6 +119,8 @@ ShopInteraction 接受可选 Callable `event_handler(interaction_id) -> bool`，
 
 ## 添加演出指令
 
+角色演出组件已实现，参见 [ActorDirector API、完成信号与 Demo](actor_director.md)。MainGame 通过 `get_actor_director()` 提供实例，默认注册 `player`，并把角色接管纳入现有输入锁。当前 JSON schema 尚未添加 `actor_move` 等命令；后续扩展应等待 ActorAction 的完成信号并在事件取消时取消所属句柄。
+
 在 `StoryLibrary._step` 增加 command 和必要参数的类型/范围校验，在 `StoryDirector._process` 的 match 中调用独立 handler。同步指令执行后由现有尾部安排下一步；异步指令只在完成信号中调用 `_schedule_next`，取消路径须停止所属资源，并通过当前运行 generation 防止同步取消后继续执行。扩展时同时添加有效/无效数据测试及取消测试，避免把角色、镜头或 UI 的具体节点路径写入 Director。
 
 实现依据 Godot 4.7 官方文档：[Node 的退出顺序与 process mode](https://docs.godotengine.org/en/4.7/classes/class_node.html)、[Timer 的停止和 timeout](https://docs.godotengine.org/en/4.7/classes/class_timer.html)、[JSON 解析和错误诊断](https://docs.godotengine.org/en/4.7/classes/class_json.html)、[AudioStreamPlayer 的 finished 与 stop](https://docs.godotengine.org/en/4.7/classes/class_audiostreamplayer.html)。Timer.stop 不发 timeout、AudioStreamPlayer.stop 不发 finished，因此取消显式清理；退出信号同步通知宿主释放锁。

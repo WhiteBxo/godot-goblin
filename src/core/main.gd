@@ -9,6 +9,7 @@ var _shop_ui: ShopUI
 var _shop_interaction: ShopInteraction
 var _dialogue_manager: DialogueManager
 var _story_director: StoryDirector
+var _actor_director: ActorDirector
 var _input_locked: bool = false
 var _movement_before_dialogue: bool = true
 var _interaction_before_dialogue: bool = true
@@ -63,11 +64,20 @@ func get_dialogue_manager() -> DialogueManager:
 func get_story_director() -> StoryDirector:
 	return _story_director
 
+func get_actor_director() -> ActorDirector:
+	return _actor_director
+
 func _route_story_interaction(id: StringName) -> bool:
 	# Only an absent route falls through to the existing ShopUI.
 	return _story_director.request_interaction(String(id)) != ERR_DOES_NOT_EXIST
 
 func _create_dialogue_system() -> void:
+	_actor_director = ActorDirector.new()
+	_actor_director.name = "ActorDirector"
+	$Systems.add_child(_actor_director)
+	_actor_director.configure($World/EntityRoot)
+	_actor_director.actor_register(&"player", get_player() as PlayerController)
+	_actor_director.actor_control_changed.connect(_on_actor_control_changed)
 	var ui: DialogueUI = preload("res://src/UI/dialogue/dialogue_ui.tscn").instantiate()
 	$PopupLayer.add_child(ui)
 	_dialogue_manager = DialogueManager.new()
@@ -95,8 +105,16 @@ func _on_dialogue_started(_id: String) -> void:
 func _on_dialogue_ended(_id: String, _cancelled: bool) -> void:
 	_refresh_input_lock()
 
+func _on_actor_control_changed(actor_id: StringName, _controlled: bool) -> void:
+	if actor_id == &"player":
+		_refresh_input_lock()
+
 func _refresh_input_lock() -> void:
-	var should_lock := (is_instance_valid(_dialogue_manager) and _dialogue_manager.is_active()) or (is_instance_valid(_story_director) and _story_director.is_busy())
+	var should_lock := (
+		(is_instance_valid(_dialogue_manager) and _dialogue_manager.is_active())
+		or (is_instance_valid(_story_director) and _story_director.is_busy())
+		or (is_instance_valid(_actor_director) and _actor_director.is_actor_controlled(&"player"))
+	)
 	if should_lock == _input_locked:
 		return
 	var player := get_player() as PlayerController

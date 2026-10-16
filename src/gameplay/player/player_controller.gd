@@ -11,9 +11,12 @@ const DIRECTION_NAMES: Array[StringName] = [&"down", &"left", &"right", &"up"]
 @export_range(1.0, 20000.0, 1.0) var deceleration := 2400.0
 @export_range(0.1, 4.0, 0.05) var animation_speed := 1.0
 @export var initial_facing: Facing = Facing.DOWN
+## NPC scenes reuse this controller without reading the player's InputMap.
+@export var accepts_player_input := true
 
 var facing: Facing = Facing.DOWN
 var movement_enabled := true
+var _performance_owner: WeakRef
 
 @onready var animated_sprite: AnimatedSprite2D = $Visual/AnimatedSprite2D
 
@@ -22,7 +25,52 @@ func _ready() -> void:
 	_update_animation(false)
 
 func _physics_process(delta: float) -> void:
+	if not accepts_player_input or is_performance_controlled():
+		return
 	move_direction(Input.get_vector("move_left", "move_right", "move_up", "move_down"), delta)
+
+func is_performance_controlled() -> bool:
+	return _performance_owner != null and _performance_owner.get_ref() != null
+
+func claim_performance_control(owner: Object) -> bool:
+	if owner == null or is_performance_controlled():
+		return false
+	_performance_owner = weakref(owner)
+	stop_performance_motion()
+	return true
+
+func release_performance_control(owner: Object) -> void:
+	if _performance_owner != null and _performance_owner.get_ref() == owner:
+		stop_performance_motion()
+		_performance_owner = null
+
+func stop_performance_motion() -> void:
+	velocity = Vector2.ZERO
+	_update_animation(false)
+
+func set_performance_facing(owner: Object, direction: Facing) -> void:
+	if _performance_owner == null or _performance_owner.get_ref() != owner:
+		return
+	facing = direction
+	_update_animation(false)
+
+## Called only from ActorDirector's physics tick. Uses each subclass's collision rules.
+func move_performance(owner: Object, target: Vector2, move_speed: float, delta: float) -> void:
+	if _performance_owner == null or _performance_owner.get_ref() != owner:
+		return
+	var offset := target - global_position
+	_update_facing(offset)
+	velocity = offset.normalized() * minf(move_speed, offset.length() / delta)
+	var previous_position := global_position
+	_move_velocity(delta)
+	var distance := global_position.distance_to(previous_position)
+	_update_animation(distance > 0.01, distance / maxf(delta * move_speed, 0.001))
+
+func get_emote_offset() -> Vector2:
+	var texture := animated_sprite.sprite_frames.get_frame_texture(animated_sprite.animation, animated_sprite.frame)
+	if texture == null:
+		return Vector2(0, -48)
+	return to_local(animated_sprite.to_global(Vector2(0, animated_sprite.offset.y - texture.get_height() * 0.5))) + Vector2(0, -8)
 
 func get_movement_speed() -> float:
 	return speed
@@ -33,7 +81,7 @@ func set_movement_enabled(enabled: bool) -> void:
 	_update_animation(false)
 
 func move_direction(direction: Vector2, delta: float) -> void:
-	if not movement_enabled:
+	if not movement_enabled or is_performance_controlled():
 		return
 	direction = direction.limit_length()
 	if not direction.is_zero_approx():

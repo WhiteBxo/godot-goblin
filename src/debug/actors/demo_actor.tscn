@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/player/player_controller.gd" id="1"]
+[ext_resource type="SpriteFrames" path="res://src/gameplay/player/player_run_frames.tres" id="2"]
+[ext_resource type="Material" path="res://src/gameplay/player/player_sprite_material.tres" id="3"]
+
+[sub_resource type="CapsuleShape2D" id="Feet"]
+radius = 5.0
+height = 14.0
+
+[node name="DemoActor" type="CharacterBody2D"]
+texture_filter = 1
+collision_layer = 2
+collision_mask = 1
+motion_mode = 1
+script = ExtResource("1")
+accepts_player_input = false
+
+[node name="Visual" type="Node2D" parent="."]
+scale = Vector2(0.17, 0.17)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Visual"]
+material = ExtResource("3")
+sprite_frames = ExtResource("2")
+animation = &"idle_down"
+offset = Vector2(0, -144)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5707964
+shape = SubResource("Feet")

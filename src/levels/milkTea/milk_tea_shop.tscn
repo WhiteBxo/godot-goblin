@@ -6,16 +6,16 @@
 [ext_resource type="Script" uid="uid://dkbll2phdrmcl" path="res://src/gameplay/interaction/interaction_point.gd" id="4_3hpft"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vw2ab"]
-size = Vector2(1600, 72)
+size = Vector2(1672, 120)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v1cj1"]
-size = Vector2(70, 770)
+size = Vector2(95, 941)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_31k1o"]
-size = Vector2(60, 770)
+size = Vector2(82, 941)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1vk20"]
-size = Vector2(1625, 30)
+size = Vector2(1672, 21)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cup7g"]
 size = Vector2(308, 322)
@@ -64,19 +64,19 @@ position = Vector2(836, 560)
 collision_mask = 2
 
 [node name="NorthWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1457378286]
-position = Vector2(840, 36)
+position = Vector2(836, 60)
 shape = SubResource("RectangleShape2D_vw2ab")
 
 [node name="WestWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1449910695]
-position = Vector2(60, 445)
+position = Vector2(47.5, 470.5)
 shape = SubResource("RectangleShape2D_v1cj1")
 
 [node name="EastWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=65941821]
-position = Vector2(1620, 445)
+position = Vector2(1631, 470.5)
 shape = SubResource("RectangleShape2D_31k1o")
 
 [node name="SouthBoundary" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1114317820]
-position = Vector2(837.5, 935)
+position = Vector2(836, 930.5)
 shape = SubResource("RectangleShape2D_1vk20")
 
 [node name="StorageShelves" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=355186072]
@@ -164,7 +164,3 @@ description = "珍珠奶茶 · 配方
 2. 加入珍珠和糖浆，摇匀封杯
 
 MVP 展示界面，暂不消耗库存。"
-
-[node name="ShopCamera" type="Camera2D" parent="." unique_id=766857107]
-position = Vector2(836, 470.5)
-zoom = Vector2(0.375, 0.375)

@@ -80,7 +80,9 @@ func _run() -> void:
 	Input.action_press("move_left")
 	await _frames(30)
 	Input.action_release("move_left")
-	_check(player.global_position.x >= 109.0 and player.global_position.x < 110.0, "Player stops at the actual west wall")
+	var west: CollisionShape2D = level.get_node("WallsAndFurniture/WestWall")
+	var stop_x: float = west.global_position.x + west.shape.size.x * 0.5 + feet.height * 0.5
+	_check(player.global_position.x >= stop_x and player.global_position.x < stop_x + 1.0, "Player stops at the actual west wall")
 	player.velocity = Vector2.ZERO
 	_check(_reachable(level, player), "All three interaction points must be reachable from spawn")
 	for point in level.get_interaction_points():
@@ -104,6 +106,8 @@ func _run() -> void:
 	await _key(KEY_E)
 	_check(not ui.is_open(), "E outside interaction range must do nothing")
 	if "--capture" in OS.get_cmdline_user_args():
+		player.camera.reset_smoothing()
+		player.camera.force_update_scroll()
 		await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png("res://.godot/milk_tea_verification/shop.png")
 		player.global_position = level.get_interaction_points()[0].global_position

@@ -1,0 +1,147 @@
+{
+  "version": 1,
+  "events": {
+    "test.conditions": {
+      "conditions": {
+        "day": 2,
+        "stage": "test.ready",
+        "flags": {
+          "test.ready": true,
+          "test.blocked": false
+        },
+        "completed_events": [
+          "test.prerequisite"
+        ],
+        "not_completed_events": [
+          "test.forbidden"
+        ]
+      },
+      "steps": [
+        {
+          "command": "set_flag",
+          "key": "test.passed"
+        }
+      ]
+    },
+    "test.sequence": {
+      "steps": [
+        {
+          "command": "set_flag",
+          "key": "test.first"
+        },
+        {
+          "command": "wait",
+          "seconds": 0.12
+        },
+        {
+          "command": "set_stage",
+          "value": "test.waited"
+        },
+        {
+          "command": "dialogue",
+          "id": "demo.greeting"
+        },
+        {
+          "command": "set_flag",
+          "key": "test.after_dialogue"
+        }
+      ]
+    },
+    "test.wait": {
+      "steps": [
+        {
+          "command": "wait",
+          "seconds": 0.15
+        },
+        {
+          "command": "set_flag",
+          "key": "test.after_wait"
+        }
+      ]
+    },
+    "test.dialogue": {
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "demo.greeting"
+        },
+        {
+          "command": "set_flag",
+          "key": "test.after_cancel"
+        }
+      ]
+    },
+    "test.missing_dialogue": {
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "missing.dialogue"
+        },
+        {
+          "command": "set_flag",
+          "key": "test.after_error"
+        }
+      ]
+    },
+    "test.sfx": {
+      "steps": [
+        {
+          "command": "play_sfx",
+          "path": "res://missing_audio.wav"
+        },
+        {
+          "command": "play_sfx",
+          "path": "res://src/gameplay/player/player_frames.tres"
+        },
+        {
+          "command": "play_sfx",
+          "path": "res://src/debug/story/strange_knock.tres"
+        },
+        {
+          "command": "wait",
+          "seconds": 0.05
+        }
+      ]
+    },
+    "test.choice": {
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "test.immediate_choice"
+        },
+        {
+          "command": "set_flag",
+          "key": "test.chosen",
+          "when": {
+            "choice": {
+              "dialogue": "test.immediate_choice",
+              "line": "choice",
+              "id": "finish"
+            }
+          }
+        },
+        {
+          "command": "set_flag",
+          "key": "test.wrong",
+          "when": {
+            "choice": {
+              "dialogue": "test.immediate_choice",
+              "line": "choice",
+              "id": "other"
+            }
+          }
+        }
+      ]
+    },
+    "test.repeat": {
+      "once": false,
+      "steps": [
+        {
+          "command": "set_flag",
+          "key": "test.repeat",
+          "value": false
+        }
+      ]
+    }
+  }
+}

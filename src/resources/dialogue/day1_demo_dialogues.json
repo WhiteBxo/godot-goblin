@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "dialogues": {
+    "day1.opening": {
+      "start": "opening",
+      "lines": {"opening": {"speaker": "主角·内心", "text": "再这么下去，我连下个月的房租都要交不起了。当初到底是谁跟我说开奶茶店稳赚不赔的？"}}
+    },
+    "day1.reaction": {
+      "start": "reaction",
+      "lines": {"reaction": {"speaker": "主角", "text": "……什么声音？门外有人吗？先看看订单板吧。"}}
+    },
+    "day1.orders_before": {
+      "start": "board",
+      "lines": {"board": {"speaker": "主角·内心", "text": "订单板上空空的。今天也没什么客人……"}}
+    },
+    "day1.orders_after": {
+      "start": "board",
+      "lines": {"board": {"speaker": "主角·内心", "text": "刚才明明听见了动静，订单板上却没有新订单。要再调查一下吗？", "choices": [
+        {"id": "investigate", "text": "记下这件怪事"},
+        {"id": "later", "text": "先忙店里的事"}
+      ]}}
+    }
+  }
+}

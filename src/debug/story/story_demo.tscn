@@ -1,0 +1,52 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/debug/story/story_demo.gd" id="1"]
+[ext_resource type="PackedScene" path="res://src/core/main.tscn" id="2"]
+[ext_resource type="FontFile" path="res://assets/fonts/fusion_pixel/fusion-pixel-12px-monospaced-zh_hans.otf.woff2" id="3"]
+
+[sub_resource type="Theme" id="Theme"]
+default_font = ExtResource("3")
+default_font_size = 12
+
+[node name="StoryDemo" type="Node"]
+script = ExtResource("1")
+
+[node name="MainGame" parent="." instance=ExtResource("2")]
+
+[node name="DemoLayer" type="CanvasLayer" parent="."]
+process_mode = 3
+layer = 50
+
+[node name="Panel" type="PanelContainer" parent="DemoLayer"]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 632.0
+offset_bottom = 94.0
+mouse_filter = 2
+theme = SubResource("Theme")
+
+[node name="Content" type="VBoxContainer" parent="DemoLayer/Panel"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Instructions" type="Label" parent="DemoLayer/Panel/Content"]
+layout_mode = 2
+text = "剧情 Demo · E/空格/Enter 推进 · Esc 取消对话 · WASD 移动\n结束或取消后调查订单板；仓库和制作台沿用原交互。"
+mouse_filter = 2
+
+[node name="Buttons" type="HBoxContainer" parent="DemoLayer/Panel/Content"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Intro" type="Button" parent="DemoLayer/Panel/Content/Buttons"]
+layout_mode = 2
+text = "启动开场（完成后不可重复）"
+
+[node name="Cancel" type="Button" parent="DemoLayer/Panel/Content/Buttons"]
+layout_mode = 2
+text = "中止演出（含停顿）"
+
+[node name="Status" type="Label" parent="DemoLayer/Panel/Content"]
+layout_mode = 2
+text = "正在加载……"
+mouse_filter = 2

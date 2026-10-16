@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "dialogues": {
+    "demo.greeting": {
+      "start": "hello",
+      "lines": {
+        "hello": {"speaker": "店员", "text": "欢迎光临！今天也来一杯热乎乎的奶茶吧。", "portrait": "res://src/resources/dialogue/demo_portrait.tres"}
+      }
+    },
+    "demo.first_shift": {
+      "start": "welcome",
+      "lines": {
+        "welcome": {"speaker": "店员", "text": "早上好！这是我们一起开店的第一天。", "portrait": "res://src/resources/dialogue/demo_portrait.tres", "next": "explain"},
+        "explain": {"speaker": "旁白", "text": "窗外的阳光落在柜台上。你放下背包，闻到了刚泡好的茶香。", "next": "question"},
+        "question": {
+          "speaker": "店员",
+          "text": "准备好了吗？我们先从哪件事开始？",
+          "choices": [
+            {"id": "learn", "text": "先听听你的建议", "next": "learn_result"},
+            {"id": "ready", "text": "我准备好了，开始吧", "next": "ready_result"}
+          ]
+        },
+        "learn_result": {"speaker": "店员", "text": "别着急，先熟悉店里的每一个角落。我们可以慢慢来。"},
+        "ready_result": {"speaker": "店员", "text": "好！那就带着这份干劲，迎接今天的第一位客人吧。"}
+      }
+    }
+  }
+}

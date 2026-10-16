@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "dialogues": {
+    "test.immediate_choice": {
+      "start": "choice",
+      "lines": {
+        "choice": {
+          "speaker": "",
+          "text": "",
+          "choices": [{"id": "finish", "text": "结束对话", "next": ""}]
+        }
+      }
+    }
+  }
+}

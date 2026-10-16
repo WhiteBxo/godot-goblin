@@ -414,29 +414,121 @@ polygon = PackedVector2Array(299, 664, 335, 664, 335, 677, 299, 677)
 texture = ExtResource("2_map")
 uv = PackedVector2Array(299, 664, 335, 664, 335, 677, 299, 677)
 
+[node name="EquipmentForeground" type="Node2D" parent="."]
+
+[node name="Counter" type="Node2D" parent="EquipmentForeground"]
+script = ExtResource("9_frame")
+baseline_y = 501.0
+
+[node name="Counter" type="Polygon2D" parent="EquipmentForeground/Counter"]
+texture = ExtResource("2_map")
+polygon = PackedVector2Array(734, 410, 1226, 410, 1226, 501, 734, 501)
+uv = PackedVector2Array(734, 410, 1226, 410, 1226, 501, 734, 501)
+
+[node name="DisplayShelf" type="Polygon2D" parent="EquipmentForeground/Counter"]
+texture = ExtResource("2_map")
+polygon = PackedVector2Array(969, 380, 1035, 380, 1035, 455, 969, 455)
+uv = PackedVector2Array(969, 380, 1035, 380, 1035, 455, 969, 455)
+
+[node name="CashRegister" type="Polygon2D" parent="EquipmentForeground/Counter"]
+texture = ExtResource("2_map")
+polygon = PackedVector2Array(825, 394, 849, 394, 849, 409, 870, 409, 870, 445, 819, 445, 819, 410, 825, 410)
+uv = PackedVector2Array(825, 394, 849, 394, 849, 409, 870, 409, 870, 445, 819, 445, 819, 410, 825, 410)
+
+[node name="Terminal" type="Polygon2D" parent="EquipmentForeground/Counter"]
+texture = ExtResource("2_map")
+polygon = PackedVector2Array(803, 417, 818, 417, 818, 437, 803, 437)
+uv = PackedVector2Array(803, 417, 818, 417, 818, 437, 803, 437)
+
+[node name="Bottle" type="Polygon2D" parent="EquipmentForeground/Counter"]
+texture = ExtResource("2_map")
+polygon = PackedVector2Array(941, 410, 952, 410, 958, 418, 958, 448, 939, 448, 939, 418)
+uv = PackedVector2Array(941, 410, 952, 410, 958, 418, 958, 448, 939, 448, 939, 418)
+
+[node name="BackEquipment" type="Node2D" parent="EquipmentForeground"]
+script = ExtResource("9_frame")
+baseline_y = 294.0
+
+[node name="Worktop" type="Polygon2D" parent="EquipmentForeground/BackEquipment"]
+texture = ExtResource("2_map")
+polygon = PackedVector2Array(657, 212, 1169, 212, 1169, 294, 657, 294)
+uv = PackedVector2Array(657, 212, 1169, 212, 1169, 294, 657, 294)
+
+[node name="TeaUrns" type="Polygon2D" parent="EquipmentForeground/BackEquipment"]
+texture = ExtResource("2_map")
+polygon = PackedVector2Array(775, 152, 908, 152, 912, 211, 775, 211)
+uv = PackedVector2Array(775, 152, 908, 152, 912, 211, 775, 211)
+
+[node name="Ingredients" type="Polygon2D" parent="EquipmentForeground/BackEquipment"]
+texture = ExtResource("2_map")
+polygon = PackedVector2Array(922, 190, 998, 190, 998, 251, 922, 251)
+uv = PackedVector2Array(922, 190, 998, 190, 998, 251, 922, 251)
+
+[node name="CoffeeMachine" type="Polygon2D" parent="EquipmentForeground/BackEquipment"]
+texture = ExtResource("2_map")
+polygon = PackedVector2Array(1015, 170, 1068, 170, 1068, 246, 1015, 246)
+uv = PackedVector2Array(1015, 170, 1068, 170, 1068, 246, 1015, 246)
+
+[node name="RightEquipment" type="Node2D" parent="EquipmentForeground"]
+script = ExtResource("9_frame")
+baseline_y = 441.0
+
+[node name="Appliance" type="Polygon2D" parent="EquipmentForeground/RightEquipment"]
+texture = ExtResource("2_map")
+polygon = PackedVector2Array(1170, 293, 1225, 293, 1225, 441, 1170, 441)
+uv = PackedVector2Array(1170, 293, 1225, 293, 1225, 441, 1170, 441)
+
+[node name="Storage" type="Node2D" parent="EquipmentForeground"]
+script = ExtResource("9_frame")
+baseline_y = 292.0
+
+[node name="Cabinet" type="Polygon2D" parent="EquipmentForeground/Storage"]
+texture = ExtResource("2_map")
+polygon = PackedVector2Array(437, 134, 540, 134, 540, 286, 437, 286)
+uv = PackedVector2Array(437, 134, 540, 134, 540, 286, 437, 286)
+
+[node name="Fridge" type="Polygon2D" parent="EquipmentForeground/Storage"]
+texture = ExtResource("2_map")
+polygon = PackedVector2Array(550, 154, 615, 154, 615, 292, 550, 292)
+uv = PackedVector2Array(550, 154, 615, 154, 615, 292, 550, 292)
+
 [node name="InteractionPoints" type="Node2D" parent="." unique_id=1232960211]
 
 [node name="OrderBoard" parent="InteractionPoints" unique_id=1304020900 instance=ExtResource("3_xdoh7")]
-position = Vector2(834, 546)
+position = Vector2(844, 447)
 interaction_id = "orders"
-display_name = "订单板"
+display_name = "收银台"
 description = "今日订单 #001
 珍珠奶茶 × 1 · 常温 · 少糖
 
 制作流程：查看订单 → 仓库备料 → 制作台调配。"
+feedback_rect = Rect2(-26, -53, 52, 52)
+
+[node name="Marker" parent="InteractionPoints/OrderBoard" index="1"]
+visible = false
+
+[node name="Label" parent="InteractionPoints/OrderBoard" index="2"]
+visible = false
 
 [node name="Storage" parent="InteractionPoints" unique_id=762435014 instance=ExtResource("3_xdoh7")]
-position = Vector2(486, 326)
+position = Vector2(490, 286)
 interaction_id = "storage"
-display_name = "仓库"
+display_name = "储物柜"
 description = "原料库存
 红茶 12 份　牛奶 12 份
 珍珠 8 份　糖浆 10 份
 
 货架原料充足，可以开始今日营业。"
+feedback_rect = Rect2(-54, -152, 108, 152)
+
+[node name="Marker" parent="InteractionPoints/Storage" index="1"]
+visible = false
+
+[node name="Label" parent="InteractionPoints/Storage" index="2"]
+visible = false
 
 [node name="TeaStation" parent="InteractionPoints" unique_id=840788172 instance=ExtResource("3_xdoh7")]
-position = Vector2(924, 343)
+position = Vector2(841, 296)
 interaction_id = "tea_station"
 display_name = "奶茶制作台"
 description = "珍珠奶茶 · 配方
@@ -446,6 +538,17 @@ description = "珍珠奶茶 · 配方
 2. 加入珍珠和糖浆，摇匀封杯
 
 MVP 展示界面，暂不消耗库存。"
+feedback_rect = Rect2(-74, -147, 148, 145)
+
+[node name="Marker" parent="InteractionPoints/TeaStation" index="1"]
+visible = false
+
+[node name="Label" parent="InteractionPoints/TeaStation" index="2"]
+visible = false
 
 [editable path="Rooms/Bedroom"]
 [editable path="Rooms/Bathroom"]
+
+[editable path="InteractionPoints/OrderBoard"]
+[editable path="InteractionPoints/Storage"]
+[editable path="InteractionPoints/TeaStation"]

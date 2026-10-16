@@ -12,6 +12,10 @@ var _focus: InteractionPoint
 var _pulse: InteractionPoint
 var _remaining := 0.0
 
+func _ready() -> void:
+	# World feedback must stay visible over foreground furniture and room roofs.
+	z_index = 30
+
 func configure(interaction: ShopInteraction, audio: AudioManager = null) -> void:
 	if is_instance_valid(_interaction):
 		_interaction.target_changed.disconnect(_on_target_changed)

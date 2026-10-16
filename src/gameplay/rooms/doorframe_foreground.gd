@@ -1,6 +1,6 @@
 class_name DoorframeForeground
 extends Node2D
-## Reuses exact background texels; sorts the frame against the observer's feet.
+## Reuses exact background texels; sorts frames or furniture against feet.
 
 @export var baseline_y := 480.0
 @export var observer_group: StringName = &"player"

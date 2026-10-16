@@ -19,6 +19,7 @@ MilkTeaShop (Node2D, scale 1.25)
 ├─ WallsAndFurniture (StaticBody2D, layer 1 / mask 2)
 │  └─ 各墙体及家具的 CollisionShape2D
 ├─ Doorframes (按脚点排序，使用原地图同位置像素)
+├─ EquipmentForeground (柜台/展示架、后部/右侧设备、仓储设备)
 ├─ Rooms (Node2D)
 │  ├─ Bedroom (RoomReveal / Area2D 实例)
 │  │  ├─ Interior (CollisionPolygon2D)
@@ -109,3 +110,9 @@ F6 独立运行关卡仅查看地图和素材遮挡；正式试玩请 F5 运行 
 
 - [Polygon2D](https://docs.godotengine.org/en/4.7/classes/class_polygon2d.html)：uv 与 polygon 各顶点一一对应，UV 使用源纹理像素坐标。
 - [CanvasItem Shader](https://docs.godotengine.org/en/4.7/tutorials/shaders/shader_reference/canvas_item_shader.html)：保留输入 COLOR 的 modulate，仅把棋盘格像素的 alpha 置零。
+
+## 设备前景与互动点
+
+柜台、展示架、收银机、制茶工作台与仓储设备现已从原地图同坐标提取为设备前景，沿用 DoorframeForeground 的脚点排序；玩家在设备后方时被遮挡，在前方时正常覆盖设备。原有碰撞保持不变。
+
+互动点对应实际收银机、储物柜和制茶设备，取消常驻菱形和大字标签；采用已有角框和底部 E 提示。位置、高亮范围与接近方式见 [交互反馈规范](interaction_feedback.md#奶茶店设备绑定)。

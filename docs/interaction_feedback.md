@@ -59,3 +59,23 @@ godot --headless --path . --script tests/verify_cinematic_integration.gd
 - [Node：生命周期、process_mode、NOTIFICATION_PAUSED 与 unhandled input](https://docs.godotengine.org/en/4.7/classes/class_node.html)：暂停回调清除 Always HUD；世界与 controller 保持 Pausable。
 - [InputEvent.is_action_pressed / is_echo](https://docs.godotengine.org/en/4.7/classes/class_inputevent.html)：使用 action 输入、拒绝按键重复，不依赖原始 E 键码做玩法逻辑。
 - [CanvasItem.draw_line / queue_redraw](https://docs.godotengine.org/en/4.7/classes/class_canvasitem.html)：只在 `_draw` 绘制，关闭 antialiased，变换后取整端点。
+
+## 奶茶店设备绑定
+
+正式店铺沿用上述单一目标选择、硬边角框、底部 E 提示与 0.18 秒成功反馈，不添加材质发光或额外交互检测器。各点保留原 interaction_id 和 UI/StoryDirector 路由，关卡实例中的 Marker、Label 隐藏。
+
+坐标使用原始地图本地像素，随 MilkTeaShop 的 1.25 倍缩放变换：
+
+| 交互节点 / ID | 实际设备 | position | feedback_rect（相对于交互节点） |
+| --- | --- | --- | --- |
+| OrderBoard / orders | 收银机，显示名「收银台」 | (844,447) | (-26,-53,52,52) |
+| Storage / storage | 仓储区原料柜，显示名「储物柜」 | (490,286) | (-54,-152,108,152) |
+| TeaStation / tea_station | 三个茶桶及其下方制作台 | (841,296) | (-74,-147,148,145) |
+
+Area2D 半径仍为 85 个本地像素；feedback_rect 仅定义实际设备的高亮范围，不扩大碰撞或改变可行走规则。收银台可从营业区靠近柜台前沿使用，储物柜从下方通道接近，制作台从设备前方接近。
+
+设备前景使用原始完整地图纹理，polygon 和 uv 逐点相同，避免生成素材或局部缩放错位。EquipmentForeground 按玩家脚点复用现有前景排序组件：柜台/展示架基线 y=501，后部工作台 y=294，右侧设备 y=441，仓储设备 y=292；背后 z=12，前方 z=8，玩家 z=10。该层不修改实体碰撞。
+
+InteractionFeedback 使用世界 z_index=30，高于设备与屋顶，角框不会被柜台盖住；仍在暂停、对白、剧情控制和弹窗期间清空，并且一次只指向当前目标。
+
+验证：`tests/verify_shop_equipment.gd` 使用真实主场景接近三类设备并触发 E/退出，检查柜台前后遮挡、原底图同坐标取样、现有提示/高亮和锁定恢复。窗口版追加 `-- --capture`，截图输出至 `.godot/milk_tea_verification/device_*.png`。

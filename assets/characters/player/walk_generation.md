@@ -21,3 +21,13 @@ Create the companion IDLE STANDING sprite sheet for the EXACT character in this 
 ```
 
 待机源图实际为 2172 × 724；工具按四列检测不透明区域，以 nearest 缩至 208 像素高，并按躯干中心与脚底对齐到四个 200 × 300 格子。行走源图不改像素，使用 AtlasTexture 的 region 和 margin 对齐。渲染材质统一清理半透明杂色。
+
+## 并脚过渡修正
+
+用户指出旧循环仍缺少真正并脚的瞬间。此次使用内置 imagegen，以 `player_walk_sheet.png` 和 `player_idle_atlas.png` 为参考，单独生成四向并脚姿势，保存为 `player_passing_source.png`（实际 1254 × 1254，2 × 2 排列）。工具以相同 nearest 规范生成 `player_passing_atlas.png`，直接替换每个方向第 3、7 帧，并将这两帧相对时长设为 1.25。
+
+```text
+Make ONLY FOUR feet-together PASSING POSES to insert between left and right steps of the walking cycle in Image 1. Image 2 is the required legs and boots reference. VERY IMPORTANT: both knees nearly straight, both boots together immediately beneath the pelvis, soles side by side on the SAME horizontal floor level. The outer silhouettes of the two legs are parallel and touching or very close. No raised knee, no foot kicked behind, NO bent lifted leg, no straddling, no crossing legs, no forward/back spread. This is the instant when the feet come together during a simple RPG walking cycle. Follow the narrow closed-leg stance of Image 2 exactly. Arms are near the middle of the swing, hanging naturally near the hips. Preserve Image 1's character identity, EXACT head size/body proportions, blue shirt, brown apron, black hair and dark trousers/boots, same crisp pixel-art style. Four isolated full-body figures on TRUE TRANSPARENT background, no shadows or scenery. Arrange a clean 2x2 grid on a 1024x1024 PNG: top-left DOWN front; top-right LEFT profile; bottom-left RIGHT profile; bottom-right UP back. Use one character per 512x512 quadrant, centered on the torso, identical scale around 400px tall, ground baseline 475 within each quadrant. Down/up must visibly have TWO level boots touching side-by-side, left/right must visibly form a narrow vertical pair of legs, with both soles aligned. No text, no guides, no motion blur, no translucent fringes. The whole purpose of these four images is visibly FEET TOGETHER, unlike the spread and lifted walking frames.
+```
+
+逐帧确认：第 3、7 帧已实际引用并脚图集，脚底仍在 y=294；独立预览场景提供慢放和手动单步，供检查迈步与并脚的先后关系。

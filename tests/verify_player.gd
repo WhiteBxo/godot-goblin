@@ -34,7 +34,7 @@ func _run() -> void:
 		var sprite := player.animated_sprite
 		for direction in ["down", "left", "right", "up"]:
 			_check(sprite.sprite_frames.get_frame_count("idle_" + direction) == 1, "One neutral idle frame: " + direction)
-			_check(sprite.sprite_frames.get_frame_count("walk_" + direction) == 8, "Eight distinct walk phases: " + direction)
+			_check(sprite.sprite_frames.get_frame_count("walk_" + direction) == 8, "Eight-phase walk cycle: " + direction)
 		var directions := {"down": "move_down", "left": "move_left", "right": "move_right", "up": "move_up"}
 		for direction: String in directions:
 			Input.action_press(directions[direction])

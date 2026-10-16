@@ -29,7 +29,11 @@ func _run() -> void:
 			for index in range(frames.get_frame_count(animation)):
 				var texture := frames.get_frame_texture(animation, index) as AtlasTexture
 				_check(texture.get_size() == Vector2(200, 300), "Every pose uses the same canvas")
-				_check(texture.region not in regions, "Walk phases use distinct source frames")
+				if state == "walk" and (index == 2 or index == 6):
+					_check(texture.atlas.resource_path.ends_with("player_passing_atlas.png"), "Both half-cycles use the verified feet-together pose")
+					_check(frames.get_frame_duration(animation, index) == 1.25, "Feet-together phase remains visible")
+				else:
+					_check(texture.region not in regions, "Non-passing phases use distinct source frames")
 				regions.append(texture.region)
 				sprite.texture = texture
 				await process_frame
@@ -47,5 +51,5 @@ func _run() -> void:
 				_check(not partial_alpha, "No translucent fringe or ghost pixels: " + animation)
 	viewport.queue_free()
 	await process_frame
-	print("PLAYER_VISUALS: ", "PASS" if _failures.is_empty() else "FAIL", " (36 rendered poses, hard alpha, baseline, cell isolation)")
+	print("PLAYER_VISUALS: ", "PASS" if _failures.is_empty() else "FAIL", " (36 rendered frames, closed-feet phases, hard alpha, baseline, cell isolation)")
 	quit(0 if _failures.is_empty() else 1)

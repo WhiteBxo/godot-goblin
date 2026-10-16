@@ -62,6 +62,8 @@ func _ready() -> void:
 	systems.add_child(story)
 	story.configure(dialogue, func() -> bool: return not ui.is_open())
 	story.event_started.connect(func(_id: String) -> void: _sync_lock())
+	ui.opened.connect(_sync_lock)
+	ui.closed.connect(_sync_lock)
 	story.event_finished.connect(func(_id: String, _ok: bool, _reason: String) -> void: _sync_lock())
 	_menu = HBoxContainer.new()
 	_menu.position = Vector2(12, 12)

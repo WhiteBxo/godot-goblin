@@ -50,6 +50,7 @@ func _run() -> void:
 	await _test_flow()
 	await _test_compact_ui()
 	_test_edge_cases()
+	await _test_speaker_portraits()
 	await _test_lifecycle()
 	await _test_demo()
 	await _test_main_input_lock()
@@ -104,7 +105,7 @@ func _test_flow() -> void:
 	_check(_manager.start_dialogue("demo.first_shift") == OK, "Start dialogue by ID")
 	_check(_starts == ["demo.first_shift"] and _manager.get_current_line_id() == "welcome", "Start signal and first line are correct")
 	_check(_ui.visible and _ui.is_revealing(), "Dialogue opens with typewriter animation")
-	_check(_ui.get_node("Panel/Margin/Content/Speaker").text == "店员" and _ui.get_node("Panel/Margin/Content/Line/Portrait").visible, "Speaker name and optional portrait are displayed")
+	_check(_ui.get_node("Panel/Margin/Content/Speaker").text == "店员" and _ui.get_node("Portrait").visible, "Speaker name and optional portrait are displayed")
 	_check(_manager.start_dialogue("demo.greeting") == ERR_BUSY and _manager.load_dialogues() == ERR_BUSY, "Active dialogue cannot be replaced or reloaded")
 	await create_timer(0.12).timeout
 	var text: RichTextLabel = _ui.get_node("Panel/Margin/Content/Line/Text")
@@ -114,7 +115,7 @@ func _test_flow() -> void:
 	await _tap(KEY_E, true)
 	_check(_manager.get_current_line_id() == "welcome", "Key echo cannot advance a dialogue")
 	await _tap(KEY_SPACE)
-	_check(_manager.get_current_line_id() == "explain" and not _ui.get_node("Panel/Margin/Content/Line/Portrait").visible, "Space advances to a consecutive line without a portrait")
+	_check(_manager.get_current_line_id() == "explain" and not _ui.get_node("Portrait").visible, "Space advances to a consecutive line without a portrait")
 	await _tap(KEY_ENTER)
 	await _tap(KEY_E)
 	_check(_manager.get_current_line_id() == "question", "Consecutive lines reach the choice prompt")
@@ -198,6 +199,55 @@ func _test_edge_cases() -> void:
 	_check(_manager.load_dialogues() == OK, "Default catalogue can be explicitly reloaded")
 
 
+func _test_speaker_portraits() -> void:
+	for path: String in [
+		"res://assets/characters/apron_man/player_portrait.png",
+		"res://assets/characters/goblin/goblin_smiling_portrait.png",
+		"res://assets/characters/goblin/goblin_laughing_portrait.png",
+	]:
+		var image := (load(path) as Texture2D).get_image()
+		_check(image.detect_alpha() != Image.ALPHA_NONE and not image.is_invisible(), "Portrait contains both transparency and a visible character: " + path)
+		_check(image.get_pixel(0, 0).a == 0.0 and image.get_pixel(image.get_width() - 1, image.get_height() - 1).a == 0.0, "Portrait background corners are transparent: " + path)
+	_check(_manager.start_dialogue("demo.speaker_portraits") == OK, "Portrait demo starts through the real manager")
+	var portrait: TextureRect = _ui.get_node("Portrait")
+	var expected := {
+		"player": "res://assets/characters/apron_man/player_portrait.png",
+		"goblin": "res://assets/characters/goblin/goblin_smiling_portrait.png",
+		"narrator": "",
+		"inner": "res://assets/characters/apron_man/player_portrait.png",
+		"override": "res://assets/characters/goblin/goblin_laughing_portrait.png",
+		"hidden": "",
+	}
+	for line_id: String in expected:
+		_check(_manager.get_current_line_id() == line_id, "Portrait sequence reaches " + line_id)
+		var path: String = expected[line_id]
+		if path.is_empty():
+			_check(not portrait.visible and portrait.texture == null, "Missing or suppressed portrait clears the previous speaker: " + line_id)
+		else:
+			_check(portrait.visible and portrait.texture.resource_path == path, "Speaker default or explicit override is shown: " + line_id)
+		_ui.reveal_all()
+		await _frames()
+		var panel: Control = _ui.get_node("Panel")
+		_check(is_equal_approx(portrait.get_global_rect().get_center().y, panel.get_global_rect().position.y), "Dialogue panel covers the lower half of the centered portrait")
+		_check(panel.z_index > portrait.z_index and portrait.get_global_rect().end.y <= panel.get_global_rect().end.y, "Portrait is behind the panel with no feet protruding below")
+		var on_left := line_id in ["player", "inner", "hidden"]
+		_check((portrait.get_global_rect().get_center().x < root.get_visible_rect().size.x / 2.0) == on_left, "Player is on the left and NPC is on the right: " + line_id)
+		_check(Rect2(Vector2.ZERO, root.get_visible_rect().size).encloses(portrait.get_global_rect()), "Portrait fits the viewport")
+		if "--capture-portraits" in OS.get_cmdline_user_args():
+			await RenderingServer.frame_post_draw
+			root.get_texture().get_image().save_png("user://dialogue-portrait-%s.png" % line_id)
+		_manager.advance()
+	_check(not _manager.is_active() and not portrait.visible and portrait.texture == null, "Ending dialogue clears the portrait")
+	_manager.start_dialogue("demo.speaker_portraits")
+	_manager.end_dialogue(true)
+	_check(not portrait.visible and portrait.texture == null, "Cancelling dialogue clears the portrait")
+	_check(_manager.load_dialogues("res://src/resources/dialogue/day1_demo_dialogues.json") == OK, "Existing Day 1 dialogue loads without adding portrait fields")
+	_manager.start_dialogue("day1.opening")
+	_check(portrait.visible and portrait.texture == _manager.speaker_portraits["主角"], "Existing opening resolves the protagonist portrait automatically")
+	_manager.end_dialogue()
+	_check(_manager.load_dialogues() == OK, "Restore default dialogue catalogue after portrait checks")
+
+
 func _test_lifecycle() -> void:
 	_manager.start_dialogue("demo.greeting")
 	_manager.free()
@@ -236,6 +286,9 @@ func _test_demo() -> void:
 		root.get_texture().get_image().save_png("/private/tmp/dialogue-demo-choices.png")
 	await _tap(KEY_ESCAPE)
 	_check(player.movement_enabled and demo.get_node("HudLayer/Screen/Menu").visible, "Standalone scene restores controls and offers replay")
+	demo.get_node("HudLayer/Screen/Menu/Portraits").pressed.emit()
+	_check(manager.get_current_line_id() == "player" and (demo.get_node("PopupLayer/DialogueUI/Portrait") as TextureRect).visible, "Standalone portrait menu starts the speaker portrait preview")
+	manager.end_dialogue(true)
 	demo.queue_free()
 	await _frames()
 

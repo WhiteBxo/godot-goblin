@@ -1,0 +1,80 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="theme"]
+[ext_resource type="Script" path="res://src/UI/milk_tea/shop_popup.gd" id="script"]
+
+[node name="Modal" type="Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("theme")
+script = ExtResource("script")
+
+[node name="Shade" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.035, 0.02, 0.015, 0.72)
+
+[node name="Center" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_bottom = 40
+mouse_filter = 2
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+custom_minimum_size = Vector2(0, 0)
+size_flags_horizontal = 3
+size_flags_vertical = 3
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 20
+
+[node name="Content" type="VBoxContainer" parent="Center/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Center/Panel/Margin/Content"]
+layout_mode = 2
+theme_type_variation = &"Title"
+text = "订单板"
+
+[node name="DescriptionScroll" type="ScrollContainer" parent="Center/Panel/Margin/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+follow_focus = true
+
+[node name="Description" type="Label" parent="Center/Panel/Margin/Content/DescriptionScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 2
+
+[node name="RecipeStatus" type="Label" parent="Center/Panel/Margin/Content"]
+visible = false
+layout_mode = 2
+autowrap_mode = 2
+
+[node name="Ingredients" type="HBoxContainer" parent="Center/Panel/Margin/Content"]
+visible = false
+layout_mode = 2
+
+[node name="Close" type="Button" parent="Center/Panel/Margin/Content"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+text = "返回店铺  [Esc]"

@@ -8,6 +8,16 @@ signal choice_selected(dialogue_id: String, line_id: String, choice_id: String)
 signal line_changed(line_id: String)
 
 @export_file("*.json") var dialogue_file: String = "res://src/resources/dialogue/example_dialogues.json"
+## Player names use the left portrait slot; all other speakers use the right.
+@export var left_portrait_speakers: PackedStringArray = ["主角", "主角·内心", "玩家"]
+## Exact speaker names; per-line portrait paths override these defaults.
+@export var speaker_portraits: Dictionary[String, Texture2D] = {
+	"主角": preload("res://assets/characters/apron_man/player_portrait.png"),
+	"主角·内心": preload("res://assets/characters/apron_man/player_portrait.png"),
+	"玩家": preload("res://assets/characters/apron_man/player_portrait.png"),
+	"胖哥布林": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
+	"哥布林": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
+}
 
 var last_error: String = ""
 var _library := DialogueLibrary.new()
@@ -127,13 +137,16 @@ func _go_to(line_id: String) -> void:
 
 func _present_line() -> void:
 	var line: Dictionary = _dialogue["lines"][_line_id]
-	var portrait: Texture2D
+	var portrait: Texture2D = speaker_portraits.get(line["speaker"])
+	if line.has("portrait"):
+		# An explicit empty path suppresses even a configured speaker portrait.
+		portrait = null
 	if not line.get("portrait", "").is_empty():
 		portrait = load(line["portrait"]) as Texture2D
 	var choices: Array[String] = []
 	for choice: Dictionary in line.get("choices", []):
 		choices.append(choice["text"])
-	_ui.present_line(line["speaker"], line["text"], portrait, choices)
+	_ui.present_line(line["speaker"], line["text"], portrait, choices, line["speaker"] in left_portrait_speakers)
 	line_changed.emit(_line_id)
 
 

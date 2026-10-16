@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="TeaMenu" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/resources/milk_tea/tea_menu.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+ingredients = Array[Dictionary]([{
+"id": "black_tea", "name": "红茶", "category": "tea"
+}, {
+"id": "green_tea", "name": "茉莉绿茶", "category": "tea"
+}, {
+"id": "creamer", "name": "奶精", "category": "milk"
+}, {
+"id": "pearl", "name": "珍珠", "category": "topping"
+}, {
+"id": "coconut", "name": "椰果", "category": "topping"
+}, {
+"id": "syrup", "name": "糖浆", "category": "syrup"
+}])
+initial_stock = {"black_tea": 12, "green_tea": 12, "creamer": 12, "pearl": 8, "coconut": 8, "syrup": 10}
+orders = Array[Dictionary]([{
+"name": "珍珠奶茶", "recipe": ["black_tea", "creamer", "pearl", "syrup"]
+}, {
+"name": "椰果茉莉奶茶", "recipe": ["green_tea", "creamer", "coconut", "syrup"]
+}, {
+"name": "原味奶茶", "recipe": ["black_tea", "creamer", "syrup"]
+}])

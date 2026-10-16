@@ -55,10 +55,12 @@ func _run() -> void:
 	_view("Focus bounds")
 	var marker := Marker2D.new()
 	_game.get_active_level().add_child(marker)
-	marker.position = Vector2(800, 500)
+	# This focus-follow case needs a world target inside the camera limits.
+	# The level's 1.25 scale would push these local coordinates past the limit.
+	marker.global_position = Vector2(800, 500)
 	focus = _director.camera_focus(marker, 0.1)
 	await _wait(focus)
-	marker.position += Vector2(80, 30)
+	marker.global_position += Vector2(80, 30)
 	await _frames()
 	_check(_camera.global_position.distance_to(marker.global_position) < 2.0, "Completed focus tracks moving live target")
 	marker.queue_free()

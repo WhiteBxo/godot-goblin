@@ -1,5 +1,7 @@
 # StoryDirector / P0 Cinematic Integration
 
+自然语言编排入口见 [Story Authoring Workflow](story_authoring_workflow.md)，全部 JSON 指令/默认参数见 [编排指令速查](story_authoring_commands.md)。创作源保存在 `docs/design/`，运行时继续使用本页的原有系统与 Schema。
+
 `src/core/story/story_library.gd` 负责 JSON 加载和完整校验；`story_director.gd` 只调度步骤。MainGame 在 `Systems` 创建 StoryDirector，传入原有 DialogueManager；Director 通过 `/root/GameState` 取得已有 Autoload，不创建第二份状态。正式入口不加载第一天示例、不自动播放剧情。
 
 ## 接入与公开接口
@@ -164,7 +166,7 @@ MainGame 在现有 `Systems` 中创建各 Director，通过 `configure_cinematic
 - **完成通知**：每个句柄关联 generation、原步骤和等待模式；先从跟踪表移除，再处理成功/失败。同步拒绝/零时长的结果也 deferred 发布，重复 Signal、已退休动作及上一代事件的回调均不能再次推进。
 - **取消与退出**：先递增 generation、停 Timer 和 dispatch，断开所属动作回调，再按句柄取消 ActorAction，停止所属声音，复位镜头。删除角色、Marker、演出服务、对白 UI、StoryDirector 或宿主场景，以及 GameState reset/restore 均安全取消；已完成 focus 的目标消失也通过 `camera_recovered` 取消。
 - **状态保留**：不回滚已经执行的 flag/stage、spawn、显隐、朝向和已走过的距离。取消已生成的角色会停在原地，生命周期仍归 ActorDirector；退出场景自动清理。Demo 重播前显式清理上一位顾客。无本段句柄的外部角色动作不受取消影响。
-- **音乐所有权**：正常结束、失败、取消时停止本段音效与仍归本段的 BGM；如果外部已经发起更新的音乐请求，保留它。没有音乐步骤的旧剧情也不会停止场景 BGM。需要长期场景音乐时由宿主启动，不绑定到剧情。
+- **音乐所有权**：正常结束停止本段 SFX，并将 BGM 留给场景继续播放（包括未完成的非阻塞淡变）；失败、取消时停止本段 SFX 与仍归本段的 BGM。如果外部已经发起更新的音乐请求，保留它。没有音乐步骤的旧剧情不会停止场景 BGM。显式 stop_bgm 或后续音乐指令仍生效。
 - **输入**：各 Director 不操作输入锁。MainGame 继续统一计算对白 / 剧情 / player 接管的 OR，最后释放时恢复进入演出前的移动与交互状态，包括原本已禁用的情况。玩家中途删除时也安全释放交互锁；StoryDirector 被移除后，店铺交互安全 fallback 到原 ShopUI。
 
 Timer、ActorDirector、CameraDirector 随 Systems 暂停；AudioManager 保留原有策略，音乐淡变可在暂停中完成，但下一剧情步骤要等 Systems 恢复后执行。音效等待使用声音池的自然完成通知；循环音效若使用 `wait: true` 不会自然结束，作者应使用有限素材或显式取消。
@@ -195,3 +197,22 @@ Demo 脚本只注册资源/Marker、加载目录、启动事件和提供重播/�
 新增实现同样核对 [Signal 的连接、断开和绑定参数](https://docs.godotengine.org/en/4.7/classes/class_signal.html)、[Tween 的绑定、完成与 kill](https://docs.godotengine.org/en/4.7/classes/class_tween.html)、[PackedScene 实例化](https://docs.godotengine.org/en/4.7/classes/class_packedscene.html)：kill/stop 不作为自然完成，必须显式结算取消；节点退出和句柄回调按所属事件清理。
 
 本次使用 Godot 4.7.2 验证：新增集成测试通过（含真实物理、声音完成通知及完整开场时长），Metal Forward+ 窗口渲染和截图通过，开场实测约 24.5 秒。既有 `verify_story_director`（147）、`verify_actor_director`（165）、`verify_camera_director`（285）、`verify_audio_manager`（64）、`verify_dialogue`（75）、`verify_game_state`（120），以及 `verify_player`、`verify_milk_tea_shop`、`verify_shop_camera` 全部通过。相机回归中三处陈旧断言已改用实际公开跟随/缩放语义，未修改相机玩法实现。
+
+
+## Gameplay Bridge
+
+相邻短事件通过 [Gameplay Bridge 编排规则](story_authoring_workflow.md#自动演出与玩家操作gameplay-bridge) 连接。
+`GameplayBridge` 位于 MainGame/Systems，只消费 GameState 与 TeaMaking 的完成 Signal，不执行 Story steps。
+ShopUI 制作台提供固定配方按钮；配方规则属于 `src/gameplay/milk_tea/tea_making.gd`。
+输入锁继续由 MainGame 依据 busy/modal/actor 状态计算；ActorDirector 和 CameraDirector 职责保持原样。
+
+F6：`src/debug/gameplay_bridge/gameplay_bridge_demo.tscn`。推进开场对白，WASD 到奶茶制作台，E 打开，
+依次点击红茶、牛奶、珍珠，确认完成后弹窗仍开着、音乐持续；Esc 返回后自动出现后续对白。
+错误投料从头制作；未完成时 Esc 可退出并再次 E 继续。结束后移动恢复、不会重复续播。
+再次单独运行 Demo 使用新的运行进程；宿主不重置全局状态。
+
+自动验证：`Godot --headless --path . --script res://tests/verify_gameplay_bridge.gd`。
+涉及 UI 的截图验证可去掉 `--headless`，并追加 `-- --capture`。
+Godot 4.7 依据：[Signal 同步通知与自动断连](https://docs.godotengine.org/en/4.7/classes/class_signal.html)、
+[Node 的 can_process 与暂停](https://docs.godotengine.org/en/4.7/classes/class_node.html)、
+[AudioStreamPlayer 播放生命周期](https://docs.godotengine.org/en/4.7/classes/class_audiostreamplayer.html)。

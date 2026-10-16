@@ -31,11 +31,14 @@ func _run() -> void:
 	var camera := player.camera
 	var bounds := level.get_world_bounds()
 	var camera_bounds := level.get_camera_bounds()
-	_check(bounds.size == Vector2(1672, 941), "Bounds come from the replacement texture")
-	_check(camera_bounds.position == Vector2(100, 80) and camera_bounds.size == Vector2(1480, 861), "Camera excludes the painted outer frame")
+	_check(bounds.size.is_equal_approx(Vector2(1720, 960)), "Bounds come from the replacement texture")
+	_check(camera_bounds.position.is_equal_approx(Vector2(140, 67.5)) and camera_bounds.size.is_equal_approx(Vector2(1440, 880)), "Camera excludes the painted outer frame")
 	_check(camera.zoom == Vector2(0.5, 0.5), "Default view is 50 percent wider than the old zoom")
 	_check(camera.is_current() and camera.get_parent() == player, "The active camera follows the player")
 	_check_view(camera, camera_bounds, "Spawn view excludes the outer frame")
+	player.global_position = level.to_global(Vector2(690, 545))
+	camera.reset_smoothing()
+	await _frames(30)
 	var start_center := camera.get_screen_center_position()
 	Input.action_press("move_right")
 	await _frames(25)
@@ -50,7 +53,7 @@ func _run() -> void:
 			await _frames(1)
 			_check_view(camera, camera_bounds, "Smoothed corner view excludes the outer frame")
 	# There must be no path around either side wall through the bottom floor strip.
-	var starts := [Vector2(150, 870), Vector2(1550, 870), Vector2(300, 870), Vector2(1500, 170)]
+	var starts := [level.to_global(Vector2(175, 570)), level.to_global(Vector2(1205, 560)), level.to_global(Vector2(350, 640)), level.to_global(Vector2(850, 320))]
 	var actions := ["move_left", "move_right", "move_down", "move_up"]
 	for index in range(starts.size()):
 		player.velocity = Vector2.ZERO
@@ -64,8 +67,8 @@ func _run() -> void:
 		_check(bounds.encloses(visible_player), "The entire character stays inside the background: " + actions[index])
 		_check_view(camera, camera_bounds, "Boundary view excludes the outer frame")
 	# Hold S against the bottom at the center and both corners, sampling render frames.
-	for x in [150.0, 800.0, 1520.0]:
-		player.global_position = Vector2(x, 900)
+	for x in [350.0, 1035.0, 1055.0]:
+		player.global_position = level.to_global(Vector2(x, 640))
 		player.velocity = Vector2.ZERO
 		Input.action_press("move_down")
 		await _frames(150)
@@ -77,7 +80,7 @@ func _run() -> void:
 			_check(root.canvas_transform == stable_transform, "Holding S keeps the rendered world transform fixed")
 			_check(camera.global_position.y <= camera_bounds.end.y - camera.get_viewport_rect().size.y / camera.zoom.y * 0.5 + 0.001, "Follow target itself stays inside camera limits")
 		Input.action_release("move_down")
-	player.global_position = Vector2(300, 900)
+	player.global_position = level.to_global(Vector2(520, 570))
 	player.velocity = Vector2.ZERO
 	player.configure_camera(camera_bounds)
 	Input.action_press("move_up")

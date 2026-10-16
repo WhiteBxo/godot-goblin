@@ -8,7 +8,7 @@ signal cancel_requested
 @export_range(1.0, 200.0) var characters_per_second: float = 32.0
 
 @onready var _speaker: Label = $Panel/Margin/Content/Speaker
-@onready var _portrait: TextureRect = $Panel/Margin/Content/Line/Portrait
+@onready var _portrait: TextureRect = $Portrait
 @onready var _text: RichTextLabel = $Panel/Margin/Content/Line/Text
 @onready var _choice_scroll: ScrollContainer = $Panel/Margin/Content/ChoiceScroll
 @onready var _choices: VBoxContainer = $Panel/Margin/Content/ChoiceScroll/Choices
@@ -20,18 +20,37 @@ var _characters: float = 0.0
 var _revealing: bool = false
 var _input_ready_frame: int = 0
 var _previous_focus: Control
+var _ui_manager: UIManager
+var _screen_id: StringName
+var _closing_dialogue := false
+
+func bind_ui(manager: UIManager, id: StringName) -> void:
+	_ui_manager = manager
+	_screen_id = id
+
+func on_ui_closed() -> void:
+	if not _closing_dialogue:
+		cancel_requested.emit()
+
+func get_default_focus() -> Control:
+	return _buttons[_selected] if not _revealing and not _buttons.is_empty() else null
 
 
 func _ready() -> void:
 	hide()
 
 
-func present_line(speaker: String, text: String, portrait: Texture2D, choices: Array[String]) -> void:
-	if not visible:
+func present_line(speaker: String, text: String, portrait: Texture2D, choices: Array[String], portrait_on_left: bool = false) -> void:
+	if is_instance_valid(_ui_manager):
+		if _ui_manager.open_screen(_screen_id) != OK:
+			return
+	elif not visible:
 		_previous_focus = get_viewport().gui_get_focus_owner()
 	_speaker.text = speaker
 	_portrait.texture = portrait
 	_portrait.visible = portrait != null
+	_portrait.offset_left = -268.0 if portrait_on_left else 28.0
+	_portrait.offset_right = -28.0 if portrait_on_left else 268.0
 	_text.text = text
 	_text.visible_characters = 0
 	_text.scroll_to_line(0)
@@ -42,7 +61,7 @@ func present_line(speaker: String, text: String, portrait: Texture2D, choices: A
 	for index in range(choices.size()):
 		var button := Button.new()
 		button.text = choices[index]
-		button.custom_minimum_size.y = 20
+		button.custom_minimum_size.y = 24
 		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.pressed.connect(func() -> void: choice_requested.emit(index))
@@ -71,12 +90,18 @@ func reveal_all() -> void:
 
 
 func close_dialogue() -> void:
+	_closing_dialogue = true
+	if is_instance_valid(_ui_manager):
+		_ui_manager.close_screen(_screen_id)
 	hide()
+	_portrait.texture = null
+	_portrait.hide()
 	_revealing = false
 	_clear_choices()
-	if is_instance_valid(_previous_focus) and _previous_focus.is_visible_in_tree():
+	if not is_instance_valid(_ui_manager) and is_instance_valid(_previous_focus) and _previous_focus.is_visible_in_tree():
 		_previous_focus.grab_focus()
 	_previous_focus = null
+	_closing_dialogue = false
 
 
 func _process(delta: float) -> void:
@@ -89,6 +114,11 @@ func _process(delta: float) -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if is_instance_valid(_ui_manager):
+		return
+	handle_ui_input(event)
+
+func handle_ui_input(event: InputEvent) -> void:
 	if not visible:
 		return
 	var confirm := event.is_action("interact") or event.is_action("ui_accept")

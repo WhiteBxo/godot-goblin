@@ -7,12 +7,16 @@ extends Node
 var _shop_level: MilkTeaShop
 var _settlement_level: SettlementMap
 var _shop_player: ShopPlayer
+var _ui_manager: UIManager
 var _shop_ui: ShopUI
 var _shop_interaction: ShopInteraction
+var _tea_production: TeaProduction
 var _dialogue_manager: DialogueManager
 var _story_director: StoryDirector
 var _actor_director: ActorDirector
 var _camera_director: CameraDirector
+var _tea_making: TeaMaking
+var _gameplay_bridge: GameplayBridge
 var _input_locked: bool = false
 var _movement_before_dialogue: bool = true
 var _interaction_before_dialogue: bool = true
@@ -23,6 +27,7 @@ var _debug_panel: DeveloperPanel
 
 func _ready() -> void:
 	DebugRuntime.apply_release_policy(get_tree())
+	_create_ui_system()
 	_settlement_level = $World/LevelRoot.get_child(0) as SettlementMap
 	if _settlement_level != null:
 		_initialize_settlement()
@@ -36,13 +41,24 @@ func _ready() -> void:
 		var ui: ShopUI = preload("res://src/UI/milk_tea/shop_ui.tscn").instantiate()
 		$HudLayer.add_child(ui)
 		ui.set_popup_layer($PopupLayer)
+		_tea_production = TeaProduction.new()
+		_tea_production.name = "TeaProduction"
+		$Systems.add_child(_tea_production)
+		ui.configure_production(_tea_production)
+		ui.make_requested.connect(func(recipe: Array[String]) -> void: ui.show_production_result(_tea_production.make_drink(recipe)))
+		ui.bind_manager(_ui_manager)
 		var interaction := ShopInteraction.new()
 		interaction.name = "ShopInteraction"
 		$Systems.add_child(interaction)
 		interaction.configure(_shop_player, ui, _shop_level.get_interaction_points(), _route_story_interaction)
 		_shop_ui = ui
 		_shop_interaction = interaction
+		var feedback := InteractionFeedback.new()
+		feedback.name = "InteractionFeedback"
+		$World/EffectRoot.add_child(feedback)
+		feedback.configure(interaction, _audio_manager)
 		_create_dialogue_system()
+		_create_gameplay_bridge()
 		return
 	var error := _active_level.load_error
 	if DebugRuntime.is_enabled():
@@ -60,6 +76,20 @@ func _ready() -> void:
 		_debug_tools.configure(_player.set_speed_multiplier, _player.get_speed_multiplier, _debug_panel)
 		_demo_tools.start()
 
+func get_ui_manager() -> UIManager:
+	return _ui_manager if is_instance_valid(_ui_manager) else null
+
+func _create_ui_system() -> void:
+	_ui_manager = UIManager.new()
+	_ui_manager.name = "UIManager"
+	$Systems.add_child(_ui_manager)
+	_ui_manager.configure({&"hud": $HudLayer, &"popup": $PopupLayer, &"pause": $PauseLayer})
+	var pause: PauseMenu = preload("res://src/UI/pause/pause_menu.tscn").instantiate()
+	$PauseLayer.add_child(pause)
+	_ui_manager.register_screen(&"pause", pause, &"pause", true)
+	pause.resume_requested.connect(func() -> void: _ui_manager.set_paused(false))
+	_ui_manager.modal_changed.connect(_refresh_input_lock)
+
 func get_active_level() -> Node2D:
 	if _settlement_level != null:
 		return _settlement_level
@@ -76,6 +106,7 @@ func _initialize_settlement() -> void:
 	_shop_ui.close_text = "继续探索  [Esc]"
 	$HudLayer.add_child(_shop_ui)
 	_shop_ui.set_popup_layer($PopupLayer)
+	_shop_ui.bind_manager(_ui_manager)
 	_shop_interaction = ShopInteraction.new()
 	_shop_interaction.name = "SettlementInteraction"
 	$Systems.add_child(_shop_interaction)
@@ -87,6 +118,9 @@ func _initialize_settlement() -> void:
 		preview.set_script(load("res://src/debug/settlement/settlement_preview.gd"))
 		preview.call("configure", self, $DebugLayer)
 		$Systems.add_child(preview)
+
+func get_tea_production() -> TeaProduction:
+	return _tea_production
 
 func get_player() -> CharacterBody2D:
 	return _shop_player if is_instance_valid(_shop_player) else (_player if is_instance_valid(_player) else null)
@@ -115,11 +149,11 @@ func get_story_director() -> StoryDirector:
 func get_actor_director() -> ActorDirector:
 	return _actor_director if is_instance_valid(_actor_director) else null
 
-func _route_story_interaction(id: StringName) -> bool:
+func _route_story_interaction(id: StringName) -> Error:
 	# An unavailable service or absent route falls through to the existing ShopUI.
 	if not is_instance_valid(_story_director):
-		return false
-	return _story_director.request_interaction(String(id)) != ERR_DOES_NOT_EXIST
+		return ERR_DOES_NOT_EXIST
+	return _story_director.request_interaction(String(id))
 
 func _create_dialogue_system() -> void:
 	_actor_director = ActorDirector.new()
@@ -130,6 +164,7 @@ func _create_dialogue_system() -> void:
 	_actor_director.actor_control_changed.connect(_on_actor_control_changed)
 	var ui: DialogueUI = preload("res://src/UI/dialogue/dialogue_ui.tscn").instantiate()
 	$PopupLayer.add_child(ui)
+	_ui_manager.register_screen(&"dialogue", ui, &"popup", true)
 	_dialogue_manager = DialogueManager.new()
 	_dialogue_manager.name = "DialogueManager"
 	$Systems.add_child(_dialogue_manager)
@@ -155,8 +190,28 @@ func _on_story_exiting() -> void:
 	if is_instance_valid(_camera_director):
 		_camera_director.cancel_all("StoryDirector exited")
 
+func get_gameplay_bridge() -> GameplayBridge:
+	return _gameplay_bridge
+
+func get_tea_making() -> TeaMaking:
+	return _tea_making
+
+func get_shop_ui() -> ShopUI:
+	return _shop_ui
+
+func _create_gameplay_bridge() -> void:
+	_tea_making = TeaMaking.new()
+	_tea_making.name = "TeaMaking"
+	$Systems.add_child(_tea_making)
+	_shop_ui.bind_tea_making(_tea_making)
+	_gameplay_bridge = GameplayBridge.new()
+	_gameplay_bridge.name = "GameplayBridge"
+	$Systems.add_child(_gameplay_bridge)
+	_gameplay_bridge.configure(_story_director, _ui_manager, _tea_making)
+
 func _can_start_story() -> bool:
-	return not is_instance_valid(_shop_ui) or not _shop_ui.is_open()
+	return (not get_tree().paused and not _ui_manager.has_modal()
+		and (not is_instance_valid(_gameplay_bridge) or _gameplay_bridge.allows_story_start()))
 
 func _can_start_dialogue() -> bool:
 	return _can_start_story() and (not is_instance_valid(_story_director) or not _story_director.is_busy() or _story_director.is_starting_dialogue())
@@ -173,7 +228,8 @@ func _on_actor_control_changed(actor_id: StringName, _controlled: bool) -> void:
 
 func _refresh_input_lock() -> void:
 	var should_lock := (
-		(is_instance_valid(_dialogue_manager) and _dialogue_manager.is_active())
+		(is_instance_valid(_ui_manager) and _ui_manager.has_modal())
+		or (is_instance_valid(_dialogue_manager) and _dialogue_manager.is_active())
 		or (is_instance_valid(_story_director) and _story_director.is_busy())
 		or (is_instance_valid(_actor_director) and _actor_director.is_actor_controlled(&"player"))
 	)

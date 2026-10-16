@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "phases": [
+    {
+      "id": "bridge.make_tea",
+      "after_event": "bridge.intro",
+      "stage": "bridge.make_tea",
+      "recipe": "pearl_milk_tea",
+      "completion_flag": "bridge.tea_done",
+      "next_event": "bridge.after_tea"
+    }
+  ]
+}

@@ -20,11 +20,11 @@ func _send_action(action: StringName, pressed: bool) -> void:
 	Input.flush_buffered_events()
 
 func _verify() -> void:
-	var game: MainGame = load("res://src/core/main.tscn").instantiate()
+	var game: MainGame = _make_cave_game()
 	root.add_child(game)
 	await process_frame
-	var level := game.get_active_level()
-	var player := game.get_player()
+	var level := game.get_active_level() as CaveMap
+	var player := game.get_player() as CavePlayer
 	var tools := game.get_debug_tools()
 	var demo := game.get_demo_tools()
 	var overlay := demo.get_overlay()
@@ -49,8 +49,11 @@ func _verify() -> void:
 		check(not screen_layer.follow_viewport_enabled, "Screen layer stays fixed: " + name)
 		var expected_mode := Node.PROCESS_MODE_WHEN_PAUSED if name == "PauseLayer" else Node.PROCESS_MODE_ALWAYS
 		check(screen_layer.process_mode == expected_mode, "Screen layer process mode: " + name)
-		if name != "DebugLayer":
-			check(screen_layer.get_child_count() == 0, "Reserved UI layer remains empty: " + name)
+		if name in ["HudLayer", "TransitionLayer"]:
+			check(screen_layer.get_child_count() == 0, "Unused UI layer remains empty: " + name)
+	check(game.get_ui_manager() != null, "MainGame exposes scene-local UI manager")
+	check(game.get_node("PopupLayer/DialogueUI") != null, "Dialogue belongs to PopupLayer")
+	check(game.get_node("PauseLayer/PauseMenu") != null, "Pause menu belongs to PauseLayer")
 	check(not game.get_node("PauseLayer").visible, "Pause layer initially hidden")
 	check(not game.get_node("TransitionLayer").visible, "Transition layer initially hidden")
 	check(overlay.mouse_filter == Control.MOUSE_FILTER_IGNORE, "Debug overlay does not intercept mouse input")
@@ -66,6 +69,8 @@ func _verify() -> void:
 		panel.speed_selector.item_selected.emit(index)
 		var multiplier := float(panel.speed_selector.get_item_id(index))
 		player.global_position = Vector2.ZERO
+		# Measure steady speed; acceleration has its own player tests.
+		player.velocity = Vector2.RIGHT * player.get_movement_speed()
 		player.move_direction(Vector2.RIGHT, 0.1)
 		check(is_equal_approx(player.global_position.x, base_speed * multiplier * 0.1), "Selected multiplier changes actual movement: %s" % multiplier)
 		check(is_equal_approx(player.speed, base_speed), "Multiplier preserves base speed")
@@ -131,11 +136,11 @@ func _verify() -> void:
 	game.queue_free()
 	await process_frame
 	ProjectSettings.set_setting("debug/developer_tools/enabled", false)
-	var plain_game: MainGame = load("res://src/core/main.tscn").instantiate()
+	var plain_game: MainGame = _make_cave_game()
 	root.add_child(plain_game)
 	await process_frame
 	check(plain_game.get_debug_tools() == null and plain_game.get_demo_tools() == null, "Game starts without debug components")
-	check(plain_game.get_node("Systems").get_child_count() == 0 and plain_game.get_node("DebugLayer").get_child_count() == 0, "Disabled debug tools leave containers empty")
+	check(plain_game.get_ui_manager() != null and plain_game.get_node("DebugLayer").get_child_count() == 0, "Disabled debug tools preserve game systems without debug display")
 	check(plain_game.get_player().can_stand_at(plain_game.get_player().global_position), "Normal level initialization is independent of debug tools")
 	_send_action("debug_toggle_overview", true)
 	_send_action("debug_toggle_overview", false)
@@ -151,3 +156,17 @@ func _verify() -> void:
 	ProjectSettings.set_setting("debug/developer_tools/enabled", null)
 	print("MainGame total: %d checks; %d failures" % [checks, failures.size()])
 	quit(0 if failures.is_empty() else 1)
+
+# This suite exercises the supported cave host and its developer tools explicitly.
+# The default shop host has its own movement/interaction suite.
+func _make_cave_game() -> MainGame:
+	var game: MainGame = load("res://src/core/main.tscn").instantiate()
+	var levels := game.get_node("World/LevelRoot")
+	levels.get_child(0).free()
+	levels.add_child(load("res://src/levels/cave/cave_map.tscn").instantiate())
+	var entities := game.get_node("World/EntityRoot")
+	entities.get_child(0).free()
+	var player: CavePlayer = load("res://src/gameplay/player/player.tscn").instantiate()
+	player.name = "Player"
+	entities.add_child(player)
+	return game

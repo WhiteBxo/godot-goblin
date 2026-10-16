@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/debug/gameplay_bridge/gameplay_bridge_demo.gd" id="1"]
+[ext_resource type="PackedScene" path="res://src/core/main.tscn" id="2"]
+
+[node name="GameplayBridgeDemo" type="Node"]
+script = ExtResource("1")
+
+[node name="MainGame" parent="." instance=ExtResource("2")]

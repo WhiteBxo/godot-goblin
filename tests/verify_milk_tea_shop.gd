@@ -84,12 +84,7 @@ func _run() -> void:
 	var stop_x: float = west.global_position.x + west.shape.size.x * west.global_scale.x * 0.5 + feet.height * 0.5
 	_check(player.global_position.x >= stop_x and player.global_position.x < stop_x + 1.0, "Player stops at the actual west wall")
 	player.velocity = Vector2.ZERO
-	for door: AutomaticDoor in level.get_node("Doors").get_children():
-		door._set_open(true)
-	await _frames(3)
 	_check(_reachable(level, player), "All three interaction points must be reachable from spawn")
-	for door: AutomaticDoor in level.get_node("Doors").get_children():
-		door._set_open(false)
 	for point in level.get_interaction_points():
 		player.global_position = point.global_position
 		await _frames(3)

@@ -51,6 +51,18 @@ func _walk(player: ShopPlayer, level: MilkTeaShop, action: String, target: Vecto
 func _room_behavior(game: MainGame, room_name: String, outside: Vector2, inside: Vector2, enter_action: String, exit_action: String, axis: Vector2) -> void:
 	var level := game.get_active_level() as MilkTeaShop
 	var player := game.get_player() as ShopPlayer
+	_check(not level.has_node("Doors"), "All legacy automatic doors are removed")
+	_check(not player.test_move(Transform2D(0, level.to_global(Vector2(690, 530))), Vector2(0, -120) * level.scale), "Counter opening has no leftover door collider")
+	_check(not player.test_move(Transform2D(0, level.to_global(Vector2(1122, 675))), Vector2(0, 50) * level.scale), "Shop entrance has no leftover door collider")
+	var frame: Node2D = level.get_node("Doorframes/Bedroom")
+	player.global_position = level.to_global(Vector2(362, 510))
+	await _frames(3)
+	_check(frame.z_index < player.z_index, "Player in front draws over the doorway frame")
+	player.global_position = level.to_global(Vector2(362, 385))
+	await _frames(3)
+	_check(frame.z_index > player.z_index, "Player behind the doorway is occluded by the frame")
+	for piece: Polygon2D in frame.get_children():
+		_check(piece.texture == level.get_node("Background").texture and piece.polygon == piece.uv, "Doorframe uses background pixels at identical coordinates: " + piece.name)
 	var room: RoomReveal = level.get_node("Rooms/" + room_name)
 	player.global_position = level.to_global(outside)
 	player.velocity = Vector2.ZERO

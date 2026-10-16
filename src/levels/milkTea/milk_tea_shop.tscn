@@ -3,8 +3,15 @@
 [ext_resource type="Script" uid="uid://bvkqqmktf3g4o" path="res://src/levels/milkTea/milk_tea_shop.gd" id="1_p60we"]
 [ext_resource type="Texture2D" path="res://assets/map/milkTea/shop_interior_rooms.png" id="2_map"]
 [ext_resource type="PackedScene" path="res://src/gameplay/interaction/interaction_point.tscn" id="3_xdoh7"]
-[ext_resource type="PackedScene" path="res://src/gameplay/doors/automatic_door.tscn" id="4_door"]
 [ext_resource type="PackedScene" path="res://src/gameplay/rooms/room_reveal.tscn" id="5_room"]
+[ext_resource type="Texture2D" path="res://assets/map/milkTea/room_occlusion/bedroom_reference.png" id="6_bedroom_roof"]
+[ext_resource type="Texture2D" path="res://assets/map/milkTea/room_occlusion/bathroom_reference.webp" id="7_bathroom_roof"]
+
+[ext_resource type="Shader" path="res://src/shaders/occlusion_cutout.gdshader" id="8_cutout"]
+[ext_resource type="Script" path="res://src/gameplay/rooms/doorframe_foreground.gd" id="9_frame"]
+
+[sub_resource type="ShaderMaterial" id="Material_Cutout"]
+shader = ExtResource("8_cutout")
 
 [sub_resource type="RectangleShape2D" id="Shape_NorthWall"]
 size = Vector2(1144, 48)
@@ -336,19 +343,6 @@ shape = SubResource("Shape_LobbyPlantRight")
 position = Vector2(1007.0, 647.5)
 shape = SubResource("Shape_LobbyBin")
 
-[node name="Doors" type="Node2D" parent="."]
-
-[node name="CounterGate" parent="Doors" instance=ExtResource("4_door")]
-position = Vector2(654, 487)
-door_width = 78.0
-door_height = 63.0
-
-[node name="EntranceDoor" parent="Doors" instance=ExtResource("4_door")]
-position = Vector2(1088, 705)
-door_width = 68.0
-door_height = 104.0
-glass = true
-
 [node name="Rooms" type="Node2D" parent="."]
 
 [node name="Bedroom" parent="Rooms" instance=ExtResource("5_room")]
@@ -357,7 +351,14 @@ glass = true
 polygon = PackedVector2Array(150, 103, 394, 103, 394, 480, 334, 480, 334, 411, 150, 411)
 
 [node name="PlaceholderRoof" parent="Rooms/Bedroom/Occlusion" index="0"]
+visible = false
 polygon = PackedVector2Array(151, 104, 394, 104, 394, 411, 151, 411)
+
+[node name="Roof" type="Polygon2D" parent="Rooms/Bedroom/Occlusion"]
+material = SubResource("Material_Cutout")
+polygon = PackedVector2Array(151, 104, 394, 104, 394, 340, 334, 370, 334, 411, 151, 411)
+texture = ExtResource("6_bedroom_roof")
+uv = PackedVector2Array(37, 33, 118, 33, 118, 111, 99, 121, 99, 139, 37, 139)
 
 [node name="Bathroom" parent="Rooms" instance=ExtResource("5_room")]
 
@@ -365,7 +366,53 @@ polygon = PackedVector2Array(151, 104, 394, 104, 394, 411, 151, 411)
 polygon = PackedVector2Array(150, 448, 299, 448, 299, 612, 334, 612, 334, 664, 150, 664)
 
 [node name="PlaceholderRoof" parent="Rooms/Bathroom/Occlusion" index="0"]
+visible = false
 polygon = PackedVector2Array(151, 450, 298, 450, 298, 664, 151, 664)
+
+[node name="Roof" type="Polygon2D" parent="Rooms/Bathroom/Occlusion"]
+material = SubResource("Material_Cutout")
+polygon = PackedVector2Array(151, 450, 298, 450, 298, 664, 151, 664)
+texture = ExtResource("7_bathroom_roof")
+uv = PackedVector2Array(12, 108, 64, 122, 64, 207, 12, 193)
+
+[node name="Doorframes" type="Node2D" parent="."]
+
+[node name="Bedroom" type="Node2D" parent="Doorframes"]
+script = ExtResource("9_frame")
+baseline_y = 480.0
+
+[node name="Lintel" type="Polygon2D" parent="Doorframes/Bedroom"]
+polygon = PackedVector2Array(327, 367, 395, 337, 401, 340, 401, 354, 340, 382, 327, 378)
+texture = ExtResource("2_map")
+uv = PackedVector2Array(327, 367, 395, 337, 401, 340, 401, 354, 340, 382, 327, 378)
+
+[node name="LeftPost" type="Polygon2D" parent="Doorframes/Bedroom"]
+polygon = PackedVector2Array(327, 367, 340, 373, 340, 477, 327, 483)
+texture = ExtResource("2_map")
+uv = PackedVector2Array(327, 367, 340, 373, 340, 477, 327, 483)
+
+[node name="RightPost" type="Polygon2D" parent="Doorframes/Bedroom"]
+polygon = PackedVector2Array(388, 352, 400, 346, 400, 455, 388, 455)
+texture = ExtResource("2_map")
+uv = PackedVector2Array(388, 352, 400, 346, 400, 455, 388, 455)
+
+[node name="BathroomUpper" type="Node2D" parent="Doorframes"]
+script = ExtResource("9_frame")
+baseline_y = 612.0
+
+[node name="Frame" type="Polygon2D" parent="Doorframes/BathroomUpper"]
+polygon = PackedVector2Array(299, 498, 334, 498, 334, 612, 299, 612)
+texture = ExtResource("2_map")
+uv = PackedVector2Array(299, 498, 334, 498, 334, 612, 299, 612)
+
+[node name="BathroomLower" type="Node2D" parent="Doorframes"]
+script = ExtResource("9_frame")
+baseline_y = 677.0
+
+[node name="Frame" type="Polygon2D" parent="Doorframes/BathroomLower"]
+polygon = PackedVector2Array(299, 664, 335, 664, 335, 677, 299, 677)
+texture = ExtResource("2_map")
+uv = PackedVector2Array(299, 664, 335, 664, 335, 677, 299, 677)
 
 [node name="InteractionPoints" type="Node2D" parent="." unique_id=1232960211]
 

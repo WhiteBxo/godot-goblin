@@ -4,9 +4,9 @@
 
 当前主场景仍是 `src/core/main.tscn`。关卡使用用户本次提供的原始地图 `assets/map/milkTea/shop_interior_rooms.png`，1376 × 768，逐字节复制，未重绘、修改家具、处理像素或调整整张背景透明度。背景 Sprite2D 不居中，位置为 (0, 0)，缩放为 (1, 1)；MilkTeaShop 保留 (1.25, 1.25) 缩放，因此世界范围是 1720 × 960。
 
-地图内卧室和卫生间的门扇节点与门碰撞已移除，直接走开放门洞；柜台小门和店铺正门沿用原有自动门。原自动门处理过的旧底图不再被当前关卡引用。
+地图内所有自动门节点、脚本和门扇碰撞已移除，包括柜台小门和店铺正门。卧室、卫生间、柜台与正门均直接通行。原自动门处理过的旧底图不再被当前关卡引用。
 
-当前项目没有 CameraDirector 类。实际镜头是 ShopPlayer 下原有的 BoundedFollowCamera；房间组件不引用、创建、切换或修改 Camera2D，也不向 StoryDirector、MainGame 或玩家发送移动锁定请求。
+当前项目镜头由 CameraDirector 调度 ShopPlayer 下原有的 BoundedFollowCamera；房间组件与门框前景组件不引用、创建、切换或修改 Camera2D，也不向 StoryDirector、MainGame 或玩家发送移动锁定请求。
 
 ## Godot 节点配置
 
@@ -18,12 +18,13 @@ MilkTeaShop (Node2D, scale 1.25)
 ├─ Spawn (Marker2D, 1048, 553)
 ├─ WallsAndFurniture (StaticBody2D, layer 1 / mask 2)
 │  └─ 各墙体及家具的 CollisionShape2D
-├─ Doors (保留柜台和正门)
+├─ Doorframes (按脚点排序，使用原地图同位置像素)
 ├─ Rooms (Node2D)
 │  ├─ Bedroom (RoomReveal / Area2D 实例)
 │  │  ├─ Interior (CollisionPolygon2D)
 │  │  └─ Occlusion (Node2D, z_index=20)
-│  │     └─ PlaceholderRoof (Polygon2D)
+│  │     ├─ PlaceholderRoof (隐藏的复用默认占位)
+│  │     └─ Roof (Polygon2D，原素材 + UV)
 │  └─ Bathroom (相同的 RoomReveal 场景实例)
 └─ InteractionPoints (原有订单、仓储、制作交互)
 ```
@@ -33,7 +34,8 @@ MilkTeaShop (Node2D, scale 1.25)
 | Bedroom / Bathroom | 实例化 `src/gameplay/rooms/room_reveal.tscn`；脚本为 `room_reveal.gd`，类型 Area2D。Collision Layer 全关（0），Mask 仅第 2 层（数值 2），Monitoring 开启，Monitorable 关闭。`observer_group = player`，`fade_duration = 0.25`。 |
 | Interior | CollisionPolygon2D，Build Mode 为 Solids；绘制室内与门槛感应范围，不产生实体阻挡。实例启用 Editable Children 后编辑 polygon。 |
 | Occlusion | Node2D，仅该节点的 `modulate.a` 被 Tween 控制。`z_index = 20`，高于玩家的 10，沿用世界坐标，不放入 CanvasLayer。 |
-| PlaceholderRoof | 独立 Polygon2D，深灰褐色、不透明；仅覆盖各自室内。当前为验证机制的占位美术。 |
+| Roof | 独立 Polygon2D，使用原始附件纹理及整数顶点/UV。卧室使用第二张木梁素材，卫生间使用第一张斜面板，经 UV 校正到房间轮廓。两房 PlaceholderRoof 均隐藏。 |
+| Doorframes | 卧室门楣和立柱、卫生间上下门柱分别使用原 Background 的纹理；polygon 与 uv 逐点相同，节点没有额外缩放/偏移，因此门框与底图像素完全重合。玩家脚点在门框基线后方时 z=12，在前方时 z=8；玩家 z=10。 |
 | Background | 始终保持 `modulate.a = 1`，不被房间组件引用或改动。 |
 | WallsAndFurniture | 实体阻挡沿用玩家的 layer 2 / mask 1。卧室下墙、中间浅色墙、卫生间上墙和浅色侧墙保持碰撞；门洞没有阻挡体。 |
 | Player / Camera2D | 原有 ShopPlayer、脚部 CapsuleShape2D 和 BoundedFollowCamera，房间系统不调整输入、位置、速度、镜头限制或缩放。 |
@@ -61,9 +63,23 @@ MilkTeaShop (Node2D, scale 1.25)
 
 新增房间时，把 room_reveal.tscn 实例放在当前关卡 Rooms 下，保持 Interior / Occlusion 名称；打开 Editable Children，分别绘制 Interior 的感应多边形与 PlaceholderRoof 的覆盖范围。配置观察分组和淡出时间即可，不需要注册管理器或增加相机。
 
-本图只有完整室内背景，没有独立屋顶贴图，无法从原图直接得到正式屋顶。因此本次交付的是可运行的占位遮挡机制。正式美术需补充卧室、卫生间各一张带透明背景的屋顶/顶部遮挡 PNG，室内家具和地板不能烘焙进遮挡图，门洞与保留墙边应留透明。推荐两图都采用 1376 × 768 画布，位置与原始地图对齐。
+目前两个房间都已使用用户提供的素材替换占位。原始附件保存在：
 
-接入时隐藏 PlaceholderRoof，在同一个 Occlusion 下添加 Sprite2D，centered=false、position=(0,0)、scale=(1,1)，赋予对应 PNG。也可使用裁剪尺寸图片，但须设置正确地图坐标偏移。不要把 Background 移入 Occlusion，也不要添加独立 Camera2D。
+- `assets/map/milkTea/room_occlusion/bedroom_reference.png`：第二张木梁屋顶/墙框素材，原始 256 × 256 RGB。
+- `assets/map/milkTea/room_occlusion/bathroom_reference.webp`：第一张倾斜面板素材，原始 256 × 256 RGB。
+
+两图的棋盘格是烘焙 RGB 像素，并不是真透明。最终直接引用原始附件，未采用 imagegen 处理后发生缩放和形变的中间图。`occlusion_cutout.gdshader` 在显示阶段仅抠除浅色中性棋盘格，保留源纹理及 Occlusion 的渐隐 alpha。纹理过滤沿用 Nearest，不生成 mipmap。
+
+屋顶采用 Polygon2D 的整数地图顶点配合原始 256 像素画布 UV 校正，不把整张墙框图片任意拉伸覆盖背景。素材本身是低分辨率缩略图，所以屋顶纹理需要映射放大，无法恢复与 1376 × 768 地图一一对应的原始纹理像素；如果需要屋顶纹理也达到真正 1:1，仍需原分辨率分层源文件。门框前景直接使用完整地图，因此其轮廓和采样可以做到真正 1:1。
+
+| Roof | 地图顶点（与保存的室内轮廓对齐） | 源图 UV（原图像素） |
+| --- | --- | --- |
+| Bedroom | (151,104), (394,104), (394,340), (334,370), (334,411), (151,411) | (37,33), (118,33), (118,111), (99,121), (99,139), (37,139) |
+| Bathroom | (151,450), (298,450), (298,664), (151,664) | (12,108), (64,122), (64,207), (12,193) |
+
+要调整屋顶，只编辑各房间 `Occlusion/Roof` 的 polygon 与 uv；不要修改原图、Background 透明度或门洞碰撞。要增加房间仍可从 room_reveal.tscn 的默认占位开始，配置完成后隐藏占位并添加 Roof。
+
+`DoorframeForeground` 的 baseline_y 是门框基线的关卡本地 Y：卧室 480，卫生间上柱 612、下柱 677。前景始终独立于 Occlusion，因此进入房间不会把真实门框一起淡掉；排序在玩家移动后的物理优先级 1 更新。
 
 ## 验证与试玩
 
@@ -75,13 +91,13 @@ MilkTeaShop (Node2D, scale 1.25)
 Godot --headless --path . --script tests/verify_room_reveal.gd
 Godot --headless --path . --script tests/verify_milk_tea_shop.gd
 Godot --headless --path . --script tests/verify_shop_camera.gd
-Godot --headless --path . --script tests/verify_shop_doors.gd
+Godot --headless --path . --script tests/verify_camera_director.gd
 Godot --headless --path . --script tests/verify_story_director.gd
 ```
 
-房间测试通过真实 InputMap 移动检查两个门洞、持续跟随镜头、场景身份与移动权限，另外覆盖墙体阻挡、0.25 秒时长、渐变中间值、室内出生、快速往返、补间中断、两房独立、多观察者、非玩家和释放中的生命周期。测试中的瞬时位置设置只用于边界条件准备，正式房间组件从不移动玩家。
+房间测试通过真实 InputMap 移动检查两个门洞、持续跟随镜头、场景身份与移动权限，另外覆盖自动门删除后的通路、门框前后关系及 1:1 背景采样、墙体阻挡、0.25 秒时长、渐变中间值、室内出生、快速往返、补间中断、两房独立、多观察者、非玩家和释放中的生命周期。测试中的瞬时位置设置只用于边界条件准备，正式房间组件从不移动玩家。
 
-F6 独立运行关卡仅查看地图和占位遮挡；正式试玩请 F5 运行 main.tscn。先由营业区向左穿过中间墙下方缺口进入走廊，再向上走进卧室，观察深色占位屋顶在 0.25 秒内消失；退出后恢复。再从走廊下方绕过卫生间浅色侧墙底端，向左走进卫生间，观察相同渐隐效果。全程无需 E、没有黑屏或场景切换。最后尝试沿墙推动，确认只能从门洞通行。
+F6 独立运行关卡仅查看地图和素材遮挡；正式试玩请 F5 运行 main.tscn。先由营业区向左穿过中间墙下方缺口进入走廊，再向上走进卧室，观察木质屋顶在 0.25 秒内消失；退出后恢复。再从走廊下方绕过卫生间浅色侧墙底端，向左走进卫生间，观察相同渐隐效果。全程无需 E、没有黑屏或场景切换。最后尝试沿墙推动，确认只能从门洞通行。观察角色位于卧室门框两侧时，门框会按脚点正确切换前后遮挡；柜台和正门不再有动态门扇。
 
 ## Godot 4.7 官方文档
 
@@ -90,3 +106,6 @@ F6 独立运行关卡仅查看地图和占位遮挡；正式试玩请 F5 运行 
 - [CanvasItem](https://docs.godotengine.org/en/4.7/classes/class_canvasitem.html)：modulate 影响子节点，使用单独 Occlusion 限定影响范围。
 - [CollisionPolygon2D](https://docs.godotengine.org/en/4.7/classes/class_collisionpolygon2d.html)：使用保存的多边形定义每个 Area 的覆盖形状。
 - [Geometry2D](https://docs.godotengine.org/en/4.7/classes/class_geometry2d.html#class-geometry2d-method-is-point-in-polygon)：初始化时按相同室内多边形判定脚点。
+
+- [Polygon2D](https://docs.godotengine.org/en/4.7/classes/class_polygon2d.html)：uv 与 polygon 各顶点一一对应，UV 使用源纹理像素坐标。
+- [CanvasItem Shader](https://docs.godotengine.org/en/4.7/tutorials/shaders/shader_reference/canvas_item_shader.html)：保留输入 COLOR 的 modulate，仅把棋盘格像素的 alpha 置零。

@@ -66,7 +66,8 @@ Signals：`dialogue_started(dialogue_id: String)`、`dialogue_ended(dialogue_id:
 
 - `speaker` 和 `text` 为必填字符串，可为空；文本支持 Unicode、换行，不启用 BBCode。长文本可滚动阅读。
 - 省略 `portrait` 时，Manager 按 `speaker` 精确匹配导出的 `speaker_portraits` 字典。默认主角、玩家、主角·内心使用围裙男子全身图，胖哥布林、哥布林使用微笑立绘；旁白及其他未配置角色不显示图片。宿主可在 Inspector 或启动前修改该字典，为新角色配置 Texture2D，不依赖 Actor 节点层级。
-- `portrait` 非空时必须为存在的 `res://` Texture2D 路径，优先于角色默认图，可用于单句表情变化；显式 `"portrait": ""` 隐藏该句立绘。每行重新解析，缺图、结束或取消均清除上一张图片。原始素材不修改，保留白色背景；默认图使用 preload 建立资源依赖。
+- `portrait` 非空时必须为存在的 `res://` Texture2D 路径，优先于角色默认图，可用于单句表情变化；显式 `"portrait": ""` 隐藏该句立绘。每行重新解析，缺图、结束或取消均清除上一张图片。对话使用独立的透明背景 PNG，原始白底素材保留；默认图使用 preload 建立资源依赖。
+- `left_portrait_speakers` 配置主角的姓名（默认主角、主角·内心、玩家），这些角色显示在左侧；其他 NPC 显示在右侧。单句覆盖图片不改变角色所属侧。
 - 普通行用 `next` 指向同一对话中的行；省略或 `""` 表示确认后结束。连续对白必须显式连接。
 - 选项由 `id`、`text` 和可选 `next` 构成。ID 在当前行内唯一，文案非空；`next` 为空表示选择后直接完成。非空 choices 与行级 next 不能同时出现。
 - 加载时校验整个目录及全部分支目标；不会边演出边发现悬空的 `next`。循环分支允许，每次都等待用户确认，不会自动死循环。更新 JSON 后可 idle 时显式 reload。
@@ -78,7 +79,7 @@ UI 复用 InputMap 的 `interact`、`ui_accept`、`ui_up/down`、`ui_cancel`，�
 
 MainGame 复用 `PlayerController.set_movement_enabled` 保存并关闭移动，并用 ShopInteraction 新增的通用 `set_input_enabled` / `is_input_enabled` 关闭交互和提示。交互点直接发 signal 也受此开关保护。MainGame 统一以“对白活跃 OR StoryDirector 忙碌”计算锁定；最后一个输入所有者结束才恢复原值，演出停顿也保持锁定，原先已禁用的控制不会被误启用。ShopUI 已打开时通过 `can_start` 拒绝启动对话，继续使用现有店铺弹窗锁定逻辑，不堆叠两个输入所有者。
 
-UI 按 640×360 视口设计，底部面板为 560×136px，水平居中、距底边 12px，棕色、金色边框与奶茶店一致。当前说话者立绘在面板左上方独立的 220×200px 区域内等比完整显示，使用线性过滤，不挤占正文、不遮挡选项；无图时隐藏该区域。正文超出固定范围后支持鼠标滚轮和右侧滚动条阅读，不再撑大面板，新的一行从顶部开始显示。选项列表也支持滚动。对话 UI 与独立场景使用随包分发的 [Fusion Pixel](../assets/fonts/fusion_pixel/README.md) 中文字体，避免依赖宿主系统 CJK fallback；保留完整简体字符版本、原始许可证和导入设置。
+UI 按 640×360 视口设计，底部面板为 560×136px，水平居中、距底边 12px，棕色、金色边框与奶茶店一致。当前说话者立绘在左侧或右侧的 240×272px 区域内等比居中，使用线性过滤。区域中心对齐面板上边缘，面板以较高的 z_index 绘制在立绘前方，遮住下半身，约上半身露出；无图时隐藏立绘。正文超出固定范围后支持鼠标滚轮和右侧滚动条阅读，不再撑大面板，新的一行从顶部开始显示。选项列表也支持滚动。对话 UI 与独立场景使用随包分发的 [Fusion Pixel](../assets/fonts/fusion_pixel/README.md) 中文字体，避免依赖宿主系统 CJK fallback；保留完整简体字符版本、原始许可证和导入设置。
 
 ## 试玩与自动化验证
 
@@ -92,9 +93,9 @@ UI 按 640×360 视口设计，底部面板为 560×136px，水平居中、距�
 2. E 补全文本，再按推进；到达问题后出现两个选项，按 ↓ + Enter 或点击按钮选择，看到对应的不同回应。
 3. 最后一行确认后返回菜单，显示稳定的选项结果 ID；菜单可重复播放普通对白和连续对白，体验另一个分支。
 4. 对话中 WASD 不移动角色；结束或 Esc 中止后 WASD 恢复移动，角色被限制在试玩区域。
-5. 返回菜单点击“角色立绘 · 切换与隐藏”，依次观察主角 → 胖哥布林 → 旁白（隐藏）→ 主角内心 → 哥布林大笑（单句覆盖）→ 显式隐藏。每句用确认键补全文本，再按推进；Esc 中止后立绘消失。F5 的现有 Day 1 主角对白也会自动显示立绘。
+5. 返回菜单点击“角色立绘 · 切换与隐藏”，依次观察左侧主角 → 右侧胖哥布林 → 旁白（隐藏）→ 左侧主角内心 → 右侧哥布林大笑（单句覆盖）→ 显式隐藏。确认立绘无白底，约上半身露在对话框上方，下半身被面板遮住，不盖住正文或选项。每句用确认键补全文本，再按推进；Esc 中止后立绘消失。F5 的现有 Day 1 主角对白也会自动显示左侧立绘。
 
-立绘回归包含在 `tests/verify_dialogue.gd`；有渲染运行时加 `-- --capture-portraits` 可将各句截图保存至 `user://dialogue-portrait-<行 ID>.png`。立绘布局依据 [Godot 4.7 TextureRect](https://docs.godotengine.org/en/4.7/classes/class_texturerect.html) 的 `EXPAND_IGNORE_SIZE` 和 `STRETCH_KEEP_ASPECT_CENTERED`，资源依赖依据 [preload](https://docs.godotengine.org/en/4.7/classes/class_@gdscript.html#class-gdscript-method-preload)。
+立绘回归包含在 `tests/verify_dialogue.gd`；有渲染运行时加 `-- --capture-portraits` 可将各句截图保存至 `user://dialogue-portrait-<行 ID>.png`。立绘布局依据 [Godot 4.7 TextureRect](https://docs.godotengine.org/en/4.7/classes/class_texturerect.html) 的 `EXPAND_IGNORE_SIZE` 和 `STRETCH_KEEP_ASPECT_CENTERED`，前后遮挡依据 [CanvasItem 的 z_index](https://docs.godotengine.org/en/4.7/classes/class_canvasitem.html#class-canvasitem-property-z-index)，资源依赖依据 [preload](https://docs.godotengine.org/en/4.7/classes/class_@gdscript.html#class-gdscript-method-preload)。
 
 ```sh
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --script res://tests/verify_dialogue.gd

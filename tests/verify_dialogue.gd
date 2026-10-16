@@ -200,14 +200,22 @@ func _test_edge_cases() -> void:
 
 
 func _test_speaker_portraits() -> void:
+	for path: String in [
+		"res://assets/characters/apron_man/player_portrait.png",
+		"res://assets/characters/goblin/goblin_smiling_portrait.png",
+		"res://assets/characters/goblin/goblin_laughing_portrait.png",
+	]:
+		var image := (load(path) as Texture2D).get_image()
+		_check(image.detect_alpha() != Image.ALPHA_NONE and not image.is_invisible(), "Portrait contains both transparency and a visible character: " + path)
+		_check(image.get_pixel(0, 0).a == 0.0 and image.get_pixel(image.get_width() - 1, image.get_height() - 1).a == 0.0, "Portrait background corners are transparent: " + path)
 	_check(_manager.start_dialogue("demo.speaker_portraits") == OK, "Portrait demo starts through the real manager")
 	var portrait: TextureRect = _ui.get_node("Portrait")
 	var expected := {
-		"player": "res://assets/characters/apron_man/apron_man_full_body.jpg",
-		"goblin": "res://assets/characters/goblin/goblin_smiling.png",
+		"player": "res://assets/characters/apron_man/player_portrait.png",
+		"goblin": "res://assets/characters/goblin/goblin_smiling_portrait.png",
 		"narrator": "",
-		"inner": "res://assets/characters/apron_man/apron_man_full_body.jpg",
-		"override": "res://assets/characters/goblin/goblin_laughing.jpg",
+		"inner": "res://assets/characters/apron_man/player_portrait.png",
+		"override": "res://assets/characters/goblin/goblin_laughing_portrait.png",
 		"hidden": "",
 	}
 	for line_id: String in expected:
@@ -219,7 +227,11 @@ func _test_speaker_portraits() -> void:
 			_check(portrait.visible and portrait.texture.resource_path == path, "Speaker default or explicit override is shown: " + line_id)
 		_ui.reveal_all()
 		await _frames()
-		_check(portrait.get_global_rect().end.y <= (_ui.get_node("Panel") as Control).get_global_rect().position.y, "Portrait stays above the dialogue panel")
+		var panel: Control = _ui.get_node("Panel")
+		_check(is_equal_approx(portrait.get_global_rect().get_center().y, panel.get_global_rect().position.y), "Dialogue panel covers the lower half of the centered portrait")
+		_check(panel.z_index > portrait.z_index and portrait.get_global_rect().end.y <= panel.get_global_rect().end.y, "Portrait is behind the panel with no feet protruding below")
+		var on_left := line_id in ["player", "inner", "hidden"]
+		_check((portrait.get_global_rect().get_center().x < root.get_visible_rect().size.x / 2.0) == on_left, "Player is on the left and NPC is on the right: " + line_id)
 		_check(Rect2(Vector2.ZERO, root.get_visible_rect().size).encloses(portrait.get_global_rect()), "Portrait fits the viewport")
 		if "--capture-portraits" in OS.get_cmdline_user_args():
 			await RenderingServer.frame_post_draw

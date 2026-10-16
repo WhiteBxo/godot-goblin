@@ -1,6 +1,6 @@
 # 角色原始插画
 
-以下四张图片来自用户于 2026-10-16 提供的附件，按角色分类并改为可读文件名。文件内容逐字节复制，保留原始格式、尺寸、白色背景及表情图中的文字；未抠图、裁切、缩放或重新压缩。作为独立纹理资源导入并用于对话立绘，未替换玩家动画。
+以下四张图片来自用户于 2026-10-16 提供的附件，按角色分类并改为可读文件名。原始文件逐字节保留，包含原始格式、尺寸、白色背景及表情图中的文字。对话使用下文的独立透明派生素材，未替换玩家动画。
 
 | 项目文件 | 原附件文件名 | 内容 |
 | --- | --- | --- |
@@ -11,7 +11,11 @@
 
 随图提交 Godot 生成的 `.import` 设置；`.godot/` 下的派生缓存由编辑器重新生成。使用默认的 2D Texture2D 导入、无损压缩和关闭 mipmaps，避免再次有损压缩插画。现有玩家动画素材说明见 `player/README.md`。
 
-对话立绘已由 `src/core/dialogue/dialogue_manager.gd` 的 `speaker_portraits` 接入：主角（含内心独白）使用围裙男子全身图，胖哥布林使用微笑图。大笑图可通过单句 `portrait` 指定；六表情整图仍保留为原始素材。显示时等比缩放，不修改源图。规则与试玩入口见 [对话系统](../../docs/dialogue_system.md)。
+对话立绘已由 `src/core/dialogue/dialogue_manager.gd` 的 `speaker_portraits` 接入：主角（含内心独白）使用 `apron_man/player_portrait.png`，胖哥布林使用 `goblin/goblin_smiling_portrait.png`；单句可指定 `goblin/goblin_laughing_portrait.png`。这三张为透明 RGBA PNG，原始图片和六表情整图保留。主角在左侧、NPC 在右侧，图片下半身被对话框遮住。规则与试玩入口见 [对话系统](../../docs/dialogue_system.md)。
+
+透明派生素材于 2026-10-16 使用内置 imagegen 编辑模式分别处理对应原图。每张使用相同提示词，可从原图重新执行；生成式编辑可能存在细微笔触变化，应以已提交 PNG 为显示依据：
+
+> Edit target: the supplied character illustration. Remove ONLY the white background and all ground shadows / ground marks outside the character, creating a clean transparent RGBA cutout of the complete full-body character. Preserve the exact original character identity, facial expression, pose, silhouette, clothing, colors, ink outlines, proportions, and illustration style. Do not redesign, mirror, crop limbs, or add anything. Tight framing around the full character with only a small transparent margin. Output a single character on genuine transparent background, no checkerboard painted into the image.
 
 在 Godot FileSystem 面板打开对应图片，可检查立绘和表情整图。重新导入可在项目根目录执行 `godot --headless --editor --path . --import --quit`（`godot` 需指向本机 Godot 4.7 可执行文件）。
 

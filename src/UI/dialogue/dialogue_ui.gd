@@ -26,12 +26,14 @@ func _ready() -> void:
 	hide()
 
 
-func present_line(speaker: String, text: String, portrait: Texture2D, choices: Array[String]) -> void:
+func present_line(speaker: String, text: String, portrait: Texture2D, choices: Array[String], portrait_on_left: bool = false) -> void:
 	if not visible:
 		_previous_focus = get_viewport().gui_get_focus_owner()
 	_speaker.text = speaker
 	_portrait.texture = portrait
 	_portrait.visible = portrait != null
+	_portrait.offset_left = -268.0 if portrait_on_left else 28.0
+	_portrait.offset_right = -28.0 if portrait_on_left else 268.0
 	_text.text = text
 	_text.visible_characters = 0
 	_text.scroll_to_line(0)

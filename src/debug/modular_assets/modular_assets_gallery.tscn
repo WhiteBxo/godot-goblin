@@ -1,0 +1,53 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/debug/modular_assets/modular_assets_gallery.gd" id="1_script"]
+[ext_resource type="FontFile" path="res://assets/fonts/fusion_pixel/fusion-pixel-12px-monospaced-zh_hans.otf.woff2" id="2_font"]
+
+[sub_resource type="Theme" id="Theme"]
+default_font = ExtResource("2_font")
+default_font_size = 12
+
+[sub_resource type="StyleBoxFlat" id="Panel"]
+bg_color = Color(0.06, 0.075, 0.1, 0.96)
+content_margin_left = 10.0
+content_margin_right = 10.0
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+
+[node name="ModularAssetsGallery" type="Node2D"]
+texture_filter = 1
+script = ExtResource("1_script")
+
+[node name="Backdrop" type="Polygon2D" parent="."]
+z_index = -50
+polygon = PackedVector2Array(-10000, -10000, 10000, -10000, 10000, 10000, -10000, 10000)
+color = Color(0.17, 0.20, 0.25, 1)
+
+[node name="Objects" type="Node2D" parent="."]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(1170, 570)
+
+[node name="DebugLayer" type="CanvasLayer" parent="."]
+layer = 50
+
+[node name="Panel" type="PanelContainer" parent="DebugLayer"]
+offset_left = 8.0
+offset_top = 8.0
+mouse_filter = 2
+theme = SubResource("Theme")
+theme_override_styles/panel = SubResource("Panel")
+
+[node name="Content" type="VBoxContainer" parent="DebugLayer/Panel"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="DebugLayer/Panel/Content"]
+layout_mode = 2
+mouse_filter = 2
+text = "独立素材库"
+
+[node name="Instructions" type="Label" parent="DebugLayer/Panel/Content"]
+layout_mode = 2
+mouse_filter = 2
+text = "Tab 下一组 · WASD 平移 · PageUp / PageDown 缩放 · M 居中"

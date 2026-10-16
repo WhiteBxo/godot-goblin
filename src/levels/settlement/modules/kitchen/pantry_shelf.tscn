@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/kitchen/pantry_shelf.png" id="1_texture"]
+
+[node name="PantryShelf" type="Node2D"]
+texture_filter = 1
+metadata/pack = "kitchen"
+metadata/asset_id = "pantry_shelf"
+metadata/native_size = Vector2i(216, 366)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-108, -364)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

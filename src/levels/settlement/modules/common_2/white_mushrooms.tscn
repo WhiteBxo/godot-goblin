@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/common_2/white_mushrooms.png" id="1_texture"]
+
+[node name="WhiteMushrooms" type="Node2D"]
+texture_filter = 1
+metadata/pack = "common_2"
+metadata/asset_id = "white_mushrooms"
+metadata/native_size = Vector2i(174, 147)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-87, -145)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

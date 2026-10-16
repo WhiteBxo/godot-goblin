@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/kitchen/spit_roast.png" id="1_texture"]
+
+[node name="SpitRoast" type="Node2D"]
+texture_filter = 1
+metadata/pack = "kitchen"
+metadata/asset_id = "spit_roast"
+metadata/native_size = Vector2i(355, 309)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-177, -307)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

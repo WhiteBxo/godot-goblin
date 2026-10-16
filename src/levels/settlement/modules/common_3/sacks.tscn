@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/common_3/sacks.png" id="1_texture"]
+
+[node name="Sacks" type="Node2D"]
+texture_filter = 1
+metadata/pack = "common_3"
+metadata/asset_id = "sacks"
+metadata/native_size = Vector2i(230, 202)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-115, -200)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

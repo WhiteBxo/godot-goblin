@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/tabletop/coin_pile.png" id="1_texture"]
+
+[node name="CoinPile" type="Node2D"]
+texture_filter = 1
+metadata/pack = "tabletop"
+metadata/asset_id = "coin_pile"
+metadata/native_size = Vector2i(189, 132)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-94, -130)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

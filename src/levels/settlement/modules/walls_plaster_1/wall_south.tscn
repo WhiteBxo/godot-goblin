@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/walls_plaster_1/wall_south.png" id="1_texture"]
+
+[node name="WallSouth" type="Node2D"]
+texture_filter = 1
+metadata/pack = "walls_plaster_1"
+metadata/asset_id = "wall_south"
+metadata/native_size = Vector2i(298, 105)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-149, -103)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]
+
+[node name="LeftEnd" type="Marker2D" parent="."]
+position = Vector2(-147, 0)
+
+[node name="RightEnd" type="Marker2D" parent="."]
+position = Vector2(147, 0)

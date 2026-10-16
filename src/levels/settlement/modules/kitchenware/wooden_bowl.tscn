@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/kitchenware/wooden_bowl.png" id="1_texture"]
+
+[node name="WoodenBowl" type="Node2D"]
+texture_filter = 1
+metadata/pack = "kitchenware"
+metadata/asset_id = "wooden_bowl"
+metadata/native_size = Vector2i(174, 164)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-87, -162)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

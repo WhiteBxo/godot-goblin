@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/milk_shop/ingredient_tray.png" id="1_texture"]
+
+[node name="IngredientTray" type="Node2D"]
+texture_filter = 1
+metadata/pack = "milk_shop"
+metadata/asset_id = "ingredient_tray"
+metadata/native_size = Vector2i(234, 177)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-117, -175)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

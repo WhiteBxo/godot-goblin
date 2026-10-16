@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/kitchenware/vegetable_bowl.png" id="1_texture"]
+
+[node name="VegetableBowl" type="Node2D"]
+texture_filter = 1
+metadata/pack = "kitchenware"
+metadata/asset_id = "vegetable_bowl"
+metadata/native_size = Vector2i(219, 212)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-109, -210)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]
+
+[node name="SurfaceAnchor" type="Marker2D" parent="."]
+position = Vector2(0, -127)

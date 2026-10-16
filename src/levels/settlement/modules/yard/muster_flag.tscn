@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/yard/muster_flag.png" id="1_texture"]
+
+[node name="MusterFlag" type="Node2D"]
+texture_filter = 1
+metadata/pack = "yard"
+metadata/asset_id = "muster_flag"
+metadata/native_size = Vector2i(200, 321)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-100, -319)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

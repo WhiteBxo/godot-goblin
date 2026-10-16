@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/training/commander_chair.png" id="1_texture"]
+
+[node name="CommanderChair" type="Node2D"]
+texture_filter = 1
+metadata/pack = "training"
+metadata/asset_id = "commander_chair"
+metadata/native_size = Vector2i(133, 231)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-66, -229)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

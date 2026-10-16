@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/hearth/water_bucket.png" id="1_texture"]
+
+[node name="WaterBucket" type="Node2D"]
+texture_filter = 1
+metadata/pack = "hearth"
+metadata/asset_id = "water_bucket"
+metadata/native_size = Vector2i(138, 180)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-69, -178)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

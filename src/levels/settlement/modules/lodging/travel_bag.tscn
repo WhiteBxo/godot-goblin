@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/lodging/travel_bag.png" id="1_texture"]
+
+[node name="TravelBag" type="Node2D"]
+texture_filter = 1
+metadata/pack = "lodging"
+metadata/asset_id = "travel_bag"
+metadata/native_size = Vector2i(165, 170)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-82, -168)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

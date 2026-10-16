@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/dining/grain_sack.png" id="1_texture"]
+
+[node name="GrainSack" type="Node2D"]
+texture_filter = 1
+metadata/pack = "dining"
+metadata/asset_id = "grain_sack"
+metadata/native_size = Vector2i(176, 213)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-88, -211)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

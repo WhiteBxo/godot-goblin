@@ -1,0 +1,4559 @@
+{
+  "version": 1,
+  "model": "gpt-image-2.5-sunburst",
+  "processing": "native crop + hard alpha only; no resizing",
+  "count": 208,
+  "packs": [
+    {
+      "id": "tavern",
+      "title": "酒馆",
+      "kind": "props",
+      "assets": [
+        {
+          "id": "round_table",
+          "description": "空圆木桌，不带椅子或桌面小物",
+          "texture": "res://assets/map/settlement/modular/tavern/round_table.png",
+          "scene": "res://src/levels/settlement/modules/tavern/round_table.tscn",
+          "native_size": [
+            242,
+            247
+          ],
+          "anchor": [
+            121,
+            245
+          ],
+          "sheet_box": [
+            92,
+            146,
+            238,
+            243
+          ],
+          "source": "res://assets/map/settlement/modular/source/tavern.png"
+        },
+        {
+          "id": "wood_stool",
+          "description": "一把独立木凳",
+          "texture": "res://assets/map/settlement/modular/tavern/wood_stool.png",
+          "scene": "res://src/levels/settlement/modules/tavern/wood_stool.tscn",
+          "native_size": [
+            98,
+            136
+          ],
+          "anchor": [
+            49,
+            134
+          ],
+          "sheet_box": [
+            531,
+            209,
+            94,
+            132
+          ],
+          "source": "res://assets/map/settlement/modular/source/tavern.png"
+        },
+        {
+          "id": "bar_straight",
+          "description": "一段256像素长的吧台直段",
+          "texture": "res://assets/map/settlement/modular/tavern/bar_straight.png",
+          "scene": "res://src/levels/settlement/modules/tavern/bar_straight.tscn",
+          "native_size": [
+            334,
+            176
+          ],
+          "anchor": [
+            167,
+            174
+          ],
+          "sheet_box": [
+            791,
+            194,
+            330,
+            172
+          ],
+          "source": "res://assets/map/settlement/modular/source/tavern.png"
+        },
+        {
+          "id": "bar_corner",
+          "description": "吧台L形转角单元",
+          "texture": "res://assets/map/settlement/modular/tavern/bar_corner.png",
+          "scene": "res://src/levels/settlement/modules/tavern/bar_corner.tscn",
+          "native_size": [
+            282,
+            267
+          ],
+          "anchor": [
+            141,
+            265
+          ],
+          "sheet_box": [
+            1199,
+            131,
+            278,
+            263
+          ],
+          "source": "res://assets/map/settlement/modular/source/tavern.png"
+        },
+        {
+          "id": "bottle_rack",
+          "description": "酒瓶木架",
+          "texture": "res://assets/map/settlement/modular/tavern/bottle_rack.png",
+          "scene": "res://src/levels/settlement/modules/tavern/bottle_rack.tscn",
+          "native_size": [
+            243,
+            311
+          ],
+          "anchor": [
+            121,
+            309
+          ],
+          "sheet_box": [
+            83,
+            587,
+            239,
+            307
+          ],
+          "source": "res://assets/map/settlement/modular/source/tavern.png"
+        },
+        {
+          "id": "fireplace",
+          "description": "完整独立石壁炉，含烟囱下段",
+          "texture": "res://assets/map/settlement/modular/tavern/fireplace.png",
+          "scene": "res://src/levels/settlement/modules/tavern/fireplace.tscn",
+          "native_size": [
+            292,
+            341
+          ],
+          "anchor": [
+            146,
+            339
+          ],
+          "sheet_box": [
+            433,
+            571,
+            288,
+            337
+          ],
+          "source": "res://assets/map/settlement/modular/source/tavern.png"
+        },
+        {
+          "id": "ale_barrel",
+          "description": "单只木酒桶",
+          "texture": "res://assets/map/settlement/modular/tavern/ale_barrel.png",
+          "scene": "res://src/levels/settlement/modules/tavern/ale_barrel.tscn",
+          "native_size": [
+            146,
+            195
+          ],
+          "anchor": [
+            73,
+            193
+          ],
+          "sheet_box": [
+            886,
+            661,
+            142,
+            191
+          ],
+          "source": "res://assets/map/settlement/modular/source/tavern.png"
+        },
+        {
+          "id": "skull_banner",
+          "description": "兽骨红色墙旗，不带墙",
+          "texture": "res://assets/map/settlement/modular/tavern/skull_banner.png",
+          "scene": "res://src/levels/settlement/modules/tavern/skull_banner.tscn",
+          "native_size": [
+            221,
+            265
+          ],
+          "anchor": [
+            110,
+            263
+          ],
+          "sheet_box": [
+            1220,
+            618,
+            217,
+            261
+          ],
+          "source": "res://assets/map/settlement/modular/source/tavern.png"
+        }
+      ]
+    },
+    {
+      "id": "casino",
+      "title": "赌场",
+      "kind": "props",
+      "assets": [
+        {
+          "id": "dice_table",
+          "description": "骨骰绿布赌桌，不带椅子",
+          "texture": "res://assets/map/settlement/modular/casino/dice_table.png",
+          "scene": "res://src/levels/settlement/modules/casino/dice_table.tscn",
+          "native_size": [
+            252,
+            259
+          ],
+          "anchor": [
+            126,
+            257
+          ],
+          "sheet_box": [
+            72,
+            176,
+            248,
+            255
+          ],
+          "source": "res://assets/map/settlement/modular/source/casino.png"
+        },
+        {
+          "id": "card_table",
+          "description": "卡牌绿布赌桌，不带椅子",
+          "texture": "res://assets/map/settlement/modular/casino/card_table.png",
+          "scene": "res://src/levels/settlement/modules/casino/card_table.tscn",
+          "native_size": [
+            262,
+            259
+          ],
+          "anchor": [
+            131,
+            257
+          ],
+          "sheet_box": [
+            446,
+            176,
+            258,
+            255
+          ],
+          "source": "res://assets/map/settlement/modular/source/casino.png"
+        },
+        {
+          "id": "wheel_table",
+          "description": "符文轮盘桌，不带椅子",
+          "texture": "res://assets/map/settlement/modular/casino/wheel_table.png",
+          "scene": "res://src/levels/settlement/modules/casino/wheel_table.tscn",
+          "native_size": [
+            261,
+            264
+          ],
+          "anchor": [
+            130,
+            262
+          ],
+          "sheet_box": [
+            829,
+            175,
+            257,
+            260
+          ],
+          "source": "res://assets/map/settlement/modular/source/casino.png"
+        },
+        {
+          "id": "gambling_stool",
+          "description": "单只赌桌木凳",
+          "texture": "res://assets/map/settlement/modular/casino/gambling_stool.png",
+          "scene": "res://src/levels/settlement/modules/casino/gambling_stool.tscn",
+          "native_size": [
+            114,
+            142
+          ],
+          "anchor": [
+            57,
+            140
+          ],
+          "sheet_box": [
+            1281,
+            225,
+            110,
+            138
+          ],
+          "source": "res://assets/map/settlement/modular/source/casino.png"
+        },
+        {
+          "id": "iron_safe",
+          "description": "完整铆钉铁保险箱",
+          "texture": "res://assets/map/settlement/modular/casino/iron_safe.png",
+          "scene": "res://src/levels/settlement/modules/casino/iron_safe.tscn",
+          "native_size": [
+            155,
+            216
+          ],
+          "anchor": [
+            77,
+            214
+          ],
+          "sheet_box": [
+            118,
+            633,
+            151,
+            212
+          ],
+          "source": "res://assets/map/settlement/modular/source/casino.png"
+        },
+        {
+          "id": "boss_desk",
+          "description": "空老板账桌，不带椅子和桌面小物",
+          "texture": "res://assets/map/settlement/modular/casino/boss_desk.png",
+          "scene": "res://src/levels/settlement/modules/casino/boss_desk.tscn",
+          "native_size": [
+            333,
+            148
+          ],
+          "anchor": [
+            166,
+            146
+          ],
+          "sheet_box": [
+            411,
+            699,
+            329,
+            144
+          ],
+          "source": "res://assets/map/settlement/modular/source/casino.png"
+        },
+        {
+          "id": "collection_rack",
+          "description": "稀有金菇与奖杯收藏架",
+          "texture": "res://assets/map/settlement/modular/casino/collection_rack.png",
+          "scene": "res://src/levels/settlement/modules/casino/collection_rack.tscn",
+          "native_size": [
+            252,
+            252
+          ],
+          "anchor": [
+            126,
+            250
+          ],
+          "sheet_box": [
+            833,
+            617,
+            248,
+            248
+          ],
+          "source": "res://assets/map/settlement/modular/source/casino.png"
+        },
+        {
+          "id": "coin_tray",
+          "description": "金币钱袋托盘，不带桌子",
+          "texture": "res://assets/map/settlement/modular/casino/coin_tray.png",
+          "scene": "res://src/levels/settlement/modules/casino/coin_tray.tscn",
+          "native_size": [
+            246,
+            155
+          ],
+          "anchor": [
+            123,
+            153
+          ],
+          "sheet_box": [
+            1218,
+            692,
+            242,
+            151
+          ],
+          "source": "res://assets/map/settlement/modular/source/casino.png"
+        }
+      ]
+    },
+    {
+      "id": "dining",
+      "title": "聚餐区",
+      "kind": "props",
+      "assets": [
+        {
+          "id": "long_table",
+          "description": "空纵向长木餐桌，不带碗盘或长凳",
+          "texture": "res://assets/map/settlement/modular/dining/long_table.png",
+          "scene": "res://src/levels/settlement/modules/dining/long_table.tscn",
+          "native_size": [
+            179,
+            381
+          ],
+          "anchor": [
+            89,
+            379
+          ],
+          "sheet_box": [
+            132,
+            90,
+            175,
+            377
+          ],
+          "source": "res://assets/map/settlement/modular/source/dining.png"
+        },
+        {
+          "id": "long_bench",
+          "description": "单条纵向长木凳",
+          "texture": "res://assets/map/settlement/modular/dining/long_bench.png",
+          "scene": "res://src/levels/settlement/modules/dining/long_bench.tscn",
+          "native_size": [
+            66,
+            333
+          ],
+          "anchor": [
+            33,
+            331
+          ],
+          "sheet_box": [
+            534,
+            112,
+            62,
+            329
+          ],
+          "source": "res://assets/map/settlement/modular/source/dining.png"
+        },
+        {
+          "id": "serving_counter",
+          "description": "一段独立分餐木台",
+          "texture": "res://assets/map/settlement/modular/dining/serving_counter.png",
+          "scene": "res://src/levels/settlement/modules/dining/serving_counter.tscn",
+          "native_size": [
+            371,
+            268
+          ],
+          "anchor": [
+            185,
+            266
+          ],
+          "sheet_box": [
+            762,
+            139,
+            367,
+            264
+          ],
+          "source": "res://assets/map/settlement/modular/source/dining.png"
+        },
+        {
+          "id": "food_shelf",
+          "description": "碗碟与食材架",
+          "texture": "res://assets/map/settlement/modular/dining/food_shelf.png",
+          "scene": "res://src/levels/settlement/modules/dining/food_shelf.tscn",
+          "native_size": [
+            210,
+            278
+          ],
+          "anchor": [
+            105,
+            276
+          ],
+          "sheet_box": [
+            1231,
+            142,
+            206,
+            274
+          ],
+          "source": "res://assets/map/settlement/modular/source/dining.png"
+        },
+        {
+          "id": "cooking_pot",
+          "description": "炖汤铁锅",
+          "texture": "res://assets/map/settlement/modular/dining/cooking_pot.png",
+          "scene": "res://src/levels/settlement/modules/dining/cooking_pot.tscn",
+          "native_size": [
+            198,
+            237
+          ],
+          "anchor": [
+            99,
+            235
+          ],
+          "sheet_box": [
+            122,
+            623,
+            194,
+            233
+          ],
+          "source": "res://assets/map/settlement/modular/source/dining.png"
+        },
+        {
+          "id": "dish_stack",
+          "description": "一摞独立碗盘",
+          "texture": "res://assets/map/settlement/modular/dining/dish_stack.png",
+          "scene": "res://src/levels/settlement/modules/dining/dish_stack.tscn",
+          "native_size": [
+            125,
+            139
+          ],
+          "anchor": [
+            62,
+            137
+          ],
+          "sheet_box": [
+            522,
+            675,
+            121,
+            135
+          ],
+          "source": "res://assets/map/settlement/modular/source/dining.png"
+        },
+        {
+          "id": "grain_sack",
+          "description": "单只开口粮袋",
+          "texture": "res://assets/map/settlement/modular/dining/grain_sack.png",
+          "scene": "res://src/levels/settlement/modules/dining/grain_sack.tscn",
+          "native_size": [
+            176,
+            213
+          ],
+          "anchor": [
+            88,
+            211
+          ],
+          "sheet_box": [
+            868,
+            640,
+            172,
+            209
+          ],
+          "source": "res://assets/map/settlement/modular/source/dining.png"
+        },
+        {
+          "id": "drink_barrel",
+          "description": "单只盛水木桶",
+          "texture": "res://assets/map/settlement/modular/dining/drink_barrel.png",
+          "scene": "res://src/levels/settlement/modules/dining/drink_barrel.tscn",
+          "native_size": [
+            167,
+            230
+          ],
+          "anchor": [
+            83,
+            228
+          ],
+          "sheet_box": [
+            1254,
+            634,
+            163,
+            226
+          ],
+          "source": "res://assets/map/settlement/modular/source/dining.png"
+        }
+      ]
+    },
+    {
+      "id": "kitchen",
+      "title": "厨房",
+      "kind": "props",
+      "assets": [
+        {
+          "id": "prep_table",
+          "description": "空长木备菜桌，不带砧板、菜刀、食材或墙",
+          "texture": "res://assets/map/settlement/modular/kitchen/prep_table.png",
+          "scene": "res://src/levels/settlement/modules/kitchen/prep_table.tscn",
+          "native_size": [
+            343,
+            175
+          ],
+          "anchor": [
+            171,
+            173
+          ],
+          "sheet_box": [
+            59,
+            216,
+            339,
+            171
+          ],
+          "source": "res://assets/map/settlement/modular/source/kitchen.png"
+        },
+        {
+          "id": "cauldron",
+          "description": "石圈火床上的完整大锅",
+          "texture": "res://assets/map/settlement/modular/kitchen/cauldron.png",
+          "scene": "res://src/levels/settlement/modules/kitchen/cauldron.tscn",
+          "native_size": [
+            279,
+            325
+          ],
+          "anchor": [
+            139,
+            323
+          ],
+          "sheet_box": [
+            459,
+            123,
+            275,
+            321
+          ],
+          "source": "res://assets/map/settlement/modular/source/kitchen.png"
+        },
+        {
+          "id": "spit_roast",
+          "description": "转轴烤肉架与烤肉",
+          "texture": "res://assets/map/settlement/modular/kitchen/spit_roast.png",
+          "scene": "res://src/levels/settlement/modules/kitchen/spit_roast.tscn",
+          "native_size": [
+            355,
+            309
+          ],
+          "anchor": [
+            177,
+            307
+          ],
+          "sheet_box": [
+            800,
+            126,
+            351,
+            305
+          ],
+          "source": "res://assets/map/settlement/modular/source/kitchen.png"
+        },
+        {
+          "id": "pantry_shelf",
+          "description": "粮袋和调料架",
+          "texture": "res://assets/map/settlement/modular/kitchen/pantry_shelf.png",
+          "scene": "res://src/levels/settlement/modules/kitchen/pantry_shelf.tscn",
+          "native_size": [
+            216,
+            366
+          ],
+          "anchor": [
+            108,
+            364
+          ],
+          "sheet_box": [
+            1238,
+            105,
+            212,
+            362
+          ],
+          "source": "res://assets/map/settlement/modular/source/kitchen.png"
+        },
+        {
+          "id": "stone_sink",
+          "description": "独立石水槽",
+          "texture": "res://assets/map/settlement/modular/kitchen/stone_sink.png",
+          "scene": "res://src/levels/settlement/modules/kitchen/stone_sink.tscn",
+          "native_size": [
+            204,
+            282
+          ],
+          "anchor": [
+            102,
+            280
+          ],
+          "sheet_box": [
+            96,
+            583,
+            200,
+            278
+          ],
+          "source": "res://assets/map/settlement/modular/source/kitchen.png"
+        },
+        {
+          "id": "serving_table",
+          "description": "出餐木台",
+          "texture": "res://assets/map/settlement/modular/kitchen/serving_table.png",
+          "scene": "res://src/levels/settlement/modules/kitchen/serving_table.tscn",
+          "native_size": [
+            375,
+            196
+          ],
+          "anchor": [
+            187,
+            194
+          ],
+          "sheet_box": [
+            388,
+            659,
+            371,
+            192
+          ],
+          "source": "res://assets/map/settlement/modular/source/kitchen.png"
+        },
+        {
+          "id": "meat_rack",
+          "description": "独立挂肉木架",
+          "texture": "res://assets/map/settlement/modular/kitchen/meat_rack.png",
+          "scene": "res://src/levels/settlement/modules/kitchen/meat_rack.tscn",
+          "native_size": [
+            303,
+            227
+          ],
+          "anchor": [
+            151,
+            225
+          ],
+          "sheet_box": [
+            820,
+            626,
+            299,
+            223
+          ],
+          "source": "res://assets/map/settlement/modular/source/kitchen.png"
+        },
+        {
+          "id": "vegetable_basket",
+          "description": "蔬菜蘑菇木盆",
+          "texture": "res://assets/map/settlement/modular/kitchen/vegetable_basket.png",
+          "scene": "res://src/levels/settlement/modules/kitchen/vegetable_basket.tscn",
+          "native_size": [
+            247,
+            214
+          ],
+          "anchor": [
+            123,
+            212
+          ],
+          "sheet_box": [
+            1214,
+            643,
+            243,
+            210
+          ],
+          "source": "res://assets/map/settlement/modular/source/kitchen.png"
+        }
+      ]
+    },
+    {
+      "id": "training",
+      "title": "军营",
+      "kind": "props",
+      "assets": [
+        {
+          "id": "iron_cage",
+          "description": "单座完整铁笼，正面门",
+          "texture": "res://assets/map/settlement/modular/training/iron_cage.png",
+          "scene": "res://src/levels/settlement/modules/training/iron_cage.tscn",
+          "native_size": [
+            281,
+            253
+          ],
+          "anchor": [
+            140,
+            251
+          ],
+          "sheet_box": [
+            66,
+            157,
+            277,
+            249
+          ],
+          "source": "res://assets/map/settlement/modular/source/training.png"
+        },
+        {
+          "id": "strategy_desk",
+          "description": "空战略木桌，不带地图和卷轴",
+          "texture": "res://assets/map/settlement/modular/training/strategy_desk.png",
+          "scene": "res://src/levels/settlement/modules/training/strategy_desk.tscn",
+          "native_size": [
+            329,
+            192
+          ],
+          "anchor": [
+            164,
+            190
+          ],
+          "sheet_box": [
+            424,
+            197,
+            325,
+            188
+          ],
+          "source": "res://assets/map/settlement/modular/source/training.png"
+        },
+        {
+          "id": "training_dummy",
+          "description": "单个木训练假人",
+          "texture": "res://assets/map/settlement/modular/training/training_dummy.png",
+          "scene": "res://src/levels/settlement/modules/training/training_dummy.tscn",
+          "native_size": [
+            164,
+            261
+          ],
+          "anchor": [
+            82,
+            259
+          ],
+          "sheet_box": [
+            888,
+            153,
+            160,
+            257
+          ],
+          "source": "res://assets/map/settlement/modular/source/training.png"
+        },
+        {
+          "id": "archery_target",
+          "description": "单个草靶及支脚",
+          "texture": "res://assets/map/settlement/modular/training/archery_target.png",
+          "scene": "res://src/levels/settlement/modules/training/archery_target.tscn",
+          "native_size": [
+            182,
+            233
+          ],
+          "anchor": [
+            91,
+            231
+          ],
+          "sheet_box": [
+            1246,
+            170,
+            178,
+            229
+          ],
+          "source": "res://assets/map/settlement/modular/source/training.png"
+        },
+        {
+          "id": "weapon_rack",
+          "description": "长矛和盾架",
+          "texture": "res://assets/map/settlement/modular/training/weapon_rack.png",
+          "scene": "res://src/levels/settlement/modules/training/weapon_rack.tscn",
+          "native_size": [
+            375,
+            283
+          ],
+          "anchor": [
+            187,
+            281
+          ],
+          "sheet_box": [
+            46,
+            611,
+            371,
+            279
+          ],
+          "source": "res://assets/map/settlement/modular/source/training.png"
+        },
+        {
+          "id": "commander_chair",
+          "description": "战略办公室单把椅子",
+          "texture": "res://assets/map/settlement/modular/training/commander_chair.png",
+          "scene": "res://src/levels/settlement/modules/training/commander_chair.tscn",
+          "native_size": [
+            133,
+            231
+          ],
+          "anchor": [
+            66,
+            229
+          ],
+          "sheet_box": [
+            522,
+            642,
+            129,
+            227
+          ],
+          "source": "res://assets/map/settlement/modular/source/training.png"
+        },
+        {
+          "id": "supply_chest",
+          "description": "军用补给箱",
+          "texture": "res://assets/map/settlement/modular/training/supply_chest.png",
+          "scene": "res://src/levels/settlement/modules/training/supply_chest.tscn",
+          "native_size": [
+            183,
+            194
+          ],
+          "anchor": [
+            91,
+            192
+          ],
+          "sheet_box": [
+            875,
+            663,
+            179,
+            190
+          ],
+          "source": "res://assets/map/settlement/modular/source/training.png"
+        },
+        {
+          "id": "war_banner",
+          "description": "独立旧军旗，不带墙",
+          "texture": "res://assets/map/settlement/modular/training/war_banner.png",
+          "scene": "res://src/levels/settlement/modules/training/war_banner.tscn",
+          "native_size": [
+            220,
+            265
+          ],
+          "anchor": [
+            110,
+            263
+          ],
+          "sheet_box": [
+            1233,
+            607,
+            216,
+            261
+          ],
+          "source": "res://assets/map/settlement/modular/source/training.png"
+        }
+      ]
+    },
+    {
+      "id": "elder",
+      "title": "长老私房",
+      "kind": "props",
+      "assets": [
+        {
+          "id": "large_bed",
+          "description": "完整较大木床，紫色被褥",
+          "texture": "res://assets/map/settlement/modular/elder/large_bed.png",
+          "scene": "res://src/levels/settlement/modules/elder/large_bed.tscn",
+          "native_size": [
+            282,
+            383
+          ],
+          "anchor": [
+            141,
+            381
+          ],
+          "sheet_box": [
+            69,
+            95,
+            278,
+            379
+          ],
+          "source": "res://assets/map/settlement/modular/source/elder.png"
+        },
+        {
+          "id": "bookcase",
+          "description": "满书木书架",
+          "texture": "res://assets/map/settlement/modular/elder/bookcase.png",
+          "scene": "res://src/levels/settlement/modules/elder/bookcase.tscn",
+          "native_size": [
+            235,
+            326
+          ],
+          "anchor": [
+            117,
+            324
+          ],
+          "sheet_box": [
+            458,
+            114,
+            231,
+            322
+          ],
+          "source": "res://assets/map/settlement/modular/source/elder.png"
+        },
+        {
+          "id": "document_desk",
+          "description": "空长老书桌，不带古文书和椅子",
+          "texture": "res://assets/map/settlement/modular/elder/document_desk.png",
+          "scene": "res://src/levels/settlement/modules/elder/document_desk.tscn",
+          "native_size": [
+            331,
+            171
+          ],
+          "anchor": [
+            165,
+            169
+          ],
+          "sheet_box": [
+            793,
+            217,
+            327,
+            167
+          ],
+          "source": "res://assets/map/settlement/modular/source/elder.png"
+        },
+        {
+          "id": "bone_chair",
+          "description": "骨冠扶手椅",
+          "texture": "res://assets/map/settlement/modular/elder/bone_chair.png",
+          "scene": "res://src/levels/settlement/modules/elder/bone_chair.tscn",
+          "native_size": [
+            195,
+            274
+          ],
+          "anchor": [
+            97,
+            272
+          ],
+          "sheet_box": [
+            1231,
+            151,
+            191,
+            270
+          ],
+          "source": "res://assets/map/settlement/modular/source/elder.png"
+        },
+        {
+          "id": "meditation_table",
+          "description": "独立圆冥想茶几",
+          "texture": "res://assets/map/settlement/modular/elder/meditation_table.png",
+          "scene": "res://src/levels/settlement/modules/elder/meditation_table.tscn",
+          "native_size": [
+            247,
+            239
+          ],
+          "anchor": [
+            123,
+            237
+          ],
+          "sheet_box": [
+            84,
+            626,
+            243,
+            235
+          ],
+          "source": "res://assets/map/settlement/modular/source/elder.png"
+        },
+        {
+          "id": "red_vial",
+          "description": "一只装红色液体的密封药瓶",
+          "texture": "res://assets/map/settlement/modular/elder/red_vial.png",
+          "scene": "res://src/levels/settlement/modules/elder/red_vial.tscn",
+          "native_size": [
+            101,
+            134
+          ],
+          "anchor": [
+            50,
+            132
+          ],
+          "sheet_box": [
+            526,
+            670,
+            97,
+            130
+          ],
+          "source": "res://assets/map/settlement/modular/source/elder.png"
+        },
+        {
+          "id": "wardrobe",
+          "description": "完整木衣柜",
+          "texture": "res://assets/map/settlement/modular/elder/wardrobe.png",
+          "scene": "res://src/levels/settlement/modules/elder/wardrobe.tscn",
+          "native_size": [
+            230,
+            355
+          ],
+          "anchor": [
+            115,
+            353
+          ],
+          "sheet_box": [
+            839,
+            537,
+            226,
+            351
+          ],
+          "source": "res://assets/map/settlement/modular/source/elder.png"
+        },
+        {
+          "id": "floor_cushion",
+          "description": "单只紫色软垫",
+          "texture": "res://assets/map/settlement/modular/elder/floor_cushion.png",
+          "scene": "res://src/levels/settlement/modules/elder/floor_cushion.tscn",
+          "native_size": [
+            149,
+            135
+          ],
+          "anchor": [
+            74,
+            133
+          ],
+          "sheet_box": [
+            1260,
+            682,
+            145,
+            131
+          ],
+          "source": "res://assets/map/settlement/modular/source/elder.png"
+        }
+      ]
+    },
+    {
+      "id": "ritual",
+      "title": "祭坛大厅",
+      "kind": "props",
+      "assets": [
+        {
+          "id": "altar",
+          "description": "完整石祭台，红布与贡碗",
+          "texture": "res://assets/map/settlement/modular/ritual/altar.png",
+          "scene": "res://src/levels/settlement/modules/ritual/altar.tscn",
+          "native_size": [
+            350,
+            332
+          ],
+          "anchor": [
+            175,
+            330
+          ],
+          "sheet_box": [
+            59,
+            131,
+            346,
+            328
+          ],
+          "source": "res://assets/map/settlement/modular/source/ritual.png"
+        },
+        {
+          "id": "offering_table",
+          "description": "单段贡品石桌",
+          "texture": "res://assets/map/settlement/modular/ritual/offering_table.png",
+          "scene": "res://src/levels/settlement/modules/ritual/offering_table.tscn",
+          "native_size": [
+            325,
+            179
+          ],
+          "anchor": [
+            162,
+            177
+          ],
+          "sheet_box": [
+            480,
+            244,
+            321,
+            175
+          ],
+          "source": "res://assets/map/settlement/modular/source/ritual.png"
+        },
+        {
+          "id": "carved_pillar",
+          "description": "一根完整刻纹石柱",
+          "texture": "res://assets/map/settlement/modular/ritual/carved_pillar.png",
+          "scene": "res://src/levels/settlement/modules/ritual/carved_pillar.tscn",
+          "native_size": [
+            121,
+            373
+          ],
+          "anchor": [
+            60,
+            371
+          ],
+          "sheet_box": [
+            896,
+            87,
+            117,
+            369
+          ],
+          "source": "res://assets/map/settlement/modular/source/ritual.png"
+        },
+        {
+          "id": "bone_idol",
+          "description": "独立兽骨图腾，不带墙",
+          "texture": "res://assets/map/settlement/modular/ritual/bone_idol.png",
+          "scene": "res://src/levels/settlement/modules/ritual/bone_idol.tscn",
+          "native_size": [
+            374,
+            286
+          ],
+          "anchor": [
+            187,
+            284
+          ],
+          "sheet_box": [
+            1130,
+            155,
+            370,
+            282
+          ],
+          "source": "res://assets/map/settlement/modular/source/ritual.png"
+        },
+        {
+          "id": "brazier",
+          "description": "单个石座火盆",
+          "texture": "res://assets/map/settlement/modular/ritual/brazier.png",
+          "scene": "res://src/levels/settlement/modules/ritual/brazier.tscn",
+          "native_size": [
+            170,
+            263
+          ],
+          "anchor": [
+            85,
+            261
+          ],
+          "sheet_box": [
+            131,
+            600,
+            166,
+            259
+          ],
+          "source": "res://assets/map/settlement/modular/source/ritual.png"
+        },
+        {
+          "id": "prayer_mat",
+          "description": "一张编织跪拜垫",
+          "texture": "res://assets/map/settlement/modular/ritual/prayer_mat.png",
+          "scene": "res://src/levels/settlement/modules/ritual/prayer_mat.tscn",
+          "native_size": [
+            274,
+            155
+          ],
+          "anchor": [
+            137,
+            153
+          ],
+          "sheet_box": [
+            459,
+            695,
+            270,
+            151
+          ],
+          "source": "res://assets/map/settlement/modular/source/ritual.png"
+        },
+        {
+          "id": "ritual_banner",
+          "description": "独立红色仪式旗，不带墙",
+          "texture": "res://assets/map/settlement/modular/ritual/ritual_banner.png",
+          "scene": "res://src/levels/settlement/modules/ritual/ritual_banner.tscn",
+          "native_size": [
+            197,
+            305
+          ],
+          "anchor": [
+            98,
+            303
+          ],
+          "sheet_box": [
+            858,
+            581,
+            193,
+            301
+          ],
+          "source": "res://assets/map/settlement/modular/source/ritual.png"
+        },
+        {
+          "id": "secret_cover",
+          "description": "半开石盖与拉环，独立机关，不带台阶或地板",
+          "texture": "res://assets/map/settlement/modular/ritual/secret_cover.png",
+          "scene": "res://src/levels/settlement/modules/ritual/secret_cover.tscn",
+          "native_size": [
+            278,
+            203
+          ],
+          "anchor": [
+            139,
+            201
+          ],
+          "sheet_box": [
+            1170,
+            651,
+            274,
+            199
+          ],
+          "source": "res://assets/map/settlement/modular/source/ritual.png"
+        }
+      ]
+    },
+    {
+      "id": "lodging",
+      "title": "住宿区",
+      "kind": "props",
+      "assets": [
+        {
+          "id": "straw_bed",
+          "description": "完整单人草垫木床",
+          "texture": "res://assets/map/settlement/modular/lodging/straw_bed.png",
+          "scene": "res://src/levels/settlement/modules/lodging/straw_bed.tscn",
+          "native_size": [
+            215,
+            344
+          ],
+          "anchor": [
+            107,
+            342
+          ],
+          "sheet_box": [
+            97,
+            101,
+            211,
+            340
+          ],
+          "source": "res://assets/map/settlement/modular/source/lodging.png"
+        },
+        {
+          "id": "bedside_chest",
+          "description": "床脚行李箱",
+          "texture": "res://assets/map/settlement/modular/lodging/bedside_chest.png",
+          "scene": "res://src/levels/settlement/modules/lodging/bedside_chest.tscn",
+          "native_size": [
+            202,
+            136
+          ],
+          "anchor": [
+            101,
+            134
+          ],
+          "sheet_box": [
+            484,
+            226,
+            198,
+            132
+          ],
+          "source": "res://assets/map/settlement/modular/source/lodging.png"
+        },
+        {
+          "id": "bedside_table",
+          "description": "单个床头木柜",
+          "texture": "res://assets/map/settlement/modular/lodging/bedside_table.png",
+          "scene": "res://src/levels/settlement/modules/lodging/bedside_table.tscn",
+          "native_size": [
+            148,
+            188
+          ],
+          "anchor": [
+            74,
+            186
+          ],
+          "sheet_box": [
+            886,
+            187,
+            144,
+            184
+          ],
+          "source": "res://assets/map/settlement/modular/source/lodging.png"
+        },
+        {
+          "id": "wash_basin",
+          "description": "单个木水盆及矮架",
+          "texture": "res://assets/map/settlement/modular/lodging/wash_basin.png",
+          "scene": "res://src/levels/settlement/modules/lodging/wash_basin.tscn",
+          "native_size": [
+            179,
+            202
+          ],
+          "anchor": [
+            89,
+            200
+          ],
+          "sheet_box": [
+            1244,
+            184,
+            175,
+            198
+          ],
+          "source": "res://assets/map/settlement/modular/source/lodging.png"
+        },
+        {
+          "id": "coat_rack",
+          "description": "衣物挂钩板与旧衣，不带墙",
+          "texture": "res://assets/map/settlement/modular/lodging/coat_rack.png",
+          "scene": "res://src/levels/settlement/modules/lodging/coat_rack.tscn",
+          "native_size": [
+            280,
+            205
+          ],
+          "anchor": [
+            140,
+            203
+          ],
+          "sheet_box": [
+            64,
+            666,
+            276,
+            201
+          ],
+          "source": "res://assets/map/settlement/modular/source/lodging.png"
+        },
+        {
+          "id": "privacy_curtain",
+          "description": "一幅旧绿布帘及挂杆，不带墙",
+          "texture": "res://assets/map/settlement/modular/lodging/privacy_curtain.png",
+          "scene": "res://src/levels/settlement/modules/lodging/privacy_curtain.tscn",
+          "native_size": [
+            292,
+            237
+          ],
+          "anchor": [
+            146,
+            235
+          ],
+          "sheet_box": [
+            439,
+            641,
+            288,
+            233
+          ],
+          "source": "res://assets/map/settlement/modular/source/lodging.png"
+        },
+        {
+          "id": "bedside_lamp",
+          "description": "小油灯",
+          "texture": "res://assets/map/settlement/modular/lodging/bedside_lamp.png",
+          "scene": "res://src/levels/settlement/modules/lodging/bedside_lamp.tscn",
+          "native_size": [
+            99,
+            178
+          ],
+          "anchor": [
+            49,
+            176
+          ],
+          "sheet_box": [
+            907,
+            672,
+            95,
+            174
+          ],
+          "source": "res://assets/map/settlement/modular/source/lodging.png"
+        },
+        {
+          "id": "travel_bag",
+          "description": "单只旅行行囊",
+          "texture": "res://assets/map/settlement/modular/lodging/travel_bag.png",
+          "scene": "res://src/levels/settlement/modules/lodging/travel_bag.tscn",
+          "native_size": [
+            165,
+            170
+          ],
+          "anchor": [
+            82,
+            168
+          ],
+          "sheet_box": [
+            1252,
+            685,
+            161,
+            166
+          ],
+          "source": "res://assets/map/settlement/modular/source/lodging.png"
+        }
+      ]
+    },
+    {
+      "id": "warehouse",
+      "title": "仓库",
+      "kind": "props",
+      "assets": [
+        {
+          "id": "stock_rack",
+          "description": "完整木货架及箱罐",
+          "texture": "res://assets/map/settlement/modular/warehouse/stock_rack.png",
+          "scene": "res://src/levels/settlement/modules/warehouse/stock_rack.tscn",
+          "native_size": [
+            373,
+            321
+          ],
+          "anchor": [
+            186,
+            319
+          ],
+          "sheet_box": [
+            52,
+            126,
+            369,
+            317
+          ],
+          "source": "res://assets/map/settlement/modular/source/warehouse.png"
+        },
+        {
+          "id": "crate",
+          "description": "单个方木箱",
+          "texture": "res://assets/map/settlement/modular/warehouse/crate.png",
+          "scene": "res://src/levels/settlement/modules/warehouse/crate.tscn",
+          "native_size": [
+            141,
+            195
+          ],
+          "anchor": [
+            70,
+            193
+          ],
+          "sheet_box": [
+            538,
+            219,
+            137,
+            191
+          ],
+          "source": "res://assets/map/settlement/modular/source/warehouse.png"
+        },
+        {
+          "id": "crate_stack",
+          "description": "两只不同高的箱垛",
+          "texture": "res://assets/map/settlement/modular/warehouse/crate_stack.png",
+          "scene": "res://src/levels/settlement/modules/warehouse/crate_stack.tscn",
+          "native_size": [
+            256,
+            288
+          ],
+          "anchor": [
+            128,
+            286
+          ],
+          "sheet_box": [
+            827,
+            147,
+            252,
+            284
+          ],
+          "source": "res://assets/map/settlement/modular/source/warehouse.png"
+        },
+        {
+          "id": "inventory_desk",
+          "description": "空盘点木桌，不带账本和墨瓶",
+          "texture": "res://assets/map/settlement/modular/warehouse/inventory_desk.png",
+          "scene": "res://src/levels/settlement/modules/warehouse/inventory_desk.tscn",
+          "native_size": [
+            294,
+            228
+          ],
+          "anchor": [
+            147,
+            226
+          ],
+          "sheet_box": [
+            1184,
+            204,
+            290,
+            224
+          ],
+          "source": "res://assets/map/settlement/modular/source/warehouse.png"
+        },
+        {
+          "id": "sealed_sack",
+          "description": "单只捆口粮袋",
+          "texture": "res://assets/map/settlement/modular/warehouse/sealed_sack.png",
+          "scene": "res://src/levels/settlement/modules/warehouse/sealed_sack.tscn",
+          "native_size": [
+            208,
+            215
+          ],
+          "anchor": [
+            104,
+            213
+          ],
+          "sheet_box": [
+            112,
+            654,
+            204,
+            211
+          ],
+          "source": "res://assets/map/settlement/modular/source/warehouse.png"
+        },
+        {
+          "id": "clay_jar",
+          "description": "独立带盖陶罐",
+          "texture": "res://assets/map/settlement/modular/warehouse/clay_jar.png",
+          "scene": "res://src/levels/settlement/modules/warehouse/clay_jar.tscn",
+          "native_size": [
+            178,
+            228
+          ],
+          "anchor": [
+            89,
+            226
+          ],
+          "sheet_box": [
+            498,
+            641,
+            174,
+            224
+          ],
+          "source": "res://assets/map/settlement/modular/source/warehouse.png"
+        },
+        {
+          "id": "water_barrel",
+          "description": "单只独立木桶",
+          "texture": "res://assets/map/settlement/modular/warehouse/water_barrel.png",
+          "scene": "res://src/levels/settlement/modules/warehouse/water_barrel.tscn",
+          "native_size": [
+            206,
+            283
+          ],
+          "anchor": [
+            103,
+            281
+          ],
+          "sheet_box": [
+            843,
+            604,
+            202,
+            279
+          ],
+          "source": "res://assets/map/settlement/modular/source/warehouse.png"
+        },
+        {
+          "id": "rope_coil",
+          "description": "盘绕麻绳",
+          "texture": "res://assets/map/settlement/modular/warehouse/rope_coil.png",
+          "scene": "res://src/levels/settlement/modules/warehouse/rope_coil.tscn",
+          "native_size": [
+            254,
+            179
+          ],
+          "anchor": [
+            127,
+            177
+          ],
+          "sheet_box": [
+            1209,
+            670,
+            250,
+            175
+          ],
+          "source": "res://assets/map/settlement/modular/source/warehouse.png"
+        }
+      ]
+    },
+    {
+      "id": "milk_shop",
+      "title": "奶茶店营业区",
+      "kind": "props",
+      "assets": [
+        {
+          "id": "shop_counter",
+          "description": "一段256像素长现代奶茶柜台",
+          "texture": "res://assets/map/settlement/modular/milk_shop/shop_counter.png",
+          "scene": "res://src/levels/settlement/modules/milk_shop/shop_counter.tscn",
+          "native_size": [
+            380,
+            155
+          ],
+          "anchor": [
+            190,
+            153
+          ],
+          "sheet_box": [
+            63,
+            229,
+            376,
+            151
+          ],
+          "source": "res://assets/map/settlement/modular/source/milk_shop.png"
+        },
+        {
+          "id": "tea_urn",
+          "description": "一台独立奶茶保温桶",
+          "texture": "res://assets/map/settlement/modular/milk_shop/tea_urn.png",
+          "scene": "res://src/levels/settlement/modules/milk_shop/tea_urn.tscn",
+          "native_size": [
+            129,
+            208
+          ],
+          "anchor": [
+            64,
+            206
+          ],
+          "sheet_box": [
+            541,
+            178,
+            125,
+            204
+          ],
+          "source": "res://assets/map/settlement/modular/source/milk_shop.png"
+        },
+        {
+          "id": "ingredient_tray",
+          "description": "独立六格配料盒",
+          "texture": "res://assets/map/settlement/modular/milk_shop/ingredient_tray.png",
+          "scene": "res://src/levels/settlement/modules/milk_shop/ingredient_tray.tscn",
+          "native_size": [
+            234,
+            177
+          ],
+          "anchor": [
+            117,
+            175
+          ],
+          "sheet_box": [
+            843,
+            213,
+            230,
+            173
+          ],
+          "source": "res://assets/map/settlement/modular/source/milk_shop.png"
+        },
+        {
+          "id": "espresso_machine",
+          "description": "独立小型奶茶咖啡制作机",
+          "texture": "res://assets/map/settlement/modular/milk_shop/espresso_machine.png",
+          "scene": "res://src/levels/settlement/modules/milk_shop/espresso_machine.tscn",
+          "native_size": [
+            153,
+            219
+          ],
+          "anchor": [
+            76,
+            217
+          ],
+          "sheet_box": [
+            1261,
+            169,
+            149,
+            215
+          ],
+          "source": "res://assets/map/settlement/modular/source/milk_shop.png"
+        },
+        {
+          "id": "cash_register",
+          "description": "独立收银机",
+          "texture": "res://assets/map/settlement/modular/milk_shop/cash_register.png",
+          "scene": "res://src/levels/settlement/modules/milk_shop/cash_register.tscn",
+          "native_size": [
+            173,
+            200
+          ],
+          "anchor": [
+            86,
+            198
+          ],
+          "sheet_box": [
+            126,
+            636,
+            169,
+            196
+          ],
+          "source": "res://assets/map/settlement/modular/source/milk_shop.png"
+        },
+        {
+          "id": "cup_rack",
+          "description": "杯具壁挂木架，不带墙",
+          "texture": "res://assets/map/settlement/modular/milk_shop/cup_rack.png",
+          "scene": "res://src/levels/settlement/modules/milk_shop/cup_rack.tscn",
+          "native_size": [
+            238,
+            266
+          ],
+          "anchor": [
+            119,
+            264
+          ],
+          "sheet_box": [
+            466,
+            584,
+            234,
+            262
+          ],
+          "source": "res://assets/map/settlement/modular/source/milk_shop.png"
+        },
+        {
+          "id": "waiting_bench",
+          "description": "一张完整等候长凳",
+          "texture": "res://assets/map/settlement/modular/milk_shop/waiting_bench.png",
+          "scene": "res://src/levels/settlement/modules/milk_shop/waiting_bench.tscn",
+          "native_size": [
+            358,
+            164
+          ],
+          "anchor": [
+            179,
+            162
+          ],
+          "sheet_box": [
+            780,
+            672,
+            354,
+            160
+          ],
+          "source": "res://assets/map/settlement/modular/source/milk_shop.png"
+        },
+        {
+          "id": "rest_chair",
+          "description": "一把绿色休息扶手椅",
+          "texture": "res://assets/map/settlement/modular/milk_shop/rest_chair.png",
+          "scene": "res://src/levels/settlement/modules/milk_shop/rest_chair.tscn",
+          "native_size": [
+            191,
+            212
+          ],
+          "anchor": [
+            95,
+            210
+          ],
+          "sheet_box": [
+            1242,
+            627,
+            187,
+            208
+          ],
+          "source": "res://assets/map/settlement/modular/source/milk_shop.png"
+        }
+      ]
+    },
+    {
+      "id": "milk_home",
+      "title": "奶茶店生活区",
+      "kind": "props",
+      "assets": [
+        {
+          "id": "single_bed",
+          "description": "左侧完整单人床",
+          "texture": "res://assets/map/settlement/modular/milk_home/single_bed.png",
+          "scene": "res://src/levels/settlement/modules/milk_home/single_bed.tscn",
+          "native_size": [
+            182,
+            346
+          ],
+          "anchor": [
+            91,
+            344
+          ],
+          "sheet_box": [
+            119,
+            108,
+            178,
+            342
+          ],
+          "source": "res://assets/map/settlement/modular/source/milk_home.png"
+        },
+        {
+          "id": "home_desk",
+          "description": "一张小书桌，不带凳子",
+          "texture": "res://assets/map/settlement/modular/milk_home/home_desk.png",
+          "scene": "res://src/levels/settlement/modules/milk_home/home_desk.tscn",
+          "native_size": [
+            206,
+            198
+          ],
+          "anchor": [
+            103,
+            196
+          ],
+          "sheet_box": [
+            475,
+            176,
+            202,
+            194
+          ],
+          "source": "res://assets/map/settlement/modular/source/milk_home.png"
+        },
+        {
+          "id": "home_wardrobe",
+          "description": "木衣柜",
+          "texture": "res://assets/map/settlement/modular/milk_home/home_wardrobe.png",
+          "scene": "res://src/levels/settlement/modules/milk_home/home_wardrobe.tscn",
+          "native_size": [
+            175,
+            331
+          ],
+          "anchor": [
+            87,
+            329
+          ],
+          "sheet_box": [
+            875,
+            96,
+            171,
+            327
+          ],
+          "source": "res://assets/map/settlement/modular/source/milk_home.png"
+        },
+        {
+          "id": "refrigerator",
+          "description": "完整双层冰箱",
+          "texture": "res://assets/map/settlement/modular/milk_home/refrigerator.png",
+          "scene": "res://src/levels/settlement/modules/milk_home/refrigerator.tscn",
+          "native_size": [
+            150,
+            320
+          ],
+          "anchor": [
+            75,
+            318
+          ],
+          "sheet_box": [
+            1249,
+            116,
+            146,
+            316
+          ],
+          "source": "res://assets/map/settlement/modular/source/milk_home.png"
+        },
+        {
+          "id": "toilet",
+          "description": "独立马桶",
+          "texture": "res://assets/map/settlement/modular/milk_home/toilet.png",
+          "scene": "res://src/levels/settlement/modules/milk_home/toilet.tscn",
+          "native_size": [
+            118,
+            250
+          ],
+          "anchor": [
+            59,
+            248
+          ],
+          "sheet_box": [
+            150,
+            631,
+            114,
+            246
+          ],
+          "source": "res://assets/map/settlement/modular/source/milk_home.png"
+        },
+        {
+          "id": "bathroom_sink",
+          "description": "独立洗手池",
+          "texture": "res://assets/map/settlement/modular/milk_home/bathroom_sink.png",
+          "scene": "res://src/levels/settlement/modules/milk_home/bathroom_sink.tscn",
+          "native_size": [
+            148,
+            188
+          ],
+          "anchor": [
+            74,
+            186
+          ],
+          "sheet_box": [
+            504,
+            666,
+            144,
+            184
+          ],
+          "source": "res://assets/map/settlement/modular/source/milk_home.png"
+        },
+        {
+          "id": "shower",
+          "description": "淋浴喷头和水管，不带墙地板",
+          "texture": "res://assets/map/settlement/modular/milk_home/shower.png",
+          "scene": "res://src/levels/settlement/modules/milk_home/shower.tscn",
+          "native_size": [
+            138,
+            300
+          ],
+          "anchor": [
+            69,
+            298
+          ],
+          "sheet_box": [
+            875,
+            596,
+            134,
+            296
+          ],
+          "source": "res://assets/map/settlement/modular/source/milk_home.png"
+        },
+        {
+          "id": "storage_rack",
+          "description": "小型原料储物架",
+          "texture": "res://assets/map/settlement/modular/milk_home/storage_rack.png",
+          "scene": "res://src/levels/settlement/modules/milk_home/storage_rack.tscn",
+          "native_size": [
+            249,
+            328
+          ],
+          "anchor": [
+            124,
+            326
+          ],
+          "sheet_box": [
+            1199,
+            581,
+            245,
+            324
+          ],
+          "source": "res://assets/map/settlement/modular/source/milk_home.png"
+        }
+      ]
+    },
+    {
+      "id": "garden",
+      "title": "种植区",
+      "kind": "props",
+      "assets": [
+        {
+          "id": "white_mushrooms",
+          "description": "一小丛白蘑菇，不带泥土色块",
+          "texture": "res://assets/map/settlement/modular/garden/white_mushrooms.png",
+          "scene": "res://src/levels/settlement/modules/garden/white_mushrooms.tscn",
+          "native_size": [
+            155,
+            152
+          ],
+          "anchor": [
+            77,
+            150
+          ],
+          "sheet_box": [
+            127,
+            185,
+            151,
+            148
+          ],
+          "source": "res://assets/map/settlement/modular/source/garden.png"
+        },
+        {
+          "id": "blue_mushrooms",
+          "description": "一小丛蓝蘑菇，不带地板",
+          "texture": "res://assets/map/settlement/modular/garden/blue_mushrooms.png",
+          "scene": "res://src/levels/settlement/modules/garden/blue_mushrooms.tscn",
+          "native_size": [
+            165,
+            145
+          ],
+          "anchor": [
+            82,
+            143
+          ],
+          "sheet_box": [
+            494,
+            187,
+            161,
+            141
+          ],
+          "source": "res://assets/map/settlement/modular/source/garden.png"
+        },
+        {
+          "id": "herb_basket",
+          "description": "草药木篮",
+          "texture": "res://assets/map/settlement/modular/garden/herb_basket.png",
+          "scene": "res://src/levels/settlement/modules/garden/herb_basket.tscn",
+          "native_size": [
+            179,
+            163
+          ],
+          "anchor": [
+            89,
+            161
+          ],
+          "sheet_box": [
+            858,
+            183,
+            175,
+            159
+          ],
+          "source": "res://assets/map/settlement/modular/source/garden.png"
+        },
+        {
+          "id": "garden_fence",
+          "description": "一段矮木栅栏",
+          "texture": "res://assets/map/settlement/modular/garden/garden_fence.png",
+          "scene": "res://src/levels/settlement/modules/garden/garden_fence.tscn",
+          "native_size": [
+            229,
+            133
+          ],
+          "anchor": [
+            114,
+            131
+          ],
+          "sheet_box": [
+            1223,
+            193,
+            225,
+            129
+          ],
+          "source": "res://assets/map/settlement/modular/source/garden.png"
+        },
+        {
+          "id": "garden_gate",
+          "description": "独立矮木栅门",
+          "texture": "res://assets/map/settlement/modular/garden/garden_gate.png",
+          "scene": "res://src/levels/settlement/modules/garden/garden_gate.tscn",
+          "native_size": [
+            217,
+            184
+          ],
+          "anchor": [
+            108,
+            182
+          ],
+          "sheet_box": [
+            94,
+            651,
+            213,
+            180
+          ],
+          "source": "res://assets/map/settlement/modular/source/garden.png"
+        },
+        {
+          "id": "tool_stand",
+          "description": "铁铲草叉工具架",
+          "texture": "res://assets/map/settlement/modular/garden/tool_stand.png",
+          "scene": "res://src/levels/settlement/modules/garden/tool_stand.tscn",
+          "native_size": [
+            205,
+            246
+          ],
+          "anchor": [
+            102,
+            244
+          ],
+          "sheet_box": [
+            474,
+            607,
+            201,
+            242
+          ],
+          "source": "res://assets/map/settlement/modular/source/garden.png"
+        },
+        {
+          "id": "watering_bucket",
+          "description": "单只盛水木桶",
+          "texture": "res://assets/map/settlement/modular/garden/watering_bucket.png",
+          "scene": "res://src/levels/settlement/modules/garden/watering_bucket.tscn",
+          "native_size": [
+            151,
+            192
+          ],
+          "anchor": [
+            75,
+            190
+          ],
+          "sheet_box": [
+            868,
+            651,
+            147,
+            188
+          ],
+          "source": "res://assets/map/settlement/modular/source/garden.png"
+        },
+        {
+          "id": "garden_table",
+          "description": "分拣木桌，不带凳子",
+          "texture": "res://assets/map/settlement/modular/garden/garden_table.png",
+          "scene": "res://src/levels/settlement/modules/garden/garden_table.tscn",
+          "native_size": [
+            287,
+            181
+          ],
+          "anchor": [
+            143,
+            179
+          ],
+          "sheet_box": [
+            1190,
+            658,
+            283,
+            177
+          ],
+          "source": "res://assets/map/settlement/modular/source/garden.png"
+        }
+      ]
+    },
+    {
+      "id": "workshop",
+      "title": "河岸工坊",
+      "kind": "props",
+      "assets": [
+        {
+          "id": "anvil",
+          "description": "独立铁砧和矮底座",
+          "texture": "res://assets/map/settlement/modular/workshop/anvil.png",
+          "scene": "res://src/levels/settlement/modules/workshop/anvil.tscn",
+          "native_size": [
+            171,
+            190
+          ],
+          "anchor": [
+            85,
+            188
+          ],
+          "sheet_box": [
+            112,
+            213,
+            167,
+            186
+          ],
+          "source": "res://assets/map/settlement/modular/source/workshop.png"
+        },
+        {
+          "id": "workbench",
+          "description": "修理工作台",
+          "texture": "res://assets/map/settlement/modular/workshop/workbench.png",
+          "scene": "res://src/levels/settlement/modules/workshop/workbench.tscn",
+          "native_size": [
+            265,
+            168
+          ],
+          "anchor": [
+            132,
+            166
+          ],
+          "sheet_box": [
+            427,
+            221,
+            261,
+            164
+          ],
+          "source": "res://assets/map/settlement/modular/source/workshop.png"
+        },
+        {
+          "id": "forge",
+          "description": "完整小型石炉",
+          "texture": "res://assets/map/settlement/modular/workshop/forge.png",
+          "scene": "res://src/levels/settlement/modules/workshop/forge.tscn",
+          "native_size": [
+            216,
+            367
+          ],
+          "anchor": [
+            108,
+            365
+          ],
+          "sheet_box": [
+            843,
+            75,
+            212,
+            363
+          ],
+          "source": "res://assets/map/settlement/modular/source/workshop.png"
+        },
+        {
+          "id": "tool_board",
+          "description": "铁锤钳子工具挂板，不带墙",
+          "texture": "res://assets/map/settlement/modular/workshop/tool_board.png",
+          "scene": "res://src/levels/settlement/modules/workshop/tool_board.tscn",
+          "native_size": [
+            280,
+            175
+          ],
+          "anchor": [
+            140,
+            173
+          ],
+          "sheet_box": [
+            1184,
+            214,
+            276,
+            171
+          ],
+          "source": "res://assets/map/settlement/modular/source/workshop.png"
+        },
+        {
+          "id": "hide_rack",
+          "description": "晒皮木架和兽皮",
+          "texture": "res://assets/map/settlement/modular/workshop/hide_rack.png",
+          "scene": "res://src/levels/settlement/modules/workshop/hide_rack.tscn",
+          "native_size": [
+            327,
+            291
+          ],
+          "anchor": [
+            163,
+            289
+          ],
+          "sheet_box": [
+            43,
+            574,
+            323,
+            287
+          ],
+          "source": "res://assets/map/settlement/modular/source/workshop.png"
+        },
+        {
+          "id": "sawhorse",
+          "description": "木工作业锯架",
+          "texture": "res://assets/map/settlement/modular/workshop/sawhorse.png",
+          "scene": "res://src/levels/settlement/modules/workshop/sawhorse.tscn",
+          "native_size": [
+            307,
+            204
+          ],
+          "anchor": [
+            153,
+            202
+          ],
+          "sheet_box": [
+            411,
+            640,
+            303,
+            200
+          ],
+          "source": "res://assets/map/settlement/modular/source/workshop.png"
+        },
+        {
+          "id": "timber_stack",
+          "description": "捆扎木材堆",
+          "texture": "res://assets/map/settlement/modular/workshop/timber_stack.png",
+          "scene": "res://src/levels/settlement/modules/workshop/timber_stack.tscn",
+          "native_size": [
+            296,
+            170
+          ],
+          "anchor": [
+            148,
+            168
+          ],
+          "sheet_box": [
+            805,
+            666,
+            292,
+            166
+          ],
+          "source": "res://assets/map/settlement/modular/source/workshop.png"
+        },
+        {
+          "id": "small_cart",
+          "description": "完整双轮板车",
+          "texture": "res://assets/map/settlement/modular/workshop/small_cart.png",
+          "scene": "res://src/levels/settlement/modules/workshop/small_cart.tscn",
+          "native_size": [
+            347,
+            225
+          ],
+          "anchor": [
+            173,
+            223
+          ],
+          "sheet_box": [
+            1153,
+            639,
+            343,
+            221
+          ],
+          "source": "res://assets/map/settlement/modular/source/workshop.png"
+        }
+      ]
+    },
+    {
+      "id": "hearth",
+      "title": "公共火塘",
+      "kind": "props",
+      "assets": [
+        {
+          "id": "stone_firepit",
+          "description": "独立低矮石圈篝火，只含火焰、柴和石圈",
+          "texture": "res://assets/map/settlement/modular/hearth/stone_firepit.png",
+          "scene": "res://src/levels/settlement/modules/hearth/stone_firepit.tscn",
+          "native_size": [
+            295,
+            266
+          ],
+          "anchor": [
+            147,
+            264
+          ],
+          "sheet_box": [
+            65,
+            159,
+            291,
+            262
+          ],
+          "source": "res://assets/map/settlement/modular/source/hearth.png"
+        },
+        {
+          "id": "empty_fire_ring",
+          "description": "没有火焰的空石圈火塘",
+          "texture": "res://assets/map/settlement/modular/hearth/empty_fire_ring.png",
+          "scene": "res://src/levels/settlement/modules/hearth/empty_fire_ring.tscn",
+          "native_size": [
+            291,
+            266
+          ],
+          "anchor": [
+            145,
+            264
+          ],
+          "sheet_box": [
+            439,
+            159,
+            287,
+            262
+          ],
+          "source": "res://assets/map/settlement/modular/source/hearth.png"
+        },
+        {
+          "id": "hanging_pot",
+          "description": "独立悬挂小铁锅，不带支架",
+          "texture": "res://assets/map/settlement/modular/hearth/hanging_pot.png",
+          "scene": "res://src/levels/settlement/modules/hearth/hanging_pot.tscn",
+          "native_size": [
+            159,
+            187
+          ],
+          "anchor": [
+            79,
+            185
+          ],
+          "sheet_box": [
+            871,
+            188,
+            155,
+            183
+          ],
+          "source": "res://assets/map/settlement/modular/source/hearth.png"
+        },
+        {
+          "id": "pot_tripod",
+          "description": "空木杆三脚锅架，不带锅",
+          "texture": "res://assets/map/settlement/modular/hearth/pot_tripod.png",
+          "scene": "res://src/levels/settlement/modules/hearth/pot_tripod.tscn",
+          "native_size": [
+            313,
+            246
+          ],
+          "anchor": [
+            156,
+            244
+          ],
+          "sheet_box": [
+            1165,
+            155,
+            309,
+            242
+          ],
+          "source": "res://assets/map/settlement/modular/source/hearth.png"
+        },
+        {
+          "id": "bench_front",
+          "description": "一条正面粗木长凳",
+          "texture": "res://assets/map/settlement/modular/hearth/bench_front.png",
+          "scene": "res://src/levels/settlement/modules/hearth/bench_front.tscn",
+          "native_size": [
+            314,
+            125
+          ],
+          "anchor": [
+            157,
+            123
+          ],
+          "sheet_box": [
+            47,
+            672,
+            310,
+            121
+          ],
+          "source": "res://assets/map/settlement/modular/source/hearth.png"
+        },
+        {
+          "id": "bench_back",
+          "description": "一条背面粗木长凳",
+          "texture": "res://assets/map/settlement/modular/hearth/bench_back.png",
+          "scene": "res://src/levels/settlement/modules/hearth/bench_back.tscn",
+          "native_size": [
+            318,
+            125
+          ],
+          "anchor": [
+            159,
+            123
+          ],
+          "sheet_box": [
+            427,
+            672,
+            314,
+            121
+          ],
+          "source": "res://assets/map/settlement/modular/source/hearth.png"
+        },
+        {
+          "id": "kindling_pile",
+          "description": "一小堆柴薪",
+          "texture": "res://assets/map/settlement/modular/hearth/kindling_pile.png",
+          "scene": "res://src/levels/settlement/modules/hearth/kindling_pile.tscn",
+          "native_size": [
+            157,
+            149
+          ],
+          "anchor": [
+            78,
+            147
+          ],
+          "sheet_box": [
+            869,
+            665,
+            153,
+            145
+          ],
+          "source": "res://assets/map/settlement/modular/source/hearth.png"
+        },
+        {
+          "id": "water_bucket",
+          "description": "一只装水木桶",
+          "texture": "res://assets/map/settlement/modular/hearth/water_bucket.png",
+          "scene": "res://src/levels/settlement/modules/hearth/water_bucket.tscn",
+          "native_size": [
+            138,
+            180
+          ],
+          "anchor": [
+            69,
+            178
+          ],
+          "sheet_box": [
+            1257,
+            643,
+            134,
+            176
+          ],
+          "source": "res://assets/map/settlement/modular/source/hearth.png"
+        }
+      ]
+    },
+    {
+      "id": "tabletop",
+      "title": "桌面小道具",
+      "kind": "props",
+      "assets": [
+        {
+          "id": "beer_mug",
+          "description": "单只麦酒杯",
+          "texture": "res://assets/map/settlement/modular/tabletop/beer_mug.png",
+          "scene": "res://src/levels/settlement/modules/tabletop/beer_mug.tscn",
+          "native_size": [
+            128,
+            137
+          ],
+          "anchor": [
+            64,
+            135
+          ],
+          "sheet_box": [
+            143,
+            202,
+            124,
+            133
+          ],
+          "source": "res://assets/map/settlement/modular/source/tabletop.png"
+        },
+        {
+          "id": "wine_bottle",
+          "description": "单只绿色酒瓶",
+          "texture": "res://assets/map/settlement/modular/tabletop/wine_bottle.png",
+          "scene": "res://src/levels/settlement/modules/tabletop/wine_bottle.tscn",
+          "native_size": [
+            99,
+            218
+          ],
+          "anchor": [
+            49,
+            216
+          ],
+          "sheet_box": [
+            528,
+            144,
+            95,
+            214
+          ],
+          "source": "res://assets/map/settlement/modular/source/tabletop.png"
+        },
+        {
+          "id": "candle_holder",
+          "description": "一支蜡烛与小烛台",
+          "texture": "res://assets/map/settlement/modular/tabletop/candle_holder.png",
+          "scene": "res://src/levels/settlement/modules/tabletop/candle_holder.tscn",
+          "native_size": [
+            129,
+            217
+          ],
+          "anchor": [
+            64,
+            215
+          ],
+          "sheet_box": [
+            912,
+            151,
+            125,
+            213
+          ],
+          "source": "res://assets/map/settlement/modular/source/tabletop.png"
+        },
+        {
+          "id": "open_book",
+          "description": "一本摊开的账本",
+          "texture": "res://assets/map/settlement/modular/tabletop/open_book.png",
+          "scene": "res://src/levels/settlement/modules/tabletop/open_book.tscn",
+          "native_size": [
+            232,
+            154
+          ],
+          "anchor": [
+            116,
+            152
+          ],
+          "sheet_box": [
+            1232,
+            191,
+            228,
+            150
+          ],
+          "source": "res://assets/map/settlement/modular/source/tabletop.png"
+        },
+        {
+          "id": "scroll_bundle",
+          "description": "一组卷轴",
+          "texture": "res://assets/map/settlement/modular/tabletop/scroll_bundle.png",
+          "scene": "res://src/levels/settlement/modules/tabletop/scroll_bundle.tscn",
+          "native_size": [
+            199,
+            154
+          ],
+          "anchor": [
+            99,
+            152
+          ],
+          "sheet_box": [
+            94,
+            669,
+            195,
+            150
+          ],
+          "source": "res://assets/map/settlement/modular/source/tabletop.png"
+        },
+        {
+          "id": "bone_dice",
+          "description": "三颗骨骰",
+          "texture": "res://assets/map/settlement/modular/tabletop/bone_dice.png",
+          "scene": "res://src/levels/settlement/modules/tabletop/bone_dice.tscn",
+          "native_size": [
+            179,
+            160
+          ],
+          "anchor": [
+            89,
+            158
+          ],
+          "sheet_box": [
+            490,
+            666,
+            175,
+            156
+          ],
+          "source": "res://assets/map/settlement/modular/source/tabletop.png"
+        },
+        {
+          "id": "playing_cards",
+          "description": "一小摞独立卡牌",
+          "texture": "res://assets/map/settlement/modular/tabletop/playing_cards.png",
+          "scene": "res://src/levels/settlement/modules/tabletop/playing_cards.tscn",
+          "native_size": [
+            140,
+            146
+          ],
+          "anchor": [
+            70,
+            144
+          ],
+          "sheet_box": [
+            890,
+            675,
+            136,
+            142
+          ],
+          "source": "res://assets/map/settlement/modular/source/tabletop.png"
+        },
+        {
+          "id": "coin_pile",
+          "description": "一小堆金币",
+          "texture": "res://assets/map/settlement/modular/tabletop/coin_pile.png",
+          "scene": "res://src/levels/settlement/modules/tabletop/coin_pile.tscn",
+          "native_size": [
+            189,
+            132
+          ],
+          "anchor": [
+            94,
+            130
+          ],
+          "sheet_box": [
+            1245,
+            691,
+            185,
+            128
+          ],
+          "source": "res://assets/map/settlement/modular/source/tabletop.png"
+        }
+      ]
+    },
+    {
+      "id": "kitchenware",
+      "title": "厨房小道具",
+      "kind": "props",
+      "assets": [
+        {
+          "id": "kitchen_knife",
+          "description": "一把独立菜刀",
+          "texture": "res://assets/map/settlement/modular/kitchenware/kitchen_knife.png",
+          "scene": "res://src/levels/settlement/modules/kitchenware/kitchen_knife.tscn",
+          "native_size": [
+            95,
+            201
+          ],
+          "anchor": [
+            47,
+            199
+          ],
+          "sheet_box": [
+            161,
+            177,
+            91,
+            197
+          ],
+          "source": "res://assets/map/settlement/modular/source/kitchenware.png"
+        },
+        {
+          "id": "chopping_board",
+          "description": "一块空砧板",
+          "texture": "res://assets/map/settlement/modular/kitchenware/chopping_board.png",
+          "scene": "res://src/levels/settlement/modules/kitchenware/chopping_board.tscn",
+          "native_size": [
+            228,
+            154
+          ],
+          "anchor": [
+            114,
+            152
+          ],
+          "sheet_box": [
+            464,
+            186,
+            224,
+            150
+          ],
+          "source": "res://assets/map/settlement/modular/source/kitchenware.png"
+        },
+        {
+          "id": "raw_meat",
+          "description": "一块生肉",
+          "texture": "res://assets/map/settlement/modular/kitchenware/raw_meat.png",
+          "scene": "res://src/levels/settlement/modules/kitchenware/raw_meat.tscn",
+          "native_size": [
+            170,
+            129
+          ],
+          "anchor": [
+            85,
+            127
+          ],
+          "sheet_box": [
+            878,
+            198,
+            166,
+            125
+          ],
+          "source": "res://assets/map/settlement/modular/source/kitchenware.png"
+        },
+        {
+          "id": "vegetable_bowl",
+          "description": "一盆蔬菜",
+          "texture": "res://assets/map/settlement/modular/kitchenware/vegetable_bowl.png",
+          "scene": "res://src/levels/settlement/modules/kitchenware/vegetable_bowl.tscn",
+          "native_size": [
+            219,
+            212
+          ],
+          "anchor": [
+            109,
+            210
+          ],
+          "sheet_box": [
+            1231,
+            156,
+            215,
+            208
+          ],
+          "source": "res://assets/map/settlement/modular/source/kitchenware.png"
+        },
+        {
+          "id": "wooden_bowl",
+          "description": "一只空木碗",
+          "texture": "res://assets/map/settlement/modular/kitchenware/wooden_bowl.png",
+          "scene": "res://src/levels/settlement/modules/kitchenware/wooden_bowl.tscn",
+          "native_size": [
+            174,
+            164
+          ],
+          "anchor": [
+            87,
+            162
+          ],
+          "sheet_box": [
+            118,
+            676,
+            170,
+            160
+          ],
+          "source": "res://assets/map/settlement/modular/source/kitchenware.png"
+        },
+        {
+          "id": "iron_pan",
+          "description": "一口独立铁锅",
+          "texture": "res://assets/map/settlement/modular/kitchenware/iron_pan.png",
+          "scene": "res://src/levels/settlement/modules/kitchenware/iron_pan.tscn",
+          "native_size": [
+            252,
+            201
+          ],
+          "anchor": [
+            126,
+            199
+          ],
+          "sheet_box": [
+            452,
+            658,
+            248,
+            197
+          ],
+          "source": "res://assets/map/settlement/modular/source/kitchenware.png"
+        },
+        {
+          "id": "ladle",
+          "description": "一把汤勺",
+          "texture": "res://assets/map/settlement/modular/kitchenware/ladle.png",
+          "scene": "res://src/levels/settlement/modules/kitchenware/ladle.tscn",
+          "native_size": [
+            89,
+            239
+          ],
+          "anchor": [
+            44,
+            237
+          ],
+          "sheet_box": [
+            915,
+            628,
+            85,
+            235
+          ],
+          "source": "res://assets/map/settlement/modular/source/kitchenware.png"
+        },
+        {
+          "id": "herb_bundle",
+          "description": "一束捆好的香草",
+          "texture": "res://assets/map/settlement/modular/kitchenware/herb_bundle.png",
+          "scene": "res://src/levels/settlement/modules/kitchenware/herb_bundle.tscn",
+          "native_size": [
+            115,
+            210
+          ],
+          "anchor": [
+            57,
+            208
+          ],
+          "sheet_box": [
+            1276,
+            657,
+            111,
+            206
+          ],
+          "source": "res://assets/map/settlement/modular/source/kitchenware.png"
+        }
+      ]
+    },
+    {
+      "id": "yard",
+      "title": "庭院与集结点",
+      "kind": "props",
+      "assets": [
+        {
+          "id": "cargo_cart",
+          "description": "完整双轮货车",
+          "texture": "res://assets/map/settlement/modular/yard/cargo_cart.png",
+          "scene": "res://src/levels/settlement/modules/yard/cargo_cart.tscn",
+          "native_size": [
+            326,
+            216
+          ],
+          "anchor": [
+            163,
+            214
+          ],
+          "sheet_box": [
+            35,
+            173,
+            322,
+            212
+          ],
+          "source": "res://assets/map/settlement/modular/source/yard.png"
+        },
+        {
+          "id": "cargo_crates",
+          "description": "货物箱垛",
+          "texture": "res://assets/map/settlement/modular/yard/cargo_crates.png",
+          "scene": "res://src/levels/settlement/modules/yard/cargo_crates.tscn",
+          "native_size": [
+            253,
+            219
+          ],
+          "anchor": [
+            126,
+            217
+          ],
+          "sheet_box": [
+            458,
+            170,
+            249,
+            215
+          ],
+          "source": "res://assets/map/settlement/modular/source/yard.png"
+        },
+        {
+          "id": "cargo_sacks",
+          "description": "三只粮袋组合",
+          "texture": "res://assets/map/settlement/modular/yard/cargo_sacks.png",
+          "scene": "res://src/levels/settlement/modules/yard/cargo_sacks.tscn",
+          "native_size": [
+            219,
+            196
+          ],
+          "anchor": [
+            109,
+            194
+          ],
+          "sheet_box": [
+            843,
+            194,
+            215,
+            192
+          ],
+          "source": "res://assets/map/settlement/modular/source/yard.png"
+        },
+        {
+          "id": "canvas_shelter",
+          "description": "独立敞口遮雨棚，空棚不含货物和地面",
+          "texture": "res://assets/map/settlement/modular/yard/canvas_shelter.png",
+          "scene": "res://src/levels/settlement/modules/yard/canvas_shelter.tscn",
+          "native_size": [
+            367,
+            277
+          ],
+          "anchor": [
+            183,
+            275
+          ],
+          "sheet_box": [
+            1144,
+            137,
+            363,
+            273
+          ],
+          "source": "res://assets/map/settlement/modular/source/yard.png"
+        },
+        {
+          "id": "low_stone_fence",
+          "description": "一段低石矮墙",
+          "texture": "res://assets/map/settlement/modular/yard/low_stone_fence.png",
+          "scene": "res://src/levels/settlement/modules/yard/low_stone_fence.tscn",
+          "native_size": [
+            279,
+            93
+          ],
+          "anchor": [
+            139,
+            91
+          ],
+          "sheet_box": [
+            66,
+            708,
+            275,
+            89
+          ],
+          "source": "res://assets/map/settlement/modular/source/yard.png"
+        },
+        {
+          "id": "wood_sign",
+          "description": "独立木路牌，无文字",
+          "texture": "res://assets/map/settlement/modular/yard/wood_sign.png",
+          "scene": "res://src/levels/settlement/modules/yard/wood_sign.tscn",
+          "native_size": [
+            176,
+            258
+          ],
+          "anchor": [
+            88,
+            256
+          ],
+          "sheet_box": [
+            502,
+            611,
+            172,
+            254
+          ],
+          "source": "res://assets/map/settlement/modular/source/yard.png"
+        },
+        {
+          "id": "muster_flag",
+          "description": "独立旧红旗和旗杆底座",
+          "texture": "res://assets/map/settlement/modular/yard/muster_flag.png",
+          "scene": "res://src/levels/settlement/modules/yard/muster_flag.tscn",
+          "native_size": [
+            200,
+            321
+          ],
+          "anchor": [
+            100,
+            319
+          ],
+          "sheet_box": [
+            852,
+            575,
+            196,
+            317
+          ],
+          "source": "res://assets/map/settlement/modular/source/yard.png"
+        },
+        {
+          "id": "outdoor_bench",
+          "description": "单张完整粗木长凳",
+          "texture": "res://assets/map/settlement/modular/yard/outdoor_bench.png",
+          "scene": "res://src/levels/settlement/modules/yard/outdoor_bench.tscn",
+          "native_size": [
+            284,
+            117
+          ],
+          "anchor": [
+            142,
+            115
+          ],
+          "sheet_box": [
+            1188,
+            703,
+            280,
+            113
+          ],
+          "source": "res://assets/map/settlement/modular/source/yard.png"
+        }
+      ]
+    },
+    {
+      "id": "walls_stone_1",
+      "title": "灰石木梁墙体 1",
+      "kind": "walls",
+      "assets": [
+        {
+          "id": "wall_north",
+          "description": "后墙直段，横向256像素，正面可见墙面，高140，无柱帽",
+          "texture": "res://assets/map/settlement/modular/walls_stone_1/wall_north.png",
+          "scene": "res://src/levels/settlement/modules/walls_stone_1/wall_north.tscn",
+          "native_size": [
+            319,
+            176
+          ],
+          "anchor": [
+            159,
+            174
+          ],
+          "sheet_box": [
+            65,
+            172,
+            315,
+            172
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_stone_1.png"
+        },
+        {
+          "id": "wall_south",
+          "description": "前墙低剖面直段，横向256像素，高100，无柱帽",
+          "texture": "res://assets/map/settlement/modular/walls_stone_1/wall_south.png",
+          "scene": "res://src/levels/settlement/modules/walls_stone_1/wall_south.tscn",
+          "native_size": [
+            321,
+            128
+          ],
+          "anchor": [
+            160,
+            126
+          ],
+          "sheet_box": [
+            468,
+            214,
+            317,
+            124
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_stone_1.png"
+        },
+        {
+          "id": "wall_west",
+          "description": "左侧墙直段，竖向256像素，窄墙顶与外侧立面",
+          "texture": "res://assets/map/settlement/modular/walls_stone_1/wall_west.png",
+          "scene": "res://src/levels/settlement/modules/walls_stone_1/wall_west.tscn",
+          "native_size": [
+            75,
+            278
+          ],
+          "anchor": [
+            37,
+            276
+          ],
+          "sheet_box": [
+            924,
+            118,
+            71,
+            274
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_stone_1.png"
+        },
+        {
+          "id": "wall_east",
+          "description": "右侧墙直段，竖向256像素，窄墙顶与外侧立面",
+          "texture": "res://assets/map/settlement/modular/walls_stone_1/wall_east.png",
+          "scene": "res://src/levels/settlement/modules/walls_stone_1/wall_east.tscn",
+          "native_size": [
+            76,
+            278
+          ],
+          "anchor": [
+            38,
+            276
+          ],
+          "sheet_box": [
+            1308,
+            118,
+            72,
+            274
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_stone_1.png"
+        },
+        {
+          "id": "corner_nw",
+          "description": "完整西北L形墙转角，两臂各128像素",
+          "texture": "res://assets/map/settlement/modular/walls_stone_1/corner_nw.png",
+          "scene": "res://src/levels/settlement/modules/walls_stone_1/corner_nw.tscn",
+          "native_size": [
+            246,
+            262
+          ],
+          "anchor": [
+            123,
+            260
+          ],
+          "sheet_box": [
+            106,
+            605,
+            242,
+            258
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_stone_1.png"
+        },
+        {
+          "id": "corner_ne",
+          "description": "完整东北L形墙转角，两臂各128像素",
+          "texture": "res://assets/map/settlement/modular/walls_stone_1/corner_ne.png",
+          "scene": "res://src/levels/settlement/modules/walls_stone_1/corner_ne.tscn",
+          "native_size": [
+            241,
+            261
+          ],
+          "anchor": [
+            120,
+            259
+          ],
+          "sheet_box": [
+            460,
+            605,
+            237,
+            257
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_stone_1.png"
+        },
+        {
+          "id": "door_south",
+          "description": "独立正南门框，两门柱之间敞开宽120像素，无门板",
+          "texture": "res://assets/map/settlement/modular/walls_stone_1/door_south.png",
+          "scene": "res://src/levels/settlement/modules/walls_stone_1/door_south.tscn",
+          "native_size": [
+            255,
+            265
+          ],
+          "anchor": [
+            127,
+            263
+          ],
+          "sheet_box": [
+            842,
+            605,
+            251,
+            261
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_stone_1.png"
+        },
+        {
+          "id": "wall_post",
+          "description": "一根独立墙体支柱",
+          "texture": "res://assets/map/settlement/modular/walls_stone_1/wall_post.png",
+          "scene": "res://src/levels/settlement/modules/walls_stone_1/wall_post.tscn",
+          "native_size": [
+            65,
+            262
+          ],
+          "anchor": [
+            32,
+            260
+          ],
+          "sheet_box": [
+            1314,
+            605,
+            61,
+            258
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_stone_1.png"
+        }
+      ]
+    },
+    {
+      "id": "walls_stone_2",
+      "title": "灰石木梁墙体 2",
+      "kind": "walls",
+      "assets": [
+        {
+          "id": "corner_sw",
+          "description": "完整西南L形低墙转角，两臂各128像素",
+          "texture": "res://assets/map/settlement/modular/walls_stone_2/corner_sw.png",
+          "scene": "res://src/levels/settlement/modules/walls_stone_2/corner_sw.tscn",
+          "native_size": [
+            247,
+            294
+          ],
+          "anchor": [
+            123,
+            292
+          ],
+          "sheet_box": [
+            71,
+            116,
+            243,
+            290
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_stone_2.png"
+        },
+        {
+          "id": "corner_se",
+          "description": "完整东南L形低墙转角，两臂各128像素",
+          "texture": "res://assets/map/settlement/modular/walls_stone_2/corner_se.png",
+          "scene": "res://src/levels/settlement/modules/walls_stone_2/corner_se.tscn",
+          "native_size": [
+            252,
+            294
+          ],
+          "anchor": [
+            126,
+            292
+          ],
+          "sheet_box": [
+            460,
+            116,
+            248,
+            290
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_stone_2.png"
+        },
+        {
+          "id": "door_west",
+          "description": "独立向西敞开的侧门框，无门板",
+          "texture": "res://assets/map/settlement/modular/walls_stone_2/door_west.png",
+          "scene": "res://src/levels/settlement/modules/walls_stone_2/door_west.tscn",
+          "native_size": [
+            206,
+            280
+          ],
+          "anchor": [
+            103,
+            278
+          ],
+          "sheet_box": [
+            857,
+            120,
+            202,
+            276
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_stone_2.png"
+        },
+        {
+          "id": "door_east",
+          "description": "独立向东敞开的侧门框，无门板",
+          "texture": "res://assets/map/settlement/modular/walls_stone_2/door_east.png",
+          "scene": "res://src/levels/settlement/modules/walls_stone_2/door_east.tscn",
+          "native_size": [
+            206,
+            280
+          ],
+          "anchor": [
+            103,
+            278
+          ],
+          "sheet_box": [
+            1241,
+            120,
+            202,
+            276
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_stone_2.png"
+        },
+        {
+          "id": "window",
+          "description": "独立窗框与窗格，不带墙面",
+          "texture": "res://assets/map/settlement/modular/walls_stone_2/window.png",
+          "scene": "res://src/levels/settlement/modules/walls_stone_2/window.tscn",
+          "native_size": [
+            132,
+            151
+          ],
+          "anchor": [
+            66,
+            149
+          ],
+          "sheet_box": [
+            129,
+            674,
+            128,
+            147
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_stone_2.png"
+        },
+        {
+          "id": "wall_torch",
+          "description": "一只独立壁挂火炬与支架，不带墙",
+          "texture": "res://assets/map/settlement/modular/walls_stone_2/wall_torch.png",
+          "scene": "res://src/levels/settlement/modules/walls_stone_2/wall_torch.tscn",
+          "native_size": [
+            78,
+            195
+          ],
+          "anchor": [
+            39,
+            193
+          ],
+          "sheet_box": [
+            532,
+            640,
+            74,
+            191
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_stone_2.png"
+        },
+        {
+          "id": "wall_lamp",
+          "description": "一只独立壁灯与支架，不带墙",
+          "texture": "res://assets/map/settlement/modular/walls_stone_2/wall_lamp.png",
+          "scene": "res://src/levels/settlement/modules/walls_stone_2/wall_lamp.tscn",
+          "native_size": [
+            119,
+            184
+          ],
+          "anchor": [
+            59,
+            182
+          ],
+          "sheet_box": [
+            900,
+            652,
+            115,
+            180
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_stone_2.png"
+        },
+        {
+          "id": "support_beam",
+          "description": "一根独立横向支撑木梁",
+          "texture": "res://assets/map/settlement/modular/walls_stone_2/support_beam.png",
+          "scene": "res://src/levels/settlement/modules/walls_stone_2/support_beam.tscn",
+          "native_size": [
+            300,
+            90
+          ],
+          "anchor": [
+            150,
+            88
+          ],
+          "sheet_box": [
+            1193,
+            711,
+            296,
+            86
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_stone_2.png"
+        }
+      ]
+    },
+    {
+      "id": "walls_fortress_1",
+      "title": "赌场深灰墙体 1",
+      "kind": "walls",
+      "assets": [
+        {
+          "id": "wall_north",
+          "description": "后墙直段，横向256像素，正面可见墙面，高140，无柱帽",
+          "texture": "res://assets/map/settlement/modular/walls_fortress_1/wall_north.png",
+          "scene": "res://src/levels/settlement/modules/walls_fortress_1/wall_north.tscn",
+          "native_size": [
+            290,
+            148
+          ],
+          "anchor": [
+            145,
+            146
+          ],
+          "sheet_box": [
+            58,
+            183,
+            286,
+            144
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_fortress_1.png"
+        },
+        {
+          "id": "wall_south",
+          "description": "前墙低剖面直段，横向256像素，高100，无柱帽",
+          "texture": "res://assets/map/settlement/modular/walls_fortress_1/wall_south.png",
+          "scene": "res://src/levels/settlement/modules/walls_fortress_1/wall_south.tscn",
+          "native_size": [
+            283,
+            111
+          ],
+          "anchor": [
+            141,
+            109
+          ],
+          "sheet_box": [
+            444,
+            217,
+            279,
+            107
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_fortress_1.png"
+        },
+        {
+          "id": "wall_west",
+          "description": "左侧墙直段，竖向256像素，窄墙顶与外侧立面",
+          "texture": "res://assets/map/settlement/modular/walls_fortress_1/wall_west.png",
+          "scene": "res://src/levels/settlement/modules/walls_fortress_1/wall_west.tscn",
+          "native_size": [
+            75,
+            270
+          ],
+          "anchor": [
+            37,
+            268
+          ],
+          "sheet_box": [
+            925,
+            124,
+            71,
+            266
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_fortress_1.png"
+        },
+        {
+          "id": "wall_east",
+          "description": "右侧墙直段，竖向256像素，窄墙顶与外侧立面",
+          "texture": "res://assets/map/settlement/modular/walls_fortress_1/wall_east.png",
+          "scene": "res://src/levels/settlement/modules/walls_fortress_1/wall_east.tscn",
+          "native_size": [
+            75,
+            271
+          ],
+          "anchor": [
+            37,
+            269
+          ],
+          "sheet_box": [
+            1308,
+            123,
+            71,
+            267
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_fortress_1.png"
+        },
+        {
+          "id": "corner_nw",
+          "description": "完整西北L形墙转角，两臂各128像素",
+          "texture": "res://assets/map/settlement/modular/walls_fortress_1/corner_nw.png",
+          "scene": "res://src/levels/settlement/modules/walls_fortress_1/corner_nw.tscn",
+          "native_size": [
+            229,
+            252
+          ],
+          "anchor": [
+            114,
+            250
+          ],
+          "sheet_box": [
+            90,
+            603,
+            225,
+            248
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_fortress_1.png"
+        },
+        {
+          "id": "corner_ne",
+          "description": "完整东北L形墙转角，两臂各128像素",
+          "texture": "res://assets/map/settlement/modular/walls_fortress_1/corner_ne.png",
+          "scene": "res://src/levels/settlement/modules/walls_fortress_1/corner_ne.tscn",
+          "native_size": [
+            227,
+            252
+          ],
+          "anchor": [
+            113,
+            250
+          ],
+          "sheet_box": [
+            456,
+            603,
+            223,
+            248
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_fortress_1.png"
+        },
+        {
+          "id": "door_south",
+          "description": "独立正南门框，两门柱之间敞开宽120像素，无门板",
+          "texture": "res://assets/map/settlement/modular/walls_fortress_1/door_south.png",
+          "scene": "res://src/levels/settlement/modules/walls_fortress_1/door_south.tscn",
+          "native_size": [
+            302,
+            268
+          ],
+          "anchor": [
+            151,
+            266
+          ],
+          "sheet_box": [
+            812,
+            588,
+            298,
+            264
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_fortress_1.png"
+        },
+        {
+          "id": "wall_post",
+          "description": "一根独立墙体支柱",
+          "texture": "res://assets/map/settlement/modular/walls_fortress_1/wall_post.png",
+          "scene": "res://src/levels/settlement/modules/walls_fortress_1/wall_post.tscn",
+          "native_size": [
+            70,
+            255
+          ],
+          "anchor": [
+            35,
+            253
+          ],
+          "sheet_box": [
+            1311,
+            602,
+            66,
+            251
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_fortress_1.png"
+        }
+      ]
+    },
+    {
+      "id": "walls_fortress_2",
+      "title": "赌场深灰墙体 2",
+      "kind": "walls",
+      "assets": [
+        {
+          "id": "corner_sw",
+          "description": "完整西南L形低墙转角，两臂各128像素",
+          "texture": "res://assets/map/settlement/modular/walls_fortress_2/corner_sw.png",
+          "scene": "res://src/levels/settlement/modules/walls_fortress_2/corner_sw.tscn",
+          "native_size": [
+            273,
+            285
+          ],
+          "anchor": [
+            136,
+            283
+          ],
+          "sheet_box": [
+            59,
+            116,
+            269,
+            281
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_fortress_2.png"
+        },
+        {
+          "id": "corner_se",
+          "description": "完整东南L形低墙转角，两臂各128像素",
+          "texture": "res://assets/map/settlement/modular/walls_fortress_2/corner_se.png",
+          "scene": "res://src/levels/settlement/modules/walls_fortress_2/corner_se.tscn",
+          "native_size": [
+            267,
+            285
+          ],
+          "anchor": [
+            133,
+            283
+          ],
+          "sheet_box": [
+            442,
+            116,
+            263,
+            281
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_fortress_2.png"
+        },
+        {
+          "id": "door_west",
+          "description": "独立向西敞开的侧门框，无门板",
+          "texture": "res://assets/map/settlement/modular/walls_fortress_2/door_west.png",
+          "scene": "res://src/levels/settlement/modules/walls_fortress_2/door_west.tscn",
+          "native_size": [
+            190,
+            289
+          ],
+          "anchor": [
+            95,
+            287
+          ],
+          "sheet_box": [
+            862,
+            116,
+            186,
+            285
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_fortress_2.png"
+        },
+        {
+          "id": "door_east",
+          "description": "独立向东敞开的侧门框，无门板",
+          "texture": "res://assets/map/settlement/modular/walls_fortress_2/door_east.png",
+          "scene": "res://src/levels/settlement/modules/walls_fortress_2/door_east.tscn",
+          "native_size": [
+            200,
+            289
+          ],
+          "anchor": [
+            100,
+            287
+          ],
+          "sheet_box": [
+            1247,
+            116,
+            196,
+            285
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_fortress_2.png"
+        },
+        {
+          "id": "window",
+          "description": "独立窗框与窗格，不带墙面",
+          "texture": "res://assets/map/settlement/modular/walls_fortress_2/window.png",
+          "scene": "res://src/levels/settlement/modules/walls_fortress_2/window.tscn",
+          "native_size": [
+            174,
+            210
+          ],
+          "anchor": [
+            87,
+            208
+          ],
+          "sheet_box": [
+            107,
+            639,
+            170,
+            206
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_fortress_2.png"
+        },
+        {
+          "id": "wall_torch",
+          "description": "一只独立壁挂火炬与支架，不带墙",
+          "texture": "res://assets/map/settlement/modular/walls_fortress_2/wall_torch.png",
+          "scene": "res://src/levels/settlement/modules/walls_fortress_2/wall_torch.tscn",
+          "native_size": [
+            81,
+            221
+          ],
+          "anchor": [
+            40,
+            219
+          ],
+          "sheet_box": [
+            537,
+            625,
+            77,
+            217
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_fortress_2.png"
+        },
+        {
+          "id": "wall_lamp",
+          "description": "一只独立壁灯与支架，不带墙",
+          "texture": "res://assets/map/settlement/modular/walls_fortress_2/wall_lamp.png",
+          "scene": "res://src/levels/settlement/modules/walls_fortress_2/wall_lamp.tscn",
+          "native_size": [
+            80,
+            174
+          ],
+          "anchor": [
+            40,
+            172
+          ],
+          "sheet_box": [
+            922,
+            667,
+            76,
+            170
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_fortress_2.png"
+        },
+        {
+          "id": "support_beam",
+          "description": "一根独立横向支撑木梁",
+          "texture": "res://assets/map/settlement/modular/walls_fortress_2/support_beam.png",
+          "scene": "res://src/levels/settlement/modules/walls_fortress_2/support_beam.tscn",
+          "native_size": [
+            289,
+            82
+          ],
+          "anchor": [
+            144,
+            80
+          ],
+          "sheet_box": [
+            1193,
+            706,
+            285,
+            78
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_fortress_2.png"
+        }
+      ]
+    },
+    {
+      "id": "walls_plaster_1",
+      "title": "奶茶店墙体 1",
+      "kind": "walls",
+      "assets": [
+        {
+          "id": "wall_north",
+          "description": "后墙直段，横向256像素，正面可见墙面，高140，无柱帽",
+          "texture": "res://assets/map/settlement/modular/walls_plaster_1/wall_north.png",
+          "scene": "res://src/levels/settlement/modules/walls_plaster_1/wall_north.tscn",
+          "native_size": [
+            321,
+            148
+          ],
+          "anchor": [
+            160,
+            146
+          ],
+          "sheet_box": [
+            62,
+            183,
+            317,
+            144
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_plaster_1.png"
+        },
+        {
+          "id": "wall_south",
+          "description": "前墙低剖面直段，横向256像素，高100，无柱帽",
+          "texture": "res://assets/map/settlement/modular/walls_plaster_1/wall_south.png",
+          "scene": "res://src/levels/settlement/modules/walls_plaster_1/wall_south.tscn",
+          "native_size": [
+            298,
+            105
+          ],
+          "anchor": [
+            149,
+            103
+          ],
+          "sheet_box": [
+            452,
+            217,
+            294,
+            101
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_plaster_1.png"
+        },
+        {
+          "id": "wall_west",
+          "description": "左侧墙直段，竖向256像素，窄墙顶与外侧立面",
+          "texture": "res://assets/map/settlement/modular/walls_plaster_1/wall_west.png",
+          "scene": "res://src/levels/settlement/modules/walls_plaster_1/wall_west.tscn",
+          "native_size": [
+            80,
+            276
+          ],
+          "anchor": [
+            40,
+            274
+          ],
+          "sheet_box": [
+            924,
+            116,
+            76,
+            272
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_plaster_1.png"
+        },
+        {
+          "id": "wall_east",
+          "description": "右侧墙直段，竖向256像素，窄墙顶与外侧立面",
+          "texture": "res://assets/map/settlement/modular/walls_plaster_1/wall_east.png",
+          "scene": "res://src/levels/settlement/modules/walls_plaster_1/wall_east.tscn",
+          "native_size": [
+            80,
+            276
+          ],
+          "anchor": [
+            40,
+            274
+          ],
+          "sheet_box": [
+            1304,
+            116,
+            76,
+            272
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_plaster_1.png"
+        },
+        {
+          "id": "corner_nw",
+          "description": "完整西北L形墙转角，两臂各128像素",
+          "texture": "res://assets/map/settlement/modular/walls_plaster_1/corner_nw.png",
+          "scene": "res://src/levels/settlement/modules/walls_plaster_1/corner_nw.tscn",
+          "native_size": [
+            205,
+            248
+          ],
+          "anchor": [
+            102,
+            246
+          ],
+          "sheet_box": [
+            100,
+            608,
+            201,
+            244
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_plaster_1.png"
+        },
+        {
+          "id": "corner_ne",
+          "description": "完整东北L形墙转角，两臂各128像素",
+          "texture": "res://assets/map/settlement/modular/walls_plaster_1/corner_ne.png",
+          "scene": "res://src/levels/settlement/modules/walls_plaster_1/corner_ne.tscn",
+          "native_size": [
+            204,
+            248
+          ],
+          "anchor": [
+            102,
+            246
+          ],
+          "sheet_box": [
+            496,
+            608,
+            200,
+            244
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_plaster_1.png"
+        },
+        {
+          "id": "door_south",
+          "description": "独立正南门框，两门柱之间敞开宽120像素，无门板",
+          "texture": "res://assets/map/settlement/modular/walls_plaster_1/door_south.png",
+          "scene": "res://src/levels/settlement/modules/walls_plaster_1/door_south.tscn",
+          "native_size": [
+            256,
+            219
+          ],
+          "anchor": [
+            128,
+            217
+          ],
+          "sheet_box": [
+            834,
+            620,
+            252,
+            215
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_plaster_1.png"
+        },
+        {
+          "id": "wall_post",
+          "description": "一根独立墙体支柱",
+          "texture": "res://assets/map/settlement/modular/walls_plaster_1/wall_post.png",
+          "scene": "res://src/levels/settlement/modules/walls_plaster_1/wall_post.tscn",
+          "native_size": [
+            68,
+            261
+          ],
+          "anchor": [
+            34,
+            259
+          ],
+          "sheet_box": [
+            1312,
+            604,
+            64,
+            257
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_plaster_1.png"
+        }
+      ]
+    },
+    {
+      "id": "walls_plaster_2",
+      "title": "奶茶店墙体 2",
+      "kind": "walls",
+      "assets": [
+        {
+          "id": "corner_sw",
+          "description": "完整西南L形低墙转角，两臂各128像素",
+          "texture": "res://assets/map/settlement/modular/walls_plaster_2/corner_sw.png",
+          "scene": "res://src/levels/settlement/modules/walls_plaster_2/corner_sw.tscn",
+          "native_size": [
+            247,
+            304
+          ],
+          "anchor": [
+            123,
+            302
+          ],
+          "sheet_box": [
+            53,
+            127,
+            243,
+            300
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_plaster_2.png"
+        },
+        {
+          "id": "corner_se",
+          "description": "完整东南L形低墙转角，两臂各128像素",
+          "texture": "res://assets/map/settlement/modular/walls_plaster_2/corner_se.png",
+          "scene": "res://src/levels/settlement/modules/walls_plaster_2/corner_se.tscn",
+          "native_size": [
+            230,
+            300
+          ],
+          "anchor": [
+            115,
+            298
+          ],
+          "sheet_box": [
+            488,
+            124,
+            226,
+            296
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_plaster_2.png"
+        },
+        {
+          "id": "door_west",
+          "description": "独立向西敞开的侧门框，无门板",
+          "texture": "res://assets/map/settlement/modular/walls_plaster_2/door_west.png",
+          "scene": "res://src/levels/settlement/modules/walls_plaster_2/door_west.tscn",
+          "native_size": [
+            224,
+            272
+          ],
+          "anchor": [
+            112,
+            270
+          ],
+          "sheet_box": [
+            841,
+            124,
+            220,
+            268
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_plaster_2.png"
+        },
+        {
+          "id": "door_east",
+          "description": "独立向东敞开的侧门框，无门板",
+          "texture": "res://assets/map/settlement/modular/walls_plaster_2/door_east.png",
+          "scene": "res://src/levels/settlement/modules/walls_plaster_2/door_east.tscn",
+          "native_size": [
+            225,
+            272
+          ],
+          "anchor": [
+            112,
+            270
+          ],
+          "sheet_box": [
+            1220,
+            124,
+            221,
+            268
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_plaster_2.png"
+        },
+        {
+          "id": "window",
+          "description": "独立窗框与窗格，不带墙面",
+          "texture": "res://assets/map/settlement/modular/walls_plaster_2/window.png",
+          "scene": "res://src/levels/settlement/modules/walls_plaster_2/window.tscn",
+          "native_size": [
+            195,
+            211
+          ],
+          "anchor": [
+            97,
+            209
+          ],
+          "sheet_box": [
+            101,
+            636,
+            191,
+            207
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_plaster_2.png"
+        },
+        {
+          "id": "wall_torch",
+          "description": "一只独立壁挂火炬与支架，不带墙",
+          "texture": "res://assets/map/settlement/modular/walls_plaster_2/wall_torch.png",
+          "scene": "res://src/levels/settlement/modules/walls_plaster_2/wall_torch.tscn",
+          "native_size": [
+            86,
+            210
+          ],
+          "anchor": [
+            43,
+            208
+          ],
+          "sheet_box": [
+            523,
+            617,
+            82,
+            206
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_plaster_2.png"
+        },
+        {
+          "id": "wall_lamp",
+          "description": "一只独立壁灯与支架，不带墙",
+          "texture": "res://assets/map/settlement/modular/walls_plaster_2/wall_lamp.png",
+          "scene": "res://src/levels/settlement/modules/walls_plaster_2/wall_lamp.tscn",
+          "native_size": [
+            139,
+            162
+          ],
+          "anchor": [
+            69,
+            160
+          ],
+          "sheet_box": [
+            883,
+            655,
+            135,
+            158
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_plaster_2.png"
+        },
+        {
+          "id": "support_beam",
+          "description": "一根独立横向支撑木梁",
+          "texture": "res://assets/map/settlement/modular/walls_plaster_2/support_beam.png",
+          "scene": "res://src/levels/settlement/modules/walls_plaster_2/support_beam.tscn",
+          "native_size": [
+            325,
+            80
+          ],
+          "anchor": [
+            162,
+            78
+          ],
+          "sheet_box": [
+            1178,
+            706,
+            321,
+            76
+          ],
+          "source": "res://assets/map/settlement/modular/source/walls_plaster_2.png"
+        }
+      ]
+    },
+    {
+      "id": "common_1",
+      "title": "岩石与石柱",
+      "kind": "common",
+      "assets": [
+        {
+          "id": "rock_a",
+          "description": "rock_a",
+          "texture": "res://assets/map/settlement/modular/common_1/rock_a.png",
+          "scene": "res://src/levels/settlement/modules/common_1/rock_a.tscn",
+          "native_size": [
+            219,
+            124
+          ],
+          "anchor": [
+            109,
+            122
+          ],
+          "sheet_box": [
+            21,
+            85,
+            215,
+            120
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        },
+        {
+          "id": "rock_b",
+          "description": "rock_b",
+          "texture": "res://assets/map/settlement/modular/common_1/rock_b.png",
+          "scene": "res://src/levels/settlement/modules/common_1/rock_b.tscn",
+          "native_size": [
+            220,
+            105
+          ],
+          "anchor": [
+            110,
+            103
+          ],
+          "sheet_box": [
+            276,
+            104,
+            216,
+            101
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        },
+        {
+          "id": "rock_c",
+          "description": "rock_c",
+          "texture": "res://assets/map/settlement/modular/common_1/rock_c.png",
+          "scene": "res://src/levels/settlement/modules/common_1/rock_c.tscn",
+          "native_size": [
+            211,
+            132
+          ],
+          "anchor": [
+            105,
+            130
+          ],
+          "sheet_box": [
+            538,
+            79,
+            207,
+            128
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        },
+        {
+          "id": "rock_d",
+          "description": "rock_d",
+          "texture": "res://assets/map/settlement/modular/common_1/rock_d.png",
+          "scene": "res://src/levels/settlement/modules/common_1/rock_d.tscn",
+          "native_size": [
+            213,
+            137
+          ],
+          "anchor": [
+            106,
+            135
+          ],
+          "sheet_box": [
+            789,
+            79,
+            209,
+            133
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        },
+        {
+          "id": "rock_e",
+          "description": "rock_e",
+          "texture": "res://assets/map/settlement/modular/common_1/rock_e.png",
+          "scene": "res://src/levels/settlement/modules/common_1/rock_e.tscn",
+          "native_size": [
+            218,
+            119
+          ],
+          "anchor": [
+            109,
+            117
+          ],
+          "sheet_box": [
+            22,
+            346,
+            214,
+            115
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        },
+        {
+          "id": "rock_f",
+          "description": "rock_f",
+          "texture": "res://assets/map/settlement/modular/common_1/rock_f.png",
+          "scene": "res://src/levels/settlement/modules/common_1/rock_f.tscn",
+          "native_size": [
+            214,
+            124
+          ],
+          "anchor": [
+            107,
+            122
+          ],
+          "sheet_box": [
+            277,
+            341,
+            210,
+            120
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        },
+        {
+          "id": "pillar_round",
+          "description": "pillar_round",
+          "texture": "res://assets/map/settlement/modular/common_1/pillar_round.png",
+          "scene": "res://src/levels/settlement/modules/common_1/pillar_round.tscn",
+          "native_size": [
+            129,
+            202
+          ],
+          "anchor": [
+            64,
+            200
+          ],
+          "sheet_box": [
+            578,
+            292,
+            125,
+            198
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        },
+        {
+          "id": "pillar_square",
+          "description": "pillar_square",
+          "texture": "res://assets/map/settlement/modular/common_1/pillar_square.png",
+          "scene": "res://src/levels/settlement/modules/common_1/pillar_square.tscn",
+          "native_size": [
+            125,
+            211
+          ],
+          "anchor": [
+            62,
+            209
+          ],
+          "sheet_box": [
+            835,
+            281,
+            121,
+            207
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        }
+      ]
+    },
+    {
+      "id": "common_2",
+      "title": "常用补给道具",
+      "kind": "common",
+      "assets": [
+        {
+          "id": "crate_barrel",
+          "description": "crate_barrel",
+          "texture": "res://assets/map/settlement/modular/common_2/crate_barrel.png",
+          "scene": "res://src/levels/settlement/modules/common_2/crate_barrel.tscn",
+          "native_size": [
+            230,
+            183
+          ],
+          "anchor": [
+            115,
+            181
+          ],
+          "sheet_box": [
+            13,
+            49,
+            226,
+            179
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        },
+        {
+          "id": "bench",
+          "description": "bench",
+          "texture": "res://assets/map/settlement/modular/common_2/bench.png",
+          "scene": "res://src/levels/settlement/modules/common_2/bench.tscn",
+          "native_size": [
+            232,
+            107
+          ],
+          "anchor": [
+            116,
+            105
+          ],
+          "sheet_box": [
+            269,
+            102,
+            228,
+            103
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        },
+        {
+          "id": "barrel",
+          "description": "barrel",
+          "texture": "res://assets/map/settlement/modular/common_2/barrel.png",
+          "scene": "res://src/levels/settlement/modules/common_2/barrel.tscn",
+          "native_size": [
+            132,
+            170
+          ],
+          "anchor": [
+            66,
+            168
+          ],
+          "sheet_box": [
+            576,
+            55,
+            128,
+            166
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        },
+        {
+          "id": "grain_sacks",
+          "description": "grain_sacks",
+          "texture": "res://assets/map/settlement/modular/common_2/grain_sacks.png",
+          "scene": "res://src/levels/settlement/modules/common_2/grain_sacks.tscn",
+          "native_size": [
+            195,
+            188
+          ],
+          "anchor": [
+            97,
+            186
+          ],
+          "sheet_box": [
+            797,
+            44,
+            191,
+            184
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        },
+        {
+          "id": "blue_mushrooms",
+          "description": "blue_mushrooms",
+          "texture": "res://assets/map/settlement/modular/common_2/blue_mushrooms.png",
+          "scene": "res://src/levels/settlement/modules/common_2/blue_mushrooms.tscn",
+          "native_size": [
+            184,
+            151
+          ],
+          "anchor": [
+            92,
+            149
+          ],
+          "sheet_box": [
+            37,
+            306,
+            180,
+            147
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        },
+        {
+          "id": "white_mushrooms",
+          "description": "white_mushrooms",
+          "texture": "res://assets/map/settlement/modular/common_2/white_mushrooms.png",
+          "scene": "res://src/levels/settlement/modules/common_2/white_mushrooms.tscn",
+          "native_size": [
+            174,
+            147
+          ],
+          "anchor": [
+            87,
+            145
+          ],
+          "sheet_box": [
+            299,
+            312,
+            170,
+            143
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        },
+        {
+          "id": "herbs",
+          "description": "herbs",
+          "texture": "res://assets/map/settlement/modular/common_2/herbs.png",
+          "scene": "res://src/levels/settlement/modules/common_2/herbs.tscn",
+          "native_size": [
+            176,
+            153
+          ],
+          "anchor": [
+            88,
+            151
+          ],
+          "sheet_box": [
+            555,
+            309,
+            172,
+            149
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        },
+        {
+          "id": "brazier",
+          "description": "brazier",
+          "texture": "res://assets/map/settlement/modular/common_2/brazier.png",
+          "scene": "res://src/levels/settlement/modules/common_2/brazier.tscn",
+          "native_size": [
+            144,
+            146
+          ],
+          "anchor": [
+            72,
+            144
+          ],
+          "sheet_box": [
+            824,
+            312,
+            140,
+            142
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        }
+      ]
+    },
+    {
+      "id": "common_3",
+      "title": "常用生活道具",
+      "kind": "common",
+      "assets": [
+        {
+          "id": "planter",
+          "description": "planter",
+          "texture": "res://assets/map/settlement/modular/common_3/planter.png",
+          "scene": "res://src/levels/settlement/modules/common_3/planter.tscn",
+          "native_size": [
+            170,
+            190
+          ],
+          "anchor": [
+            85,
+            188
+          ],
+          "sheet_box": [
+            46,
+            28,
+            166,
+            186
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        },
+        {
+          "id": "basket",
+          "description": "basket",
+          "texture": "res://assets/map/settlement/modular/common_3/basket.png",
+          "scene": "res://src/levels/settlement/modules/common_3/basket.tscn",
+          "native_size": [
+            212,
+            103
+          ],
+          "anchor": [
+            106,
+            101
+          ],
+          "sheet_box": [
+            279,
+            90,
+            208,
+            99
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        },
+        {
+          "id": "lamp_post",
+          "description": "lamp_post",
+          "texture": "res://assets/map/settlement/modular/common_3/lamp_post.png",
+          "scene": "res://src/levels/settlement/modules/common_3/lamp_post.tscn",
+          "native_size": [
+            130,
+            213
+          ],
+          "anchor": [
+            65,
+            211
+          ],
+          "sheet_box": [
+            572,
+            13,
+            126,
+            209
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        },
+        {
+          "id": "sacks",
+          "description": "sacks",
+          "texture": "res://assets/map/settlement/modular/common_3/sacks.png",
+          "scene": "res://src/levels/settlement/modules/common_3/sacks.tscn",
+          "native_size": [
+            230,
+            202
+          ],
+          "anchor": [
+            115,
+            200
+          ],
+          "sheet_box": [
+            781,
+            26,
+            226,
+            198
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        },
+        {
+          "id": "handcart",
+          "description": "handcart",
+          "texture": "res://assets/map/settlement/modular/common_3/handcart.png",
+          "scene": "res://src/levels/settlement/modules/common_3/handcart.tscn",
+          "native_size": [
+            230,
+            162
+          ],
+          "anchor": [
+            115,
+            160
+          ],
+          "sheet_box": [
+            21,
+            304,
+            226,
+            158
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        },
+        {
+          "id": "firewood",
+          "description": "firewood",
+          "texture": "res://assets/map/settlement/modular/common_3/firewood.png",
+          "scene": "res://src/levels/settlement/modules/common_3/firewood.tscn",
+          "native_size": [
+            232,
+            147
+          ],
+          "anchor": [
+            116,
+            145
+          ],
+          "sheet_box": [
+            269,
+            321,
+            228,
+            143
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        },
+        {
+          "id": "sign",
+          "description": "sign",
+          "texture": "res://assets/map/settlement/modular/common_3/sign.png",
+          "scene": "res://src/levels/settlement/modules/common_3/sign.tscn",
+          "native_size": [
+            171,
+            215
+          ],
+          "anchor": [
+            85,
+            213
+          ],
+          "sheet_box": [
+            557,
+            267,
+            167,
+            211
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        },
+        {
+          "id": "stone_marker",
+          "description": "stone_marker",
+          "texture": "res://assets/map/settlement/modular/common_3/stone_marker.png",
+          "scene": "res://src/levels/settlement/modules/common_3/stone_marker.tscn",
+          "native_size": [
+            137,
+            176
+          ],
+          "anchor": [
+            68,
+            174
+          ],
+          "sheet_box": [
+            828,
+            305,
+            133,
+            172
+          ],
+          "source": "res://assets/map/settlement/props.png"
+        }
+      ]
+    }
+  ],
+  "inspection_notes": []
+}

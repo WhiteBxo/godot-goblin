@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/walls_plaster_2/door_east.png" id="1_texture"]
+
+[node name="DoorEast" type="Node2D"]
+texture_filter = 1
+metadata/pack = "walls_plaster_2"
+metadata/asset_id = "door_east"
+metadata/native_size = Vector2i(225, 272)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-112, -270)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

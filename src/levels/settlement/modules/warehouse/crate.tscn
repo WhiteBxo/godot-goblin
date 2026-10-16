@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/warehouse/crate.png" id="1_texture"]
+
+[node name="Crate" type="Node2D"]
+texture_filter = 1
+metadata/pack = "warehouse"
+metadata/asset_id = "crate"
+metadata/native_size = Vector2i(141, 195)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-70, -193)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

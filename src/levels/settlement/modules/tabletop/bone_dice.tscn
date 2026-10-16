@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/tabletop/bone_dice.png" id="1_texture"]
+
+[node name="BoneDice" type="Node2D"]
+texture_filter = 1
+metadata/pack = "tabletop"
+metadata/asset_id = "bone_dice"
+metadata/native_size = Vector2i(179, 160)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-89, -158)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

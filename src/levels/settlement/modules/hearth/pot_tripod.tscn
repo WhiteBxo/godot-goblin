@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/hearth/pot_tripod.png" id="1_texture"]
+
+[node name="PotTripod" type="Node2D"]
+texture_filter = 1
+metadata/pack = "hearth"
+metadata/asset_id = "pot_tripod"
+metadata/native_size = Vector2i(313, 246)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-156, -244)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

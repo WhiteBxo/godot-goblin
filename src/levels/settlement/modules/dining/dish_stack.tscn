@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/dining/dish_stack.png" id="1_texture"]
+
+[node name="DishStack" type="Node2D"]
+texture_filter = 1
+metadata/pack = "dining"
+metadata/asset_id = "dish_stack"
+metadata/native_size = Vector2i(125, 139)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-62, -137)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

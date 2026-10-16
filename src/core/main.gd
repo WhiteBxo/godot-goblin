@@ -5,6 +5,7 @@ extends Node
 @onready var _active_level: CaveMap = $World/LevelRoot.get_child(0) as CaveMap
 @onready var _player: CavePlayer = $World/EntityRoot/Player as CavePlayer
 var _shop_level: MilkTeaShop
+var _settlement_level: SettlementMap
 var _shop_player: ShopPlayer
 var _shop_ui: ShopUI
 var _shop_interaction: ShopInteraction
@@ -22,6 +23,10 @@ var _debug_panel: DeveloperPanel
 
 func _ready() -> void:
 	DebugRuntime.apply_release_policy(get_tree())
+	_settlement_level = $World/LevelRoot.get_child(0) as SettlementMap
+	if _settlement_level != null:
+		_initialize_settlement()
+		return
 	_shop_level = $World/LevelRoot.get_child(0) as MilkTeaShop
 	if _shop_level != null:
 		_shop_player = $World/EntityRoot/Player as ShopPlayer
@@ -56,13 +61,41 @@ func _ready() -> void:
 		_demo_tools.start()
 
 func get_active_level() -> Node2D:
+	if _settlement_level != null:
+		return _settlement_level
 	return _shop_level if _shop_level != null else _active_level
+
+func _initialize_settlement() -> void:
+	_shop_player = $World/EntityRoot/Player as ShopPlayer
+	_shop_player.global_position = _settlement_level.get_spawn_position()
+	_shop_player.configure_camera(_settlement_level.get_camera_bounds())
+	_create_camera_system(_shop_player.camera)
+	_shop_ui = preload("res://src/UI/milk_tea/shop_ui.tscn").instantiate()
+	_shop_ui.help_text = "洞窟聚落                  WASD 移动 · E 查看 · Esc 关闭"
+	_shop_ui.show_help = not DebugRuntime.is_enabled()
+	_shop_ui.close_text = "继续探索  [Esc]"
+	$HudLayer.add_child(_shop_ui)
+	_shop_ui.set_popup_layer($PopupLayer)
+	_shop_interaction = ShopInteraction.new()
+	_shop_interaction.name = "SettlementInteraction"
+	$Systems.add_child(_shop_interaction)
+	_shop_interaction.configure(_shop_player, _shop_ui, _settlement_level.get_interaction_points(), _route_story_interaction)
+	_create_dialogue_system()
+	if DebugRuntime.is_enabled():
+		var preview := Node.new()
+		preview.name = "SettlementPreview"
+		preview.set_script(load("res://src/debug/settlement/settlement_preview.gd"))
+		preview.call("configure", self, $DebugLayer)
+		$Systems.add_child(preview)
 
 func get_player() -> CharacterBody2D:
 	return _shop_player if is_instance_valid(_shop_player) else (_player if is_instance_valid(_player) else null)
 
 func get_dialogue_manager() -> DialogueManager:
 	return _dialogue_manager
+
+func get_interaction_ui() -> ShopUI:
+	return _shop_ui
 
 func get_audio_manager() -> AudioManager:
 	return _audio_manager

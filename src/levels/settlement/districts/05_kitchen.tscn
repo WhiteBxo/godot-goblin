@@ -1,0 +1,234 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/05_kitchen.png" id="1_pq1wh"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1256l"]
+size = Vector2(30, 798)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jgokl"]
+size = Vector2(30, 798)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ke1hc"]
+size = Vector2(580, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_oty8u"]
+size = Vector2(580, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bg6f0"]
+size = Vector2(1296, 145)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xha3w"]
+size = Vector2(435, 45)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8kjlg"]
+size = Vector2(458, 83)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lfpd8"]
+size = Vector2(112, 170)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hby11"]
+size = Vector2(105, 260)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_siirm"]
+size = Vector2(299, 56)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d53g7"]
+size = Vector2(365, 56)
+
+[node name="Kitchen" type="Node2D" unique_id=439932064]
+y_sort_enabled = true
+metadata/zone_id = "05_kitchen"
+metadata/display_name = "厨房备料"
+metadata/footprint = Rect2(80, 70, 1380, 870)
+
+[node name="PaintedInterior" type="Sprite2D" parent="." unique_id=1205996462]
+z_index = -20
+texture = ExtResource("1_pq1wh")
+centered = false
+
+[node name="Walls" type="Node2D" parent="." unique_id=469570564]
+
+[node name="Wall0" type="StaticBody2D" parent="Walls" unique_id=1882511437]
+collision_mask = 2
+
+[node name="@CollisionShape2D@107" type="CollisionShape2D" parent="Walls/Wall0" unique_id=1827957225]
+position = Vector2(135, 489)
+shape = SubResource("RectangleShape2D_1256l")
+
+[node name="Wall1" type="StaticBody2D" parent="Walls" unique_id=1695602711]
+collision_mask = 2
+
+[node name="@CollisionShape2D@109" type="CollisionShape2D" parent="Walls/Wall1" unique_id=1070553940]
+position = Vector2(1401, 489)
+shape = SubResource("RectangleShape2D_jgokl")
+
+[node name="Wall2" type="StaticBody2D" parent="Walls" unique_id=1839163951]
+collision_mask = 2
+
+[node name="@CollisionShape2D@111" type="CollisionShape2D" parent="Walls/Wall2" unique_id=1040141312]
+position = Vector2(410, 872)
+shape = SubResource("RectangleShape2D_ke1hc")
+
+[node name="Wall3" type="StaticBody2D" parent="Walls" unique_id=1593220753]
+collision_mask = 2
+
+[node name="@CollisionShape2D@113" type="CollisionShape2D" parent="Walls/Wall3" unique_id=814291546]
+position = Vector2(1126, 872)
+shape = SubResource("RectangleShape2D_oty8u")
+
+[node name="Wall4" type="StaticBody2D" parent="Walls" unique_id=1052176352]
+collision_mask = 2
+
+[node name="@CollisionShape2D@115" type="CollisionShape2D" parent="Walls/Wall4" unique_id=538423500]
+position = Vector2(768, 162.5)
+shape = SubResource("RectangleShape2D_bg6f0")
+
+[node name="Foreground" type="Node2D" parent="." unique_id=36775039]
+y_sort_enabled = true
+
+[node name="Wall0" type="Node2D" parent="Foreground" unique_id=32428151]
+position = Vector2(0, 888)
+
+[node name="@Sprite2D@108" type="Sprite2D" parent="Foreground/Wall0" unique_id=594569387]
+position = Vector2(120, -798)
+texture = ExtResource("1_pq1wh")
+centered = false
+region_enabled = true
+region_rect = Rect2(120, 90, 42, 798)
+
+[node name="Wall1" type="Node2D" parent="Foreground" unique_id=604258143]
+position = Vector2(0, 888)
+
+[node name="@Sprite2D@110" type="Sprite2D" parent="Foreground/Wall1" unique_id=1613588028]
+position = Vector2(1374, -798)
+texture = ExtResource("1_pq1wh")
+centered = false
+region_enabled = true
+region_rect = Rect2(1374, 90, 42, 798)
+
+[node name="Wall2" type="Node2D" parent="Foreground" unique_id=798291184]
+position = Vector2(0, 888)
+
+[node name="@Sprite2D@112" type="Sprite2D" parent="Foreground/Wall2" unique_id=174596808]
+position = Vector2(120, -118)
+texture = ExtResource("1_pq1wh")
+centered = false
+region_enabled = true
+region_rect = Rect2(120, 770, 580, 118)
+
+[node name="Wall3" type="Node2D" parent="Foreground" unique_id=2063956252]
+position = Vector2(0, 888)
+
+[node name="@Sprite2D@114" type="Sprite2D" parent="Foreground/Wall3" unique_id=1023368002]
+position = Vector2(836, -118)
+texture = ExtResource("1_pq1wh")
+centered = false
+region_enabled = true
+region_rect = Rect2(836, 770, 580, 118)
+
+[node name="Furniture0" type="Node2D" parent="Foreground" unique_id=823455063]
+position = Vector2(0, 363)
+
+[node name="@Sprite2D@117" type="Sprite2D" parent="Foreground/Furniture0" unique_id=40387677]
+position = Vector2(170, -166)
+texture = ExtResource("1_pq1wh")
+centered = false
+region_enabled = true
+region_rect = Rect2(170, 197, 458, 183)
+
+[node name="Furniture1" type="Node2D" parent="Foreground" unique_id=1979718294]
+position = Vector2(0, 405)
+
+[node name="@Sprite2D@119" type="Sprite2D" parent="Foreground/Furniture1" unique_id=1364963413]
+position = Vector2(698, -251)
+texture = ExtResource("1_pq1wh")
+centered = false
+region_enabled = true
+region_rect = Rect2(698, 154, 500, 266)
+
+[node name="Furniture2" type="Node2D" parent="Foreground" unique_id=875879442]
+position = Vector2(0, 770)
+
+[node name="@Sprite2D@121" type="Sprite2D" parent="Foreground/Furniture2" unique_id=1891714686]
+position = Vector2(166, -314)
+texture = ExtResource("1_pq1wh")
+centered = false
+region_enabled = true
+region_rect = Rect2(166, 456, 145, 315)
+
+[node name="Furniture3" type="Node2D" parent="Foreground" unique_id=2038464557]
+position = Vector2(0, 771)
+
+[node name="@Sprite2D@123" type="Sprite2D" parent="Foreground/Furniture3" unique_id=1333044752]
+position = Vector2(1235, -381)
+texture = ExtResource("1_pq1wh")
+centered = false
+region_enabled = true
+region_rect = Rect2(1235, 390, 130, 399)
+
+[node name="Furniture4" type="Node2D" parent="Foreground" unique_id=159665718]
+position = Vector2(0, 840)
+
+[node name="@Sprite2D@125" type="Sprite2D" parent="Foreground/Furniture4" unique_id=829443330]
+position = Vector2(340, -126)
+texture = ExtResource("1_pq1wh")
+centered = false
+region_enabled = true
+region_rect = Rect2(340, 714, 315, 130)
+
+[node name="Furniture5" type="Node2D" parent="Foreground" unique_id=132440604]
+position = Vector2(0, 840)
+
+[node name="@Sprite2D@127" type="Sprite2D" parent="Foreground/Furniture5" unique_id=1652967360]
+position = Vector2(873, -122)
+texture = ExtResource("1_pq1wh")
+centered = false
+region_enabled = true
+region_rect = Rect2(873, 718, 393, 128)
+
+[node name="Furniture" type="Node2D" parent="." unique_id=1981981024]
+
+[node name="Preparation" type="StaticBody2D" parent="Furniture" unique_id=692233841]
+collision_mask = 2
+
+[node name="@CollisionShape2D@116" type="CollisionShape2D" parent="Furniture/Preparation" unique_id=1917154141]
+position = Vector2(399.5, 340.5)
+shape = SubResource("RectangleShape2D_xha3w")
+
+[node name="Cooking" type="StaticBody2D" parent="Furniture" unique_id=123844826]
+collision_mask = 2
+
+[node name="@CollisionShape2D@118" type="CollisionShape2D" parent="Furniture/Cooking" unique_id=423095307]
+position = Vector2(950, 363.5)
+shape = SubResource("RectangleShape2D_8kjlg")
+
+[node name="Washing" type="StaticBody2D" parent="Furniture" unique_id=1005494868]
+collision_mask = 2
+
+[node name="@CollisionShape2D@120" type="CollisionShape2D" parent="Furniture/Washing" unique_id=1110194109]
+position = Vector2(236, 685)
+shape = SubResource("RectangleShape2D_lfpd8")
+
+[node name="EastStock" type="StaticBody2D" parent="Furniture" unique_id=1564955102]
+collision_mask = 2
+
+[node name="@CollisionShape2D@122" type="CollisionShape2D" parent="Furniture/EastStock" unique_id=398308461]
+position = Vector2(1302.5, 641)
+shape = SubResource("RectangleShape2D_hby11")
+
+[node name="ServingLeft" type="StaticBody2D" parent="Furniture" unique_id=1362172176]
+collision_mask = 2
+
+[node name="@CollisionShape2D@124" type="CollisionShape2D" parent="Furniture/ServingLeft" unique_id=792679225]
+position = Vector2(495.5, 812)
+shape = SubResource("RectangleShape2D_siirm")
+
+[node name="ServingRight" type="StaticBody2D" parent="Furniture" unique_id=1838338984]
+collision_mask = 2
+
+[node name="@CollisionShape2D@126" type="CollisionShape2D" parent="Furniture/ServingRight" unique_id=1638260779]
+position = Vector2(1069.5, 812)
+shape = SubResource("RectangleShape2D_d53g7")
+
+[node name="Entrance" type="Marker2D" parent="." unique_id=1865088153]
+position = Vector2(768, 928)

@@ -3,6 +3,10 @@ extends Control
 
 signal closed
 
+@export var help_text := "小小奶茶店                                      WASD 移动 · E 交互 · Esc 关闭"
+@export var show_help := true
+@export var close_text := "返回店铺  [Esc]"
+
 @onready var _modal: Control = $Modal
 @onready var _prompt: Label = $Prompt
 @onready var _title: Label = $Modal/Center/Panel/Margin/Content/Title
@@ -10,6 +14,9 @@ signal closed
 @onready var _close: Button = $Modal/Center/Panel/Margin/Content/Close
 
 func _ready() -> void:
+	$Header.text = help_text
+	$Header.visible = show_help
+	_close.text = close_text
 	_close.pressed.connect(close)
 
 func show_prompt(point: InteractionPoint) -> void:

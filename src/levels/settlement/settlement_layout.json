@@ -1,0 +1,3473 @@
+{
+  "version": 2,
+  "units": "native pixels",
+  "player_height": 110,
+  "world_size": [
+    8192,
+    9216
+  ],
+  "spawn": [
+    5180,
+    8560
+  ],
+  "floor_outline": [
+    [
+      1280,
+      512
+    ],
+    [
+      2816,
+      256
+    ],
+    [
+      5376,
+      256
+    ],
+    [
+      7424,
+      512
+    ],
+    [
+      7936,
+      1536
+    ],
+    [
+      7936,
+      7936
+    ],
+    [
+      7168,
+      8960
+    ],
+    [
+      3328,
+      8960
+    ],
+    [
+      1280,
+      8192
+    ],
+    [
+      256,
+      6912
+    ],
+    [
+      256,
+      2048
+    ],
+    [
+      512,
+      1024
+    ]
+  ],
+  "river": [
+    1920,
+    0,
+    830,
+    7540
+  ],
+  "bridges": [
+    3328,
+    5504
+  ],
+  "zones": [
+    {
+      "id": "00_shop",
+      "name": "奶茶店",
+      "position": [
+        3900,
+        7800
+      ],
+      "kind": "building",
+      "asset": "res://assets/map/settlement/00_shop.png",
+      "entry": [
+        1289,
+        950
+      ],
+      "observation": "这里是暂时落脚的奶茶店，街道向北通往聚落。",
+      "obstacles": [
+        {
+          "name": "BedroomDivider",
+          "collision": [
+            420,
+            130,
+            35,
+            300
+          ],
+          "visual": [
+            410,
+            100,
+            50,
+            335
+          ]
+        },
+        {
+          "name": "StorageDivider",
+          "collision": [
+            690,
+            125,
+            38,
+            455
+          ],
+          "visual": [
+            615,
+            100,
+            115,
+            480
+          ]
+        },
+        {
+          "name": "BedroomSouth",
+          "collision": [
+            115,
+            503,
+            215,
+            28
+          ],
+          "visual": [
+            105,
+            490,
+            235,
+            110
+          ]
+        },
+        {
+          "name": "BathroomDivider",
+          "collision": [
+            312,
+            535,
+            30,
+            272
+          ],
+          "visual": [
+            300,
+            525,
+            42,
+            285
+          ]
+        },
+        {
+          "name": "StockPartition",
+          "collision": [
+            425,
+            420,
+            82,
+            120
+          ],
+          "visual": [
+            418,
+            408,
+            90,
+            138
+          ]
+        },
+        {
+          "name": "StockPartitionEast",
+          "collision": [
+            600,
+            430,
+            28,
+            110
+          ],
+          "visual": [
+            595,
+            420,
+            40,
+            130
+          ]
+        },
+        {
+          "name": "Pantry",
+          "collision": [
+            462,
+            200,
+            205,
+            145
+          ],
+          "visual": [
+            458,
+            155,
+            220,
+            240
+          ]
+        },
+        {
+          "name": "TeaEquipment",
+          "collision": [
+            732,
+            275,
+            607,
+            85
+          ],
+          "visual": [
+            730,
+            180,
+            610,
+            180
+          ]
+        },
+        {
+          "name": "Refrigerator",
+          "collision": [
+            1340,
+            345,
+            70,
+            135
+          ],
+          "visual": [
+            1334,
+            288,
+            80,
+            195
+          ]
+        },
+        {
+          "name": "ServiceCounter",
+          "collision": [
+            808,
+            530,
+            500,
+            57
+          ],
+          "visual": [
+            805,
+            447,
+            505,
+            143
+          ]
+        },
+        {
+          "name": "RestChair",
+          "collision": [
+            1314,
+            566,
+            91,
+            57
+          ],
+          "visual": [
+            1310,
+            497,
+            101,
+            132
+          ]
+        },
+        {
+          "name": "WaitingBench",
+          "collision": [
+            797,
+            775,
+            287,
+            31
+          ],
+          "visual": [
+            790,
+            737,
+            300,
+            70
+          ]
+        },
+        {
+          "name": "WestPlanter",
+          "collision": [
+            719,
+            779,
+            64,
+            33
+          ],
+          "visual": [
+            700,
+            710,
+            85,
+            106
+          ]
+        },
+        {
+          "name": "EastPlanter",
+          "collision": [
+            1093,
+            784,
+            61,
+            28
+          ],
+          "visual": [
+            1080,
+            709,
+            80,
+            104
+          ]
+        },
+        {
+          "name": "StoredBoxes",
+          "collision": [
+            483,
+            731,
+            186,
+            75
+          ],
+          "visual": [
+            475,
+            684,
+            205,
+            124
+          ]
+        },
+        {
+          "name": "LowerDivider",
+          "collision": [
+            675,
+            674,
+            30,
+            155
+          ],
+          "visual": [
+            668,
+            667,
+            39,
+            168
+          ]
+        }
+      ],
+      "occluders": [],
+      "walls": [
+        {
+          "collision": [
+            73,
+            99,
+            30,
+            811
+          ],
+          "visual": [
+            73,
+            99,
+            42,
+            811
+          ],
+          "sort_y": 910
+        },
+        {
+          "collision": [
+            1433,
+            99,
+            30,
+            811
+          ],
+          "visual": [
+            1421,
+            99,
+            42,
+            811
+          ],
+          "sort_y": 910
+        },
+        {
+          "collision": [
+            73,
+            878,
+            1155,
+            32
+          ],
+          "visual": [
+            73,
+            792,
+            1155,
+            118
+          ],
+          "sort_y": 910
+        },
+        {
+          "collision": [
+            1350,
+            878,
+            113,
+            32
+          ],
+          "visual": [
+            1350,
+            792,
+            113,
+            118
+          ],
+          "sort_y": 910
+        },
+        {
+          "collision": [
+            73,
+            99,
+            1390,
+            145
+          ]
+        }
+      ]
+    },
+    {
+      "id": "01_muster",
+      "name": "撤离集结",
+      "position": [
+        2400,
+        7750
+      ],
+      "kind": "open",
+      "asset": "res://assets/map/settlement/01_muster.png",
+      "entry": [
+        768,
+        930
+      ],
+      "observation": "入口外有宽敞空地，适合退回后重新整理行装。",
+      "obstacles": [],
+      "occluders": [],
+      "walls": []
+    },
+    {
+      "id": "02_vestibule",
+      "name": "入口前厅",
+      "position": [
+        3200,
+        6500
+      ],
+      "kind": "building",
+      "asset": "res://assets/map/settlement/02_vestibule.png",
+      "entry": [
+        768,
+        925
+      ],
+      "observation": "岗亭两侧堆着补给，北面的路通往公共火塘。",
+      "obstacles": [
+        {
+          "name": "LeftDesk",
+          "collision": [
+            350,
+            435,
+            160,
+            62
+          ],
+          "visual": [
+            347,
+            382,
+            166,
+            146
+          ]
+        },
+        {
+          "name": "Register",
+          "collision": [
+            915,
+            439,
+            325,
+            57
+          ],
+          "visual": [
+            910,
+            388,
+            335,
+            116
+          ]
+        },
+        {
+          "name": "Supplies",
+          "collision": [
+            180,
+            713,
+            148,
+            75
+          ],
+          "visual": [
+            174,
+            646,
+            165,
+            145
+          ]
+        },
+        {
+          "name": "RightChair",
+          "collision": [
+            1225,
+            730,
+            125,
+            52
+          ],
+          "visual": [
+            1220,
+            670,
+            135,
+            120
+          ]
+        }
+      ],
+      "occluders": [],
+      "walls": [
+        {
+          "collision": [
+            118,
+            82,
+            30,
+            803
+          ],
+          "visual": [
+            118,
+            82,
+            42,
+            803
+          ],
+          "sort_y": 885
+        },
+        {
+          "collision": [
+            1388,
+            82,
+            30,
+            803
+          ],
+          "visual": [
+            1376,
+            82,
+            42,
+            803
+          ],
+          "sort_y": 885
+        },
+        {
+          "collision": [
+            118,
+            853,
+            582,
+            32
+          ],
+          "visual": [
+            118,
+            767,
+            582,
+            118
+          ],
+          "sort_y": 885
+        },
+        {
+          "collision": [
+            836,
+            853,
+            582,
+            32
+          ],
+          "visual": [
+            836,
+            767,
+            582,
+            118
+          ],
+          "sort_y": 885
+        },
+        {
+          "collision": [
+            118,
+            82,
+            582,
+            145
+          ]
+        },
+        {
+          "collision": [
+            836,
+            82,
+            582,
+            145
+          ]
+        }
+      ]
+    },
+    {
+      "id": "03_training",
+      "name": "军营训练",
+      "position": [
+        6200,
+        2050
+      ],
+      "kind": "building",
+      "asset": "res://assets/map/settlement/03_training.png",
+      "entry": [
+        800,
+        940
+      ],
+      "observation": "训练用的假人、武器架和铁笼分列两侧。",
+      "obstacles": [
+        {
+          "name": "CageA",
+          "collision": [
+            102,
+            408,
+            221,
+            135
+          ],
+          "visual": [
+            97,
+            354,
+            232,
+            190
+          ]
+        },
+        {
+          "name": "CageB",
+          "collision": [
+            102,
+            553,
+            221,
+            137
+          ],
+          "visual": [
+            97,
+            495,
+            232,
+            201
+          ]
+        },
+        {
+          "name": "CageC",
+          "collision": [
+            102,
+            702,
+            221,
+            135
+          ],
+          "visual": [
+            97,
+            641,
+            232,
+            200
+          ]
+        },
+        {
+          "name": "StrategyTable",
+          "collision": [
+            205,
+            234,
+            200,
+            52
+          ],
+          "visual": [
+            196,
+            177,
+            215,
+            123
+          ]
+        },
+        {
+          "name": "OfficeDivider",
+          "collision": [
+            466,
+            92,
+            28,
+            263
+          ],
+          "visual": [
+            452,
+            83,
+            54,
+            275
+          ]
+        },
+        {
+          "name": "OfficeSouth",
+          "collision": [
+            110,
+            332,
+            285,
+            26
+          ],
+          "visual": [
+            103,
+            307,
+            300,
+            70
+          ]
+        },
+        {
+          "name": "DummyLine",
+          "collision": [
+            752,
+            289,
+            416,
+            32
+          ],
+          "visual": [
+            735,
+            217,
+            460,
+            121
+          ]
+        },
+        {
+          "name": "Targets",
+          "collision": [
+            1210,
+            290,
+            151,
+            25
+          ],
+          "visual": [
+            1195,
+            216,
+            185,
+            110
+          ]
+        }
+      ],
+      "occluders": [],
+      "walls": [
+        {
+          "collision": [
+            74,
+            83,
+            30,
+            817
+          ],
+          "visual": [
+            74,
+            83,
+            42,
+            817
+          ],
+          "sort_y": 900
+        },
+        {
+          "collision": [
+            1432,
+            83,
+            30,
+            817
+          ],
+          "visual": [
+            1420,
+            83,
+            42,
+            817
+          ],
+          "sort_y": 900
+        },
+        {
+          "collision": [
+            74,
+            868,
+            614,
+            32
+          ],
+          "visual": [
+            74,
+            782,
+            614,
+            118
+          ],
+          "sort_y": 900
+        },
+        {
+          "collision": [
+            912,
+            868,
+            550,
+            32
+          ],
+          "visual": [
+            912,
+            782,
+            550,
+            118
+          ],
+          "sort_y": 900
+        },
+        {
+          "collision": [
+            74,
+            83,
+            1388,
+            145
+          ]
+        }
+      ]
+    },
+    {
+      "id": "04_lodging",
+      "name": "住宿休息",
+      "position": [
+        4600,
+        5950
+      ],
+      "kind": "building",
+      "asset": "res://assets/map/settlement/04_lodging.png",
+      "entry": [
+        768,
+        958
+      ],
+      "observation": "草床与行囊挤在墙边，中央留着休息者来往的通道。",
+      "obstacles": [
+        {
+          "name": "Bed00",
+          "collision": [
+            200,
+            280,
+            205,
+            119
+          ],
+          "visual": [
+            194,
+            232,
+            218,
+            177
+          ]
+        },
+        {
+          "name": "Bed01",
+          "collision": [
+            200,
+            472,
+            205,
+            119
+          ],
+          "visual": [
+            194,
+            424,
+            218,
+            177
+          ]
+        },
+        {
+          "name": "Bed02",
+          "collision": [
+            200,
+            664,
+            205,
+            119
+          ],
+          "visual": [
+            194,
+            616,
+            218,
+            177
+          ]
+        },
+        {
+          "name": "Bed10",
+          "collision": [
+            1130,
+            280,
+            205,
+            119
+          ],
+          "visual": [
+            1124,
+            232,
+            218,
+            177
+          ]
+        },
+        {
+          "name": "Bed11",
+          "collision": [
+            1130,
+            472,
+            205,
+            119
+          ],
+          "visual": [
+            1124,
+            424,
+            218,
+            177
+          ]
+        },
+        {
+          "name": "Bed12",
+          "collision": [
+            1130,
+            664,
+            205,
+            119
+          ],
+          "visual": [
+            1124,
+            616,
+            218,
+            177
+          ]
+        }
+      ],
+      "occluders": [],
+      "walls": [
+        {
+          "collision": [
+            132,
+            94,
+            30,
+            824
+          ],
+          "visual": [
+            132,
+            94,
+            42,
+            824
+          ],
+          "sort_y": 918
+        },
+        {
+          "collision": [
+            1374,
+            94,
+            30,
+            824
+          ],
+          "visual": [
+            1362,
+            94,
+            42,
+            824
+          ],
+          "sort_y": 918
+        },
+        {
+          "collision": [
+            132,
+            886,
+            568,
+            32
+          ],
+          "visual": [
+            132,
+            800,
+            568,
+            118
+          ],
+          "sort_y": 918
+        },
+        {
+          "collision": [
+            836,
+            886,
+            568,
+            32
+          ],
+          "visual": [
+            836,
+            800,
+            568,
+            118
+          ],
+          "sort_y": 918
+        },
+        {
+          "collision": [
+            132,
+            94,
+            1272,
+            145
+          ]
+        }
+      ]
+    },
+    {
+      "id": "05_kitchen",
+      "name": "厨房备料",
+      "position": [
+        6400,
+        5600
+      ],
+      "kind": "building",
+      "asset": "res://assets/map/settlement/05_kitchen.png",
+      "entry": [
+        768,
+        928
+      ],
+      "observation": "大锅和烤肉架旁堆着备菜，厨房与庭院之间便于搬运。",
+      "obstacles": [
+        {
+          "name": "Preparation",
+          "collision": [
+            182,
+            318,
+            435,
+            45
+          ],
+          "visual": [
+            170,
+            197,
+            458,
+            183
+          ]
+        },
+        {
+          "name": "Cooking",
+          "collision": [
+            721,
+            322,
+            458,
+            83
+          ],
+          "visual": [
+            698,
+            154,
+            500,
+            266
+          ]
+        },
+        {
+          "name": "Washing",
+          "collision": [
+            180,
+            600,
+            112,
+            170
+          ],
+          "visual": [
+            166,
+            456,
+            145,
+            315
+          ]
+        },
+        {
+          "name": "EastStock",
+          "collision": [
+            1250,
+            511,
+            105,
+            260
+          ],
+          "visual": [
+            1235,
+            390,
+            130,
+            399
+          ]
+        },
+        {
+          "name": "ServingLeft",
+          "collision": [
+            346,
+            784,
+            299,
+            56
+          ],
+          "visual": [
+            340,
+            714,
+            315,
+            130
+          ]
+        },
+        {
+          "name": "ServingRight",
+          "collision": [
+            887,
+            784,
+            365,
+            56
+          ],
+          "visual": [
+            873,
+            718,
+            393,
+            128
+          ]
+        }
+      ],
+      "occluders": [],
+      "walls": [
+        {
+          "collision": [
+            120,
+            90,
+            30,
+            798
+          ],
+          "visual": [
+            120,
+            90,
+            42,
+            798
+          ],
+          "sort_y": 888
+        },
+        {
+          "collision": [
+            1386,
+            90,
+            30,
+            798
+          ],
+          "visual": [
+            1374,
+            90,
+            42,
+            798
+          ],
+          "sort_y": 888
+        },
+        {
+          "collision": [
+            120,
+            856,
+            580,
+            32
+          ],
+          "visual": [
+            120,
+            770,
+            580,
+            118
+          ],
+          "sort_y": 888
+        },
+        {
+          "collision": [
+            836,
+            856,
+            580,
+            32
+          ],
+          "visual": [
+            836,
+            770,
+            580,
+            118
+          ],
+          "sort_y": 888
+        },
+        {
+          "collision": [
+            120,
+            90,
+            1296,
+            145
+          ]
+        }
+      ]
+    },
+    {
+      "id": "06_tavern",
+      "name": "酒馆",
+      "position": [
+        2800,
+        3850
+      ],
+      "kind": "building",
+      "asset": "res://assets/map/settlement/06_tavern.png",
+      "entry": [
+        768,
+        948
+      ],
+      "observation": "吧台后陈列着琥珀色酒瓶，店里也适合打听消息。",
+      "obstacles": [
+        {
+          "name": "Hearth",
+          "collision": [
+            277,
+            237,
+            220,
+            40
+          ],
+          "visual": [
+            271,
+            53,
+            231,
+            225
+          ]
+        },
+        {
+          "name": "BarNorth",
+          "collision": [
+            914,
+            222,
+            443,
+            63
+          ],
+          "visual": [
+            900,
+            120,
+            465,
+            170
+          ]
+        },
+        {
+          "name": "BarWest",
+          "collision": [
+            912,
+            280,
+            64,
+            127
+          ],
+          "visual": [
+            905,
+            164,
+            78,
+            258
+          ]
+        },
+        {
+          "name": "BarFront",
+          "collision": [
+            920,
+            360,
+            440,
+            65
+          ],
+          "visual": [
+            910,
+            301,
+            455,
+            126
+          ]
+        },
+        {
+          "name": "TableNorth",
+          "collision": [
+            332,
+            359,
+            146,
+            55
+          ],
+          "visual": [
+            325,
+            302,
+            157,
+            136
+          ]
+        },
+        {
+          "name": "TableSouthWest",
+          "collision": [
+            404,
+            680,
+            137,
+            55
+          ],
+          "visual": [
+            395,
+            621,
+            156,
+            135
+          ]
+        },
+        {
+          "name": "TableSouthEast",
+          "collision": [
+            1019,
+            683,
+            139,
+            54
+          ],
+          "visual": [
+            1010,
+            624,
+            156,
+            128
+          ]
+        },
+        {
+          "name": "EastBarrels",
+          "collision": [
+            1302,
+            641,
+            73,
+            110
+          ],
+          "visual": [
+            1290,
+            575,
+            93,
+            184
+          ]
+        }
+      ],
+      "occluders": [],
+      "walls": [
+        {
+          "collision": [
+            106,
+            53,
+            30,
+            855
+          ],
+          "visual": [
+            106,
+            53,
+            42,
+            855
+          ],
+          "sort_y": 908
+        },
+        {
+          "collision": [
+            1401,
+            53,
+            30,
+            855
+          ],
+          "visual": [
+            1389,
+            53,
+            42,
+            855
+          ],
+          "sort_y": 908
+        },
+        {
+          "collision": [
+            106,
+            876,
+            594,
+            32
+          ],
+          "visual": [
+            106,
+            790,
+            594,
+            118
+          ],
+          "sort_y": 908
+        },
+        {
+          "collision": [
+            836,
+            876,
+            595,
+            32
+          ],
+          "visual": [
+            836,
+            790,
+            595,
+            118
+          ],
+          "sort_y": 908
+        },
+        {
+          "collision": [
+            106,
+            53,
+            1325,
+            145
+          ]
+        }
+      ]
+    },
+    {
+      "id": "07_casino",
+      "name": "赌场",
+      "position": [
+        5800,
+        3850
+      ],
+      "kind": "building",
+      "asset": "res://assets/map/settlement/07_casino.png",
+      "entry": [
+        768,
+        957
+      ],
+      "observation": "低赌桌和兑换台占据大厅，老板的收藏放在隔间里。",
+      "obstacles": [
+        {
+          "name": "WestPartition",
+          "collision": [
+            649,
+            87,
+            30,
+            399
+          ],
+          "visual": [
+            645,
+            80,
+            40,
+            411
+          ]
+        },
+        {
+          "name": "EastPartition",
+          "collision": [
+            818,
+            87,
+            30,
+            375
+          ],
+          "visual": [
+            812,
+            80,
+            45,
+            391
+          ]
+        },
+        {
+          "name": "WestCrossWall",
+          "collision": [
+            169,
+            475,
+            331,
+            32
+          ],
+          "visual": [
+            166,
+            462,
+            339,
+            53
+          ]
+        },
+        {
+          "name": "EastCrossWall",
+          "collision": [
+            949,
+            451,
+            422,
+            32
+          ],
+          "visual": [
+            945,
+            427,
+            432,
+            62
+          ]
+        },
+        {
+          "name": "DiceTable",
+          "collision": [
+            280,
+            352,
+            170,
+            58
+          ],
+          "visual": [
+            268,
+            272,
+            194,
+            155
+          ]
+        },
+        {
+          "name": "CardTable",
+          "collision": [
+            313,
+            732,
+            187,
+            58
+          ],
+          "visual": [
+            303,
+            638,
+            210,
+            160
+          ]
+        },
+        {
+          "name": "WheelTable",
+          "collision": [
+            1033,
+            732,
+            167,
+            58
+          ],
+          "visual": [
+            1020,
+            639,
+            190,
+            160
+          ]
+        },
+        {
+          "name": "BossDesk",
+          "collision": [
+            998,
+            350,
+            195,
+            50
+          ],
+          "visual": [
+            987,
+            294,
+            217,
+            114
+          ]
+        },
+        {
+          "name": "Collection",
+          "collision": [
+            1190,
+            220,
+            175,
+            55
+          ],
+          "visual": [
+            1182,
+            120,
+            190,
+            167
+          ]
+        }
+      ],
+      "occluders": [],
+      "walls": [
+        {
+          "collision": [
+            137,
+            81,
+            30,
+            836
+          ],
+          "visual": [
+            137,
+            81,
+            42,
+            836
+          ],
+          "sort_y": 917
+        },
+        {
+          "collision": [
+            1368,
+            81,
+            30,
+            836
+          ],
+          "visual": [
+            1356,
+            81,
+            42,
+            836
+          ],
+          "sort_y": 917
+        },
+        {
+          "collision": [
+            137,
+            885,
+            563,
+            32
+          ],
+          "visual": [
+            137,
+            799,
+            563,
+            118
+          ],
+          "sort_y": 917
+        },
+        {
+          "collision": [
+            836,
+            885,
+            562,
+            32
+          ],
+          "visual": [
+            836,
+            799,
+            562,
+            118
+          ],
+          "sort_y": 917
+        },
+        {
+          "collision": [
+            137,
+            81,
+            1261,
+            145
+          ]
+        }
+      ]
+    },
+    {
+      "id": "08_dining",
+      "name": "聚餐区",
+      "position": [
+        4400,
+        2350
+      ],
+      "kind": "building",
+      "asset": "res://assets/map/settlement/08_dining.png",
+      "entry": [
+        768,
+        959
+      ],
+      "observation": "长桌供聚落居民聚餐，仓库、军营与食堂之间有运输路。",
+      "obstacles": [
+        {
+          "name": "Serving",
+          "collision": [
+            580,
+            301,
+            445,
+            63
+          ],
+          "visual": [
+            570,
+            219,
+            462,
+            151
+          ]
+        },
+        {
+          "name": "TableWest",
+          "collision": [
+            400,
+            502,
+            192,
+            238
+          ],
+          "visual": [
+            390,
+            412,
+            217,
+            340
+          ]
+        },
+        {
+          "name": "TableEast",
+          "collision": [
+            1012,
+            502,
+            193,
+            238
+          ],
+          "visual": [
+            998,
+            411,
+            223,
+            342
+          ]
+        },
+        {
+          "name": "WestStock",
+          "collision": [
+            145,
+            596,
+            120,
+            185
+          ],
+          "visual": [
+            130,
+            514,
+            145,
+            278
+          ]
+        }
+      ],
+      "occluders": [],
+      "walls": [
+        {
+          "collision": [
+            96,
+            91,
+            30,
+            828
+          ],
+          "visual": [
+            96,
+            91,
+            42,
+            828
+          ],
+          "sort_y": 919
+        },
+        {
+          "collision": [
+            1409,
+            91,
+            30,
+            828
+          ],
+          "visual": [
+            1397,
+            91,
+            42,
+            828
+          ],
+          "sort_y": 919
+        },
+        {
+          "collision": [
+            96,
+            887,
+            604,
+            32
+          ],
+          "visual": [
+            96,
+            801,
+            604,
+            118
+          ],
+          "sort_y": 919
+        },
+        {
+          "collision": [
+            836,
+            887,
+            603,
+            32
+          ],
+          "visual": [
+            836,
+            801,
+            603,
+            118
+          ],
+          "sort_y": 919
+        },
+        {
+          "collision": [
+            96,
+            91,
+            1343,
+            145
+          ]
+        }
+      ]
+    },
+    {
+      "id": "09_ritual",
+      "name": "祭坛大厅",
+      "position": [
+        3000,
+        650
+      ],
+      "kind": "building",
+      "asset": "res://assets/map/settlement/09_ritual.png",
+      "entry": [
+        768,
+        981
+      ],
+      "observation": "仪式地毯通向北面的祭台，贡品沿两侧摆放。",
+      "obstacles": [
+        {
+          "name": "Altar",
+          "collision": [
+            596,
+            266,
+            349,
+            72
+          ],
+          "visual": [
+            580,
+            115,
+            384,
+            227
+          ]
+        },
+        {
+          "name": "OfferingsWest",
+          "collision": [
+            364,
+            401,
+            160,
+            50
+          ],
+          "visual": [
+            346,
+            327,
+            196,
+            132
+          ]
+        },
+        {
+          "name": "OfferingsEast",
+          "collision": [
+            1014,
+            401,
+            160,
+            50
+          ],
+          "visual": [
+            996,
+            327,
+            196,
+            132
+          ]
+        },
+        {
+          "name": "Brazier00",
+          "collision": [
+            588,
+            510,
+            45,
+            25
+          ],
+          "visual": [
+            583,
+            454,
+            57,
+            90
+          ]
+        },
+        {
+          "name": "Brazier01",
+          "collision": [
+            588,
+            629,
+            45,
+            25
+          ],
+          "visual": [
+            583,
+            573,
+            57,
+            90
+          ]
+        },
+        {
+          "name": "Brazier02",
+          "collision": [
+            588,
+            748,
+            45,
+            25
+          ],
+          "visual": [
+            583,
+            692,
+            57,
+            90
+          ]
+        },
+        {
+          "name": "Brazier10",
+          "collision": [
+            942,
+            510,
+            45,
+            25
+          ],
+          "visual": [
+            937,
+            454,
+            57,
+            90
+          ]
+        },
+        {
+          "name": "Brazier11",
+          "collision": [
+            942,
+            629,
+            45,
+            25
+          ],
+          "visual": [
+            937,
+            573,
+            57,
+            90
+          ]
+        },
+        {
+          "name": "Brazier12",
+          "collision": [
+            942,
+            748,
+            45,
+            25
+          ],
+          "visual": [
+            937,
+            692,
+            57,
+            90
+          ]
+        }
+      ],
+      "occluders": [],
+      "walls": [
+        {
+          "collision": [
+            152,
+            46,
+            30,
+            895
+          ],
+          "visual": [
+            152,
+            46,
+            42,
+            895
+          ],
+          "sort_y": 941
+        },
+        {
+          "collision": [
+            1354,
+            46,
+            30,
+            895
+          ],
+          "visual": [
+            1342,
+            46,
+            42,
+            895
+          ],
+          "sort_y": 941
+        },
+        {
+          "collision": [
+            152,
+            909,
+            522,
+            32
+          ],
+          "visual": [
+            152,
+            823,
+            522,
+            118
+          ],
+          "sort_y": 941
+        },
+        {
+          "collision": [
+            862,
+            909,
+            522,
+            32
+          ],
+          "visual": [
+            862,
+            823,
+            522,
+            118
+          ],
+          "sort_y": 941
+        },
+        {
+          "collision": [
+            152,
+            46,
+            1232,
+            145
+          ]
+        }
+      ]
+    },
+    {
+      "id": "10_elder",
+      "name": "长老住处",
+      "position": [
+        5550,
+        650
+      ],
+      "kind": "building",
+      "asset": "res://assets/map/settlement/10_elder.png",
+      "entry": [
+        765,
+        943
+      ],
+      "observation": "书桌、寝区和带锁储物柜各据一侧，房内很安静。",
+      "obstacles": [
+        {
+          "name": "Bookshelves",
+          "collision": [
+            178,
+            280,
+            201,
+            56
+          ],
+          "visual": [
+            167,
+            124,
+            223,
+            221
+          ]
+        },
+        {
+          "name": "DocumentDesk",
+          "collision": [
+            308,
+            426,
+            270,
+            49
+          ],
+          "visual": [
+            298,
+            343,
+            292,
+            152
+          ]
+        },
+        {
+          "name": "Bed",
+          "collision": [
+            929,
+            380,
+            253,
+            80
+          ],
+          "visual": [
+            914,
+            209,
+            280,
+            260
+          ]
+        },
+        {
+          "name": "Vault",
+          "collision": [
+            1218,
+            636,
+            125,
+            64
+          ],
+          "visual": [
+            1210,
+            506,
+            142,
+            202
+          ]
+        },
+        {
+          "name": "CenterTable",
+          "collision": [
+            676,
+            632,
+            157,
+            45
+          ],
+          "visual": [
+            668,
+            558,
+            176,
+            133
+          ]
+        }
+      ],
+      "occluders": [],
+      "walls": [
+        {
+          "collision": [
+            130,
+            93,
+            30,
+            810
+          ],
+          "visual": [
+            130,
+            93,
+            42,
+            810
+          ],
+          "sort_y": 903
+        },
+        {
+          "collision": [
+            1376,
+            93,
+            30,
+            810
+          ],
+          "visual": [
+            1364,
+            93,
+            42,
+            810
+          ],
+          "sort_y": 903
+        },
+        {
+          "collision": [
+            130,
+            871,
+            530,
+            32
+          ],
+          "visual": [
+            130,
+            785,
+            530,
+            118
+          ],
+          "sort_y": 903
+        },
+        {
+          "collision": [
+            870,
+            871,
+            536,
+            32
+          ],
+          "visual": [
+            870,
+            785,
+            536,
+            118
+          ],
+          "sort_y": 903
+        },
+        {
+          "collision": [
+            130,
+            93,
+            1276,
+            145
+          ]
+        }
+      ]
+    },
+    {
+      "id": "11_growing",
+      "name": "种植区",
+      "position": [
+        400,
+        2150
+      ],
+      "kind": "open",
+      "asset": "res://assets/map/settlement/11_growing.png",
+      "entry": [
+        768,
+        930
+      ],
+      "observation": "浅色菌菇在湿润土垄里生长，河岸还有零散采集点。",
+      "obstacles": [
+        {
+          "name": "GardenShed",
+          "collision": [
+            130,
+            100,
+            300,
+            200
+          ],
+          "visual": [
+            110,
+            42,
+            340,
+            310
+          ]
+        },
+        {
+          "name": "SortingTable",
+          "collision": [
+            672,
+            548,
+            168,
+            48
+          ],
+          "visual": [
+            668,
+            481,
+            175,
+            117
+          ]
+        }
+      ],
+      "occluders": [],
+      "walls": []
+    },
+    {
+      "id": "12_warehouse",
+      "name": "仓库",
+      "position": [
+        2800,
+        2350
+      ],
+      "kind": "building",
+      "asset": "res://assets/map/settlement/12_warehouse.png",
+      "entry": [
+        768,
+        920
+      ],
+      "observation": "货架与箱垛靠墙码放，补给桥就在西面的河道上。",
+      "obstacles": [
+        {
+          "name": "ShelvesWest",
+          "collision": [
+            423,
+            282,
+            287,
+            68
+          ],
+          "visual": [
+            416,
+            151,
+            301,
+            207
+          ]
+        },
+        {
+          "name": "ShelvesEast",
+          "collision": [
+            829,
+            281,
+            310,
+            70
+          ],
+          "visual": [
+            818,
+            150,
+            330,
+            213
+          ]
+        },
+        {
+          "name": "InventoryDesk",
+          "collision": [
+            198,
+            431,
+            210,
+            56
+          ],
+          "visual": [
+            186,
+            375,
+            234,
+            125
+          ]
+        },
+        {
+          "name": "WestStacks",
+          "collision": [
+            185,
+            718,
+            277,
+            65
+          ],
+          "visual": [
+            178,
+            631,
+            294,
+            164
+          ]
+        },
+        {
+          "name": "EastStacks",
+          "collision": [
+            1138,
+            675,
+            215,
+            108
+          ],
+          "visual": [
+            1127,
+            572,
+            240,
+            224
+          ]
+        }
+      ],
+      "occluders": [],
+      "walls": [
+        {
+          "collision": [
+            135,
+            84,
+            30,
+            796
+          ],
+          "visual": [
+            135,
+            84,
+            42,
+            796
+          ],
+          "sort_y": 880
+        },
+        {
+          "collision": [
+            1372,
+            84,
+            30,
+            796
+          ],
+          "visual": [
+            1360,
+            84,
+            42,
+            796
+          ],
+          "sort_y": 880
+        },
+        {
+          "collision": [
+            135,
+            848,
+            565,
+            32
+          ],
+          "visual": [
+            135,
+            762,
+            565,
+            118
+          ],
+          "sort_y": 880
+        },
+        {
+          "collision": [
+            836,
+            848,
+            566,
+            32
+          ],
+          "visual": [
+            836,
+            762,
+            566,
+            118
+          ],
+          "sort_y": 880
+        },
+        {
+          "collision": [
+            135,
+            84,
+            1267,
+            145
+          ]
+        }
+      ]
+    },
+    {
+      "id": "13_yard",
+      "name": "卸货庭院",
+      "position": [
+        6400,
+        7000
+      ],
+      "kind": "open",
+      "asset": "res://assets/map/settlement/13_yard.png",
+      "entry": [
+        768,
+        930
+      ],
+      "observation": "板车停在货堆边，东侧有一条通往上层聚落的绕行路。",
+      "obstacles": [
+        {
+          "name": "NorthShelter",
+          "collision": [
+            876,
+            250,
+            370,
+            67
+          ],
+          "visual": [
+            834,
+            50,
+            439,
+            295
+          ]
+        },
+        {
+          "name": "Cart",
+          "collision": [
+            333,
+            422,
+            224,
+            58
+          ],
+          "visual": [
+            308,
+            315,
+            266,
+            184
+          ]
+        },
+        {
+          "name": "WestCargo",
+          "collision": [
+            140,
+            800,
+            178,
+            66
+          ],
+          "visual": [
+            120,
+            692,
+            220,
+            194
+          ]
+        },
+        {
+          "name": "EastCargo",
+          "collision": [
+            1300,
+            712,
+            120,
+            135
+          ],
+          "visual": [
+            1285,
+            620,
+            160,
+            260
+          ]
+        }
+      ],
+      "occluders": [],
+      "walls": []
+    },
+    {
+      "id": "14_hearth",
+      "name": "公共火塘",
+      "position": [
+        4300,
+        4600
+      ],
+      "kind": "open",
+      "asset": "res://assets/map/settlement/14_hearth.png",
+      "entry": [
+        768,
+        930
+      ],
+      "observation": "火塘旁能歇脚，周围的街道分别通向酒馆、赌场和入口。",
+      "obstacles": [
+        {
+          "name": "FireRing",
+          "collision": [
+            694,
+            517,
+            139,
+            55
+          ],
+          "visual": [
+            675,
+            422,
+            177,
+            160
+          ]
+        },
+        {
+          "name": "BenchNW",
+          "collision": [
+            510,
+            393,
+            173,
+            31
+          ],
+          "visual": [
+            499,
+            343,
+            195,
+            84
+          ]
+        },
+        {
+          "name": "BenchNE",
+          "collision": [
+            1026,
+            393,
+            173,
+            31
+          ],
+          "visual": [
+            1010,
+            342,
+            199,
+            88
+          ]
+        },
+        {
+          "name": "BenchSW",
+          "collision": [
+            511,
+            704,
+            173,
+            31
+          ],
+          "visual": [
+            499,
+            654,
+            195,
+            84
+          ]
+        },
+        {
+          "name": "BenchSE",
+          "collision": [
+            1026,
+            704,
+            173,
+            31
+          ],
+          "visual": [
+            1010,
+            653,
+            199,
+            88
+          ]
+        }
+      ],
+      "occluders": [],
+      "walls": []
+    },
+    {
+      "id": "15_workshop",
+      "name": "河岸工坊",
+      "position": [
+        400,
+        4900
+      ],
+      "kind": "open",
+      "asset": "res://assets/map/settlement/15_workshop.png",
+      "entry": [
+        768,
+        930
+      ],
+      "observation": "铁砧与修补台摆在棚下，东侧的入口桥可以跨过河道。",
+      "obstacles": [
+        {
+          "name": "WorkshopRear",
+          "collision": [
+            197,
+            175,
+            625,
+            194
+          ],
+          "visual": [
+            190,
+            132,
+            640,
+            246
+          ]
+        },
+        {
+          "name": "Anvil",
+          "collision": [
+            471,
+            449,
+            71,
+            32
+          ],
+          "visual": [
+            451,
+            378,
+            113,
+            110
+          ]
+        },
+        {
+          "name": "HideRack",
+          "collision": [
+            118,
+            794,
+            222,
+            46
+          ],
+          "visual": [
+            109,
+            653,
+            243,
+            192
+          ]
+        },
+        {
+          "name": "RepairTable",
+          "collision": [
+            660,
+            807,
+            156,
+            42
+          ],
+          "visual": [
+            642,
+            730,
+            197,
+            125
+          ]
+        },
+        {
+          "name": "Timber",
+          "collision": [
+            925,
+            501,
+            225,
+            88
+          ],
+          "visual": [
+            911,
+            421,
+            251,
+            180
+          ]
+        }
+      ],
+      "occluders": [],
+      "walls": []
+    }
+  ],
+  "routes": {
+    "day1": [
+      [
+        5180,
+        8560
+      ],
+      [
+        5190,
+        8750
+      ],
+      [
+        5480,
+        8860
+      ],
+      [
+        5480,
+        7540
+      ],
+      [
+        3968,
+        7540
+      ],
+      [
+        3968,
+        6430
+      ],
+      [
+        4300,
+        6100
+      ],
+      [
+        4300,
+        5504
+      ],
+      [
+        4500,
+        5100
+      ],
+      [
+        4500,
+        3500
+      ],
+      [
+        4300,
+        3500
+      ],
+      [
+        4300,
+        1900
+      ],
+      [
+        3768,
+        1900
+      ],
+      [
+        3768,
+        1580
+      ],
+      [
+        3768,
+        1580
+      ],
+      [
+        3768,
+        1900
+      ],
+      [
+        6320,
+        1900
+      ],
+      [
+        6320,
+        1550
+      ]
+    ],
+    "day2": [
+      [
+        5180,
+        8560
+      ],
+      [
+        5190,
+        8750
+      ],
+      [
+        5480,
+        8860
+      ],
+      [
+        5480,
+        7540
+      ],
+      [
+        3968,
+        7540
+      ],
+      [
+        3968,
+        6430
+      ],
+      [
+        4300,
+        6100
+      ],
+      [
+        4300,
+        5504
+      ],
+      [
+        4300,
+        5050
+      ],
+      [
+        3568,
+        5050
+      ],
+      [
+        3568,
+        4800
+      ],
+      [
+        3568,
+        5050
+      ],
+      [
+        6568,
+        5050
+      ],
+      [
+        6568,
+        4800
+      ],
+      [
+        6568,
+        5050
+      ],
+      [
+        5480,
+        5504
+      ],
+      [
+        4300,
+        6100
+      ],
+      [
+        4300,
+        6250
+      ]
+    ],
+    "supply": [
+      [
+        1400,
+        8000
+      ],
+      [
+        1400,
+        6000
+      ],
+      [
+        1400,
+        5504
+      ],
+      [
+        2820,
+        5504
+      ],
+      [
+        2820,
+        3328
+      ],
+      [
+        3568,
+        3328
+      ],
+      [
+        3568,
+        3270
+      ],
+      [
+        3568,
+        3328
+      ],
+      [
+        1400,
+        3328
+      ],
+      [
+        1400,
+        3100
+      ]
+    ]
+  },
+  "story_anchors": [
+    {
+      "id": "shop_rest_chair",
+      "position": [
+        5180,
+        8480
+      ]
+    },
+    {
+      "id": "shop_workbench",
+      "position": [
+        4940,
+        8220
+      ]
+    },
+    {
+      "id": "drunken_guard",
+      "position": [
+        4300,
+        6250
+      ]
+    },
+    {
+      "id": "tavern_bartender",
+      "position": [
+        3870,
+        4340
+      ]
+    },
+    {
+      "id": "casino_boss",
+      "position": [
+        6890,
+        4270
+      ]
+    },
+    {
+      "id": "elder_document",
+      "position": [
+        5990,
+        1170
+      ]
+    },
+    {
+      "id": "elder_blood_storage",
+      "position": [
+        6800,
+        1400
+      ]
+    },
+    {
+      "id": "ritual_hidden_cover",
+      "position": [
+        4000,
+        1010
+      ]
+    },
+    {
+      "id": "elder_hidden_bookcase",
+      "position": [
+        6800,
+        870
+      ]
+    },
+    {
+      "id": "night_gather_0",
+      "position": [
+        1710,
+        4120
+      ]
+    },
+    {
+      "id": "night_gather_1",
+      "position": [
+        1750,
+        5900
+      ]
+    },
+    {
+      "id": "night_gather_2",
+      "position": [
+        2920,
+        5520
+      ]
+    },
+    {
+      "id": "night_gather_3",
+      "position": [
+        2990,
+        3610
+      ]
+    },
+    {
+      "id": "night_gather_4",
+      "position": [
+        7490,
+        5250
+      ]
+    },
+    {
+      "id": "night_gather_5",
+      "position": [
+        6110,
+        7070
+      ]
+    },
+    {
+      "id": "night_gather_6",
+      "position": [
+        7520,
+        1800
+      ]
+    },
+    {
+      "id": "night_gather_7",
+      "position": [
+        1160,
+        7280
+      ]
+    }
+  ],
+  "streets": [
+    [
+      [
+        5190,
+        8750
+      ],
+      [
+        5480,
+        8860
+      ],
+      [
+        5480,
+        7540
+      ],
+      [
+        3968,
+        7540
+      ],
+      [
+        3968,
+        6430
+      ],
+      [
+        4300,
+        6100
+      ],
+      [
+        4300,
+        5504
+      ],
+      [
+        4500,
+        5100
+      ],
+      [
+        4500,
+        3500
+      ],
+      [
+        4300,
+        3500
+      ],
+      [
+        4300,
+        1900
+      ],
+      [
+        3768,
+        1900
+      ],
+      [
+        3768,
+        1580
+      ]
+    ],
+    [
+      [
+        3500,
+        3328
+      ],
+      [
+        1500,
+        3328
+      ],
+      [
+        1500,
+        2900
+      ]
+    ],
+    [
+      [
+        3968,
+        5504
+      ],
+      [
+        1500,
+        5504
+      ]
+    ],
+    [
+      [
+        3000,
+        5050
+      ],
+      [
+        7400,
+        5050
+      ]
+    ],
+    [
+      [
+        6320,
+        1850
+      ],
+      [
+        6320,
+        1580
+      ]
+    ],
+    [
+      [
+        4300,
+        1900
+      ],
+      [
+        6320,
+        1900
+      ],
+      [
+        7800,
+        1900
+      ],
+      [
+        7800,
+        8200
+      ]
+    ],
+    [
+      [
+        6900,
+        6900
+      ],
+      [
+        7800,
+        6900
+      ]
+    ],
+    [
+      [
+        6800,
+        8200
+      ],
+      [
+        7800,
+        8200
+      ]
+    ],
+    [
+      [
+        5100,
+        3400
+      ],
+      [
+        7800,
+        3400
+      ]
+    ],
+    [
+      [
+        3568,
+        5050
+      ],
+      [
+        3568,
+        4800
+      ]
+    ],
+    [
+      [
+        6568,
+        5050
+      ],
+      [
+        6568,
+        4800
+      ]
+    ],
+    [
+      [
+        2820,
+        5504
+      ],
+      [
+        2820,
+        3328
+      ]
+    ]
+  ],
+  "street_props": [
+    {
+      "id": "EntranceLamp",
+      "position": [
+        5660,
+        8620
+      ],
+      "cell": [
+        0,
+        3
+      ],
+      "solid": true
+    },
+    {
+      "id": "SouthSignCrates",
+      "position": [
+        3600,
+        7600
+      ],
+      "cell": [
+        2,
+        1
+      ],
+      "solid": true
+    },
+    {
+      "id": "GuardPillarWest",
+      "position": [
+        4050,
+        6250
+      ],
+      "cell": [
+        0,
+        1
+      ],
+      "solid": true
+    },
+    {
+      "id": "GuardPillarEast",
+      "position": [
+        4510,
+        6060
+      ],
+      "cell": [
+        1,
+        1
+      ],
+      "solid": true
+    },
+    {
+      "id": "HearthApproach",
+      "position": [
+        4070,
+        5350
+      ],
+      "cell": [
+        0,
+        3
+      ],
+      "solid": true
+    },
+    {
+      "id": "TavernLamp",
+      "position": [
+        3650,
+        4860
+      ],
+      "cell": [
+        0,
+        3
+      ],
+      "solid": true
+    },
+    {
+      "id": "CasinoCrates",
+      "position": [
+        6910,
+        4860
+      ],
+      "cell": [
+        2,
+        1
+      ],
+      "solid": true
+    },
+    {
+      "id": "CasinoLamp",
+      "position": [
+        6440,
+        4890
+      ],
+      "cell": [
+        0,
+        3
+      ],
+      "solid": true
+    },
+    {
+      "id": "WestBridgeLamp",
+      "position": [
+        1800,
+        5380
+      ],
+      "cell": [
+        0,
+        3
+      ],
+      "solid": true
+    },
+    {
+      "id": "EastBridgeLamp",
+      "position": [
+        3020,
+        5380
+      ],
+      "cell": [
+        0,
+        3
+      ],
+      "solid": true
+    },
+    {
+      "id": "SupplyBridgeCrates",
+      "position": [
+        2870,
+        3140
+      ],
+      "cell": [
+        2,
+        1
+      ],
+      "solid": true
+    },
+    {
+      "id": "WarehouseLamp",
+      "position": [
+        3660,
+        3340
+      ],
+      "cell": [
+        0,
+        3
+      ],
+      "solid": true
+    },
+    {
+      "id": "UpperStreetPillar",
+      "position": [
+        4340,
+        3690
+      ],
+      "cell": [
+        1,
+        1
+      ],
+      "solid": true
+    },
+    {
+      "id": "RitualPillarWest",
+      "position": [
+        3410,
+        1820
+      ],
+      "cell": [
+        0,
+        1
+      ],
+      "solid": true
+    },
+    {
+      "id": "RitualPillarEast",
+      "position": [
+        4130,
+        1820
+      ],
+      "cell": [
+        1,
+        1
+      ],
+      "solid": true
+    },
+    {
+      "id": "ElderLamp",
+      "position": [
+        6570,
+        1730
+      ],
+      "cell": [
+        0,
+        3
+      ],
+      "solid": true
+    },
+    {
+      "id": "NightGather0",
+      "position": [
+        1800,
+        4120
+      ],
+      "cell": [
+        0,
+        2
+      ],
+      "solid": false
+    },
+    {
+      "id": "NightGather1",
+      "position": [
+        1840,
+        5900
+      ],
+      "cell": [
+        1,
+        2
+      ],
+      "solid": false
+    },
+    {
+      "id": "NightGather2",
+      "position": [
+        2830,
+        5520
+      ],
+      "cell": [
+        2,
+        2
+      ],
+      "solid": false
+    },
+    {
+      "id": "NightGather3",
+      "position": [
+        2900,
+        3610
+      ],
+      "cell": [
+        0,
+        2
+      ],
+      "solid": false
+    },
+    {
+      "id": "NightGather4",
+      "position": [
+        7400,
+        5250
+      ],
+      "cell": [
+        1,
+        2
+      ],
+      "solid": false
+    },
+    {
+      "id": "NightGather5",
+      "position": [
+        6020,
+        7070
+      ],
+      "cell": [
+        2,
+        2
+      ],
+      "solid": false
+    },
+    {
+      "id": "NightGather6",
+      "position": [
+        7430,
+        1800
+      ],
+      "cell": [
+        0,
+        2
+      ],
+      "solid": false
+    },
+    {
+      "id": "NightGather7",
+      "position": [
+        1250,
+        7280
+      ],
+      "cell": [
+        1,
+        2
+      ],
+      "solid": false
+    }
+  ],
+  "river_outline": [
+    [
+      1970,
+      0
+    ],
+    [
+      1952,
+      1000
+    ],
+    [
+      1984,
+      2300
+    ],
+    [
+      1920,
+      3500
+    ],
+    [
+      1952,
+      4700
+    ],
+    [
+      1940,
+      6000
+    ],
+    [
+      1990,
+      7150
+    ],
+    [
+      2030,
+      7350
+    ],
+    [
+      2100,
+      7480
+    ],
+    [
+      2336,
+      7540
+    ],
+    [
+      2570,
+      7480
+    ],
+    [
+      2650,
+      7350
+    ],
+    [
+      2700,
+      7150
+    ],
+    [
+      2720,
+      6000
+    ],
+    [
+      2736,
+      4700
+    ],
+    [
+      2750,
+      3500
+    ],
+    [
+      2690,
+      2300
+    ],
+    [
+      2720,
+      1000
+    ],
+    [
+      2700,
+      0
+    ]
+  ],
+  "service_points": [
+    {
+      "id": "orders",
+      "name": "订单板",
+      "position": [
+        4970,
+        8450
+      ],
+      "description": "今日订单 #001\n珍珠奶茶 × 1 · 常温 · 少糖\n\n查看订单 → 仓库备料 → 制作台调配。"
+    },
+    {
+      "id": "storage",
+      "name": "原料仓储",
+      "position": [
+        4470,
+        8380
+      ],
+      "description": "原料库存\n红茶 12 份　牛奶 12 份\n珍珠 8 份　糖浆 10 份\n\n货架原料充足，可以准备今日营业。"
+    },
+    {
+      "id": "tea_station",
+      "name": "奶茶制作台",
+      "position": [
+        4940,
+        8220
+      ],
+      "description": "珍珠奶茶 · 配方\n红茶 × 1 + 牛奶 × 1 + 珍珠 × 1\n\n加入茶底和牛奶，放入珍珠、糖浆后摇匀封杯。"
+    }
+  ]
+}

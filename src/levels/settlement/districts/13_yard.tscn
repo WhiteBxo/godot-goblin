@@ -1,0 +1,104 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/13_yard.png" id="1_bvb12"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_e0wr6"]
+size = Vector2(370, 67)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pw5cu"]
+size = Vector2(224, 58)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ys5yr"]
+size = Vector2(178, 66)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d5o4w"]
+size = Vector2(120, 135)
+
+[node name="Yard" type="Node2D" unique_id=1140038112]
+y_sort_enabled = true
+metadata/zone_id = "13_yard"
+metadata/display_name = "卸货庭院"
+metadata/footprint = Rect2(80, 70, 1380, 870)
+
+[node name="PaintedInterior" type="Sprite2D" parent="." unique_id=1640970043]
+z_index = -20
+texture = ExtResource("1_bvb12")
+centered = false
+
+[node name="Walls" type="Node2D" parent="." unique_id=626257984]
+
+[node name="Foreground" type="Node2D" parent="." unique_id=1587554]
+y_sort_enabled = true
+
+[node name="Furniture0" type="Node2D" parent="Foreground" unique_id=640908108]
+position = Vector2(0, 317)
+
+[node name="@Sprite2D@267" type="Sprite2D" parent="Foreground/Furniture0" unique_id=119319516]
+position = Vector2(834, -267)
+texture = ExtResource("1_bvb12")
+centered = false
+region_enabled = true
+region_rect = Rect2(834, 50, 439, 295)
+
+[node name="Furniture1" type="Node2D" parent="Foreground" unique_id=1883969563]
+position = Vector2(0, 480)
+
+[node name="@Sprite2D@269" type="Sprite2D" parent="Foreground/Furniture1" unique_id=1021103776]
+position = Vector2(308, -165)
+texture = ExtResource("1_bvb12")
+centered = false
+region_enabled = true
+region_rect = Rect2(308, 315, 266, 184)
+
+[node name="Furniture2" type="Node2D" parent="Foreground" unique_id=1669982086]
+position = Vector2(0, 866)
+
+[node name="@Sprite2D@271" type="Sprite2D" parent="Foreground/Furniture2" unique_id=602768112]
+position = Vector2(120, -174)
+texture = ExtResource("1_bvb12")
+centered = false
+region_enabled = true
+region_rect = Rect2(120, 692, 220, 194)
+
+[node name="Furniture3" type="Node2D" parent="Foreground" unique_id=864591658]
+position = Vector2(0, 847)
+
+[node name="@Sprite2D@273" type="Sprite2D" parent="Foreground/Furniture3" unique_id=592149550]
+position = Vector2(1285, -227)
+texture = ExtResource("1_bvb12")
+centered = false
+region_enabled = true
+region_rect = Rect2(1285, 620, 160, 260)
+
+[node name="Furniture" type="Node2D" parent="." unique_id=196791462]
+
+[node name="NorthShelter" type="StaticBody2D" parent="Furniture" unique_id=795077075]
+collision_mask = 2
+
+[node name="@CollisionShape2D@266" type="CollisionShape2D" parent="Furniture/NorthShelter" unique_id=666382462]
+position = Vector2(1061, 283.5)
+shape = SubResource("RectangleShape2D_e0wr6")
+
+[node name="Cart" type="StaticBody2D" parent="Furniture" unique_id=1853554155]
+collision_mask = 2
+
+[node name="@CollisionShape2D@268" type="CollisionShape2D" parent="Furniture/Cart" unique_id=1706458259]
+position = Vector2(445, 451)
+shape = SubResource("RectangleShape2D_pw5cu")
+
+[node name="WestCargo" type="StaticBody2D" parent="Furniture" unique_id=294686949]
+collision_mask = 2
+
+[node name="@CollisionShape2D@270" type="CollisionShape2D" parent="Furniture/WestCargo" unique_id=8611345]
+position = Vector2(229, 833)
+shape = SubResource("RectangleShape2D_ys5yr")
+
+[node name="EastCargo" type="StaticBody2D" parent="Furniture" unique_id=523775267]
+collision_mask = 2
+
+[node name="@CollisionShape2D@272" type="CollisionShape2D" parent="Furniture/EastCargo" unique_id=1337938650]
+position = Vector2(1360, 779.5)
+shape = SubResource("RectangleShape2D_d5o4w")
+
+[node name="Entrance" type="Marker2D" parent="." unique_id=1865226589]
+position = Vector2(768, 930)

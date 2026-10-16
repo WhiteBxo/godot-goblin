@@ -23,8 +23,12 @@ func _verify() -> void:
 	var map: CaveMap = load(MAP_PATH).instantiate()
 	var floor: TileMapLayer = map.get_node("FloorLayer")
 	var river: TileMapLayer = map.get_node("RiverLayer")
-	check(floor.get_used_cells().size() == 6309, "Ground cells exist before any runtime script runs")
-	check(river.get_used_cells().size() == 232, "River cells are saved in the scene")
+	var current_layout: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://src/levels/cave/cave_layout.json"))
+	var expected_cells := cells_from_layout(current_layout)
+	var expected_rivers := rivers_from_layout(current_layout, expected_cells)
+	check(floor.get_used_cells().size() == expected_cells.size(), "Ground cell count matches current layout")
+	check(cells_from_layer(floor) == expected_cells, "Saved scene ground matches current layout coordinates")
+	check(cells_from_layer(river) == expected_rivers, "Saved river matches current layout coverage")
 	check(map.get_node("BorderLayer").get_used_cells().size() > 0, "Outside edges are saved for editor display")
 	check(floor.position == Vector2.ZERO, "Ground uses the same grid as gameplay")
 	check(floor.tile_set.get_terrain_sets_count() == 1 and floor.tile_set.get_terrain_name(0, 0) == "StoneFloor", "Ground supports the standard terrain brush")
@@ -73,7 +77,9 @@ func _verify() -> void:
 	await _settle()
 	check(not reopened.walkable_cells.has(erased) and reopened.walkable_cells.has(added), "Saved walkability survives reopening and startup")
 	check(reopened.river_layer.get_cell_source_id(added) == 0, "Saved river survives reopening and startup")
-	check(reopened.load_layout("res://src/levels/cave/cave_layout_original.json") == OK and reopened.walkable_cells.size() == 6305, "Legacy layout remains available through explicit import")
+	var original_layout: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://src/levels/cave/cave_layout_original.json"))
+	var original_cells := cells_from_layout(original_layout)
+	check(reopened.load_layout("res://src/levels/cave/cave_layout_original.json") == OK and reopened.walkable_cells == original_cells, "Legacy layout remains available through explicit import")
 	map.queue_free()
 	reopened.queue_free()
 	await _settle()
@@ -81,3 +87,32 @@ func _verify() -> void:
 	for failure in failures:
 		push_error(failure)
 	quit(0 if failures.is_empty() else 1)
+
+func cells_from_layout(layout: Dictionary) -> Dictionary:
+	var cells: Dictionary = {}
+	for room: Dictionary in layout.rooms:
+		add_rect(cells, [room.x, room.y, room.w, room.h])
+	for corridor: Array in layout.corridors:
+		add_rect(cells, corridor)
+	return cells
+
+func rivers_from_layout(layout: Dictionary, cells: Dictionary) -> Dictionary:
+	var rivers: Dictionary = {}
+	for river_rect: Array in layout.rivers:
+		for y in range(int(river_rect[1]), int(river_rect[1] + river_rect[3])):
+			for x in range(int(river_rect[0]), int(river_rect[0] + river_rect[2])):
+				var cell := Vector2i(x, y)
+				if cells.has(cell):
+					rivers[cell] = true
+	return rivers
+
+func cells_from_layer(layer: TileMapLayer) -> Dictionary:
+	var cells: Dictionary = {}
+	for cell: Vector2i in layer.get_used_cells():
+		cells[cell] = true
+	return cells
+
+func add_rect(cells: Dictionary, rect: Array) -> void:
+	for y in range(int(rect[1]), int(rect[1] + rect[3])):
+		for x in range(int(rect[0]), int(rect[0] + rect[2])):
+			cells[Vector2i(x, y)] = true

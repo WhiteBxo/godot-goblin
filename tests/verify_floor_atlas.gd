@@ -11,11 +11,6 @@ const EXPECTED_ATLAS_MASKS := [
 	[2, 3, 11, 5],
 	[0, 8, 6, 1],
 ]
-const EXPECTED_MAP_MASK_COUNTS := {
-	1: 14, 2: 13, 3: 397, 4: 14, 5: 242, 7: 20,
-	8: 13, 10: 244, 11: 19, 12: 397, 13: 20, 14: 19, 15: 5593,
-}
-
 func _initialize() -> void:
 	call_deferred("_verify")
 
@@ -26,8 +21,14 @@ func _verify() -> void:
 	var cave_map: CaveMap = scene.get_active_level()
 	var failures: Array[String] = []
 	var original_layout := "--original-layout" in OS.get_cmdline_user_args()
-	var expected_count := 6305 if original_layout else 6309
-	var expected_masks: Dictionary = EXPECTED_MAP_MASK_COUNTS if original_layout else {1:14,2:13,3:397,4:14,5:246,7:20,8:13,10:248,11:19,12:397,13:20,14:19,15:5593}
+	var layout_path := "res://src/levels/cave/cave_layout.json"
+	if original_layout:
+		layout_path = "res://src/levels/cave/cave_layout_original.json"
+	var expected_layout: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(layout_path))
+	var expected_cells := layout_cells(expected_layout)
+	var expected_river_cells := river_cells(expected_layout, expected_cells)
+	var expected_count := expected_cells.size()
+	var expected_masks := legacy_mask_counts(expected_cells)
 	var floor_layer: TileMapLayer = cave_map.floor_layer
 	var river_layer: TileMapLayer = cave_map.river_layer
 	var script_constants: Dictionary = cave_map.get_script().get_script_constant_map()
@@ -51,8 +52,13 @@ func _verify() -> void:
 		failures.append("floor atlas texture padding must be disabled")
 	if floor_layer.get_used_cells().size() != expected_count:
 		failures.append("unexpected number of editable ground cells")
-	if river_layer.get_used_cells().size() != 232:
-		failures.append("river should remain 232 cells")
+	var actual_river_cells: Dictionary = {}
+	for cell: Vector2i in river_layer.get_used_cells():
+		actual_river_cells[cell] = true
+	if actual_river_cells != expected_river_cells:
+		failures.append("saved river cells differ from the selected layout")
+	if cave_map.walkable_cells != expected_cells:
+		failures.append("saved ground cells differ from the selected layout")
 	if FileAccess.get_sha256("res://assets/map/cave/cave_floor_atlas.png").to_lower() != EXPECTED_ATLAS_SHA256:
 		failures.append("source atlas PNG changed on disk")
 	var source_image: Image = (load("res://assets/map/cave/cave_floor_atlas.png") as Texture2D).get_image()
@@ -86,11 +92,9 @@ func _verify() -> void:
 				if output_color != source_color and maxf(source_color.r, maxf(source_color.g, source_color.b)) > 0.32:
 					failures.append("bright stone pixel was altered at mask %d" % mask)
 					break
-	for y in range(4, 62):
-		for x in range(5, 9):
-			if river_layer.get_cell_source_id(Vector2i(x, y)) < 0:
-				failures.append("river disconnected at (%d,%d)" % [x, y])
-				break
+	for cell: Vector2i in expected_river_cells:
+		if river_layer.get_cell_source_id(cell) < 0:
+			failures.append("river disconnected at %s" % cell)
 
 	var actual_masks: Dictionary = {}
 	var actual_mask_counts: Dictionary = {}
@@ -150,7 +154,7 @@ func _verify() -> void:
 	if failures.is_empty():
 		var masks: Array = actual_masks.keys()
 		masks.sort()
-		print("PASS: all 16 atlas masks; actual map mask counts=", actual_mask_counts, "; editable map pixels identical; river=232; narrow passage passable; camera centered.")
+		print("PASS: all 16 atlas masks; actual map mask counts=", actual_mask_counts, "; editable map pixels identical; river=", expected_river_cells.size(), "; narrow passage passable; camera centered.")
 		quit()
 	else:
 		for failure: String in failures:
@@ -167,3 +171,41 @@ func _corner_seed(bit: int) -> Vector2i:
 			return Vector2i(0, TILE_SIZE - 1)
 		_:
 			return Vector2i(TILE_SIZE - 1, TILE_SIZE - 1)
+
+func layout_cells(layout: Dictionary) -> Dictionary:
+	var cells: Dictionary = {}
+	for room: Dictionary in layout.rooms:
+		add_rect(cells, [room.x, room.y, room.w, room.h])
+	for corridor: Array in layout.corridors:
+		add_rect(cells, corridor)
+	return cells
+
+func add_rect(cells: Dictionary, rect: Array) -> void:
+	for y in range(int(rect[1]), int(rect[1] + rect[3])):
+		for x in range(int(rect[0]), int(rect[0] + rect[2])):
+			cells[Vector2i(x, y)] = true
+
+func river_cells(layout: Dictionary, cells: Dictionary) -> Dictionary:
+	var rivers: Dictionary = {}
+	for river: Array in layout.rivers:
+		for y in range(int(river[1]), int(river[1] + river[3])):
+			for x in range(int(river[0]), int(river[0] + river[2])):
+				var cell := Vector2i(x, y)
+				if cells.has(cell):
+					rivers[cell] = true
+	return rivers
+
+func legacy_mask_counts(cells: Dictionary) -> Dictionary:
+	var candidates: Dictionary = {}
+	for cell: Vector2i in cells:
+		for offset: Vector2i in [Vector2i.ZERO, Vector2i.LEFT, Vector2i.UP, Vector2i(-1, -1)]:
+			candidates[cell + offset] = true
+	var counts: Dictionary = {}
+	for cell: Vector2i in candidates:
+		var mask := 0
+		for index in range(4):
+			var offset := Vector2i(index % 2, index >> 1)
+			if cells.has(cell + offset):
+				mask |= 1 << index
+		counts[mask] = int(counts.get(mask, 0)) + 1
+	return counts

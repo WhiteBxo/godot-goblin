@@ -1,0 +1,83 @@
+[gd_resource type="Theme" load_steps=7 format=3]
+
+[ext_resource type="FontFile" path="res://assets/fonts/fusion_pixel/fusion-pixel-12px-monospaced-zh_hans.otf.woff2" id="2_font"]
+
+[sub_resource type="StyleBoxFlat" id="PanelStyle"]
+bg_color = Color(0.16, 0.105, 0.075, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.77, 0.57, 0.3, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="StyleBoxFlat" id="ButtonStyle"]
+bg_color = Color(0.24, 0.16, 0.105, 1)
+content_margin_left = 12.0
+content_margin_top = 4.0
+content_margin_right = 12.0
+content_margin_bottom = 4.0
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_left = 4
+corner_radius_bottom_right = 4
+
+[sub_resource type="StyleBoxFlat" id="ButtonHover"]
+bg_color = Color(0.38, 0.25, 0.13, 1)
+content_margin_left = 12.0
+content_margin_top = 4.0
+content_margin_right = 12.0
+content_margin_bottom = 4.0
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_left = 4
+corner_radius_bottom_right = 4
+
+[sub_resource type="StyleBoxFlat" id="FocusStyle"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 0.82, 0.48, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_left = 4
+corner_radius_bottom_right = 4
+
+[sub_resource type="StyleBoxFlat" id="DisabledStyle"]
+bg_color = Color(0.16, 0.105, 0.075, 1)
+content_margin_left = 12.0
+content_margin_right = 12.0
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+
+[resource]
+default_font = ExtResource("2_font")
+default_font_size = 12
+Button/colors/font_color = Color(1, 0.91, 0.77, 1)
+Button/styles/normal = SubResource("ButtonStyle")
+Button/styles/hover = SubResource("ButtonHover")
+Button/styles/pressed = SubResource("ButtonHover")
+Button/styles/focus = SubResource("FocusStyle")
+Label/colors/font_color = Color(1, 0.91, 0.77, 1)
+RichTextLabel/colors/default_color = Color(1, 0.91, 0.77, 1)
+
+Button/styles/disabled = SubResource("DisabledStyle")
+Button/colors/font_disabled_color = Color(0.55, 0.48, 0.4, 1)
+PanelContainer/styles/panel = SubResource("PanelStyle")
+Title/base_type = &"Label"
+Title/colors/font_color = Color(1, 0.82, 0.48, 1)
+Title/font_sizes/font_size = 24
+Speaker/base_type = &"Label"
+Speaker/colors/font_color = Color(1, 0.82, 0.48, 1)
+Hint/base_type = &"Label"
+Hint/colors/font_color = Color(0.77, 0.66, 0.5, 1)
+VBoxContainer/constants/separation = 8
+MarginContainer/constants/margin_left = 12
+MarginContainer/constants/margin_right = 12
+MarginContainer/constants/margin_top = 8
+MarginContainer/constants/margin_bottom = 8

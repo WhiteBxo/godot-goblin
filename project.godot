@@ -36,6 +36,11 @@ enabled=PackedStringArray("res://addons/GDQuest_GDScript_formatter/plugin.cfg", 
 
 [input]
 
+pause_game={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"physical_keycode":80)]
+}
+
 interact={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"physical_keycode":69)]

@@ -6,6 +6,7 @@ extends Node
 @onready var _player: CavePlayer = $World/EntityRoot/Player as CavePlayer
 var _shop_level: MilkTeaShop
 var _shop_player: ShopPlayer
+var _ui_manager: UIManager
 var _shop_ui: ShopUI
 var _shop_interaction: ShopInteraction
 var _dialogue_manager: DialogueManager
@@ -22,6 +23,7 @@ var _debug_panel: DeveloperPanel
 
 func _ready() -> void:
 	DebugRuntime.apply_release_policy(get_tree())
+	_create_ui_system()
 	_shop_level = $World/LevelRoot.get_child(0) as MilkTeaShop
 	if _shop_level != null:
 		_shop_player = $World/EntityRoot/Player as ShopPlayer
@@ -31,6 +33,7 @@ func _ready() -> void:
 		var ui: ShopUI = preload("res://src/UI/milk_tea/shop_ui.tscn").instantiate()
 		$HudLayer.add_child(ui)
 		ui.set_popup_layer($PopupLayer)
+		ui.bind_manager(_ui_manager)
 		var interaction := ShopInteraction.new()
 		interaction.name = "ShopInteraction"
 		$Systems.add_child(interaction)
@@ -58,6 +61,20 @@ func _ready() -> void:
 	if _debug_tools != null:
 		_debug_tools.configure(_player.set_speed_multiplier, _player.get_speed_multiplier, _debug_panel)
 		_demo_tools.start()
+
+func get_ui_manager() -> UIManager:
+	return _ui_manager if is_instance_valid(_ui_manager) else null
+
+func _create_ui_system() -> void:
+	_ui_manager = UIManager.new()
+	_ui_manager.name = "UIManager"
+	$Systems.add_child(_ui_manager)
+	_ui_manager.configure({&"hud": $HudLayer, &"popup": $PopupLayer, &"pause": $PauseLayer})
+	var pause: PauseMenu = preload("res://src/UI/pause/pause_menu.tscn").instantiate()
+	$PauseLayer.add_child(pause)
+	_ui_manager.register_screen(&"pause", pause, &"pause", true)
+	pause.resume_requested.connect(func() -> void: _ui_manager.set_paused(false))
+	_ui_manager.modal_changed.connect(_refresh_input_lock)
 
 func get_active_level() -> Node2D:
 	return _shop_level if _shop_level != null else _active_level
@@ -101,6 +118,7 @@ func _create_dialogue_system() -> void:
 	_actor_director.actor_control_changed.connect(_on_actor_control_changed)
 	var ui: DialogueUI = preload("res://src/UI/dialogue/dialogue_ui.tscn").instantiate()
 	$PopupLayer.add_child(ui)
+	_ui_manager.register_screen(&"dialogue", ui, &"popup", true)
 	_dialogue_manager = DialogueManager.new()
 	_dialogue_manager.name = "DialogueManager"
 	$Systems.add_child(_dialogue_manager)
@@ -127,7 +145,7 @@ func _on_story_exiting() -> void:
 		_camera_director.cancel_all("StoryDirector exited")
 
 func _can_start_story() -> bool:
-	return not is_instance_valid(_shop_ui) or not _shop_ui.is_open()
+	return not get_tree().paused and not _ui_manager.has_modal()
 
 func _can_start_dialogue() -> bool:
 	return _can_start_story() and (not is_instance_valid(_story_director) or not _story_director.is_busy() or _story_director.is_starting_dialogue())
@@ -144,7 +162,8 @@ func _on_actor_control_changed(actor_id: StringName, _controlled: bool) -> void:
 
 func _refresh_input_lock() -> void:
 	var should_lock := (
-		(is_instance_valid(_dialogue_manager) and _dialogue_manager.is_active())
+		(is_instance_valid(_ui_manager) and _ui_manager.has_modal())
+		or (is_instance_valid(_dialogue_manager) and _dialogue_manager.is_active())
 		or (is_instance_valid(_story_director) and _story_director.is_busy())
 		or (is_instance_valid(_actor_director) and _actor_director.is_actor_controlled(&"player"))
 	)

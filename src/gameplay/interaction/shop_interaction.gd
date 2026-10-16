@@ -18,7 +18,6 @@ var _event_handler: Callable
 var _dispatching := false
 var _last_dispatch_frame := -1
 var _armed := true
-var _movement_before_popup := true
 
 func is_input_enabled() -> bool:
 	return _input_enabled
@@ -130,18 +129,13 @@ func _on_interacted(point: InteractionPoint) -> void:
 	var consumed: bool = result if result is bool else result != ERR_DOES_NOT_EXIST
 	var succeeded: bool = result if result is bool else result == OK
 	if not consumed and is_instance_valid(_player) and is_instance_valid(_ui) and is_instance_valid(point):
-		_movement_before_popup = _player.movement_enabled
-		_player.set_movement_enabled(false)
 		_ui.open(point)
-		succeeded = true
+		succeeded = _ui.is_open()
 	_dispatching = false
 	refresh_target()
 	if succeeded and is_instance_valid(point) and not point.is_queued_for_deletion():
 		interaction_succeeded.emit(point)
 
 func _on_closed() -> void:
-	# A separate host lock may have been applied while the popup was open.
-	if _input_enabled and is_instance_valid(_player):
-		_player.set_movement_enabled(_movement_before_popup)
 	_armed = false
 	refresh_target()

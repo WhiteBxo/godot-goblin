@@ -20,6 +20,20 @@ var _characters: float = 0.0
 var _revealing: bool = false
 var _input_ready_frame: int = 0
 var _previous_focus: Control
+var _ui_manager: UIManager
+var _screen_id: StringName
+var _closing_dialogue := false
+
+func bind_ui(manager: UIManager, id: StringName) -> void:
+	_ui_manager = manager
+	_screen_id = id
+
+func on_ui_closed() -> void:
+	if not _closing_dialogue:
+		cancel_requested.emit()
+
+func get_default_focus() -> Control:
+	return _buttons[_selected] if not _revealing and not _buttons.is_empty() else null
 
 
 func _ready() -> void:
@@ -27,7 +41,10 @@ func _ready() -> void:
 
 
 func present_line(speaker: String, text: String, portrait: Texture2D, choices: Array[String]) -> void:
-	if not visible:
+	if is_instance_valid(_ui_manager):
+		if _ui_manager.open_screen(_screen_id) != OK:
+			return
+	elif not visible:
 		_previous_focus = get_viewport().gui_get_focus_owner()
 	_speaker.text = speaker
 	_portrait.texture = portrait
@@ -42,7 +59,7 @@ func present_line(speaker: String, text: String, portrait: Texture2D, choices: A
 	for index in range(choices.size()):
 		var button := Button.new()
 		button.text = choices[index]
-		button.custom_minimum_size.y = 20
+		button.custom_minimum_size.y = 24
 		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.pressed.connect(func() -> void: choice_requested.emit(index))
@@ -71,12 +88,16 @@ func reveal_all() -> void:
 
 
 func close_dialogue() -> void:
+	_closing_dialogue = true
+	if is_instance_valid(_ui_manager):
+		_ui_manager.close_screen(_screen_id)
 	hide()
 	_revealing = false
 	_clear_choices()
-	if is_instance_valid(_previous_focus) and _previous_focus.is_visible_in_tree():
+	if not is_instance_valid(_ui_manager) and is_instance_valid(_previous_focus) and _previous_focus.is_visible_in_tree():
 		_previous_focus.grab_focus()
 	_previous_focus = null
+	_closing_dialogue = false
 
 
 func _process(delta: float) -> void:
@@ -89,6 +110,11 @@ func _process(delta: float) -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if is_instance_valid(_ui_manager):
+		return
+	handle_ui_input(event)
+
+func handle_ui_input(event: InputEvent) -> void:
 	if not visible:
 		return
 	var confirm := event.is_action("interact") or event.is_action("ui_accept")

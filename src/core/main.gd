@@ -11,6 +11,7 @@ var _shop_interaction: ShopInteraction
 var _dialogue_manager: DialogueManager
 var _story_director: StoryDirector
 var _actor_director: ActorDirector
+var _camera_director: CameraDirector
 var _input_locked: bool = false
 var _movement_before_dialogue: bool = true
 var _interaction_before_dialogue: bool = true
@@ -25,7 +26,9 @@ func _ready() -> void:
 	if _shop_level != null:
 		_shop_player = $World/EntityRoot/Player as ShopPlayer
 		_shop_player.global_position = _shop_level.get_spawn_position()
+<<<<<<< HEAD
 		_shop_player.configure_camera(_shop_level.get_camera_bounds())
+		_create_camera_system(_shop_player.camera)
 		var ui: ShopUI = preload("res://src/UI/milk_tea/shop_ui.tscn").instantiate()
 		$HudLayer.add_child(ui)
 		ui.set_popup_layer($PopupLayer)
@@ -65,6 +68,15 @@ func get_dialogue_manager() -> DialogueManager:
 func get_audio_manager() -> AudioManager:
 	return _audio_manager
 
+func get_camera_director() -> CameraDirector:
+	return _camera_director
+
+func _create_camera_system(camera: BoundedFollowCamera) -> void:
+	_camera_director = CameraDirector.new()
+	_camera_director.name = "CameraDirector"
+	$Systems.add_child(_camera_director)
+	_camera_director.configure(camera)
+
 func get_story_director() -> StoryDirector:
 	return _story_director
 
@@ -94,6 +106,9 @@ func _create_dialogue_system() -> void:
 	_story_director.name = "StoryDirector"
 	$Systems.add_child(_story_director)
 	_story_director.configure(_dialogue_manager, _can_start_story)
+	if is_instance_valid(_camera_director):
+		_story_director.event_finished.connect(func(_id: String, _ok: bool, _reason: String) -> void: _camera_director.cancel_all("Story finished"))
+		_story_director.tree_exiting.connect(_camera_director.cancel_all.bind("StoryDirector exited"))
 	_story_director.set_audio_adapter(StoryAudioAdapter.new(_audio_manager))
 	_story_director.event_started.connect(func(_id: String) -> void: _refresh_input_lock())
 	_story_director.event_finished.connect(func(_id: String, _ok: bool, _reason: String) -> void: _refresh_input_lock())

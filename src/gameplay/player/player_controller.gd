@@ -76,6 +76,10 @@ func get_emote_offset() -> Vector2:
 func get_facing_vector() -> Vector2:
 	return [Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT, Vector2.UP][facing]
 
+func face_direction(direction: Facing) -> void:
+	facing = direction
+	_update_animation(false)
+
 func set_speed_multiplier(multiplier: float) -> void:
 	if multiplier in [1.0, 2.0, 4.0, 8.0]:
 		speed_multiplier = multiplier

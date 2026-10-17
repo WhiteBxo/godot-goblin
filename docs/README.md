@@ -48,6 +48,7 @@
 | [GameState](systems/game_state.md) | `game_state.md` |
 | [Gameplay Bridge](systems/gameplay_bridge.md) | `gameplay_bridge.md` |
 | [ScreenTransition](systems/screen_transition.md) | `screen_transition.md` |
+| [店铺与聚落进出](systems/scene_travel.md) | `scene_travel.md` |
 | [StoryDirector / P0 Cinematic Integration](systems/story_director.md) | `story_director.md` |
 | [项目 UI 系统](systems/ui_system.md) | `ui_system.md` |
 

@@ -34,6 +34,8 @@ Unity 的 `GoblinCasinoDemo`、`GoblinTavernDemo`、`GoblinTrainingDemo`、`Gobl
 
 目前实现地图、实际角色移动、环境碰撞、遮挡、地点说明、三个奶茶店信息交互和夜间采集：`GatherPoints` 在 8 个 `night_gather_*` 锚点放置采集点（`required_flag = world.phase.night`，白天不可采），醒神菇入共享库存并可交给酒馆，详见 [采集与任务物资提交](../../gameplay/gathering.md)。剧情演出、NPC 巡逻/警报、买酒、赌局、雇佣和两天完整任务流程尚未接入。预留锚点不等于已实现对应玩法。
 
+奶茶店门口现已通过 E 双向连接独立店内场景，落点及经营状态保留见[店铺与聚落进出](../../systems/scene_travel.md)。该入口不自动触发 S03，不改变现有聚落地图与碰撞。
+
 ## 编辑与文件职责
 
 - `src/levels/settlement/settlement_map.tscn`：保存的地面 TileMapLayer、河道、街道、两座桥、外围岩壁、16 个场景实例和剧情锚点。运行时不读取 JSON 重建地图。

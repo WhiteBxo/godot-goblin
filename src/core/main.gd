@@ -27,6 +27,9 @@ var _actor_director: ActorDirector
 var _camera_director: CameraDirector
 var _tea_making: TeaMaking
 var _gameplay_bridge: GameplayBridge
+var _scene_travel: SceneTravel
+var _arrival_entrance: StringName
+var _scene_exits: Dictionary[StringName, SceneExit] = {}
 var _input_locked: bool = false
 var _movement_before_dialogue: bool = true
 var _interaction_before_dialogue: bool = true
@@ -48,7 +51,7 @@ func _ready() -> void:
 	_shop_level = $World/LevelRoot.get_child(0) as MilkTeaShop
 	if _shop_level != null:
 		_shop_player = $World/EntityRoot/Player as ShopPlayer
-		_shop_player.global_position = _shop_level.get_spawn_position()
+		_place_player(_shop_level)
 		_shop_player.configure_camera(_shop_level.get_camera_bounds())
 		_create_camera_system(_shop_player.camera)
 		var ui: ShopUI = preload("res://src/UI/milk_tea/shop_ui.tscn").instantiate()
@@ -59,7 +62,9 @@ func _ready() -> void:
 		var interaction := ShopInteraction.new()
 		interaction.name = "ShopInteraction"
 		$Systems.add_child(interaction)
-		interaction.configure(_shop_player, ui, _with_npc_points(_shop_level.get_interaction_points()), _route_story_interaction)
+		var points := _with_npc_points(_shop_level.get_interaction_points())
+		points.append_array(_shop_level.get_scene_exits())
+		interaction.configure(_shop_player, ui, points, _route_story_interaction)
 		_shop_ui = ui
 		_shop_interaction = interaction
 		var feedback := InteractionFeedback.new()
@@ -68,6 +73,7 @@ func _ready() -> void:
 		feedback.configure(interaction, _audio_manager)
 		_create_dialogue_system()
 		_create_gameplay_bridge()
+		_create_scene_travel(_shop_level.get_scene_exits())
 		_create_debug_components()
 		return
 	var error := _active_level.load_error
@@ -103,7 +109,7 @@ func _create_ui_system() -> void:
 	_ui_manager.modal_changed.connect(_refresh_input_lock)
 
 func _return_to_title(pause: PauseMenu) -> void:
-	var error := GameEntry.return_to_title(get_tree())
+	var error := ERR_BUSY if is_instance_valid(_scene_travel) and _scene_travel.is_busy() else GameEntry.return_to_title(get_tree())
 	if error != OK and is_instance_valid(pause):
 		pause.show_navigation_error(error)
 
@@ -190,13 +196,67 @@ func get_active_level() -> Node2D:
 		return _settlement_level
 	return _shop_level if _shop_level != null else _active_level
 
+## Called on a detached, instantiated destination, before the source is removed.
+func prepare_scene_arrival(id: StringName) -> Error:
+	if is_inside_tree() or id == &"":
+		return ERR_INVALID_PARAMETER
+	var level := get_node_or_null("World/LevelRoot")
+	var player := get_node_or_null("World/EntityRoot/Player") as ShopPlayer
+	if level == null or level.get_child_count() != 1 or player == null:
+		return ERR_UNCONFIGURED
+	var map := level.get_child(0)
+	if not map is MilkTeaShop and not map is SettlementMap:
+		return ERR_UNCONFIGURED
+	if map.get_scene_entrance(id) == null:
+		return ERR_DOES_NOT_EXIST
+	_arrival_entrance = id
+	return OK
+
+func _place_player(level: Node2D) -> void:
+	if _arrival_entrance != &"":
+		var entrance: SceneEntrance = level.get_scene_entrance(_arrival_entrance)
+		entrance.place_player(_shop_player)
+	else:
+		_shop_player.teleport_to(level.get_spawn_position())
+
+func get_scene_travel() -> SceneTravel:
+	return _scene_travel
+
+func _create_scene_travel(exits: Array[SceneExit]) -> void:
+	for point in exits:
+		_scene_exits[point.interaction_id] = point
+	var visual: ScreenTransition = preload("res://src/UI/screen_transition/screen_transition.tscn").instantiate()
+	$TransitionLayer.add_child(visual)
+	_scene_travel = SceneTravel.new()
+	_scene_travel.name = "SceneTravel"
+	$Systems.add_child(_scene_travel)
+	_scene_travel.configure(visual, _can_leave_scene)
+	_scene_travel.busy_changed.connect(_refresh_input_lock)
+	_scene_travel.travel_failed.connect(_on_scene_travel_failed)
+	if _arrival_entrance != &"":
+		_scene_travel.begin_arrival()
+
+func _can_leave_scene() -> bool:
+	var owns_lock := is_instance_valid(_scene_travel) and _scene_travel.is_busy()
+	var movement_available := _movement_before_dialogue if owns_lock else _shop_player.movement_enabled
+	return (not get_tree().paused and not _ui_manager.has_modal() and movement_available
+		and not _shop_player.is_performance_controlled()
+		and not _story_director.is_busy() and not _dialogue_manager.is_active()
+		and _gameplay_bridge.allows_story_start())
+
+func _on_scene_travel_failed(point: SceneExit, _error: Error) -> void:
+	if get_tree().paused or _ui_manager.has_modal():
+		return
+	_shop_ui.open(point)
+	_shop_ui.show_interaction_result("暂时无法通过这扇门，请重试。")
+
 func _initialize_settlement() -> void:
 	_shop_player = $World/EntityRoot/Player as ShopPlayer
-	_shop_player.global_position = _settlement_level.get_spawn_position()
+	_place_player(_settlement_level)
 	_shop_player.configure_camera(_settlement_level.get_camera_bounds())
 	_create_camera_system(_shop_player.camera)
 	_shop_ui = preload("res://src/UI/milk_tea/shop_ui.tscn").instantiate()
-	_shop_ui.help_text = "洞窟聚落                  WASD 移动 · E 查看 · Esc 关闭"
+	_shop_ui.help_text = "洞窟聚落                  WASD 移动 · E 交互 · Esc / P 暂停"
 	_shop_ui.show_help = not DebugRuntime.is_enabled()
 	_shop_ui.close_text = "继续探索  [Esc]"
 	$HudLayer.add_child(_shop_ui)
@@ -206,6 +266,7 @@ func _initialize_settlement() -> void:
 	_create_gathering(gather_points)
 	_shop_ui.bind_manager(_ui_manager)
 	var points := _with_npc_points(_settlement_level.get_interaction_points())
+	points.append_array(_settlement_level.get_scene_exits())
 	for point: GatherPoint in gather_points:
 		points.append(point)
 	_shop_interaction = ShopInteraction.new()
@@ -214,6 +275,7 @@ func _initialize_settlement() -> void:
 	_shop_interaction.configure(_shop_player, _shop_ui, points, _route_story_interaction)
 	_create_dialogue_system()
 	_create_gameplay_bridge(false)
+	_create_scene_travel(_settlement_level.get_scene_exits())
 	if DebugRuntime.is_enabled():
 		var preview := Node.new()
 		preview.name = "SettlementPreview"
@@ -311,6 +373,8 @@ func _route_story_interaction(id: StringName) -> Error:
 		var error := _story_director.request_interaction(String(id))
 		if error != ERR_DOES_NOT_EXIST:
 			return error
+	if _scene_exits.has(id):
+		return _scene_travel.request_exit(_scene_exits[id])
 	if is_instance_valid(_gathering_service) and _gathering_service.has_point(id):
 		var point := _gathering_service.get_point(id)
 		var result := _gathering_service.harvest(id)
@@ -403,6 +467,7 @@ func _refresh_order_requirements(ui: ShopUI) -> void:
 
 func _can_start_story() -> bool:
 	return (not get_tree().paused and not _ui_manager.has_modal()
+		and (not is_instance_valid(_scene_travel) or not _scene_travel.is_busy())
 		and (not is_instance_valid(_gameplay_bridge) or _gameplay_bridge.allows_story_start()))
 
 func _can_start_dialogue() -> bool:
@@ -420,7 +485,8 @@ func _on_actor_control_changed(actor_id: StringName, _controlled: bool) -> void:
 
 func _refresh_input_lock() -> void:
 	var should_lock := (
-		(is_instance_valid(_ui_manager) and _ui_manager.has_modal())
+		(is_instance_valid(_scene_travel) and _scene_travel.is_busy())
+		or (is_instance_valid(_ui_manager) and _ui_manager.has_modal())
 		or (is_instance_valid(_dialogue_manager) and _dialogue_manager.is_active())
 		or (is_instance_valid(_story_director) and _story_director.is_busy())
 		or (is_instance_valid(_actor_director) and _actor_director.is_actor_controlled(&"player"))

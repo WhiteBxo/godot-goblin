@@ -13,6 +13,19 @@ func get_camera_bounds() -> Rect2:
 func get_spawn_position() -> Vector2:
 	return $Spawn.global_position
 
+func get_scene_entrance(id: StringName) -> SceneEntrance:
+	for child in $SceneEntrances.get_children():
+		if child is SceneEntrance and child.entrance_id == id:
+			return child
+	return null
+
+func get_scene_exits() -> Array[SceneExit]:
+	var exits: Array[SceneExit] = []
+	for child in $SceneExits.get_children():
+		if child is SceneExit:
+			exits.append(child)
+	return exits
+
 func get_interaction_points() -> Array[InteractionPoint]:
 	var points: Array[InteractionPoint] = []
 	for child in $InteractionPoints.get_children():

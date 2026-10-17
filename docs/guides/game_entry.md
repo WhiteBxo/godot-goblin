@@ -10,6 +10,7 @@ F5 进入 `src/UI/title/title_menu.tscn`。标题显示 Godot Goblin、新游戏
 | --- | --- |
 | `start_new_game(tree: SceneTree) -> Error` | 先加载并校验奶茶店 PackedScene，再调用唯一 GameState 的 `start_new_game()`，成功后切换 |
 | `return_to_title(tree: SceneTree) -> Error` | 切换到标题，不重置会话；成功切换后解除暂停 |
+| `travel_to_scene(tree: SceneTree, destination: Node) -> Error` | 接收已预检的离树目标，复用导航锁；门口进出保留会话与暂停边界，详见[店铺与聚落进出](../systems/scene_travel.md) |
 
 调用方在延后执行的 UI handler 中调用导航，避免物理/GUI 派发期间切场景。菜单从收到请求时禁用按钮；共享导航锁从重置前保持至 `scene_changed`，拒绝重复调用及 reset 信号中的同步重入。失败时恢复按钮和焦点，显示简短错误，技术原因记录到日志。
 

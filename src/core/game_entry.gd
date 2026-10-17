@@ -14,6 +14,23 @@ static func start_new_game(tree: SceneTree) -> Error:
 static func return_to_title(tree: SceneTree) -> Error:
 	return _navigate(tree, TITLE_SCENE, false)
 
+## The caller validates and prepares the detached destination before leaving the source.
+## Shares the title/new-game navigation slot, but never resets or unpauses the session.
+static func travel_to_scene(tree: SceneTree, destination: Node) -> Error:
+	if tree == null or not is_instance_valid(destination):
+		return ERR_INVALID_PARAMETER
+	if _changing_scene or tree.paused:
+		return ERR_BUSY
+	if destination.is_inside_tree() or destination.get_parent() != null:
+		return ERR_UNCONFIGURED
+	_changing_scene = true
+	tree.scene_changed.connect(_on_scene_changed, CONNECT_ONE_SHOT)
+	var error := tree.change_scene_to_node(destination)
+	if error != OK:
+		tree.scene_changed.disconnect(_on_scene_changed)
+		_changing_scene = false
+	return error
+
 static func _navigate(tree: SceneTree, path: String, reset_session: bool) -> Error:
 	if tree == null:
 		return ERR_INVALID_PARAMETER

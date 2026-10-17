@@ -1,6 +1,6 @@
 # 玩家动画与动作接口
 
-洞穴与聚落 / 店铺玩家统一使用 `src/gameplay/player/player_actions_frames.tres`。新素材包含站立待机、走路、奔跑、潜行、蹲下待机、投掷，共 24 组四向动画、274 帧。NPC 的既有 idle/run 资源继续由控制器兼容。
+洞穴玩家使用 `src/gameplay/player/player_actions_frames.tres`；聚落 / 店铺玩家使用同一批源图直接生成的 `player_actions_pixel_frames.tres`。新素材包含站立待机、走路、奔跑、潜行、蹲下待机、投掷，共 24 组四向动画、274 帧。NPC 的既有 idle/run 资源继续由控制器兼容。
 
 ## 操作
 
@@ -41,12 +41,14 @@ F 通过 `_unhandled_input` 响应，遵守 GUI 对输入的消费，忽略键�
 | 蹲下待机 → `crouch_idle` | 合并图片 2.png | 合并图片.png | 合并图片 3.png |
 | 投掷 → `throw` | 合并图片 2.png | 合并图片.png | 合并图片 3.png |
 
-普通图以 64×64 格、24 像素间隔，逐行读取非空格。正面站立待机的 4096×1640 图片以 5×2 等分格缩为 64×64，保持原比例；其他素材不改变原始帧格。左向通过镜像右向生成。每帧统一 nearest 放大 3.5 倍，放入 224×300 透明画布；同一方向的整段动画共用一个脚底锚点，保留逐帧起伏，不逐帧贴地。保留玩家现有 Visual 比例、碰撞及相机配置。
+普通图以 64×64 格、24 像素间隔，逐行读取非空格。正面站立待机的 4096×1640 图片以 5×2 等分格缩为 64×64，保持原比例；其他素材不改变原始帧格。左向通过镜像右向生成。洞穴兼容图集每帧 nearest 放大 3.5 倍，放入 224×300 透明画布。聚落 / 店铺专用图集直接从 64×64 原始帧 nearest 放大 2 倍，放入 128×160 透明画布，脚底锚点 y=156；Visual 使用 1 倍、AnimatedSprite2D.offset=(0, -76)，避免先放大再缩小。可见站立高度约 118 世界像素，比原 3.5×0.52≈1.82 倍方案大约 10%。同一方向的整段动画共用一个脚底锚点，保留逐帧起伏，不逐帧贴地。碰撞及相机配置保持原值。
 
-`player_actions_atlas.png` 和 SpriteFrames 均由 `tools/characters/build_player_actions.py` 生成。依赖 Python + Pillow，运行时只加载已导入的资源：
+`player_actions_atlas.png`、`player_actions_pixel_atlas.png` 和对应 SpriteFrames 均由 `tools/characters/build_player_actions.py` 生成。依赖 Python + Pillow，运行时只加载已导入的资源：
 
 ```powershell
-# 从仓库中保留的源 PNG 重新生成：
+# 从仓库中保留的源 PNG 重新生成店铺 / 聚落专用的整数倍图集：
+python tools/characters/build_player_actions.py --pixel-perfect
+# 重建洞穴兼容图集：
 python tools/characters/build_player_actions.py
 # 首次接收附件时可额外传入：--archive "附件完整路径.zip"
 godot --headless --editor --path . --import --quit
@@ -60,10 +62,12 @@ FPS：待机 8、走路 12、奔跑 18、潜行 12、蹲伏待机 10、投掷 12
 
 - `tests/verify_player.gd`：两套玩家场景的移动、平滑启停、转向、移动锁、洞穴通行查询。
 - `tests/verify_player_actions.gd`：按键、六类四向动作、速度、Ctrl 优先级、四向单次出手、完成 / 取消、剧情接管、NPC 输入关闭、GUI 输入消费。
-- 带渲染运行 `tests/verify_player_visuals.gd`：遍历 274 帧，检查透明边缘、画布、比例、落脚范围，在系统临时目录生成 `player_actions_contact_render.png`。
+- 带渲染运行 `tests/verify_player_visuals.gd`：遍历店铺专用图集的 274 帧，检查透明边缘、画布、比例、落脚范围，以及每个源像素对应一致的 2×2 像素块，在系统临时目录生成 `player_actions_contact_render.png`。
 - F6 打开 `src/debug/player_actions_preview/player_actions_preview.tscn`：WASD、Shift、Ctrl、F 试玩；左上角显示开始、出手与结束信号；P 锁定 / 解锁移动，可检查投掷取消。该预览仅在 Debug 组装。
 - `src/debug/player_walk_preview/player_walk_preview.tscn`：保留四向奔跑慢放、暂停与逐帧检查。
 
 官方 API 参考：[AnimatedSprite2D](https://docs.godotengine.org/en/4.7/classes/class_animatedsprite2d.html) 的 `frame_changed`、非循环 `animation_finished` 与 `set_frame_and_progress`；[Node 输入传播](https://docs.godotengine.org/en/4.7/classes/class_node.html#class-node-private-method-unhandled-input)；[SpriteFrames](https://docs.godotengine.org/en/4.7/classes/class_spriteframes.html) 的动画循环和 FPS 设置。
 
 本次实现核对的官方 4.7 文档源码：[AnimatedSprite2D.xml](https://github.com/godotengine/godot/blob/4.7/doc/classes/AnimatedSprite2D.xml)、[Node.xml](https://github.com/godotengine/godot/blob/4.7/doc/classes/Node.xml)、[SpriteFrames.xml](https://github.com/godotengine/godot/blob/4.7/doc/classes/SpriteFrames.xml)。
+
+此次像素比例修正参考 [Godot 4.7 多分辨率与整数缩放](https://docs.godotengine.org/en/4.7/tutorials/rendering/multiple_resolutions.html#integer-scaling)：非整数缩放可能导致像素宽度不均。这里只调整店铺 / 聚落主角的资源与视觉节点，默认镜头和窗口配置保持原值。

@@ -1,15 +1,12 @@
 class_name ChroniclePanel
-extends Control
+extends VBoxContainer
+## Read-only chronicle browser page. The page owns no chrome; ModalShell provides it.
 
-signal close_requested
-
-@onready var _list: ItemList = $Margin/Panel/Margin/Content/Body/Entries
-@onready var _title: Label = $Margin/Panel/Margin/Content/Body/Detail/Title
-@onready var _text: RichTextLabel = $Margin/Panel/Margin/Content/Body/Detail/Text
-@onready var _summary: Label = $Margin/Panel/Margin/Content/Header/Summary
-@onready var _close: Button = $Margin/Panel/Margin/Content/Header/Close
-
-var _embedded_close: Button
+@onready var _list: ItemList = %Entries
+@onready var _title: Label = %Title
+@onready var _text: RichTextLabel = %Text
+@onready var _summary: Label = %Summary
+@onready var _body: BoxContainer = %Body
 
 var _journal: ChronicleJournal
 var _ids: Array[String] = []
@@ -18,7 +15,6 @@ var _selected_id := ""
 func _ready() -> void:
 	_list.item_selected.connect(_select)
 	_list.item_activated.connect(_select)
-	_close.pressed.connect(func() -> void: close_requested.emit())
 	visibility_changed.connect(_on_visibility_changed)
 	_refresh()
 
@@ -36,7 +32,22 @@ func uses_native_gui_input() -> bool:
 	return true
 
 func get_default_focus() -> Control:
-	return _list if _list.item_count > 0 else (_embedded_close if is_instance_valid(_embedded_close) else _close)
+	return _list if _list.item_count > 0 else null
+
+func get_entries() -> ItemList:
+	return _list
+
+func get_detail_title() -> Label:
+	return _title
+
+func get_detail_text() -> RichTextLabel:
+	return _text
+
+func get_summary() -> Label:
+	return _summary
+
+func get_body() -> BoxContainer:
+	return _body
 
 func _on_visibility_changed() -> void:
 	if is_node_ready() and not is_visible_in_tree():
@@ -75,13 +86,3 @@ func _select(index: int) -> void:
 	_refresh()
 	_text.scroll_to_line(0)
 	_journal.mark_read(_selected_id)
-
-## Reuse the browser inside a shared modal without nested chrome.
-func set_embedded(close_button: Button) -> void:
-	_embedded_close = close_button
-	$Dim.hide()
-	$Margin/Panel/Margin/Content/Header.hide()
-	$Margin/Panel/Margin/Content/Hint.hide()
-	for side: String in ["left", "top", "right", "bottom"]:
-		$Margin.add_theme_constant_override("margin_" + side, 0)
-	$Margin/Panel.add_theme_stylebox_override("panel", StyleBoxEmpty.new())

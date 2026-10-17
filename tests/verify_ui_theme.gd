@@ -20,7 +20,7 @@ const REQUIRED_VARIATIONS := [
 	"Title", "HeroTitle", "H2", "Speaker", "Hint", "Muted", "Subtitle", "Value",
 	"Success", "Warning", "Danger", "Badge", "BadgeMain", "BadgeDone", "BadgeMuted",
 	"Keycap", "PrimaryButton", "GhostButton", "DangerButton", "IconButton",
-	"InsetPanel", "CardPanel", "SunkenPanel", "SuccessBar",
+	"InsetPanel", "CardPanel", "SunkenPanel", "ShadePanel", "SuccessBar",
 ]
 const ALLOWED_FONT_SIZES := [12, 24, 36]
 const THEME_ALLOWLIST := ["res://src/UI/screen_transition/screen_transition.tscn"]

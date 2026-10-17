@@ -2,7 +2,6 @@ extends SceneTree
 
 const StateData = preload("res://src/core/game_state.gd")
 const FIXTURE := "res://tests/fixtures/task_panel_tasks.json"
-const BODY := "Margin/Panel/Margin/Content/Body/"
 var checks := 0
 var failures: Array[String] = []
 
@@ -63,15 +62,15 @@ func _test_projection_and_panel() -> void:
 	var journal := TaskJournal.new()
 	root.add_child(journal)
 	journal.configure(catalog, state)
-	var panel: TaskPanel = load("res://src/UI/tasks/task_panel.tscn").instantiate()
+	var panel: TaskPopup = load("res://src/UI/tasks/task_popup.tscn").instantiate()
 	panel.bind_journal(journal) # Pre-tree binding must not connect twice.
 	root.add_child(panel)
 	panel.show()
 	await frames()
-	var list: ItemList = panel.get_node(BODY + "Entries")
-	var title: Label = panel.get_node(BODY + "Detail/Title")
-	var text: RichTextLabel = panel.get_node(BODY + "Detail/Text")
-	var body: BoxContainer = panel.get_node(BODY.trim_suffix("/"))
+	var list: ItemList = panel.get_entries()
+	var title: Label = panel.get_detail_title()
+	var text: RichTextLabel = panel.get_detail_text()
+	var body: BoxContainer = panel.get_body()
 	check(list.item_count == 0 and title.text == "暂无活动任务", "Inactive tasks stay out of the empty browser")
 	check(journal.get_task("panel.hidden").delivery.is_empty(), "Hidden delivery IDs are masked in projection")
 	state.set_flag("task.panel.active")
@@ -131,7 +130,7 @@ func _test_projection_and_panel() -> void:
 		root.size = dimensions
 		await frames(6)
 		check(body.vertical == (dimensions.x < 480), "Responsive list direction at " + str(dimensions))
-		check(Rect2(Vector2.ZERO, Vector2(dimensions)).encloses(panel.get_node("Margin/Panel").get_global_rect()), "Panel stays within viewport at " + str(dimensions))
+		check(Rect2(Vector2.ZERO, Vector2(dimensions)).encloses(panel.get_panel_rect()), "Panel stays within viewport at " + str(dimensions))
 		check(text.size.y > 40 and text.size.x > 100, "Detail retains usable scrolling area at " + str(dimensions))
 		if dimensions.x < 480:
 			check(is_equal_approx(list.size.y, 88.0), "Narrow list height is 88 logical pixels")
@@ -185,7 +184,7 @@ func _test_material_panel() -> void:
 	var journal := TaskJournal.new()
 	root.add_child(journal)
 	journal.configure(catalog, state)
-	var panel: TaskPanel = load("res://src/UI/tasks/task_panel.tscn").instantiate()
+	var panel: TaskPopup = load("res://src/UI/tasks/task_popup.tscn").instantiate()
 	panel.bind_journal(journal)
 	root.add_child(panel)
 	panel.show()
@@ -197,7 +196,7 @@ func _test_material_panel() -> void:
 	check(journal.get_task("tavern.insomnia_order").delivery.items.insomnia_mushroom == 3, "Material projection is independent of caller mutation")
 	panel.set_delivery_names({"tavern": "酒馆"}, {"insomnia_mushroom": "醒神菇"})
 	await frames()
-	var text: RichTextLabel = panel.get_node(BODY + "Detail/Text")
+	var text: RichTextLabel = panel.get_detail_text()
 	check(text.text.contains("交付对象：酒馆") and text.text.contains("醒神菇 × 3"), "Material task panel displays target, item name and quantity")
 	check(not text.text.contains("insomnia_mushroom") and not text.text.contains("成品待确认"), "Material details never leak internal item IDs or use finished-product placeholders")
 	panel.free()
@@ -212,11 +211,11 @@ func _test_host(path: String) -> void:
 	current_scene = game
 	await frames()
 	var ui := game.get_ui_manager()
-	var panel: TaskPanel = game.get_node("PopupLayer/HandbookPanel/Margin/Panel/Content/Pages/Tasks")
+	var panel: TaskPanel = game.get_node("PopupLayer/HandbookPanel").get_tasks_page()
 	var button: Button = game.get_node("HudLayer/HandbookHUD")
 	var player := game.get_player() as PlayerController
-	var text: RichTextLabel = panel.get_node(BODY + "Detail/Text")
-	var list: ItemList = panel.get_node(BODY + "Entries")
+	var text: RichTextLabel = panel.get_detail_text()
+	var list: ItemList = panel.get_entries()
 	check(not button.visible and game.open_tasks() == ERR_UNAVAILABLE, path + ": Handbook is hidden before task unlock")
 	state.set_flag("task.shop.first_order.active")
 	check(button.visible, "First task unlocks handbook")
@@ -238,7 +237,7 @@ func _test_host(path: String) -> void:
 	check(game.open_chronicle() == ERR_BUSY, "Task flow excludes another popup while paused")
 	await tap(KEY_ESCAPE)
 	check(not paused and ui.is_open(&"tasks") and not player.movement_enabled, "Esc resumes to the existing task window")
-	game.get_node("PopupLayer/HandbookPanel/Margin/Panel/Content/Header/Close").pressed.emit()
+	game.get_node("PopupLayer/HandbookPanel").get_close_button().pressed.emit()
 	check(not ui.has_modal() and player.movement_enabled, "Close button restores movement")
 	await tap(KEY_P)
 	await tap(KEY_J)

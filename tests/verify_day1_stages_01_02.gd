@@ -258,7 +258,7 @@ func _run() -> void:
 	_attach_observers()
 	await frames()
 	check(_state.get_business_profile() == "day1", "Official host selects the formal profile")
-	check(_game.open_chronicle() == ERR_UNAVAILABLE and _game.get_node("PopupLayer/HandbookPanel/Margin/Panel/Content/Pages").is_tab_hidden(1), "Chronicle is inaccessible before unlock")
+	check(_game.open_chronicle() == ERR_UNAVAILABLE and _game.get_node("PopupLayer/HandbookPanel").get_pages().is_tab_hidden(1), "Chronicle is inaccessible before unlock")
 	check(not _game.get_tea_production().make_drink(["black_tea", "creamer", "pearl", "syrup"], "day1_human").ok, "Cannot craft ahead of acceptance")
 	await _wait_event("day1.opening")
 	check(_state.story_stage == "day1.wait_human" and _game.get_player().movement_enabled, "First gameplay handoff releases input")

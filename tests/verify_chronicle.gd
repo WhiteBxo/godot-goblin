@@ -1,7 +1,6 @@
 extends SceneTree
 
 const StateData = preload("res://src/core/game_state.gd")
-const PANEL_BODY := "Margin/Panel/Margin/Content/Body/"
 var checks := 0
 var failures: Array[String] = []
 
@@ -104,9 +103,9 @@ func _run() -> void:
 	await frames()
 	journal = game.get_chronicle_journal()
 	var ui := game.get_ui_manager()
-	var panel: ChroniclePanel = game.get_node("PopupLayer/HandbookPanel/Margin/Panel/Content/Pages/Chronicle")
-	var list: ItemList = panel.get_node(PANEL_BODY + "Entries")
-	var text: RichTextLabel = panel.get_node(PANEL_BODY + "Detail/Text")
+	var panel: ChroniclePanel = game.get_node("PopupLayer/HandbookPanel").get_chronicle_page()
+	var list: ItemList = panel.get_entries()
+	var text: RichTextLabel = panel.get_detail_text()
 	var hud: HandbookHUD = game.get_node("HudLayer/HandbookHUD")
 	var player := game.get_player() as PlayerController
 	check(game.open_chronicle() == ERR_UNAVAILABLE and list.item_count == 0 and not hud.visible, "Review remains hidden until the first entry unlocks")

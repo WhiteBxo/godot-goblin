@@ -66,7 +66,7 @@ func open_screen(id: StringName) -> Error:
 				return ERR_BUSY
 			return prepare.call()
 		return OK
-	if id == &"pause" and not _owns_pause:
+	if id == ScreenIds.PAUSE and not _owns_pause:
 		if get_tree().paused:
 			return ERR_BUSY
 		set_paused(true)
@@ -96,7 +96,7 @@ func close_screen(id: StringName) -> void:
 	id = _aliases[id].target if _aliases.has(id) else id
 	if not is_open(id):
 		return
-	if id == &"pause" and _owns_pause:
+	if id == ScreenIds.PAUSE and _owns_pause:
 		set_paused(false)
 		return
 	_close(id)
@@ -138,23 +138,23 @@ func request_back() -> void:
 
 func set_paused(value: bool) -> void:
 	if value:
-		if _owns_pause or get_tree().paused or not _screens.has(&"pause"):
+		if _owns_pause or get_tree().paused or not _screens.has(ScreenIds.PAUSE):
 			return
-		var view: Control = _screens[&"pause"].view
+		var view: Control = _screens[ScreenIds.PAUSE].view
 		if not is_instance_valid(view) or not view.is_inside_tree() or view.is_queued_for_deletion():
 			return
 		_owns_pause = true
 		get_tree().paused = true
-		_layers[&"pause"].show()
-		open_screen(&"pause")
+		_layers[ScreenIds.PAUSE].show()
+		open_screen(ScreenIds.PAUSE)
 	else:
 		if not _owns_pause:
 			return
 		_owns_pause = false
 		get_tree().paused = false
-		if is_open(&"pause"):
-			_close(&"pause")
-		_layers[&"pause"].hide()
+		if is_open(ScreenIds.PAUSE):
+			_close(ScreenIds.PAUSE)
+		_layers[ScreenIds.PAUSE].hide()
 	pause_changed.emit(value)
 
 ## Explicit removal supports scene tools rebinding a view before the old one exits.

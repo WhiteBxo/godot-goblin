@@ -7,7 +7,7 @@ UI 使用 Godot 4.7 原生 Control、Container 和 Theme，不增加 autoload �
 | 层 | 内容 | process mode |
 | --- | --- | --- |
 | HudLayer / 10 | ShopUI：标题和交互提示 | Always |
-| PopupLayer / 20 | 独立 ShopPopup、DialogueUI | Always；被覆盖时 Disabled |
+| PopupLayer / 20 | 独立 ShopPopup、DialogueUI、HandbookPanel | Always；被覆盖时 Disabled |
 | PauseLayer / 30 | PauseMenu | WhenPaused |
 | TransitionLayer / 40 | 预留转场层，原 ScreenTransition 模块独立使用 | Always |
 | DebugLayer / 50 | 调试显示和 UI demo 按钮 | Always |
@@ -35,13 +35,15 @@ UIManager 在 Systems 下使用 Always；World 和其他普通 Systems 保持 Pa
 
 信号为 `modal_changed()`、`pause_changed(paused)`、`screen_closed(id)`。非模态显示改变也可能触发 modal_changed，订阅者应重新查询状态。
 
-新增界面将内容放在独立 Control 场景，根节点引用共享 Theme；模态根覆盖全屏，遮罩接收鼠标。业务请求以 signal 交给宿主处理，宿主将关闭请求接到 `close_screen`。可选实现：
+新增界面继承 `src/UI/management/ui_screen.gd`，把内容放在独立 Control 场景，根节点引用共享 Theme；screen ID 使用 `src/UI/management/screen_ids.gd` 常量。业务请求以 signal 交给宿主处理，宿主将关闭请求接到 `close_screen`。`UIScreen` 已提供以下默认实现，按需覆盖：
 
 - `get_default_focus() -> Control`：打开和恢复时的默认焦点；没有可选项可返回 null。
 - `bind_ui(manager, id)`：切换为管理器输入路由；未绑定时保留独立场景输入。
 - `uses_native_gui_input() -> bool`：返回 true 时由原生 Control 处理确认、方向和 Tab；用于 Developer Console 的 OptionButton 和只读 TextEdit，其他界面的输入分发不变。
 - `handle_ui_input(event)`：处理栈顶的确认和方向输入，当前用于对白。Tab 导航由管理器处理。
 - `on_ui_closed()`：同步结束业务生命周期；对白在此请求 DialogueManager 取消。此回调发生在界面已出栈、隐藏之后，应可重复安全调用。
+
+模态界面组合 `src/UI/components/modal_shell.tscn`：壳负责遮罩、外边距、Panel 边框、标题、关闭按钮与页脚，内容场景只提供列表、详情和输入。手册由 `ModalShell + HandbookBody`（`TabContainer` + `TaskPage` / `ChroniclePage`）组成，`TaskPopup` 仅用于测试与 F6 预览。内容页不得再复制 Dim、Panel、Header 或 Close；`ModalShell.get_panel_rect()` 与 `get_close_button()` 供测试和宿主使用。
 
 当前 `popup` 层模态互斥，`pause` 可覆盖 popup；通用 HUD 使用非模态注册。`pause` 是管理器保留 ID；通过 open_screen("pause") 或 set_paused(true) 均会取得暂停。不要在 pause 层注册其他业务界面。
 
@@ -95,7 +97,7 @@ godot --path . --log-file .godot/ui-visual.log --script res://tests/verify_ui_ma
 
 统一手册与任务面板的截图分别写入 `.godot/handbook/` 与 `.godot/task_panel/`；主题画廊写入 `.godot/ui_kit/`。窗口截图来自游戏 viewport，不包含宽窗口的比例留白。验收同时断言实际 Window 尺寸，避免只修改截图文件名。
 
-本次主题化批次通过：ui_theme 131 项、ui_kit 6 项、ui_manager 47 项（窗口版含尺寸断言 50 项）、handbook 41 项、task_panel 92 项、chronicle 64 项、dialogue 154 项、main_game 73 项、day1_stages_01_02 255 项，以及 milk_tea_shop 的移动 / 碰撞 / 交互检查。F6 与 640×360、1280×720 截图已人工检查。
+本次主题化与壳重构批次通过：ui_theme 147 项、ui_kit 6 项、ui_manager 47 项（窗口版含尺寸断言 50 项）、handbook 44 项、task_panel 92 项、chronicle 64 项、dialogue 154 项、main_game 73 项、day1_stages_01_02 255 项，以及 milk_tea_shop 的移动 / 碰撞 / 交互检查。F6 与 640×360、1280×720 截图已人工检查。
 
 历史 UI 验收（统一手册接入前）：ui_manager 47 项（窗口版含尺寸断言共 50 项）、main_game 72 项、dialogue 75 项、story_director 147 项、cinematic_integration 286 项、interaction_feedback 46 项、screen_transition 54 项，以及 milk_tea_shop 的移动/碰撞/交互检查。窗口版在项目默认 Metal Forward+ 下完成三种尺寸截图检查；Compatibility 渲染器也通过同一 UI 回归。
 

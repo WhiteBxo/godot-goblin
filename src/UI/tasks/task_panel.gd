@@ -1,17 +1,13 @@
 class_name TaskPanel
-extends Control
-## Read-only activity browser. All facts and reveal rules belong to TaskJournal.
+extends VBoxContainer
+## Read-only activity browser page. Facts and reveal rules belong to TaskJournal.
+## The page owns no chrome: ModalShell provides the shade, panel, header and close button.
 
-signal close_requested
-
-@onready var _list: ItemList = $Margin/Panel/Margin/Content/Body/Entries
-@onready var _body: BoxContainer = $Margin/Panel/Margin/Content/Body
-@onready var _title: Label = $Margin/Panel/Margin/Content/Body/Detail/Title
-@onready var _text: RichTextLabel = $Margin/Panel/Margin/Content/Body/Detail/Text
-@onready var _summary: Label = $Margin/Panel/Margin/Content/Header/Summary
-@onready var _close: Button = $Margin/Panel/Margin/Content/Header/Close
-
-var _embedded_close: Button
+@onready var _list: ItemList = %Entries
+@onready var _body: BoxContainer = %Body
+@onready var _title: Label = %Title
+@onready var _text: RichTextLabel = %Text
+@onready var _summary: Label = %Summary
 
 var _journal: TaskJournal
 var _ids: Array[String] = []
@@ -31,7 +27,6 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	_list.item_selected.connect(_select)
 	_list.item_activated.connect(_select)
-	_close.pressed.connect(func() -> void: close_requested.emit())
 	visibility_changed.connect(_on_visibility_changed)
 	_resize_panel()
 	_refresh()
@@ -61,7 +56,22 @@ func uses_native_gui_input() -> bool:
 	return true
 
 func get_default_focus() -> Control:
-	return _list if _list.item_count > 0 else (_embedded_close if is_instance_valid(_embedded_close) else _close)
+	return _list if _list.item_count > 0 else null
+
+func get_entries() -> ItemList:
+	return _list
+
+func get_detail_title() -> Label:
+	return _title
+
+func get_detail_text() -> RichTextLabel:
+	return _text
+
+func get_summary() -> Label:
+	return _summary
+
+func get_body() -> BoxContainer:
+	return _body
 
 func _connect_journal() -> void:
 	if is_instance_valid(_journal) and not _journal.projection_changed.is_connected(_refresh):
@@ -74,7 +84,7 @@ func _disconnect_journal() -> void:
 func _resize_panel() -> void:
 	var narrow := get_viewport_rect().size.x < 480.0
 	_body.vertical = narrow
-	_list.custom_minimum_size = Vector2(0, 88) if narrow else Vector2(180, 0)
+	_list.custom_minimum_size = Vector2(0, 88) if narrow else Vector2(176, 0)
 	_list.size_flags_vertical = Control.SIZE_FILL if narrow else Control.SIZE_EXPAND_FILL
 
 func _on_visibility_changed() -> void:
@@ -103,8 +113,6 @@ func _refresh() -> void:
 		_title.text = "暂无活动任务"
 		_title.tooltip_text = ""
 		_set_detail("接取任务后，可在这里查看目标、交付对象和奖励。")
-		if _list.has_focus():
-			get_default_focus().grab_focus()
 		return
 	var selected_index := _ids.find(_selected_id)
 	_list.select(selected_index) # select() does not emit item_selected.
@@ -155,13 +163,3 @@ func _select(index: int) -> void:
 		return
 	_selected_id = _ids[index]
 	_refresh()
-
-## Reuse the browser inside a shared modal without nested chrome.
-func set_embedded(close_button: Button) -> void:
-	_embedded_close = close_button
-	$Dim.hide()
-	$Margin/Panel/Margin/Content/Header.hide()
-	$Margin/Panel/Margin/Content/Hint.hide()
-	for side: String in ["left", "top", "right", "bottom"]:
-		$Margin.add_theme_constant_override("margin_" + side, 0)
-	$Margin/Panel.add_theme_stylebox_override("panel", StyleBoxEmpty.new())

@@ -58,11 +58,11 @@ func set_popup_layer(layer: CanvasLayer) -> void:
 
 func bind_manager(manager: UIManager) -> void:
 	_manager = manager
-	_manager.register_screen(&"shop_hud", self, &"hud", false)
-	_manager.open_screen(&"shop_hud")
-	_manager.register_screen(&"shop", _popup, &"popup", true)
+	_manager.register_screen(ScreenIds.SHOP_HUD, self, &"hud", false)
+	_manager.open_screen(ScreenIds.SHOP_HUD)
+	_manager.register_screen(ScreenIds.SHOP, _popup, &"popup", true)
 	_manager.screen_closed.connect(func(id: StringName) -> void:
-		if id == &"shop":
+		if id == ScreenIds.SHOP:
 			closed.emit())
 
 func bind_tea_making(tea: TeaMaking) -> void:
@@ -79,7 +79,7 @@ func open(point: InteractionPoint) -> void:
 	if not is_instance_valid(_popup):
 		return
 	if is_instance_valid(_manager):
-		if _manager.open_screen(&"shop") != OK:
+		if _manager.open_screen(ScreenIds.SHOP) != OK:
 			return
 	else:
 		_popup.show()
@@ -93,7 +93,7 @@ func close() -> void:
 	if not is_open():
 		return
 	if is_instance_valid(_manager):
-		_manager.close_screen(&"shop")
+		_manager.close_screen(ScreenIds.SHOP)
 	else:
 		_popup.hide()
 		closed.emit()

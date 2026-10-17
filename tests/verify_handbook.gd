@@ -1,7 +1,6 @@
 extends SceneTree
 
 const StateData = preload("res://src/core/game_state.gd")
-const PAGE_PATH := "PopupLayer/HandbookPanel/Margin/Panel/Content/Pages"
 var checks := 0
 var failures: Array[String] = []
 
@@ -48,11 +47,15 @@ func _run() -> void:
 	var ui := game.get_ui_manager()
 	var hud: HandbookHUD = game.get_node("HudLayer/HandbookHUD")
 	var book: HandbookPanel = game.get_node("PopupLayer/HandbookPanel")
-	var pages: TabContainer = game.get_node(PAGE_PATH)
-	var chronicle: ChroniclePanel = pages.get_node("Chronicle")
+	var pages: TabContainer = book.get_pages()
+	var chronicle: ChroniclePanel = book.get_chronicle_page()
+	var shell: ModalShell = book.get_shell()
 	var journal := game.get_chronicle_journal()
 	var dot: Label = hud.get_node("Unread")
 	var player := game.get_player() as PlayerController
+	check(shell.get_close_button() != null and shell.find_children("*", "ColorRect", true, false).is_empty(), "Shared shell owns the close button and has no duplicate Dim")
+	check(book.get_tasks_page().get_parent() == pages and chronicle.get_parent() == pages, "Pages live in the shared tab body")
+	check(not book.get_tasks_page().has_node("Dim") and not chronicle.has_node("Margin/Panel"), "Content pages own no modal chrome")
 	check(not hud.visible and hud.focus_mode == Control.FOCUS_NONE, "Both locked: no HUD or keyboard focus")
 	check(game.open_tasks() == ERR_UNAVAILABLE and game.open_chronicle() == ERR_UNAVAILABLE, "Public entrypoints reject locked systems")
 	check(ui.open_screen(&"tasks") == ERR_UNAVAILABLE and not ui.has_modal(), "Locked alias cannot reserve a modal")
@@ -65,7 +68,7 @@ func _run() -> void:
 	await click(hud)
 	check(ui.is_open(&"handbook") and pages.current_tab == 1 and not player.movement_enabled, "Mouse click opens the only available page and locks movement")
 	check(journal.get_unread_count() == 1, "Opening the shared shell never marks a record read")
-	var list: ItemList = chronicle.get_node("Margin/Panel/Margin/Content/Body/Entries")
+	var list: ItemList = chronicle.get_entries()
 	list.item_selected.emit(0)
 	check(journal.get_unread_count() == 0 and not dot.visible, "Selecting an entry clears the unread dot")
 	await capture("chronicle_only_640")
@@ -133,7 +136,7 @@ func _run() -> void:
 	journal.append_record("test.settlement", "test.settlement_long", "长篇见闻正文，用来检查自动换行与详情滚动。\n".repeat(30))
 	game.open_chronicle()
 	await capture("settlement_chronicle_640")
-	game.get_node(PAGE_PATH + "/Chronicle/Margin/Panel/Margin/Content/Body/Entries").item_selected.emit(0)
+	game.get_node("PopupLayer/HandbookPanel").get_chronicle_page().get_entries().item_selected.emit(0)
 	root.size = Vector2i(1280, 720)
 	await capture("settlement_chronicle_1280")
 	game.get_ui_manager().close_screen(&"handbook")
@@ -150,7 +153,8 @@ func _run() -> void:
 	game.get_story_director().cancel_event("Handbook access validation")
 	state.set_flag("day1.human_open")
 	var day_hud: HandbookHUD = game.get_node("HudLayer/HandbookHUD")
-	var day_pages: TabContainer = game.get_node(PAGE_PATH)
+	var day_book: HandbookPanel = game.get_node("PopupLayer/HandbookPanel")
+	var day_pages: TabContainer = day_book.get_pages()
 	check(day_hud.visible and day_pages.is_tab_hidden(1), "Day 1 first order unlocks tasks before chronicle")
 	game.get_chronicle_journal().unlock_entry("test.day1", "剧情条目")
 	check(day_pages.is_tab_hidden(1) and game.open_chronicle() == ERR_UNAVAILABLE, "Day 1 entries cannot bypass the story system gate")

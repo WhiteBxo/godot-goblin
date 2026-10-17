@@ -25,6 +25,7 @@ UI 使用 Godot 原生 Control、Container、Theme。总体接口见 [UI 系统]
 静态样式只来自 `src/resources/ui/game_theme.tres`，数值来源是 `src/resources/ui/ui_tokens.gd`；改 tokens 后运行 `godot --headless --path . --script res://tools/ui/build_theme.gd` 重建，不手改生成结果。正式 UI 根显式引用主题，不使用项目级全局主题。
 
 - 场景和脚本用 `theme_type_variation` 表达 Title / H2 / Hint / Muted / Success / Warning / Danger / Badge / Keycap / PrimaryButton / GhostButton / IconButton / InsetPanel 等语义，不写 per-node 颜色、字号或 `ListStyle` 覆盖。
+- 模态界面组合 `components/modal_shell.tscn`，内容页只做列表、详情与输入，不复制遮罩、Panel 边框、页脚或关闭按钮；新 screen 继承 `management/ui_screen.gd`，ID 使用 `ScreenIds` 常量。
 - 新增控件类型必须补主题条目，并通过 `tests/verify_ui_theme.gd` 的类型、字号与 raw Color 审计。
 - `src/debug/ui/ui_kit.tscn` 是 F6 主题画廊；新增可复用控件先在画廊展示，再接入正式界面。
 
@@ -33,6 +34,8 @@ UI 使用 Godot 原生 Control、Container、Theme。总体接口见 [UI 系统]
 | 目录 / 内容 | 相关模块规范 |
 | --- | --- |
 | `management/`：注册、模态栈、焦点与暂停 | [management/AGENTS.md](management/AGENTS.md) |
+| `components/`：ModalShell、页面壳与通用控件 | [components/AGENTS.md](components/AGENTS.md) |
+| `handbook/`：统一手册入口、页签与共享模态 | [handbook/AGENTS.md](handbook/AGENTS.md)，业务另读 [任务规范](../core/tasks/AGENTS.md) 与 [见闻录规范](../core/chronicle/AGENTS.md) |
 | `screen_transition/`：黑场与转场视觉 | [screen_transition/AGENTS.md](screen_transition/AGENTS.md) |
 | `dialogue/`：逐字对白、选项与立绘 | [对话规范](../core/dialogue/AGENTS.md) |
 | `milk_tea/`：制作与仓库界面 | [制作与库存规范](../gameplay/milk_tea/AGENTS.md) |

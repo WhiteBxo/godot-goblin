@@ -93,9 +93,9 @@ func _ready() -> void:
 		_create_gameplay_bridge()
 		if day1_story_enabled:
 			_business_hud = preload("res://src/UI/milk_tea/day1_business_hud.tscn").instantiate()
-			_ui_manager.register_screen(&"business_hud", _business_hud, &"hud", false)
+			_ui_manager.register_screen(ScreenIds.BUSINESS_HUD, _business_hud, &"hud", false)
 			_business_hud.configure(get_transactions(), _warehouse_inventory)
-			_ui_manager.open_screen(&"business_hud")
+			_ui_manager.open_screen(ScreenIds.BUSINESS_HUD)
 			_day1_controller = Day1ShopController.new()
 			_day1_controller.name = "Day1ShopController"
 			$Systems.add_child(_day1_controller)
@@ -133,7 +133,7 @@ func _create_ui_system() -> void:
 	_ui_manager.configure({&"hud": $HudLayer, &"popup": $PopupLayer, &"pause": $PauseLayer, &"debug": $DebugLayer})
 	var pause: PauseMenu = preload("res://src/UI/pause/pause_menu.tscn").instantiate()
 	$PauseLayer.add_child(pause)
-	_ui_manager.register_screen(&"pause", pause, &"pause", true)
+	_ui_manager.register_screen(ScreenIds.PAUSE, pause, &"pause", true)
 	pause.resume_requested.connect(func() -> void: _ui_manager.set_paused(false))
 	pause.title_requested.connect(_return_to_title.bind(pause), CONNECT_DEFERRED)
 	_ui_manager.modal_changed.connect(_refresh_input_lock)
@@ -150,20 +150,20 @@ func get_chronicle_journal() -> ChronicleJournal:
 	return _chronicle_journal if is_instance_valid(_chronicle_journal) else null
 
 func open_chronicle() -> Error:
-	return _open_handbook(&"chronicle")
+	return _open_handbook(ScreenIds.CHRONICLE)
 
 func open_tasks() -> Error:
-	return _open_handbook(&"tasks")
+	return _open_handbook(ScreenIds.TASKS)
 
 func open_handbook() -> Error:
-	return _open_handbook(&"handbook")
+	return _open_handbook(ScreenIds.HANDBOOK)
 
 func _open_handbook(page: StringName) -> Error:
 	_refresh_handbook_access()
 	if not _handbook_hud.visible:
 		return ERR_UNAVAILABLE
 	var blocked := (get_tree().paused
-		or (_ui_manager.has_modal() and not _ui_manager.is_open(&"handbook"))
+		or (_ui_manager.has_modal() and not _ui_manager.is_open(ScreenIds.HANDBOOK))
 		or (is_instance_valid(_scene_travel) and _scene_travel.is_busy())
 		or (is_instance_valid(_story_director) and _story_director.is_busy())
 		or (is_instance_valid(_actor_director) and _actor_director.is_actor_controlled(&"player")))
@@ -216,14 +216,14 @@ func _create_task_system() -> void:
 
 func _create_handbook() -> void:
 	_handbook = preload("res://src/UI/handbook/handbook_panel.tscn").instantiate()
-	_ui_manager.register_screen(&"handbook", _handbook, &"popup", true)
+	_ui_manager.register_screen(ScreenIds.HANDBOOK, _handbook, &"popup", true)
 	_handbook.bind_journals(_task_journal, _chronicle_journal)
-	_handbook.close_requested.connect(func() -> void: _ui_manager.close_screen(&"handbook"))
-	_ui_manager.register_screen_alias(&"tasks", &"handbook", _handbook.select_page.bind(&"tasks"))
-	_ui_manager.register_screen_alias(&"chronicle", &"handbook", _handbook.select_page.bind(&"chronicle"))
+	_handbook.close_requested.connect(func() -> void: _ui_manager.close_screen(ScreenIds.HANDBOOK))
+	_ui_manager.register_screen_alias(ScreenIds.TASKS, ScreenIds.HANDBOOK, _handbook.select_page.bind(ScreenIds.TASKS))
+	_ui_manager.register_screen_alias(ScreenIds.CHRONICLE, ScreenIds.HANDBOOK, _handbook.select_page.bind(ScreenIds.CHRONICLE))
 	_handbook_hud = preload("res://src/UI/handbook/handbook_hud.tscn").instantiate()
-	_ui_manager.register_screen(&"handbook_hud", _handbook_hud, &"hud", false)
-	_ui_manager.open_screen(&"handbook_hud")
+	_ui_manager.register_screen(ScreenIds.HANDBOOK_HUD, _handbook_hud, &"hud", false)
+	_ui_manager.open_screen(ScreenIds.HANDBOOK_HUD)
 	_handbook_hud.pressed.connect(open_handbook)
 	_task_journal.projection_changed.connect(_refresh_handbook_access)
 	_task_journal.projection_changed.connect(_refresh_task_delivery_names)
@@ -244,7 +244,7 @@ func _refresh_handbook_access() -> void:
 	var chronicle: bool = state.get_flag("day1.chronicle_unlocked") if day1_story_enabled else not _chronicle_journal.get_entries().is_empty()
 	_handbook.refresh_access(tasks, chronicle)
 	if not tasks and not chronicle:
-		_ui_manager.close_screen(&"handbook")
+		_ui_manager.close_screen(ScreenIds.HANDBOOK)
 	_handbook_hud.refresh_access(tasks or chronicle, _chronicle_journal.get_unread_count() if chronicle else 0)
 
 
@@ -510,7 +510,7 @@ func _create_dialogue_system() -> void:
 	_actor_director.actor_control_changed.connect(_on_actor_control_changed)
 	var ui: DialogueUI = preload("res://src/UI/dialogue/dialogue_ui.tscn").instantiate()
 	$PopupLayer.add_child(ui)
-	_ui_manager.register_screen(&"dialogue", ui, &"popup", true)
+	_ui_manager.register_screen(ScreenIds.DIALOGUE, ui, &"popup", true)
 	_dialogue_manager = DialogueManager.new()
 	_dialogue_manager.name = "DialogueManager"
 	$Systems.add_child(_dialogue_manager)

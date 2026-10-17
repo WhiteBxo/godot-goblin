@@ -31,9 +31,9 @@
 3. MainGame 为现有 NPC 挂接通用 InteractionPoint，将 actor_id 交给原 ShopInteraction 分派。点位随 NPC 移动，NPC 场景没有交付规则。店铺入口增设一个胖哥布林，聚落复用已有角色。
 4. TaskDelivery 检查订单、成品、NPC、任务 active 状态与交付回执，之后通过 `WarehouseInventory.try_exchange` 一次校验扣除与奖励的全部数量和容量。
 5. 提交期间暂缓库存信号，扣成品、加奖励、`GameState.apply_flags` 一次写完成 flag 与 `delivery.<order_id>.completed` 回执。通知期间保留提交锁。任何库存或状态监听器第一次回调时都能读取完整的成品、奖励和任务结果。
-6. MainGame 仅从成功交付回执更新原 `shop.orders_completed` 最高值。重复制作信号不推进任务。现有 GameplayBridge 继续等待 `shop.order_001_delivered`，遵守原来的暂停/弹窗/剧情取消规则。
+6. TaskDelivery 在同一提交中从成功回执更新 `shop.orders_completed` 最高值，随后统一通知库存和事实变化。计数不依赖场景回调。重复制作信号不推进任务。现有 GameplayBridge 继续等待 `shop.order_001_delivered`，遵守原来的暂停/弹窗/剧情取消规则。
 
-回执存在 GameState 的原 flags 中，不是第二套任务状态。它防止重复交付、组件重建后发奖，以及外部单独撤销任务完成 flag 后再次领奖。重置整个 GameState 或同时恢复旧 GameState/库存快照仍是显式回档；本次不新增存档文件或跨场景库存生命周期。库存继续沿用原场景会话和快照接口。
+回执存在 GameState 的原 flags 中，不是第二套任务状态。它防止重复交付、组件重建后发奖，以及外部单独撤销任务完成 flag 后再次领奖。GameState 已统一持有跨场景库存和制作服务，整体快照同时恢复物品、订单和回执；仅显式新游戏或恢复完整旧快照改变整局进度，详见 [统一经营会话](business_session.md)。未新增存档文件。
 
 `TaskJournal.get_task()` 按当前事实即时投影，避免它在 GameState 同步回调中的连接顺序影响交付校验。HUD 的常规 projection_changed 订阅保持原样。
 

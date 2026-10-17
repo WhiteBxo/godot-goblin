@@ -18,6 +18,8 @@
 - 集合存储在内部；容器输入、读取结果和快照均复制，外部修改副本不会修改 GameState。修改副本后需要再次调用 setter。
 - `reset_state() -> bool` 恢复所有默认值，清空单次事件；本来就是默认状态时返回 `false` 且静默。新游戏应显式调用，普通切换场景不调用。
 
+GameState 还通过 `get_warehouse_inventory()` / `get_tea_production()` 持有唯一的跨场景经营服务。新游戏优先调用 `start_new_game() -> Error`，同时初始化库存、成品、制作队列与剧情，并取消本地演出；`reset_state` 为兼容接口，也重置整个会话。详见 [统一经营会话](business_session.md)。
+
 ## Signal
 
 - `state_changed()`：任何实际修改后发一次，订阅方重新查询需要的数据。
@@ -44,7 +46,7 @@ GameState.state_changed.connect(_refresh_from_state)
 _refresh_from_state()
 ```
 
-未来存档系统通过 `to_dict() -> Dictionary` 取得带 `schema_version = 1` 的独立原生 Variant 快照，包含 `current_day`、`story_stage`、`flags`、`variables`、`completed_events`（排序后的字符串数组）。`restore_state(data: Dictionary) -> Error` 先检查全部字段、版本、命名空间及值类型，再整体替换；无效数据返回 `ERR_INVALID_DATA`，保留原状态且无通知；相同状态返回 `OK` 且无通知，事件数组顺序不影响比较。所有六个字段必需，额外字段忽略，未知版本拒绝。
+`to_dict() -> Dictionary` 返回 `schema_version = 2` 的独立原生 Variant 快照，包含 `current_day`、`story_stage`、`flags`、`variables`、`completed_events`（排序后的字符串数组）及 `business`（完整库存子快照、制作订单 ID 前缀）。`restore_state(data: Dictionary) -> Error` 先检查全部字段、版本、命名空间、值类型及经营数据，再整体替换；无效数据返回 `ERR_INVALID_DATA`，保留原状态且无通知；相同状态返回 `OK` 且无通知，事件数组顺序不影响比较。所有七个字段必需，顶层额外字段忽略。旧 v1 缺少经营状态，拒绝恢复以免覆盖或猜测剧情对应的物品状态。迁移策略待确认。
 
 当前仅提供内存接口，没有文件读写、迁移或存档格式选择。后续存档适配层需保留 Variant 类型；普通 JSON 会将数字解析为浮点数，不能直接保证原生快照类型往返，应在适配层编码/恢复类型后再调用 `restore_state`。
 

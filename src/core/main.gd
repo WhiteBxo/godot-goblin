@@ -179,20 +179,16 @@ func get_warehouse_inventory() -> WarehouseInventory:
 	return _warehouse_inventory
 
 func _create_shop_business(ui: ShopUI) -> void:
-	_warehouse_inventory = WarehouseInventory.new()
-	_warehouse_inventory.name = "WarehouseInventory"
-	$Systems.add_child(_warehouse_inventory)
-	_tea_production = TeaProduction.new()
-	_tea_production.name = "TeaProduction"
-	$Systems.add_child(_tea_production)
-	_tea_production.configure(_warehouse_inventory)
+	var state := get_node("/root/GameState")
+	_warehouse_inventory = state.get_warehouse_inventory()
+	_tea_production = state.get_tea_production()
 	_task_delivery = TaskDelivery.new()
 	_task_delivery.name = "TaskDelivery"
 	$Systems.add_child(_task_delivery)
 	var error := _task_delivery.configure(_task_catalog, _task_journal, get_node("/root/GameState"), _warehouse_inventory)
 	if error != OK:
 		push_error("Could not configure task delivery (%d)" % error)
-	_task_delivery.delivered.connect(func(_order_id: String) -> void: _on_orders_changed())
+	_task_journal.projection_changed.connect(_refresh_order_requirements.bind(ui))
 	ui.point_opened.connect(_on_shop_point_opened)
 	ui.configure_inventory(_warehouse_inventory)
 	ui.configure_production(_tea_production)
@@ -323,16 +319,14 @@ func _on_shop_point_opened(id: StringName) -> void:
 		get_node("/root/GameState").set_flag("shop.orders_viewed")
 		for order: Dictionary in _task_delivery.get_orders():
 			_task_delivery.accept_order(order.order_id)
-		var names := {}
-		for point: InteractionPoint in _npc_points.values():
-			names[String(point.interaction_id)] = point.display_name
-		var requirements := _task_delivery.get_requirements_text(names)
-		_shop_ui.show_order_requirements("已接取交付订单：\n" + requirements + "\n制作后携带成品到指定 NPC 按 E 交付。" if not requirements.is_empty() else "当前没有待交付订单。")
+		_refresh_order_requirements(_shop_ui)
 
-func _on_orders_changed() -> void:
-	# Preserve the existing business counter, now sourced only from committed receipts.
-	var state := get_node("/root/GameState")
-	state.set_variable("shop.orders_completed", maxi(int(state.get_variable("shop.orders_completed", 0)), _task_delivery.get_completed_count()))
+func _refresh_order_requirements(ui: ShopUI) -> void:
+	var names := {}
+	for point: InteractionPoint in _npc_points.values():
+		names[String(point.interaction_id)] = point.display_name
+	var requirements := _task_delivery.get_requirements_text(names)
+	ui.show_order_requirements("已接取交付订单：\n" + requirements + "\n制作后携带成品到指定 NPC 按 E 交付。" if not requirements.is_empty() else "当前没有待交付订单。")
 
 func _can_start_story() -> bool:
 	return (not get_tree().paused and not _ui_manager.has_modal()
@@ -420,7 +414,7 @@ func _return_player_to_spawn() -> void:
 func _restart_current_scene() -> void:
 	if not DebugRuntime.is_enabled() or get_tree().current_scene != self:
 		return
-	# Reload the host scene, retaining cross-scene GameState through its autoload.
+	# Reload the host only; GameState retains business services and story facts.
 	get_tree().reload_current_scene.call_deferred()
 
 func _create_cave_debug_components() -> void:

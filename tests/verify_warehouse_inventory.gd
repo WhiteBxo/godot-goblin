@@ -164,6 +164,7 @@ func _test_discovery_ui() -> void:
 	await process_frame
 
 func _test_session(scene_path: String) -> void:
+	root.get_node("GameState").start_new_game()
 	root.size = Vector2i(1280, 720)
 	var main: MainGame = load(scene_path).instantiate()
 	root.add_child(main)

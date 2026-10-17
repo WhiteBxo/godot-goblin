@@ -100,6 +100,8 @@ func try_deliver(order_id: String, product_id: String, target_object_id: String)
 	for id: String in task.get("rewards", {}).get("items", {}):
 		rewards[id] = int(task.rewards.items[id])
 	var before := _inventory.to_dict()
+	if not _state.begin_business_transaction():
+		return _failure("会话正在更新，暂时无法交付。")
 	_committing = true
 	# Signals are synchronous in Godot. Hold inventory notification until the
 	# completion and durable receipt are committed; observers see the full result.
@@ -108,22 +110,30 @@ func try_deliver(order_id: String, product_id: String, target_object_id: String)
 	if not _inventory.try_exchange({product_id: 1}, rewards):
 		_inventory.set_block_signals(was_blocked)
 		_committing = false
+		_state.end_business_transaction()
 		return _failure("成品不足或奖励库存已满。未消耗库存。")
 	var facts := {task.complete_when.key: true, _receipt_key(order_id): true}
+	var state_blocked := _state.is_blocking_signals()
+	_state.set_block_signals(true)
 	var error := _state.apply_flags(facts)
 	if error != OK:
 		_inventory.restore_state(before)
+	else:
+		_state.set_variable("shop.orders_completed", maxi(int(_state.get_variable("shop.orders_completed", 0)), get_completed_count()))
+	_state.set_block_signals(state_blocked)
 	_inventory.set_block_signals(was_blocked)
 	if error == OK:
+		_state.state_changed.emit()
 		_inventory.changed.emit()
 		delivered.emit(order_id)
 	_committing = false
+	_state.end_business_transaction()
 	if error != OK:
 		return _failure("交付提交失败。未消耗库存。")
 	return {"ok": true, "message": "交付成功，任务已完成。" + ("奖励：" + task.rewards.text if not rewards.is_empty() else "")}
 
 func _ready_for_delivery() -> bool:
-	return is_instance_valid(_journal) and is_instance_valid(_state) and is_instance_valid(_inventory)
+	return is_instance_valid(_journal) and is_instance_valid(_state) and is_instance_valid(_inventory) and not _inventory.is_session_locked()
 
 func _receipt_key(order_id: String) -> String:
 	return "delivery." + order_id + ".completed"

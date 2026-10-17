@@ -1,6 +1,6 @@
 class_name TeaProduction
 extends Node
-## One shop session. Inventory is injected; crafting produces inventory items, never delivery facts.
+## GameState owns the session. Crafting produces inventory items, never delivery facts.
 
 signal changed
 
@@ -9,6 +9,37 @@ const CATALOG: Resource = preload("res://src/resources/milk_tea/basic_menu.tres"
 var _inventory: WarehouseInventory
 var _completed: int = 0
 var _submitting: bool = false
+
+func is_submitting() -> bool:
+	return _submitting
+
+func to_dict() -> Dictionary:
+	var ids: Array[String] = []
+	for index in range(_completed):
+		ids.append(CATALOG.orders[index].id)
+	return {"completed_order_ids": ids}
+
+## The current fixed teaching queue only allows a completed prefix, never gaps.
+func is_valid_snapshot(data: Variant) -> bool:
+	if not data is Dictionary or not data.get("completed_order_ids") is Array:
+		return false
+	var ids: Array = data.completed_order_ids
+	if ids.size() > CATALOG.orders.size():
+		return false
+	for index in range(ids.size()):
+		if not ids[index] is String or ids[index] != CATALOG.orders[index].id:
+			return false
+	return true
+
+func restore_state(data: Variant) -> Error:
+	if _submitting or (is_instance_valid(_inventory) and _inventory.is_session_locked()):
+		return ERR_BUSY
+	if not is_valid_snapshot(data):
+		return ERR_INVALID_DATA
+	if _completed != data.completed_order_ids.size():
+		_completed = data.completed_order_ids.size()
+		changed.emit()
+	return OK
 
 func configure(inventory: WarehouseInventory) -> void:
 	# A business session cannot be rebound or reset by reopening its UI.
@@ -53,7 +84,7 @@ func get_recipe_names(recipe: Array) -> PackedStringArray:
 	return names
 
 func make_drink(recipe: Array[String], order_id: String = "") -> Dictionary:
-	if _submitting or not is_instance_valid(_inventory):
+	if _submitting or not is_instance_valid(_inventory) or _inventory.is_session_locked():
 		return {"ok": false, "message": "制作系统尚未就绪或正在制作。"}
 	var order := get_order()
 	if order.is_empty():

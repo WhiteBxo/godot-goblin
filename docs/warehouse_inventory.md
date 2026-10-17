@@ -6,7 +6,7 @@
 
 `initial_stock` 单位为份，六种初始数量保持 12 / 12 / 12 / 8 / 8 / 10。`initial_discovery` 的键是初始已发现的食材 ID，值是已知属性组列表。默认六种人类材料均已知，没有新增异世界剧情内容。新增食材只需编辑该资源；没有初始库存或发现配置的食材默认数量为零且未发现。
 
-MainGame 在正式聚落 `settlement.tscn` 与独立店铺 `main.tscn` 中，分别于 Systems 创建一个 WarehouseInventory 和一个 TeaProduction。同一场景营业会话内，库存服务同时注入 ShopUI 的仓库面板与 TeaProduction：
+GameState Autoload 持有一个 WarehouseInventory 和一个 TeaProduction。MainGame 在正式聚落 `settlement.tscn` 与独立店铺 `main.tscn` 中绑定同一份库存和制作服务：
 
 ```text
 basic_menu.tres → WarehouseInventory（数量、发现、已知属性组）
@@ -14,10 +14,10 @@ basic_menu.tres → WarehouseInventory（数量、发现、已知属性组）
                  TeaProduction          ShopUI → ShopPopup → WarehousePanel
                  （订单进度）                ↑ 制作请求 + 订单 ID
                      ↓ changed
-                  MainGame → GameState（仅交付事实）
+                  GameState（服务所有者、剧情与交付事实）
 ```
 
-关闭或重开弹窗不会创建新服务或重置状态；两个场景是独立会话，重建场景会重置库存与订单。未新增 Autoload；GameState 仍只记录业务/剧情事实，不存库存。演示 TeaMaking 的固定顺序教学保持原有行为，不消耗正式库存。
+关闭弹窗、切换场景、重进店铺和场景重载均不创建新服务或重置状态。显式新游戏整体重置经营与剧情。未新增 Autoload；完整归属、接口与重启边界见 [统一经营会话](business_session.md)。演示 TeaMaking 仍为场景本地教学，不消耗正式库存。
 
 ## 库存服务 API
 
@@ -64,7 +64,7 @@ WarehousePanel 位于现有 ShopPopup 内，使用现有 theme、返回按钮、
 
 示例仅展示一个条目；真实快照必须完整包含目录中的全部 ID。恢复前验证版本、ID 集、计数、发现与属性组，任何条目失败则全部不变；相同快照不重复通知。支持 `JSON.stringify` / `JSON.parse_string` 往返后的整数表示，拒绝小数、无穷值及非法发现状态。
 
-快照不包含静态定义、订单进度或剧情数据，不应单独作为完整营业存档。未来在 `user://` 下保存版本化文件时，需统一保存库存、订单唯一 ID / 已交付集合及 GameState，并设计恢复时的事实去重；本次没有数据库、存档界面或自动存档。
+库存子快照不包含静态定义、订单进度或剧情数据，不能单独作为完整营业存档。GameState v2 快照已统一包含库存、成品、制作订单 ID 和剧情/交付事实，完整营业恢复使用 GameState.restore_state。没有数据库、存档界面或自动存档。
 
 ## 验证与试玩
 

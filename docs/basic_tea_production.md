@@ -15,7 +15,7 @@ F5 从正式聚落入口 `src/core/settlement.tscn` 运行，或 F6 单独运行
 - 三笔订单和库存是可调整的教学默认值，保存于 `src/resources/milk_tea/basic_menu.tres`，并非最终经营数值。
 - 每杯所列原料各消耗 1 份。常温、少糖固定，糖浆自动加入；本阶段不提供温度、糖度和用量调节。
 - 原料不符、库存不足、订单全部完成时均不扣库存。完成后成品进入库存；交付任务另在指定 NPC 交互时结算，详见 [成品交付](task_delivery.md)。
-- `WarehouseInventory` 和 `TeaProduction` 由 MainGame 创建于 Systems；制作系统注入库存服务，不再自行维护库存。UI 仅展示数据和发出制作请求，提交带有当前订单 ID，过期订单和同步重入被拒绝。场景内关闭弹窗保留进度，重启主场景重置；仅预留库存序列化接口，没有新增存档流程、补货玩法、收入、AI 配方或剧情解锁内容。详见 [仓库与共享库存](warehouse_inventory.md)。
+- `WarehouseInventory` 和 `TeaProduction` 由既有 GameState Autoload 持有，MainGame 只绑定服务；UI 仅展示数据和发出带当前订单 ID 的制作请求，拒绝过期订单和同步重入。切换、重进或重载场景均保留库存、成品与队列；只有显式新游戏重置整个会话。完整快照与生命周期见 [统一经营会话](business_session.md)，没有新增文件存档、补货、收入、AI 配方或剧情解锁内容。
 - `TaskDelivery` 复用任务状态、库存和物品奖励；订单板接取首单，制作不自动完成。`tests/verify_task_delivery.gd` 覆盖交付拒绝、一致性和重复奖励保护。
 - GameState 业务事实为 `shop.order_001_delivered` 等任务完成 flag（当前仅配置首单交付） 与 `shop.orders_completed` 最高进度；只适用于当前固定教学队列，不代表跨天订单或完整库存存档。见 [Gameplay Bridge](gameplay_bridge.md)。
 - 仓库和订单板沿用现有交互入口；已配置的剧情交互仍优先由 StoryDirector 路由。

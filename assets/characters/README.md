@@ -24,3 +24,7 @@
 ## 游戏人物场景
 
 全部 31 张 NPC 动画图集已接入 8 类可复用人物场景，按剧情身份放入聚落并注册给 ActorDirector。人物映射、缺帧 fallback、F6 预览入口和再生成方式见 [游戏人物说明](../../docs/assets/characters.md)。
+
+## 攻击与无背包走路动画
+
+2026-10-17 附件已导入为四套 SpriteFrames，共 15 段动作、159 帧；来源映射、F6 预览、播放约定和复现命令见 [哥布林动作资源](goblin_actions/README.md)。

@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "tasks": [
+    {
+      "id": "test.progress",
+      "type": "main",
+      "title": "测试主线",
+      "description": "测试任务详情",
+      "activate_when": {
+        "type": "flag",
+        "key": "task.test.active"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "task.test.completed"
+      },
+      "reveal_when": {
+        "type": "flag",
+        "key": "test.reveal_task"
+      },
+      "location_id": "test.underground",
+      "difficulty": "high",
+      "rewards": {
+        "text": "测试奖励说明（不结算）",
+        "reveal_when": {
+          "type": "flag",
+          "key": "test.reveal_reward"
+        }
+      },
+      "objectives": [
+        {
+          "id": "board",
+          "text": "查看订单板",
+          "complete_when": {
+            "type": "flag",
+            "key": "shop.orders_viewed"
+          }
+        },
+        {
+          "id": "review",
+          "text": "可选剧情",
+          "required": false,
+          "complete_when": {
+            "type": "event_completed",
+            "id": "task_test.review"
+          }
+        },
+        {
+          "id": "deliveries",
+          "text": "完成两次交付",
+          "location_id": "test.underground",
+          "reveal_when": {
+            "type": "flag",
+            "key": "test.reveal_objective"
+          },
+          "complete_when": {
+            "type": "variable_at_least",
+            "key": "shop.orders_completed",
+            "value": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "test.commission",
+      "type": "commission",
+      "title": "测试委托",
+      "description": "仅用于验证事件条件",
+      "activate_when": {
+        "type": "event_completed",
+        "id": "task_test.accept"
+      },
+      "complete_when": {
+        "type": "event_completed",
+        "id": "task_test.finish"
+      },
+      "objectives": [
+        {
+          "id": "investigate",
+          "text": "测试调查",
+          "complete_when": {
+            "type": "flag",
+            "key": "test.found"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -2,6 +2,7 @@ class_name ShopUI
 extends Control
 ## HUD facade; the popup is a separate scene owned by its screen layer.
 
+signal point_opened(id: StringName)
 signal opened
 signal closed
 signal make_requested(recipe: Array[String], order_id: String)
@@ -76,6 +77,7 @@ func open(point: InteractionPoint) -> void:
 		_popup.show()
 		_popup.get_default_focus().grab_focus()
 	_popup.present(point)
+	point_opened.emit(point.interaction_id)
 	_prompt.hide()
 	opened.emit()
 

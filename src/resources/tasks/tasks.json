@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "tasks": [
+    {
+      "id": "shop.first_order",
+      "type": "main",
+      "title": "完成第一笔订单",
+      "description": "查看订单板，按订单配方制作并交付第一杯奶茶。",
+      "activate_when": {
+        "type": "flag",
+        "key": "task.shop.first_order.active"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "task.shop.first_order.completed"
+      },
+      "objectives": [
+        {
+          "id": "check_orders",
+          "text": "前往订单板查看订单",
+          "complete_when": {
+            "type": "flag",
+            "key": "shop.orders_viewed"
+          }
+        },
+        {
+          "id": "deliver_order",
+          "text": "制作并交付第一杯奶茶",
+          "complete_when": {
+            "type": "flag",
+            "key": "shop.order_001_delivered"
+          }
+        }
+      ]
+    }
+  ]
+}

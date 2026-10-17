@@ -1,0 +1,7 @@
+{
+  "canvas": [1376, 768],
+  "stack_bottom_to_top": ["walls", "floor", "doors"],
+  "visible_source_pixels_preserved": 752199,
+  "visible_pixel_mismatches": 0,
+  "transparent_exterior_pixels": 304569
+}

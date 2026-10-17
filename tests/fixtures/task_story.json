@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "events": {
+    "task_test.accept": {
+      "steps": [
+        {
+          "command": "set_flag",
+          "key": "task.shop.first_order.active"
+        },
+        {
+          "command": "set_stage",
+          "value": "task_test.waiting"
+        }
+      ]
+    },
+    "task_test.review": {
+      "steps": [
+        {
+          "command": "set_flag",
+          "key": "task_test.reviewed"
+        }
+      ],
+      "trigger": "orders",
+      "conditions": {
+        "flags": {
+          "task_test.route_review": true
+        }
+      }
+    },
+    "task_test.finish": {
+      "conditions": {
+        "flags": {
+          "task_test.delivery_ready": true
+        }
+      },
+      "steps": [
+        {
+          "command": "wait",
+          "seconds": 0.02
+        },
+        {
+          "command": "set_flag",
+          "key": "task.shop.first_order.completed"
+        },
+        {
+          "command": "set_stage",
+          "value": "task_test.done"
+        }
+      ]
+    }
+  }
+}

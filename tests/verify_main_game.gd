@@ -49,7 +49,9 @@ func _verify() -> void:
 		check(not screen_layer.follow_viewport_enabled, "Screen layer stays fixed: " + name)
 		var expected_mode := Node.PROCESS_MODE_WHEN_PAUSED if name == "PauseLayer" else Node.PROCESS_MODE_ALWAYS
 		check(screen_layer.process_mode == expected_mode, "Screen layer process mode: " + name)
-		if name in ["HudLayer", "TransitionLayer"]:
+		if name == "HudLayer":
+			check(screen_layer.get_child_count() == 1 and screen_layer.get_child(0) is TaskHUD and not screen_layer.get_child(0).visible, "Shared task HUD remains hidden without an active task")
+		if name == "TransitionLayer":
 			check(screen_layer.get_child_count() == 0, "Unused UI layer remains empty: " + name)
 	check(game.get_ui_manager() != null, "MainGame exposes scene-local UI manager")
 	check(game.get_node("PopupLayer/DialogueUI") != null, "Dialogue belongs to PopupLayer")

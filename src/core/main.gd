@@ -10,6 +10,7 @@ var _shop_player: ShopPlayer
 var _ui_manager: UIManager
 var _shop_ui: ShopUI
 var _shop_interaction: ShopInteraction
+var _task_journal: TaskJournal
 var _tea_production: TeaProduction
 var _warehouse_inventory: WarehouseInventory
 var _observed_deliveries := 0
@@ -30,6 +31,7 @@ var _debug_panel: DeveloperPanel
 func _ready() -> void:
 	DebugRuntime.apply_release_policy(get_tree())
 	_create_ui_system()
+	_create_task_system()
 	_settlement_level = $World/LevelRoot.get_child(0) as SettlementMap
 	if _settlement_level != null:
 		_initialize_settlement()
@@ -91,6 +93,23 @@ func _create_ui_system() -> void:
 	pause.resume_requested.connect(func() -> void: _ui_manager.set_paused(false))
 	_ui_manager.modal_changed.connect(_refresh_input_lock)
 
+func get_task_journal() -> TaskJournal:
+	return _task_journal if is_instance_valid(_task_journal) else null
+
+func _create_task_system() -> void:
+	var catalog := TaskCatalog.new()
+	var error := catalog.load_file("res://src/resources/tasks/tasks.json")
+	if error != OK:
+		push_error("Could not load tasks: " + catalog.last_error)
+		return
+	_task_journal = TaskJournal.new()
+	_task_journal.name = "TaskJournal"
+	$Systems.add_child(_task_journal)
+	_task_journal.configure(catalog, get_node("/root/GameState"))
+	var hud: TaskHUD = preload("res://src/UI/tasks/task_hud.tscn").instantiate()
+	$HudLayer.add_child(hud)
+	hud.bind_journal(_task_journal)
+
 func get_active_level() -> Node2D:
 	if _settlement_level != null:
 		return _settlement_level
@@ -137,6 +156,7 @@ func _create_shop_business(ui: ShopUI) -> void:
 	$Systems.add_child(_tea_production)
 	_tea_production.configure(_warehouse_inventory)
 	_tea_production.changed.connect(_on_orders_changed)
+	ui.point_opened.connect(_on_shop_point_opened)
 	ui.configure_inventory(_warehouse_inventory)
 	ui.configure_production(_tea_production)
 	ui.make_requested.connect(func(recipe: Array[String], order_id: String) -> void:
@@ -232,6 +252,10 @@ func _create_tea_making() -> void:
 	_tea_making.name = "TeaMaking"
 	$Systems.add_child(_tea_making)
 	_shop_ui.bind_tea_making(_tea_making)
+
+func _on_shop_point_opened(id: StringName) -> void:
+	if id == &"orders":
+		get_node("/root/GameState").set_flag("shop.orders_viewed")
 
 func _on_orders_changed() -> void:
 	# changed also refreshes UI: count the committed business result, not notifications.

@@ -1,6 +1,6 @@
-[gd_resource type="SpriteFrames" format=3]
+[gd_resource type="SpriteFrames" format=3 uid="uid://bax2n1j823ol6"]
 
-[ext_resource type="Texture2D" path="res://assets/characters/player/player_run_atlas.png" id="1_51hjo"]
+[ext_resource type="Texture2D" uid="uid://cuf1pdx80q7jn" path="res://assets/characters/player/player_run_atlas.png" id="1_51hjo"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vdgfm"]
 atlas = ExtResource("1_51hjo")
@@ -427,7 +427,7 @@ animations = [{
 }],
 "loop": 1,
 "name": &"run_down",
-"speed": 24.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -480,7 +480,7 @@ animations = [{
 }],
 "loop": 1,
 "name": &"run_left",
-"speed": 24.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -533,7 +533,7 @@ animations = [{
 }],
 "loop": 1,
 "name": &"run_right",
-"speed": 24.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -586,5 +586,5 @@ animations = [{
 }],
 "loop": 1,
 "name": &"run_up",
-"speed": 24.0
+"speed": 8.0
 }]

@@ -144,13 +144,15 @@ func _initialize_settlement() -> void:
 func get_tea_production() -> TeaProduction:
 	return _tea_production
 
+func get_transactions() -> WalletTransactions:
+	return get_node("/root/GameState").get_transactions()
+
 func get_warehouse_inventory() -> WarehouseInventory:
 	return _warehouse_inventory
 
 func _create_shop_business(ui: ShopUI) -> void:
-	_warehouse_inventory = WarehouseInventory.new()
-	_warehouse_inventory.name = "WarehouseInventory"
-	$Systems.add_child(_warehouse_inventory)
+	_warehouse_inventory = get_transactions().get_inventory()
+	get_transactions().set_task_lookup(_task_journal.get_task)
 	_tea_production = TeaProduction.new()
 	_tea_production.name = "TeaProduction"
 	$Systems.add_child(_tea_production)

@@ -6,7 +6,7 @@
 
 `initial_stock` 单位为份，六种初始数量保持 12 / 12 / 12 / 8 / 8 / 10。`initial_discovery` 的键是初始已发现的食材 ID，值是已知属性组列表。默认六种人类材料均已知，没有新增异世界剧情内容。新增食材只需编辑该资源；没有初始库存或发现配置的食材默认数量为零且未发现。
 
-MainGame 在正式聚落 `settlement.tscn` 与独立店铺 `main.tscn` 中，分别于 Systems 创建一个 WarehouseInventory 和一个 TeaProduction。同一场景营业会话内，库存服务同时注入 ShopUI 的仓库面板与 TeaProduction：
+MainGame 在正式聚落 `settlement.tscn` 与独立店铺 `main.tscn` 中，从 GameState 的 WalletTransactions 获取同一 WarehouseInventory，并于 Systems 创建 TeaProduction。库存跨场景保留，同时注入 ShopUI 的仓库面板与 TeaProduction；新游戏通过 GameState.reset_state 重置：
 
 ```text
 basic_menu.tres → WarehouseInventory（数量、发现、已知属性组）
@@ -17,7 +17,7 @@ basic_menu.tres → WarehouseInventory（数量、发现、已知属性组）
                   MainGame → GameState（仅交付事实）
 ```
 
-关闭或重开弹窗不会创建新服务或重置状态；两个场景是独立会话，重建场景会重置库存与订单。未新增 Autoload；GameState 仍只记录业务/剧情事实，不存库存。演示 TeaMaking 的固定顺序教学保持原有行为，不消耗正式库存。
+关闭或重开弹窗不会创建新服务或重置状态；切换或重建场景保留 GameState 持有的库存，订单制作进度仍按场景会话创建。未新增 Autoload；库存与钱包一起保存到 GameState 经济快照。演示 TeaMaking 的固定顺序教学保持原有行为，不消耗正式库存。
 
 ## 库存服务 API
 
@@ -95,3 +95,5 @@ Gameplay Bridge 测试会在 user:// 写临时 JSON，需要允许写入该目�
 - [GDScript exported properties](https://docs.godotengine.org/en/4.7/tutorials/scripting/gdscript/gdscript_exports.html#resources)：自定义 Resource 与类型化 Resource 数组可通过 Inspector 编辑。
 - [ItemList](https://docs.godotengine.org/en/4.7/classes/class_itemlist.html)：使用 item metadata 保存稳定 ID，固定图标尺寸；程序 select 后显式更新详情，不依赖用户选择信号。
 - [Object / ConnectFlags](https://docs.godotengine.org/en/4.7/classes/class_object.html#enum-object-connectflags)：默认连接立即调用监听器，因此制作提交在通知前更新完整状态，并在通知期间保留重入锁。
+
+钱包、购买、奖励与库存一起纳入 GameState v2 快照，详见 [钱包与原子交易](wallet_transactions.md)。原有库存增减与发现 API 保持兼容；购买和奖励应使用交易服务。

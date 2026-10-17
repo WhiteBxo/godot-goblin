@@ -1,5 +1,5 @@
 extends Node
-## Cross-scene story data. All mutations go through the methods below.
+## Cross-scene story and economy data. Economy mutations use get_transactions().
 ## No class_name: GameState is the Autoload name, not a second global class.
 
 signal state_changed
@@ -7,7 +7,7 @@ signal event_completed(event_id: String)
 signal state_reset
 signal state_restored
 
-const SCHEMA_VERSION: int = 1
+const SCHEMA_VERSION: int = 2
 const MAX_VALUE_DEPTH: int = 32
 
 var current_day: int:
@@ -28,6 +28,26 @@ var _story_stage: String = ""
 var _flags: Dictionary[String, bool] = {}
 var _variables: Dictionary[String, Variant] = {}
 var _completed_events: Dictionary[String, bool] = {}
+var _economy: WalletTransactions
+var _updating_economy: bool = false
+
+func _init() -> void:
+	_economy = WalletTransactions.new()
+	_economy.name = "WalletTransactions"
+	add_child(_economy)
+	_economy.changed.connect(_on_economy_changed)
+
+func get_transactions() -> WalletTransactions:
+	return _economy
+
+func _on_economy_changed() -> void:
+	if not _updating_economy:
+		state_changed.emit()
+
+func _publish_economy(before: Dictionary) -> void:
+	_updating_economy = true
+	_economy.publish_restored(before)
+	_updating_economy = false
 
 
 ## Setters return true only when data changed. Invalid input is left untouched.
@@ -112,13 +132,18 @@ func get_completed_events() -> Array[String]:
 
 
 func reset_state() -> bool:
-	if _current_day == 1 and _story_stage.is_empty() and _flags.is_empty() and _variables.is_empty() and _completed_events.is_empty():
+	if _economy.is_busy():
 		return false
+	if _current_day == 1 and _story_stage.is_empty() and _flags.is_empty() and _variables.is_empty() and _completed_events.is_empty() and _economy.to_dict() == _economy.get_default_state():
+		return false
+	var economy_before := _economy.to_dict()
+	_economy.restore_state(_economy.get_default_state(), false)
 	_current_day = 1
 	_story_stage = ""
 	_flags.clear()
 	_variables.clear()
 	_completed_events.clear()
+	_publish_economy(economy_before)
 	state_changed.emit()
 	state_reset.emit()
 	return true
@@ -133,6 +158,7 @@ func to_dict() -> Dictionary:
 		"flags": get_flags(),
 		"variables": get_variables(),
 		"completed_events": get_completed_events(),
+		"economy": _economy.to_dict(),
 	}
 
 
@@ -140,27 +166,38 @@ func to_dict() -> Dictionary:
 ## Valid identical snapshots return OK without signals. Restoring events does
 ## not emit event_completed, so loading cannot replay one-shot story effects.
 func restore_state(data: Dictionary) -> Error:
+	if _economy.is_busy():
+		return ERR_BUSY
 	if not _is_valid_snapshot(data):
 		return ERR_INVALID_DATA
+	var economy_data: Dictionary = data.get("economy", _economy.get_default_state())
 	var restored_events: Dictionary[String, bool] = {}
 	for event_id: String in data["completed_events"]:
 		restored_events[event_id] = true
-	if _current_day == data["current_day"] and _story_stage == data["story_stage"] and _flags == data["flags"] and _same_value(_variables, data["variables"]) and _completed_events == restored_events:
+	if _current_day == data["current_day"] and _story_stage == data["story_stage"] and _flags == data["flags"] and _same_value(_variables, data["variables"]) and _completed_events == restored_events and _economy.to_dict() == economy_data:
 		return OK
+	var economy_before := _economy.to_dict()
+	if _economy.restore_state(economy_data, false) != OK:
+		return ERR_INVALID_DATA
 	_current_day = data["current_day"]
 	_story_stage = data["story_stage"]
 	_flags.assign(data["flags"])
 	_variables.assign(data["variables"].duplicate(true))
 	_completed_events = restored_events
+	_publish_economy(economy_before)
 	state_changed.emit()
 	state_restored.emit()
 	return OK
 
 
 func _is_valid_snapshot(data: Dictionary) -> bool:
+	if data.has("economy") and _economy.validate_state(data.economy) != OK:
+		return false
 	if not data.has_all(["schema_version", "current_day", "story_stage", "flags", "variables", "completed_events"]):
 		return false
-	if not data["schema_version"] is int or data["schema_version"] != SCHEMA_VERSION:
+	if not data["schema_version"] is int or data["schema_version"] not in [1, SCHEMA_VERSION]:
+		return false
+	if data.schema_version == SCHEMA_VERSION and not data.has("economy"):
 		return false
 	if not data["current_day"] is int or data["current_day"] < 1 or not data["story_stage"] is String:
 		return false

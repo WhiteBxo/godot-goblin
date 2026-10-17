@@ -100,9 +100,9 @@ func _test_container_isolation() -> void:
 
 func _test_restore() -> void:
 	var snapshot := _state.to_dict()
-	_check(snapshot["schema_version"] == 1, "Snapshots include their schema version")
+	_check(snapshot["schema_version"] == 2, "Snapshots include their schema version")
 	var fresh := StateScript.new()
-	_check(fresh.restore_state(snapshot) == OK and fresh.to_dict() == snapshot, "Snapshot round trip restores all five state fields")
+	_check(fresh.restore_state(snapshot) == OK and fresh.to_dict() == snapshot, "Snapshot round trip restores all story and economy fields")
 	snapshot["variables"]["day1.order_data"]["orders"][0]["count"] = 55
 	_check(fresh.get_variable("day1.order_data")["orders"][0]["count"] == 2.0, "Restore input is deep copied")
 	_check(_state.get_variable("day1.order_data")["orders"][0]["count"] == 2.0, "Serialized output is deep copied")

@@ -44,9 +44,9 @@ GameState.state_changed.connect(_refresh_from_state)
 _refresh_from_state()
 ```
 
-未来存档系统通过 `to_dict() -> Dictionary` 取得带 `schema_version = 1` 的独立原生 Variant 快照，包含 `current_day`、`story_stage`、`flags`、`variables`、`completed_events`（排序后的字符串数组）。`restore_state(data: Dictionary) -> Error` 先检查全部字段、版本、命名空间及值类型，再整体替换；无效数据返回 `ERR_INVALID_DATA`，保留原状态且无通知；相同状态返回 `OK` 且无通知，事件数组顺序不影响比较。所有六个字段必需，额外字段忽略，未知版本拒绝。
+未来存档系统通过 `to_dict() -> Dictionary` 取得带 `schema_version = 2` 的独立原生 Variant 快照，包含 `current_day`、`story_stage`、`flags`、`variables`、`completed_events`（排序后的字符串数组）。`restore_state(data: Dictionary) -> Error` 先检查全部字段、版本、命名空间及值类型，再整体替换；无效数据返回 `ERR_INVALID_DATA`，保留原状态且无通知；相同状态返回 `OK` 且无通知，事件数组顺序不影响比较。v2 的七个字段必需（新增 `economy`）；旧 v1 仍可读取，缺少经济数据时使用新游戏默认值。额外字段忽略，未知版本拒绝。
 
-当前仅提供内存接口，没有文件读写、迁移或存档格式选择。后续存档适配层需保留 Variant 类型；普通 JSON 会将数字解析为浮点数，不能直接保证原生快照类型往返，应在适配层编码/恢复类型后再调用 `restore_state`。
+当前仅提供内存接口及 v1/v2 快照兼容，没有文件读写或存档格式选择。后续存档适配层需保留 Variant 类型；普通 JSON 会将数字解析为浮点数，不能直接保证原生快照类型往返，应在适配层编码/恢复类型后再调用 `restore_state`。
 
 ## 验证
 
@@ -59,3 +59,7 @@ _refresh_from_state()
 独立测试使用新的状态实例验证默认值、读写、通知去重、嵌套数据隔离、重置、完整恢复及非法快照的原子拒绝，并用最小场景切换验证真实 Autoload 的生命周期。
 
 实现依据为 Godot 4.7 官方文档：[Autoload 的创建时机与跨场景生命周期](https://docs.godotengine.org/en/4.7/tutorials/scripting/singletons_autoload.html)、[Dictionary 引用语义和深拷贝](https://docs.godotengine.org/en/4.7/classes/class_dictionary.html#class-dictionary-method-duplicate)、[Signal](https://docs.godotengine.org/en/4.7/classes/class_signal.html)。
+
+## 钱包与库存
+
+`get_transactions()` 返回跨场景 WalletTransactions，统一管理钱包、购买与实际奖励领取，复用现有仓库。`to_dict()` 的 economy 同时保存余额、库存、商店余量与领取记录；reset_state 一起重置，restore_state 先校验整包再发布通知。详见 [交易接口、原子性与委托待确认规则](wallet_transactions.md)。

@@ -1,6 +1,6 @@
 class_name WarehouseInventory
 extends Node
-## One session, quantities in portions. Never modifies the shared catalog Resource.
+## Quantities in portions; lifetime is controlled by its owner. Never modifies the shared catalog Resource.
 
 signal changed
 
@@ -116,15 +116,14 @@ func try_consume(materials: Variant) -> bool:
 func to_dict() -> Dictionary:
 	return {"schema_version": SCHEMA_VERSION, "ingredients": _state.duplicate(true)}
 
-## Complete atomic replacement; accepts a JSON round trip, but no file I/O.
-func restore_state(data: Variant) -> Error:
+## Validate a complete snapshot without mutation; accepts a JSON numeric round trip.
+func validate_state(data: Variant) -> Error:
 	if not data is Dictionary or not data.has_all(["schema_version", "ingredients"]):
 		return ERR_INVALID_DATA
 	if not _is_snapshot_integer(data.schema_version) or data.schema_version != SCHEMA_VERSION or not data.ingredients is Dictionary:
 		return ERR_INVALID_DATA
 	if data.ingredients.size() != _definitions.size():
 		return ERR_INVALID_DATA
-	var restored: Dictionary = {}
 	for id: Variant in data.ingredients:
 		if not _has_id(id):
 			return ERR_INVALID_DATA
@@ -137,11 +136,21 @@ func restore_state(data: Variant) -> Error:
 			return ERR_INVALID_DATA
 		if not entry.discovered and (entry.quantity > 0 or not entry.known_properties.is_empty()):
 			return ERR_INVALID_DATA
+	return OK
+
+## Silent replacement lets the transaction owner publish all participants together.
+func restore_state(data: Variant, notify: bool = true) -> Error:
+	if validate_state(data) != OK:
+		return ERR_INVALID_DATA
+	var restored: Dictionary = {}
+	for id: String in data.ingredients:
+		var entry: Dictionary = data.ingredients[id]
 		restored[id] = {"quantity": int(entry.quantity), "discovered": entry.discovered,
 			"known_properties": Array(entry.known_properties).duplicate()}
 	if restored != _state:
 		_state = restored
-		changed.emit()
+		if notify:
+			changed.emit()
 	return OK
 
 func _has_id(id: Variant) -> bool:

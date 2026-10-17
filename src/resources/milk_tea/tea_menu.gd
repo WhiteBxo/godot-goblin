@@ -7,3 +7,10 @@ extends Resource
 ## Keys are discovered ingredient IDs; values list initially known property groups.
 @export var initial_discovery: Dictionary = {}
 @export var orders: Array[Dictionary] = []
+
+## Economy configuration. Amounts are integer currency units, stock in portions.
+@export_range(0, 2147483647) var initial_balance: int = 0
+## product_id -> {item_id: String, price: int, stock?: int}. Omitted stock is unlimited.
+@export var products: Dictionary = {}
+## reward_id -> {money: int, items: Dictionary, task_id?: String}.
+@export var transaction_rewards: Dictionary = {}

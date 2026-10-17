@@ -1,0 +1,154 @@
+# 文档中心
+
+本页索引项目维护的全部文档。首次试玩先读[项目 README](../README.md)和[启动与新游戏](guides/game_entry.md)；开发前读[协作规范](../AGENTS.md)；编排剧情先读[简版写作指南](guides/story_authoring_fields_quick_guide.md)与[编排工作流](guides/story_authoring_workflow.md)。
+
+## 分类与命名规范
+
+| 目录 | 内容 |
+| --- | --- |
+| `guides/` | 启动和新游戏、剧情写作、编排工作流与指令参数。 |
+| `systems/` | 状态、对话、剧情调度、角色、镜头、音频、UI 与转场。 |
+| `gameplay/` | 制作、库存、交易、任务、采集、见闻录和交互反馈。 |
+| `levels/` | 奶茶店、聚落和旧洞穴 Demo；截图随对应说明保存。 |
+| `assets/` | 人物、音效、模块化素材库和素材导入记录。 |
+| `design/` | 策划、分阶段剧情草稿和原始附件；设计目标不等于已实现能力。 |
+| `story_authoring/` | Beat 映射、验证清单及待定项；不供游戏运行时加载。 |
+| `development/` | 开发者面板、审查、优先级与带日期的历史快照。 |
+
+- 目录和文件名使用英文小写 `snake_case`，Markdown 使用 `.md`；中文用于标题与正文。根目录 `README.md`、`AGENTS.md`、许可证和分类入口 `README.md` 沿用约定名称。
+- 文件按主题命名，例如 `warehouse_inventory.md`。剧情天数、场次、阶段统一两位数，例如 `day_01_scene_01.md`、`day_01_stages_01_02_draft.md`。
+- 版本含义写入名字：`_draft` 为草稿、`_revised` 为修改稿、`_development_spec` 为执行规格、`_pending` 为待定清单；原稿与修改稿均保留，不用“最终版”“新版2”覆盖来源关系。
+- 一次性导入记录和历史快照以 `YYYY_MM_DD` 结尾，例如 `user_assets_2026_10_17.md`；持续维护的 API 说明不加日期，文内写明核对日期、版本和验证范围。
+- 图片放在对应模块的 `captures/`，PDF、Excel 等策划原始附件放在 `design/source/`，保留原始内容。素材来源与许可证、测试夹具说明仍跟随 `assets/`、`tests/`；第三方说明仍跟随 `addons/`。
+- 剧情映射 JSON 保留既有资源 / 事件 ID 对应的文件名，例如 `day1_scene01.json`；本次仅更新其中的源稿路径，不更改运行时 ID。音效映射由生成工具维护，移动时同步修改生成目标。
+- 文档链接相对当前文档书写；命令和代码中的项目路径相对仓库根目录，Godot 资源路径保留 `res://`。移动文档时同步检查 Markdown 链接、明文路径、生成脚本和截图输出路径。
+- 设计描述目标，模块说明描述接口和验收方法，历史记录只证明当时的检查。不同稿件冲突以[Day 1 对接约定](design/day_01_integration_contract.md)和[待定清单](story_authoring/day_01_integration_pending.md)为准；当前入口与配置以代码和 `project.godot` 为准。
+
+## 使用与编排指南
+
+启动和新游戏、剧情写作、编排工作流与指令参数。
+
+| 文档 | 文件 / 说明 |
+| --- | --- |
+| [启动、整局新游戏与返回标题](guides/game_entry.md) | `game_entry.md` |
+| [剧情编排指令速查（v1）](guides/story_authoring_commands.md) | `story_authoring_commands.md` |
+| [剧情编排 Markdown 写作规范（简版）](guides/story_authoring_fields_quick_guide.md) | `story_authoring_fields_quick_guide.md` |
+| [自然语言剧情编排工作流](guides/story_authoring_workflow.md) | `story_authoring_workflow.md` |
+
+## 系统与公共接口
+
+状态、对话、剧情调度、角色、镜头、音频、UI 与转场。
+
+| 文档 | 文件 / 说明 |
+| --- | --- |
+| [ActorDirector（P0）](systems/actor_director.md) | `actor_director.md` |
+| [AudioManager（剧情演出第一阶段）](systems/audio_manager.md) | `audio_manager.md` |
+| [CameraDirector：2D 剧情镜头](systems/camera_director.md) | `camera_director.md` |
+| [通用对话系统（P0-1）](systems/dialogue_system.md) | `dialogue_system.md` |
+| [GameState](systems/game_state.md) | `game_state.md` |
+| [Gameplay Bridge](systems/gameplay_bridge.md) | `gameplay_bridge.md` |
+| [ScreenTransition](systems/screen_transition.md) | `screen_transition.md` |
+| [店铺与聚落进出](systems/scene_travel.md) | `scene_travel.md` |
+| [StoryDirector / P0 Cinematic Integration](systems/story_director.md) | `story_director.md` |
+| [项目 UI 系统](systems/ui_system.md) | `ui_system.md` |
+
+## 玩法模块
+
+制作、库存、交易、任务、采集、见闻录和交互反馈。
+
+| 文档 | 文件 / 说明 |
+| --- | --- |
+| [Day 1 前两阶段正式流程](gameplay/day_01_stages_01_02.md) | `day_01_stages_01_02.md` |
+| [初级奶茶制作](gameplay/basic_tea_production.md) | `basic_tea_production.md` |
+| [统一经营会话](gameplay/business_session.md) | `business_session.md` |
+| [见闻录基础模块](gameplay/chronicle.md) | `chronicle.md` |
+| [采集点与任务物资提交](gameplay/gathering.md) | `gathering.md` |
+| [2D 交互反馈](gameplay/interaction_feedback.md) | `interaction_feedback.md` |
+| [成品携带与指定 NPC 交付](gameplay/task_delivery.md) | `task_delivery.md` |
+| [委托列表与详情](gameplay/task_panel.md) | `task_panel.md` |
+| [任务 / 委托系统（P0）](gameplay/task_system.md) | `task_system.md` |
+| [钱包与原子交易](gameplay/wallet_transactions.md) | `wallet_transactions.md` |
+| [仓库与共享库存（第一阶段）](gameplay/warehouse_inventory.md) | `warehouse_inventory.md` |
+
+## 关卡与地图
+
+奶茶店、聚落和旧洞穴 Demo；截图随对应说明保存。
+
+| 文档 | 文件 / 说明 |
+| --- | --- |
+| [洞穴墙体 demo 接入说明](levels/cave_demo/README.md) | `cave_demo/README.md` |
+| [巢穴地图 Tile Demo](levels/cave_demo/source_demo.md) | `cave_demo/source_demo.md` |
+| [奶茶店开放房间与遮挡渐隐](levels/milk_tea_map.md) | `milk_tea_map.md` |
+| [奶茶店 MVP](levels/milk_tea_mvp.md) | `milk_tea_mvp.md` |
+| [新版洞窟聚落](levels/settlement/README.md) | `settlement/README.md` |
+
+## 素材与导入
+
+人物、音效、模块化素材库和素材导入记录。
+
+| 文档 | 文件 / 说明 |
+| --- | --- |
+| [游戏人物与美术接入](assets/characters.md) | `characters.md` |
+| [主角对话立绘：平静 / 说话](assets/imports/player_dialogue_portraits.md) | `imports/player_dialogue_portraits.md` |
+| [2026-10-17 用户素材导入清单](assets/imports/user_assets_2026_10_17.md) | `imports/user_assets_2026_10_17.md` |
+| [独立家具、道具与墙体素材库](assets/modular_assets/README.md) | `modular_assets/README.md` |
+| [Sound Library v1](assets/sound_library.md) | `sound_library.md` |
+| [音效 ID 与资源映射（生成文件）](assets/sound_library_ids.md) | `sound_library_ids.md` |
+
+## 设计与剧情源稿
+
+策划、分阶段剧情草稿和原始附件；设计目标不等于已实现能力。
+
+| 文档 | 文件 / 说明 |
+| --- | --- |
+| [Cinematic 开场（工作流基准稿）](design/cinematic_opening.md) | `cinematic_opening.md` |
+| [Day 1 精简版剧情冒险：开发执行规格（Godot 2D）](design/day_01_development_spec.md) | 历史精简执行规格；仅用于范围差异对照。 |
+| [Day 1 正式剧情与业务配置约定](design/day_01_integration_contract.md) | 正式剧情内容依据、宿主绑定和发布边界。 |
+| [day1_scene01](design/day_01_scene_01.md) | 独立试编排源稿，运行时 ID 仍为 day1_scene01。 |
+| [Day 1 前两个阶段：剧情演出初稿](design/day_01_stages_01_02_draft.md) | S01–S02 演出初稿，保留待确认项。 |
+| [第一天:一杯奶茶引发的异世界生](design/day_01_story_flow.md) | 原 PDF 转录稿，保留原文和开发备注。 |
+| [第一天](design/day_01_story_flow_revised.md) | 修改稿；对接约定采用其 S03–S06。 |
+| [Gameplay Bridge 独立验收剧情](design/gameplay_bridge_demo.md) | `gameplay_bridge_demo.md` |
+| [系统设计文档:奶茶店系统与异世界见闻录](design/milk_tea_system_and_otherworld_chronicle.md) | `milk_tea_system_and_otherworld_chronicle.md` |
+| [真实订单 Gameplay Bridge 最小示例](design/order_bridge_demo.md) | `order_bridge_demo.md` |
+| [day_02.pdf](design/source/day_02.pdf) | 第二天剧情原始 PDF。 |
+| [otherworld_ingredients_and_drinks.xlsx](design/source/otherworld_ingredients_and_drinks.xlsx) | 食材与饮品原始工作簿。 |
+
+## 剧情编排产物
+
+Beat 映射、验证清单及待定项；不供游戏运行时加载。
+
+| 文档 | 文件 / 说明 |
+| --- | --- |
+| [cinematic_opening.json](story_authoring/cinematic_opening.json) | 生成的 Beat 映射 / 验证清单，保留原资源名。 |
+| [day1_scene01.json](story_authoring/day1_scene01.json) | 生成的 Beat 映射 / 验证清单，保留原资源名。 |
+| [Day 1 对接待定与能力缺口](story_authoring/day_01_integration_pending.md) | 正式剧情对接待定项及能力缺口。 |
+| [gameplay_bridge_demo_bridge.json](story_authoring/gameplay_bridge_demo_bridge.json) | 生成的 Beat 映射 / 验证清单，保留原资源名。 |
+| [order_bridge_demo_bridge.json](story_authoring/order_bridge_demo_bridge.json) | 生成的 Beat 映射 / 验证清单，保留原资源名。 |
+
+## 开发工具与记录
+
+开发者面板、审查、优先级与带日期的历史快照。
+
+| 文档 | 文件 / 说明 |
+| --- | --- |
+| [通用 Developer Console（第一阶段）](development/developer_console.md) | `developer_console.md` |
+| [系统开发现状（2026-10-16 历史快照）](development/development_status_2026_10_16.md) | `development_status_2026_10_16.md` |
+| [系统设计审查：当前能力、缺口与优先级](development/system_design_review.md) | `system_design_review.md` |
+| [系统优先级：剧情并行推进时的开发清单](development/system_priority.md) | `system_priority.md` |
+
+## 随资源维护的说明
+
+| 文档 | 用途 |
+| --- | --- |
+| [人物素材](../assets/characters/README.md) | 原图分类、立绘与动画接入 |
+| [玩家素材](../assets/characters/player/README.md) | 主角来源、切帧与动画处理 |
+| [奶茶店地图分层](../assets/map/milk_tea_layers/README.md) | 背景与前景裁片处理 |
+| [Fusion Pixel 字体](../assets/fonts/fusion_pixel/README.md) | 字体版本、来源与许可证 |
+| [音效许可证](../assets/audio/LICENSE.md) | 原创合成音效许可 |
+| [BGM 测试夹具](../tests/fixtures/bgm_intro_loop.md) | 音频循环测试素材说明 |
+| [Godot MCP](../addons/godot_mcp/README.md) / [中文说明](../addons/godot_mcp/README.zh.md) | 随插件保留的第三方文档 |
+
+## 已知同步事项
+
+整理时发现 `story_authoring/day1_scene01.json` 中的 `source_sha256` 与源稿不一致；该差异在本次整理前已经存在，源稿内容本次逐字保留。迁移仅修正 `source` 路径，未将旧产物标记为已重新编排或验证通过。后续应结合[Day 1 待定清单](story_authoring/day_01_integration_pending.md)核对执行内容，再按编排工作流更新映射与哈希。

@@ -9,6 +9,9 @@
 [ext_resource type="Shader" uid="uid://cri6we4d0xpvo" path="res://src/shaders/occlusion_cutout.gdshader" id="8_cutout"]
 [ext_resource type="Script" uid="uid://bx8pixv32pxds" path="res://src/gameplay/rooms/doorframe_foreground.gd" id="9_frame"]
 
+[ext_resource type="Script" path="res://src/core/navigation/scene_exit.gd" id="travel_exit"]
+[ext_resource type="Script" path="res://src/core/navigation/scene_entrance.gd" id="travel_entrance"]
+
 [sub_resource type="RectangleShape2D" id="Shape_NorthWall"]
 size = Vector2(1144, 48)
 
@@ -570,6 +573,31 @@ position = Vector2(850, 550)
 
 [node name="day1_group_c" type="Marker2D" parent="StoryPositions"]
 position = Vector2(940, 550)
+
+[node name="SceneExits" type="Node2D" parent="."]
+
+[node name="ShopDoor" parent="SceneExits" instance=ExtResource("3_xdoh7")]
+position = Vector2(1123, 700)
+script = ExtResource("travel_exit")
+interaction_id = &"shop_exit"
+display_name = "走出奶茶店"
+destination_scene = "res://src/core/settlement.tscn"
+destination_entrance = &"shop_door"
+feedback_rect = Rect2(-30, -55, 60, 60)
+
+[node name="Marker" parent="SceneExits/ShopDoor" index="1"]
+visible = false
+
+[node name="Label" parent="SceneExits/ShopDoor" index="2"]
+visible = false
+
+[node name="SceneEntrances" type="Node2D" parent="."]
+
+[node name="StreetDoor" type="Marker2D" parent="SceneEntrances"]
+position = Vector2(1123, 650)
+script = ExtResource("travel_entrance")
+entrance_id = &"street_door"
+facing = 3
 
 [editable path="Rooms/Bedroom"]
 [editable path="Rooms/Bathroom"]

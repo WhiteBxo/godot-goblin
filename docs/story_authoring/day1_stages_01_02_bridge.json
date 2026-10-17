@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "source": "res://docs/design/day1_stages_01_02_draft.md",
+  "source": "res://docs/design/day_01_stages_01_02_draft.md",
   "source_sha256": "b7be487bbb413f47da9ff4bccc209ec27b25ccbac90bfd7f934a9b1e1e9b89b4",
   "scene": "res://src/core/main.tscn",
   "story": "res://src/resources/story/day1_stages_01_02.json",

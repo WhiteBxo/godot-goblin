@@ -225,6 +225,27 @@ func _test_settlement_failures() -> void:
 	check(state.commit_delivery(costs, {}, 10, facts, 1, "test_payment") != OK and state.to_dict() == before, "Stable payment ID cannot be replayed")
 	state.free()
 
+func _travel_completed_run(snapshot: Dictionary) -> void:
+	var inventory := _game.get_warehouse_inventory()
+	var production := _game.get_tea_production()
+	for path: String in ["res://src/core/settlement.tscn", "res://src/core/main.tscn"]:
+		var exit: SceneExit = _game.get_active_level().get_scene_exits()[0]
+		check(_game.get_scene_travel().request_exit(exit) == OK, "Completed Day 1 can travel to " + path)
+		await scene_changed
+		_game = current_scene as MainGame
+		var deadline := Time.get_ticks_msec() + 5000
+		while _game.get_scene_travel().is_busy() and Time.get_ticks_msec() < deadline:
+			await process_frame
+		await frames()
+		check(_game.scene_file_path == path and not _game.get_scene_travel().is_busy(), "Day 1 door transition finishes")
+		check(_state.to_dict() == snapshot, "Door travel preserves Day 1 profile, income, coins, receipts and story")
+		check(_game.get_warehouse_inventory() == inventory and _game.get_tea_production() == production, "Day 1 travel retains service identities")
+		check(_game.get_player().movement_enabled and not _game.get_story_director().is_busy(), "Arrival releases travel input without replaying story")
+	var entrance: SceneEntrance = _game.get_active_level().get_scene_entrance(&"street_door")
+	check(_game.get_player().global_position.is_equal_approx(entrance.global_position), "Day 1 checkpoint projection preserves the named door landing")
+	check(_game.get_player().facing == entrance.facing, "Day 1 arrival preserves entrance facing")
+	_attach_observers()
+
 func _run() -> void:
 	root.size = Vector2i(1280, 720)
 	_capture = "--capture" in OS.get_cmdline_user_args()
@@ -244,6 +265,7 @@ func _run() -> void:
 	await _wait_event("day1.opening")
 	check(_state.story_stage == "day1.wait_human" and _game.get_player().movement_enabled, "First gameplay handoff releases input")
 	check(_game.get_audio_manager().get_bgm_state().id == "music.daily_milk_tea", "Opening starts registered scene music")
+	check(_game.get_scene_travel().request_exit(_game.get_active_level().get_scene_exits()[0]) == ERR_BUSY, "Active gameplay phase retains its scene-travel guard")
 	_waiting_snapshots.append(_state.to_dict())
 	var counter: Node2D = _game.get_active_level().get_node("EquipmentForeground/Counter")
 	var human := _game.get_actor_director().get_actor(&"human_customer")
@@ -318,6 +340,7 @@ func _run() -> void:
 	check(_state.to_dict() == final, "Completed snapshot restoration has no business or story side effects")
 	await _snapshot("finished")
 	await _reload(final)
+	await _travel_completed_run(final)
 	for snapshot: Dictionary in _waiting_snapshots:
 		await _restore(snapshot)
 		check(_state.story_stage == snapshot.story_stage and not _game.get_story_director().is_busy(), "Every gameplay checkpoint restores idle and operable")

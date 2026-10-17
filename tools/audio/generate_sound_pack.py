@@ -278,7 +278,7 @@ def main():
     for relative, content in (
         ('src/resources/audio/sound_library.tres', resource),
         ('assets/audio/manifest.json', json.dumps(report, ensure_ascii=False, indent=2)+'\n'),
-        ('docs/sound_library_ids.md', '\n'.join(mapping)+'\n'),
+        ('docs/assets/sound_library_ids.md', '\n'.join(mapping)+'\n'),
     ):
         path = ROOT / relative
         path.parent.mkdir(parents=True, exist_ok=True)

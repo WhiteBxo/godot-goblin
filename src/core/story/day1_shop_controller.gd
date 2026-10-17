@@ -38,14 +38,14 @@ func configure(game: MainGame) -> Error:
 	game.get_tea_production().changed.connect(_refresh)
 	game.get_story_director().event_finished.connect(_event_finished)
 	game.get_gameplay_bridge().continuation_failed.connect(func(_id: String, _error: Error) -> void: _show_resume())
-	_resume_boundary.call_deferred()
+	_resume_boundary.call_deferred(game.has_scene_arrival())
 	return OK
 
 func _schedule_resume() -> void:
 	_opening_pending = false
 	_resume_boundary.call_deferred()
 
-func _resume_boundary() -> void:
+func _resume_boundary(preserve_player_position: bool = false) -> void:
 	if not is_instance_valid(_game) or not is_inside_tree():
 		return
 	last_error = ""
@@ -73,7 +73,8 @@ func _resume_boundary() -> void:
 	var positions := {}
 	for marker: Marker2D in _game.get_active_level().get_story_positions():
 		positions[String(marker.name)] = marker.global_position
-	_game.get_player().teleport_to(positions.day1_player)
+	if not preserve_player_position:
+		_game.get_player().teleport_to(positions.day1_player)
 	var actors := _game.get_actor_director()
 	for id: String in _setup.actors:
 		var actor := actors.get_actor(StringName(id))
@@ -94,7 +95,7 @@ func _resume_boundary() -> void:
 	_refresh()
 
 func _process(_delta: float) -> void:
-	if _opening_pending and not get_tree().paused and not _game.get_ui_manager().has_modal() and not _game.get_story_director().is_busy():
+	if _opening_pending and (not is_instance_valid(_game.get_scene_travel()) or not _game.get_scene_travel().is_busy()) and not get_tree().paused and not _game.get_ui_manager().has_modal() and not _game.get_story_director().is_busy():
 		_opening_pending = false
 		var error := _game.get_story_director().request_event(_setup.opening_event)
 		if error != OK:
@@ -111,4 +112,5 @@ func _show_resume() -> void:
 		_game.get_business_hud().show_resume(true)
 
 func _refresh() -> void:
-	_game.refresh_day1_access()
+	if is_inside_tree() and is_instance_valid(_game) and _game.is_inside_tree():
+		_game.refresh_day1_access()

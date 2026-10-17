@@ -102,8 +102,15 @@ func _project(task: Dictionary) -> Dictionary:
 	if task.has("rewards"):
 		var reward_revealed := revealed and _revealed(task.rewards)
 		rewards = {"text": task.rewards.text if reward_revealed else "???", "revealed": reward_revealed}
+	var delivery: Dictionary = {}
+	if revealed and task.has("delivery"):
+		delivery = {"target_object_id": task.delivery.target_object_id}
+		if task.delivery.has("items"):
+			delivery.items = task.delivery.items.duplicate(true)
+		else:
+			delivery.product_id = task.delivery.product_id
 	return {"id": task.id, "type": task.type, "status": status, "revealed": revealed,
 		"title": task.title if revealed else "???", "description": task.description if revealed else "???",
 		"location_id": task.get("location_id", "") if revealed else "",
 		"difficulty": task.get("difficulty", "") if revealed else "???",
-		"rewards": rewards, "objectives": objectives, "current_objective": current}
+		"rewards": rewards, "delivery": delivery, "objectives": objectives, "current_objective": current}

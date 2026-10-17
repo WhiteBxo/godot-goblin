@@ -6,4 +6,4 @@
 
 完整条款：[CC0 1.0 Universal legal code](https://creativecommons.org/publicdomain/zero/1.0/legalcode)。可选署名：`Goblin Sound Pack v1 / procedural synthesis`。
 
-此声明仅覆盖本目录 WAV，不改变项目代码、字体、贴图或其他素材的许可。生成工具及合成参数见 `docs/sound_library.md`；逐文件来源均为该工具，SHA-256 见 `manifest.json`。
+此声明仅覆盖本目录 WAV，不改变项目代码、字体、贴图或其他素材的许可。生成工具及合成参数见 `docs/assets/sound_library.md`；逐文件来源均为该工具，SHA-256 见 `manifest.json`。

@@ -80,7 +80,7 @@ MainGame
 
 ## 自然语言剧情编排
 
-- 用户给出 `docs/design/` 下的 Markdown 并要求「编排这段剧情」或修改局部 Beat 时，必须执行 [剧情编排工作流](docs/story_authoring_workflow.md)，按需核对 [全部指令及参数](docs/story_authoring_commands.md) 和 [StoryDirector](docs/story_director.md) 的实际 Loader / dispatch。
+- 用户给出 `docs/design/` 下的 Markdown 并要求「编排这段剧情」或修改局部 Beat 时，必须执行 [剧情编排工作流](docs/guides/story_authoring_workflow.md)，按需核对 [全部指令及参数](docs/guides/story_authoring_commands.md) 和 [StoryDirector](docs/systems/story_director.md) 的实际 Loader / dispatch。
 - Markdown 是剧情唯一内容来源，先保留或更新原稿，再生成现有 v1 Dialogue / Story JSON 和 `docs/story_authoring/` 的 Beat 映射/验证清单；不得扩写对白、改变节奏或把顺序硬编码进 GDScript。
 - 自动匹配目标宿主实际注册的 Actor、Marker、音频和场景资源；明确的位置/资源可自主配置，无法确认的空间、关键素材或缺少的表现能力记录为 pending，不编造、不扩展通用系统。
 - 混合演出与玩法的 Beat 声明「执行模式：自动演出 / 玩家操作」和「玩法完成条件」；按编排工作流拆成现有 StoryDirector 短事件与 Gameplay Bridge phase 数据，禁止 busy 中解锁、在 StoryDirector 写玩法规则或在宿主硬编码顺序。
@@ -91,6 +91,7 @@ MainGame
 - 新文件、目录、变量和 function 使用 `snake_case`；现有 `src/UI/` 保留大小写，引用必须一致。
 - 节点与类使用 `PascalCase`；常量使用 `UPPER_SNAKE_CASE`。
 - GDScript 使用 Tab 缩进，优先使用明确的类型注解或类型推断；按 Godot 生命周期组织回调。
+- 文档分类、命名与维护按 [文档中心](docs/README.md#分类与命名规范) 执行；移动文档时同步修正链接、生成目标和验证清单中的源路径。
 - 文本使用 UTF-8、LF 换行和一个末尾换行符，避免行尾空格。
 - 格式调整限定在本次任务涉及的内容，不对无关文件执行批量格式化。
 

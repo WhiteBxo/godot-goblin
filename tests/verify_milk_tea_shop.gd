@@ -145,6 +145,7 @@ func _reachable(level: MilkTeaShop, player: ShopPlayer, delivery_point: Interact
 				visited[next] = true
 				queue.append(next)
 	var points := level.get_interaction_points()
+	points.append_array(level.get_scene_exits())
 	points.append(delivery_point)
 	for point in points:
 		var found := false

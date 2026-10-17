@@ -126,11 +126,13 @@ func _validate(data: Variant, references: Dictionary) -> bool:
 			return false
 		if task.has("delivery"):
 			var delivery: Variant = task.delivery
-			if not delivery is Dictionary or not _keys(delivery, ["order_id", "product_id", "items", "target_object_id"], context + "/delivery"):
+			if not delivery is Dictionary or not _keys(delivery, ["order_id", "product_id", "items", "target_object_id", "accepted_flag"], context + "/delivery"):
 				return _invalid(context + "/delivery", "Expected order_id, target_object_id and one requirement")
 			for field: String in ["order_id", "target_object_id"]:
 				if not _text(delivery.get(field)) or not delivery[field].is_valid_identifier():
 					return _invalid(context + "/delivery/" + field, "Expected a stable object/item identifier")
+			if delivery.has("accepted_flag") and not StoryLibrary.is_namespaced(delivery.accepted_flag):
+				return _invalid(context + "/delivery/accepted_flag", "Expected a namespaced flag")
 			# A delivery carries either one finished product or a material list.
 			if delivery.has("product_id") == delivery.has("items"):
 				return _invalid(context + "/delivery", "Expected exactly one of product_id or items")
@@ -153,8 +155,10 @@ func _validate(data: Variant, references: Dictionary) -> bool:
 			var reward: Variant = task.rewards
 			if not reward is Dictionary or not _text(reward.get("text")):
 				return _invalid(context + "/rewards/text", "Expected a reward object with non-empty text")
-			if not _keys(reward, ["text", "reveal_when", "items"], context + "/rewards"):
+			if not _keys(reward, ["text", "reveal_when", "items", "money"], context + "/rewards"):
 				return false
+			if reward.has("money") and (not is_number(reward.money) or reward.money != floor(reward.money) or reward.money < 0 or reward.money > 2147483647):
+				return _invalid(context + "/rewards/money", "Expected a nonnegative bounded integer")
 			if reward.has("items") and not _item_quantities(reward.items, context + "/rewards/items"):
 				return false
 

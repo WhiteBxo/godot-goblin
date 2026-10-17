@@ -16,7 +16,7 @@ func _run() -> void:
 	_test_inventory()
 	_test_production_transaction()
 	await _test_discovery_ui()
-	await _test_session("res://src/core/main.tscn")
+	await _test_session("res://src/debug/story/legacy_shop.tscn")
 	await _test_session("res://src/core/settlement.tscn")
 	print("WAREHOUSE_INVENTORY: %s (%d checks)" % ["PASS" if _failures.is_empty() else "FAIL", _checks])
 	quit(0 if _failures.is_empty() else 1)

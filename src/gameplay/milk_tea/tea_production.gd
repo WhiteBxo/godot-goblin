@@ -6,9 +6,15 @@ signal changed
 
 const CATALOG: Resource = preload("res://src/resources/milk_tea/basic_menu.tres")
 
+var _menu: TeaMenu = CATALOG
+var _state: Node
+
 var _inventory: WarehouseInventory
 var _completed: int = 0
 var _submitting: bool = false
+
+func select_menu(menu: TeaMenu) -> void:
+	_menu = menu
 
 func is_submitting() -> bool:
 	return _submitting
@@ -16,18 +22,18 @@ func is_submitting() -> bool:
 func to_dict() -> Dictionary:
 	var ids: Array[String] = []
 	for index in range(_completed):
-		ids.append(CATALOG.orders[index].id)
+		ids.append(_menu.orders[index].id)
 	return {"completed_order_ids": ids}
 
-## The current fixed teaching queue only allows a completed prefix, never gaps.
+## The selected order queue only allows a completed prefix, never gaps.
 func is_valid_snapshot(data: Variant) -> bool:
 	if not data is Dictionary or not data.get("completed_order_ids") is Array:
 		return false
 	var ids: Array = data.completed_order_ids
-	if ids.size() > CATALOG.orders.size():
+	if ids.size() > _menu.orders.size():
 		return false
 	for index in range(ids.size()):
-		if not ids[index] is String or ids[index] != CATALOG.orders[index].id:
+		if not ids[index] is String or ids[index] != _menu.orders[index].id:
 			return false
 	return true
 
@@ -41,11 +47,14 @@ func restore_state(data: Variant) -> Error:
 		changed.emit()
 	return OK
 
-func configure(inventory: WarehouseInventory) -> void:
+func configure(inventory: WarehouseInventory, state: Node = null) -> void:
 	# A business session cannot be rebound or reset by reopening its UI.
 	if _inventory != null or inventory == null:
 		return
 	_inventory = inventory
+	_state = state
+	if is_instance_valid(_state):
+		_state.state_changed.connect(_on_inventory_changed)
 	_inventory.changed.connect(_on_inventory_changed)
 
 func get_inventory() -> WarehouseInventory:
@@ -65,14 +74,17 @@ func get_completed_count() -> int:
 	return _completed
 
 func get_order() -> Dictionary:
-	if _completed >= CATALOG.orders.size():
+	if _completed >= _menu.orders.size():
 		return {}
-	return CATALOG.orders[_completed].duplicate(true)
+	var order: Dictionary = _menu.orders[_completed]
+	if order.has("accepted_flag") and (not is_instance_valid(_state) or not _state.get_flag(order.accepted_flag)):
+		return {}
+	return order.duplicate(true)
 
 func get_order_text() -> String:
 	var order := get_order()
 	if order.is_empty():
-		return "今日制作已全部完成 · 共 %d 杯" % _completed
+		return "今日制作已全部完成 · 共 %d 杯" % _completed if _completed >= _menu.orders.size() else "当前没有已接取订单，请查看订单板。"
 	return "订单 #%03d · %s × 1\n%s · 常温 · 少糖" % [_completed + 1, order.name, " + ".join(get_recipe_names(order.recipe))]
 
 func get_recipe_names(recipe: Array) -> PackedStringArray:

@@ -70,7 +70,8 @@ func _run() -> void:
 	_check(root.get_node("GameState").call("to_dict") == state_before, "Dialogue components never change GameState")
 	await _test_main_input_lock()
 	state_before.flags["shop.orders_viewed"] = true
-	_check(root.get_node("GameState").call("to_dict") == state_before, "Shop integration only records the successfully viewed order board")
+	state_before.flags["task.shop.first_order.active"] = true
+	_check(root.get_node("GameState").call("to_dict") == state_before, "Shop integration records the viewed order board and accepts only its revealed order")
 	print("DIALOGUE: %s (%d checks, %d failures)" % ["PASS" if _failures.is_empty() else "FAIL", _checks, _failures.size()])
 	quit(0 if _failures.is_empty() else 1)
 
@@ -385,7 +386,7 @@ func _test_demo() -> void:
 
 
 func _test_main_input_lock() -> void:
-	var game: MainGame = load("res://src/core/main.tscn").instantiate()
+	var game: MainGame = load("res://src/debug/story/legacy_shop.tscn").instantiate()
 	root.add_child(game)
 	await _frames()
 	var player := game.get_player() as PlayerController

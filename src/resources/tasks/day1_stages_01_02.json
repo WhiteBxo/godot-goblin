@@ -1,0 +1,288 @@
+{
+  "version": 1,
+  "tasks": [
+    {
+      "id": "day1.order_human",
+      "type": "main",
+      "title": "珍珠奶茶 → 人类顾客",
+      "description": "查看订单板接单，在制作台制作后交给指定顾客。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day1.human_open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day1.human_open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day1.human_settled"
+      },
+      "objectives": [
+        {
+          "id": "view",
+          "text": "查看订单并接单",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.day1.human.active"
+          }
+        },
+        {
+          "id": "make",
+          "text": "制作珍珠奶茶",
+          "complete_when": {
+            "type": "variable_at_least",
+            "key": "shop.drinks_made",
+            "value": 1
+          }
+        },
+        {
+          "id": "deliver",
+          "text": "交付并收款",
+          "complete_when": {
+            "type": "flag",
+            "key": "day1.human_settled"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day1_human",
+        "product_id": "pearl_milk_tea",
+        "target_object_id": "human_customer",
+        "accepted_flag": "task.day1.human.active"
+      },
+      "rewards": {
+        "text": "营业收入 10",
+        "money": 10
+      }
+    },
+    {
+      "id": "day1.order_goblin",
+      "type": "main",
+      "title": "椰果茉莉奶茶 → 哥布林顾客",
+      "description": "查看订单板接单，在制作台制作后交给指定顾客。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day1.goblin_open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day1.goblin_open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day1.goblin_settled"
+      },
+      "objectives": [
+        {
+          "id": "view",
+          "text": "查看订单并接单",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.day1.goblin.active"
+          }
+        },
+        {
+          "id": "make",
+          "text": "制作椰果茉莉奶茶",
+          "complete_when": {
+            "type": "variable_at_least",
+            "key": "shop.drinks_made",
+            "value": 2
+          }
+        },
+        {
+          "id": "deliver",
+          "text": "交付并收款",
+          "complete_when": {
+            "type": "flag",
+            "key": "day1.goblin_settled"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day1_goblin",
+        "product_id": "coconut_milk_tea",
+        "target_object_id": "goblin_customer",
+        "accepted_flag": "task.day1.goblin.active"
+      },
+      "rewards": {
+        "text": "古怪金币 × 1",
+        "items": {
+          "strange_coin": 1
+        }
+      }
+    },
+    {
+      "id": "day1.order_group_a",
+      "type": "main",
+      "title": "原味奶茶 → 哥布林甲",
+      "description": "查看订单板接单，在制作台制作后交给指定顾客。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day1.group_open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day1.group_open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day1.group_a_settled"
+      },
+      "objectives": [
+        {
+          "id": "view",
+          "text": "查看订单并接单",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.day1.group_a.active"
+          }
+        },
+        {
+          "id": "make",
+          "text": "制作原味奶茶",
+          "complete_when": {
+            "type": "variable_at_least",
+            "key": "shop.drinks_made",
+            "value": 3
+          }
+        },
+        {
+          "id": "deliver",
+          "text": "交付并收款",
+          "complete_when": {
+            "type": "flag",
+            "key": "day1.group_a_settled"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day1_group_a",
+        "product_id": "plain_milk_tea",
+        "target_object_id": "goblin_a",
+        "accepted_flag": "task.day1.group_a.active"
+      },
+      "rewards": {
+        "text": "古怪金币 × 1",
+        "items": {
+          "strange_coin": 1
+        }
+      }
+    },
+    {
+      "id": "day1.order_group_b",
+      "type": "main",
+      "title": "珍珠奶茶 → 哥布林乙",
+      "description": "查看订单板接单，在制作台制作后交给指定顾客。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day1.group_open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day1.group_open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day1.group_b_settled"
+      },
+      "objectives": [
+        {
+          "id": "view",
+          "text": "查看订单并接单",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.day1.group_b.active"
+          }
+        },
+        {
+          "id": "make",
+          "text": "制作珍珠奶茶",
+          "complete_when": {
+            "type": "variable_at_least",
+            "key": "shop.drinks_made",
+            "value": 4
+          }
+        },
+        {
+          "id": "deliver",
+          "text": "交付并收款",
+          "complete_when": {
+            "type": "flag",
+            "key": "day1.group_b_settled"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day1_group_b",
+        "product_id": "pearl_milk_tea",
+        "target_object_id": "goblin_b",
+        "accepted_flag": "task.day1.group_b.active"
+      },
+      "rewards": {
+        "text": "古怪金币 × 1",
+        "items": {
+          "strange_coin": 1
+        }
+      }
+    },
+    {
+      "id": "day1.order_group_c",
+      "type": "main",
+      "title": "椰果茉莉奶茶 → 哥布林丙",
+      "description": "查看订单板接单，在制作台制作后交给指定顾客。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day1.group_open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day1.group_open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day1.group_c_settled"
+      },
+      "objectives": [
+        {
+          "id": "view",
+          "text": "查看订单并接单",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.day1.group_c.active"
+          }
+        },
+        {
+          "id": "make",
+          "text": "制作椰果茉莉奶茶",
+          "complete_when": {
+            "type": "variable_at_least",
+            "key": "shop.drinks_made",
+            "value": 5
+          }
+        },
+        {
+          "id": "deliver",
+          "text": "交付并收款",
+          "complete_when": {
+            "type": "flag",
+            "key": "day1.group_c_settled"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day1_group_c",
+        "product_id": "coconut_milk_tea",
+        "target_object_id": "goblin_c",
+        "accepted_flag": "task.day1.group_c.active"
+      },
+      "rewards": {
+        "text": "古怪金币 × 1",
+        "items": {
+          "strange_coin": 1
+        }
+      }
+    }
+  ]
+}

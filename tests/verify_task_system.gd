@@ -63,7 +63,7 @@ func _test_catalog() -> void:
 		["activate_when", {"type": "flag", "key": "unscoped"}, "/key"],
 		["complete_when", {"type": "variable_at_least", "key": "shop.orders_completed", "value": 2}, "/complete_when"],
 		["reveal_when", null, "/reveal_when"], ["rewards", {"text": false}, "/rewards/text"],
-		["rewards", {"text": "x", "money": 100}, "/rewards"], ["objectives", [], "/objectives"],
+		["rewards", {"text": "x", "money": true}, "/rewards/money"], ["objectives", [], "/objectives"],
 		["unexpected", true, "Unknown field"]]
 	for mutation: Array in mutations:
 		data = baseline.duplicate(true)
@@ -185,7 +185,7 @@ func _test_projection_and_lifecycle() -> void:
 	catalog.load_file(FIXTURE, _references)
 	journal.configure(catalog, state)
 	journal.configure(catalog, state)
-	_check(state.state_changed.get_connections().size() == 1, "Repeated Journal configure has one state subscription")
+	_check(_journal_subscriptions(state) == 1, "Repeated Journal configure has one state subscription")
 	hud.bind_journal(journal)
 	hud.bind_journal(journal)
 	_check(journal.projection_changed.get_connections().size() == 2, "HUD rebinding keeps one subscription alongside test observer")
@@ -194,21 +194,21 @@ func _test_projection_and_lifecycle() -> void:
 	root.add_child(hud)
 	_check(journal.projection_changed.get_connections().size() == 2 and hud.visible, "Same HUD reconnects and refreshes when reentering tree")
 	root.remove_child(journal)
-	_check(state.state_changed.get_connections().is_empty(), "Journal disconnects on leaving tree")
+	_check(_journal_subscriptions(state) == 0, "Journal disconnects on leaving tree")
 	state.reset_state()
 	root.add_child(journal)
-	_check(journal.get_active_tasks().is_empty() and not hud.visible and state.state_changed.get_connections().size() == 1, "Same Journal reconnects and recomputes changes missed outside tree")
+	_check(journal.get_active_tasks().is_empty() and not hud.visible and _journal_subscriptions(state) == 1, "Same Journal reconnects and recomputes changes missed outside tree")
 	var other_state := StateData.new()
 	root.add_child(other_state)
 	other_state.restore_state(saved)
 	journal.configure(catalog, other_state)
-	_check(state.state_changed.get_connections().is_empty() and other_state.state_changed.get_connections().size() == 1 and hud.visible, "Rebinding moves observation to the injected state only")
+	_check(_journal_subscriptions(state) == 0 and _journal_subscriptions(other_state) == 1 and hud.visible, "Rebinding moves observation to the injected state only")
 	_check(journal.configure(null, other_state) == ERR_INVALID_PARAMETER and hud.visible, "Invalid reconfigure preserves working projection")
 	hud.bind_journal(null)
 	_check(not hud.visible, "HUD can unbind and clear safely")
 	hud.free()
 	journal.free()
-	_check(other_state.state_changed.get_connections().is_empty(), "Freeing Journal leaves no state callbacks")
+	_check(_journal_subscriptions(other_state) == 0, "Freeing Journal leaves no state callbacks")
 	other_state.free()
 	state.free()
 
@@ -226,7 +226,7 @@ func _test_real_orders_and_story() -> void:
 	var original_debug: Variant = ProjectSettings.get_setting("debug/developer_tools/enabled", null)
 	ProjectSettings.set_setting("debug/developer_tools/enabled", false)
 	var initial_connections := state.state_changed.get_connections().size()
-	var game: MainGame = load("res://src/core/main.tscn").instantiate()
+	var game: MainGame = load("res://src/debug/story/legacy_shop.tscn").instantiate()
 	root.add_child(game)
 	current_scene = game
 	await _frames()
@@ -349,3 +349,10 @@ func _test_demo_host() -> void:
 	await _frames()
 	_check(state.to_dict() == before, "Leaving F6 host restores the previous GameState snapshot")
 	state.reset_state()
+
+func _journal_subscriptions(state: StateData) -> int:
+	var count := 0
+	for connection: Dictionary in state.state_changed.get_connections():
+		if connection.callable.get_object() is TaskJournal:
+			count += 1
+	return count

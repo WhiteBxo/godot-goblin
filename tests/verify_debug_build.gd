@@ -31,7 +31,7 @@ func _tap_console_key() -> void:
 		Input.flush_buffered_events()
 
 func _make_game(kind: String) -> MainGame:
-	var game: MainGame = load("res://src/core/settlement.tscn" if kind == "settlement" else "res://src/core/main.tscn").instantiate()
+	var game: MainGame = load("res://src/core/settlement.tscn" if kind == "settlement" else "res://src/debug/story/legacy_shop.tscn").instantiate()
 	if kind == "cave":
 		var levels := game.get_node("World/LevelRoot")
 		levels.get_child(0).free()

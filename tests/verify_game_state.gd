@@ -100,7 +100,7 @@ func _test_container_isolation() -> void:
 
 func _test_restore() -> void:
 	var snapshot := _state.to_dict()
-	_check(snapshot["schema_version"] == 2, "Snapshots include the complete session schema version")
+	_check(snapshot["schema_version"] == 3, "Snapshots include the complete session schema version")
 	var fresh := StateScript.new()
 	_check(fresh.restore_state(snapshot) == OK and fresh.to_dict() == snapshot, "Snapshot round trip restores all story and economy fields")
 	snapshot["variables"]["day1.order_data"]["orders"][0]["count"] = 55

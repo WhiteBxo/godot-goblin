@@ -7,8 +7,11 @@ signal event_completed(event_id: String)
 signal state_reset
 signal state_restored
 
-const SCHEMA_VERSION: int = 2
+const SCHEMA_VERSION: int = 3
+const DAY1_MENU: TeaMenu = preload("res://src/resources/milk_tea/day1_menu.tres")
 const MAX_VALUE_DEPTH: int = 32
+
+var _business_profile := "tutorial"
 
 var current_day: int:
 	get:
@@ -71,12 +74,63 @@ func _ensure_business() -> void:
 	_tea_production = TeaProduction.new()
 	_tea_production.name = "TeaProduction"
 	add_child(_tea_production)
-	_tea_production.configure(_warehouse_inventory)
+	_tea_production.configure(_warehouse_inventory, self)
 	_tea_production.changed.connect(_on_business_changed)
 
 
+func get_business_profile() -> String:
+	return _business_profile
+
+func select_business_profile(profile: String) -> Error:
+	if profile not in ["tutorial", "day1"]:
+		return ERR_INVALID_PARAMETER
+	if _session_busy():
+		return ERR_BUSY
+	if profile == _business_profile:
+		return OK
+	_ensure_business()
+	if _current_day != 1 or not _story_stage.is_empty() or not _flags.is_empty() or not _variables.is_empty() or not _completed_events.is_empty() or _tea_production.get_completed_count() != 0 or _economy.to_dict() != _economy.get_default_state():
+		return ERR_ALREADY_IN_USE
+	_business_profile = profile
+	_tea_production.select_menu(_profile_menu(profile))
+	return OK
+
+func _profile_menu(profile: String) -> TeaMenu:
+	return DAY1_MENU if profile == "day1" else TeaProduction.CATALOG
+
+## All fallible validation precedes mutation; publish only the complete result.
+func commit_delivery(costs: Dictionary, rewards: Dictionary, money: int, facts: Dictionary, count: int, request_id: String, notify: Callable = Callable()) -> Error:
+	if _session_busy():
+		return ERR_BUSY
+	for key: Variant in facts:
+		if not key is String or not _is_namespaced_key(key) or not facts[key] is bool:
+			return ERR_INVALID_DATA
+	var draft := _economy.prepare_delivery(costs, rewards, money, request_id)
+	if draft.is_empty():
+		return ERR_INVALID_DATA
+	var before := _economy.to_dict()
+	_business_transaction = true
+	_replacing = true
+	# Internal silent replacement is called only by the owning session transaction.
+	var error := _economy._replace(draft)
+	if error == OK:
+		for key: String in facts:
+			_flags[key] = facts[key]
+		_variables["shop.orders_completed"] = maxi(int(get_variable("shop.orders_completed", 0)), count)
+		_warehouse_inventory.set_session_locked(true)
+		state_changed.emit()
+		_economy.publish_restored(before)
+		if notify.is_valid():
+			notify.call()
+		_warehouse_inventory.set_session_locked(false)
+	_replacing = false
+	_business_transaction = false
+	return error
+
 func _on_business_changed() -> void:
 	if not _replacing and not _business_transaction and _tea_production.is_submitting():
+		if _business_profile == "day1":
+			_variables["shop.drinks_made"] = _tea_production.get_completed_count()
 		state_changed.emit()
 
 
@@ -214,6 +268,7 @@ func start_new_game() -> Error:
 
 func _new_game_snapshot() -> Dictionary:
 	var fresh := get_script().new() as Node
+	fresh.select_business_profile(_business_profile)
 	var defaults: Dictionary = fresh.to_dict()
 	fresh.free()
 	return defaults
@@ -229,7 +284,7 @@ func to_dict() -> Dictionary:
 		"flags": get_flags(),
 		"variables": get_variables(),
 		"completed_events": get_completed_events(),
-		"business": {"inventory": _warehouse_inventory.to_dict(), "production": _tea_production.to_dict()},
+		"business": {"profile_id": _business_profile, "inventory": _warehouse_inventory.to_dict(), "production": _tea_production.to_dict()},
 		"economy": _economy.to_dict(),
 	}
 
@@ -238,6 +293,7 @@ func to_dict() -> Dictionary:
 ## Valid identical snapshots return OK without signals. Restoring events does
 ## not emit event_completed, so loading cannot replay one-shot story effects.
 func restore_state(data: Dictionary) -> Error:
+	data = _migrate_snapshot(data)
 	if _session_busy():
 		return ERR_BUSY
 	if not _is_valid_snapshot(data):
@@ -257,10 +313,13 @@ func restore_state(data: Dictionary) -> Error:
 func _replace_session(data: Dictionary, new_game: bool) -> void:
 	_ensure_business()
 	var economy_before := _economy.to_dict()
+	var profile_changed: bool = _business_profile != data.business.profile_id
+	_business_profile = data.business.profile_id
+	_tea_production.select_menu(_profile_menu(_business_profile))
 	_economy.restore_state(data.economy, false)
 	_replacing = true
 	var inventory_changed: bool = economy_before.inventory != data.business.inventory
-	var production_changed: bool = _tea_production.to_dict() != data.business.production
+	var production_changed: bool = profile_changed or _tea_production.to_dict() != data.business.production
 	var inventory_blocked := _warehouse_inventory.is_blocking_signals()
 	var production_blocked := _tea_production.is_blocking_signals()
 	_warehouse_inventory.set_block_signals(true)
@@ -288,6 +347,23 @@ func _replace_session(data: Dictionary, new_game: bool) -> void:
 	_replacing = false
 
 
+func _migrate_snapshot(data: Dictionary) -> Dictionary:
+	if data.get("schema_version") != 2:
+		return data
+	var migrated := data.duplicate(true)
+	if not migrated.get("business") is Dictionary or not migrated.get("economy") is Dictionary or not migrated.business.get("inventory") is Dictionary or not migrated.economy.get("inventory") is Dictionary:
+		return data
+	if not _same_value(migrated.business.inventory, migrated.economy.inventory):
+		return data
+	for inventory: Dictionary in [migrated.business.inventory, migrated.economy.inventory]:
+		if not inventory.get("ingredients") is Dictionary:
+			return data
+		if not inventory.ingredients.has("strange_coin"):
+			inventory.ingredients["strange_coin"] = {"quantity": 0, "discovered": false, "known_properties": []}
+	migrated.schema_version = SCHEMA_VERSION
+	migrated.business["profile_id"] = "tutorial"
+	return migrated
+
 func _is_valid_snapshot(data: Dictionary) -> bool:
 	if not data.has_all(["schema_version", "current_day", "story_stage", "flags", "variables", "completed_events", "business", "economy"]):
 		return false
@@ -310,12 +386,16 @@ func _is_valid_snapshot(data: Dictionary) -> bool:
 		seen_events[event_id] = true
 	if _economy.validate_state(data.economy) != OK:
 		return false
-	if not data.business is Dictionary or not data.business.has_all(["inventory", "production"]):
+	if not data.business is Dictionary or not data.business.has_all(["profile_id", "inventory", "production"]) or data.business.profile_id not in ["tutorial", "day1"]:
 		return false
 	if not _same_value(data.economy.inventory, data.business.inventory):
 		return false
 	_ensure_business()
-	if not _tea_production.is_valid_snapshot(data.business.production):
+	var production_candidate := TeaProduction.new()
+	production_candidate.select_menu(_profile_menu(data.business.profile_id))
+	var production_valid := production_candidate.is_valid_snapshot(data.business.production)
+	production_candidate.free()
+	if not production_valid:
 		return false
 	var candidate := WarehouseInventory.new()
 	var valid := candidate.restore_state(data.business.inventory) == OK

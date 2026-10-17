@@ -1,7 +1,7 @@
 extends SceneTree
 
 const StateData = preload("res://src/core/game_state.gd")
-const SHOP := "res://src/core/main.tscn"
+const SHOP := "res://src/debug/story/legacy_shop.tscn"
 const SETTLEMENT := "res://src/core/settlement.tscn"
 const RECIPE: Array[String] = ["black_tea", "creamer", "pearl", "syrup"]
 var _checks := 0

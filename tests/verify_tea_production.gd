@@ -13,7 +13,7 @@ func _check(condition: bool, message: String) -> void:
 func _run() -> void:
 	# Headless windows have no native size; use the gameplay window dimensions.
 	root.size = Vector2i(1280, 720)
-	var main: MainGame = load("res://src/core/main.tscn").instantiate()
+	var main: MainGame = load("res://src/debug/story/legacy_shop.tscn").instantiate()
 	root.add_child(main)
 	current_scene = main
 	await process_frame

@@ -98,7 +98,7 @@ func _run() -> void:
 	for step: Dictionary in [{"command": "chronicle_unlock", "entry_id": "bad", "title": "标题"}, {"command": "chronicle_unlock", "entry_id": "test.first", "title": ""}, {"command": "chronicle_append", "entry_id": "test.first", "record_id": "test.r", "content": ""}, {"command": "chronicle_append", "entry_id": "test.first", "record_id": "bad", "content": "正文"}, {"command": "chronicle_unlock", "entry_id": "test.first", "title": "标题", "unknown": true}]:
 		check(library.load_json(JSON.stringify({"version": 1, "events": {"test.invalid": {"steps": [step]}}})) == ERR_INVALID_DATA, "Malformed story command rejected")
 
-	var game: MainGame = load("res://src/core/main.tscn").instantiate()
+	var game: MainGame = load("res://src/debug/story/legacy_shop.tscn").instantiate()
 	root.add_child(game)
 	current_scene = game
 	await frames()

@@ -1,0 +1,55 @@
+{
+  "actors": [
+    "human_customer",
+    "goblin_customer",
+    "goblin_a",
+    "goblin_b",
+    "goblin_c"
+  ],
+  "checkpoints": [
+    {
+      "event": "day1.ending",
+      "stage": "day1.investigate_coins",
+      "actors": {}
+    },
+    {
+      "event": "day1.group_arrival",
+      "stage": "day1.wait_group",
+      "actors": {
+        "goblin_a": "day1_group_a",
+        "goblin_b": "day1_group_b",
+        "goblin_c": "day1_group_c"
+      }
+    },
+    {
+      "event": "day1.first_goblin",
+      "stage": "day1.wait_goblin",
+      "actors": {
+        "goblin_customer": "day1_counter"
+      }
+    },
+    {
+      "event": "day1.opening",
+      "stage": "day1.wait_human",
+      "actors": {
+        "human_customer": "day1_counter"
+      }
+    },
+    {
+      "event": "",
+      "stage": "",
+      "actors": {}
+    }
+  ],
+  "batches": [
+    {
+      "orders": [
+        "day1_group_a",
+        "day1_group_b",
+        "day1_group_c"
+      ],
+      "completion_flag": "day1.group_settled"
+    }
+  ],
+  "opening_event": "day1.opening"
+}

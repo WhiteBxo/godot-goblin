@@ -12,7 +12,7 @@ func _ready() -> void:
 	var state := get_node("/root/GameState")
 	_saved_state = state.to_dict()
 	state.reset_state()
-	_game = preload("res://src/core/main.tscn").instantiate()
+	_game = preload("res://src/debug/story/legacy_shop.tscn").instantiate()
 	add_child(_game)
 	_game.get_story_director().load_events("res://src/debug/chronicle/demo_story.json")
 	var actions := HBoxContainer.new()

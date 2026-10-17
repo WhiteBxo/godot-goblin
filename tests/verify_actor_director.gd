@@ -304,7 +304,7 @@ func _test_lifecycle() -> void:
 	await _dispose()
 
 func _test_main_locks() -> void:
-	var game: MainGame = load("res://src/core/main.tscn").instantiate()
+	var game: MainGame = load("res://src/debug/story/legacy_shop.tscn").instantiate()
 	root.add_child(game)
 	await _frames()
 	var director := game.get_actor_director()

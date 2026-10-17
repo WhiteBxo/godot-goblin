@@ -12,7 +12,7 @@ func check(condition: bool, description: String) -> void:
 		failures.append(description)
 
 func _verify() -> void:
-	var scene: Node = load("res://src/core/main.tscn").instantiate()
+	var scene: Node = load("res://src/debug/story/legacy_shop.tscn").instantiate()
 	root.add_child(scene)
 	await process_frame
 	var cave_map: CaveMap = scene.get_active_level()

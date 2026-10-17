@@ -10,7 +10,7 @@ func _ready() -> void:
 	var state := get_node("/root/GameState")
 	_saved_state = state.to_dict()
 	state.reset_state()
-	var game: MainGame = preload("res://src/core/main.tscn").instantiate()
+	var game: MainGame = preload("res://src/debug/story/legacy_shop.tscn").instantiate()
 	game.name = "Game"
 	add_child(game)
 	var director := game.get_story_director()

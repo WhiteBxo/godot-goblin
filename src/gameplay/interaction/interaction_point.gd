@@ -26,7 +26,7 @@ func _ready() -> void:
 func is_available() -> bool:
 	_bodies = _bodies.filter(func(body: Node2D) -> bool:
 		return is_instance_valid(body) and body.is_inside_tree() and not body.is_queued_for_deletion())
-	return interaction_enabled and is_inside_tree() and not is_queued_for_deletion() and not _bodies.is_empty()
+	return interaction_enabled and is_visible_in_tree() and is_inside_tree() and not is_queued_for_deletion() and not _bodies.is_empty()
 
 func interact() -> void:
 	if is_available():

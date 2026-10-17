@@ -50,7 +50,7 @@ func _until(predicate: Callable, message: String) -> void:
 
 
 func _new_game() -> void:
-	_game = load("res://src/core/main.tscn").instantiate()
+	_game = load("res://src/debug/story/legacy_shop.tscn").instantiate()
 	root.add_child(_game)
 	_director = _game.get_story_director()
 	_manager = _game.get_dialogue_manager()

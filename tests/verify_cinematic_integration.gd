@@ -10,7 +10,7 @@ var _audio: AudioManager
 var _state: Node
 var _steps: Array[String] = []
 var _results: Array[bool] = []
-var _path := "/private/tmp/godot-goblin-cinematic-%d.json" % OS.get_process_id()
+var _path := "user://godot-goblin-cinematic-%d.json" % OS.get_process_id()
 
 func _initialize() -> void:
 	_run.call_deferred()
@@ -43,7 +43,7 @@ func _start(steps: Array) -> void:
 	_check(_story.request_event("cinematic.test") == OK, "Fixture starts")
 
 func _new_game() -> void:
-	_game = load("res://src/core/main.tscn").instantiate()
+	_game = load("res://src/debug/story/legacy_shop.tscn").instantiate()
 	root.add_child(_game)
 	_story = _game.get_story_director()
 	_actors = _game.get_actor_director()

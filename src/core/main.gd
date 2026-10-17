@@ -1,6 +1,10 @@
 class_name MainGame
 extends Node
 
+@export var day1_story_enabled := false
+var _day1_controller: Day1ShopController
+var _business_hud: Day1BusinessHUD
+
 @onready var _audio_manager: AudioManager = $Systems/AudioManager
 @onready var _active_level: CaveMap = $World/LevelRoot.get_child(0) as CaveMap
 @onready var _player: CavePlayer = $World/EntityRoot/Player as CavePlayer
@@ -35,6 +39,11 @@ var _debug_panel: DeveloperPanel
 
 func _ready() -> void:
 	DebugRuntime.apply_release_policy(get_tree())
+	if day1_story_enabled:
+		var profile_error: Error = get_node("/root/GameState").select_business_profile("day1")
+		if profile_error != OK:
+			push_error("Cannot switch an existing business session to Day 1 (%d)" % profile_error)
+			return
 	_create_ui_system()
 	_create_chronicle_system()
 	_create_task_system()
@@ -48,6 +57,7 @@ func _ready() -> void:
 		_shop_player = $World/EntityRoot/Player as ShopPlayer
 		_shop_player.global_position = _shop_level.get_spawn_position()
 		_shop_player.configure_camera(_shop_level.get_camera_bounds())
+		_shop_level.configure_depth_sort($World/EntityRoot)
 		_create_camera_system(_shop_player.camera)
 		var ui: ShopUI = preload("res://src/UI/milk_tea/shop_ui.tscn").instantiate()
 		$HudLayer.add_child(ui)
@@ -66,6 +76,17 @@ func _ready() -> void:
 		feedback.configure(interaction, _audio_manager)
 		_create_dialogue_system()
 		_create_gameplay_bridge()
+		if day1_story_enabled:
+			_business_hud = preload("res://src/UI/milk_tea/day1_business_hud.tscn").instantiate()
+			_ui_manager.register_screen(&"business_hud", _business_hud, &"hud", false)
+			_business_hud.configure(get_transactions(), _warehouse_inventory)
+			_ui_manager.open_screen(&"business_hud")
+			_day1_controller = Day1ShopController.new()
+			_day1_controller.name = "Day1ShopController"
+			$Systems.add_child(_day1_controller)
+			var setup_error := _day1_controller.configure(self)
+			if setup_error != OK:
+				push_error("Day 1 initialization failed (%d)" % setup_error)
 		_create_debug_components()
 		return
 	var error := _active_level.load_error
@@ -106,9 +127,11 @@ func get_chronicle_journal() -> ChronicleJournal:
 	return _chronicle_journal if is_instance_valid(_chronicle_journal) else null
 
 func open_chronicle() -> Error:
+	if day1_story_enabled and not get_node("/root/GameState").get_flag("day1.chronicle_unlocked"):
+		return ERR_UNAVAILABLE
 	if _ui_manager.is_open(&"chronicle"):
 		return OK
-	if not _can_start_story() or (is_instance_valid(_story_director) and _story_director.is_busy()) or (is_instance_valid(_actor_director) and _actor_director.is_actor_controlled(&"player")):
+	if get_tree().paused or _ui_manager.has_modal() or (is_instance_valid(_story_director) and _story_director.is_busy()) or (is_instance_valid(_actor_director) and _actor_director.is_actor_controlled(&"player")):
 		return ERR_BUSY
 	return _ui_manager.open_screen(&"chronicle")
 
@@ -130,7 +153,7 @@ func _create_chronicle_system() -> void:
 func _create_task_system() -> void:
 	_task_catalog = TaskCatalog.new()
 	var catalog := _task_catalog
-	var error := catalog.load_file("res://src/resources/tasks/tasks.json")
+	var error := catalog.load_file("res://src/resources/tasks/day1_stages_01_02.json" if day1_story_enabled else "res://src/resources/tasks/tasks.json")
 	if error != OK:
 		push_error("Could not load tasks: " + catalog.last_error)
 		return
@@ -203,7 +226,10 @@ func _create_shop_business(ui: ShopUI) -> void:
 	ui.configure_inventory(_warehouse_inventory)
 	ui.configure_production(_tea_production)
 	ui.make_requested.connect(func(recipe: Array[String], order_id: String) -> void:
-		ui.show_production_result(_tea_production.make_drink(recipe, order_id)))
+		var result := _tea_production.make_drink(recipe, order_id)
+		if day1_story_enabled and result.ok:
+			_audio_manager.play_sfx("shop.tea_pour")
+		ui.show_production_result(result))
 
 func get_player() -> CharacterBody2D:
 	return _shop_player if is_instance_valid(_shop_player) else (_player if is_instance_valid(_player) else null)
@@ -258,6 +284,10 @@ func _with_npc_points(points: Array[InteractionPoint]) -> Array[InteractionPoint
 		point.display_name = entity.display_name
 		point.description = entity.story_role
 		entity.add_child(point)
+		if day1_story_enabled and entity.actor_id != &"fat_goblin":
+			point.position = Vector2(0, -150)
+			point.get_node("Marker").hide()
+			point.get_node("Label").hide()
 		points.append(point)
 		_npc_points[point.interaction_id] = point
 	return points
@@ -346,6 +376,8 @@ func _create_tea_making() -> void:
 
 func _on_shop_point_opened(id: StringName) -> void:
 	if id == &"orders":
+		if day1_story_enabled:
+			_audio_manager.play_sfx("shop.order_open")
 		get_node("/root/GameState").set_flag("shop.orders_viewed")
 		for order: Dictionary in _task_delivery.get_orders():
 			_task_delivery.accept_order(order.order_id)
@@ -453,3 +485,22 @@ func _create_cave_debug_components() -> void:
 	_demo_tools = load("res://src/debug/cave_demo/cave_demo.tscn").instantiate()
 	$Systems.add_child(_demo_tools)
 	_demo_tools.configure(_active_level, _player, overlay)
+
+func get_business_hud() -> Day1BusinessHUD:
+	return _business_hud
+
+func get_day1_controller() -> Day1ShopController:
+	return _day1_controller
+
+func refresh_day1_access() -> void:
+	if not day1_story_enabled:
+		return
+	var unlocked: bool = get_node("/root/GameState").get_flag("day1.chronicle_unlocked")
+	if is_instance_valid(_chronicle_hud):
+		_chronicle_hud.visible = unlocked
+	for id: StringName in _npc_points:
+		var available := false
+		for task: Dictionary in _task_catalog.get_tasks():
+			if task.has("delivery") and task.delivery.target_object_id == String(id) and _task_journal.get_task(task.id).get("status") == "active":
+				available = not task.delivery.has("accepted_flag") or get_node("/root/GameState").get_flag(task.delivery.accepted_flag)
+		_npc_points[id].interaction_enabled = available

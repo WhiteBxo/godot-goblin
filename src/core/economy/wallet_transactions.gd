@@ -153,6 +153,27 @@ func _prepare_and_commit(kind: String, request_id: Variant, subject: Variant, qu
 	result.items = items.duplicate(true)
 	return result
 
+## Pure preparation. GameState commits this draft with the delivery facts under its lock.
+func prepare_delivery(costs: Dictionary, rewards: Dictionary, money: int, request_id: String) -> Dictionary:
+	if is_busy() or not _id(request_id) or not _amount(money, true) or _requests.has(request_id):
+		return {}
+	if not _inventory.has_materials(costs) or _balance > LIMIT - money:
+		return {}
+	var next := to_dict()
+	for id: String in costs:
+		next.inventory.ingredients[id].quantity -= costs[id]
+	for id: String in rewards:
+		if _inventory.get_definition(id) == null or not _amount(rewards[id]):
+			return {}
+		var entry: Dictionary = next.inventory.ingredients[id]
+		if entry.quantity > LIMIT - rewards[id]:
+			return {}
+		entry.quantity += rewards[id]
+		entry.discovered = true
+	next.balance += money
+	next.requests[request_id] = true
+	return next if validate_state(next) == OK else {}
+
 func _result(ok: bool, code: String, message: String, request_id: Variant) -> Dictionary:
 	return {"ok": ok, "code": code, "message": message, "request_id": request_id,
 		"balance": _balance, "money_delta": 0, "items": {}}

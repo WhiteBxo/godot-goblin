@@ -35,7 +35,7 @@ func _wait(action: CameraAction) -> void:
 	await _frames(2)
 
 func _run() -> void:
-	_game = load("res://src/core/main.tscn").instantiate()
+	_game = load("res://src/debug/story/legacy_shop.tscn").instantiate()
 	root.add_child(_game)
 	current_scene = _game
 	await _frames()

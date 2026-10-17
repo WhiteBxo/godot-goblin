@@ -59,7 +59,7 @@ func _rebuild() -> void:
 	if is_instance_valid(_game):
 		remove_child(_game)
 		_game.queue_free()
-	_game = preload("res://src/core/main.tscn").instantiate()
+	_game = preload("res://src/debug/story/legacy_shop.tscn").instantiate()
 	add_child(_game)
 	_director = _game.get_camera_director()
 	_director.action_finished.connect(_on_finished)

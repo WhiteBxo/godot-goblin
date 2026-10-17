@@ -164,7 +164,7 @@ func _verify() -> void:
 # This suite exercises the supported cave host and its developer tools explicitly.
 # The default shop host has its own movement/interaction suite.
 func _make_cave_game() -> MainGame:
-	var game: MainGame = load("res://src/core/main.tscn").instantiate()
+	var game: MainGame = load("res://src/debug/story/legacy_shop.tscn").instantiate()
 	var levels := game.get_node("World/LevelRoot")
 	levels.get_child(0).free()
 	levels.add_child(load("res://src/levels/cave/cave_map.tscn").instantiate())

@@ -537,9 +537,9 @@ description = "珍珠奶茶 · 配方
 红茶 × 1 + 牛奶 × 1 + 珍珠 × 1
 
 1. 加入茶底与牛奶
-2. 加入珍珠和糖浆，摇匀封杯
+2. 加入珍珠和糖浆，完成制作并入库
 
-MVP 展示界面，暂不消耗库存。"
+成功制作扣除原料，携带成品交给指定顾客。"
 feedback_rect = Rect2(-74, -147, 148, 145)
 
 [node name="Marker" parent="InteractionPoints/TeaStation" index="1"]
@@ -547,6 +547,29 @@ visible = false
 
 [node name="Label" parent="InteractionPoints/TeaStation" index="2"]
 visible = false
+
+[node name="StoryPositions" type="Node2D" parent="."]
+
+[node name="day1_player" type="Marker2D" parent="StoryPositions"]
+position = Vector2(956, 365.6)
+
+[node name="day1_door" type="Marker2D" parent="StoryPositions"]
+position = Vector2(1123, 710)
+
+[node name="day1_aisle" type="Marker2D" parent="StoryPositions"]
+position = Vector2(1123, 550)
+
+[node name="day1_counter" type="Marker2D" parent="StoryPositions"]
+position = Vector2(844, 550)
+
+[node name="day1_group_a" type="Marker2D" parent="StoryPositions"]
+position = Vector2(760, 550)
+
+[node name="day1_group_b" type="Marker2D" parent="StoryPositions"]
+position = Vector2(850, 550)
+
+[node name="day1_group_c" type="Marker2D" parent="StoryPositions"]
+position = Vector2(940, 550)
 
 [editable path="Rooms/Bedroom"]
 [editable path="Rooms/Bathroom"]

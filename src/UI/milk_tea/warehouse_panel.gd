@@ -12,7 +12,7 @@ func _ready() -> void:
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_filter = OptionButton.new()
 	_filter.name = "OriginFilter"
-	for title: String in ["全部", "人类食材", "异世界食材"]:
+	for title: String in ["全部", "人类食材", "异世界食材", "剧情物品"]:
 		_filter.add_item(title)
 	_filter.item_selected.connect(func(_index: int) -> void: refresh())
 	add_child(_filter)
@@ -48,10 +48,12 @@ func configure(inventory: WarehouseInventory) -> void:
 func refresh() -> void:
 	if not is_instance_valid(_inventory):
 		return
-	var origin: String = ["", "human", "otherworld"][_filter.selected]
+	var origin: String = ["", "human", "otherworld", ""][_filter.selected]
 	_list.clear()
 	var selected := -1
 	for ingredient in _inventory.get_ingredients(origin):
+		if (_filter.selected == 3 and ingredient.category != "story_item") or (_filter.selected in [1, 2] and ingredient.category == "story_item"):
+			continue
 		var index := _list.add_item("%s  %d%s" % [ingredient.name, ingredient.quantity, " · 缺货" if ingredient.quantity == 0 else ""], ingredient.icon)
 		_list.set_item_metadata(index, ingredient.id)
 		if ingredient.id == _selected_id:
@@ -67,6 +69,9 @@ func refresh() -> void:
 func _select_item(index: int) -> void:
 	_selected_id = _list.get_item_metadata(index)
 	var ingredient := _inventory.get_ingredient_view(_selected_id)
+	if ingredient.category == "story_item":
+		_details.text = "%s · %d 枚\n剧情物品\n金币上印着某种兽类，价值未知。" % [ingredient.name, ingredient.quantity]
+		return
 	var category: String = {"tea": "茶底", "milk": "奶基底", "syrup": "糖浆", "topping": "小料", "product": "成品"}.get(ingredient.category, ingredient.category)
 	_details.text = "%s · %d 份%s\n来源：%s · 用途：%s\n稀有度：%s\n已知风味：%s\n战斗属性：%s\n特殊效果：%s\n获取方式：%s" % [
 		ingredient.name, ingredient.quantity, " · 缺货" if ingredient.quantity == 0 else "",

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3]
 
-[ext_resource type="PackedScene" path="res://src/core/main.tscn" id="main"]
+[ext_resource type="PackedScene" path="res://src/debug/story/legacy_shop.tscn" id="main"]
 [ext_resource type="Script" path="res://src/debug/ui/ui_demo.gd" id="script"]
 
 [node name="UIDemo" instance=ExtResource("main")]

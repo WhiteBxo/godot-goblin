@@ -1,0 +1,113 @@
+[gd_resource type="Resource" script_class="TeaMenu" format=3]
+
+[ext_resource type="Script" uid="uid://i4etcjmw3owg" path="res://src/resources/milk_tea/tea_menu.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://dkyno761fh0d1" path="res://assets/ui/milk_tea/ingredients/black_tea.svg" id="icon_black_tea"]
+[ext_resource type="Texture2D" uid="uid://bsd6djbcbkb1x" path="res://assets/ui/milk_tea/ingredients/coconut.svg" id="icon_coconut"]
+[ext_resource type="Texture2D" uid="uid://dutwxmuh1qd5s" path="res://assets/ui/milk_tea/ingredients/creamer.svg" id="icon_creamer"]
+[ext_resource type="Texture2D" uid="uid://ipw40gedu5f4" path="res://assets/ui/milk_tea/ingredients/green_tea.svg" id="icon_green_tea"]
+[ext_resource type="Texture2D" uid="uid://332ohufkmik3" path="res://assets/ui/milk_tea/ingredients/pearl.svg" id="icon_pearl"]
+[ext_resource type="Texture2D" uid="uid://ieiegoikaomh" path="res://assets/ui/milk_tea/ingredients/syrup.svg" id="icon_syrup"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/insomnia_mushroom.svg" id="icon_insomnia"]
+[ext_resource type="Script" uid="uid://b1nr765u71rxs" path="res://src/resources/milk_tea/ingredient_definition.gd" id="ingredient"]
+
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/strange_coin.svg" id="icon_coin"]
+
+[sub_resource type="Resource" id="Ingredient_black_tea"]
+script = ExtResource("ingredient")
+id = "black_tea"
+display_name = "红茶"
+icon = ExtResource("icon_black_tea")
+
+[sub_resource type="Resource" id="Ingredient_green_tea"]
+script = ExtResource("ingredient")
+id = "green_tea"
+display_name = "茉莉绿茶"
+icon = ExtResource("icon_green_tea")
+
+[sub_resource type="Resource" id="Ingredient_creamer"]
+script = ExtResource("ingredient")
+id = "creamer"
+display_name = "奶精"
+icon = ExtResource("icon_creamer")
+category = "milk"
+
+[sub_resource type="Resource" id="Ingredient_pearl"]
+script = ExtResource("ingredient")
+id = "pearl"
+display_name = "珍珠"
+icon = ExtResource("icon_pearl")
+category = "topping"
+
+[sub_resource type="Resource" id="Ingredient_coconut"]
+script = ExtResource("ingredient")
+id = "coconut"
+display_name = "椰果"
+icon = ExtResource("icon_coconut")
+category = "topping"
+
+[sub_resource type="Resource" id="Ingredient_syrup"]
+script = ExtResource("ingredient")
+id = "syrup"
+display_name = "糖浆"
+icon = ExtResource("icon_syrup")
+category = "syrup"
+
+[sub_resource type="Resource" id="Ingredient_insomnia"]
+script = ExtResource("ingredient")
+id = "insomnia_mushroom"
+display_name = "醒神菇"
+icon = ExtResource("icon_insomnia")
+origin = "otherworld"
+category = "material"
+rarity = "稀有"
+
+[sub_resource type="Resource" id="Product_pearl"]
+script = ExtResource("ingredient")
+id = "pearl_milk_tea"
+display_name = "珍珠奶茶（成品）"
+icon = ExtResource("icon_pearl")
+category = "product"
+
+[sub_resource type="Resource" id="Product_coconut"]
+script = ExtResource("ingredient")
+id = "coconut_milk_tea"
+display_name = "椰果茉莉奶茶（成品）"
+icon = ExtResource("icon_coconut")
+category = "product"
+
+[sub_resource type="Resource" id="Product_plain"]
+script = ExtResource("ingredient")
+id = "plain_milk_tea"
+display_name = "原味奶茶（成品）"
+icon = ExtResource("icon_creamer")
+category = "product"
+
+[sub_resource type="Resource" id="Item_coin"]
+script = ExtResource("ingredient")
+id = "strange_coin"
+display_name = "古怪金币"
+icon = ExtResource("icon_coin")
+origin = "otherworld"
+category = "story_item"
+acquisition_sources = PackedStringArray("顾客支付；金币上印着某种兽类，价值未知。")
+
+[resource]
+script = ExtResource("1")
+ingredients = Array[ExtResource("ingredient")]([SubResource("Ingredient_black_tea"), SubResource("Ingredient_green_tea"), SubResource("Ingredient_creamer"), SubResource("Ingredient_pearl"), SubResource("Ingredient_coconut"), SubResource("Ingredient_syrup"), SubResource("Ingredient_insomnia"), SubResource("Product_pearl"), SubResource("Product_coconut"), SubResource("Product_plain"), SubResource("Item_coin")])
+initial_stock = {
+"black_tea": 12,
+"coconut": 8,
+"creamer": 12,
+"green_tea": 12,
+"pearl": 8,
+"syrup": 10
+}
+initial_discovery = {
+"black_tea": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"],
+"coconut": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"],
+"creamer": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"],
+"green_tea": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"],
+"pearl": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"],
+"syrup": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"]
+}
+orders = Array[Dictionary]([{"id":"day1_human","product_id":"pearl_milk_tea","name":"珍珠奶茶","recipe":["black_tea","creamer","pearl","syrup"],"accepted_flag":"task.day1.human.active"},{"id":"day1_goblin","product_id":"coconut_milk_tea","name":"椰果茉莉奶茶","recipe":["green_tea","creamer","coconut","syrup"],"accepted_flag":"task.day1.goblin.active"},{"id":"day1_group_a","product_id":"plain_milk_tea","name":"原味奶茶","recipe":["black_tea","creamer","syrup"],"accepted_flag":"task.day1.group_a.active"},{"id":"day1_group_b","product_id":"pearl_milk_tea","name":"珍珠奶茶","recipe":["black_tea","creamer","pearl","syrup"],"accepted_flag":"task.day1.group_b.active"},{"id":"day1_group_c","product_id":"coconut_milk_tea","name":"椰果茉莉奶茶","recipe":["green_tea","creamer","coconut","syrup"],"accepted_flag":"task.day1.group_c.active"}])

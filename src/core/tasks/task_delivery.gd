@@ -11,6 +11,10 @@ var _state: StateData
 var _inventory: WarehouseInventory
 var _orders: Dictionary = {}
 var _committing := false
+var _batches: Array[Dictionary] = []
+
+func configure_batches(batches: Array[Dictionary]) -> void:
+	_batches = batches.duplicate(true)
 
 func configure(catalog: TaskCatalog, journal: TaskJournal, state: StateData, inventory: WarehouseInventory) -> Error:
 	if _committing or not is_instance_valid(journal) or not is_instance_valid(state) or not is_instance_valid(inventory) or catalog == null:
@@ -31,6 +35,8 @@ func configure(catalog: TaskCatalog, journal: TaskJournal, state: StateData, inv
 		for id: String in task.get("rewards", {}).get("items", {}):
 			if inventory.get_definition(id) == null:
 				return ERR_INVALID_DATA
+		if int(task.get("rewards", {}).get("money", 0)) > 0 and inventory != state.get_warehouse_inventory():
+			return ERR_INVALID_DATA
 		orders[delivery.order_id] = task
 	_journal = journal
 	_state = state
@@ -66,7 +72,7 @@ func accept_order(order_id: String) -> Error:
 	# Existing story-driven conditions remain under StoryDirector's control.
 	if task.activate_when.type != "flag" or not _journal.get_task(task.id).get("revealed", false):
 		return ERR_UNAVAILABLE
-	_state.set_flag(task.activate_when.key)
+	_state.set_flag(task.delivery.get("accepted_flag", task.activate_when.key))
 	return OK
 
 func get_completed_count() -> int:
@@ -122,10 +128,40 @@ func try_submit(order_id: String, target_object_id: String) -> Dictionary:
 		return _failure("成品或交付对象与订单不符。未消耗库存。")
 	if _state.get_flag(_receipt_key(order_id)) or _journal.get_task(task.id).get("status") != "active":
 		return _failure("任务未激活或已经完成，不能交付。")
+	if task.delivery.has("accepted_flag") and not _state.get_flag(task.delivery.accepted_flag):
+		return _failure("请先查看订单板接单。未消耗库存。")
 	var requirement := get_requirement(order_id)
 	var rewards := {}
 	for id: String in task.get("rewards", {}).get("items", {}):
 		rewards[id] = int(task.rewards.items[id])
+	if _inventory == _state.get_warehouse_inventory():
+		var balance_before := _state.get_transactions().get_balance()
+		var reward_stock := {}
+		for id: String in rewards:
+			reward_stock[id] = _inventory.get_stock(id)
+		_committing = true
+		var facts := {task.complete_when.key: true, _receipt_key(order_id): true}
+		for batch: Dictionary in _batches:
+			var complete := true
+			for member: String in batch.orders:
+				complete = complete and (member == order_id or _state.get_flag(_receipt_key(member)))
+			if complete:
+				facts[batch.completion_flag] = true
+		var error := _state.commit_delivery(requirement, rewards, int(task.get("rewards", {}).get("money", 0)), facts, get_completed_count() + 1, "delivery:" + order_id, delivered.emit.bind(order_id))
+		_committing = false
+		if error != OK:
+			return _failure("交付结算失败：请检查成品、奖励容量或钱包上限。未消耗库存。")
+		var money_delta := _state.get_transactions().get_balance() - balance_before
+		var committed_items := {}
+		var gains := PackedStringArray()
+		if money_delta > 0:
+			gains.append("营业收入 %d" % money_delta)
+		for id: String in rewards:
+			var quantity: int = _inventory.get_stock(id) - reward_stock[id] + int(requirement.get(id, 0))
+			committed_items[id] = quantity
+			gains.append("%s × %d" % [_inventory.get_definition(id).display_name, quantity])
+		return {"ok": true, "money_delta": money_delta, "items": committed_items,
+			"message": "交付成功，任务已完成。" + ("所得：" + "、".join(gains) if not gains.is_empty() else "")}
 	var before := _inventory.to_dict()
 	if not _state.begin_business_transaction():
 		return _failure("会话正在更新，暂时无法交付。")

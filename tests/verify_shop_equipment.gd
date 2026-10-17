@@ -41,7 +41,7 @@ func _capture(player: ShopPlayer, label: String) -> void:
 	root.get_texture().get_image().save_png("res://.godot/milk_tea_verification/device_" + label + ".png")
 
 func _run() -> void:
-	var main: MainGame = load("res://src/core/main.tscn").instantiate()
+	var main: MainGame = load("res://src/debug/story/legacy_shop.tscn").instantiate()
 	root.add_child(main)
 	current_scene = main
 	await _frames()
@@ -59,6 +59,26 @@ func _run() -> void:
 	await _frames()
 	_check(counter.z_index < player.z_index, "Player in front draws over the counter")
 	await _capture(player, "counter_front")
+	var customer := main.get_actor_director().get_actor(&"fat_goblin")
+	customer.show()
+	customer.global_position = level.to_global(Vector2(1000, 550))
+	player.global_position = level.to_global(Vector2(1000, 430))
+	await _frames()
+	_check(player.z_index < counter.z_index and customer.z_index > counter.z_index, "Counter sorts player behind and customer in front simultaneously")
+	await _capture(player, "customer_front_player_behind")
+	customer.global_position = level.to_global(Vector2(1000, 430))
+	player.global_position = level.to_global(Vector2(1000, 550))
+	await _frames()
+	_check(customer.z_index < counter.z_index and player.z_index > counter.z_index, "Customer moving behind the counter is occluded independently of player")
+	for container: Node2D in [level.get_node("Doorframes"), level.get_node("EquipmentForeground")]:
+		for foreground: DoorframeForeground in container.get_children():
+			customer.global_position = foreground.get_baseline_position() + Vector2(0, 1)
+			player.global_position = foreground.get_baseline_position() - Vector2(0, 1)
+			await _frames()
+			_check(player.z_index < foreground.z_index and customer.z_index > foreground.z_index, "Both actors respect furniture baseline: " + foreground.name)
+			_check(customer.z_index < level.get_node("Rooms/Bedroom/Occlusion").z_index, "Room roofs remain above characters")
+	_check(main.get_node("World/EntityRoot").y_sort_enabled, "Characters sharing a furniture band sort by their feet")
+	customer.hide()
 	for group in level.get_node("EquipmentForeground").get_children():
 		for piece: Polygon2D in group.get_children():
 			_check(piece.texture == level.get_node("Background").texture and piece.polygon == piece.uv, "Equipment uses original map texels at matching coordinates: " + piece.name)

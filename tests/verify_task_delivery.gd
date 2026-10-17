@@ -19,7 +19,7 @@ func _run() -> void:
 	_test_schema()
 	_test_transaction()
 	_test_multiple_orders()
-	await _test_host("res://src/core/main.tscn")
+	await _test_host("res://src/debug/story/legacy_shop.tscn")
 	await _test_host("res://src/core/settlement.tscn")
 	print("TASK_DELIVERY: %s (%d checks, %d failures)" % ["PASS" if _failures.is_empty() else "FAIL", _checks, _failures.size()])
 	quit(0 if _failures.is_empty() else 1)
@@ -176,7 +176,7 @@ func _test_host(path: String) -> void:
 	state.reset_state()
 	ProjectSettings.set_setting("debug/developer_tools/enabled", false)
 	var game: MainGame = load(path).instantiate()
-	if path.ends_with("main.tscn"):
+	if path.ends_with("legacy_shop.tscn"):
 		var wrong: SettlementCharacter = load("res://src/gameplay/characters/elder.tscn").instantiate()
 		wrong.position = Vector2(1100, 750)
 		game.get_node("World/EntityRoot").add_child(wrong)

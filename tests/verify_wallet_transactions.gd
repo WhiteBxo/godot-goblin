@@ -200,7 +200,7 @@ func _test_session() -> void:
 	var service: WalletTransactions = state.get_transactions()
 	service.add_money(15, "cross_scene")
 	var previous_inventory: WarehouseInventory
-	for scene: String in ["res://src/core/main.tscn", "res://src/core/settlement.tscn"]:
+	for scene: String in ["res://src/debug/story/legacy_shop.tscn", "res://src/core/settlement.tscn"]:
 		var main: MainGame = load(scene).instantiate()
 		root.add_child(main)
 		await process_frame

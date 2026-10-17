@@ -156,7 +156,7 @@ func _test_pool() -> void:
 func _test_story() -> void:
 	var state: Node = root.get_node("GameState")
 	var before: Dictionary = state.to_dict()
-	var game: MainGame = load("res://src/core/main.tscn").instantiate()
+	var game: MainGame = load("res://src/debug/story/legacy_shop.tscn").instantiate()
 	root.add_child(game)
 	var audio := game.get_audio_manager()
 	AudioDemoTones.populate(audio)
@@ -207,7 +207,7 @@ func _test_story() -> void:
 	_check(audio.get_active_sound_count() == 0 and audio.get_bgm_state()["playing"], "Director removal cleans sounds and preserves BGM")
 	game.queue_free()
 	await process_frame
-	game = load("res://src/core/main.tscn").instantiate()
+	game = load("res://src/debug/story/legacy_shop.tscn").instantiate()
 	root.add_child(game)
 	director = game.get_story_director()
 	director.load_events("res://tests/fixtures/audio_events.json")
@@ -231,7 +231,7 @@ func _test_demo() -> void:
 	root.add_child(demo)
 	await process_frame
 	var audio: AudioManager = demo.get_node("AudioManager")
-	_check(audio.sounds.size() == 6, "Standalone scene initializes without MainGame")
+	_check(audio.sounds.has_all(["demo.music_a", "demo.music_b", "demo.low", "demo.high", "demo.ui", "demo.story", "music.daily_milk_tea"]), "Standalone scene initializes without MainGame")
 	audio.play_bgm("demo.music_a", 0.0)
 	audio.play_bgm("demo.music_b", 0.05)
 	audio.play_sfx("demo.low")

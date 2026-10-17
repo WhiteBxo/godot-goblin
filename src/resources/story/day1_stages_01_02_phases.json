@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "phases": [
+    {
+      "id": "day1.first_drink_tutorial",
+      "after_event": "day1.opening",
+      "stage": "day1.wait_human",
+      "completion": {
+        "flag": "day1.human_settled",
+        "allow_existing": true
+      },
+      "completion_flag": "day1.human_done",
+      "next_event": "day1.first_goblin"
+    },
+    {
+      "id": "day1.goblin_first_order",
+      "after_event": "day1.first_goblin",
+      "stage": "day1.wait_goblin",
+      "completion": {
+        "flag": "day1.goblin_settled",
+        "allow_existing": true
+      },
+      "completion_flag": "day1.goblin_done",
+      "next_event": "day1.group_arrival"
+    },
+    {
+      "id": "day1.goblin_group_orders",
+      "after_event": "day1.group_arrival",
+      "stage": "day1.wait_group",
+      "completion": {
+        "flag": "day1.group_settled",
+        "allow_existing": true
+      },
+      "completion_flag": "day1.group_done",
+      "next_event": "day1.ending"
+    }
+  ]
+}

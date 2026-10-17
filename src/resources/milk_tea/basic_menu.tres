@@ -10,6 +10,8 @@
 [ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/insomnia_mushroom.svg" id="icon_insomnia"]
 [ext_resource type="Script" uid="uid://b1nr765u71rxs" path="res://src/resources/milk_tea/ingredient_definition.gd" id="ingredient"]
 
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/strange_coin.svg" id="icon_coin"]
+
 [sub_resource type="Resource" id="Ingredient_black_tea"]
 script = ExtResource("ingredient")
 id = "black_tea"
@@ -80,9 +82,18 @@ display_name = "原味奶茶（成品）"
 icon = ExtResource("icon_creamer")
 category = "product"
 
+[sub_resource type="Resource" id="Item_coin"]
+script = ExtResource("ingredient")
+id = "strange_coin"
+display_name = "古怪金币"
+icon = ExtResource("icon_coin")
+origin = "otherworld"
+category = "story_item"
+acquisition_sources = PackedStringArray("顾客支付；金币上印着某种兽类，价值未知。")
+
 [resource]
 script = ExtResource("1")
-ingredients = Array[ExtResource("ingredient")]([SubResource("Ingredient_black_tea"), SubResource("Ingredient_green_tea"), SubResource("Ingredient_creamer"), SubResource("Ingredient_pearl"), SubResource("Ingredient_coconut"), SubResource("Ingredient_syrup"), SubResource("Ingredient_insomnia"), SubResource("Product_pearl"), SubResource("Product_coconut"), SubResource("Product_plain")])
+ingredients = Array[ExtResource("ingredient")]([SubResource("Ingredient_black_tea"), SubResource("Ingredient_green_tea"), SubResource("Ingredient_creamer"), SubResource("Ingredient_pearl"), SubResource("Ingredient_coconut"), SubResource("Ingredient_syrup"), SubResource("Ingredient_insomnia"), SubResource("Product_pearl"), SubResource("Product_coconut"), SubResource("Product_plain"), SubResource("Item_coin")])
 initial_stock = {
 "black_tea": 12,
 "coconut": 8,

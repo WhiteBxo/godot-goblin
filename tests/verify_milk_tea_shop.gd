@@ -30,7 +30,7 @@ func _key(physical_key: int) -> void:
 	await process_frame
 
 func _run() -> void:
-	var main: MainGame = load("res://src/core/main.tscn").instantiate()
+	var main: MainGame = load("res://src/debug/story/legacy_shop.tscn").instantiate()
 	root.add_child(main)
 	current_scene = main
 	await _frames(3)

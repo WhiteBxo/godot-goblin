@@ -67,7 +67,12 @@ func _run() -> void:
 	_check(production.get_completed_count() == 3 and panel.get_child(2).disabled, "No-topping order must succeed and final order must disable crafting")
 	var after := production.get_stock("syrup")
 	_check(not production.make_drink(["black_tea", "creamer", "syrup"]).ok and production.get_stock("syrup") == after, "Completed orders cannot be submitted twice")
-	_check(root.get_node("GameState").to_dict() == state_before, "Ordinary ingredients and crafting must not mutate story or chronicle state")
+	var state := root.get_node("GameState")
+	_check(state.get_variable("shop.orders_completed") == 3 and state.get_flag("shop.order_001_delivered") and state.get_flag("shop.order_003_delivered"), "Successful business progress projects delivery facts to GameState")
+	var after_delivery: Dictionary = state.to_dict()
+	production.changed.emit()
+	_check(state.to_dict() == after_delivery, "Duplicate changed signal never recounts a delivery")
+	_check(state.story_stage == state_before.story_stage and state.get_completed_events() == state_before.completed_events and not state.get_flag("bridge.tea_done"), "Real orders never complete demonstration recipe or advance story directly")
 	# Exercise stock exhaustion and atomic failure independently of the demo queue.
 	var scarce := TeaProduction.new()
 	scarce._stock["pearl"] = 0

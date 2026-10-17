@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "events": {
+    "order_demo.intro": {
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "order_demo.opening"
+        },
+        {
+          "command": "set_stage",
+          "value": "day1.before_order"
+        }
+      ]
+    },
+    "order_demo.tutorial": {
+      "trigger": "orders",
+      "conditions": {
+        "stage": "day1.before_order",
+        "completed_events": [
+          "order_demo.intro"
+        ],
+        "not_completed_events": [
+          "order_demo.tutorial"
+        ]
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "order_demo.tutorial"
+        },
+        {
+          "command": "set_stage",
+          "value": "day1.waiting_order"
+        }
+      ]
+    },
+    "order_demo.after_order": {
+      "conditions": {
+        "stage": "day1.waiting_order",
+        "completed_events": [
+          "order_demo.tutorial"
+        ],
+        "flags": {
+          "order_demo.delivery_done": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "order_demo.continuation"
+        },
+        {
+          "command": "set_stage",
+          "value": "day1.after_order"
+        }
+      ]
+    },
+    "order_demo.board_after": {
+      "trigger": "orders",
+      "conditions": {
+        "stage": "day1.after_order",
+        "completed_events": [
+          "order_demo.after_order"
+        ],
+        "flags": {
+          "shop.order_001_delivered": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "order_demo.board_after"
+        }
+      ]
+    }
+  }
+}

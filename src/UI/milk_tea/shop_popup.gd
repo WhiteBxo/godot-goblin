@@ -30,8 +30,12 @@ func is_making_station() -> bool:
 	return _station
 
 func _refresh_recipe() -> void:
-	$Center/Panel/Margin/Content/Ingredients.visible = _station
-	$Center/Panel/Margin/Content/RecipeStatus.visible = _station
+	var demo_recipe := is_instance_valid(_tea) and _tea.has_session()
+	$Center/Panel/Margin/Content/Ingredients.visible = _station and demo_recipe
+	$Center/Panel/Margin/Content/RecipeStatus.visible = _station and demo_recipe
+	if is_instance_valid(_production_panel):
+		_production_panel.visible = _station and not demo_recipe
+		$Center/Panel/Margin/Content/DescriptionScroll.visible = not _station or demo_recipe
 	$Center/Panel/Margin/Content/RecipeStatus.text = _tea.get_instruction() if is_instance_valid(_tea) else "当前没有制作目标。"
 	for button: Button in $Center/Panel/Margin/Content/Ingredients.get_children():
 		button.disabled = not is_instance_valid(_tea) or not _tea.is_active()
@@ -46,7 +50,7 @@ func present(point: InteractionPoint) -> void:
 	)
 	$Center/Panel/Margin/Content/DescriptionScroll.scroll_vertical = 0
 	if _production != null:
-		var crafting := point.interaction_id == &"tea_station"
+		var crafting := _station and not (is_instance_valid(_tea) and _tea.has_session())
 		_production_panel.visible = crafting
 		$Center/Panel/Margin/Content/DescriptionScroll.visible = not crafting
 		if crafting:

@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "dialogues": {
+    "order_demo.opening": {
+      "start": "line",
+      "lines": {
+        "line": {
+          "speaker": "主角",
+          "text": "先去看看订单板吧。"
+        }
+      }
+    },
+    "order_demo.tutorial": {
+      "start": "line",
+      "lines": {
+        "line": {
+          "speaker": "主角",
+          "text": "第一单是珍珠奶茶：红茶、奶精、珍珠，再加糖浆。去制作台做好并交付吧。"
+        }
+      }
+    },
+    "order_demo.continuation": {
+      "start": "line",
+      "lines": {
+        "line": {
+          "speaker": "主角",
+          "text": "第一杯已经交付，接下来可以继续营业了。"
+        }
+      }
+    },
+    "order_demo.board_after": {
+      "start": "line",
+      "lines": {
+        "line": {
+          "speaker": "主角",
+          "text": "订单板上已经记下这杯珍珠奶茶了。"
+        }
+      }
+    }
+  }
+}

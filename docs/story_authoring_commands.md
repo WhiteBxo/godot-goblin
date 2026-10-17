@@ -75,5 +75,5 @@ Markdown Beat 可声明 `执行模式：自动演出 / 玩家操作`，玩家 Be
 它们是编排字段，不是 Story command，不传给 StoryLibrary。Codex 在玩家边界结束当前短事件，
 生成六字段 phase 条目，并为下段事件生成 stage + completed_events + completion flag 准入条件。
 详见 [拆分、映射和验证规则](story_authoring_workflow.md#自动演出与玩家操作gameplay-bridge)。
-当前实现仅支持 `pearl_milk_tea` 一杯（红茶→牛奶→珍珠）；其他目标列 pending。
+v1 保留 `pearl_milk_tea` 一杯（红茶→牛奶→珍珠）。v2 支持 `completion: {"flag": "shop.order_001_delivered", "allow_existing": true}`，消费真实业务事实；其他尚无 Signal/状态实现的目标列 pending。
 成功事件收尾保留场景 BGM，SFX 仍清理；取消/失败仅停止仍属本事件的音乐。

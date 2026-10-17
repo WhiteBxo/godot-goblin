@@ -17,6 +17,9 @@ var _can_make: Callable
 func configure(can_make: Callable) -> void:
 	_can_make = can_make
 
+func has_recipe(recipe_id: String) -> bool:
+	return RECIPES.has(recipe_id)
+
 func begin(recipe_id: String) -> int:
 	cancel()
 	if not RECIPES.has(recipe_id):
@@ -31,6 +34,12 @@ func cancel() -> void:
 	_progress = 0
 	_completed = false
 	changed.emit()
+
+func is_completed_session(recipe_id: String, session: int) -> bool:
+	return _completed and session == _session and recipe_id == _recipe
+
+func has_session() -> bool:
+	return not _recipe.is_empty()
 
 func is_active() -> bool:
 	return not _recipe.is_empty() and not _completed

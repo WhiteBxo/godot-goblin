@@ -1,0 +1,14 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/night_infiltration/north_crate.png" id="1"]
+
+[node name="NorthCrate" type="Node2D"]
+texture_filter = 1
+metadata/native_size = Vector2i(45, 62)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-22, -60)
+texture = ExtResource("1")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

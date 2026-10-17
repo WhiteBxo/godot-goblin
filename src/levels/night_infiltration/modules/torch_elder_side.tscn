@@ -1,0 +1,14 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/night_infiltration/torch_elder_side.png" id="1"]
+
+[node name="TorchElderSide" type="Node2D"]
+texture_filter = 1
+metadata/native_size = Vector2i(37, 86)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-17, -85)
+texture = ExtResource("1")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

@@ -1,0 +1,970 @@
+{
+  "version": 2,
+  "world_size": [
+    1678,
+    937
+  ],
+  "units": "native reference pixels; no resampling",
+  "reference": "source/concept.png",
+  "tutorial_sources": [
+    "AI游戏美术/二维分层场景/提示词合集.txt",
+    "AI游戏美术/HD-2D游戏场景/批量生图提示词.txt",
+    "AI游戏美术/HD-2D游戏场景/场景模版搭建提示词.md"
+  ],
+  "generated_plate_translation": [
+    0,
+    0
+  ],
+  "generated_edit_translation": [
+    4,
+    -1
+  ],
+  "assets": [
+    {
+      "id": "west_home",
+      "scene": "res://src/levels/night_infiltration/modules/west_home.tscn",
+      "native_size": [
+        469,
+        243
+      ],
+      "source_box": [
+        273,
+        95,
+        742,
+        338
+      ],
+      "position": [
+        500,
+        326
+      ],
+      "kind": "building",
+      "blocks": [
+        [
+          306,
+          150,
+          386,
+          160
+        ]
+      ]
+    },
+    {
+      "id": "south_home",
+      "scene": "res://src/levels/night_infiltration/modules/south_home.tscn",
+      "native_size": [
+        415,
+        260
+      ],
+      "source_box": [
+        354,
+        419,
+        769,
+        679
+      ],
+      "position": [
+        560,
+        669
+      ],
+      "kind": "building",
+      "blocks": [
+        [
+          386,
+          455,
+          366,
+          204
+        ]
+      ]
+    },
+    {
+      "id": "fuel_shed",
+      "scene": "res://src/levels/night_infiltration/modules/fuel_shed.tscn",
+      "native_size": [
+        272,
+        267
+      ],
+      "source_box": [
+        47,
+        240,
+        319,
+        507
+      ],
+      "position": [
+        180,
+        505
+      ],
+      "kind": "prop",
+      "blocks": [
+        [
+          60,
+          349,
+          249,
+          134
+        ]
+      ]
+    },
+    {
+      "id": "middle_cargo",
+      "scene": "res://src/levels/night_infiltration/modules/middle_cargo.tscn",
+      "native_size": [
+        221,
+        169
+      ],
+      "source_box": [
+        630,
+        353,
+        851,
+        522
+      ],
+      "position": [
+        740,
+        510
+      ],
+      "kind": "prop",
+      "blocks": [
+        [
+          697,
+          434,
+          149,
+          65
+        ]
+      ]
+    },
+    {
+      "id": "east_cargo",
+      "scene": "res://src/levels/night_infiltration/modules/east_cargo.tscn",
+      "native_size": [
+        295,
+        167
+      ],
+      "source_box": [
+        923,
+        549,
+        1218,
+        716
+      ],
+      "position": [
+        1080,
+        715
+      ],
+      "kind": "prop",
+      "blocks": [
+        [
+          951,
+          636,
+          247,
+          70
+        ]
+      ]
+    },
+    {
+      "id": "checkpoint",
+      "scene": "res://src/levels/night_infiltration/modules/checkpoint.tscn",
+      "native_size": [
+        555,
+        207
+      ],
+      "source_box": [
+        61,
+        576,
+        616,
+        783
+      ],
+      "position": [
+        240,
+        778
+      ],
+      "kind": "prop",
+      "blocks": [
+        [
+          65,
+          666,
+          77,
+          104
+        ],
+        [
+          142,
+          622,
+          35,
+          155
+        ],
+        [
+          315,
+          635,
+          46,
+          141
+        ],
+        [
+          368,
+          736,
+          258,
+          40
+        ]
+      ]
+    },
+    {
+      "id": "north_bench",
+      "scene": "res://src/levels/night_infiltration/modules/north_bench.tscn",
+      "native_size": [
+        119,
+        39
+      ],
+      "source_box": [
+        768,
+        77,
+        887,
+        116
+      ],
+      "position": [
+        826,
+        115
+      ],
+      "kind": "prop",
+      "blocks": [
+        [
+          776,
+          94,
+          106,
+          21
+        ]
+      ]
+    },
+    {
+      "id": "north_crate",
+      "scene": "res://src/levels/night_infiltration/modules/north_crate.tscn",
+      "native_size": [
+        45,
+        62
+      ],
+      "source_box": [
+        499,
+        44,
+        544,
+        106
+      ],
+      "position": [
+        521,
+        104
+      ],
+      "kind": "prop",
+      "blocks": [
+        [
+          502,
+          70,
+          42,
+          30
+        ]
+      ]
+    },
+    {
+      "id": "west_home_cargo",
+      "scene": "res://src/levels/night_infiltration/modules/west_home_cargo.tscn",
+      "native_size": [
+        89,
+        103
+      ],
+      "source_box": [
+        684,
+        208,
+        773,
+        311
+      ],
+      "position": [
+        730,
+        310
+      ],
+      "kind": "prop",
+      "blocks": [
+        [
+          696,
+          250,
+          67,
+          53
+        ]
+      ]
+    },
+    {
+      "id": "elder_side_cargo",
+      "scene": "res://src/levels/night_infiltration/modules/elder_side_cargo.tscn",
+      "native_size": [
+        49,
+        120
+      ],
+      "source_box": [
+        927,
+        211,
+        976,
+        331
+      ],
+      "position": [
+        957,
+        330
+      ],
+      "kind": "prop",
+      "blocks": [
+        [
+          934,
+          258,
+          43,
+          64
+        ]
+      ]
+    },
+    {
+      "id": "elder_door_barrels",
+      "scene": "res://src/levels/night_infiltration/modules/elder_door_barrels.tscn",
+      "native_size": [
+        70,
+        68
+      ],
+      "source_box": [
+        1018,
+        405,
+        1088,
+        473
+      ],
+      "position": [
+        1050,
+        472
+      ],
+      "kind": "prop",
+      "blocks": [
+        [
+          1023,
+          443,
+          62,
+          26
+        ]
+      ]
+    },
+    {
+      "id": "elder_front_crate",
+      "scene": "res://src/levels/night_infiltration/modules/elder_front_crate.tscn",
+      "native_size": [
+        56,
+        68
+      ],
+      "source_box": [
+        1513,
+        425,
+        1569,
+        493
+      ],
+      "position": [
+        1540,
+        492
+      ],
+      "kind": "prop",
+      "blocks": [
+        [
+          1520,
+          459,
+          47,
+          29
+        ]
+      ]
+    },
+    {
+      "id": "drunk_guard",
+      "scene": "res://src/levels/night_infiltration/modules/drunk_guard.tscn",
+      "native_size": [
+        77,
+        79
+      ],
+      "source_box": [
+        839,
+        432,
+        916,
+        511
+      ],
+      "position": [
+        870,
+        509
+      ],
+      "kind": "actor",
+      "blocks": [
+        [
+          852,
+          490,
+          36,
+          16
+        ]
+      ]
+    },
+    {
+      "id": "entrance_guard",
+      "scene": "res://src/levels/night_infiltration/modules/entrance_guard.tscn",
+      "native_size": [
+        77,
+        76
+      ],
+      "source_box": [
+        207,
+        676,
+        284,
+        752
+      ],
+      "position": [
+        241,
+        750
+      ],
+      "kind": "actor",
+      "blocks": [
+        [
+          223,
+          735,
+          36,
+          18
+        ]
+      ]
+    },
+    {
+      "id": "door_guard_left",
+      "scene": "res://src/levels/night_infiltration/modules/door_guard_left.tscn",
+      "native_size": [
+        77,
+        83
+      ],
+      "source_box": [
+        1181,
+        400,
+        1258,
+        483
+      ],
+      "position": [
+        1217,
+        481
+      ],
+      "kind": "actor",
+      "blocks": [
+        [
+          1199,
+          468,
+          36,
+          18
+        ]
+      ]
+    },
+    {
+      "id": "door_guard_right",
+      "scene": "res://src/levels/night_infiltration/modules/door_guard_right.tscn",
+      "native_size": [
+        73,
+        77
+      ],
+      "source_box": [
+        1298,
+        405,
+        1371,
+        482
+      ],
+      "position": [
+        1333,
+        482
+      ],
+      "kind": "actor",
+      "blocks": [
+        [
+          1315,
+          469,
+          36,
+          18
+        ]
+      ]
+    },
+    {
+      "id": "torch_north",
+      "scene": "res://src/levels/night_infiltration/modules/torch_north.tscn",
+      "native_size": [
+        37,
+        81
+      ],
+      "source_box": [
+        697,
+        0,
+        734,
+        81
+      ],
+      "position": [
+        714,
+        80
+      ],
+      "kind": "prop",
+      "blocks": [
+        [
+          709,
+          65,
+          10,
+          15
+        ]
+      ]
+    },
+    {
+      "id": "torch_west",
+      "scene": "res://src/levels/night_infiltration/modules/torch_west.tscn",
+      "native_size": [
+        37,
+        86
+      ],
+      "source_box": [
+        207,
+        114,
+        244,
+        200
+      ],
+      "position": [
+        224,
+        199
+      ],
+      "kind": "prop",
+      "blocks": [
+        [
+          219,
+          184,
+          10,
+          15
+        ]
+      ]
+    },
+    {
+      "id": "torch_elder_side",
+      "scene": "res://src/levels/night_infiltration/modules/torch_elder_side.tscn",
+      "native_size": [
+        37,
+        86
+      ],
+      "source_box": [
+        916,
+        85,
+        953,
+        171
+      ],
+      "position": [
+        933,
+        170
+      ],
+      "kind": "prop",
+      "blocks": [
+        [
+          928,
+          155,
+          10,
+          15
+        ]
+      ]
+    },
+    {
+      "id": "torch_fuel",
+      "scene": "res://src/levels/night_infiltration/modules/torch_fuel.tscn",
+      "native_size": [
+        37,
+        86
+      ],
+      "source_box": [
+        71,
+        405,
+        108,
+        491
+      ],
+      "position": [
+        88,
+        490
+      ],
+      "kind": "prop",
+      "blocks": [
+        [
+          83,
+          475,
+          10,
+          15
+        ]
+      ]
+    },
+    {
+      "id": "torch_gate_left",
+      "scene": "res://src/levels/night_infiltration/modules/torch_gate_left.tscn",
+      "native_size": [
+        37,
+        86
+      ],
+      "source_box": [
+        95,
+        623,
+        132,
+        709
+      ],
+      "position": [
+        112,
+        708
+      ],
+      "kind": "prop",
+      "blocks": [
+        [
+          107,
+          693,
+          10,
+          15
+        ]
+      ]
+    },
+    {
+      "id": "torch_gate_right",
+      "scene": "res://src/levels/night_infiltration/modules/torch_gate_right.tscn",
+      "native_size": [
+        37,
+        86
+      ],
+      "source_box": [
+        341,
+        625,
+        378,
+        711
+      ],
+      "position": [
+        358,
+        710
+      ],
+      "kind": "prop",
+      "blocks": [
+        [
+          353,
+          695,
+          10,
+          15
+        ]
+      ]
+    },
+    {
+      "id": "torch_south_home",
+      "scene": "res://src/levels/night_infiltration/modules/torch_south_home.tscn",
+      "native_size": [
+        37,
+        86
+      ],
+      "source_box": [
+        657,
+        567,
+        694,
+        653
+      ],
+      "position": [
+        674,
+        652
+      ],
+      "kind": "prop",
+      "blocks": [
+        [
+          669,
+          637,
+          10,
+          15
+        ]
+      ]
+    },
+    {
+      "id": "torch_east",
+      "scene": "res://src/levels/night_infiltration/modules/torch_east.tscn",
+      "native_size": [
+        37,
+        86
+      ],
+      "source_box": [
+        1608,
+        505,
+        1645,
+        591
+      ],
+      "position": [
+        1625,
+        590
+      ],
+      "kind": "prop",
+      "blocks": [
+        [
+          1620,
+          575,
+          10,
+          15
+        ]
+      ]
+    },
+    {
+      "id": "elder_room",
+      "scene": "res://src/levels/night_infiltration/modules/elder_room.tscn",
+      "native_size": [
+        640,
+        425
+      ],
+      "source_box": [
+        969,
+        35,
+        1609,
+        460
+      ],
+      "position": [
+        970,
+        35
+      ],
+      "kind": "room",
+      "blocks": []
+    },
+    {
+      "id": "elder_desk",
+      "scene": "res://src/levels/night_infiltration/modules/elder_desk.tscn",
+      "native_size": [
+        153,
+        102
+      ],
+      "source_box": [
+        1085,
+        203,
+        1238,
+        305
+      ],
+      "position": [
+        1160,
+        304
+      ],
+      "kind": "occlusion",
+      "blocks": []
+    },
+    {
+      "id": "elder_bed",
+      "scene": "res://src/levels/night_infiltration/modules/elder_bed.tscn",
+      "native_size": [
+        139,
+        174
+      ],
+      "source_box": [
+        1300,
+        112,
+        1439,
+        286
+      ],
+      "position": [
+        1370,
+        285
+      ],
+      "kind": "occlusion",
+      "blocks": []
+    },
+    {
+      "id": "elder_front_left",
+      "scene": "res://src/levels/night_infiltration/modules/elder_front_left.tscn",
+      "native_size": [
+        214,
+        134
+      ],
+      "source_box": [
+        969,
+        326,
+        1183,
+        460
+      ],
+      "position": [
+        1070,
+        459
+      ],
+      "kind": "occlusion",
+      "blocks": []
+    },
+    {
+      "id": "elder_front_right",
+      "scene": "res://src/levels/night_infiltration/modules/elder_front_right.tscn",
+      "native_size": [
+        271,
+        161
+      ],
+      "source_box": [
+        1338,
+        299,
+        1609,
+        460
+      ],
+      "position": [
+        1460,
+        459
+      ],
+      "kind": "occlusion",
+      "blocks": []
+    },
+    {
+      "id": "elder_header",
+      "scene": "res://src/levels/night_infiltration/modules/elder_header.tscn",
+      "native_size": [
+        166,
+        29
+      ],
+      "source_box": [
+        1175,
+        326,
+        1341,
+        355
+      ],
+      "position": [
+        1260,
+        458
+      ],
+      "kind": "occlusion",
+      "blocks": []
+    },
+    {
+      "id": "elder_west_wall",
+      "scene": "res://src/levels/night_infiltration/modules/elder_west_wall.tscn",
+      "native_size": [
+        40,
+        318
+      ],
+      "source_box": [
+        969,
+        35,
+        1009,
+        353
+      ],
+      "position": [
+        990,
+        352
+      ],
+      "kind": "occlusion",
+      "blocks": []
+    },
+    {
+      "id": "elder_cabinet",
+      "scene": "res://src/levels/night_infiltration/modules/elder_cabinet.tscn",
+      "native_size": [
+        89,
+        180
+      ],
+      "source_box": [
+        1478,
+        81,
+        1567,
+        261
+      ],
+      "position": [
+        1522,
+        260
+      ],
+      "kind": "occlusion",
+      "blocks": []
+    },
+    {
+      "id": "elder_door_closed",
+      "scene": "res://src/levels/night_infiltration/modules/elder_door_closed.tscn",
+      "native_size": [
+        157,
+        96
+      ],
+      "source_box": [
+        1182,
+        354,
+        1339,
+        450
+      ],
+      "position": [
+        1260,
+        450
+      ],
+      "kind": "door_closed",
+      "blocks": []
+    },
+    {
+      "id": "elder_door_open",
+      "scene": "res://src/levels/night_infiltration/modules/elder_door_open.tscn",
+      "native_size": [
+        157,
+        96
+      ],
+      "source_box": [
+        1182,
+        354,
+        1339,
+        450
+      ],
+      "position": [
+        1260,
+        450
+      ],
+      "kind": "door_open",
+      "blocks": []
+    },
+    {
+      "id": "rim_north",
+      "scene": "res://src/levels/night_infiltration/modules/rim_north.tscn",
+      "native_size": [
+        1678,
+        356
+      ],
+      "source_box": [
+        0,
+        0,
+        1678,
+        356
+      ],
+      "position": [
+        0,
+        0
+      ],
+      "kind": "rock",
+      "blocks": []
+    },
+    {
+      "id": "rim_west",
+      "scene": "res://src/levels/night_infiltration/modules/rim_west.tscn",
+      "native_size": [
+        350,
+        581
+      ],
+      "source_box": [
+        0,
+        356,
+        350,
+        937
+      ],
+      "position": [
+        0,
+        0
+      ],
+      "kind": "rock",
+      "blocks": []
+    },
+    {
+      "id": "rim_east",
+      "scene": "res://src/levels/night_infiltration/modules/rim_east.tscn",
+      "native_size": [
+        308,
+        581
+      ],
+      "source_box": [
+        1370,
+        356,
+        1678,
+        937
+      ],
+      "position": [
+        0,
+        0
+      ],
+      "kind": "rock",
+      "blocks": []
+    },
+    {
+      "id": "rim_south",
+      "scene": "res://src/levels/night_infiltration/modules/rim_south.tscn",
+      "native_size": [
+        1020,
+        213
+      ],
+      "source_box": [
+        350,
+        724,
+        1370,
+        937
+      ],
+      "position": [
+        0,
+        0
+      ],
+      "kind": "rock",
+      "blocks": []
+    }
+  ]
+}

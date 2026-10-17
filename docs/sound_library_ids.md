@@ -22,3 +22,4 @@
 | `story.goblin` | 哥布林含糊嘀咕 | `story.goblin.01` → `res://assets/audio/story/goblin_01.wav` (0.950)<br>`story.goblin.02` → `res://assets/audio/story/goblin_02.wav` (0.950)<br>`story.goblin.03` → `res://assets/audio/story/goblin_03.wav` (0.950) |
 | `ambience.shop` | 奶茶店室内循环 | `ambience.shop` → `res://assets/audio/ambience/shop.wav` (12.000) |
 | `ambience.cave` | 地下洞穴循环 | `ambience.cave` → `res://assets/audio/ambience/cave.wav` (12.000) |
+| `music.daily_milk_tea` | 奶茶店日常 BGM | `res://assets/audio/music/daily_milk_tea.ogg`；首次从 0 播放，末尾回到 68.279 秒循环 |

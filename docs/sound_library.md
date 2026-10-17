@@ -44,7 +44,7 @@ func start_room_tone(audio: AudioManager) -> int:
 
 打开 `src/debug/audio/sound_library_demo.tscn`，F6 运行。无需正式关卡或剧情。
 
-1. 分类筛选，单击条目查看 ID、资源路径、时长和循环标志；双击或「播放」试听。列表包含全部 31 个文件。
+1. 分类筛选，单击条目查看 ID、资源路径、时长和循环标志；双击或「播放」试听。列表包含 31 个 WAV 和 1 个用户提供的 Ogg 音乐。
 2. 「连续试听」从当前分类第一项开始，逐条播放，间隔 0.22 秒；循环条目试听 6 秒后继续，最后自动停止。
 3. 音量范围 -48～0 dB，默认 -6 dB；拖动时当前条目按新音量从头播放，并结束连续模式。只使用 AudioManager 的公开播放音量参数，不改全局 Bus。
 4. 连续点击播放应重新触发且没有残留池槽；「停止」取消当前音效与待播放 Timer，再次点击无副作用。
@@ -55,7 +55,7 @@ func start_room_tone(audio: AudioManager) -> int:
 
 ## 来源、生成与响度
 
-无外部音频。WAV 来源统一为 `tools/audio/generate_sound_pack.py`，许可见 [音频许可证](../assets/audio/LICENSE.md)。固定种子 `47001 + 条目序号 * 100 + 变体序号`；各素材独立随机数发生器；采样噪声、多模态衰减共鸣、滑频气泡、谐波共振峰声源、短延迟反射分层。不是纯正弦测试音集合。
+原有 31 个 WAV 来源统一为 `tools/audio/generate_sound_pack.py`，许可见 [音频许可证](../assets/audio/LICENSE.md)。固定种子 `47001 + 条目序号 * 100 + 变体序号`；各素材独立随机数发生器；采样噪声、多模态衰减共鸣、滑频气泡、谐波共振峰声源、短延迟反射分层。不是纯正弦测试音集合。
 
 处理：轻柔 tanh 饱和、短音 45–5500 Hz 带通、8 ms 首尾包络、消除不可闻长尾；常规有效区 RMS 约 -23 dBFS，对话 -28 dBFS，循环 -32 dBFS。有效区定义为超过本文件峰值 4% 的采样；这是短音一致性指标，不宣称 LUFS 等响。4 倍过采样估计 true peak 上限 -6 dBTP，实际峰值保留更多余量。叠加大量音效仍须按场景混音，单文件不削波不代表任意叠加不削波。
 
@@ -82,3 +82,13 @@ godot --headless --path . --script res://tests/verify_audio_manager.gd
 Godot 4.7.2：Sound Library 912 项检查通过（含跨越完整 12 秒周期后仍播放、连续试听 6 秒自动换条目）；既有 AudioManager 64 项回归通过。31 个 WAV 的 PCM 检查及重复生成逐字节哈希检查通过。非 headless Compatibility 模式运行 Demo 验证通过，已检查 1280×720 截图：分类、列表、路径/时长和控制区显示完整。图形模式没有修改项目渲染器配置。
 
 编辑器批量导入成功，但退出日志报告资源释放警告（495 ObjectDB、10 resources）；独立运行上述音频测试没有该警告。警告来源尚未定位，本次未修改插件。未进行人工耳听验收，主观风格和长时间舒适度按前述 F6 步骤确认。
+
+## 奶茶店日常音乐
+
+用户提供 `daily_milkTea.ogg`，原样保存为 `assets/audio/music/daily_milk_tea.ogg`，注册 ID 为 `music.daily_milk_tea`。来源与授权不纳入原有程序合成 WAV 的 CC0 声明。
+
+导入配置和资源表均设置 `loop=true`、`loop_offset=68.279`，`beat_count=0`，首次从头播放，到文件末尾后原生回到 1:08.279 循环。
+
+F6 运行 `src/debug/audio/audio_demo.tscn`，点击「奶茶日常 BGM（从头试听）」；「淡出停止」结束试听。也可在 `sound_library_demo.tscn` 的 music 分类双击试听；手动播放持续循环，连续试听仅播放 6 秒。
+
+API 依据：[Godot 4.7 AudioStreamOggVorbis](https://docs.godotengine.org/en/4.7/classes/class_audiostreamoggvorbis.html#class-audiostreamoggvorbis-property-loop-offset)。

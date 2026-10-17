@@ -8,6 +8,7 @@ var _status: Label
 
 func _ready() -> void:
 	AudioDemoTones.populate(_audio)
+	preload("res://src/resources/audio/sound_library.tres").register_all(_audio)
 	_adapter = StoryAudioAdapter.new(_audio)
 	var layer := CanvasLayer.new()
 	add_child(layer)
@@ -32,6 +33,12 @@ func _ready() -> void:
 	_button(music, "压低 BGM", func() -> void: _audio.fade_bgm(-24.0, 0.8))
 	_button(music, "恢复 BGM", func() -> void: _audio.fade_bgm(0.0, 0.8))
 	_button(music, "淡出停止", func() -> void: _audio.stop_bgm(1.0))
+	var daily := HBoxContainer.new()
+	column.add_child(daily)
+	_button(daily, "奶茶日常 BGM（从头试听）", func() -> void: _audio.play_bgm("music.daily_milk_tea", 0.0, -6.0, true))
+	var loop_note := Label.new()
+	loop_note.text = "末尾 → 1:08.279 循环 · 上方淡出停止"
+	daily.add_child(loop_note)
 	var sounds := HBoxContainer.new()
 	column.add_child(sounds)
 	_button(sounds, "叠加低音 + 高音", func() -> void:
@@ -47,7 +54,7 @@ func _ready() -> void:
 		var handle := _audio.play_sfx("demo.story")
 		_audio.stop_sound(handle, 1.5))
 	var instructions := Label.new()
-	instructions.text = "取消演出音效时，BGM 应持续；淡出按钮应使音量平滑降低。\n所有音色均为原创程序合成占位音，正式入口不会自动播放。"
+	instructions.text = "取消演出音效时，BGM 应持续；淡出按钮应使音量平滑降低。\n奶茶日常为用户提供音频，其余为程序合成占位音。"
 	column.add_child(instructions)
 	_status = Label.new()
 	column.add_child(_status)

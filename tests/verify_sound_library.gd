@@ -36,7 +36,18 @@ func _run() -> void:
 		for index in range(streams.size()):
 			total += 1
 			var id := SoundLibrary.variant_id(entry["id"], index, streams.size())
-			var stream := audio.sounds[id] as AudioStreamWAV
+			var stream := audio.sounds[id] as AudioStream
+			if stream is AudioStreamOggVorbis:
+				_check(stream.loop and is_equal_approx(stream.loop_offset, 68.279), "Milk tea native loop starts at 68.279 seconds")
+				_check(stream.get_length() > stream.loop_offset and stream.beat_count == 0, "Music loops at EOF after a valid intro")
+				_check(audio.play_bgm(id, 0.0) == OK, "Milk tea BGM plays through service")
+				_check(audio._music.get_playback_position() < 0.2, "Milk tea first playback starts at intro")
+				audio._music.seek(stream.get_length() - 0.3)
+				await create_timer(0.8).timeout
+				var loop_position := audio._music.get_playback_position()
+				_check(audio._music.playing and loop_position >= 68.279 and loop_position < 69.5, "Real milk tea decoder wraps from EOF to 68.279 seconds")
+				audio.stop_bgm()
+				continue
 			_check(stream != null and stream.get_length() > .02, "WAV loads with duration: " + id)
 			_check(stream.format == AudioStreamWAV.FORMAT_16_BITS, "Uncompressed PCM import: " + id)
 			_check((stream.loop_mode == AudioStreamWAV.LOOP_FORWARD) == bool(entry["loop"]), "Imported loop flag: " + id)
@@ -46,7 +57,7 @@ func _run() -> void:
 			audio.stop_sound(handle)
 			audio.stop_sound(handle)
 			_check(audio.get_active_sound_count(owner) == 0, "Stop is idempotent: " + id)
-	_check(total == 31, "31 resources")
+	_check(total == 32, "32 resources")
 	var first := audio.play_sfx("player.step_wood", owner)
 	var second := audio.play_sfx("player.step_wood", owner)
 	_check(first > 0 and second != first and audio.get_active_sound_count(owner) == 2, "Repeated overlap")
@@ -69,7 +80,7 @@ func _run() -> void:
 	var demo := DEMO.instantiate()
 	root.add_child(demo)
 	await process_frame
-	_check(demo._rows.size() == 31, "Demo lists all files")
+	_check(demo._rows.size() == 32, "Demo lists all files")
 	demo._filter(1)
 	_check(demo._visible_rows.size() == 7, "UI category contains seven variants")
 	demo.start_sequence()

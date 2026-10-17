@@ -112,6 +112,16 @@ func allows_story_start() -> bool:
 			return false
 	return true
 
+## Independent read-only snapshot for tooling. Reads existing fields only: it
+## never loads phases, dispatches continuations or mutates wait/reservation state.
+func get_runtime_status() -> Dictionary:
+	var link: Dictionary = _active
+	return {"enabled": _enabled, "phase_count": _links.size(),
+		"phase_id": str(link.get("id", "")), "stage": str(link.get("stage", "")),
+		"next_event": str(link.get("next_event", "")), "waiting": _waiting,
+		"inflight": _inflight, "allows_story_start": allows_story_start(),
+		"last_error": last_error}
+
 func _eligible(link: Dictionary) -> bool:
 	return (_state.story_stage == link.stage and _state.is_event_completed(link.after_event)
 		and not _state.is_event_completed(link.next_event))

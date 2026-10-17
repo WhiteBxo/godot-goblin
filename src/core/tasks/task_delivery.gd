@@ -3,6 +3,8 @@ extends Node
 ## Session coordinator. GameState owns task facts/receipts; WarehouseInventory owns items.
 
 signal delivered(order_id: String)
+## 失败也发信号：调试日志需要真实原因；返回值与调用方行为保持不变。
+signal delivery_failed(order_id: String, reason: String)
 
 const StateData = preload("res://src/core/game_state.gd")
 
@@ -120,16 +122,16 @@ func deliver_to(target_object_id: String) -> Dictionary:
 ## Canonical entry point. Products and materials both commit through one schedule.
 func try_submit(order_id: String, target_object_id: String) -> Dictionary:
 	if _committing or not _ready_for_delivery():
-		return _failure("交付系统尚未就绪或正在提交。")
+		return _failure("交付系统尚未就绪或正在提交。", order_id)
 	if not _orders.has(order_id):
-		return _failure("订单不存在。")
+		return _failure("订单不存在。", order_id)
 	var task: Dictionary = _orders[order_id]
 	if task.delivery.target_object_id != target_object_id:
-		return _failure("成品或交付对象与订单不符。未消耗库存。")
+		return _failure("成品或交付对象与订单不符。未消耗库存。", order_id)
 	if _state.get_flag(_receipt_key(order_id)) or _journal.get_task(task.id).get("status") != "active":
-		return _failure("任务未激活或已经完成，不能交付。")
+		return _failure("任务未激活或已经完成，不能交付。", order_id)
 	if task.delivery.has("accepted_flag") and not _state.get_flag(task.delivery.accepted_flag):
-		return _failure("请先查看订单板接单。未消耗库存。")
+		return _failure("请先查看订单板接单。未消耗库存。", order_id)
 	var requirement := get_requirement(order_id)
 	var rewards := {}
 	for id: String in task.get("rewards", {}).get("items", {}):
@@ -150,7 +152,7 @@ func try_submit(order_id: String, target_object_id: String) -> Dictionary:
 		var error := _state.commit_delivery(requirement, rewards, int(task.get("rewards", {}).get("money", 0)), facts, get_completed_count() + 1, "delivery:" + order_id, delivered.emit.bind(order_id))
 		_committing = false
 		if error != OK:
-			return _failure("交付结算失败：请检查成品、奖励容量或钱包上限。未消耗库存。")
+			return _failure("交付结算失败：请检查成品、奖励容量或钱包上限。未消耗库存。", order_id)
 		var money_delta := _state.get_transactions().get_balance() - balance_before
 		var committed_items := {}
 		var gains := PackedStringArray()
@@ -164,7 +166,7 @@ func try_submit(order_id: String, target_object_id: String) -> Dictionary:
 			"message": "交付成功，任务已完成。" + ("所得：" + "、".join(gains) if not gains.is_empty() else "")}
 	var before := _inventory.to_dict()
 	if not _state.begin_business_transaction():
-		return _failure("会话正在更新，暂时无法交付。")
+		return _failure("会话正在更新，暂时无法交付。", order_id)
 	_committing = true
 	# Signals are synchronous in Godot. Hold inventory notification until the
 	# completion and durable receipt are committed; observers see the full result.
@@ -174,7 +176,7 @@ func try_submit(order_id: String, target_object_id: String) -> Dictionary:
 		_inventory.set_block_signals(was_blocked)
 		_committing = false
 		_state.end_business_transaction()
-		return _failure("所需成品或物资不足，或奖励库存已满。未消耗库存。")
+		return _failure("所需成品或物资不足，或奖励库存已满。未消耗库存。", order_id)
 	var facts := {task.complete_when.key: true, _receipt_key(order_id): true}
 	var state_blocked := _state.is_blocking_signals()
 	_state.set_block_signals(true)
@@ -192,20 +194,20 @@ func try_submit(order_id: String, target_object_id: String) -> Dictionary:
 	_committing = false
 	_state.end_business_transaction()
 	if error != OK:
-		return _failure("交付提交失败。未消耗库存。")
+		return _failure("交付提交失败。未消耗库存。", order_id)
 	return {"ok": true, "message": "交付成功，任务已完成。" + ("奖励：" + task.rewards.text if not rewards.is_empty() else "")}
 
 ## Legacy signature kept for existing callers: finished products pass their ID,
 ## material orders pass an empty string.
 func try_deliver(order_id: String, product_id: String, target_object_id: String) -> Dictionary:
 	if not _orders.has(order_id):
-		return _failure("订单不存在。")
+		return _failure("订单不存在。", order_id)
 	var delivery: Dictionary = _orders[order_id].delivery
 	if delivery.has("product_id"):
 		if product_id != delivery.product_id:
-			return _failure("成品或交付对象与订单不符。未消耗库存。")
+			return _failure("成品或交付对象与订单不符。未消耗库存。", order_id)
 	elif not product_id.is_empty():
-		return _failure("该订单需要物资，不需要成品。未消耗库存。")
+		return _failure("该订单需要物资，不需要成品。未消耗库存。", order_id)
 	return try_submit(order_id, target_object_id)
 
 func _ready_for_delivery() -> bool:
@@ -214,5 +216,7 @@ func _ready_for_delivery() -> bool:
 func _receipt_key(order_id: String) -> String:
 	return "delivery." + order_id + ".completed"
 
-func _failure(message: String) -> Dictionary:
+## 助手在返回失败结果的同时广播原因；order_id 为空表示还未定位到具体订单。
+func _failure(message: String, order_id: String = "") -> Dictionary:
+	delivery_failed.emit(order_id, message)
 	return {"ok": false, "message": message}

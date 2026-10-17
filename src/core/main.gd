@@ -626,7 +626,14 @@ func _create_debug_components() -> void:
 		"can_restart": func() -> bool: return get_tree().current_scene == self,
 		"state": get_node_or_null("/root/GameState"),
 		"story": get_story_director(),
+		"dialogue": _dialogue_manager,
 		"ui_manager": _ui_manager,
+		"transactions": get_transactions(),
+		"inventory": get_warehouse_inventory(),
+		"production": get_tea_production(),
+		"tasks": get_task_journal(),
+		"delivery": get_task_delivery(),
+		"bridge": get_gameplay_bridge(),
 	})
 
 func _get_developer_status() -> Dictionary:

@@ -27,6 +27,7 @@ var _dialogue_id: String = ""
 var _line_id: String = ""
 var _dialogue: Dictionary = {}
 var _loaded: bool = false
+var _loaded_path: String = ""
 var _selecting: bool = false
 
 
@@ -49,11 +50,19 @@ func configure(ui: DialogueUI, can_start: Callable = Callable()) -> void:
 func load_dialogues(path: String = "") -> Error:
 	if is_active():
 		return ERR_BUSY
-	var error := _library.load_file(dialogue_file if path.is_empty() else path)
+	var source := dialogue_file if path.is_empty() else path
+	var error := _library.load_file(source)
 	last_error = _library.last_error
 	if error == OK:
 		_loaded = true
+		_loaded_path = source
 	return error
+
+
+## Path of the last successful load; empty until a catalogue is loaded, so tools
+## can tell "never loaded" from the exported default.
+func get_dialogue_source_path() -> String:
+	return _loaded_path
 
 
 func start_dialogue(id: String) -> Error:

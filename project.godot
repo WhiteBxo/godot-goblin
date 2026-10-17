@@ -17,6 +17,7 @@ config/features=PackedStringArray("4.7", "Forward Plus")
 [autoload]
 
 GameState="*res://src/core/game_state.gd"
+DevLog="*res://src/debug/developer_tools/debug_log.gd"
 MCPRuntimeProbe="*uid://bsg12huaf1u5i"
 PhantomCameraManager="*uid://duq6jhf6unyis"
 

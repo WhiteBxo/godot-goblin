@@ -21,9 +21,12 @@ if director.load_events("res://src/resources/story/day1_demo_events.json") == OK
 | `configure(manager: DialogueManager, can_start: Callable = Callable())` | 注入场景内 Manager 和可选宿主准入检查；重新配置先取消旧演出 |
 | `configure_cinematic(actors: ActorDirector, cameras: CameraDirector = null)` | 注入现有演出服务；重新配置先取消旧演出；MainGame 默认接入自己的 Director |
 | `set_audio_adapter(adapter: StoryAudioAdapter)` | 注入音频适配层；替换前取消旧演出；MainGame 默认接入 AudioManager |
-| `load_events(path: String = "") -> Error` | 空参数使用 `event_file`；完整验证后替换目录，失败保留旧数据；busy 时拒绝 |
+| `load_events(path: String = "") -> Error` | 空参数使用 `event_file`；完整验证后替换目录，失败保留旧数据；busy 或收尾中拒绝并把原因写入 `last_error` |
 | `request_event(id: String) -> Error` | 同步检查并占用演出；`OK` 表示已接受，最终结果看 signal |
 | `request_interaction(interaction_id: String) -> Error` | JSON 顺序选择第一个符合条件且未完成的路由；无路由为 `ERR_DOES_NOT_EXIST` |
+| `get_event_ids() -> Array[String]` | 只读：已加载事件 ID，按字母序返回，仅用于显示；`request_interaction` 仍按 JSON 顺序选取第一个合格事件。不触发加载 |
+| `get_event_summary(id: String) -> Dictionary` | 只读投影：`once`、`trigger`、`step_count`、`conditions_met`、`completed`（读 GameState `completed_events`）；未知 ID 返回空字典 |
+| `get_event_source_path() -> String` | 最近一次成功加载的路径，未加载时回退到 `event_file`；供调试工具重载同一个文件 |
 | `is_busy() -> bool` | 从接受请求到成功/失败收尾之前为 true |
 | `cancel_event(reason: String = "Cancelled")` | 取消所属对白、停顿和音效；idle 时静默 |
 | `get_choice(dialogue_id: String, line_id: String) -> String` | 当前/最近一次演出的选项 ID；未选择为空；下一次成功接受事件时清空 |
@@ -31,6 +34,8 @@ if director.load_events("res://src/resources/story/day1_demo_events.json") == OK
 | `last_error: String` | 最近请求/加载错误或失败事件的 ID、步骤下标及原因 |
 
 常见错误：`ERR_BUSY`（演出、对话或 ShopUI 占用）、`ERR_UNCONFIGURED`（缺少场景/Manager）、`ERR_DOES_NOT_EXIST`（未知事件或无匹配路由）、`ERR_UNAUTHORIZED`（条件不满足）、`ERR_ALREADY_EXISTS`（单次事件已完成）。文件和格式错误保留 Godot Error，附 `last_error` 诊断。等待和运行错误通过结束 signal 报告。
+
+三个只读接口（`get_event_ids`、`get_event_summary`、`get_event_source_path`）只读取已加载目录与 GameState，不调用 Loader、不占用演出、不消耗 `once`、不改变 JSON 顺序；`conditions_met` 复用 `request_event` 的判断规则，但只报告结果，不代为拒绝。它们供 Debug 的 Console「事件」页使用：该页列出目录、按宿主真实路径热重载（同时按 `DialogueManager.get_dialogue_source_path()` 刷新对白目录，让文案改动立即生效），并主动 `request_event` 触发单个事件。热重载只替换目录，不重置 GameState、不重放已执行事件、不改变阶段；`once` 事件的完成标记仍在 GameState 里，所以已完成事件的请求照常返回 `ERR_ALREADY_EXISTS`，界面原样显示该原因。工具仅在 Debug 存在，Release 不创建节点、不注册按键；详见 [Developer Console](../development/developer_console.md)。
 
 Signals：
 

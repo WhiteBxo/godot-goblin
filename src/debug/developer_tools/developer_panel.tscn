@@ -3,6 +3,38 @@
 [ext_resource type="Script" path="res://src/debug/developer_tools/developer_panel.gd" id="1_panel"]
 [ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="2_theme"]
 
+[sub_resource type="StyleBoxFlat" id="FieldStyle"]
+content_margin_left = 6.0
+content_margin_top = 3.0
+content_margin_right = 6.0
+content_margin_bottom = 3.0
+bg_color = Color(0.11, 0.075, 0.055, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.45, 0.34, 0.22, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="FieldFocusStyle"]
+content_margin_left = 6.0
+content_margin_top = 3.0
+content_margin_right = 6.0
+content_margin_bottom = 3.0
+bg_color = Color(0.13, 0.09, 0.062, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 0.82, 0.48, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
 [node name="DeveloperPanel" type="Control"]
 visible = false
 layout_mode = 3
@@ -114,6 +146,23 @@ wrap_mode = 1
 [node name="Log" type="VBoxContainer" parent="Panel/Margin/Tools/Tabs/剧情/Details"]
 layout_mode = 2
 
+[node name="LogToolbar" type="HBoxContainer" parent="Panel/Margin/Tools/Tabs/剧情/Details/Log"]
+layout_mode = 2
+
+[node name="LogSourceLabel" type="Label" parent="Panel/Margin/Tools/Tabs/剧情/Details/Log/LogToolbar"]
+layout_mode = 2
+text = "来源"
+
+[node name="LogSource" type="OptionButton" parent="Panel/Margin/Tools/Tabs/剧情/Details/Log/LogToolbar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ExportLog" type="Button" parent="Panel/Margin/Tools/Tabs/剧情/Details/Log/LogToolbar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "导出"
+
 [node name="LogText" type="TextEdit" parent="Panel/Margin/Tools/Tabs/剧情/Details/Log"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -122,7 +171,271 @@ editable = false
 theme_override_colors/font_readonly_color = Color(1, 0.91, 0.77, 1)
 wrap_mode = 1
 
+[node name="LogMessage" type="Label" parent="Panel/Margin/Tools/Tabs/剧情/Details/Log"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 2
+text = "日志跨场景保留最近 500 条。"
+
 [node name="ClearLog" type="Button" parent="Panel/Margin/Tools/Tabs/剧情/Details/Log"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "清空日志（最多 200 条）"
+text = "清空日志（最多 500 条）"
+
+[node name="Events" type="VBoxContainer" parent="Panel/Margin/Tools/Tabs/剧情/Details"]
+layout_mode = 2
+
+[node name="EventList" type="ItemList" parent="Panel/Margin/Tools/Tabs/剧情/Details/Events"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="EventMessage" type="Label" parent="Panel/Margin/Tools/Tabs/剧情/Details/Events"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "尚未读取事件列表。"
+autowrap_mode = 2
+
+[node name="EventActions" type="HBoxContainer" parent="Panel/Margin/Tools/Tabs/剧情/Details/Events"]
+layout_mode = 2
+
+[node name="ReloadEvents" type="Button" parent="Panel/Margin/Tools/Tabs/剧情/Details/Events/EventActions"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "重新加载"
+
+[node name="TriggerEvent" type="Button" parent="Panel/Margin/Tools/Tabs/剧情/Details/Events/EventActions"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "触发…"
+
+[node name="EventConfirmation" type="VBoxContainer" parent="Panel/Margin/Tools/Tabs/剧情/Details/Events"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="EventConfirmText" type="Label" parent="Panel/Margin/Tools/Tabs/剧情/Details/Events/EventConfirmation"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 2
+
+[node name="ConfirmEvent" type="Button" parent="Panel/Margin/Tools/Tabs/剧情/Details/Events/EventConfirmation"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "确认触发（会锁定输入，可能移动角色）"
+
+[node name="CancelEvent" type="Button" parent="Panel/Margin/Tools/Tabs/剧情/Details/Events/EventConfirmation"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "取消"
+
+[node name="业务" type="VBoxContainer" parent="Panel/Margin/Tools/Tabs"]
+layout_mode = 2
+
+[node name="Sections" type="TabContainer" parent="Panel/Margin/Tools/Tabs/业务"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="WalletText" type="TextEdit" parent="Panel/Margin/Tools/Tabs/业务/Sections"]
+unique_name_in_owner = true
+layout_mode = 2
+editable = false
+theme_override_colors/font_readonly_color = Color(1, 0.91, 0.77, 1)
+wrap_mode = 1
+
+[node name="InventoryText" type="TextEdit" parent="Panel/Margin/Tools/Tabs/业务/Sections"]
+unique_name_in_owner = true
+layout_mode = 2
+editable = false
+theme_override_colors/font_readonly_color = Color(1, 0.91, 0.77, 1)
+wrap_mode = 1
+
+[node name="ProductionText" type="TextEdit" parent="Panel/Margin/Tools/Tabs/业务/Sections"]
+unique_name_in_owner = true
+layout_mode = 2
+editable = false
+theme_override_colors/font_readonly_color = Color(1, 0.91, 0.77, 1)
+wrap_mode = 1
+
+[node name="TaskText" type="TextEdit" parent="Panel/Margin/Tools/Tabs/业务/Sections"]
+unique_name_in_owner = true
+layout_mode = 2
+editable = false
+theme_override_colors/font_readonly_color = Color(1, 0.91, 0.77, 1)
+wrap_mode = 1
+
+[node name="BridgeText" type="TextEdit" parent="Panel/Margin/Tools/Tabs/业务/Sections"]
+unique_name_in_owner = true
+layout_mode = 2
+editable = false
+theme_override_colors/font_readonly_color = Color(1, 0.91, 0.77, 1)
+wrap_mode = 1
+
+[node name="写状态" type="VBoxContainer" parent="Panel/Margin/Tools/Tabs"]
+layout_mode = 2
+
+[node name="WriteHint" type="Label" parent="Panel/Margin/Tools/Tabs/写状态"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"Hint"
+text = "写入立即生效，并在事件日志追加“调试写入”记录。"
+autowrap_mode = 3
+
+[node name="Sections" type="TabContainer" parent="Panel/Margin/Tools/Tabs/写状态"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Flag" type="VBoxContainer" parent="Panel/Margin/Tools/Tabs/写状态/Sections"]
+layout_mode = 2
+
+[node name="FlagLabel" type="Label" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Flag"]
+layout_mode = 2
+theme_type_variation = &"Hint"
+text = "GameState.set_flag"
+autowrap_mode = 3
+
+[node name="FlagRow" type="HBoxContainer" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Flag"]
+layout_mode = 2
+
+[node name="FlagKey" type="LineEdit" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Flag/FlagRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "day1.human_settled"
+theme_override_styles/normal = SubResource("FieldStyle")
+theme_override_styles/focus = SubResource("FieldFocusStyle")
+
+[node name="FlagValue" type="OptionButton" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Flag/FlagRow"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "true / false"
+
+[node name="ApplyFlag" type="Button" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Flag/FlagRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "应用"
+
+[node name="Variable" type="VBoxContainer" parent="Panel/Margin/Tools/Tabs/写状态/Sections"]
+layout_mode = 2
+
+[node name="VariableLabel" type="Label" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Variable"]
+layout_mode = 2
+theme_type_variation = &"Hint"
+text = "自动解析：true/false → bool，整数 → int，小数 → float，其余 → String"
+autowrap_mode = 3
+
+[node name="VariableRow" type="HBoxContainer" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Variable"]
+layout_mode = 2
+
+[node name="VariableKey" type="LineEdit" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Variable/VariableRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "shop.orders_completed"
+theme_override_styles/normal = SubResource("FieldStyle")
+theme_override_styles/focus = SubResource("FieldFocusStyle")
+
+[node name="ApplyVariable" type="Button" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Variable/VariableRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "应用"
+
+[node name="VariableValue" type="LineEdit" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Variable"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "值：true / 12 / 1.5 / 文本"
+theme_override_styles/normal = SubResource("FieldStyle")
+theme_override_styles/focus = SubResource("FieldFocusStyle")
+
+[node name="Event" type="VBoxContainer" parent="Panel/Margin/Tools/Tabs/写状态/Sections"]
+layout_mode = 2
+
+[node name="EventLabel" type="Label" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Event"]
+layout_mode = 2
+theme_type_variation = &"Hint"
+text = "GameState.complete_event"
+autowrap_mode = 3
+
+[node name="EventRow" type="HBoxContainer" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Event"]
+layout_mode = 2
+
+[node name="EventId" type="LineEdit" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Event/EventRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "day1.opening"
+theme_override_styles/normal = SubResource("FieldStyle")
+theme_override_styles/focus = SubResource("FieldFocusStyle")
+
+[node name="CompleteEvent" type="Button" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Event/EventRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "应用"
+
+[node name="Phase" type="VBoxContainer" parent="Panel/Margin/Tools/Tabs/写状态/Sections"]
+layout_mode = 2
+
+[node name="PhaseLabel" type="Label" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Phase"]
+layout_mode = 2
+theme_type_variation = &"Hint"
+text = "只写所选阶段的 completion.flag，推进仍由 GameplayBridge 完成"
+autowrap_mode = 3
+
+[node name="PhaseSelector" type="OptionButton" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Phase"]
+unique_name_in_owner = true
+layout_mode = 2
+clip_text = true
+fit_to_longest_item = false
+
+[node name="PhaseDetail" type="Label" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Phase"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"Hint"
+autowrap_mode = 3
+
+[node name="EnterPhase" type="Button" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Phase"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "写入完成条件并刷新"
+
+[node name="Session" type="VBoxContainer" parent="Panel/Margin/Tools/Tabs/写状态/Sections"]
+layout_mode = 2
+
+[node name="SessionLabel" type="Label" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Session"]
+layout_mode = 2
+theme_type_variation = &"Hint"
+text = "GameState.start_new_game()"
+autowrap_mode = 3
+
+[node name="ResetSession" type="Button" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Session"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "重置会话（清空钱包/库存/任务）…"
+
+[node name="ResetConfirmation" type="VBoxContainer" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Session"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="ResetText" type="Label" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Session/ResetConfirmation"]
+layout_mode = 2
+autowrap_mode = 3
+text = "会清空钱包余额、库存、任务与剧情进度，回到新游戏状态，立即执行且无法撤销。"
+
+[node name="ConfirmReset" type="Button" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Session/ResetConfirmation"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "确认重置会话"
+
+[node name="CancelReset" type="Button" parent="Panel/Margin/Tools/Tabs/写状态/Sections/Session/ResetConfirmation"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "取消重置"
+
+[node name="WriteResult" type="Label" parent="Panel/Margin/Tools/Tabs/写状态"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+autowrap_mode = 3

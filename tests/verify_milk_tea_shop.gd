@@ -84,7 +84,7 @@ func _run() -> void:
 	var stop_x: float = west.global_position.x + west.shape.size.x * west.global_scale.x * 0.5 + feet.height * 0.5
 	_check(player.global_position.x >= stop_x and player.global_position.x < stop_x + 1.0, "Player stops at the actual west wall")
 	player.velocity = Vector2.ZERO
-	_check(_reachable(level, player), "All three interaction points must be reachable from spawn")
+	_check(_reachable(level, player, main.get_node("World/EntityRoot/FatGoblin/InteractionPoint")), "Shop facilities and delivery NPC must be reachable from spawn")
 	for point in level.get_interaction_points():
 		player.global_position = point.global_position
 		await _frames(3)
@@ -123,7 +123,7 @@ func _e_event() -> InputEventKey:
 	event.physical_keycode = KEY_E
 	return event
 
-func _reachable(level: MilkTeaShop, player: ShopPlayer) -> bool:
+func _reachable(level: MilkTeaShop, player: ShopPlayer, delivery_point: InteractionPoint) -> bool:
 	# Flood the real physics space with the player's shape, not a second obstacle map.
 	var query := PhysicsShapeQueryParameters2D.new()
 	query.shape = player.get_node("CollisionShape2D").shape
@@ -144,7 +144,9 @@ func _reachable(level: MilkTeaShop, player: ShopPlayer) -> bool:
 			if space.intersect_shape(query, 1).is_empty() and not player.test_move(Transform2D(0.0, Vector2(cell) * 24.0), Vector2(offset) * 24.0):
 				visited[next] = true
 				queue.append(next)
-	for point in level.get_interaction_points():
+	var points := level.get_interaction_points()
+	points.append(delivery_point)
+	for point in points:
 		var found := false
 		for cell: Vector2i in queue:
 			if (Vector2(cell) * 24.0).distance_to(point.global_position) < 60.0:

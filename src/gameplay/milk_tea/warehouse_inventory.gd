@@ -11,6 +11,14 @@ const PROPERTY_GROUPS: PackedStringArray = ["flavor_tags", "combat_attributes", 
 
 var _definitions: Dictionary = {}
 var _state: Dictionary = {}
+var _session_locked := false
+
+## Used by the owning GameState while publishing a complete replacement.
+func set_session_locked(locked: bool) -> void:
+	_session_locked = locked
+
+func is_session_locked() -> bool:
+	return _session_locked
 
 func _init(menu: TeaMenu = CATALOG) -> void:
 	if menu == null:
@@ -74,7 +82,7 @@ func get_ingredients(origin: String = "") -> Array[Dictionary]:
 	return result
 
 func add_ingredient(id: Variant, amount: Variant) -> bool:
-	if not _has_id(id) or not _is_quantity(amount) or get_stock(id) > MAX_QUANTITY - amount:
+	if _session_locked or not _has_id(id) or not _is_quantity(amount) or get_stock(id) > MAX_QUANTITY - amount:
 		return false
 	_state[id].quantity += amount
 	_state[id].discovered = true
@@ -82,14 +90,14 @@ func add_ingredient(id: Variant, amount: Variant) -> bool:
 	return true
 
 func discover(id: Variant) -> bool:
-	if not _has_id(id) or is_discovered(id):
+	if _session_locked or not _has_id(id) or is_discovered(id):
 		return false
 	_state[id].discovered = true
 	changed.emit()
 	return true
 
 func discover_property(id: Variant, property: Variant) -> bool:
-	if not _has_id(id) or not property is String or property not in PROPERTY_GROUPS or is_property_known(id, property):
+	if _session_locked or not _has_id(id) or not property is String or property not in PROPERTY_GROUPS or is_property_known(id, property):
 		return false
 	_state[id].discovered = true
 	_state[id].known_properties.append(property)
@@ -106,10 +114,25 @@ func has_materials(materials: Variant) -> bool:
 
 ## No notification or mutation occurs until every entry passes validation.
 func try_consume(materials: Variant) -> bool:
-	if not has_materials(materials):
+	return try_exchange(materials, {})
+
+## Validate costs and gains together, including capacity, before publishing either.
+func try_exchange(materials: Variant, acquired: Variant) -> bool:
+	if _session_locked or not materials is Dictionary or not acquired is Dictionary or (materials.is_empty() and acquired.is_empty()):
 		return false
+	if not materials.is_empty() and not has_materials(materials):
+		return false
+	for id: Variant in acquired:
+		if not _has_id(id) or not _is_quantity(acquired[id]):
+			return false
+		var remaining: int = get_stock(id) - int(materials.get(id, 0))
+		if remaining > MAX_QUANTITY - acquired[id]:
+			return false
 	for id: String in materials:
 		_state[id].quantity -= materials[id]
+	for id: String in acquired:
+		_state[id].quantity += acquired[id]
+		_state[id].discovered = true
 	changed.emit()
 	return true
 
@@ -140,6 +163,8 @@ func validate_state(data: Variant) -> Error:
 
 ## Silent replacement lets the transaction owner publish all participants together.
 func restore_state(data: Variant, notify: bool = true) -> Error:
+	if _session_locked:
+		return ERR_BUSY
 	if validate_state(data) != OK:
 		return ERR_INVALID_DATA
 	var restored: Dictionary = {}

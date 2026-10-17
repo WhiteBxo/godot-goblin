@@ -4,7 +4,7 @@
 
 原有 `WarehouseInventory` 已具备食材目录、数量上限、发现信息和快照原子替换；`TeaProduction` 通过注入库存消费原料。任务目录的 `rewards` 仅展示文本，TaskJournal 是只读投影。GameState 原先只有原生 Variant 内存快照，没有文件存档层。当前商品价格、订单收入和实际任务奖金额尚无既定数值。
 
-因此复用 TeaMenu、WarehouseInventory 和 GameState，不增加 autoload 或文件存档框架，不改变任务 JSON v1 格式及奖励展示，不自动为现有订单添加收入。跨场景余额、库存和领取记录由 GameState 的 WalletTransactions 子节点持有；MainGame 通过公开 getter 获取并注入同一库存。制作进度仍沿用原先营业会话生命周期。
+因此复用 TeaMenu、WarehouseInventory 和 GameState，不增加 autoload 或文件存档框架，不改变任务 JSON v1 格式及奖励展示，不自动为现有订单添加收入。跨场景余额、库存和领取记录由 GameState 的 WalletTransactions 子节点持有；MainGame 通过公开 getter 获取并注入同一库存。制作进度也由 GameState 持有；钱包、制作和交付复用同一份跨场景经营会话。
 
 ## 接口
 
@@ -57,9 +57,9 @@ products 与 transaction_rewards 默认空，保留现有教学库存、订单�
 
 ## 存档与兼容
 
-GameState 快照升级为 `schema_version = 2`，必需 economy 字段，包含余额、完整库存、有限商品余量、成功请求记录和奖励领取记录。所有部分先校验，再整体替换；损坏的经济数据也不会改变剧情字段。相同快照静默，读档不会发 transaction_finished 或重播奖励。库存单独变化（包括制作消耗）也进入 GameState 快照。
+GameState 快照升级为 `schema_version = 2`，必需 economy 和 business 字段，包含余额、完整库存、有限商品余量、成功请求记录和奖励领取记录。所有部分先校验，再整体替换；损坏的经济数据也不会改变剧情字段。相同快照静默，读档不会发 transaction_finished 或重播奖励。库存单独变化（包括制作消耗）也进入 GameState 快照。
 
-旧 `schema_version = 1` 快照仍可读取；缺少 economy 时恢复为配置中的初始经济状态。旧存档原本不包含库存，无法从旧数据推算历史经济状态。新游戏 reset_state 会整体重置经济数据，普通切场景保留余额和库存。
+完整恢复要求同时包含钱包与经营数据，且 economy.inventory 与 business.inventory 一致。旧 v1 或缺字段的局部快照拒绝恢复，避免推测并覆盖历史经济或制作进度；迁移策略待确认。start_new_game / reset_state 整体重置经济、制作和剧情数据，普通切场景保留全部进度。
 
 仍使用仓库已有的原生 Variant 快照接口，没有创建第二套生产存档机制。实际文件往返测试使用 FileAccess.store_var/get_var 验证完整 GameState；经济子快照还覆盖 JSON 数字往返。GameState 原有剧情字段仍要求保留 Variant 类型，不能将整包快照直接当普通 JSON 恢复。
 
@@ -90,7 +90,7 @@ godot --headless --path . --script res://tests/verify_tea_production.gd
 godot --headless --path . --script res://tests/verify_milk_tea_shop.gd
 ```
 
-交易测试覆盖余额、限量商品、免费商品、非法参数/配置、钱包和库存上限、多物品奖励、真实任务完成检查、重复领取与别名、同步重入、注入提交失败、JSON 及实际文件往返、损坏存档拒绝、旧快照兼容、跨主场景切换和制作共用库存。
+交易测试覆盖余额、限量商品、免费商品、非法参数/配置、钱包和库存上限、多物品奖励、真实任务完成检查、重复领取与别名、同步重入、注入提交失败、JSON 及实际文件往返、损坏存档拒绝、旧/局部快照原子拒绝、跨主场景切换和制作共用库存。
 
 手动回归入口：`src/core/main.tscn` 或 `src/core/settlement.tscn`，F6。打开仓库查看库存，在制作台交付订单后再开仓库，观察对应原料减少，任务与订单板照常更新。当前没有新增购买按钮或奖励数值；交易行为通过上述测试和公开 API 验收。
 

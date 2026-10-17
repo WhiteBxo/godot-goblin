@@ -187,7 +187,8 @@ func _test_snapshots() -> void:
 	var legacy := full.duplicate(true)
 	legacy.erase("economy")
 	legacy.schema_version = 1
-	_check(restored.restore_state(legacy) == OK and restored.get_transactions().get_balance() == 0, "Legacy GameState snapshot defaults the new economy")
+	var before_legacy := restored.to_dict()
+	_check(restored.restore_state(legacy) == ERR_INVALID_DATA and restored.to_dict() == before_legacy, "Legacy partial snapshot cannot erase the combined business/economy session")
 	service.free()
 	copy.free()
 	state.free()

@@ -8,6 +8,7 @@ var _production: TeaProduction
 var _production_panel: TeaProductionPanel
 var _warehouse_panel: WarehousePanel
 var _point_id: StringName
+var _order_requirements := "制作后成品进入库存，携带到指定 NPC 按 E 交付。"
 
 var _tea: TeaMaking
 var _station := false
@@ -61,7 +62,7 @@ func present(point: InteractionPoint) -> void:
 		if crafting:
 			_production_panel.refresh(true)
 		elif point.interaction_id == &"orders":
-			$Center/Panel/Margin/Content/DescriptionScroll/Description.text = _production.get_order_text() + "\n\n到制作台选择对应原料，完成后自动交付。"
+			_refresh_order_board()
 		elif point.interaction_id == &"storage":
 			_warehouse_panel.refresh()
 
@@ -92,7 +93,14 @@ func configure_production(production: TeaProduction) -> void:
 
 func _refresh_order_board() -> void:
 	if _point_id == &"orders":
-		$Center/Panel/Margin/Content/DescriptionScroll/Description.text = _production.get_order_text() + "\n\n到制作台选择对应原料，完成后自动交付。"
+		$Center/Panel/Margin/Content/DescriptionScroll/Description.text = _production.get_order_text() + "\n\n" + _order_requirements
+
+func show_order_requirements(message: String) -> void:
+	_order_requirements = message
+	_refresh_order_board()
+
+func show_interaction_result(message: String) -> void:
+	$Center/Panel/Margin/Content/DescriptionScroll/Description.text = message
 
 func show_production_result(result: Dictionary) -> void:
 	_production_panel.show_result(result)

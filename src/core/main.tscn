@@ -5,6 +5,8 @@
 [ext_resource type="PackedScene" path="res://src/gameplay/player/shop_player.tscn" id="3_player"]
 [ext_resource type="PackedScene" path="res://src/core/audio/audio_manager.tscn" id="4_audio"]
 
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/fat_goblin.tscn" id="npc_customer"]
+
 [node name="MainGame" type="Node" unique_id=1512212887]
 process_mode = 3
 script = ExtResource("1_main")
@@ -25,6 +27,9 @@ texture_filter = 1
 [node name="EntityRoot" type="Node2D" parent="World" unique_id=133438663]
 
 [node name="Player" parent="World/EntityRoot" unique_id=5727926 instance=ExtResource("3_player")]
+
+[node name="FatGoblin" parent="World/EntityRoot" instance=ExtResource("npc_customer")]
+position = Vector2(1325, 730)
 
 [node name="EffectRoot" type="Node2D" parent="World" unique_id=466167947]
 

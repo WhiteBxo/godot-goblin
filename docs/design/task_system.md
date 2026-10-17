@@ -2,6 +2,8 @@
 
 日期：2026-10-17。实现依据为当前工作区，Godot 4.7.2。本文先于实现建立，验证后补充实测记录。
 
+> 后续实现已增加 [成品携带与指定 NPC 交付](../task_delivery.md)：首单不再制作后自动交付，订单板接取、成品入库、NPC 校验、任务完成及物品奖励均以该文和当前源码为准。下文保留 P0 实现时的架构记录与历史实测结果。
+
 ## 仓库审查与复用
 
 - 当前 project.godot 的正式入口为 src/core/settlement.tscn；src/core/main.tscn 是独立店铺。两者复用 MainGame。docs/development_status.md 的入口、经营能力描述已落后于源码。

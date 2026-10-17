@@ -346,11 +346,12 @@ func _test_real_orders() -> void:
 	for column in selectors.get_children():
 		(column.get_child(1) as OptionButton).select(1)
 	panel.get_child(2).pressed.emit()
-	_check(production.get_completed_count() == 1 and _state.get_flag("shop.order_001_delivered"), "Actual UI make_drink success records unique order fact")
-	var business_count: int = _state.get_variable("shop.orders_completed")
+	_check(production.get_completed_count() == 1 and not _state.get_flag("shop.order_001_delivered"), "UI crafting creates a carried cup without delivery facts")
+	_check(_game.get_task_delivery().try_deliver("order_001", "pearl_milk_tea", "fat_goblin").ok, "Actual NPC delivery records unique order fact")
+	var business_before: Dictionary = _state.to_dict()
 	production.changed.emit()
 	production.changed.emit()
-	_check(_state.get_variable("shop.orders_completed") == business_count, "Repeated business notifications are idempotent")
+	_check(_state.to_dict() == business_before, "Repeated production notifications never recount a delivery")
 	await _frames()
 	_check(_state.get_flag("order_demo.delivery_done") and _started.size() == 2, "Flag wait records objective while shop popup delays continuation")
 	if "--capture" in OS.get_cmdline_user_args():
@@ -376,7 +377,8 @@ func _test_real_orders() -> void:
 	await _dispose()
 	# This unique fixed order explicitly accepts historical deliveries.
 	_new_demo(order_scene)
-	_check(_game.get_tea_production().make_drink(["black_tea", "creamer", "pearl", "syrup"]).ok, "Early real order delivery succeeds as gameplay")
+	_check(_game.get_tea_production().make_drink(["black_tea", "creamer", "pearl", "syrup"]).ok, "Early crafting succeeds as gameplay")
+	_check(_game.get_task_delivery().accept_order("order_001") == OK and _game.get_task_delivery().deliver_to("fat_goblin").ok, "Early active order is actually delivered before the bridge phase")
 	await _order_opening()
 	await _interact(_order_board())
 	await _until(_game.get_dialogue_manager().is_active, "Early delivery still requires board tutorial")

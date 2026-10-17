@@ -5,14 +5,14 @@
       "id": "shop.first_order",
       "type": "main",
       "title": "完成第一笔订单",
-      "description": "查看订单板，按订单配方制作并交付第一杯奶茶。",
+      "description": "查看订单板接单，制作成品后携带给胖哥布林。",
       "activate_when": {
         "type": "flag",
         "key": "task.shop.first_order.active"
       },
       "complete_when": {
         "type": "flag",
-        "key": "task.shop.first_order.completed"
+        "key": "shop.order_001_delivered"
       },
       "objectives": [
         {
@@ -25,13 +25,24 @@
         },
         {
           "id": "deliver_order",
-          "text": "制作并交付第一杯奶茶",
+          "text": "将珍珠奶茶交给胖哥布林",
           "complete_when": {
             "type": "flag",
             "key": "shop.order_001_delivered"
           }
         }
-      ]
+      ],
+      "delivery": {
+        "order_id": "order_001",
+        "product_id": "pearl_milk_tea",
+        "target_object_id": "fat_goblin"
+      },
+      "rewards": {
+        "text": "糖浆 × 1",
+        "items": {
+          "syrup": 1
+        }
+      }
     }
   ]
 }

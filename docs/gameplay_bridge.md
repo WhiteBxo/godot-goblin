@@ -37,8 +37,8 @@ TeaMaking 增加 `has_recipe`、`has_session`、`is_completed_session` 查询。
 TeaProduction 无剧情依赖、无新剧情 API。MainGame 监听原 changed，读取 get_completed_count。
 只有配方/库存校验成功并提交进度后才增长。组装层先消费本场景已观察的序号，再写：
 
-- `shop.order_001_delivered`（后续同为 002、003）：固定订单序号交付事实，重复通知幂等。
-- `shop.orders_completed`：固定队列已完成的最高进度，取 max，避免重进场景降低快照中进度。
+- `shop.order_001_delivered`：任务配置的首单交付事实；后续订单需配置自己的交付任务。重复通知幂等。
+- `shop.orders_completed`：已成功交付订单的最高计数（制作不计数），取 max，避免重进场景降低快照中进度。
 
 失败配方、缺库存、关闭 UI、TeaMaking 完成不改变上述事实。
 UI 中固定配方 Demo session 与真实订单控件互斥显示，防止误认它们是一套业务。
@@ -53,7 +53,7 @@ UI 中固定配方 Demo session 与真实订单控件互斥显示，防止误认
 
 F6：`src/debug/gameplay_bridge/order_bridge_demo.tscn`。
 开场 → WASD 到订单板 E 调查 → 推进教学 → 奶茶制作台 E →
-选择红茶/奶精/珍珠，糖浆自动加入 → 制作并交付 → Esc 关闭 → 自动续播。
+选择红茶/奶精/珍珠，糖浆自动加入 → 制作并入库 → Esc 关闭 → 胖哥布林按 E 交付 → 关闭交付弹窗 → 自动续播。详见 [成品交付](task_delivery.md)。
 完成后再次调查订单板出现一次特殊对白，再次则回原订单 UI。
 旧 `gameplay_bridge_demo.tscn` 继续验证固定顺序配方，不代表真实订单。
 

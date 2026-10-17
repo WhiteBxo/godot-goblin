@@ -14,6 +14,8 @@ UI 使用 Godot 4.7 原生 Control、Container 和 Theme，不增加 autoload �
 
 UIManager 在 Systems 下使用 Always；World 和其他普通 Systems 保持 Pausable。界面节点由其 CanvasLayer 持有，管理器保存注册和模态栈。店铺 HUD 和弹窗通过独立场景实例化，不再从 HUD 内部 reparent 弹窗。
 
+见闻录使用 `chronicle_hud`（HudLayer 的按钮及未读数）与 `chronicle`（PopupLayer 模态列表/详情）。通过 `MainGame.open_chronicle()` 打开，复用弹窗互斥、操作锁、Esc 关闭和 P 暂停；ItemList 使用原生方向键、Enter 和鼠标输入，Tab 继续由原生 Control 导航及管理器焦点约束处理。详见 [见闻录模块](chronicle.md)。
+
 ## 接入接口
 
 `configure(layers)` 接收 StringName 到 CanvasLayer 的映射，目前使用 `hud`、`popup`、`pause`、`debug`。MainGame 创建、注入并注册暂停菜单。

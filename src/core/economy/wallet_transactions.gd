@@ -18,6 +18,7 @@ var _claimed: Dictionary = {}
 var _busy: bool = false
 var _task_lookup: Callable
 var _defaults: Dictionary
+var _session_guard: Callable
 
 func _init(menu: TeaMenu = WarehouseInventory.CATALOG) -> void:
 	if menu == null:
@@ -42,7 +43,10 @@ func get_balance() -> int:
 	return _balance
 
 func is_busy() -> bool:
-	return _busy
+	return _busy or (_session_guard.is_valid() and _session_guard.call())
+
+func set_session_guard(guard: Callable) -> void:
+	_session_guard = guard
 
 func set_task_lookup(lookup: Callable) -> void:
 	_task_lookup = lookup
@@ -64,7 +68,7 @@ func claim_reward(reward_id: Variant, request_id: Variant) -> Dictionary:
 
 func _execute(kind: String, request_id: Variant, subject: Variant, quantity: Variant) -> Dictionary:
 	# Nested calls return directly: emitting another result here could recurse forever.
-	if _busy:
+	if is_busy():
 		return _result(false, "busy", "交易正在处理中。", request_id)
 	_busy = true
 	var result := _prepare_and_commit(kind, request_id, subject, quantity)
@@ -176,7 +180,7 @@ func validate_state(data: Variant) -> Error:
 	return OK
 
 func restore_state(data: Variant, notify: bool = true) -> Error:
-	if _busy:
+	if is_busy():
 		return ERR_BUSY
 	_busy = true
 	var before := to_dict()

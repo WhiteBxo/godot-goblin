@@ -6,7 +6,7 @@
 
 `initial_stock` 单位为份，六种初始数量保持 12 / 12 / 12 / 8 / 8 / 10。`initial_discovery` 的键是初始已发现的食材 ID，值是已知属性组列表。默认六种人类材料均已知，没有新增异世界剧情内容。新增食材只需编辑该资源；没有初始库存或发现配置的食材默认数量为零且未发现。
 
-MainGame 在正式聚落 `settlement.tscn` 与独立店铺 `main.tscn` 中，从 GameState 的 WalletTransactions 获取同一 WarehouseInventory，并于 Systems 创建 TeaProduction。库存跨场景保留，同时注入 ShopUI 的仓库面板与 TeaProduction；新游戏通过 GameState.reset_state 重置：
+GameState Autoload 持有 WalletTransactions（其内部拥有唯一的 WarehouseInventory）和一个 TeaProduction。钱包交易、制作与交付复用同一库存。MainGame 在正式聚落 `settlement.tscn` 与独立店铺 `main.tscn` 中绑定同一份库存和制作服务：
 
 ```text
 basic_menu.tres → WarehouseInventory（数量、发现、已知属性组）
@@ -14,10 +14,10 @@ basic_menu.tres → WarehouseInventory（数量、发现、已知属性组）
                  TeaProduction          ShopUI → ShopPopup → WarehousePanel
                  （订单进度）                ↑ 制作请求 + 订单 ID
                      ↓ changed
-                  MainGame → GameState（仅交付事实）
+                  GameState（服务所有者、剧情与交付事实）
 ```
 
-关闭或重开弹窗不会创建新服务或重置状态；切换或重建场景保留 GameState 持有的库存，订单制作进度仍按场景会话创建。未新增 Autoload；库存与钱包一起保存到 GameState 经济快照。演示 TeaMaking 的固定顺序教学保持原有行为，不消耗正式库存。
+关闭弹窗、切换场景、重进店铺和场景重载均不创建新服务或重置状态。显式新游戏整体重置经营与剧情。未新增 Autoload；完整归属、接口与重启边界见 [统一经营会话](business_session.md)。演示 TeaMaking 仍为场景本地教学，不消耗正式库存。
 
 ## 库存服务 API
 
@@ -43,7 +43,7 @@ basic_menu.tres → WarehouseInventory（数量、发现、已知属性组）
 
 TeaProduction 保留 `get_stock`、`get_ingredients`、`get_order`、`get_completed_count`、`make_drink` 等 API。独立使用时先 `configure(inventory)`；未配置不能制作，不能再次绑定另一份库存重置营业进度。
 
-`make_drink(recipe, order_id = "")` 先验证当前订单和配方，将重复 ID 汇总成所需份数，再检查整组库存。提交阶段没有 await，订单进度与全部扣料在通知前完成，失败则保留原状态。提交锁持续到同步通知结束，监听器不能重入制作。旧的单参数调用仍按当前订单制作；正式 UI 始终传递显示的订单 ID，拒绝过期请求。订单全部完成后拒绝继续制作。MainGame 仍按已观察交付数去重，重复 changed 不会增加业务事实或重复触发剧情奖励。
+`make_drink(recipe, order_id = "")` 先验证当前订单和配方，将重复 ID 汇总成所需份数，再检查整组库存。提交阶段没有 await，订单进度与全部扣料在通知前完成，失败则保留原状态。提交锁持续到同步通知结束，监听器不能重入制作。旧的单参数调用仍按当前订单制作；正式 UI 始终传递显示的订单 ID，拒绝过期请求。订单全部完成后拒绝继续制作。制作成功增加 `category=product` 成品，不写交付事实。TaskDelivery 在指定 NPC 交互时校验任务并通过 `try_exchange` 合并扣成品与发放物品奖励；重复 changed 不会完成任务。详见 [成品交付](task_delivery.md)。
 
 WarehousePanel 位于现有 ShopPopup 内，使用现有 theme、返回按钮、UIManager focus 和移动锁。三个筛选项是全部 / 人类食材 / 异世界食材。左侧图标、名称、数量，右侧详情可滚动；缺货仍可查看详情。库存 changed 自动刷新仓库列表及制作台选项，订单变化刷新订单板。UI 不保存或修改库存。图标是本次直接编写的 16×16 SVG 像素风源文件，位于 `assets/ui/milk_tea/ingredients/`，随附 Godot `.import` 设置，无需生成派生图片。
 
@@ -64,7 +64,7 @@ WarehousePanel 位于现有 ShopPopup 内，使用现有 theme、返回按钮、
 
 示例仅展示一个条目；真实快照必须完整包含目录中的全部 ID。恢复前验证版本、ID 集、计数、发现与属性组，任何条目失败则全部不变；相同快照不重复通知。支持 `JSON.stringify` / `JSON.parse_string` 往返后的整数表示，拒绝小数、无穷值及非法发现状态。
 
-快照不包含静态定义、订单进度或剧情数据，不应单独作为完整营业存档。未来在 `user://` 下保存版本化文件时，需统一保存库存、订单唯一 ID / 已交付集合及 GameState，并设计恢复时的事实去重；本次没有数据库、存档界面或自动存档。
+库存子快照不包含静态定义、订单进度或剧情数据，不能单独作为完整营业存档。GameState v2 快照已统一包含库存、成品、制作订单 ID 和剧情/交付事实，完整营业恢复使用 GameState.restore_state。没有数据库、存档界面或自动存档。
 
 ## 验证与试玩
 
@@ -87,7 +87,7 @@ Gameplay Bridge 测试会在 user:// 写临时 JSON，需要允许写入该目�
 
 2026-10-17 使用 Godot 4.7.2 实测以上十个脚本全部通过：仓库 125 checks、Gameplay Bridge 246 checks、UIManager 47 checks、GameState 120 checks、主场景 72 checks、设备 36 checks、交互反馈 46 checks；制作、移动及聚落验证均 PASS。仓库另外在 Metal Forward+ 图形模式通过 125 checks，已检查两个入口的渲染截图。沙箱内的 macOS 证书读取/编辑器设置写入提示与业务断言无关；Gameplay Bridge 临时 user:// 写入在允许该目录写入后重跑通过。
 
-非 headless 运行仓库测试附加 `-- --capture`，输出 `.godot/warehouse_main.png` 和 `.godot/warehouse_settlement.png`，不提交缓存截图。F5 或 F6 店铺场景后，E 打开仓库查看默认六种材料，筛选异世界应为空；Esc 后移动恢复。制作 #001 后，红茶/奶精/珍珠/糖浆各减一，重开仓库仍保持扣料，订单板与制作台均显示 #002；按原教学配方完成三单后不能再交付。
+非 headless 运行仓库测试附加 `-- --capture`，输出 `.godot/warehouse_main.png` 和 `.godot/warehouse_settlement.png`，不提交缓存截图。F5 或 F6 店铺场景后，E 打开仓库查看默认六种材料，筛选异世界应为空；Esc 后移动恢复。制作 #001 后成品入库，红茶/奶精/珍珠/糖浆各减一，重开仓库仍保持扣料，订单板与制作台均显示 #002；按原教学配方制作三杯后不能重复制作；首单在胖哥布林交付才结算。
 
 ## Godot 4.7 官方依据
 

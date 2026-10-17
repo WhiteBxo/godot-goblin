@@ -34,6 +34,12 @@ var _actors: ActorDirector
 var _cameras: CameraDirector
 var _actions: Dictionary = {}
 var _used_camera := false
+var _chronicle: ChronicleJournal
+
+
+func set_chronicle_journal(journal: ChronicleJournal) -> void:
+	cancel_event("Chronicle service replaced")
+	_chronicle = journal
 
 
 func _ready() -> void:
@@ -251,6 +257,18 @@ func _process(_delta: float) -> void:
 			_state.set_flag(step["key"], step.get("value", true))
 		"set_stage":
 			_state.set_story_stage(step["value"])
+		"chronicle_unlock", "chronicle_append":
+			if not is_instance_valid(_chronicle):
+				_finish(false, "ChronicleJournal unavailable")
+				return
+			var error: Error
+			if step.command == "chronicle_unlock":
+				error = _chronicle.unlock_entry(step.entry_id, step.title)
+			else:
+				error = _chronicle.append_record(step.entry_id, step.record_id, step.content)
+			if _is_current(generation) and error != OK:
+				_finish(false, "Chronicle command failed (%d): %s" % [error, step.entry_id])
+				return
 		"play_sfx", "play_bgm", "stop_bgm", "fade_bgm":
 			_dispatch_audio(step, generation)
 			return

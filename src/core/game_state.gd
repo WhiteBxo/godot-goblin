@@ -1,5 +1,5 @@
 extends Node
-## Cross-scene story and economy data. Economy mutations use get_transactions().
+## Cross-scene session owner: business services, wallet transactions and story/task facts.
 ## No class_name: GameState is the Autoload name, not a second global class.
 
 signal state_changed
@@ -29,30 +29,76 @@ var _flags: Dictionary[String, bool] = {}
 var _variables: Dictionary[String, Variant] = {}
 var _completed_events: Dictionary[String, bool] = {}
 var _economy: WalletTransactions
-var _updating_economy: bool = false
+var _warehouse_inventory: WarehouseInventory
+var _tea_production: TeaProduction
+var _replacing := false
+var _business_transaction := false
+
 
 func _init() -> void:
 	_economy = WalletTransactions.new()
 	_economy.name = "WalletTransactions"
 	add_child(_economy)
+	_economy.set_session_guard(func() -> bool:
+		return _replacing or _business_transaction or (_tea_production != null and _tea_production.is_submitting())
+	)
 	_economy.changed.connect(_on_economy_changed)
+
 
 func get_transactions() -> WalletTransactions:
 	return _economy
 
+
 func _on_economy_changed() -> void:
-	if not _updating_economy:
+	if not _replacing and not _business_transaction and (_tea_production == null or not _tea_production.is_submitting()):
 		state_changed.emit()
 
-func _publish_economy(before: Dictionary) -> void:
-	_updating_economy = true
-	_economy.publish_restored(before)
-	_updating_economy = false
+
+func get_warehouse_inventory() -> WarehouseInventory:
+	_ensure_business()
+	return _warehouse_inventory
+
+
+func get_tea_production() -> TeaProduction:
+	_ensure_business()
+	return _tea_production
+
+
+func _ensure_business() -> void:
+	if _warehouse_inventory != null:
+		return
+	_warehouse_inventory = _economy.get_inventory()
+	_tea_production = TeaProduction.new()
+	_tea_production.name = "TeaProduction"
+	add_child(_tea_production)
+	_tea_production.configure(_warehouse_inventory)
+	_tea_production.changed.connect(_on_business_changed)
+
+
+func _on_business_changed() -> void:
+	if not _replacing and not _business_transaction and _tea_production.is_submitting():
+		state_changed.emit()
+
+
+## Delivery holds this through all synchronous notifications, including receipts.
+func begin_business_transaction() -> bool:
+	if _session_busy():
+		return false
+	_business_transaction = true
+	return true
+
+
+func end_business_transaction() -> void:
+	_business_transaction = false
+
+
+func _session_busy() -> bool:
+	return _economy.is_busy()
 
 
 ## Setters return true only when data changed. Invalid input is left untouched.
 func set_current_day(value: int) -> bool:
-	if value < 1 or value == _current_day:
+	if _replacing or value < 1 or value == _current_day:
 		return false
 	_current_day = value
 	state_changed.emit()
@@ -60,7 +106,7 @@ func set_current_day(value: int) -> bool:
 
 
 func set_story_stage(value: String) -> bool:
-	if value == _story_stage:
+	if _replacing or value == _story_stage:
 		return false
 	_story_stage = value
 	state_changed.emit()
@@ -76,7 +122,7 @@ func get_flag(key: String, default_value: bool = false) -> bool:
 
 
 func set_flag(key: String, value: bool = true) -> bool:
-	if not _is_namespaced_key(key) or (_flags.has(key) and _flags[key] == value):
+	if _replacing or not _is_namespaced_key(key) or (_flags.has(key) and _flags[key] == value):
 		return false
 	_flags[key] = value
 	state_changed.emit()
@@ -98,13 +144,29 @@ func get_variable(key: String, default_value: Variant = null) -> Variant:
 ## Values: null, bool, int, finite float, String, Array, string-keyed Dictionary.
 ## Containers may nest up to MAX_VALUE_DEPTH; Objects and cycles are rejected.
 func set_variable(key: String, value: Variant) -> bool:
-	if not _is_namespaced_key(key) or not _is_story_value(value):
+	if _replacing or not _is_namespaced_key(key) or not _is_story_value(value):
 		return false
 	if _variables.has(key) and _same_value(_variables[key], value):
 		return false
 	_variables[key] = _copy_value(value)
 	state_changed.emit()
 	return true
+
+
+## Commit related gameplay facts before notifying synchronous observers.
+func apply_flags(flags: Dictionary) -> Error:
+	if _replacing:
+		return ERR_BUSY
+	for key: Variant in flags:
+		if not key is String or not _is_namespaced_key(key) or not flags[key] is bool:
+			return ERR_INVALID_DATA
+	var changed := false
+	for key: String in flags:
+		changed = changed or not _flags.has(key) or _flags[key] != flags[key]
+		_flags[key] = flags[key]
+	if changed:
+		state_changed.emit()
+	return OK
 
 
 func get_variables() -> Dictionary[String, Variant]:
@@ -116,7 +178,7 @@ func is_event_completed(event_id: String) -> bool:
 
 
 func complete_event(event_id: String) -> bool:
-	if not _is_namespaced_key(event_id) or is_event_completed(event_id):
+	if _replacing or not _is_namespaced_key(event_id) or is_event_completed(event_id):
 		return false
 	_completed_events[event_id] = true
 	state_changed.emit()
@@ -132,25 +194,34 @@ func get_completed_events() -> Array[String]:
 
 
 func reset_state() -> bool:
-	if _economy.is_busy():
+	if _session_busy():
 		return false
-	if _current_day == 1 and _story_stage.is_empty() and _flags.is_empty() and _variables.is_empty() and _completed_events.is_empty() and _economy.to_dict() == _economy.get_default_state():
+	var defaults := _new_game_snapshot()
+	if _same_value(to_dict(), defaults):
 		return false
-	var economy_before := _economy.to_dict()
-	_economy.restore_state(_economy.get_default_state(), false)
-	_current_day = 1
-	_story_stage = ""
-	_flags.clear()
-	_variables.clear()
-	_completed_events.clear()
-	_publish_economy(economy_before)
-	state_changed.emit()
-	state_reset.emit()
+	_replace_session(defaults, true)
 	return true
+
+
+## Explicit new game, including cancellation of scene-local story/recipe work.
+## Scene switching/reloading must never call this. No disk save is implied.
+func start_new_game() -> Error:
+	if _session_busy():
+		return ERR_BUSY
+	_replace_session(_new_game_snapshot(), true)
+	return OK
+
+
+func _new_game_snapshot() -> Dictionary:
+	var fresh := get_script().new() as Node
+	var defaults: Dictionary = fresh.to_dict()
+	fresh.free()
+	return defaults
 
 
 ## Native Variant snapshot, with independent containers; no file I/O.
 func to_dict() -> Dictionary:
+	_ensure_business()
 	return {
 		"schema_version": SCHEMA_VERSION,
 		"current_day": _current_day,
@@ -158,6 +229,7 @@ func to_dict() -> Dictionary:
 		"flags": get_flags(),
 		"variables": get_variables(),
 		"completed_events": get_completed_events(),
+		"business": {"inventory": _warehouse_inventory.to_dict(), "production": _tea_production.to_dict()},
 		"economy": _economy.to_dict(),
 	}
 
@@ -166,38 +238,60 @@ func to_dict() -> Dictionary:
 ## Valid identical snapshots return OK without signals. Restoring events does
 ## not emit event_completed, so loading cannot replay one-shot story effects.
 func restore_state(data: Dictionary) -> Error:
-	if _economy.is_busy():
+	if _session_busy():
 		return ERR_BUSY
 	if not _is_valid_snapshot(data):
 		return ERR_INVALID_DATA
-	var economy_data: Dictionary = data.get("economy", _economy.get_default_state())
-	var restored_events: Dictionary[String, bool] = {}
-	for event_id: String in data["completed_events"]:
-		restored_events[event_id] = true
-	if _current_day == data["current_day"] and _story_stage == data["story_stage"] and _flags == data["flags"] and _same_value(_variables, data["variables"]) and _completed_events == restored_events and _economy.to_dict() == economy_data:
+	var normalized := to_dict()
+	for key: String in normalized:
+		normalized[key] = _copy_value(data[key])
+	normalized.completed_events.sort()
+	if _same_value(to_dict(), normalized):
 		return OK
+	_replace_session(data, false)
+	return OK
+
+
+## All components are validated first; publish only after the whole session commits.
+## Keep service identities so existing UI subscriptions survive new game/restore.
+func _replace_session(data: Dictionary, new_game: bool) -> void:
+	_ensure_business()
 	var economy_before := _economy.to_dict()
-	if _economy.restore_state(economy_data, false) != OK:
-		return ERR_INVALID_DATA
+	_economy.restore_state(data.economy, false)
+	_replacing = true
+	var inventory_changed: bool = economy_before.inventory != data.business.inventory
+	var production_changed: bool = _tea_production.to_dict() != data.business.production
+	var inventory_blocked := _warehouse_inventory.is_blocking_signals()
+	var production_blocked := _tea_production.is_blocking_signals()
+	_warehouse_inventory.set_block_signals(true)
+	_tea_production.set_block_signals(true)
+	_tea_production.restore_state(data.business.production)
 	_current_day = data["current_day"]
 	_story_stage = data["story_stage"]
 	_flags.assign(data["flags"])
 	_variables.assign(data["variables"].duplicate(true))
-	_completed_events = restored_events
-	_publish_economy(economy_before)
+	_completed_events.clear()
+	for event_id: String in data["completed_events"]:
+		_completed_events[event_id] = true
+	_warehouse_inventory.set_block_signals(inventory_blocked)
+	_tea_production.set_block_signals(production_blocked)
+	_warehouse_inventory.set_session_locked(true)
 	state_changed.emit()
-	state_restored.emit()
-	return OK
+	_economy.publish_restored(economy_before)
+	if production_changed and not inventory_changed:
+		_tea_production.changed.emit()
+	if new_game:
+		state_reset.emit()
+	else:
+		state_restored.emit()
+	_warehouse_inventory.set_session_locked(false)
+	_replacing = false
 
 
 func _is_valid_snapshot(data: Dictionary) -> bool:
-	if data.has("economy") and _economy.validate_state(data.economy) != OK:
+	if not data.has_all(["schema_version", "current_day", "story_stage", "flags", "variables", "completed_events", "business", "economy"]):
 		return false
-	if not data.has_all(["schema_version", "current_day", "story_stage", "flags", "variables", "completed_events"]):
-		return false
-	if not data["schema_version"] is int or data["schema_version"] not in [1, SCHEMA_VERSION]:
-		return false
-	if data.schema_version == SCHEMA_VERSION and not data.has("economy"):
+	if not data["schema_version"] is int or data["schema_version"] != SCHEMA_VERSION:
 		return false
 	if not data["current_day"] is int or data["current_day"] < 1 or not data["story_stage"] is String:
 		return false
@@ -214,7 +308,19 @@ func _is_valid_snapshot(data: Dictionary) -> bool:
 		if not event_id is String or not _is_namespaced_key(event_id) or seen_events.has(event_id):
 			return false
 		seen_events[event_id] = true
-	return true
+	if _economy.validate_state(data.economy) != OK:
+		return false
+	if not data.business is Dictionary or not data.business.has_all(["inventory", "production"]):
+		return false
+	if not _same_value(data.economy.inventory, data.business.inventory):
+		return false
+	_ensure_business()
+	if not _tea_production.is_valid_snapshot(data.business.production):
+		return false
+	var candidate := WarehouseInventory.new()
+	var valid := candidate.restore_state(data.business.inventory) == OK
+	candidate.free()
+	return valid
 
 
 func _is_namespaced_key(key: String) -> bool:

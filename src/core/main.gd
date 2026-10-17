@@ -17,6 +17,7 @@ var _tea_production: TeaProduction
 var _warehouse_inventory: WarehouseInventory
 var _task_catalog: TaskCatalog
 var _task_delivery: TaskDelivery
+var _gathering_service: GatheringService
 var _npc_points: Dictionary = {}
 var _dialogue_manager: DialogueManager
 var _story_director: StoryDirector
@@ -158,11 +159,16 @@ func _initialize_settlement() -> void:
 	$HudLayer.add_child(_shop_ui)
 	_shop_ui.set_popup_layer($PopupLayer)
 	_create_shop_business(_shop_ui)
+	var gather_points := _settlement_level.get_gather_points()
+	_create_gathering(gather_points)
 	_shop_ui.bind_manager(_ui_manager)
+	var points := _with_npc_points(_settlement_level.get_interaction_points())
+	for point: GatherPoint in gather_points:
+		points.append(point)
 	_shop_interaction = ShopInteraction.new()
 	_shop_interaction.name = "SettlementInteraction"
 	$Systems.add_child(_shop_interaction)
-	_shop_interaction.configure(_shop_player, _shop_ui, _with_npc_points(_settlement_level.get_interaction_points()), _route_story_interaction)
+	_shop_interaction.configure(_shop_player, _shop_ui, points, _route_story_interaction)
 	_create_dialogue_system()
 	_create_gameplay_bridge(false)
 	if DebugRuntime.is_enabled():
@@ -229,6 +235,19 @@ func get_actor_director() -> ActorDirector:
 func get_task_delivery() -> TaskDelivery:
 	return _task_delivery
 
+func get_gathering_service() -> GatheringService:
+	return _gathering_service if is_instance_valid(_gathering_service) else null
+
+func _create_gathering(points: Array[GatherPoint]) -> void:
+	if points.is_empty():
+		return
+	_gathering_service = GatheringService.new()
+	_gathering_service.name = "GatheringService"
+	$Systems.add_child(_gathering_service)
+	var error := _gathering_service.configure(get_node("/root/GameState"), _warehouse_inventory, points)
+	if error != OK:
+		push_error("Could not configure gathering (%d)" % error)
+
 func _with_npc_points(points: Array[InteractionPoint]) -> Array[InteractionPoint]:
 	for entity in $World/EntityRoot.get_children():
 		if not entity is SettlementCharacter:
@@ -244,16 +263,23 @@ func _with_npc_points(points: Array[InteractionPoint]) -> Array[InteractionPoint
 	return points
 
 func _route_story_interaction(id: StringName) -> Error:
-	# Existing story routes retain priority; delivery is a gameplay fallback.
+	# Existing story routes retain priority; gathering and delivery are gameplay fallbacks.
 	if is_instance_valid(_story_director):
 		var error := _story_director.request_interaction(String(id))
 		if error != ERR_DOES_NOT_EXIST:
 			return error
-	if _npc_points.has(id) and is_instance_valid(_task_delivery):
-		var result := _task_delivery.deliver_to(String(id))
-		_shop_ui.open(_npc_points[id])
-		_shop_ui.show_interaction_result(result.message)
+	if is_instance_valid(_gathering_service) and _gathering_service.has_point(id):
+		var point := _gathering_service.get_point(id)
+		var result := _gathering_service.harvest(id)
+		if is_instance_valid(point):
+			_shop_ui.open(point)
+			_shop_ui.show_interaction_result(result.message)
 		return OK if result.ok else ERR_UNAVAILABLE
+	if _npc_points.has(id) and is_instance_valid(_task_delivery):
+		var delivery_result := _task_delivery.deliver_to(String(id))
+		_shop_ui.open(_npc_points[id])
+		_shop_ui.show_interaction_result(delivery_result.message)
+		return OK if delivery_result.ok else ERR_UNAVAILABLE
 	return ERR_DOES_NOT_EXIST
 
 func _create_dialogue_system() -> void:
@@ -330,7 +356,7 @@ func _refresh_order_requirements(ui: ShopUI) -> void:
 	for point: InteractionPoint in _npc_points.values():
 		names[String(point.interaction_id)] = point.display_name
 	var requirements := _task_delivery.get_requirements_text(names)
-	ui.show_order_requirements("已接取交付订单：\n" + requirements + "\n制作后携带成品到指定 NPC 按 E 交付。" if not requirements.is_empty() else "当前没有待交付订单。")
+	ui.show_order_requirements("已接取订单：\n" + requirements + "\n准备所需成品或物资，携带到指定 NPC 按 E 交付。" if not requirements.is_empty() else "当前没有待交付订单。")
 
 func _can_start_story() -> bool:
 	return (not get_tree().paused and not _ui_manager.has_modal()

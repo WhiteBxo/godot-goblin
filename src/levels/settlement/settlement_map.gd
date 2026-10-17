@@ -20,6 +20,16 @@ func get_interaction_points() -> Array[InteractionPoint]:
 			points.append(child)
 	return points
 
+func get_gather_points() -> Array[GatherPoint]:
+	var points: Array[GatherPoint] = []
+	var container := get_node_or_null("GatherPoints")
+	if container == null:
+		return points
+	for child in container.get_children():
+		if child is GatherPoint:
+			points.append(child)
+	return points
+
 func get_zone_at(world_position: Vector2) -> String:
 	for zone: Node2D in $Districts.get_children():
 		var area: Rect2 = zone.get_meta("footprint", Rect2(110, 80, 1320, 840))

@@ -4,6 +4,8 @@
 
 > 后续实现已增加 [成品携带与指定 NPC 交付](../task_delivery.md)：首单不再制作后自动交付，订单板接取、成品入库、NPC 校验、任务完成及物品奖励均以该文和当前源码为准。下文保留 P0 实现时的架构记录与历史实测结果。
 
+> 后续 UI 已增加 [委托列表与详情](../task_panel.md)：可通过 HUD 按钮或 J 键查看全部活动任务。本文中的“P0 不提供列表”保留为历史实现范围。
+
 ## 仓库审查与复用
 
 - 当前 project.godot 的正式入口为 src/core/settlement.tscn；src/core/main.tscn 是独立店铺。两者复用 MainGame。docs/development_status.md 的入口、经营能力描述已落后于源码。

@@ -11,6 +11,8 @@ var _ui_manager: UIManager
 var _shop_ui: ShopUI
 var _shop_interaction: ShopInteraction
 var _task_journal: TaskJournal
+var _task_panel: TaskPanel
+var _task_button: Button
 var _chronicle_journal: ChronicleJournal
 var _chronicle_hud: ChronicleHUD
 var _tea_production: TeaProduction
@@ -112,6 +114,32 @@ func open_chronicle() -> Error:
 		return ERR_BUSY
 	return _ui_manager.open_screen(&"chronicle")
 
+func open_tasks() -> Error:
+	if _ui_manager.is_open(&"tasks"):
+		return OK
+	if not _can_start_story() or (is_instance_valid(_story_director) and _story_director.is_busy()) or (is_instance_valid(_actor_director) and _actor_director.is_actor_controlled(&"player")):
+		return ERR_BUSY
+	_refresh_task_delivery_names()
+	return _ui_manager.open_screen(&"tasks")
+
+func _refresh_task_delivery_names() -> void:
+	var target_names := {}
+	for point: InteractionPoint in _npc_points.values():
+		target_names[String(point.interaction_id)] = point.display_name
+	var product_names := {}
+	var inventory: WarehouseInventory = get_node("/root/GameState").get_warehouse_inventory()
+	for task: Dictionary in _task_journal.get_active_tasks():
+		if not task.delivery.is_empty():
+			var product := inventory.get_definition(task.delivery.product_id)
+			if product != null:
+				product_names[task.delivery.product_id] = product.display_name
+	_task_panel.set_delivery_names(target_names, product_names)
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if event.is_action_pressed(&"open_tasks") and not event.is_echo():
+		open_tasks()
+		get_viewport().set_input_as_handled()
+
 func _create_chronicle_system() -> void:
 	_chronicle_journal = ChronicleJournal.new()
 	_chronicle_journal.name = "ChronicleJournal"
@@ -141,6 +169,15 @@ func _create_task_system() -> void:
 	var hud: TaskHUD = preload("res://src/UI/tasks/task_hud.tscn").instantiate()
 	$HudLayer.add_child(hud)
 	hud.bind_journal(_task_journal)
+	_task_panel = preload("res://src/UI/tasks/task_panel.tscn").instantiate()
+	_ui_manager.register_screen(&"tasks", _task_panel, &"popup", true)
+	_task_panel.bind_journal(_task_journal)
+	_task_journal.projection_changed.connect(_refresh_task_delivery_names)
+	_task_panel.close_requested.connect(func() -> void: _ui_manager.close_screen(&"tasks"))
+	_task_button = preload("res://src/UI/tasks/task_button.tscn").instantiate()
+	_ui_manager.register_screen(&"task_button", _task_button, &"hud", false)
+	_task_button.pressed.connect(open_tasks)
+	_ui_manager.open_screen(&"task_button")
 
 func get_active_level() -> Node2D:
 	if _settlement_level != null:
@@ -384,6 +421,8 @@ func _refresh_input_lock() -> void:
 	)
 	if is_instance_valid(_chronicle_hud):
 		_chronicle_hud.disabled = should_lock
+	if is_instance_valid(_task_button):
+		_task_button.disabled = should_lock
 	if should_lock == _input_locked:
 		return
 	var player := get_player() as PlayerController

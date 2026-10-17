@@ -1,27 +1,96 @@
-[gd_resource type="Resource" script_class="TeaMenu" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="TeaMenu" load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://src/resources/milk_tea/tea_menu.gd" id="1"]
+[ext_resource type="Script" path="res://src/resources/milk_tea/ingredient_definition.gd" id="ingredient"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/black_tea.svg" id="icon_black_tea"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/green_tea.svg" id="icon_green_tea"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/creamer.svg" id="icon_creamer"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/pearl.svg" id="icon_pearl"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/coconut.svg" id="icon_coconut"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/syrup.svg" id="icon_syrup"]
+
+[sub_resource type="Resource" id="Ingredient_black_tea"]
+script = ExtResource("ingredient")
+id = "black_tea"
+display_name = "红茶"
+icon = ExtResource("icon_black_tea")
+origin = "human"
+category = "tea"
+rarity = "普通"
+flavor_tags = PackedStringArray("醇香", "微涩")
+acquisition_sources = PackedStringArray("店铺原有红茶")
+
+[sub_resource type="Resource" id="Ingredient_green_tea"]
+script = ExtResource("ingredient")
+id = "green_tea"
+display_name = "茉莉绿茶"
+icon = ExtResource("icon_green_tea")
+origin = "human"
+category = "tea"
+rarity = "普通"
+flavor_tags = PackedStringArray("茉莉花香", "清爽")
+acquisition_sources = PackedStringArray("店铺原有茉莉绿茶")
+
+[sub_resource type="Resource" id="Ingredient_creamer"]
+script = ExtResource("ingredient")
+id = "creamer"
+display_name = "奶精"
+icon = ExtResource("icon_creamer")
+origin = "human"
+category = "milk"
+rarity = "普通"
+flavor_tags = PackedStringArray("奶香")
+acquisition_sources = PackedStringArray("店铺原有奶精")
+
+[sub_resource type="Resource" id="Ingredient_pearl"]
+script = ExtResource("ingredient")
+id = "pearl"
+display_name = "珍珠"
+icon = ExtResource("icon_pearl")
+origin = "human"
+category = "topping"
+rarity = "普通"
+flavor_tags = PackedStringArray("软糯")
+acquisition_sources = PackedStringArray("店铺原有珍珠")
+
+[sub_resource type="Resource" id="Ingredient_coconut"]
+script = ExtResource("ingredient")
+id = "coconut"
+display_name = "椰果"
+icon = ExtResource("icon_coconut")
+origin = "human"
+category = "topping"
+rarity = "普通"
+flavor_tags = PackedStringArray("清甜")
+acquisition_sources = PackedStringArray("店铺原有椰果")
+
+[sub_resource type="Resource" id="Ingredient_syrup"]
+script = ExtResource("ingredient")
+id = "syrup"
+display_name = "糖浆"
+icon = ExtResource("icon_syrup")
+origin = "human"
+category = "syrup"
+rarity = "普通"
+flavor_tags = PackedStringArray("甜")
+acquisition_sources = PackedStringArray("店铺原有糖浆")
 
 [resource]
 script = ExtResource("1")
-ingredients = Array[Dictionary]([{
-"id": "black_tea", "name": "红茶", "category": "tea"
-}, {
-"id": "green_tea", "name": "茉莉绿茶", "category": "tea"
-}, {
-"id": "creamer", "name": "奶精", "category": "milk"
-}, {
-"id": "pearl", "name": "珍珠", "category": "topping"
-}, {
-"id": "coconut", "name": "椰果", "category": "topping"
-}, {
-"id": "syrup", "name": "糖浆", "category": "syrup"
-}])
+ingredients = Array[ExtResource("ingredient")]([SubResource("Ingredient_black_tea"), SubResource("Ingredient_green_tea"), SubResource("Ingredient_creamer"), SubResource("Ingredient_pearl"), SubResource("Ingredient_coconut"), SubResource("Ingredient_syrup")])
 initial_stock = {"black_tea": 12, "green_tea": 12, "creamer": 12, "pearl": 8, "coconut": 8, "syrup": 10}
+initial_discovery = {
+"black_tea": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"],
+"green_tea": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"],
+"creamer": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"],
+"pearl": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"],
+"coconut": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"],
+"syrup": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"],
+}
 orders = Array[Dictionary]([{
-"name": "珍珠奶茶", "recipe": ["black_tea", "creamer", "pearl", "syrup"]
+"id": "order_001", "name": "珍珠奶茶", "recipe": ["black_tea", "creamer", "pearl", "syrup"]
 }, {
-"name": "椰果茉莉奶茶", "recipe": ["green_tea", "creamer", "coconut", "syrup"]
+"id": "order_002", "name": "椰果茉莉奶茶", "recipe": ["green_tea", "creamer", "coconut", "syrup"]
 }, {
-"name": "原味奶茶", "recipe": ["black_tea", "creamer", "syrup"]
+"id": "order_003", "name": "原味奶茶", "recipe": ["black_tea", "creamer", "syrup"]
 }])

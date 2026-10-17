@@ -1,13 +1,14 @@
 class_name TeaProductionPanel
 extends VBoxContainer
 
-signal make_requested(recipe: Array[String])
+signal make_requested(recipe: Array[String], order_id: String)
 
 var _production: TeaProduction
 var _selectors: Array[OptionButton] = []
 var _order: Label
 var _result: Label
 var _make: Button
+var _order_id: String = ""
 
 func _ready() -> void:
 	add_theme_constant_override("separation", 8)
@@ -40,10 +41,14 @@ func _ready() -> void:
 	add_child(_result)
 
 func configure(production: TeaProduction) -> void:
+	if is_instance_valid(_production) and _production.changed.is_connected(refresh):
+		_production.changed.disconnect(refresh)
 	_production = production
+	_production.changed.connect(refresh)
 
 func refresh(clear_result: bool = false) -> void:
 	_order.text = _production.get_order_text()
+	_order_id = _production.get_order().get("id", "")
 	var categories: Array[String] = ["tea", "milk", "topping"]
 	for index in range(_selectors.size()):
 		var selector := _selectors[index]
@@ -83,4 +88,4 @@ func _request_make() -> void:
 		if not id.is_empty():
 			recipe.append(id)
 	recipe.append("syrup")
-	make_requested.emit(recipe)
+	make_requested.emit(recipe, _order_id)

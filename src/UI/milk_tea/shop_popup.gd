@@ -2,10 +2,12 @@ class_name ShopPopup
 extends Control
 
 signal close_requested
-signal make_requested(recipe: Array[String])
+signal make_requested(recipe: Array[String], order_id: String)
 
 var _production: TeaProduction
 var _production_panel: TeaProductionPanel
+var _warehouse_panel: WarehousePanel
+var _point_id: StringName
 
 var _tea: TeaMaking
 var _station := false
@@ -35,13 +37,16 @@ func _refresh_recipe() -> void:
 	$Center/Panel/Margin/Content/RecipeStatus.visible = _station and demo_recipe
 	if is_instance_valid(_production_panel):
 		_production_panel.visible = _station and not demo_recipe
-		$Center/Panel/Margin/Content/DescriptionScroll.visible = not _station or demo_recipe
+		$Center/Panel/Margin/Content/DescriptionScroll.visible = (not _station or demo_recipe) and _point_id != &"storage"
 	$Center/Panel/Margin/Content/RecipeStatus.text = _tea.get_instruction() if is_instance_valid(_tea) else "当前没有制作目标。"
 	for button: Button in $Center/Panel/Margin/Content/Ingredients.get_children():
 		button.disabled = not is_instance_valid(_tea) or not _tea.is_active()
 
 func present(point: InteractionPoint) -> void:
+	_point_id = point.interaction_id
 	_station = point.interaction_id == &"tea_station"
+	if is_instance_valid(_warehouse_panel):
+		_warehouse_panel.visible = _point_id == &"storage"
 	_refresh_recipe()
 	$Center/Panel/Margin/Content/Title.text = point.display_name
 	$Center/Panel/Margin/Content/DescriptionScroll/Description.text = (
@@ -52,27 +57,42 @@ func present(point: InteractionPoint) -> void:
 	if _production != null:
 		var crafting := _station and not (is_instance_valid(_tea) and _tea.has_session())
 		_production_panel.visible = crafting
-		$Center/Panel/Margin/Content/DescriptionScroll.visible = not crafting
+		$Center/Panel/Margin/Content/DescriptionScroll.visible = not crafting and _point_id != &"storage"
 		if crafting:
 			_production_panel.refresh(true)
 		elif point.interaction_id == &"orders":
 			$Center/Panel/Margin/Content/DescriptionScroll/Description.text = _production.get_order_text() + "\n\n到制作台选择对应原料，完成后自动交付。"
 		elif point.interaction_id == &"storage":
-			var lines := PackedStringArray(["店铺原有食材 · 库存（份）"])
-			for ingredient in _production.get_ingredients():
-				lines.append("%s  %d" % [ingredient.name, _production.get_stock(ingredient.id)])
-			$Center/Panel/Margin/Content/DescriptionScroll/Description.text = "\n".join(lines)
+			_warehouse_panel.refresh()
+
+func configure_inventory(inventory: WarehouseInventory) -> void:
+	if not is_instance_valid(_warehouse_panel):
+		_warehouse_panel = WarehousePanel.new()
+		_warehouse_panel.name = "WarehousePanel"
+		var content := $Center/Panel/Margin/Content
+		content.add_child(_warehouse_panel)
+		content.move_child(_warehouse_panel, $Center/Panel/Margin/Content/Close.get_index())
+		_warehouse_panel.hide()
+	_warehouse_panel.configure(inventory)
 
 func configure_production(production: TeaProduction) -> void:
+	if is_instance_valid(_production) and _production.changed.is_connected(_refresh_order_board):
+		_production.changed.disconnect(_refresh_order_board)
 	_production = production
-	_production_panel = TeaProductionPanel.new()
-	_production_panel.name = "ProductionPanel"
-	var content := $Center/Panel/Margin/Content
-	content.add_child(_production_panel)
-	content.move_child(_production_panel, $Center/Panel/Margin/Content/Close.get_index())
+	_production.changed.connect(_refresh_order_board)
+	if not is_instance_valid(_production_panel):
+		_production_panel = TeaProductionPanel.new()
+		_production_panel.name = "ProductionPanel"
+		var content := $Center/Panel/Margin/Content
+		content.add_child(_production_panel)
+		content.move_child(_production_panel, $Center/Panel/Margin/Content/Close.get_index())
+		_production_panel.make_requested.connect(func(recipe: Array[String], order_id: String) -> void: make_requested.emit(recipe, order_id))
 	_production_panel.configure(production)
-	_production_panel.make_requested.connect(func(recipe: Array[String]) -> void: make_requested.emit(recipe))
 	_production_panel.hide()
+
+func _refresh_order_board() -> void:
+	if _point_id == &"orders":
+		$Center/Panel/Margin/Content/DescriptionScroll/Description.text = _production.get_order_text() + "\n\n到制作台选择对应原料，完成后自动交付。"
 
 func show_production_result(result: Dictionary) -> void:
 	_production_panel.show_result(result)

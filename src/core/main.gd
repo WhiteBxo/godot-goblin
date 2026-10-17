@@ -11,6 +11,7 @@ var _ui_manager: UIManager
 var _shop_ui: ShopUI
 var _shop_interaction: ShopInteraction
 var _tea_production: TeaProduction
+var _warehouse_inventory: WarehouseInventory
 var _observed_deliveries := 0
 var _dialogue_manager: DialogueManager
 var _story_director: StoryDirector
@@ -42,12 +43,7 @@ func _ready() -> void:
 		var ui: ShopUI = preload("res://src/UI/milk_tea/shop_ui.tscn").instantiate()
 		$HudLayer.add_child(ui)
 		ui.set_popup_layer($PopupLayer)
-		_tea_production = TeaProduction.new()
-		_tea_production.name = "TeaProduction"
-		$Systems.add_child(_tea_production)
-		_tea_production.changed.connect(_on_orders_changed)
-		ui.configure_production(_tea_production)
-		ui.make_requested.connect(func(recipe: Array[String]) -> void: ui.show_production_result(_tea_production.make_drink(recipe)))
+		_create_shop_business(ui)
 		ui.bind_manager(_ui_manager)
 		var interaction := ShopInteraction.new()
 		interaction.name = "ShopInteraction"
@@ -108,6 +104,7 @@ func _initialize_settlement() -> void:
 	_shop_ui.close_text = "继续探索  [Esc]"
 	$HudLayer.add_child(_shop_ui)
 	_shop_ui.set_popup_layer($PopupLayer)
+	_create_shop_business(_shop_ui)
 	_shop_ui.bind_manager(_ui_manager)
 	_shop_interaction = ShopInteraction.new()
 	_shop_interaction.name = "SettlementInteraction"
@@ -124,6 +121,23 @@ func _initialize_settlement() -> void:
 
 func get_tea_production() -> TeaProduction:
 	return _tea_production
+
+func get_warehouse_inventory() -> WarehouseInventory:
+	return _warehouse_inventory
+
+func _create_shop_business(ui: ShopUI) -> void:
+	_warehouse_inventory = WarehouseInventory.new()
+	_warehouse_inventory.name = "WarehouseInventory"
+	$Systems.add_child(_warehouse_inventory)
+	_tea_production = TeaProduction.new()
+	_tea_production.name = "TeaProduction"
+	$Systems.add_child(_tea_production)
+	_tea_production.configure(_warehouse_inventory)
+	_tea_production.changed.connect(_on_orders_changed)
+	ui.configure_inventory(_warehouse_inventory)
+	ui.configure_production(_tea_production)
+	ui.make_requested.connect(func(recipe: Array[String], order_id: String) -> void:
+		ui.show_production_result(_tea_production.make_drink(recipe, order_id)))
 
 func get_player() -> CharacterBody2D:
 	return _shop_player if is_instance_valid(_shop_player) else (_player if is_instance_valid(_player) else null)

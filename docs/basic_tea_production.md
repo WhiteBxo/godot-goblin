@@ -1,6 +1,6 @@
 # 初级奶茶制作
 
-单独运行店铺场景 `src/core/main.tscn`（F6；当前 F5 默认入口为 settlement.tscn），走到上方奶茶制作台，按 E 打开饮品制作界面。操作弹窗时停止移动，Esc 或返回按钮关闭后恢复移动。
+F5 从正式聚落入口 `src/core/settlement.tscn` 运行，或 F6 单独运行店铺场景 `src/core/main.tscn`。走到奶茶制作台，按 E 打开饮品制作界面。两个入口都由 MainGame 装配营业会话；操作弹窗时停止移动，Esc 或返回按钮关闭后恢复移动。
 
 ## 验收步骤
 
@@ -8,19 +8,20 @@
 2. 制作前未选齐或选择错误茶底，点击制作时应提示原料不符，库存和订单均保持原状。
 3. 按 Esc 退出，到仓库按 E 查看已扣减的基础库存；回制作台应继续订单 #002，不能重新领取 #001。
 4. #002 选择茉莉绿茶、奶精、椰果；#003 选择红茶、奶精、不加小料。全部完成后显示完成杯数，制作按钮禁用。
-5. 全程食材栏只显示红茶、茉莉绿茶、奶精、珍珠、椰果、糖浆，不显示异世界类别或食材，成功交付时由 MainGame 将真实订单进度投影到 GameState，失败和关窗不写成功；不写入见闻录。
+5. 教学数据仍只有红茶、茉莉绿茶、奶精、珍珠、椰果、糖浆。仓库可按全部、人类食材、异世界食材筛选；默认异世界列表为空，未发现材料不出现。查看图标、数量和详情，缺货材料仍在列表中。成功交付时由 MainGame 将真实订单进度投影到 GameState，失败和关窗不写成功；不写入见闻录。
 
 ## 当前规则与边界
 
 - 三笔订单和库存是可调整的教学默认值，保存于 `src/resources/milk_tea/basic_menu.tres`，并非最终经营数值。
 - 每杯所列原料各消耗 1 份。常温、少糖固定，糖浆自动加入；本阶段不提供温度、糖度和用量调节。
 - 原料不符、库存不足、订单全部完成时均不扣库存。完成后自动交付，不另设交付或收款步骤。
-- 数据组件 `src/gameplay/milk_tea/tea_production.gd` 由 MainGame 创建于 Systems，UI 仅展示数据和发出制作请求。场景内关闭弹窗保留进度，重启主场景重置；没有新增存档、补货、收入、AI 配方或异世界解锁功能。
+- `WarehouseInventory` 和 `TeaProduction` 由 MainGame 创建于 Systems；制作系统注入库存服务，不再自行维护库存。UI 仅展示数据和发出制作请求，提交带有当前订单 ID，过期订单和同步重入被拒绝。场景内关闭弹窗保留进度，重启主场景重置；仅预留库存序列化接口，没有新增存档流程、补货玩法、收入、AI 配方或剧情解锁内容。详见 [仓库与共享库存](warehouse_inventory.md)。
 - GameState 业务事实为 `shop.order_001_delivered` 等序号 flag 与 `shop.orders_completed` 最高进度；只适用于当前固定教学队列，不代表跨天订单或完整库存存档。见 [Gameplay Bridge](gameplay_bridge.md)。
 - 仓库和订单板沿用现有交互入口；已配置的剧情交互仍优先由 StoryDirector 路由。
 
 ## 验证
 
+- `Godot --headless --path . --script tests/verify_warehouse_inventory.gd`：库存与发现、非法输入、原子扣料、JSON 往返、隐藏属性、实时 UI 刷新、正式聚落与独立店铺的共享会话。
 - `Godot --headless --path . --script tests/verify_tea_production.gd`：实际 UI 按钮、配料校验、库存扣减、重开进度、无小料订单、结束保护、缺货原子性以及真实交付的 GameState 事实、重复通知去重。
 - `Godot --headless --path . --script tests/verify_milk_tea_shop.gd`：原有移动、障碍、三个交互入口与移动锁回归。
 - 非 headless 运行制作验证并附加 `-- --capture`，截图保存到 `.godot/tea_production.png` 与 `.godot/tea_production_complete.png`，不纳入提交。

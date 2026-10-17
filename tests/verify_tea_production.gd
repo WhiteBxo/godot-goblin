@@ -52,7 +52,8 @@ func _run() -> void:
 	_check(production.get_completed_count() == 1 and production.get_stock("black_tea") == 11 and production.get_stock("pearl") == 7 and production.get_stock("creamer") == 11 and production.get_stock("syrup") == 9, "Button must complete order and consume each ingredient exactly once")
 	ui.close()
 	ui.open(storage)
-	_check(not panel.visible and "红茶  11" in content.get_node("DescriptionScroll/Description").text, "Storage must show shared updated stock")
+	var warehouse: WarehousePanel = content.get_node("WarehousePanel")
+	_check(not panel.visible and warehouse.visible and "红茶  11" in warehouse._list.get_item_text(0), "Storage must show shared updated stock")
 	ui.close()
 	ui.open(station)
 	_check(production.get_completed_count() == 1 and "椰果茉莉奶茶" in panel.get_child(0).text, "Reopening must retain progress and show next order")
@@ -75,16 +76,20 @@ func _run() -> void:
 	_check(state.story_stage == state_before.story_stage and state.get_completed_events() == state_before.completed_events and not state.get_flag("bridge.tea_done"), "Real orders never complete demonstration recipe or advance story directly")
 	# Exercise stock exhaustion and atomic failure independently of the demo queue.
 	var scarce := TeaProduction.new()
-	scarce._stock["pearl"] = 0
+	var inventory := WarehouseInventory.new()
+	scarce.configure(inventory)
+	inventory.try_consume({"pearl": 8})
 	_check(not scarce.make_drink(["black_tea", "creamer", "pearl", "syrup"]).ok and scarce.get_stock("black_tea") == 12 and scarce.get_stock("creamer") == 12, "Insufficient stock must not partially consume the recipe")
 	_check(not scarce.make_drink(["black_tea", "creamer", "pearl", "syrup", "otherworld"]).ok, "Unknown or locked ingredients must be rejected")
 	scarce.free()
+	inventory.free()
 	if "--capture" in OS.get_cmdline_user_args() and DisplayServer.get_name() != "headless":
 		await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png("res://.godot/tea_production_complete.png")
 		ui.close()
 		var fresh := TeaProduction.new()
 		main.get_node("Systems").add_child(fresh)
+		fresh.configure(main.get_warehouse_inventory())
 		panel.configure(fresh)
 		ui.open(station)
 		await process_frame

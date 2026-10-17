@@ -337,9 +337,9 @@ func _test_real_orders() -> void:
 	var panel: TeaProductionPanel = _game.get_node("PopupLayer/Modal/Center/Panel/Margin/Content/ProductionPanel")
 	panel.get_child(2).pressed.emit()
 	_check(production.get_completed_count() == 0 and not _state.get_flag("shop.order_001_delivered"), "Failed UI recipe cannot satisfy production fact")
-	production._stock["pearl"] = 0
+	production.get_inventory().try_consume({"pearl": 8})
 	_check(not production.make_drink(["black_tea", "creamer", "pearl", "syrup"]).ok and not _state.get_flag("shop.order_001_delivered"), "Insufficient stock never records delivery")
-	production._stock["pearl"] = 8
+	production.get_inventory().add_ingredient("pearl", 8)
 	_tea.recipe_completed.emit("pearl_milk_tea", 1)
 	_check(not _state.get_flag("order_demo.delivery_done"), "TeaMaking signal cannot satisfy real order phase")
 	var selectors := panel.get_child(1)
@@ -395,7 +395,7 @@ func _test_flag_waits() -> void:
 	_game = _demo as MainGame
 	_director = _game.get_story_director()
 	_bridge = _game.get_gameplay_bridge()
-	_check(_bridge != null and _game.get_tea_making() == null and _game.get_tea_production() == null, "Production settlement assembles flag bridge without tea dependencies or autoplay")
+	_check(_bridge != null and _game.get_tea_making() == null and _game.get_tea_production() != null and _game.get_tea_production().get_inventory() == _game.get_warehouse_inventory(), "Production settlement assembles shared business inventory and flag bridge without demonstration dependencies")
 	_check(not _director.is_busy(), "Formal settlement never starts demo story")
 	var prefix := "user://flag-bridge-%d" % OS.get_process_id()
 	var story_path := prefix + "-events.json"

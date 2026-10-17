@@ -1,0 +1,213 @@
+extends SceneTree
+
+const StateData = preload("res://src/core/game_state.gd")
+const PANEL_BODY := "Margin/Panel/Margin/Content/Body/"
+var checks := 0
+var failures: Array[String] = []
+
+func _initialize() -> void:
+	_run.call_deferred()
+
+func check(ok: bool, description: String) -> void:
+	checks += 1
+	if not ok:
+		failures.append(description)
+		push_error(description)
+
+func frames(count: int = 2) -> void:
+	for index in range(count):
+		await process_frame
+
+func tap(key: Key) -> void:
+	var event := InputEventKey.new()
+	event.physical_keycode = key
+	event.keycode = key
+	event.pressed = true
+	Input.parse_input_event(event)
+	await process_frame
+	event = InputEventKey.new()
+	event.physical_keycode = key
+	event.keycode = key
+	Input.parse_input_event(event)
+	await process_frame
+
+func _run() -> void:
+	var state: StateData = root.get_node("GameState")
+	state.reset_state()
+	var journal := ChronicleJournal.new()
+	check(journal.unlock_entry("test.first", "测试") == ERR_UNCONFIGURED, "Unconfigured mutation rejected")
+	root.add_child(journal)
+	check(journal.configure(state) == OK, "Journal configured with existing state")
+	var changes: Array[bool] = []
+	journal.changed.connect(func() -> void: changes.append(true))
+	check(journal.get_entries().is_empty() and journal.get_entry("test.hidden").is_empty(), "Locked entries absent")
+	check(journal.append_record("test.first", "test.record", "正文") == ERR_DOES_NOT_EXIST, "Appending cannot silently unlock an entry")
+	check(journal.unlock_entry("bad", "标题") == ERR_INVALID_PARAMETER, "Entry IDs use repository namespaces")
+	check(journal.unlock_entry("test.first", "  ") == ERR_INVALID_PARAMETER, "Empty title rejected")
+	check(journal.unlock_entry("test.first", "测试") == OK, "Unlock succeeds")
+	check(journal.get_unread_count() == 1 and not journal.get_entry("test.first").is_read, "Unlock starts unread")
+	check(journal.mark_read("test.first") == OK, "Explicit read succeeds")
+	var notifications := changes.size()
+	check(journal.mark_read("test.first") == OK and changes.size() == notifications, "Repeated read emits no extra change")
+	check(journal.unlock_entry("test.first", "不同标题") == OK and journal.get_entry("test.first").title == "测试" and journal.get_unread_count() == 0, "Duplicate unlock preserves title and read state")
+	check(journal.append_record("test.first", "test.record", "第一段 [b]原文[/b]") == OK, "Append succeeds")
+	check(journal.get_unread_count() == 1, "Append returns entry to unread")
+	journal.mark_read("test.first")
+	notifications = changes.size()
+	check(journal.append_record("test.first", "test.record", "不应覆盖") == OK and changes.size() == notifications, "Duplicate append is silent")
+	check(journal.get_entry("test.first").records.size() == 1 and journal.get_entry("test.first").records[0].content == "第一段 [b]原文[/b]" and journal.get_entry("test.first").is_read, "Duplicate append preserves original text and read state")
+	check(journal.append_record("test.first", "test.next", "第二段") == OK, "Second record added")
+	check(journal.append_record("test.first", "bad", "正文") == ERR_INVALID_PARAMETER and journal.append_record("test.first", "test.empty", " ") == ERR_INVALID_PARAMETER, "Invalid record rejected")
+	journal.unlock_entry("test.second", "另一条")
+	check(journal.append_record("test.second", "test.record", "冲突") == ERR_ALREADY_EXISTS, "Global record ID collision rejected")
+	check(journal.mark_read("test.hidden") == ERR_DOES_NOT_EXIST, "Cannot read locked entry")
+	var exposed := journal.get_entries()
+	exposed[0].records.clear()
+	check(journal.get_entry("test.first").records.size() == 2, "Callers cannot mutate internal data")
+	notifications = changes.size()
+	state.set_flag("test.unrelated")
+	check(changes.size() == notifications, "Unrelated state does not refresh journal")
+	journal.mark_read("test.second")
+	var snapshot := state.to_dict()
+	# Exercise the existing native Variant snapshot boundary through actual disk
+	# I/O in a temporary fixture, without adding a production save system.
+	var temporary := "/private/tmp/goblin-chronicle-snapshot.bin"
+	var file := FileAccess.open(temporary, FileAccess.WRITE)
+	file.store_var(snapshot)
+	file.close()
+	state.reset_state()
+	check(journal.get_entries().is_empty(), "GameState reset clears projection")
+	file = FileAccess.open(temporary, FileAccess.READ)
+	check(state.restore_state(file.get_var()) == OK, "Existing snapshot restores after disk round trip")
+	file.close()
+	DirAccess.remove_absolute(temporary)
+	check(journal.get_entry("test.first").records.size() == 2 and journal.get_unread_count() == 1 and journal.get_entry("test.second").is_read, "Restore retains records, unlocks and mixed read states")
+	journal.free()
+	journal = ChronicleJournal.new()
+	root.add_child(journal)
+	journal.configure(state)
+	check(journal.get_entry("test.first").records.size() == 2, "Recreating scene service retains progress")
+	state.set_variable(ChronicleJournal.STATE_KEY, "malformed")
+	check(journal.get_entries().is_empty() and journal.unlock_entry("test.valid", "标题") == ERR_INVALID_DATA, "Malformed reserved data cannot crash or be overwritten")
+	state.restore_state(snapshot)
+	journal.free()
+	state.reset_state()
+
+	var library := StoryLibrary.new()
+	check(library.load_file("res://src/debug/chronicle/demo_story.json") == OK, "Actual story loader accepts chronicle commands")
+	for step: Dictionary in [{"command": "chronicle_unlock", "entry_id": "bad", "title": "标题"}, {"command": "chronicle_unlock", "entry_id": "test.first", "title": ""}, {"command": "chronicle_append", "entry_id": "test.first", "record_id": "test.r", "content": ""}, {"command": "chronicle_append", "entry_id": "test.first", "record_id": "bad", "content": "正文"}, {"command": "chronicle_unlock", "entry_id": "test.first", "title": "标题", "unknown": true}]:
+		check(library.load_json(JSON.stringify({"version": 1, "events": {"test.invalid": {"steps": [step]}}})) == ERR_INVALID_DATA, "Malformed story command rejected")
+
+	var game: MainGame = load("res://src/core/main.tscn").instantiate()
+	root.add_child(game)
+	current_scene = game
+	await frames()
+	journal = game.get_chronicle_journal()
+	var ui := game.get_ui_manager()
+	var panel: ChroniclePanel = game.get_node("PopupLayer/ChroniclePanel")
+	var list: ItemList = panel.get_node(PANEL_BODY + "Entries")
+	var text: RichTextLabel = panel.get_node(PANEL_BODY + "Detail/Text")
+	var hud: ChronicleHUD = game.get_node("HudLayer/ChronicleHUD")
+	var player := game.get_player() as PlayerController
+	check(game.open_chronicle() == OK and list.item_count == 0, "Empty review opens without fixture content")
+	check(not player.movement_enabled and hud.disabled, "Chronicle modal locks gameplay")
+	ui.close_screen(&"chronicle")
+	check(player.movement_enabled, "Closing restores movement")
+	var director := game.get_story_director()
+	var completed: Array[String] = []
+	director.event_completed.connect(func(id: String) -> void: completed.append(id))
+	director.load_events("res://src/debug/chronicle/demo_story.json")
+	director.set_chronicle_journal(null)
+	check(director.request_event("chronicle_test.discover") == OK, "Unbound host accepts valid event for runtime dispatch")
+	await frames(6)
+	check(not director.is_busy() and director.last_error.contains("ChronicleJournal unavailable") and journal.get_entries().is_empty(), "Missing service fails clearly without writing progress")
+	director.set_chronicle_journal(journal)
+	director.request_event("chronicle_test.append")
+	await frames(6)
+	check(not director.is_busy() and director.last_error.contains("steps[0]") and journal.get_entries().is_empty(), "Appending before unlock fails at real dispatch boundary")
+	check(director.request_event("chronicle_test.discover") == OK, "Story event begins")
+	check(game.open_chronicle() == ERR_BUSY, "Story sequence blocks review opening")
+	await frames(12)
+	check(not director.is_busy() and "chronicle_test.discover" in completed, "Real StoryDirector completes chronicle event")
+	check(list.item_count == 1 and list.get_item_text(0).begins_with("● ") and hud.text.contains("1"), "Unlock refreshes list and HUD unread badge")
+	check(game.open_chronicle() == OK and journal.get_unread_count() == 1, "Opening list alone does not mark entries read")
+	check(game.open_chronicle() == OK, "Repeated open is harmless")
+	check(root.gui_get_focus_owner() == list, "List gets keyboard focus")
+	await tap(KEY_DOWN)
+	await tap(KEY_ENTER)
+	check(journal.get_unread_count() == 0 and not list.get_item_text(0).begins_with("● "), "Native keyboard selection marks the entry read")
+	check(text.text.contains("独立测试记录"), "Selected detail shows story content")
+	await tap(KEY_P)
+	check(paused and not panel.can_process(), "Pause covers and freezes review")
+	journal.append_record("test.first", "test.during_pause", "暂停期间追加")
+	check(journal.get_unread_count() == 1, "Covered review cannot automatically consume new content")
+	await tap(KEY_ESCAPE)
+	check(not paused and ui.is_open(&"chronicle") and journal.get_unread_count() == 1, "Resume keeps new content unread")
+	list.item_selected.emit(0)
+	check(journal.get_unread_count() == 0 and text.text.contains("暂停期间追加"), "Reselecting displays and reads new content")
+	await tap(KEY_ESCAPE)
+	check(not ui.has_modal() and player.movement_enabled, "Esc closes review and restores world input")
+	director.request_event("chronicle_test.append")
+	await frames(12)
+	check(journal.get_entry("test.first").records.size() == 3 and journal.get_unread_count() == 1, "Story append adds content and unread badge")
+	director.request_event("chronicle_test.append")
+	await frames(12)
+	check(journal.get_entry("test.first").records.size() == 3, "Replay of actual story event is idempotent")
+	director.request_event("chronicle_test.second")
+	await frames(12)
+	check(list.item_count == 2 and journal.get_unread_count() == 2, "Second entry appears only after unlock")
+	game.open_chronicle()
+	list.item_selected.emit(1)
+	check(journal.get_unread_count() == 1 and text.text.contains("不会影响"), "Reading one entry preserves other unread state")
+	ui.close_screen(&"chronicle")
+	journal.append_record("test.second", "test.hidden_panel", "隐藏期间追加")
+	list.item_selected.emit(1)
+	check(journal.get_unread_count() == 2, "Hidden panel cannot mark content read")
+	game.open_chronicle()
+	list.item_selected.emit(0)
+	check(text.text.contains("后续追加"), "Review includes appended story record")
+	ui.close_screen(&"chronicle")
+	game.get_shop_ui().open(game.get_active_level().get_interaction_points()[0])
+	check(game.open_chronicle() == ERR_BUSY, "Existing shop modal remains exclusive")
+	game.get_shop_ui().close()
+	check(game.get_dialogue_manager().start_dialogue("demo.greeting") == OK and game.open_chronicle() == ERR_BUSY, "Dialogue remains exclusive")
+	game.get_dialogue_manager().end_dialogue(false)
+	var saved := state.to_dict()
+	state.reset_state()
+	check(list.item_count == 0 and not hud.text.contains("●"), "Reset refreshes UI and HUD")
+	state.restore_state(saved)
+	check(list.item_count == 2 and hud.text.contains("●"), "Restore refreshes UI without replaying events")
+	player.set_movement_enabled(false)
+	game.open_chronicle()
+	ui.close_screen(&"chronicle")
+	check(not player.movement_enabled, "Preexisting movement lock preserved")
+	player.set_movement_enabled(true)
+
+	if "--capture" in OS.get_cmdline_user_args():
+		journal.unlock_entry("test.long", "很长的见闻标题，用于验证自动换行与布局边界")
+		journal.append_record("test.long", "test.long_record", "测试长正文。 [b]保持原文[/b]\n".repeat(55))
+		game.open_chronicle()
+		list.item_selected.emit(2)
+		for dimensions: Vector2i in [Vector2i(640, 360), Vector2i(1280, 720), Vector2i(1440, 720)]:
+			root.size = dimensions
+			await frames(8)
+			await RenderingServer.frame_post_draw
+			check(root.size == dimensions, "Capture window size applied")
+			check(text.get_global_rect().end.x <= panel.size.x and text.get_global_rect().end.y <= panel.size.y, "Long text remains within modal")
+			check(text.get_v_scroll_bar().max_value > text.get_v_scroll_bar().page, "Long content scrolls")
+			root.get_texture().get_image().save_png("/private/tmp/goblin-chronicle-%dx%d.png" % [dimensions.x, dimensions.y])
+		ui.close_screen(&"chronicle")
+	game.queue_free()
+	await frames()
+	state.reset_state()
+	state.set_flag("test.demo_preserved")
+	var demo: Node = load("res://src/debug/chronicle/chronicle_demo.tscn").instantiate()
+	root.add_child(demo)
+	await frames()
+	check(not state.get_flag("test.demo_preserved") and (demo.get_node("MainGame") as MainGame).get_chronicle_journal().get_entries().is_empty(), "F6 host starts isolated with no preloaded entries")
+	demo.queue_free()
+	await frames()
+	check(state.get_flag("test.demo_preserved"), "F6 host restores original state when removed")
+	state.reset_state()
+	print("Chronicle checks: %d, failures: %d" % [checks, failures.size()])
+	quit(0 if failures.is_empty() else 1)

@@ -146,6 +146,18 @@ func _step(step: Variant, context: String) -> bool:
 			fields.append("value")
 			if not step.get("value") is String:
 				return _invalid(context, "set_stage requires a string value")
+		"chronicle_unlock", "chronicle_append":
+			fields.append("entry_id")
+			if not is_namespaced(step.get("entry_id")):
+				return _invalid(context, "chronicle requires a namespaced entry_id")
+			if step.command == "chronicle_unlock":
+				fields.append("title")
+				if not _text(step.get("title")):
+					return _invalid(context, "chronicle_unlock requires a non-empty title")
+			else:
+				fields.append_array(["record_id", "content"])
+				if not is_namespaced(step.get("record_id")) or not _text(step.get("content")):
+					return _invalid(context, "chronicle_append requires a namespaced record_id and non-empty content")
 		"play_sfx":
 			fields.append_array(["path", "id", "wait"])
 			if not step.get("wait", false) is bool:

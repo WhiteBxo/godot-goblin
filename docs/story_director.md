@@ -88,6 +88,8 @@ Signal 同步调用。收尾期间拒绝递归启动新事件，串联事件请�
 | `wait` | `seconds`：有限数字 ≥ 0 | 使用可停止的单次 Timer；0 在下一 process tick 继续 |
 | `set_flag` | `key`：命名空间字符串 | `value` 为 bool，默认 true；设置相同值视为成功 |
 | `set_stage` | `value`：字符串 | 调用 `set_story_stage`；相同阶段视为成功 |
+| `chronicle_unlock` | `entry_id`：命名空间 ID；`title`：非空字符串 | 调用注入的 ChronicleJournal；重复解锁无副作用 |
+| `chronicle_append` | `entry_id`、`record_id`：命名空间 ID；`content`：非空字符串 | 向已解锁条目追加并标为未读；重复记录无副作用。见 [见闻录](chronicle.md) |
 | `play_sfx` | 非空 `id` 或 `res:// path`，二选一 | 经适配层调用 AudioManager；默认非阻塞，`wait: true` 等自然结束；旧 path 保持兼容；资源/服务缺失或池满发 skipped 并继续 |
 
 目录必须包含 `version: 1` 和 `events` 对象；事件必须有非空 `steps`。未知字段、未知指令、非法类型、负等待值及非法命名空间均拒绝，并报告事件/步骤位置。对白 ID 在 runtime 由 DialogueManager 验证，音效允许留空素材路径对应的占位文件名（路径本身必须是 `res://`）。现有导出 preset 的 `*.json` 已覆盖新数据；以后改用选择场景导出时，必须显式包含 JSON 及其动态引用的音效资源。

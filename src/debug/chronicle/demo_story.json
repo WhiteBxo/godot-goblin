@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "events": {
+    "chronicle_test.discover": {
+      "once": false,
+      "steps": [
+        {"command": "chronicle_unlock", "entry_id": "test.first", "title": "测试见闻：初次发现"},
+        {"command": "chronicle_append", "entry_id": "test.first", "record_id": "test.first_observation", "content": "这是独立测试记录，用于验证首次解锁、未读提示与回顾。\n正式剧情内容可通过相同接口替换。"}
+      ]
+    },
+    "chronicle_test.append": {
+      "once": false,
+      "steps": [
+        {"command": "chronicle_append", "entry_id": "test.first", "record_id": "test.follow_up", "content": "这是后续追加的记录。新增内容应显示在原记录之后，并重新出现未读提示。\n重复触发本事件不会重复添加。"}
+      ]
+    },
+    "chronicle_test.second": {
+      "once": false,
+      "steps": [
+        {"command": "chronicle_unlock", "entry_id": "test.second", "title": "测试见闻：另一条目"},
+        {"command": "chronicle_append", "entry_id": "test.second", "record_id": "test.second_observation", "content": "这条见闻在触发解锁前不会出现在列表中，读取它也不会影响其他条目的未读状态。"}
+      ]
+    }
+  }
+}

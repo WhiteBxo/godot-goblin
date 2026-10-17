@@ -11,6 +11,8 @@ var _ui_manager: UIManager
 var _shop_ui: ShopUI
 var _shop_interaction: ShopInteraction
 var _task_journal: TaskJournal
+var _chronicle_journal: ChronicleJournal
+var _chronicle_hud: ChronicleHUD
 var _tea_production: TeaProduction
 var _warehouse_inventory: WarehouseInventory
 var _observed_deliveries := 0
@@ -31,6 +33,7 @@ var _debug_panel: DeveloperPanel
 func _ready() -> void:
 	DebugRuntime.apply_release_policy(get_tree())
 	_create_ui_system()
+	_create_chronicle_system()
 	_create_task_system()
 	_settlement_level = $World/LevelRoot.get_child(0) as SettlementMap
 	if _settlement_level != null:
@@ -95,6 +98,31 @@ func _create_ui_system() -> void:
 
 func get_task_journal() -> TaskJournal:
 	return _task_journal if is_instance_valid(_task_journal) else null
+
+func get_chronicle_journal() -> ChronicleJournal:
+	return _chronicle_journal if is_instance_valid(_chronicle_journal) else null
+
+func open_chronicle() -> Error:
+	if _ui_manager.is_open(&"chronicle"):
+		return OK
+	if not _can_start_story() or (is_instance_valid(_story_director) and _story_director.is_busy()) or (is_instance_valid(_actor_director) and _actor_director.is_actor_controlled(&"player")):
+		return ERR_BUSY
+	return _ui_manager.open_screen(&"chronicle")
+
+func _create_chronicle_system() -> void:
+	_chronicle_journal = ChronicleJournal.new()
+	_chronicle_journal.name = "ChronicleJournal"
+	$Systems.add_child(_chronicle_journal)
+	_chronicle_journal.configure(get_node("/root/GameState"))
+	var panel: ChroniclePanel = preload("res://src/UI/chronicle/chronicle_panel.tscn").instantiate()
+	_ui_manager.register_screen(&"chronicle", panel, &"popup", true)
+	panel.bind_journal(_chronicle_journal)
+	panel.close_requested.connect(func() -> void: _ui_manager.close_screen(&"chronicle"))
+	_chronicle_hud = preload("res://src/UI/chronicle/chronicle_hud.tscn").instantiate()
+	_ui_manager.register_screen(&"chronicle_hud", _chronicle_hud, &"hud", false)
+	_chronicle_hud.bind_journal(_chronicle_journal)
+	_chronicle_hud.pressed.connect(open_chronicle)
+	_ui_manager.open_screen(&"chronicle_hud")
 
 func _create_task_system() -> void:
 	var catalog := TaskCatalog.new()
@@ -218,6 +246,7 @@ func _create_dialogue_system() -> void:
 	_story_director.name = "StoryDirector"
 	$Systems.add_child(_story_director)
 	_story_director.configure(_dialogue_manager, _can_start_story)
+	_story_director.set_chronicle_journal(_chronicle_journal)
 	_story_director.configure_cinematic(_actor_director, _camera_director)
 	_story_director.tree_exiting.connect(_on_story_exiting)
 	_story_director.set_audio_adapter(StoryAudioAdapter.new(_audio_manager))
@@ -296,6 +325,8 @@ func _refresh_input_lock() -> void:
 		or (is_instance_valid(_story_director) and _story_director.is_busy())
 		or (is_instance_valid(_actor_director) and _actor_director.is_actor_controlled(&"player"))
 	)
+	if is_instance_valid(_chronicle_hud):
+		_chronicle_hud.disabled = should_lock
 	if should_lock == _input_locked:
 		return
 	var player := get_player() as PlayerController

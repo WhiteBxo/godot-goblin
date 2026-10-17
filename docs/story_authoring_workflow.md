@@ -38,7 +38,7 @@
 - `conditions` 在请求时检查，`when` 在步骤执行时检查；全部字段为 AND。没有 OR、else、goto、循环或命令式场景切换。`trigger` 是交互路由 ID，需宿主实际调用 `request_interaction`，JSON 顺序优先第一个合格事件；订单/仓库/制作台为 `orders`/`storage`/`tea_station`。
 - `once` 默认 true，整段成功才记完成。重复演出显式 false；不同条件的路由要检查遮蔽和优先顺序。flag 和事件 ID 用命名空间；`set_stage` 字符串按原稿约定。成功标记置末尾；失败不回滚已执行状态和角色位置/生成/显隐，重试须核对现场。
 - `when.choice` 只能消费本次演出已完成选择的稳定 ID；跨事件先写 flag。对白分支由 `next`/`choices` 表达，不按选项显示文本匹配。
-- MainGame 统一锁输入；不得在新脚本重复锁定或强制恢复 true。超出已有指令的动画、场景切换、给予物品、任务/手札等真实业务能力列为缺口；不能用 `set_flag` 冒充已实现这些系统。
+- MainGame 统一锁输入；不得在新脚本重复锁定或强制恢复 true。见闻录使用已有 `chronicle_unlock` / `chronicle_append` 指令，标题和正文仅取自 Markdown；超出已有指令的动画、场景切换、给予物品、任务等真实业务能力列为缺口；不能用 `set_flag` 冒充已实现这些系统。
 
 ## 局部 Beat 修改
 

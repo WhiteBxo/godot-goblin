@@ -50,7 +50,9 @@ func _verify() -> void:
 		var expected_mode := Node.PROCESS_MODE_WHEN_PAUSED if name == "PauseLayer" else Node.PROCESS_MODE_ALWAYS
 		check(screen_layer.process_mode == expected_mode, "Screen layer process mode: " + name)
 		if name == "HudLayer":
-			check(screen_layer.get_child_count() == 1 and screen_layer.get_child(0) is TaskHUD and not screen_layer.get_child(0).visible, "Shared task HUD remains hidden without an active task")
+			var task_hud := screen_layer.get_node("TaskHUD") as TaskHUD
+			check(task_hud != null and not task_hud.visible, "Shared task HUD remains hidden without an active task")
+			check(screen_layer.get_node("ChronicleHUD") is ChronicleHUD and screen_layer.get_node("ChronicleHUD").visible, "Chronicle button belongs to HUD")
 		if name == "TransitionLayer":
 			check(screen_layer.get_child_count() == 0, "Unused UI layer remains empty: " + name)
 	check(game.get_ui_manager() != null, "MainGame exposes scene-local UI manager")

@@ -1,6 +1,6 @@
 # 剧情编排指令速查（v1）
 
-以 `src/core/story/story_library.gd`、`story_director.gd` 及 `src/core/dialogue/dialogue_library.gd` 的实际校验和 dispatch 为准。共 19 条 Story 指令；Director 的公开 GDScript API 不一定能在 JSON 中使用，例如 `camera_follow` 不是 Story command。
+以 `src/core/story/story_library.gd`、`story_director.gd` 及 `src/core/dialogue/dialogue_library.gd` 的实际校验和 dispatch 为准。共 21 条 Story 指令；Director 的公开 GDScript API 不一定能在 JSON 中使用，例如 `camera_follow` 不是 Story command。
 
 ## Story JSON
 
@@ -14,6 +14,8 @@
 | `wait` | `seconds >= 0`；0 到下一 process tick | 是，不接受 wait |
 | `set_flag` | `key` 命名空间 ID；`value` bool，默认 true | 同步，不接受 wait |
 | `set_stage` | `value` string | 同步，不接受 wait |
+| `chronicle_unlock` | `entry_id` 命名空间 ID；`title` 非空文本；重复解锁保持已有内容和已读状态 | 同步，不接受 wait |
+| `chronicle_append` | 已解锁的 `entry_id`；全局唯一命名空间 `record_id`；非空 `content`；同条目同 ID 重试成功且不重复添加，跨条目冲突失败 | 同步，不接受 wait |
 | `play_sfx` | `id` 非空或 `path` 为 res://，严格二选一；`wait` bool | 否 |
 | `actor_spawn` | `actor` 尚未占用；`scene` 为 res://*.tscn，根继承 PlayerController；`target`；`wait` bool | 是 |
 | `actor_move` | `actor`、`target`；`speed = 120`、`timeout = 15`，均 > 0；`wait` bool | 是 |
@@ -33,6 +35,8 @@
 `conditions` / `when` 允许以下字段（均可省略，各项 AND）：`day` 正整数、`stage` string、`flags` 命名空间 key→bool（缺失 flag 为 false）、`completed_events` / `not_completed_events` 命名空间 ID 数组。仅 `when` 额外接受 `choice: {"dialogue": "ID", "line": "行ID", "id": "选项ID"}`，三个字符串非空。本次尚未作出的选择不匹配。
 
 命名空间 ID 至少两个由 `.` 分隔的合法 identifier，例如 `day1.intro_finished`。Actor、Marker、音频和 Dialogue ID 没有该强制命名空间约束，但应保持现有稳定名称。
+
+MainGame 已绑定见闻录服务；其他宿主先调用 `StoryDirector.set_chronicle_journal(journal)`。见闻录指令只更新数据，不打开 UI；缺少服务或向未解锁条目追加时事件失败，已执行的步骤不回滚。接口与 F6 测试入口见 [见闻录模块](chronicle.md)。
 
 ## Dialogue JSON
 

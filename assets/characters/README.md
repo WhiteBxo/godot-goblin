@@ -20,3 +20,7 @@
 在 Godot FileSystem 面板打开对应图片，可检查立绘和表情整图。重新导入可在项目根目录执行 `godot --headless --editor --path . --import --quit`（`godot` 需指向本机 Godot 4.7 可执行文件）。
 
 导入规则参照 [Godot 4.7 官方图片导入文档](https://docs.godotengine.org/en/4.7/tutorials/assets_pipeline/importing_images.html)：JPEG 与 PNG 均可作为 Texture2D 导入，JPEG 格式不支持透明通道。
+
+## 游戏人物场景
+
+全部 31 张 NPC 动画图集已接入 8 类可复用人物场景，按剧情身份放入聚落并注册给 ActorDirector。人物映射、缺帧 fallback、F6 预览入口和再生成方式见 [游戏人物说明](../../docs/characters.md)。

@@ -360,8 +360,8 @@ func _create_shop_business(ui: ShopUI) -> void:
 	ui.point_opened.connect(_on_shop_point_opened)
 	ui.configure_inventory(_warehouse_inventory)
 	ui.configure_production(_tea_production)
-	ui.craft_requested.connect(func(materials: Array[String]) -> void:
-		var result := _tea_production.craft(materials)
+	ui.craft_requested.connect(func(materials: Array[String], quantity: int) -> void:
+		var result := _tea_production.craft(materials, quantity)
 		if day1_story_enabled and result.ok:
 			_audio_manager.play_sfx("shop.tea_pour")
 		ui.show_production_result(result))

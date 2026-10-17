@@ -5,7 +5,7 @@ extends Control
 signal point_opened(id: StringName)
 signal opened
 signal closed
-signal craft_requested(materials: Array[String])
+signal craft_requested(materials: Array[String], quantity: int)
 var _production: TeaProduction
 var _inventory: WarehouseInventory
 
@@ -50,7 +50,7 @@ func set_popup_layer(layer: CanvasLayer) -> void:
 	layer.add_child(_popup)
 	(_popup.get_default_focus() as Button).text = close_text
 	_popup.close_requested.connect(close)
-	_popup.craft_requested.connect(func(materials: Array[String]) -> void: craft_requested.emit(materials))
+	_popup.craft_requested.connect(func(materials: Array[String], quantity: int) -> void: craft_requested.emit(materials, quantity))
 	if _inventory != null:
 		_popup.configure_inventory(_inventory)
 	if _production != null:

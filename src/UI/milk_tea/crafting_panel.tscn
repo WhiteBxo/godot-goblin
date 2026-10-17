@@ -41,7 +41,17 @@ text = "一键重做"
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
+
+[node name="RecipeTitle" type="Label" parent="Body/Right"]
+layout_mode = 2
+text = "配方 · 点击自动填料"
+
+[node name="RecipeList" type="ItemList" parent="Body/Right"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_vertical = 3
+allow_reselect = true
 
 [node name="OrderLine" type="Label" parent="Body/Right"]
 layout_mode = 2
@@ -64,6 +74,7 @@ disabled = true
 text = "清空"
 
 [node name="SelectedScroll" type="ScrollContainer" parent="Body/Right"]
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
@@ -74,9 +85,30 @@ size_flags_horizontal = 3
 columns = 2
 
 [node name="PreviewLine" type="Label" parent="Body/Right"]
-custom_minimum_size = Vector2(0, 28)
+custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 autowrap_mode = 2
+
+[node name="Batch" type="HBoxContainer" parent="Body/Right"]
+layout_mode = 2
+
+[node name="BatchLabel" type="Label" parent="Body/Right/Batch"]
+layout_mode = 2
+text = "杯数"
+
+[node name="Quantity" type="SpinBox" parent="Body/Right/Batch"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+max_value = 1.0
+value = 1.0
+step = 1.0
+update_on_text_changed = true
+
+[node name="Maximum" type="Button" parent="Body/Right/Batch"]
+layout_mode = 2
+text = "最大"
+disabled = true
 
 [node name="CraftButton" type="Button" parent="Body/Right"]
 custom_minimum_size = Vector2(0, 28)
@@ -85,6 +117,6 @@ disabled = true
 text = "合成并入库"
 
 [node name="ResultLabel" type="Label" parent="Body/Right"]
-custom_minimum_size = Vector2(0, 28)
+custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 autowrap_mode = 2

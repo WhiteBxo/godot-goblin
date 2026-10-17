@@ -1,9 +1,9 @@
 class_name CraftingPanel
 extends VBoxContainer
-## Two-column crafting view: materials and owned cups on the left, the mixing tray on the right.
+## Inventory on the left; available recipes and a batch mixing tray on the right.
 ## Read-only towards services; every commit goes through craft_requested().
 
-signal craft_requested(materials: Array[String])
+signal craft_requested(materials: Array[String], quantity: int)
 
 const CATEGORY_ORDER: Dictionary = {"tea": 0, "milk": 1, "syrup": 2, "topping": 3, "material": 4}
 const COLOR_OK := Color("bde3a5")
@@ -21,6 +21,9 @@ var _available_products: Dictionary = {}
 @onready var _list: ItemList = $Body/Left/MaterialList
 @onready var _detail: Label = $Body/Left/ProductDetail
 @onready var _redo: Button = $Body/Left/RedoButton
+@onready var _recipe_list: ItemList = $Body/Right/RecipeList
+@onready var _quantity: SpinBox = $Body/Right/Batch/Quantity
+@onready var _maximum: Button = $Body/Right/Batch/Maximum
 @onready var _order_line: Label = $Body/Right/OrderLine
 @onready var _clear: Button = $Body/Right/SelectedHeader/ClearButton
 @onready var _chips: GridContainer = $Body/Right/SelectedScroll/ChipGrid
@@ -32,6 +35,11 @@ func _ready() -> void:
 	_list.item_clicked.connect(_on_item_clicked)
 	_list.item_activated.connect(_on_item_activated)
 	_list.item_selected.connect(_on_item_selected)
+	_recipe_list.item_selected.connect(_on_recipe_selected)
+	_quantity.value_changed.connect(func(_value: float) -> void:
+		_rebuild_chips()
+		_refresh_preview())
+	_maximum.pressed.connect(func() -> void: set_batch_quantity(_production.get_max_craftable(_selected)))
 	_redo.pressed.connect(redo_selected_product)
 	_clear.pressed.connect(func() -> void: clear_selection())
 	_craft.pressed.connect(func() -> void: submit())
@@ -53,6 +61,7 @@ func refresh(clear_result: bool = false) -> void:
 	_collect_available(_production.get_available_recipes())
 	_prune_selection()
 	_rebuild_list()
+	_rebuild_recipes()
 	_order_line.text = _production.get_order_text()
 	if clear_result:
 		_result.text = ""
@@ -62,6 +71,42 @@ func refresh(clear_result: bool = false) -> void:
 	_sync_selected_product()
 	_refreshing = false
 	_list.get_v_scroll_bar().set_deferred("value", scroll)
+
+func batch_quantity() -> int:
+	return int(_quantity.value)
+
+func set_batch_quantity(quantity: int) -> void:
+	_quantity.value = clampi(quantity, 1, maxi(1, _production.get_max_craftable(_selected)))
+
+## Replaces the tray in full, even if stock is insufficient, so shortages are visible.
+func select_recipe(product_id: String) -> bool:
+	if not is_instance_valid(_production) or not _is_product_available(product_id):
+		return false
+	var recipe := _production.get_recipe_by_product(product_id)
+	if recipe == null:
+		return false
+	_selected.assign(recipe.materials)
+	_quantity.set_value_no_signal(1)
+	_after_selection_change(true)
+	return true
+
+func _on_recipe_selected(index: int) -> void:
+	if not _refreshing:
+		select_recipe(str(_recipe_list.get_item_metadata(index)))
+
+func _rebuild_recipes() -> void:
+	var scroll := _recipe_list.get_v_scroll_bar().value
+	_recipe_list.clear()
+	for recipe: TeaRecipe in _production.get_available_recipes():
+		var maximum := _production.get_max_craftable(recipe.materials)
+		var index := _recipe_list.add_item("%s · %s" % [_production.get_item_name(recipe.product_id), "可做 %d 杯" % maximum if maximum > 0 else "材料不足或库存已满"])
+		_recipe_list.set_item_metadata(index, recipe.product_id)
+		if maximum == 0:
+			_recipe_list.set_item_custom_fg_color(index, COLOR_WARN)
+		_recipe_list.set_item_tooltip(index, " + ".join(_production.get_recipe_names(recipe.materials)))
+		if TeaRecipe.key_for(_selected) == recipe.get_material_key():
+			_recipe_list.select(index)
+	_recipe_list.get_v_scroll_bar().set_deferred("value", scroll)
 
 func add_material(id: String) -> bool:
 	if not is_instance_valid(_production) or id.is_empty():
@@ -123,7 +168,7 @@ func submit() -> Dictionary:
 	if not is_instance_valid(_production):
 		_last_result = {"ok": false, "code": "busy", "message": "制作系统尚未就绪。"}
 		return _last_result
-	craft_requested.emit(selected_materials())
+	craft_requested.emit(selected_materials(), batch_quantity())
 	if _last_result.is_empty():
 		_last_result = {"ok": false, "code": "busy", "message": "制作请求没有响应。"}
 	return _last_result
@@ -167,7 +212,7 @@ func grab_default_focus() -> void:
 
 func uses_native_gui_input() -> bool:
 	var focus := get_viewport().gui_get_focus_owner()
-	return is_instance_valid(focus) and (focus == _list or _list.is_ancestor_of(focus))
+	return is_instance_valid(focus) and (focus == _list or focus == _recipe_list or focus == _quantity or _quantity.is_ancestor_of(focus))
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_visible_in_tree() or not _list.has_focus():
@@ -206,6 +251,7 @@ func _activate_index(index: int) -> void:
 		add_material(id)
 
 func _after_selection_change(clear_result: bool) -> void:
+	_rebuild_recipes()
 	if clear_result:
 		_result.text = ""
 		_result.remove_theme_color_override("font_color")
@@ -287,7 +333,7 @@ func _make_chip(id: String, amount: int) -> Control:
 	var label := Label.new()
 	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	label.clip_text = true
-	label.text = "%s ×%d" % [_production.get_item_name(id), amount]
+	label.text = "%s ×%d / %d" % [_production.get_item_name(id), amount * int(_quantity.value), _production.get_stock(id)]
 	if _production.get_stock(id) < amount:
 		label.add_theme_color_override("font_color", COLOR_WARN)
 	var remove := Button.new()
@@ -305,18 +351,23 @@ func _refresh_preview() -> void:
 		_craft.disabled = true
 		_clear.disabled = true
 		return
-	var preview := _production.preview_craft(_selected)
+	var maximum := _production.get_max_craftable(_selected)
+	_quantity.max_value = maxi(1, maximum)
+	_quantity.editable = maximum > 0
+	_maximum.disabled = maximum < 1
+	var preview := _production.preview_craft(_selected, int(_quantity.value))
 	match str(preview.code):
 		"ok":
-			_preview.text = "→ %s%s" % [preview.product_name, "（计入当前订单）" if preview.advances_order else ""]
+			_preview.text = "→ %s ×%d%s" % [preview.product_name, int(_quantity.value), "（计入当前订单）" if preview.advances_order else ""]
 			_preview.add_theme_color_override("font_color", COLOR_OK)
 		"empty":
-			_preview.text = "从左侧点选原料，或在成品上重做"
+			_preview.text = "点击上方配方自动填料，或从左侧选择原料"
 			_preview.remove_theme_color_override("font_color")
 		_:
 			_preview.text = str(preview.message)
 			_preview.add_theme_color_override("font_color", COLOR_WARN)
-	_craft.disabled = _selected.is_empty()
+	_craft.disabled = preview.code != "ok"
+	_craft.text = "制作 %d 杯并入库" % int(_quantity.value)
 
 func _sync_selected_product() -> void:
 	if _selected_product_id.is_empty() or not is_instance_valid(_production):

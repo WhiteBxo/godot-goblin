@@ -40,6 +40,8 @@ func _run() -> void:
 	_check_atomic_failures()
 	_check_reentrancy()
 	_check_capacity()
+	_check_batch_crafting()
+	_check_batch_orders()
 	_check_order_entry()
 	await _check_locked_panel()
 	await _check_panel()
@@ -186,6 +188,57 @@ func _check_capacity() -> void:
 	production.free()
 	inventory.free()
 
+func _check_batch_crafting() -> void:
+	var inventory := WarehouseInventory.new()
+	var production := TeaProduction.new()
+	production.configure(inventory)
+	_check(production.get_max_craftable(PEARL) == 8, "Batch maximum uses the scarcest material")
+	var before := inventory.to_dict()
+	for quantity: int in [0, -1, WarehouseInventory.MAX_QUANTITY + 1]:
+		_check(production.craft(PEARL, quantity).code == "invalid_quantity", "Invalid batch count is rejected")
+	_check(inventory.to_dict() == before, "Invalid quantities never mutate stock")
+	var preview := production.preview_craft(PEARL, 9)
+	_check(preview.code == "missing_materials" and preview.missing.get("pearl") == 1, "Batch shortage reports the total missing amount")
+	_check(not production.craft(PEARL, 9).ok and inventory.to_dict() == before, "Oversized batch fails as a whole")
+	var observed: Array[bool] = []
+	var observer := func() -> void:
+		observed.append(inventory.get_stock("pearl_milk_tea") == 3 and inventory.get_stock("pearl") == 5 and production.get_completed_count() == 1)
+		observed.append(not production.craft(PEARL, 2).ok)
+	inventory.changed.connect(observer)
+	var result := production.craft(PEARL, 3)
+	inventory.changed.disconnect(observer)
+	_check(result.ok and result.quantity == 3, "A batch returns its committed quantity")
+	_check(observed == [true, true], "One inventory notification observes the full batch and rejects reentry")
+	_check(inventory.get_stock("black_tea") == 9 and inventory.get_stock("syrup") == 7, "Every batch ingredient is consumed exactly three times")
+	_check(production.get_completed_count() == 1, "Extra cups cannot skip the next different order")
+	_check(inventory.add_ingredient("pearl_milk_tea", WarehouseInventory.MAX_QUANTITY - 4), "Leave capacity for one cup")
+	_check(production.get_max_craftable(PEARL) == 1, "Batch maximum includes product capacity")
+	before = inventory.to_dict()
+	_check(production.craft(PEARL, 2).code == "capacity" and inventory.to_dict() == before, "Product overflow rejects the whole batch")
+	production.free()
+	inventory.free()
+
+func _check_batch_orders() -> void:
+	var menu := (load(BASIC_MENU) as TeaMenu).duplicate(true) as TeaMenu
+	menu.orders = [
+		{"id": "batch_1", "product_id": "pearl_milk_tea"},
+		{"id": "batch_2", "product_id": "pearl_milk_tea", "accepted_flag": "batch.accepted"},
+		{"id": "batch_3", "product_id": "pearl_milk_tea"},
+		{"id": "batch_4", "product_id": "plain_milk_tea"},
+	]
+	var state := FlagState.new()
+	var inventory := WarehouseInventory.new(menu)
+	var production := TeaProduction.new()
+	production.select_menu(menu)
+	production.configure(inventory, state)
+	_check(production.craft(PEARL, 3).ok and production.get_completed_count() == 1, "A batch stops order progress before an unaccepted order")
+	state.flags["batch.accepted"] = true
+	_check(production.craft(PEARL, 3).ok and production.get_completed_count() == 3, "A batch fulfills contiguous accepted matching orders")
+	_check(inventory.get_stock("pearl_milk_tea") == 6, "All cups enter stock even when only some count towards orders")
+	production.free()
+	inventory.free()
+	state.free()
+
 func _check_order_entry() -> void:
 	var inventory := WarehouseInventory.new()
 	var production := TeaProduction.new()
@@ -210,6 +263,7 @@ func _check_locked_panel() -> void:
 	var panel: CraftingPanel = load("res://src/UI/milk_tea/crafting_panel.tscn").instantiate()
 	root.add_child(panel)
 	panel.configure(production)
+	_check(not panel.select_recipe("day1_blood_milk_tea"), "Locked recipe cannot fill the tray")
 	_check(not _panel_has_row(panel, "day1_griffin_blood"), "Locked material never reaches the selectable list")
 	_check(not _panel_has_row(panel, "day1_blood_milk_tea"), "Locked product never reaches the owned list")
 	state.flags[BLOOD_FLAG] = true
@@ -274,6 +328,41 @@ func _check_panel() -> void:
 		await process_frame
 		await process_frame
 		_check(modal.get_node("Center/Panel").size.x <= size.x and modal.get_node("Center/Panel").size.y <= size.y, "Crafting panel fits the viewport: " + str(size))
+	root.size = Vector2i(1280, 720)
+	_check(panel.select_recipe("pearl_milk_tea"), "A known recipe auto-fills without owning a product")
+	_check(panel.selected_materials() == PEARL, "Recipe selection replaces all tray materials")
+	var recipe_list: ItemList = panel.get_node("Body/Right/RecipeList")
+	_check(recipe_list.item_count == main.get_tea_production().get_available_recipes().size(), "All unlocked recipes are visible on opening")
+	var quantity_input: LineEdit = panel.get_node("Body/Right/Batch/Quantity").get_line_edit()
+	quantity_input.text = "2"
+	quantity_input.text_changed.emit("2")
+	await process_frame
+	_check(panel.batch_quantity() == 2, "Typing a quantity updates the pending batch immediately")
+	panel.set_batch_quantity(3)
+	_check(panel.batch_quantity() == 3, "Batch quantity can be changed")
+	_check(panel.get_node("Body/Right/SelectedScroll").size.y >= 40, "The selected material tray stays readable")
+	var before_stock := main.get_warehouse_inventory().get_stock("pearl_milk_tea")
+	result = panel.submit()
+	_check(result.ok and main.get_warehouse_inventory().get_stock("pearl_milk_tea") == before_stock + 3, "UI forwards the entire batch through the host")
+	panel.select_recipe("plain_milk_tea")
+	panel.get_node("Body/Right/Batch/Maximum").pressed.emit()
+	_check(panel.batch_quantity() == main.get_tea_production().get_max_craftable(PLAIN), "Maximum button fills the available batch quantity")
+	recipe_list.item_selected.emit(0)
+	_check(panel.batch_quantity() == 1 and panel.selected_materials() == PEARL, "Switching recipes resets quantity and replaces the tray")
+	var inventory := main.get_warehouse_inventory()
+	inventory.try_consume({"pearl": inventory.get_stock("pearl")})
+	_check(panel.select_recipe("pearl_milk_tea") and panel.selected_materials() == PEARL, "Missing-stock recipe stays selectable with a complete tray")
+	_check(not panel.is_craft_enabled() and "原料不足" in panel.preview_text(), "Missing ingredients disable submission with a shortage explanation")
+	inventory.add_ingredient("pearl", 4)
+	_check(panel.is_craft_enabled(), "Restocking refreshes a selected recipe immediately")
+	panel.set_batch_quantity(3)
+	if "--capture" in OS.get_cmdline_user_args() and DisplayServer.get_name() != "headless":
+		for size: Vector2i in [Vector2i(640, 360), Vector2i(1280, 720)]:
+			root.size = size
+			await process_frame
+			await process_frame
+			await RenderingServer.frame_post_draw
+			root.get_texture().get_image().save_png("res://.godot/tea_batch_%d.png" % size.x)
 	ui.close()
 	main.queue_free()
 	await process_frame

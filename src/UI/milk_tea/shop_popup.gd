@@ -2,7 +2,7 @@ class_name ShopPopup
 extends Control
 
 signal close_requested
-signal craft_requested(materials: Array[String])
+signal craft_requested(materials: Array[String], quantity: int)
 
 const LAYOUT_NORMAL: Dictionary = {"center": 40, "margin_x": 24, "margin_y": 20, "gap": 12, "title": 24, "close": 32}
 const LAYOUT_CRAFTING: Dictionary = {"center": 16, "margin_x": 12, "margin_y": 10, "gap": 8, "title": 18, "close": 26}
@@ -108,7 +108,7 @@ func configure_production(production: TeaProduction) -> void:
 		content.add_child(_crafting_panel)
 		content.move_child(_crafting_panel, $Center/Panel/Margin/Content/Close.get_index())
 		_crafting_panel.craft_requested.connect(
-			func(materials: Array[String]) -> void: craft_requested.emit(materials))
+			func(materials: Array[String], quantity: int) -> void: craft_requested.emit(materials, quantity))
 	_crafting_panel.configure(production)
 	_crafting_panel.hide()
 

@@ -133,15 +133,19 @@ func get_recipe_names(recipe: Array) -> PackedStringArray:
 	return names
 
 ## Pure preview used by both the UI and craft(); never mutates stock or order progress.
-func preview_craft(materials: Array) -> Dictionary:
+func preview_craft(materials: Array, quantity: int = 1) -> Dictionary:
 	var normalized: Array[String] = []
 	for id: Variant in materials:
 		if id is String and not id.is_empty():
 			normalized.append(id)
 	var result := {"code": "busy", "recipe_id": "", "product_id": "", "product_name": "",
-		"materials": normalized, "missing": {}, "advances_order": false, "order_id": "",
+		"materials": normalized, "quantity": quantity, "missing": {}, "advances_order": false, "order_id": "",
 		"message": "制作系统尚未就绪。"}
 	if not is_instance_valid(_inventory):
+		return result
+	if quantity < 1 or quantity > WarehouseInventory.MAX_QUANTITY:
+		result.code = "invalid_quantity"
+		result.message = "制作杯数必须为 1 至 %d。" % WarehouseInventory.MAX_QUANTITY
 		return result
 	if normalized.is_empty():
 		result.code = "empty"
@@ -165,7 +169,7 @@ func preview_craft(materials: Array) -> Dictionary:
 	var costs := _counts(normalized)
 	var missing: Dictionary = {}
 	for id: String in costs:
-		var lack: int = costs[id] - _inventory.get_stock(id)
+		var lack: int = int(costs[id]) * quantity - _inventory.get_stock(id)
 		if lack > 0:
 			missing[id] = lack
 	result.code = "ok"
@@ -180,16 +184,31 @@ func preview_craft(materials: Array) -> Dictionary:
 		result.missing = missing
 		result.message = "原料不足：%s。未消耗库存。" % _missing_text(missing)
 		return result
-	result.message = "%s制作完成，已放入库存。" % result.product_name
+	if _inventory.get_stock(recipe.product_id) > WarehouseInventory.MAX_QUANTITY - quantity:
+		result.code = "capacity"
+		result.message = "成品库存容量不足。未消耗库存。"
+		return result
+	result.message = "%s ×%d 制作完成，已放入库存。" % [result.product_name, quantity]
 	if result.advances_order:
-		result.message = "%s制作完成，已放入库存并计入当前订单。" % result.product_name
+		result.message = "%s ×%d 制作完成，已放入库存并计入当前订单。" % [result.product_name, quantity]
 	return result
 
+## Capacity is limited by every ingredient and by the product inventory ceiling.
+func get_max_craftable(materials: Array) -> int:
+	var preview := preview_craft(materials)
+	if preview.code != "ok":
+		return 0
+	var maximum: int = WarehouseInventory.MAX_QUANTITY - get_stock(preview.product_id)
+	var costs := _counts(materials)
+	for id: String in costs:
+		maximum = mini(maximum, int(get_stock(id) / int(costs[id])))
+	return maximum
+
 ## Free crafting: the only commit path for both the crafting panel and make_drink().
-func craft(materials: Array) -> Dictionary:
+func craft(materials: Array, quantity: int = 1) -> Dictionary:
 	if _submitting or not is_instance_valid(_inventory) or _inventory.is_session_locked():
 		return {"ok": false, "code": "busy", "message": "制作系统尚未就绪或正在制作。"}
-	var preview := preview_craft(materials)
+	var preview := preview_craft(materials, quantity)
 	if preview.code != "ok":
 		# Return the whole preview so callers keep the details, e.g. the missing
 		# amounts, instead of only the code.
@@ -197,14 +216,19 @@ func craft(materials: Array) -> Dictionary:
 		rejected.ok = false
 		return rejected
 	var costs := _counts(preview.materials)
-	var advances: bool = preview.advances_order
+	for id: String in costs:
+		costs[id] *= quantity
 	_submitting = true
-	# Progress must be visible to listeners during the synchronous inventory notification.
-	if advances:
+	var completed_before := _completed
+	# Count only the contiguous, accepted orders fulfilled by this batch.
+	for _cup in range(mini(quantity, _menu.orders.size() - _completed)):
+		var order := get_order()
+		if order.is_empty() or str(order.get("product_id", "")) != preview.product_id:
+			break
 		_completed += 1
-	if not _inventory.try_exchange(costs, {preview.product_id: 1}):
-		if advances:
-			_completed -= 1
+	# Publish complete progress together with the single inventory exchange.
+	if not _inventory.try_exchange(costs, {preview.product_id: quantity}):
+		_completed = completed_before
 		_submitting = false
 		return {"ok": false, "code": "capacity", "message": "原料不足或成品库存已满。未消耗库存。"}
 	changed.emit()

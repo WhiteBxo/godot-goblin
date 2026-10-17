@@ -76,6 +76,8 @@ func _build_containers(theme: Theme) -> void:
 	theme.set_type_variation("SunkenPanel", "PanelContainer")
 	theme.set_stylebox("panel", "SunkenPanel",
 		_flat(T.SUNKEN, T.BORDER_SOFT, 1, T.RADIUS_BUTTON, 6, 6, 6, 6))
+	theme.set_type_variation("ShadePanel", "Panel")
+	theme.set_stylebox("panel", "ShadePanel", _flat(T.SHADE, Color.TRANSPARENT, 0, 0))
 
 	theme.set_constant("margin_left", "MarginContainer", T.SPACE_3)
 	theme.set_constant("margin_top", "MarginContainer", T.SPACE_2)

@@ -201,6 +201,9 @@ func _create_dialogue_system() -> void:
 	$Systems.add_child(_actor_director)
 	_actor_director.configure($World/EntityRoot)
 	_actor_director.actor_register(&"player", get_player() as PlayerController)
+	for entity in $World/EntityRoot.get_children():
+		if entity is SettlementCharacter:
+			_actor_director.actor_register(entity.actor_id, entity)
 	_actor_director.actor_control_changed.connect(_on_actor_control_changed)
 	var ui: DialogueUI = preload("res://src/UI/dialogue/dialogue_ui.tscn").instantiate()
 	$PopupLayer.add_child(ui)

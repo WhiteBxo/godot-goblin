@@ -1,0 +1,462 @@
+[
+  {
+    "id": "fat_goblin",
+    "display_name": "胖哥布林",
+    "role": "主角的委托人，贪吃且善于盘算。",
+    "side_faces_left": false,
+    "animations": {
+      "run_down": {
+        "source": "idle_sheet_02",
+        "fps": 8,
+        "first_only": true,
+        "frame_count": 16
+      },
+      "idle_down": {
+        "source": "idle_sheet_02",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16
+      },
+      "run_right": {
+        "source": "idle_sheet_01",
+        "fps": 8,
+        "first_only": true,
+        "frame_count": 16
+      },
+      "idle_right": {
+        "source": "idle_sheet_01",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16
+      },
+      "run_left": {
+        "source": "idle_sheet_01",
+        "fps": 8,
+        "first_only": true,
+        "frame_count": 16
+      },
+      "idle_left": {
+        "source": "idle_sheet_01",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16
+      },
+      "run_up": {
+        "source": "idle_sheet_02",
+        "fps": 8,
+        "first_only": true,
+        "frame_count": 16
+      },
+      "idle_up": {
+        "source": "idle_sheet_02",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16
+      },
+      "emote_laugh": {
+        "source": "idle_sheet_03",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16
+      }
+    }
+  },
+  {
+    "id": "common_goblin",
+    "display_name": "普通哥布林",
+    "role": "聚落居民与奶茶店背景顾客。",
+    "side_faces_left": true,
+    "animations": {
+      "run_down": {
+        "source": "walk_sheet_05",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 10
+      },
+      "idle_down": {
+        "source": "idle_sheet",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16
+      },
+      "run_right": {
+        "source": "walk_sheet_02",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 16
+      },
+      "idle_right": {
+        "source": "walk_sheet_02",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 16
+      },
+      "run_left": {
+        "source": "walk_sheet_02",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 16
+      },
+      "idle_left": {
+        "source": "walk_sheet_02",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 16
+      },
+      "run_up": {
+        "source": "walk_sheet_03",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 10
+      },
+      "idle_up": {
+        "source": "walk_sheet_03",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 10
+      }
+    }
+  },
+  {
+    "id": "guard",
+    "display_name": "守卫",
+    "role": "长老居所守卫；可供醉酒守卫剧情使用。",
+    "side_faces_left": false,
+    "animations": {
+      "run_down": {
+        "source": "walk_sheet_02",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 15
+      },
+      "idle_down": {
+        "source": "walk_sheet_02",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 15
+      },
+      "run_right": {
+        "source": "walk_sheet",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 15
+      },
+      "idle_right": {
+        "source": "walk_sheet",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 15
+      },
+      "run_left": {
+        "source": "walk_sheet",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 15
+      },
+      "idle_left": {
+        "source": "walk_sheet",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 15
+      },
+      "run_up": {
+        "source": "walk_sheet_03",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 13
+      },
+      "idle_up": {
+        "source": "walk_sheet_03",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 13
+      }
+    }
+  },
+  {
+    "id": "guard_captain",
+    "display_name": "守卫长",
+    "role": "聚落武装人员；尚无明确专属剧情。",
+    "side_faces_left": true,
+    "animations": {
+      "run_down": {
+        "source": "walk_sheet_03",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 16
+      },
+      "idle_down": {
+        "source": "idle_sheet",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16
+      },
+      "run_right": {
+        "source": "walk_sheet_04",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 14
+      },
+      "idle_right": {
+        "source": "walk_sheet_04",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 14
+      },
+      "run_left": {
+        "source": "walk_sheet_04",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 14
+      },
+      "idle_left": {
+        "source": "walk_sheet_04",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 14
+      },
+      "run_up": {
+        "source": "walk_sheet_05",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 10
+      },
+      "idle_up": {
+        "source": "walk_sheet_05",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 10
+      },
+      "idle_variant": {
+        "source": "idle_sheet",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16
+      }
+    }
+  },
+  {
+    "id": "elder",
+    "display_name": "长老",
+    "role": "主持格里芬仪式、掌管格里芬之血的权威代表。",
+    "side_faces_left": true,
+    "animations": {
+      "run_down": {
+        "source": "walk_sheet_02",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 11
+      },
+      "idle_down": {
+        "source": "idle_sheet_02",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16
+      },
+      "run_right": {
+        "source": "walk_sheet_03",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 12
+      },
+      "idle_right": {
+        "source": "idle_sheet_03",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16
+      },
+      "run_left": {
+        "source": "walk_sheet_03",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 12
+      },
+      "idle_left": {
+        "source": "idle_sheet_03",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16
+      },
+      "run_up": {
+        "source": "walk_sheet",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 16
+      },
+      "idle_up": {
+        "source": "walk_sheet",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 16
+      }
+    }
+  },
+  {
+    "id": "chef",
+    "display_name": "厨师",
+    "role": "厨房备料区域人物；尚无明确专属剧情。",
+    "side_faces_left": false,
+    "animations": {
+      "run_down": {
+        "source": "walk_sheet_03",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 14
+      },
+      "idle_down": {
+        "source": "idle_sheet",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16
+      },
+      "run_right": {
+        "source": "walk_sheet_05",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 14
+      },
+      "idle_right": {
+        "source": "walk_sheet_05",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 14
+      },
+      "run_left": {
+        "source": "walk_sheet_05",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 14
+      },
+      "idle_left": {
+        "source": "walk_sheet_05",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 14
+      },
+      "run_up": {
+        "source": "walk_sheet_02",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 10
+      },
+      "idle_up": {
+        "source": "walk_sheet_02",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 10
+      }
+    }
+  },
+  {
+    "id": "tavern",
+    "display_name": "酒馆人物",
+    "role": "酒馆区域人物，可作为后续酒水线索的表现角色。",
+    "side_faces_left": false,
+    "animations": {
+      "run_down": {
+        "source": "walk_sheet",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 9
+      },
+      "idle_down": {
+        "source": "idle_sheet",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16
+      },
+      "run_right": {
+        "source": "walk_sheet_02",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 13
+      },
+      "idle_right": {
+        "source": "walk_sheet_02",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 13
+      },
+      "run_left": {
+        "source": "walk_sheet_02",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 13
+      },
+      "idle_left": {
+        "source": "walk_sheet_02",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 13
+      },
+      "run_up": {
+        "source": "walk_sheet_04",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 10
+      },
+      "idle_up": {
+        "source": "walk_sheet_04",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 10
+      }
+    }
+  },
+  {
+    "id": "casino",
+    "display_name": "赌场人物",
+    "role": "赌场区域人物，可作为后续食材线索的表现角色。",
+    "side_faces_left": false,
+    "animations": {
+      "run_down": {
+        "source": "walk_sheet_03",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 9
+      },
+      "idle_down": {
+        "source": "idle_sheet",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16
+      },
+      "run_right": {
+        "source": "walk_sheet_02",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 14
+      },
+      "idle_right": {
+        "source": "walk_sheet_02",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 14
+      },
+      "run_left": {
+        "source": "walk_sheet_02",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 14
+      },
+      "idle_left": {
+        "source": "walk_sheet_02",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 14
+      },
+      "run_up": {
+        "source": "walk_sheet",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 10
+      },
+      "idle_up": {
+        "source": "walk_sheet",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 10
+      }
+    }
+  }
+]

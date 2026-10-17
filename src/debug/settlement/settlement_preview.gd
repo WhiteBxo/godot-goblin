@@ -2,9 +2,11 @@ extends Node
 ## Map inspection stays outside the production map and story systems.
 
 const LAYOUT_PATH := "res://src/levels/settlement/settlement_layout.json"
+const NIGHT_FLAG := "world.phase.night"
 var _game: MainGame
 var _level: SettlementMap
 var _player: ShopPlayer
+var _state: Node
 var _overview_camera: Camera2D
 var _overview := false
 var _labels: Node2D
@@ -25,6 +27,7 @@ func _ready() -> void:
 		return
 	_level = _game.get_active_level() as SettlementMap
 	_player = _game.get_player() as ShopPlayer
+	_state = get_node_or_null("/root/GameState")
 	_labels = Node2D.new()
 	_labels.name = "OverviewLabels"
 	_labels.z_index = 100
@@ -93,7 +96,8 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	if is_instance_valid(_status):
-		_status.text = "%s  ·  WASD 移动 / E 查看\nM 全图 / 跟随  ·  Tab 切换动线  ·  %s" % [_level.get_zone_at(_player.global_position), _route_names[_route_index]]
+		_status.text = "%s  ·  WASD 移动 / E 查看\nM 全图 / 跟随  ·  Tab 切换动线  ·  F4 %s  ·  %s" % [
+			_level.get_zone_at(_player.global_position), _phase_text(), _route_names[_route_index]]
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_echo():
@@ -109,6 +113,17 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("debug_settlement_routes"):
 		set_route((_route_index + 1) % 4)
 		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("debug_toggle_night"):
+		toggle_night()
+		get_viewport().set_input_as_handled()
+
+## Debug-only fact toggle; the game has no day/phase state machine yet.
+func toggle_night() -> void:
+	if is_instance_valid(_state):
+		_state.set_flag(NIGHT_FLAG, not _state.get_flag(NIGHT_FLAG))
+
+func _phase_text() -> String:
+	return "夜晚" if is_instance_valid(_state) and _state.get_flag(NIGHT_FLAG) else "白天"
 
 func _exit_tree() -> void:
 	for node: Node in [_labels, _routes, _overview_camera, _panel]:

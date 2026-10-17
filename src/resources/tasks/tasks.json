@@ -43,6 +43,56 @@
           "syrup": 1
         }
       }
+    },
+    {
+      "id": "tavern.insomnia_order",
+      "type": "commission",
+      "title": "酒馆的醒神菇委托",
+      "description": "酒馆人物想要三朵醒神菇。夜里到聚落各处的夜光菌丛采集，再回来交付。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "world.phase.night"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "task.tavern.insomnia.active"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "tavern.insomnia.delivered"
+      },
+      "objectives": [
+        {
+          "id": "gather_mushrooms",
+          "text": "采集醒神菇",
+          "complete_when": {
+            "type": "variable_at_least",
+            "key": "gather.total.insomnia_mushroom",
+            "value": 3
+          }
+        },
+        {
+          "id": "deliver_mushrooms",
+          "text": "把醒神菇交给酒馆人物",
+          "complete_when": {
+            "type": "flag",
+            "key": "tavern.insomnia.delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "order_insomnia_01",
+        "items": {
+          "insomnia_mushroom": 3
+        },
+        "target_object_id": "tavern"
+      },
+      "rewards": {
+        "text": "糖浆 × 2（占位）",
+        "items": {
+          "syrup": 2
+        }
+      }
     }
   ]
 }

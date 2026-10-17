@@ -23,6 +23,7 @@
 [ext_resource type="PackedScene" path="res://src/levels/settlement/districts/15_workshop.tscn" id="21_ytoox"]
 [ext_resource type="PackedScene" path="res://src/gameplay/interaction/interaction_point.tscn" id="22_trnvy"]
 [ext_resource type="Script" path="res://src/gameplay/interaction/interaction_point.gd" id="23_8o6tw"]
+[ext_resource type="PackedScene" path="res://src/gameplay/gathering/gather_point.tscn" id="24_gather"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yektj"]
 size = Vector2(1587.1873, 40)
@@ -4694,6 +4695,88 @@ description = "珍珠奶茶 · 配方
 红茶 × 1 + 牛奶 × 1 + 珍珠 × 1
 
 加入茶底和牛奶，放入珍珠、糖浆后摇匀封杯。"
+
+[node name="GatherPoints" type="Node2D" parent="."]
+
+[node name="NightGather0" type="Area2D" parent="GatherPoints" instance=ExtResource("24_gather")]
+position = Vector2(1710, 4120)
+interaction_id = &"night_gather_0"
+display_name = "夜光菌丛"
+description = "湿润的菌丛在夜色里泛着微光。按 E 采集醒神菇。"
+item_id = "insomnia_mushroom"
+refresh_mode = "daily"
+required_flag = "world.phase.night"
+feedback_rect = Rect2(-28, -28, 56, 56)
+
+[node name="NightGather1" type="Area2D" parent="GatherPoints" instance=ExtResource("24_gather")]
+position = Vector2(1750, 5900)
+interaction_id = &"night_gather_1"
+display_name = "夜光菌丛"
+description = "湿润的菌丛在夜色里泛着微光。按 E 采集醒神菇。"
+item_id = "insomnia_mushroom"
+refresh_mode = "daily"
+required_flag = "world.phase.night"
+feedback_rect = Rect2(-28, -28, 56, 56)
+
+[node name="NightGather2" type="Area2D" parent="GatherPoints" instance=ExtResource("24_gather")]
+position = Vector2(2920, 5520)
+interaction_id = &"night_gather_2"
+display_name = "夜光菌丛"
+description = "湿润的菌丛在夜色里泛着微光。按 E 采集醒神菇。"
+item_id = "insomnia_mushroom"
+refresh_mode = "daily"
+required_flag = "world.phase.night"
+feedback_rect = Rect2(-28, -28, 56, 56)
+
+[node name="NightGather3" type="Area2D" parent="GatherPoints" instance=ExtResource("24_gather")]
+position = Vector2(2990, 3610)
+interaction_id = &"night_gather_3"
+display_name = "夜光菌丛"
+description = "湿润的菌丛在夜色里泛着微光。按 E 采集醒神菇。"
+item_id = "insomnia_mushroom"
+refresh_mode = "daily"
+required_flag = "world.phase.night"
+feedback_rect = Rect2(-28, -28, 56, 56)
+
+[node name="NightGather4" type="Area2D" parent="GatherPoints" instance=ExtResource("24_gather")]
+position = Vector2(7490, 5250)
+interaction_id = &"night_gather_4"
+display_name = "夜光菌丛"
+description = "湿润的菌丛在夜色里泛着微光。按 E 采集醒神菇。"
+item_id = "insomnia_mushroom"
+refresh_mode = "daily"
+required_flag = "world.phase.night"
+feedback_rect = Rect2(-28, -28, 56, 56)
+
+[node name="NightGather5" type="Area2D" parent="GatherPoints" instance=ExtResource("24_gather")]
+position = Vector2(6110, 7070)
+interaction_id = &"night_gather_5"
+display_name = "夜光菌丛"
+description = "湿润的菌丛在夜色里泛着微光。按 E 采集醒神菇。"
+item_id = "insomnia_mushroom"
+refresh_mode = "daily"
+required_flag = "world.phase.night"
+feedback_rect = Rect2(-28, -28, 56, 56)
+
+[node name="NightGather6" type="Area2D" parent="GatherPoints" instance=ExtResource("24_gather")]
+position = Vector2(7520, 1800)
+interaction_id = &"night_gather_6"
+display_name = "夜光菌丛"
+description = "湿润的菌丛在夜色里泛着微光。按 E 采集醒神菇。"
+item_id = "insomnia_mushroom"
+refresh_mode = "once"
+required_flag = "world.phase.night"
+feedback_rect = Rect2(-28, -28, 56, 56)
+
+[node name="NightGather7" type="Area2D" parent="GatherPoints" instance=ExtResource("24_gather")]
+position = Vector2(1160, 7280)
+interaction_id = &"night_gather_7"
+display_name = "夜光菌丛"
+description = "湿润的菌丛在夜色里泛着微光。按 E 采集醒神菇。"
+item_id = "insomnia_mushroom"
+refresh_mode = "once"
+required_flag = "world.phase.night"
+feedback_rect = Rect2(-28, -28, 56, 56)
 
 [node name="StoryAnchors" type="Node2D" parent="." unique_id=469995804]
 

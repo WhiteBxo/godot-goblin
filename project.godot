@@ -84,6 +84,11 @@ debug_settlement_routes={
 "events": [Object(InputEventKey,"physical_keycode":4194306)]
 }
 
+debug_toggle_night={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"physical_keycode":4194335)]
+}
+
 [physics]
 
 3d/physics_engine="Jolt Physics"

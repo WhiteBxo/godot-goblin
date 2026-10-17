@@ -24,6 +24,7 @@
 [ext_resource type="PackedScene" path="res://src/gameplay/interaction/interaction_point.tscn" id="22_trnvy"]
 [ext_resource type="Script" path="res://src/gameplay/interaction/interaction_point.gd" id="23_8o6tw"]
 [ext_resource type="PackedScene" path="res://src/gameplay/gathering/gather_point.tscn" id="24_gather"]
+[ext_resource type="Script" path="res://src/gameplay/story_interaction/story_interaction_point.gd" id="25_story"]
 
 [ext_resource type="Script" path="res://src/core/navigation/scene_exit.gd" id="travel_exit"]
 [ext_resource type="Script" path="res://src/core/navigation/scene_entrance.gd" id="travel_entrance"]
@@ -4699,6 +4700,48 @@ description = "珍珠奶茶 · 配方
 红茶 × 1 + 牛奶 × 1 + 珍珠 × 1
 
 加入茶底和牛奶，放入珍珠、糖浆后摇匀封杯。"
+
+[node name="day1_elder_document" type="Area2D" parent="InteractionPoints" instance=ExtResource("22_trnvy")]
+position = Vector2(5990, 1170)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("25_story")
+kind = 1
+interaction_id = &"day1_elder_document"
+entry_id = &"day1_elder_document"
+success_flags = Array[StringName](["day1.s05.document_read"])
+required_flags = Array[StringName](["world.phase.night", "day1.s04.commission_accepted"])
+required_stages = Array[String](["day1.s05"])
+display_name = "古文书"
+description = "古文书 · 残页
+字迹被反复涂抹，只剩两个词还能辨认：黄金乡、变量。"
+
+[node name="day1_blood_storage" type="Area2D" parent="InteractionPoints" instance=ExtResource("22_trnvy")]
+position = Vector2(6800, 1400)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("25_story")
+kind = 0
+interaction_id = &"day1_blood_storage"
+entry_id = &"day1_blood_storage"
+success_flags = Array[StringName](["day1.s05.blood_acquired"])
+item_id = "day1_griffin_blood"
+amount = 1
+required_flags = Array[StringName](["world.phase.night", "day1.s04.commission_accepted"])
+required_stages = Array[String](["day1.s05"])
+display_name = "圣物储存柜"
+description = "带锁的柜格，里面只有一支封蜡小瓶。标签写着：格里芬之血。"
+
+[node name="drunken_guard" parent="InteractionPoints" instance=ExtResource("22_trnvy")]
+position = Vector2(4300, 6250)
+script = ExtResource("25_story")
+kind = 1
+interaction_id = &"drunken_guard"
+entry_id = &"day1_drunken_guard"
+required_flags = Array[StringName](["world.phase.night", "day1.s04.commission_accepted"])
+required_stages = Array[String](["day1.s05"])
+display_name = "醉酒的守卫"
+description = "醉酒的守卫"
 
 [node name="GatherPoints" type="Node2D" parent="."]
 

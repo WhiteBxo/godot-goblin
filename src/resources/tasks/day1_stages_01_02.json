@@ -283,6 +283,40 @@
           "strange_coin": 1
         }
       }
+    },
+    {
+      "id": "day1.s06.blood_drink",
+      "type": "main",
+      "title": "格里芬之血特调 → 胖哥布林",
+      "description": "制作格里芬之血特调，并将成品交给胖哥布林。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day1.s06.blood_drink_available"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day1.s06.blood_drink_available"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day1.s06.blood_drink_delivered"
+      },
+      "objectives": [
+        {
+          "id": "deliver",
+          "text": "制作特调并交付胖哥布林",
+          "complete_when": {
+            "type": "flag",
+            "key": "day1.s06.blood_drink_delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day1_s06_blood_drink",
+        "product_id": "day1_blood_milk_tea",
+        "target_object_id": "fat_goblin",
+        "accepted_flag": "day1.task.blood_drink.active"
+      }
     }
   ]
 }

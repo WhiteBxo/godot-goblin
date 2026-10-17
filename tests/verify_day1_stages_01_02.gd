@@ -114,9 +114,10 @@ func _make() -> void:
 	if order.is_empty():
 		return
 	await _interact("tea_station")
-	var panel: TeaProductionPanel = _game.get_node("PopupLayer/Modal/Center/Panel/Margin/Content/ProductionPanel")
+	var panel: CraftingPanel = _game.get_node("PopupLayer/Modal/Center/Panel/Margin/Content/ProductionPanel")
 	var before := _state.to_dict()
-	panel.get_child(2).pressed.emit()
+	panel.clear_selection()
+	panel.submit()
 	check(_state.to_dict() == before, "Incomplete recipe changes no participant")
 	if production.get_completed_count() == 0:
 		_game.get_shop_ui().close()
@@ -124,25 +125,22 @@ func _make() -> void:
 		check(_state.to_dict() == before, "Closing an unfinished production screen never completes an order")
 		await _interact("tea_station")
 		panel = _game.get_node("PopupLayer/Modal/Center/Panel/Margin/Content/ProductionPanel")
-	for index in range(panel._selectors.size()):
-		var selector: OptionButton = panel._selectors[index]
-		selector.select(0)
-		for option in range(selector.item_count):
-			if str(selector.get_item_metadata(option)) in order.recipe:
-				selector.select(option)
+	panel.clear_selection()
+	for id: String in order.recipe:
+		panel.add_material(id)
 	if production.get_completed_count() == 0:
 		var ingredient := "syrup"
 		var stock := production.get_stock(ingredient)
 		_game.get_warehouse_inventory().try_consume({ingredient: stock})
 		before = _state.to_dict()
-		panel.get_child(2).pressed.emit()
+		panel.submit()
 		check(_state.to_dict() == before, "Correct recipe with missing ingredients changes no participant")
 		_game.get_warehouse_inventory().add_ingredient(ingredient, stock)
 	var sound_handle: int = _game.get_audio_manager().get("_next_handle")
 	var notices: Array[bool] = []
 	var observe := func() -> void: notices.append(_state.get_variable("shop.drinks_made") == production.get_completed_count())
 	_state.state_changed.connect(observe)
-	panel.get_child(2).pressed.emit()
+	panel.submit()
 	_state.state_changed.disconnect(observe)
 	check(not notices.is_empty() and not notices.has(false), "Craft notification snapshots contain production and task progress together")
 	check(_game.get_audio_manager().get("_next_handle") == sound_handle + 1, "Each successful production triggers exactly one pour sound")

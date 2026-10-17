@@ -25,6 +25,9 @@ var _task_catalog: TaskCatalog
 var _task_delivery: TaskDelivery
 var _gathering_service: GatheringService
 var _npc_points: Dictionary = {}
+var _story_points: Dictionary[StringName, StoryInteractionPoint] = {}
+var _pending_story_document: StoryInteractionPoint
+var _world_controller: Day1WorldController
 var _dialogue_manager: DialogueManager
 var _story_director: StoryDirector
 var _actor_director: ActorDirector
@@ -44,6 +47,8 @@ var _debug_panel: DeveloperPanel
 
 func _ready() -> void:
 	DebugRuntime.apply_release_policy(get_tree())
+	if get_node("/root/GameState").get_business_profile() == "day1":
+		day1_story_enabled = true
 	if day1_story_enabled:
 		var profile_error: Error = get_node("/root/GameState").select_business_profile("day1")
 		if profile_error == ERR_ALREADY_IN_USE and get_node("/root/GameState").get_business_profile() == "tutorial":
@@ -97,6 +102,7 @@ func _ready() -> void:
 			var setup_error := _day1_controller.configure(self)
 			if setup_error != OK:
 				push_error("Day 1 initialization failed (%d)" % setup_error)
+		_create_world_controller()
 		_create_scene_travel(_shop_level.get_scene_exits())
 		_create_debug_components()
 		return
@@ -272,6 +278,8 @@ func _create_scene_travel(exits: Array[SceneExit]) -> void:
 		_scene_travel.begin_arrival()
 
 func _can_leave_scene() -> bool:
+	if _shop_level != null and not Day1Access.can_leave_shop(get_node("/root/GameState")):
+		return false
 	var owns_lock := is_instance_valid(_scene_travel) and _scene_travel.is_busy()
 	var movement_available := _movement_before_dialogue if owns_lock else _shop_player.movement_enabled
 	return (not get_tree().paused and not _ui_manager.has_modal() and movement_available
@@ -301,6 +309,13 @@ func _initialize_settlement() -> void:
 	_create_gathering(gather_points)
 	_shop_ui.bind_manager(_ui_manager)
 	var points := _with_npc_points(_settlement_level.get_interaction_points())
+	for point: InteractionPoint in points:
+		if point is StoryInteractionPoint:
+			if _story_points.has(point.interaction_id):
+				push_error("Duplicate story interaction ID: " + String(point.interaction_id))
+				point.interaction_enabled = false
+			else:
+				_story_points[point.interaction_id] = point
 	points.append_array(_settlement_level.get_scene_exits())
 	for point: GatherPoint in gather_points:
 		points.append(point)
@@ -309,7 +324,10 @@ func _initialize_settlement() -> void:
 	$Systems.add_child(_shop_interaction)
 	_shop_interaction.configure(_shop_player, _shop_ui, points, _route_story_interaction)
 	_create_dialogue_system()
+	for marker: Marker2D in _settlement_level.get_story_positions():
+		_actor_director.register_position(StringName(marker.name), marker)
 	_create_gameplay_bridge(false)
+	_create_world_controller()
 	_create_scene_travel(_settlement_level.get_scene_exits())
 	if DebugRuntime.is_enabled():
 		var preview := Node.new()
@@ -415,6 +433,17 @@ func _route_story_interaction(id: StringName) -> Error:
 		var error := _story_director.request_interaction(String(id))
 		if error != ERR_DOES_NOT_EXIST:
 			return error
+	if _story_points.has(id):
+		var point := _story_points[id]
+		if not point.is_available():
+			return ERR_UNAVAILABLE
+		_shop_ui.open(point)
+		if point.kind == StoryInteractionPoint.Kind.DOCUMENT:
+			_pending_story_document = point
+			return OK
+		var result := point.resolve()
+		_shop_ui.show_interaction_result(result.message)
+		return OK if result.ok else ERR_UNAVAILABLE
 	if _scene_exits.has(id):
 		return _scene_travel.request_exit(_scene_exits[id])
 	if is_instance_valid(_gathering_service) and _gathering_service.has_point(id):
@@ -430,6 +459,25 @@ func _route_story_interaction(id: StringName) -> Error:
 		_shop_ui.show_interaction_result(delivery_result.message)
 		return OK if delivery_result.ok else ERR_UNAVAILABLE
 	return ERR_DOES_NOT_EXIST
+
+func _create_world_controller() -> void:
+	_world_controller = Day1WorldController.new()
+	$Systems.add_child(_world_controller)
+	var actors: Array[SettlementCharacter] = []
+	for entity: Node in $World/EntityRoot.get_children():
+		if entity is SettlementCharacter:
+			actors.append(entity)
+	_world_controller.configure(get_node("/root/GameState"), get_active_level(), actors, _npc_points)
+	_shop_ui.closed.connect(_complete_story_document)
+	# Only a successfully instantiated destination can publish an arrival fact.
+	if _shop_level != null and _arrival_entrance == &"street_door":
+		_world_controller.record_shop_arrival()
+
+func _complete_story_document() -> void:
+	var point := _pending_story_document
+	_pending_story_document = null
+	if is_instance_valid(point):
+		point.resolve()
 
 func _create_dialogue_system() -> void:
 	_actor_director = ActorDirector.new()

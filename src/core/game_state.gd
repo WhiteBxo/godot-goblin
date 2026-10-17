@@ -135,6 +135,52 @@ func commit_delivery(costs: Dictionary, rewards: Dictionary, money: int, facts: 
 	_business_transaction = false
 	return error
 
+## One-shot investigation/pickup. Validate and prepare before publishing any fact.
+func commit_story_interaction(receipt: String, items: Dictionary, facts: Dictionary) -> Error:
+	if _session_busy():
+		return ERR_BUSY
+	if not _is_namespaced_key(receipt):
+		return ERR_INVALID_DATA
+	if get_flag(receipt):
+		return ERR_ALREADY_EXISTS
+	for key: Variant in facts:
+		if not key is String or not _is_namespaced_key(key) or not facts[key] is bool:
+			return ERR_INVALID_DATA
+	_ensure_business()
+	var draft := _economy.prepare_delivery({}, items, 0, "story:" + receipt)
+	if draft.is_empty():
+		return ERR_INVALID_DATA
+	var before := _economy.to_dict()
+	_business_transaction = true
+	_replacing = true
+	var error := _economy._replace(draft)
+	if error == OK:
+		for key: String in facts:
+			_flags[key] = facts[key]
+		_flags[receipt] = true
+		_warehouse_inventory.set_session_locked(true)
+		state_changed.emit()
+		_economy.publish_restored(before)
+		_warehouse_inventory.set_session_locked(false)
+	_replacing = false
+	_business_transaction = false
+	return error
+
+## DayPhase owns legal transitions; publish both phase keys and the day together.
+func commit_day_phase(phase: String) -> bool:
+	if _session_busy() or phase not in ["day", "night"] or DayPhase.get_phase(self) == phase:
+		return false
+	if DayPhase.get_phase(self).is_empty():
+		return false
+	_variables["world.phase"] = phase
+	_flags["world.phase.night"] = phase == "night"
+	if phase == "day":
+		_current_day += 1
+	_replacing = true
+	state_changed.emit()
+	_replacing = false
+	return true
+
 func _on_business_changed() -> void:
 	if not _replacing and not _business_transaction and _tea_production.is_submitting():
 		if _business_profile == "day1":

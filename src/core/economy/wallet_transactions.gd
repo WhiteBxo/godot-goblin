@@ -157,7 +157,7 @@ func _prepare_and_commit(kind: String, request_id: Variant, subject: Variant, qu
 func prepare_delivery(costs: Dictionary, rewards: Dictionary, money: int, request_id: String) -> Dictionary:
 	if is_busy() or not _id(request_id) or not _amount(money, true) or _requests.has(request_id):
 		return {}
-	if not _inventory.has_materials(costs) or _balance > LIMIT - money:
+	if (not costs.is_empty() and not _inventory.has_materials(costs)) or _balance > LIMIT - money:
 		return {}
 	var next := to_dict()
 	for id: String in costs:

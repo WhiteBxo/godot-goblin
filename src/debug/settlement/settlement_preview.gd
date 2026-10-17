@@ -117,13 +117,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		toggle_night()
 		get_viewport().set_input_as_handled()
 
-## Debug-only fact toggle; the game has no day/phase state machine yet.
+## Use the same atomic phase transition as formal gameplay.
 func toggle_night() -> void:
 	if is_instance_valid(_state):
-		_state.set_flag(NIGHT_FLAG, not _state.get_flag(NIGHT_FLAG))
+		if DayPhase.is_night(_state):
+			DayPhase.enter_day(_state)
+		else:
+			DayPhase.enter_night(_state)
 
 func _phase_text() -> String:
-	return "夜晚" if is_instance_valid(_state) and _state.get_flag(NIGHT_FLAG) else "白天"
+	return "夜晚" if DayPhase.is_night(_state) else "白天"
 
 func _exit_tree() -> void:
 	for node: Node in [_labels, _routes, _overview_camera, _panel]:

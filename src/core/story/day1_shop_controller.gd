@@ -28,6 +28,7 @@ func configure(game: MainGame) -> Error:
 	for batch: Dictionary in _setup.batches:
 		batches.append(batch)
 	game.get_task_delivery().configure_batches(batches)
+	_apply_exit_gates(game.get_active_level().get_scene_exits())
 	var legacy := actors.get_actor(&"fat_goblin")
 	if is_instance_valid(legacy):
 		legacy.hide()
@@ -41,6 +42,20 @@ func configure(game: MainGame) -> Error:
 	_resume_boundary.call_deferred(game.has_scene_arrival())
 	return OK
 
+## Gates are session data, not scene data: the same shop scene also serves the
+## legacy walkthrough, which must stay open.
+func _apply_exit_gates(exits: Array[SceneExit]) -> void:
+	for gate: Dictionary in _setup.get("exit_gates", []):
+		var identifier := StringName(str(gate.get("exit_id", "")))
+		if identifier == &"":
+			continue
+		var flags: Array[StringName] = []
+		for value: Variant in (gate.get("required_flags", []) as Array):
+			flags.append(StringName(str(value)))
+		for exit: SceneExit in exits:
+			if exit.interaction_id == identifier:
+				exit.required_flags = flags
+
 func _schedule_resume() -> void:
 	_opening_pending = false
 	_resume_boundary.call_deferred()
@@ -49,6 +64,9 @@ func _resume_boundary(preserve_player_position: bool = false) -> void:
 	if not is_instance_valid(_game) or not is_inside_tree():
 		return
 	last_error = ""
+	if Day1Access.is_later_stage(_state):
+		_game.get_business_hud().show_resume(false)
+		return
 	var director := _game.get_story_director()
 	var bridge := _game.get_gameplay_bridge()
 	bridge.stop(true)

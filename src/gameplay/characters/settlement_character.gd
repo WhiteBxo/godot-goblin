@@ -6,6 +6,23 @@ extends PlayerController
 @export var display_name := ""
 @export_multiline var story_role := ""
 @export var side_faces_left := false
+@export_enum("always", "day", "night") var active_phase := "always"
+
+func refresh_phase(state: Node) -> void:
+	if active_phase != "always":
+		visible = DayPhase.get_phase(state) == active_phase
+
+func _ready() -> void:
+	super._ready()
+	_sync_solid_body()
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_VISIBILITY_CHANGED:
+		_sync_solid_body()
+
+## Story shows and hides actors in place; an off-stage body must never block the player.
+func _sync_solid_body() -> void:
+	set_collision_layer_value(NPC_LAYER, is_visible_in_tree())
 
 func _update_animation(moving: bool, movement_ratio: float = 1.0) -> void:
 	super._update_animation(moving, movement_ratio)

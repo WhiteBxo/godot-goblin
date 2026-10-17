@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://src/core/settlement.tscn" id="1_host"]
+[ext_resource type="Script" path="res://src/debug/story/day1_world_flow_demo.gd" id="2_demo"]
+
+[node name="MainGame" instance=ExtResource("1_host")]
+script = ExtResource("2_demo")

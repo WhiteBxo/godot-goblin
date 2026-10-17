@@ -24,7 +24,7 @@
 3. 在目标宿主及其注册代码中解析绑定。先精确 ID，再按名称/用途匹配唯一现有项。多个候选、身份不符的占位角色、未确认空间位置或关键声音必须列入 pending。跨场景同名不代表已注册，`speaker` 也不等于 Actor ID。
 4. 位置/资源明确时完成必要配置：Marker2D 保存到所属场景，由共同宿主调用 `register_position`；现有角色用 `actor_register`，动态角色用 `actor_spawn`；音频用 AudioManager 的 `sounds` 或 `register_sound`。不得虚构坐标、复用人类占位角色冒充正式哥布林、生成临时音调冒充指定关键音效。确认过的占位资源可以复用并注明。
 5. 依照指令表生成原有 v1 JSON。只在宿主做服务注入、注册、加载、启动和必要重播清理；演出顺序在 Story JSON，Gameplay 等待边界在 Phase JSON，调查等主动触发沿用 trigger 路由。正式启动事件必须接入真实触发调用；仅配置 `conditions` 不会自动开播。新增 debug 宿主与正式关卡分开，保持 Release 边界。
-6. 更新清单和源稿 SHA-256，运行下方验证；每个事件、选项分支、正反条件和触发路由安排 case。缺失引用、音效 skipped、移动受阻/超时或执行失败均不能宣称验收通过。pending 涉及的事件保留上一份有效产物；新事件不要发布伪造的可播放版本，可先完成独立且已确认的其他事件。
+6. 更新清单和源稿 SHA-256，按下方验证分级表运行本次需要的检查；新增或改动的事件、选项分支、正反条件和触发路由各自安排 case。缺失引用、音效 skipped、移动受阻/超时或执行失败均不能宣称验收通过。pending 涉及的事件保留上一份有效产物；新事件不要发布伪造的可播放版本，可先完成独立且已确认的其他事件。
 7. 检查差异、仅提交本次文件，给出 Beat 变更、自动匹配/新增绑定、检查结果、待确认事项、F6 入口和 commit。不自动 push。
 
 未指定动作参数时可用现有默认值，并在摘要注明；若会决定关键节奏或空间含义（如“沉默很久”“去门外”且没有对应 Marker），先列 pending。原稿不明确的触发点和剧情状态不能编造成既定设定。
@@ -48,13 +48,37 @@
 
 ## 验证与试玩
 
-首次 checkout 先让 Godot 导入：
+验证范围按 [AGENTS.md 的测试与分级验证](../../AGENTS.md#测试与分级验证)选择。下列命令是候选清单，不是每次编排都要执行的清单：先按本次改动写下最小测试计划（风险点 → 要执行的命令），执行后汇报实际跑了哪些、跳过了哪些及原因。对白、立绘、音效引用和单个 Beat 参数的修改不做完整项目回归。
+
+| 本次改动 | 最低验证 |
+| --- | --- |
+| 对白文字、立绘、音效引用、单个 Beat 参数 | 对应清单的 `validate_story.gd`；只改资源引用时补一次对应宿主 F6 观察 |
+| 增删 Beat、调整顺序、改绑定或 Marker | 对应清单的 `validate_story.gd` + 对应 F6 场景观察 |
+| Story JSON 结构、`when.choice`、trigger、stage/flag 契约 | `validate_story.gd` + `tests/verify_story_director.gd`；被其他宿主消费时加 `tests/verify_cinematic_integration.gd` |
+| 清单 schema、Loader 或验证器自身 | `validate_story.gd` + `python3 tests/verify_story_authoring.py` |
+| Gameplay Bridge phase、业务 flag 契约或跨模块状态 | `validate_story.gd` + `tests/verify_gameplay_bridge.gd` 和受该契约影响的业务模块测试 |
+| 仅修改源稿以外的文档 | 只检查 Markdown、链接和 Git diff |
+
+- 同一任务内代码、配置和测试数据未发生相关变化时，同一命令只运行一次；通过后不再为再次确认而重复执行。修复相关失败后只重跑受影响的那条命令，修改又触及别的模块时才扩展范围。
+- 失败先归因：只有能对应到本次 diff 的失败才在本任务内修复。与本次改动无关的历史失败（例如已知被同一顾客路线阻断的清单用例、沙箱证书诊断）记录为基线问题，不计入本次验收，也不顺手扩大范围去修。
+- 只有核心公共接口、跨模块状态契约、场景生命周期、共享数据格式、大规模重构或发布验收才触发完整回归；用户明确要求完整回归时以用户要求为准。
+
+首次 checkout 先用编辑器导入资源，同一任务内只做一次：
 
 ```sh
 /Applications/Godot.app/Contents/MacOS/Godot --headless --editor --path . --quit
+```
+
+候选验证命令，按上表取用：
+
+```sh
+# 对应清单的离线校验与 cases 执行（改剧情必跑）
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --script res://tools/story/validate_story.gd -- res://docs/story_authoring/cinematic_opening.json
+# 模块：Director 的 schema、顺序、阻塞与路由（改契约时）
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --script res://tests/verify_story_director.gd
+# 模块：真实宿主整段演出（其他宿主消费改动时）
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --script res://tests/verify_cinematic_integration.gd
+# 工具链：清单 schema 与 Python 生成/校验（改验证器时）
 python3 tests/verify_story_authoring.py
 ```
 
@@ -99,7 +123,7 @@ python3 tests/verify_story_authoring.py
 
 追踪清单为玩家 Beat 记录 phase ID、来源（recipe 或 flag/allow_existing）、前后事件、stage、输出 flag、数据路径；纯交互 Beat 记录 trigger/expected_event；演出 Beat 继续记录 event/steps/dialogues。现有 `validate_story.gd` v1 清单仅支持演出步骤，不能把玩家 Beat 填成虚假的 Story command：含玩法的稿另用 `<name>_bridge.json` 清单记录源稿 SHA-256、演出区间和 gameplay 映射，并添加真实场景集成测试核对散列、Loader、phase 引用、Signal 与整个流程。旧清单/验证器无需迁移。
 
-必要验收：提前制作、错误顺序、重复完成、关闭未完成 UI、制作后关闭/重新打开、其他 modal/暂停遮挡、取消前段/后段、reset/restore、退出依赖与场景、连续多个 Gameplay 阶段、音乐持续和输入锁恢复。已有演出/音频/UI 回归也要执行。
+改动 Gameplay Bridge 或业务完成契约时的必要验收：提前制作、错误顺序、重复完成、关闭未完成 UI、制作后关闭/重新打开、其他 modal/暂停遮挡、取消前段/后段、reset/restore、退出依赖与场景、连续多个 Gameplay 阶段、音乐持续和输入锁恢复。对应的演出/音频/UI 模块本身被改动时，运行该模块已有的测试；本节不是每次剧情修改都执行整套回归的依据。
 
 
 ### 参考做法与本项目对应

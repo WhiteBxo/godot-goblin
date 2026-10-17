@@ -277,16 +277,14 @@ func _test_real_orders_and_story() -> void:
 	_check(inventory.to_dict() == scarce and state.to_dict() == scarce_facts and not state.get_flag("shop.order_001_delivered"), "Shortage never reports delivery or partially consumes materials")
 	inventory.restore_state(stock_before)
 	shop.open(points[&"tea_station"])
-	var panel: TeaProductionPanel = game.get_node("PopupLayer/Modal/Center/Panel/Margin/Content/ProductionPanel")
-	var selectors: Array[OptionButton] = []
-	for column in panel.get_child(1).get_children():
-		selectors.append(column.get_child(1))
-	panel.get_child(2).pressed.emit()
+	var panel: CraftingPanel = game.get_node("PopupLayer/Modal/Center/Panel/Margin/Content/ProductionPanel")
+	panel.clear_selection()
+	panel.submit()
 	_check(production.get_completed_count() == 0 and not state.get_flag("shop.order_001_delivered"), "Incomplete UI submission does not complete task")
-	selectors[0].select(1)
-	selectors[1].select(1)
-	selectors[2].select(1)
-	panel.get_child(2).pressed.emit()
+	panel.clear_selection()
+	for id: String in ["black_tea", "creamer", "pearl", "syrup"]:
+		panel.add_material(id)
+	panel.submit()
 	_check(production.get_completed_count() == 1 and not state.get_flag("shop.order_001_delivered") and inventory.get_stock("pearl_milk_tea") == 1, "Real UI crafting puts a carried cup in inventory without completing task")
 	_check(inventory.get_stock("black_tea") == 11 and inventory.get_stock("syrup") == 9, "Real delivery consumes each actual ingredient once")
 	_check(journal.get_task("shop.first_order").current_objective.id == "deliver_order" and journal.get_task("shop.first_order").status == "active" and not director.is_busy(), "Crafting leaves delivery objective active")

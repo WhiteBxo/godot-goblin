@@ -44,24 +44,30 @@ position = Vector2(5400, 8620)
 
 [node name="CommonGoblin" parent="World/EntityRoot" instance=ExtResource("npc_common_goblin")]
 position = Vector2(5500, 8910)
+active_phase = "day"
 
 [node name="Guard" parent="World/EntityRoot" instance=ExtResource("npc_guard")]
 position = Vector2(4410, 6250)
 
 [node name="GuardCaptain" parent="World/EntityRoot" instance=ExtResource("npc_guard_captain")]
 position = Vector2(7130, 3120)
+active_phase = "day"
 
 [node name="Elder" parent="World/EntityRoot" instance=ExtResource("npc_elder")]
 position = Vector2(6410, 1730)
+active_phase = "day"
 
 [node name="Chef" parent="World/EntityRoot" instance=ExtResource("npc_chef")]
 position = Vector2(7290, 6650)
+active_phase = "day"
 
 [node name="Tavern" parent="World/EntityRoot" instance=ExtResource("npc_tavern")]
 position = Vector2(3680, 4910)
+active_phase = "night"
 
 [node name="Casino" parent="World/EntityRoot" instance=ExtResource("npc_casino")]
 position = Vector2(6690, 4920)
+active_phase = "night"
 
 [node name="EffectRoot" type="Node2D" parent="World"]
 y_sort_enabled = true

@@ -21,11 +21,23 @@ func configure(visual: ScreenTransition, can_travel: Callable) -> void:
 func is_busy() -> bool:
 	return _busy
 
+## GameState is an autoload that lives outside the active scene tree, so an
+## absolute get_node() from this node fails whenever it is not in the tree yet.
+## Resolve through the main loop to keep gating testable and orphan-safe.
+func _resolve_state() -> Node:
+	var loop := Engine.get_main_loop() as SceneTree
+	if loop == null or loop.root == null:
+		return null
+	return loop.root.get_node_or_null("GameState")
+
 func request_exit(point: SceneExit) -> Error:
 	if _busy or not _can_travel.is_valid() or not _can_travel.call():
 		return ERR_BUSY
 	if not is_instance_valid(point) or point.destination_entrance == &"":
 		return ERR_INVALID_PARAMETER
+	if not point.are_conditions_met(_resolve_state()):
+		travel_failed.emit(point, ERR_UNAVAILABLE)
+		return ERR_UNAVAILABLE
 	if not ResourceLoader.exists(point.destination_scene, "PackedScene"):
 		return ERR_FILE_NOT_FOUND
 	_busy = true
@@ -69,6 +81,9 @@ func _depart(path: String, entrance: StringName) -> void:
 	# A pause/modal/performance may have started while fading. Keep the source intact.
 	if not _can_travel.call():
 		_fail(ERR_BUSY)
+		return
+	if not _requested_exit.are_conditions_met(_resolve_state()):
+		_fail(ERR_UNAVAILABLE)
 		return
 	var destination := _destination
 	_destination = null

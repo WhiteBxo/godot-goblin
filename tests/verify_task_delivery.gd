@@ -202,10 +202,11 @@ func _test_host(path: String) -> void:
 	player.global_position = station.global_position
 	await _frames()
 	await _press_interact()
-	var panel: TeaProductionPanel = game.get_node("PopupLayer/Modal/Center/Panel/Margin/Content/ProductionPanel")
-	for column in panel.get_child(1).get_children():
-		(column.get_child(1) as OptionButton).select(1)
-	panel.get_child(2).pressed.emit()
+	var panel: CraftingPanel = game.get_node("PopupLayer/Modal/Center/Panel/Margin/Content/ProductionPanel")
+	panel.clear_selection()
+	for id: String in ["black_tea", "creamer", "pearl", "syrup"]:
+		panel.add_material(id)
+	panel.submit()
 	var inventory := game.get_warehouse_inventory()
 	_check(inventory.get_stock("pearl_milk_tea") == 1 and not state.get_flag("shop.order_001_delivered"), "Real production UI leaves cup carried and task active")
 	ui.close()

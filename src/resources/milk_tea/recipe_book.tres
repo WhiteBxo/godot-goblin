@@ -1,0 +1,119 @@
+[gd_resource type="Resource" script_class="TeaRecipeBook" format=3]
+
+[ext_resource type="Script" path="res://src/resources/milk_tea/tea_recipe_book.gd" id="book"]
+[ext_resource type="Script" path="res://src/resources/milk_tea/tea_recipe.gd" id="recipe"]
+
+[sub_resource type="Resource" id="Recipe_pearl"]
+script = ExtResource("recipe")
+id = "pearl_milk_tea"
+product_id = "pearl_milk_tea"
+materials = Array[String](["black_tea", "creamer", "pearl", "syrup"])
+
+[sub_resource type="Resource" id="Recipe_coconut"]
+script = ExtResource("recipe")
+id = "coconut_milk_tea"
+product_id = "coconut_milk_tea"
+materials = Array[String](["green_tea", "creamer", "coconut", "syrup"])
+
+[sub_resource type="Resource" id="Recipe_plain"]
+script = ExtResource("recipe")
+id = "plain_milk_tea"
+product_id = "plain_milk_tea"
+materials = Array[String](["black_tea", "creamer", "syrup"])
+
+[sub_resource type="Resource" id="Recipe_blood"]
+script = ExtResource("recipe")
+id = "day1_blood_recipe"
+product_id = "day1_blood_milk_tea"
+materials = Array[String](["day1_griffin_blood", "black_tea", "creamer", "syrup"])
+required_flag = "day1.s05.blood_acquired"
+required_flags = Array[String](["day1.s05.returned_shop"])
+required_stages = Array[String](["day1.s06"])
+
+[sub_resource type="Resource" id="Recipe_h01"]
+script = ExtResource("recipe")
+id = "classic_boba_milk_tea"
+product_id = "classic_boba_milk_tea"
+materials = Array[String](["creamer_milk_tea_base", "brown_sugar_boba", "ice"])
+required_flag = "business.profile.day1"
+
+[sub_resource type="Resource" id="Recipe_h02"]
+script = ExtResource("recipe")
+id = "mint_choc_milk_tea"
+product_id = "mint_choc_milk_tea"
+materials = Array[String](["creamer_milk_tea_base", "mint_syrup", "mint_choc_crisp", "ice"])
+required_flag = "business.profile.day1"
+
+[sub_resource type="Resource" id="Recipe_h03"]
+script = ExtResource("recipe")
+id = "coffee_cocoa_ice_milk"
+product_id = "coffee_cocoa_ice_milk"
+materials = Array[String](["creamer_milk_tea_base", "instant_coffee_concentrate", "cocoa_powder", "ice"])
+required_flag = "business.profile.day1"
+
+[sub_resource type="Resource" id="Recipe_h04"]
+script = ExtResource("recipe")
+id = "apple_milk_green_tea"
+product_id = "apple_milk_green_tea"
+materials = Array[String](["industrial_green_tea", "apple_jam", "creamer_milk_tea_base", "ice"])
+required_flag = "business.profile.day1"
+
+[sub_resource type="Resource" id="Recipe_h05"]
+script = ExtResource("recipe")
+id = "strawberry_milk_green_tea"
+product_id = "strawberry_milk_green_tea"
+materials = Array[String](["industrial_green_tea", "strawberry_jam", "creamer_milk_tea_base", "ice"])
+required_flag = "business.profile.day1"
+
+[sub_resource type="Resource" id="Recipe_h06"]
+script = ExtResource("recipe")
+id = "iced_mint_latte"
+product_id = "iced_mint_latte"
+materials = Array[String](["instant_coffee_concentrate", "creamer_milk_tea_base", "mint_syrup", "ice"])
+required_flag = "business.profile.day1"
+
+[sub_resource type="Resource" id="Recipe_h01"]
+script = ExtResource("recipe")
+id = "classic_boba_milk_tea"
+product_id = "classic_boba_milk_tea"
+materials = Array[String](["creamer_milk_tea_base", "brown_sugar_boba", "ice"])
+required_flag = "business.profile.day1"
+
+[sub_resource type="Resource" id="Recipe_h02"]
+script = ExtResource("recipe")
+id = "mint_choc_milk_tea"
+product_id = "mint_choc_milk_tea"
+materials = Array[String](["creamer_milk_tea_base", "mint_syrup", "mint_choc_crisp", "ice"])
+required_flag = "business.profile.day1"
+
+[sub_resource type="Resource" id="Recipe_h03"]
+script = ExtResource("recipe")
+id = "coffee_cocoa_ice_milk"
+product_id = "coffee_cocoa_ice_milk"
+materials = Array[String](["creamer_milk_tea_base", "instant_coffee_concentrate", "cocoa_powder", "ice"])
+required_flag = "business.profile.day1"
+
+[sub_resource type="Resource" id="Recipe_h04"]
+script = ExtResource("recipe")
+id = "apple_milk_green_tea"
+product_id = "apple_milk_green_tea"
+materials = Array[String](["industrial_green_tea", "apple_jam", "creamer_milk_tea_base", "ice"])
+required_flag = "business.profile.day1"
+
+[sub_resource type="Resource" id="Recipe_h05"]
+script = ExtResource("recipe")
+id = "strawberry_milk_green_tea"
+product_id = "strawberry_milk_green_tea"
+materials = Array[String](["industrial_green_tea", "strawberry_jam", "creamer_milk_tea_base", "ice"])
+required_flag = "business.profile.day1"
+
+[sub_resource type="Resource" id="Recipe_h06"]
+script = ExtResource("recipe")
+id = "iced_mint_latte"
+product_id = "iced_mint_latte"
+materials = Array[String](["instant_coffee_concentrate", "creamer_milk_tea_base", "mint_syrup", "ice"])
+required_flag = "business.profile.day1"
+
+[resource]
+script = ExtResource("book")
+recipes = Array[ExtResource("recipe")]([SubResource("Recipe_pearl"), SubResource("Recipe_coconut"), SubResource("Recipe_plain"), SubResource("Recipe_blood"), SubResource("Recipe_h01"), SubResource("Recipe_h02"), SubResource("Recipe_h03"), SubResource("Recipe_h04"), SubResource("Recipe_h05"), SubResource("Recipe_h06")])

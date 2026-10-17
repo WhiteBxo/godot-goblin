@@ -69,6 +69,8 @@ func get_ingredient_view(id: Variant) -> Dictionary:
 	var definition: IngredientDefinition = _definitions[id]
 	var view := {"id": id, "name": definition.display_name, "icon": definition.icon,
 		"origin": definition.origin, "category": definition.category, "rarity": definition.rarity,
+		"form": definition.form, "processing_methods": definition.processing_methods,
+		"price": definition.price, "description": definition.description,
 		"quantity": get_stock(id)}
 	for property: String in PROPERTY_GROUPS:
 		view[property] = definition.get(property).duplicate() if is_property_known(id, property) else PackedStringArray(["???"])

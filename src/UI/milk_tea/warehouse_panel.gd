@@ -72,12 +72,22 @@ func _select_item(index: int) -> void:
 	if ingredient.category == "story_item":
 		_details.text = "%s · %d 枚\n剧情物品\n金币上印着某种兽类，价值未知。" % [ingredient.name, ingredient.quantity]
 		return
-	var category: String = {"tea": "茶底", "milk": "奶基底", "syrup": "糖浆", "topping": "小料", "product": "成品"}.get(ingredient.category, ingredient.category)
-	_details.text = "%s · %d 份%s\n来源：%s · 用途：%s\n稀有度：%s\n已知风味：%s\n战斗属性：%s\n特殊效果：%s\n获取方式：%s" % [
-		ingredient.name, ingredient.quantity, " · 缺货" if ingredient.quantity == 0 else "",
-		"人类食材" if ingredient.origin == "human" else "异世界食材", category, ingredient.rarity,
-		_property_text(ingredient.flavor_tags), _property_text(ingredient.combat_attributes),
-		_property_text(ingredient.special_effects), _property_text(ingredient.acquisition_sources)]
+	var category: String = {"tea": "茶底", "milk": "奶基底", "syrup": "糖浆", "topping": "小料", "product": "成品", "material": "原料"}.get(ingredient.category, ingredient.category)
+	var lines: PackedStringArray = ["%s · %d 份%s" % [ingredient.name, ingredient.quantity, " · 缺货" if ingredient.quantity == 0 else ""],
+		"来源：%s · 用途：%s" % ["人类食材" if ingredient.origin == "human" else "异世界食材", category],
+		"稀有度：%s" % ingredient.rarity]
+	# Spreadsheet-only fields stay hidden until the item itself is discovered.
+	if not str(ingredient.form).is_empty():
+		lines.append("形态：%s · 加工：%s" % [ingredient.form, _property_text(ingredient.processing_methods)])
+	if int(ingredient.price) > 0:
+		lines.append("标价：%d 金币" % int(ingredient.price))
+	lines.append("已知风味：%s" % _property_text(ingredient.flavor_tags))
+	lines.append("战斗属性：%s" % _property_text(ingredient.combat_attributes))
+	lines.append("特殊效果：%s" % _property_text(ingredient.special_effects))
+	lines.append("获取方式：%s" % _property_text(ingredient.acquisition_sources))
+	if not str(ingredient.description).is_empty():
+		lines.append("\n%s" % ingredient.description)
+	_details.text = "\n".join(lines)
 
 func _property_text(values: PackedStringArray) -> String:
 	return "、".join(values) if not values.is_empty() else "无"

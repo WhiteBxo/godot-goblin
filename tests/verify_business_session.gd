@@ -75,7 +75,7 @@ func _run() -> void:
 	game = await _switch(SHOP)
 	_check(game.get_warehouse_inventory() == inventory and game.get_tea_production() == production, "Reentry reuses services instead of rebuilding defaults")
 	popup = _open(game, &"tea_station")
-	_check("椰果茉莉奶茶" in popup._production_panel._order.text and production.get_completed_count() == 1, "Reentered production UI restores order #002")
+	_check("椰果茉莉奶茶" in popup.get_crafting_panel().order_text() and production.get_completed_count() == 1, "Reentered production UI restores order #002")
 	_check(_state.to_dict() == carried, "Reentry never overwrites story or creates cups")
 	_check(reload_current_scene() == OK, "Reload the real shop scene")
 	await scene_changed

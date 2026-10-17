@@ -93,10 +93,18 @@ func select_business_profile(profile: String) -> Error:
 		return ERR_ALREADY_IN_USE
 	_business_profile = profile
 	_tea_production.select_menu(_profile_menu(profile))
+	_publish_profile_fact()
 	return OK
 
 func _profile_menu(profile: String) -> TeaMenu:
 	return DAY1_MENU if profile == "day1" else TeaProduction.CATALOG
+
+
+## Gated recipes read the active profile from session facts instead of
+## guessing it from the scene, so the formal drinks stay hidden in the tutorial.
+func _publish_profile_fact() -> void:
+	if _business_profile == "day1":
+		_flags["business.profile.day1"] = true
 
 ## All fallible validation precedes mutation; publish only the complete result.
 func commit_delivery(costs: Dictionary, rewards: Dictionary, money: int, facts: Dictionary, count: int, request_id: String, notify: Callable = Callable()) -> Error:
@@ -316,6 +324,7 @@ func _replace_session(data: Dictionary, new_game: bool) -> void:
 	var profile_changed: bool = _business_profile != data.business.profile_id
 	_business_profile = data.business.profile_id
 	_tea_production.select_menu(_profile_menu(_business_profile))
+	_publish_profile_fact()
 	_economy.restore_state(data.economy, false)
 	_replacing = true
 	var inventory_changed: bool = economy_before.inventory != data.business.inventory

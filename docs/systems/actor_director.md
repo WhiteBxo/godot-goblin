@@ -27,7 +27,7 @@
 | `actor_spawn(actor_id, scene: PackedScene, target)` | 在目标处实例化并注册；场景根必须继承 PlayerController；ID 必须未使用 |
 | `actor_move(actor_id, target, speed = 120.0, timeout = 15.0)` | 直线趋近目标；速度为世界像素/秒，总超时为游戏秒；必须有限且 > 0 |
 | `actor_face(actor_id, direction: StringName)` | `up`、`down`、`left`、`right`，复用现有朝向和 idle 动画 |
-| `actor_show(actor_id)` / `actor_hide(actor_id)` | 切换整个角色的可见性；隐藏不改变碰撞或注销角色 |
+| `actor_show(actor_id)` / `actor_hide(actor_id)` | 切换整个角色的可见性；NPC 隐藏时退出实体层，显示时恢复，不注销角色 |
 | `actor_emote(actor_id, symbol = "!", duration = 0.8)` | 在角色头顶浮动并淡出 Label；支持 `!`、`?` 等文字；duration 必须有限且 > 0 |
 
 `target` 支持世界坐标 `Vector2`、场景中的 `Marker2D` 或注册的 `String/StringName` 位置名。不接受 NodePath。接受请求时保存目标的世界坐标快照，因此移动 Marker 不会让角色追踪它；若 Marker 在动作完成前退出或删除则失败。重复位置名注册被拒绝，需先注销再替换。所有 Vector2 坐标必须有限。
@@ -92,6 +92,10 @@ StoryDirector 现已接入全部 actor 指令，使用 ActorAction 的完成 Sig
 ## 移动、互斥和输入锁
 
 所有可演出的角色复用 `PlayerController`。NPC 场景设 `accepts_player_input = false`，不需要新的 NPC 行为脚本。原玩家场景默认仍为 true；日常输入、加减速、斜向归一化、动画步相和速度参数不变。
+
+NPC 使用脚底的横向 `CapsuleShape2D` 表示地面占据，动画身体可以在视觉上重叠，脚底不能被玩家穿过。所有非玩家角色统一由 `PlayerController` 管理实体层：世界 / 家具为层 1，玩家为层 2，NPC 为层 3；玩家 mask 为 1 和 3，NPC mask 仅为 1。该规则覆盖聚落角色、人类顾客及剧情 `actor_spawn` 使用的演出角色。NPC 自身或祖先隐藏时退出层 3，重新显示时恢复，避免隐形墙；NPC 之间不互相阻挡，演出路线仍需避开墙体和家具。
+
+方案参考 [Godot 4.7 CharacterBody2D](https://docs.godotengine.org/en/4.7/classes/class_characterbody2d.html) 的俯视角 `MOTION_MODE_FLOATING` 与物理移动、[官方物理介绍](https://docs.godotengine.org/en/4.7/tutorials/physics/physics_introduction.html) 的 layer / mask 分离，以及 [GDQuest 的俯视角角色实现](https://www.gdquest.com/tutorial/godot/2d/top-down-movement/) 中物理体、碰撞形状与动画分离的结构。GDQuest 文章使用旧版节点名，API 以项目 Godot 4.7 为准；脚底形状和单向阻挡策略是结合本项目地图与演出约束的选择。
 
 PlayerController 提供 `claim_performance_control` / `release_performance_control`、`set_performance_facing`、`move_performance` 和 `get_emote_offset` 给导演调用。控制权以弱引用绑定 Director；同一角色即使被两个 Director 注册，也只有一个能接管。同角色的 move/face/show/hide/emote 保守地共用一个动作槽，不排队或隐式覆盖；需要中断时先 `cancel_action` 再发新动作。不同角色可以并行。
 

@@ -12,18 +12,6 @@ func refresh_phase(state: Node) -> void:
 	if active_phase != "always":
 		visible = DayPhase.get_phase(state) == active_phase
 
-func _ready() -> void:
-	super._ready()
-	_sync_solid_body()
-
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_VISIBILITY_CHANGED:
-		_sync_solid_body()
-
-## Story shows and hides actors in place; an off-stage body must never block the player.
-func _sync_solid_body() -> void:
-	set_collision_layer_value(NPC_LAYER, is_visible_in_tree())
-
 func _update_animation(moving: bool, movement_ratio: float = 1.0) -> void:
 	super._update_animation(moving, movement_ratio)
 	animated_sprite.flip_h = (facing == Facing.RIGHT and side_faces_left) or (facing == Facing.LEFT and not side_faces_left)

@@ -40,10 +40,23 @@ var _action_triggered := false
 @onready var animated_sprite: AnimatedSprite2D = $Visual/AnimatedSprite2D
 
 func _ready() -> void:
+	if not accepts_player_input:
+		collision_mask = 1 << (WORLD_LAYER - 1)
+		_sync_npc_collision()
 	facing = initial_facing
 	animated_sprite.frame_changed.connect(_on_action_frame_changed)
 	animated_sprite.animation_finished.connect(_on_action_animation_finished)
 	_update_animation(false)
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_VISIBILITY_CHANGED:
+		_sync_npc_collision()
+
+## Applies to both settlement NPCs and actors spawned for story performances.
+## Parent visibility also matters: an off-stage actor must never be an invisible wall.
+func _sync_npc_collision() -> void:
+	if not accepts_player_input:
+		collision_layer = (1 << (NPC_LAYER - 1)) if is_visible_in_tree() else 0
 
 func _physics_process(delta: float) -> void:
 	if not accepts_player_input or is_performance_controlled():

@@ -1,6 +1,6 @@
 # Day 1 正式剧情与业务配置约定
 
-核对日期：2026-10-17。源码基线：`ab18ce6`。本文件与[待定清单](../story_authoring/day1_integration.pending.md)共同交付开发顺序 1；只定义对接，不是可加载配置，也不代表 Day 1 已接通。
+核对日期：2026-10-17。源码基线：`ab18ce6`。本文件与[待定清单](../story_authoring/day_01_integration_pending.md)共同交付开发顺序 1；只定义对接，不是可加载配置，也不代表 Day 1 已接通。
 
 并行工作提示：核对期间工作区出现未提交的 `GameEntry`、标题菜单、暂停返回标题接线，以及将默认入口改为标题菜单的修改。本文件不纳入或验收这些改动；下述正式入口/新游戏缺口以已提交基线为准。合并后集成端应重新确认启动路径，不能据本文重复实现已有的并行工作。
 
@@ -8,11 +8,11 @@
 
 | 范围 | 内容依据 | 使用约定 |
 | --- | --- | --- |
-| S01–S02 | [前两个阶段初稿](day1_stages_01_02_draft.md) | 保留 Beat、对白、表情意图、玩家操作及原有待确认项；不反向采用旧 Demo 内容 |
-| S03–S06 | [Day 1 修改版](day01修改版.md)的对应阶段 | 保留角色动机、选择及剧情顺序；正文与补充对白有冲突时进入 pending，不自行择一 |
-| 已执行试编排 | [day1_scene01](day1_scene01.md)及[映射清单](../story_authoring/day1_scene01.json) | 仅独立开场至顾客点单；不能当成正式 S01 或制作教程完成 |
-| 历史范围差异 | [Day 1 精简执行稿](../Day1开发.md) | 仅用于识别差异。不得据此删除新版投掷、双守卫、混乱撤离、地图或接受/拒绝选项 |
-| 后续生成 | [编排工作流](../story_authoring_workflow.md)、[指令表](../story_authoring_commands.md) | Markdown 继续是剧情唯一内容来源；本文只补接线约定，不补对白、数值、坐标或节奏 |
+| S01–S02 | [前两个阶段初稿](day_01_stages_01_02_draft.md) | 保留 Beat、对白、表情意图、玩家操作及原有待确认项；不反向采用旧 Demo 内容 |
+| S03–S06 | [Day 1 修改版](day_01_story_flow_revised.md)的对应阶段 | 保留角色动机、选择及剧情顺序；正文与补充对白有冲突时进入 pending，不自行择一 |
+| 已执行试编排 | [day1_scene01](day_01_scene_01.md)及[映射清单](../story_authoring/day1_scene01.json) | 仅独立开场至顾客点单；不能当成正式 S01 或制作教程完成 |
+| 历史范围差异 | [Day 1 精简执行稿](day_01_development_spec.md) | 仅用于识别差异。不得据此删除新版投掷、双守卫、混乱撤离、地图或接受/拒绝选项 |
+| 后续生成 | [编排工作流](../guides/story_authoring_workflow.md)、[指令表](../guides/story_authoring_commands.md) | Markdown 继续是剧情唯一内容来源；本文只补接线约定，不补对白、数值、坐标或节奏 |
 
 本次只新增两份 Markdown。不更改原稿、Story/Dialogue/Phase、正式任务/菜单、场景、脚本、输入或默认入口；不自动启动剧情，不自动迁移存档。所有新增 ID 都是规划预留，须由后续实现与编排共同发布。
 
@@ -29,19 +29,19 @@
 
 | 阶段与原稿定位 | 模式与进入条件 | 成功结果与后续 | 重复、取消及当前缺口 |
 | --- | --- | --- | --- |
-| S01 `shop_opening` → `first_human_customer` | 自动演出；正式新游戏启动，进入奶茶店 | 顾客真实点单后结束短事件，进入教学操作等待 | 仅完整成功才消耗 once；失败可能已生成顾客，重试须处理现场。人类顾客与正式宿主未定：[P02](../story_authoring/day1_integration.pending.md#p02) |
-| S01 `first_drink_tutorial` → `stage_one_end` | 玩家操作后自动演出；点单成功、订单已发布 | 查看订单→正确制作入库→交人类顾客→货款到账；全部成立后进入 S02 | 关窗/错误配方不完成；制作成功不等于交付或收款。不能拿现有胖哥布林示例代替：[P04](../story_authoring/day1_integration.pending.md#p04)、[P11](../story_authoring/day1_integration.pending.md#p11) |
-| S02 `shop_quiet_again` → `goblin_first_customer` | 自动演出；S01 教学及收款成功 | 首位哥布林点单后进入玩家操作 | 日期与身份绑定不猜测：[P01](../story_authoring/day1_integration.pending.md#p01)、[P03](../story_authoring/day1_integration.pending.md#p03) |
-| S02 `goblin_first_order` → `goblin_coin_reaction` | 玩家操作后自动演出；首位哥布林订单可用 | 真正交付→按原稿获得古怪金币→反应对白；之后进入群客段 | 交付回执不能代替金币取得；重复演出不再发币，取消不回滚已提交交付：[P05](../story_authoring/day1_integration.pending.md#p05)、P11 |
-| S02 `goblin_group_customers` → `chronicle_unlocked` | 自动演出；首枚金币取得与反应段完成 | 群客点单；解锁赌场、格里芬之血、长老的空白条目，再开放群客订单操作 | 空正文不补写背景真相；见闻录服务能建空条目，但功能入口目前从启动即存在：[P12](../story_authoring/day1_integration.pending.md#p12) |
-| S02 `goblin_group_orders` → `coins_raise_suspicion` | 玩家操作后自动演出；这批订单已明确 | 全批真实交付并按原稿收币→顾客离场→主角决定调查金币，进入 S03 | 数量未定，不能用总制作数或三笔教学队列冒充全批交付；按订单集合去重：[P03](../story_authoring/day1_integration.pending.md#p03)、P04、P05 |
-| S03 修改版「第三阶段：消失的街道」 | 出店、有限探索与自动反应混合；S02 成功 | 玩家实际出店，探索结束退回店门，形成异世界发现认知→S04 | 原稿列的是观察示例，不是已批准的必查点。衣柜与变量秘密不得展示；出入口、范围及结束判定：[P13](../story_authoring/day1_integration.pending.md#p13) |
-| S04 修改版「第四阶段」及「补充：第四阶段的整体对白」 | 对话/选项与地图查看；S03 发现完成 | 保留信仰、血液传闻、地图与委托；接受/拒绝两条原有路径最终汇合到接受，进入夜间准备 | 正文在店外，补充对白却先在店内消费；该普通订单是否玩家操作未明确。地图能力、时间过渡和准确顺序：[P08](../story_authoring/day1_integration.pending.md#p08)、[P14](../story_authoring/day1_integration.pending.md#p14) |
-| S05 修改版「第一部分、关卡教学」step1–step3 | 玩家操作与演出混合；委托已接受、夜间条件已由正式业务建立 | 按原稿查看目标/小地图、投币引开入口守卫、投掷与贿赂突破宅邸双卫 | 不能改写为只有一名醉酒守卫，也不能以移动 NPC 冒充完整潜行。投掷、发现后处理、支付/放行：[P06](../story_authoring/day1_integration.pending.md#p06)、[P09](../story_authoring/day1_integration.pending.md#p09) |
+| S01 `shop_opening` → `first_human_customer` | 自动演出；正式新游戏启动，进入奶茶店 | 顾客真实点单后结束短事件，进入教学操作等待 | 仅完整成功才消耗 once；失败可能已生成顾客，重试须处理现场。人类顾客与正式宿主未定：[P02](../story_authoring/day_01_integration_pending.md#p02) |
+| S01 `first_drink_tutorial` → `stage_one_end` | 玩家操作后自动演出；点单成功、订单已发布 | 查看订单→正确制作入库→交人类顾客→货款到账；全部成立后进入 S02 | 关窗/错误配方不完成；制作成功不等于交付或收款。不能拿现有胖哥布林示例代替：[P04](../story_authoring/day_01_integration_pending.md#p04)、[P11](../story_authoring/day_01_integration_pending.md#p11) |
+| S02 `shop_quiet_again` → `goblin_first_customer` | 自动演出；S01 教学及收款成功 | 首位哥布林点单后进入玩家操作 | 日期与身份绑定不猜测：[P01](../story_authoring/day_01_integration_pending.md#p01)、[P03](../story_authoring/day_01_integration_pending.md#p03) |
+| S02 `goblin_first_order` → `goblin_coin_reaction` | 玩家操作后自动演出；首位哥布林订单可用 | 真正交付→按原稿获得古怪金币→反应对白；之后进入群客段 | 交付回执不能代替金币取得；重复演出不再发币，取消不回滚已提交交付：[P05](../story_authoring/day_01_integration_pending.md#p05)、P11 |
+| S02 `goblin_group_customers` → `chronicle_unlocked` | 自动演出；首枚金币取得与反应段完成 | 群客点单；解锁赌场、格里芬之血、长老的空白条目，再开放群客订单操作 | 空正文不补写背景真相；见闻录服务能建空条目，但功能入口目前从启动即存在：[P12](../story_authoring/day_01_integration_pending.md#p12) |
+| S02 `goblin_group_orders` → `coins_raise_suspicion` | 玩家操作后自动演出；这批订单已明确 | 全批真实交付并按原稿收币→顾客离场→主角决定调查金币，进入 S03 | 数量未定，不能用总制作数或三笔教学队列冒充全批交付；按订单集合去重：[P03](../story_authoring/day_01_integration_pending.md#p03)、P04、P05 |
+| S03 修改版「第三阶段：消失的街道」 | 出店、有限探索与自动反应混合；S02 成功 | 玩家实际出店，探索结束退回店门，形成异世界发现认知→S04 | 原稿列的是观察示例，不是已批准的必查点。衣柜与变量秘密不得展示；出入口、范围及结束判定：[P13](../story_authoring/day_01_integration_pending.md#p13) |
+| S04 修改版「第四阶段」及「补充：第四阶段的整体对白」 | 对话/选项与地图查看；S03 发现完成 | 保留信仰、血液传闻、地图与委托；接受/拒绝两条原有路径最终汇合到接受，进入夜间准备 | 正文在店外，补充对白却先在店内消费；该普通订单是否玩家操作未明确。地图能力、时间过渡和准确顺序：[P08](../story_authoring/day_01_integration_pending.md#p08)、[P14](../story_authoring/day_01_integration_pending.md#p14) |
+| S05 修改版「第一部分、关卡教学」step1–step3 | 玩家操作与演出混合；委托已接受、夜间条件已由正式业务建立 | 按原稿查看目标/小地图、投币引开入口守卫、投掷与贿赂突破宅邸双卫 | 不能改写为只有一名醉酒守卫，也不能以移动 NPC 冒充完整潜行。投掷、发现后处理、支付/放行：[P06](../story_authoring/day_01_integration_pending.md#p06)、[P09](../story_authoring/day_01_integration_pending.md#p09) |
 | S05 修改版「第二部分、剧情事件：醉酒的守卫」 | 必然发生的短事件；相对 step1–step6 的确切位置未定 | 支付成功、放行并记录次日特殊订单伏笔；不要求当日在酒馆/赌场取得材料 | 与双卫贿赂是否同一次支付未定；不能重复扣钱或拿日后交付作本次放行前置：P06、P09 |
-| S05 step4 与「第三部分、取得格里芬之血的细节」 | 调查/拾取与自动演出混合；已进入可搜索区域 | 取得文书相关信息及血液，目标转向撤离；详细段落先翻文书后拿血 | 不采用旧稿“文书必为拾血硬门槛”的默认值；阅读/持有及顺序需定。入库与一次性回执必须真实：[P07](../story_authoring/day1_integration.pending.md#p07)、[P08](../story_authoring/day1_integration.pending.md#p08) |
+| S05 step4 与「第三部分、取得格里芬之血的细节」 | 调查/拾取与自动演出混合；已进入可搜索区域 | 取得文书相关信息及血液，目标转向撤离；详细段落先翻文书后拿血 | 不采用旧稿“文书必为拾血硬门槛”的默认值；阅读/持有及顺序需定。入库与一次性回执必须真实：[P07](../story_authoring/day_01_integration_pending.md#p07)、[P08](../story_authoring/day_01_integration_pending.md#p08) |
 | S05 step5–step6 与详细段落的返店 | 玩家操作与演出混合；已取得所需物品/信息 | 教学版要求取火把、投向可燃物、制造混乱撤离；详细段落写沿原路返回。统一后安全返店→S06 | 保留两种来源的差异，不删除混乱桥段也不强行插入详细段落；火把、阻碍、撤离判定及重试待定：P08、P09、P13 |
-| S06 修改版「第六阶段：第一杯格里芬之血特调」 | 玩家制作/用量选择、交付及自动异常演出，后续帮助/休息的交互模式待定 | 血液成为可用材料→特调成品入库→交给胖哥布林→饮用异常→帮助并暂留休息，完成本章叙事 | 不把制成当喝下；材料未明、配方未定时不发布假可玩段。没有“三档统一中毒”等已定数值：[P07](../story_authoring/day1_integration.pending.md#p07)、[P10](../story_authoring/day1_integration.pending.md#p10) |
+| S06 修改版「第六阶段：第一杯格里芬之血特调」 | 玩家制作/用量选择、交付及自动异常演出，后续帮助/休息的交互模式待定 | 血液成为可用材料→特调成品入库→交给胖哥布林→饮用异常→帮助并暂留休息，完成本章叙事 | 不把制成当喝下；材料未明、配方未定时不发布假可玩段。没有“三档统一中毒”等已定数值：[P07](../story_authoring/day_01_integration_pending.md#p07)、[P10](../story_authoring/day_01_integration_pending.md#p10) |
 
 依赖主链为 S01→S02→S03→S04→S05→S06。S04 两个选择只改变对白路径，最后汇合；不能设成一条永久拒绝分支。S05 的具体子节点拓扑由 P08/P09 阻塞，当前不宣称内部顺序已全部冻结。
 
@@ -91,7 +91,7 @@ Bridge 的每条 phase 要求 `stage` 唯一，因此章节名不能同时用作
 | `night_gather_0` 至 `night_gather_7` | 已有且宿主已注册：聚落 GatheringService 注册实际 GatherPoint；同名 Marker 另存于 StoryAnchors | 当前采集的是醒神菇示例，不是取得圣血的实现；夜间 flag 不等于正式日程服务 |
 | 正式出店、文书、血液容器交互 | 规划预留 `day1_exit_shop`、`day1_elder_document`、`day1_blood_storage` | 尚无这些可用点位；原有 `00_shop` / `10_elder` 为地点说明，不能冒充剧情出入口/搜索成功 |
 | `shop.door_bell` | 已有且宿主已注册：试编排宿主明确 register_sound；声音也在 [SoundLibrary](../../src/resources/audio/sound_library.tres) | 正式 MainGame 未自动导入 SoundLibrary，不能声称正式宿主已注册 |
-| `music.daily_milk_tea`、`shop.order_open`、`shop.tea_pour`、`shop.sealer` | 资源存在但未接线：SoundLibrary 有 ID；基础 AudioManager 场景未配置 sounds 字典，MainGame 未注册目录 | 当前试编排脚本也只注册门铃，Story JSON 没有 BGM 步骤，与其 Markdown 音乐要求不一致，见 [P15](../story_authoring/day1_integration.pending.md#p15)；不在本次修复 |
+| `music.daily_milk_tea`、`shop.order_open`、`shop.tea_pour`、`shop.sealer` | 资源存在但未接线：SoundLibrary 有 ID；基础 AudioManager 场景未配置 sounds 字典，MainGame 未注册目录 | 当前试编排脚本也只注册门铃，Story JSON 没有 BGM 步骤，与其 Markdown 音乐要求不一致，见 [P15](../story_authoring/day_01_integration_pending.md#p15)；不在本次修复 |
 
 正式 Actor 预留 `day1_first_goblin_customer`、`day1_group_goblin_<序号>`，具体实例数、模板与立绘由 P03 决定。Actor ID、说话人名称和立绘映射各自独立，不能按名字相似自动绑定。
 

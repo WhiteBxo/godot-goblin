@@ -36,7 +36,7 @@
 
 命名空间 ID 至少两个由 `.` 分隔的合法 identifier，例如 `day1.intro_finished`。Actor、Marker、音频和 Dialogue ID 没有该强制命名空间约束，但应保持现有稳定名称。
 
-MainGame 已绑定见闻录服务；其他宿主先调用 `StoryDirector.set_chronicle_journal(journal)`。见闻录指令只更新数据，不打开 UI；缺少服务或向未解锁条目追加时事件失败，已执行的步骤不回滚。接口与 F6 测试入口见 [见闻录模块](chronicle.md)。
+MainGame 已绑定见闻录服务；其他宿主先调用 `StoryDirector.set_chronicle_journal(journal)`。见闻录指令只更新数据，不打开 UI；缺少服务或向未解锁条目追加时事件失败，已执行的步骤不回滚。接口与 F6 测试入口见 [见闻录模块](../gameplay/chronicle.md)。
 
 ## Dialogue JSON
 
@@ -70,7 +70,7 @@ Dialogue ID、行 ID 非空，`start` 必须指向当前对话的行；`speaker`
 | Cinematic 音频 | `cinematic.bell` = AudioDemoTones.tone(880, 0.45)；`cinematic.room` = tone(164.81, 2, true) 循环；`cinematic.rumble` = `res://src/debug/story/strange_knock.tres`；仅 Demo 宿主注册 |
 | 其他演示与测试 | 如 `demo.*` 音频、`test_position` 不属于正式注册表；只有目标宿主实际配置后才能引用 |
 
-此表是检索起点；每次编排重新核对目标场景实际注册和资源存在性，不把基线当全局常量。更多冲突/取消规则见 [StoryDirector](story_director.md#并行冲突与取消)，工作流见 [编排规范](story_authoring_workflow.md)。
+此表是检索起点；每次编排重新核对目标场景实际注册和资源存在性，不把基线当全局常量。更多冲突/取消规则见 [StoryDirector](../systems/story_director.md#并行冲突与取消)，工作流见 [编排规范](story_authoring_workflow.md)。
 
 
 ## Gameplay 模式字段

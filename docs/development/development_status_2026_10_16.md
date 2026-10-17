@@ -1,4 +1,6 @@
-# 系统开发现状
+# 系统开发现状（2026-10-16 历史快照）
+
+> 历史记录：本文保留当时的能力判断、工作区状态和验证范围，不代表当前功能。当前启动方式见[启动与新游戏](../guides/game_entry.md)，模块入口见[文档索引](../README.md)。
 
 整理日期：2026-10-16。依据当前工作区代码、场景、现有模块说明和 Day 1 实施稿整理。
 
@@ -35,7 +37,7 @@
 
 ## 对照 Day 1 六阶段
 
-以当前未跟踪的 `Day1开发.md` 实施稿作为目标参考；其中的取舍不等同于已验收功能。
+以当前未跟踪的 `docs/design/day_01_development_spec.md` 实施稿作为目标参考；其中的取舍不等同于已验收功能。
 
 | 阶段 | 可复用基础 | 实际缺口 |
 | --- | --- | --- |
@@ -62,7 +64,7 @@ Day 1 实施稿明确延后的经营模拟、复杂守卫 AI、战斗、社会�
 
 ## 当前工作区与文档注意事项
 
-整理前已有改动：`AGENTS.md`、`project.godot`、玩家场景及动画资源、奶茶店场景；另有未跟踪的 `Day1开发.md`、`player_walk_frames.tres` 和 `milkTea.tscn`。这些属于已有工作，本次不修改、不纳入提交。
+整理前已有改动：`AGENTS.md`、`project.godot`、玩家场景及动画资源、奶茶店场景；另有未跟踪的 `docs/design/day_01_development_spec.md`、`player_walk_frames.tres` 和 `milkTea.tscn`。这些属于已有工作，本次不修改、不纳入提交。
 
 - `milkTea.tscn` 当前仅有一个空 Node2D 根节点；正式入口引用的是 `milk_tea_shop.tscn`。
 - 顶层 README 和洞穴说明仍描述 F5 启动洞穴，与当前奶茶店主场景不一致。
@@ -73,7 +75,7 @@ Day 1 实施稿明确延后的经营模拟、复杂守卫 AI、战斗、社会�
 
 主要源码：`src/core/main.gd`、`main.tscn`、`game_state.gd`，以及 `src/core/dialogue/`、`src/core/story/`、`src/gameplay/player/`、`src/gameplay/interaction/`、`src/UI/milk_tea/`、`src/levels/` 和相关调试组件。
 
-模块说明：[奶茶店](milk_tea_mvp.md)、[GameState](game_state.md)、[对话](dialogue_system.md)、[StoryDirector](story_director.md)、[洞穴](cave_demo/README.md)。
+模块说明：[奶茶店](../levels/milk_tea_mvp.md)、[GameState](../systems/game_state.md)、[对话](../systems/dialogue_system.md)、[StoryDirector](../systems/story_director.md)、[洞穴](../levels/cave_demo/README.md)。
 
 后续代码改动可按涉及范围运行已有 `tests/verify_game_state.gd`、`verify_dialogue.gd`、`verify_story_director.gd`、`verify_milk_tea_shop.gd`、`verify_shop_camera.gd` 等脚本。完整 Day 1 仍需新增实际通关路径后再做端到端验收。
 

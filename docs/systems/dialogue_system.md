@@ -93,7 +93,7 @@ dialogue.set_current_portrait(null) # 只隐藏当前句，下一句重新解析
 
 如果切换由对白数据驱动，继续使用现有 v1 JSON 的 `portrait` 路径字段，例如 `"portrait": "res://assets/characters/apron_man/player_talking_portrait.png"`。无需修改 StoryDirector 或正文顺序。程序默认映射按 speaker 精确匹配；`主角·内心`、`玩家` 是独立键，按需分别配置。
 
-重建透明素材（Python 3、Pillow、numpy）：`python tools/art/prepare_player_portraits.py`。来源和抠图规则见 [本次素材导入记录](asset_imports/player_dialogue_portraits.md)。
+重建透明素材（Python 3、Pillow、numpy）：`python tools/art/prepare_player_portraits.py`。来源和抠图规则见 [本次素材导入记录](../assets/imports/player_dialogue_portraits.md)。
 
 ## 输入与界面边界
 
@@ -101,7 +101,7 @@ UI 复用 InputMap 的 `interact`、`ui_accept`、`ui_up/down`、`ui_cancel`，�
 
 MainGame 复用 `PlayerController.set_movement_enabled` 保存并关闭移动，并用 ShopInteraction 新增的通用 `set_input_enabled` / `is_input_enabled` 关闭交互和提示。交互点直接发 signal 也受此开关保护。MainGame 统一以“对白活跃 OR StoryDirector 忙碌”计算锁定；最后一个输入所有者结束才恢复原值，演出停顿也保持锁定，原先已禁用的控制不会被误启用。ShopUI 已打开时通过 `can_start` 拒绝启动对话，继续使用现有店铺弹窗锁定逻辑，不堆叠两个输入所有者。
 
-UI 按 640×360 视口设计，底部面板为 560×136px，水平居中、距底边 12px，棕色、金色边框与奶茶店一致。当前说话者立绘在左侧或右侧的 240×272px 区域内等比居中，使用线性过滤。区域中心对齐面板上边缘，面板以较高的 z_index 绘制在立绘前方，遮住下半身，约上半身露出；无图时隐藏立绘。正文超出固定范围后支持鼠标滚轮和右侧滚动条阅读，不再撑大面板，新的一行从顶部开始显示。选项列表也支持滚动。对话 UI 与独立场景使用随包分发的 [Fusion Pixel](../assets/fonts/fusion_pixel/README.md) 中文字体，避免依赖宿主系统 CJK fallback；保留完整简体字符版本、原始许可证和导入设置。
+UI 按 640×360 视口设计，底部面板为 560×136px，水平居中、距底边 12px，棕色、金色边框与奶茶店一致。当前说话者立绘在左侧或右侧的 240×272px 区域内等比居中，使用线性过滤。区域中心对齐面板上边缘，面板以较高的 z_index 绘制在立绘前方，遮住下半身，约上半身露出；无图时隐藏立绘。正文超出固定范围后支持鼠标滚轮和右侧滚动条阅读，不再撑大面板，新的一行从顶部开始显示。选项列表也支持滚动。对话 UI 与独立场景使用随包分发的 [Fusion Pixel](../../assets/fonts/fusion_pixel/README.md) 中文字体，避免依赖宿主系统 CJK fallback；保留完整简体字符版本、原始许可证和导入设置。
 
 ## 试玩与自动化验证
 

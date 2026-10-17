@@ -27,7 +27,7 @@ game.open_chronicle()
 
 进度存入 GameState 保留变量 `chronicle.entries`：`entry_id -> {title, records: [{record_id, content}], is_read}`。存在即已解锁，无需另存 `unlocked`。业务通过服务读写此保留变量，不直接修改字典。服务拒绝覆盖结构损坏的变量（ERR_INVALID_DATA），显示为空；开发者修正/恢复变量后自动刷新。
 
-现有项目没有磁盘存档系统。进度已进入 `GameState.to_dict()` / `restore_state()` 边界，跨场景和已有快照恢复都保留解锁、正文和已读状态，不建立第二套存档。未来存档层保存完整原生 Variant 快照即可；遵循 [GameState 的类型约定](game_state.md)，不要直接将 JSON 数字解析结果作为原生快照。测试使用临时文件 store_var/get_var 验证真实磁盘往返。
+现有项目没有磁盘存档系统。进度已进入 `GameState.to_dict()` / `restore_state()` 边界，跨场景和已有快照恢复都保留解锁、正文和已读状态，不建立第二套存档。未来存档层保存完整原生 Variant 快照即可；遵循 [GameState 的类型约定](../systems/game_state.md)，不要直接将 JSON 数字解析结果作为原生快照。测试使用临时文件 store_var/get_var 验证真实磁盘往返。
 
 ## 正式剧情接入
 
@@ -42,7 +42,7 @@ game.open_chronicle()
 
 后续 Beat 只需追加另一个稳定 record_id；重播或失败重试不会重复内容。MainGame 已注入服务；自定义宿主将配置好的 journal 传入 `director.set_chronicle_journal(journal)`。缺少服务、未解锁追加或 ID 冲突会让事件失败并报告所在步骤，先前已成功步骤保持原样，沿用原 Director 的非事务语义。
 
-正式编排继续遵循 [剧情编排工作流](story_authoring_workflow.md)，只从 Markdown 取标题与正文，不把剧情顺序硬编码到 GDScript。当前没有正式条目库，也不预加载未解锁正文；未来内容直接由各剧情 JSON 提供。测试事件集中在 `src/debug/chronicle/demo_story.json`，可独立替换，不引用正式剧情。
+正式编排继续遵循 [剧情编排工作流](../guides/story_authoring_workflow.md)，只从 Markdown 取标题与正文，不把剧情顺序硬编码到 GDScript。当前没有正式条目库，也不预加载未解锁正文；未来内容直接由各剧情 JSON 提供。测试事件集中在 `src/debug/chronicle/demo_story.json`，可独立替换，不引用正式剧情。
 
 ## UI 行为与 F6 验收
 

@@ -54,7 +54,7 @@ godot --headless --path . --script res://tools/map/import_cave_layout.gd -- --la
 - 原图集每格 32×32，边距和间距为 9；NW、NE、SW、SE 分别为 1、2、4、8。MASK_TO_ATLAS 在 CaveAtlas 中定义，原 demo 的显示格偏移半格。
 - prepare_cave_grid.gd 将原图集四个 16×16 象限重新拼成标准 32×32 格，生成 cave_ground.png、cave_border.png 及对应的外部 TileSet。布局坐标与 FloorLayer 现在完全对齐，原地图像素不变。
 - 原图的虚空黑化处理提前生成 cave_floor_processed.png，外部 TileSet 位于 src/resources/tilesets/，游戏启动时直接读取这些资源。
-- river_source.png 为成员 demo 中保留的生成源图，river.png 是 nearest 缩小到 32×32 的派生图；玩家现使用用户提供的四向精灵图，切帧说明见 [玩家素材说明](../../assets/characters/player/README.md)。
+- river_source.png 为成员 demo 中保留的生成源图，river.png 是 nearest 缩小到 32×32 的派生图；玩家现使用用户提供的四向精灵图，切帧说明见 [玩家素材说明](../../../assets/characters/player/README.md)。
 - 素材来源和生成提示词见 source_demo.md，说明沿用成员文档。
 - export_presets.cfg 保留 JSON 导出过滤，并排除文档、离线工具与测试；运行时不依赖 .godot 缓存中的自定义文件。
 
@@ -93,7 +93,7 @@ godot --path . -- --capture-atlas-compare
 
 ## 通用开发者工具
 
-通用面板现覆盖聚落、奶茶店与洞穴宿主。F3 打开/关闭，默认收起；状态、角色、剧情三个页签提供实时观察、移速、回出生点、确认重启与有界日志。完整接线、缺失能力处理和测试记录见 [Developer Console](../developer_console.md)。
+通用面板现覆盖聚落、奶茶店与洞穴宿主。F3 打开/关闭，默认收起；状态、角色、剧情三个页签提供实时观察、移速、回出生点、确认重启与有界日志。完整接线、缺失能力处理和测试记录见 [Developer Console](../../development/developer_console.md)。
 
 `DeveloperTools.configure(set_multiplier, get_multiplier, panel, context = {})` 保留两个 Callable 的原接口；重绑不重置已有倍率。角色能力缺失返回 ERR_UNCONFIGURED，仍可只读观察；工具关闭时隐藏面板。MainGame 注入公开 API 与场景服务，CaveDemoController 继续独立管理布局、墙体、全图与截图。UIManager 管理 Console 的 modal 焦点与底层输入屏蔽。
 

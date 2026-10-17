@@ -1,6 +1,6 @@
 # Day 1 对接待定与能力缺口
 
-核对日期：2026-10-17；源码基线 `ab18ce6`。配套[对接约定](../design/day1_integration_contract.md)。本文不是新的剧情来源，不补对白、坐标、价格、机制规则；所有 ID 预留均不等于已发布。
+核对日期：2026-10-17；源码基线 `ab18ce6`。配套[对接约定](../design/day_01_integration_contract.md)。本文不是新的剧情来源，不补对白、坐标、价格、机制规则；所有 ID 预留均不等于已发布。
 
 核对期间另有未提交的标题菜单、GameEntry 与暂停返回标题工作。P02/P10 应由集成端在其合并后复核；这些并行导航改动不等于正式剧情或结尾已完成，本轮不修改或验收它们。
 
@@ -10,7 +10,7 @@
 ## P01 日期与章节阶段不一致
 
 - **影响**：S01→S02、S04 入夜、S05 次日守卫伏笔、后续 Day 2。
-- **证据**：[前两阶段稿](../design/day1_stages_01_02_draft.md)第二阶段保留“第二天”且标待确认；[修改版](../design/day01修改版.md)又将六阶段归 Day 1。GameState.current_day 与 story_stage 独立，现有夜间采集使用 `world.phase.night`，没有自动日程。
+- **证据**：[前两阶段稿](../design/day_01_stages_01_02_draft.md)第二阶段保留“第二天”且标待确认；[修改版](../design/day_01_story_flow_revised.md)又将六阶段归 Day 1。GameState.current_day 与 story_stage 独立，现有夜间采集使用 `world.phase.night`，没有自动日程。
 - **需决定**：Day 1 是章节还是日历日；每个转场显示的日期、current_day 与昼夜事实写入时点。不能默认把第二阶段改为同日或自动推进天数。
 - **可继续**：登记六章节 ID、独立演出与业务结果；日期显示/换天段暂不发布。
 
@@ -18,7 +18,7 @@
 ## P02 正式人类顾客与宿主绑定
 
 - **影响**：S01 点单、交付目标、离场；正式启动与试编排复用。
-- **证据**：[试编排稿](../design/day1_scene01.md)明确 customer 使用暖色调试占位角色；[宿主脚本](../../src/debug/story/day1_scene01_demo.gd)仅在 Debug 自动播放。正式 MainGame 当前没有人类顾客实例或完整 Day 1 加载。
+- **证据**：[试编排稿](../design/day_01_scene_01.md)明确 customer 使用暖色调试占位角色；[宿主脚本](../../src/debug/story/day1_scene01_demo.gd)仅在 Debug 自动播放。正式 MainGame 当前没有人类顾客实例或完整 Day 1 加载。
 - **需决定/补能力**：正式人物资源与立绘、交付对象、准确站位/走位、正式宿主与加载入口。已有占位授权仅属于旧 Demo，不能扩成正式角色授权。
 - **可继续**：保留 `day1.scene01` 及正式 Actor 名预留 `day1_human_customer`，整理接口；不生成假正式资源路径。
 

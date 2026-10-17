@@ -5,12 +5,12 @@ Godot 4.7.2，F5 进入标题菜单后选择“新游戏”，或打开 `src/cor
 - WASD / 方向键：八方向移动，斜向不加速。
 - 左上仓库、上方制作台、下方订单板：靠近金色标记显示「按 E 交互」，E 打开对应信息界面。
 - Esc / 返回按钮：关闭界面并恢复移动。弹窗期间角色停止移动。
-- 制作台已接入初级制作：选择茶底、奶精、小料，按订单扣料制作成品入库并展示下一笔制作订单；首单携带到指定 NPC 交付后才完成任务并发奖。仓库、订单板与制作台共享本次营业数据。详见 [基础制作说明](basic_tea_production.md)。
+- 制作台已接入初级制作：选择茶底、奶精、小料，按订单扣料制作成品入库并展示下一笔制作订单；首单携带到指定 NPC 交付后才完成任务并发奖。仓库、订单板与制作台共享本次营业数据。详见 [基础制作说明](../gameplay/basic_tea_production.md)。
 
 ## 结构与坐标
 
 - `src/levels/milkTea/milk_tea_shop.tscn`：背景、出生点、15 个实体碰撞形状、三个交互组件实例，可直接在编辑器中修改。`get_world_bounds()` 提供背景世界范围；四面外墙在初始化时按图片尺寸与 `boundary_insets`（左、上、右、下）同步，并封闭底部侧墙缺口。
-- `src/gameplay/player/shop_player.*`：独立角色，`CharacterBody2D` 的 Floating 模式和 `move_and_slide()`。脚部横向胶囊碰撞体为 34 × 20 世界像素；新素材显示缩放为 0.52，角色约 110 像素高。动画按速度调整节奏并保留转向时的步态进度；nearest 与 alpha cutout 保持轮廓清晰。四向动画说明见 [玩家素材说明](../assets/characters/player/README.md)。
+- `src/gameplay/player/shop_player.*`：独立角色，`CharacterBody2D` 的 Floating 模式和 `move_and_slide()`。脚部横向胶囊碰撞体为 34 × 20 世界像素；新素材显示缩放为 0.52，角色约 110 像素高。动画按速度调整节奏并保留转向时的步态进度；nearest 与 alpha cutout 保持轮廓清晰。四向动画说明见 [玩家素材说明](../../assets/characters/player/README.md)。
 - `src/gameplay/player/bounded_follow_camera.gd`：角色子节点上的跟随相机，位置平滑速度为 8，默认缩放 0.5。相机保留为玩家子节点，但启用 top_level 隔离父节点碰撞位移；在玩家移动后的物理帧先将目标限制到合法取景中心范围，再交给 Camera2D 平滑，并在误差小于 0.01 世界像素时结束平滑尾差，避免底边持续按 S 时出现像素抖动。主场景注入 `get_camera_bounds()`；`camera_insets` 按左、上、右、下排除图片外圈装饰黑框，不修改背景像素和家具坐标。窗口变宽或变高时自动提高最小缩放，避免视野越界。
 - `src/gameplay/interaction/interaction_point.*`：复用 `Area2D`，导出地点 ID、名称、说明；通过 `availability_changed` 和 `interacted` 信号通知协调组件。
 - `src/gameplay/interaction/shop_interaction.gd`：选择最近可交互地点，处理 E，并协调角色与 UI。新增地点可实例化组件，通过 `MilkTeaShop.get_interaction_points()` 自动接入。

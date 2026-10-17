@@ -55,7 +55,7 @@ func start_room_tone(audio: AudioManager) -> int:
 
 ## 来源、生成与响度
 
-原有 31 个 WAV 来源统一为 `tools/audio/generate_sound_pack.py`，许可见 [音频许可证](../assets/audio/LICENSE.md)。固定种子 `47001 + 条目序号 * 100 + 变体序号`；各素材独立随机数发生器；采样噪声、多模态衰减共鸣、滑频气泡、谐波共振峰声源、短延迟反射分层。不是纯正弦测试音集合。
+原有 31 个 WAV 来源统一为 `tools/audio/generate_sound_pack.py`，许可见 [音频许可证](../../assets/audio/LICENSE.md)。固定种子 `47001 + 条目序号 * 100 + 变体序号`；各素材独立随机数发生器；采样噪声、多模态衰减共鸣、滑频气泡、谐波共振峰声源、短延迟反射分层。不是纯正弦测试音集合。
 
 处理：轻柔 tanh 饱和、短音 45–5500 Hz 带通、8 ms 首尾包络、消除不可闻长尾；常规有效区 RMS 约 -23 dBFS，对话 -28 dBFS，循环 -32 dBFS。有效区定义为超过本文件峰值 4% 的采样；这是短音一致性指标，不宣称 LUFS 等响。4 倍过采样估计 true peak 上限 -6 dBTP，实际峰值保留更多余量。叠加大量音效仍须按场景混音，单文件不削波不代表任意叠加不削波。
 
@@ -75,7 +75,7 @@ godot --headless --path . --script res://tests/verify_audio_manager.gd
 
 验证覆盖 31 个文件哈希、PCM、有效区 RMS、DC、4 倍 true peak、高频能量、短音边界及循环接缝/静音坑；Godot 验证所有加载与 loop 配置、基础/变体注册、非相邻重复、实际服务播放状态、叠加触发、停止、自然回收、缺失文件/null 流和 Demo 分类、连续试听、音量与取消。自动化不替代人工试听。
 
-实现依据 Godot 4.7 官方文档：[AudioStreamPlayer](https://docs.godotengine.org/en/4.7/classes/class_audiostreamplayer.html) 的 `stop()` 不发 finished，试听停止显式取消 Timer；[AudioStreamWAV](https://docs.godotengine.org/en/4.7/classes/class_audiostreamwav.html) 的 forward loop 与采样单位；[ResourceLoader](https://docs.godotengine.org/en/4.7/classes/class_resourceloader.html) 的导入前置要求及资源依赖。播放生命周期完全复用 [AudioManager](audio_manager.md)。
+实现依据 Godot 4.7 官方文档：[AudioStreamPlayer](https://docs.godotengine.org/en/4.7/classes/class_audiostreamplayer.html) 的 `stop()` 不发 finished，试听停止显式取消 Timer；[AudioStreamWAV](https://docs.godotengine.org/en/4.7/classes/class_audiostreamwav.html) 的 forward loop 与采样单位；[ResourceLoader](https://docs.godotengine.org/en/4.7/classes/class_resourceloader.html) 的导入前置要求及资源依赖。播放生命周期完全复用 [AudioManager](../systems/audio_manager.md)。
 
 ## 本次执行结果
 

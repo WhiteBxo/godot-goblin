@@ -20,7 +20,7 @@
 
 GameState 通过 `get_transactions()` 提供 WalletTransactions；经营服务复用其库存，钱包、制作、交付及重置/恢复通知期间拒绝重入交易。
 
-GameState 还通过 `get_warehouse_inventory()` / `get_tea_production()` 持有唯一的跨场景经营服务。新游戏优先调用 `start_new_game() -> Error`，同时初始化库存、成品、制作队列与剧情，并取消本地演出；`reset_state` 为兼容接口，也重置整个会话。详见 [统一经营会话](business_session.md)。
+GameState 还通过 `get_warehouse_inventory()` / `get_tea_production()` 持有唯一的跨场景经营服务。新游戏优先调用 `start_new_game() -> Error`，同时初始化库存、成品、制作队列与剧情，并取消本地演出；`reset_state` 为兼容接口，也重置整个会话。详见 [统一经营会话](../gameplay/business_session.md)。
 
 ## Signal
 
@@ -66,4 +66,4 @@ _refresh_from_state()
 
 ## 钱包与库存
 
-`get_transactions()` 返回跨场景 WalletTransactions，统一管理钱包、购买与实际奖励领取，复用现有仓库。`to_dict()` 的 economy 同时保存余额、库存、商店余量与领取记录；reset_state 一起重置，restore_state 先校验整包再发布通知。详见 [交易接口、原子性与委托待确认规则](wallet_transactions.md)。
+`get_transactions()` 返回跨场景 WalletTransactions，统一管理钱包、购买与实际奖励领取，复用现有仓库。`to_dict()` 的 economy 同时保存余额、库存、商店余量与领取记录；reset_state 一起重置，restore_state 先校验整包再发布通知。详见 [交易接口、原子性与委托待确认规则](../gameplay/wallet_transactions.md)。

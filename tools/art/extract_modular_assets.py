@@ -220,7 +220,7 @@ def main():
         issues.extend(warnings)
     result = {"version": 1, "model": "gpt-image-2.5-sunburst", "processing": "native crop + hard alpha only; no resizing", "count": sum(len(pack["assets"]) for pack in catalog), "packs": catalog, "inspection_notes": issues}
     (ART / "catalog.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
-    docs = ROOT / "docs/modular_assets/captures"
+    docs = ROOT / "docs/assets/modular_assets/captures"
     docs.mkdir(parents=True, exist_ok=True)
     overview = Image.new("RGB", (1536, ((len(catalog) + 3) // 4) * 300), "#202631")
     for i, pack in enumerate(catalog):

@@ -2,7 +2,7 @@
 
 整理日期：2026-10-17。前提：剧情编排在另一台机器上推进，本清单只列**不与剧情文本冲突**的系统工作，用于决定接下来写哪部分代码。
 
-依据：[系统设计审查](system_design_review.md)、[Day 1 执行规格](../Day1开发.md)、各模块说明与当前源码。
+依据：[系统设计审查](system_design_review.md)、[Day 1 执行规格](../design/day_01_development_spec.md)、各模块说明与当前源码。
 
 ## 结论
 
@@ -42,7 +42,7 @@
 
 ## 实施记录：系统 4 已完成
 
-2026-10-17 落地「采集与任务物资提交」，实现说明见 [采集与任务物资提交](../gathering.md)。
+2026-10-17 落地「采集与任务物资提交」，实现说明见 [采集与任务物资提交](../gameplay/gathering.md)。
 
 - 8 个 `night_gather_*` 锚点改为 `GatherPoints` 下的采集点实例，采集入共享库存，已采状态写 `GameState` 的 flags/variables。
 - `delivery` 新增互斥的 `items` 材料清单，复用同一份扣减、完成 flag 与回执；成品订单与旧三参 API 保持兼容。

@@ -53,11 +53,11 @@ UI 中固定配方 Demo session 与真实订单控件互斥显示，防止误认
 
 F6：`src/debug/gameplay_bridge/order_bridge_demo.tscn`。
 开场 → WASD 到订单板 E 调查 → 推进教学 → 奶茶制作台 E →
-选择红茶/奶精/珍珠，糖浆自动加入 → 制作并入库 → Esc 关闭 → 胖哥布林按 E 交付 → 关闭交付弹窗 → 自动续播。详见 [成品交付](task_delivery.md)。
+选择红茶/奶精/珍珠，糖浆自动加入 → 制作并入库 → Esc 关闭 → 胖哥布林按 E 交付 → 关闭交付弹窗 → 自动续播。详见 [成品交付](../gameplay/task_delivery.md)。
 完成后再次调查订单板出现一次特殊对白，再次则回原订单 UI。
 旧 `gameplay_bridge_demo.tscn` 继续验证固定顺序配方，不代表真实订单。
 
-源稿、映射与验证规范见 [编排工作流](story_authoring_workflow.md#自动演出与玩家操作gameplay-bridge)。
+源稿、映射与验证规范见 [编排工作流](../guides/story_authoring_workflow.md#自动演出与玩家操作gameplay-bridge)。
 运行 `tests/verify_gameplay_bridge.gd`、`verify_story_director.gd`、`verify_tea_production.gd`、
 `verify_game_state.gd`、`verify_ui_manager.gd` 与 `verify_settlement.gd`。
 

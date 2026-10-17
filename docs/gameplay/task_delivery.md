@@ -80,7 +80,7 @@
 | 装配/店铺 NPC | `src/core/main.gd`（仅本功能部分）、`src/core/main.tscn` |
 | UI | `src/UI/milk_tea/shop_ui.gd`、`shop_popup.gd`、`production_panel.gd`、`warehouse_panel.gd` |
 | 测试 | `tests/verify_task_delivery.gd`、对应 `.uid`；`verify_task_system.gd`、`verify_tea_production.gd`、`verify_warehouse_inventory.gd`、`verify_gameplay_bridge.gd`、`verify_milk_tea_shop.gd` |
-| 试玩说明 | `src/debug/tasks/task_demo.gd`、本文、`docs/basic_tea_production.md`、`docs/milk_tea_mvp.md`、`docs/warehouse_inventory.md`、`docs/gameplay_bridge.md`、`docs/design/task_system.md` |
+| 试玩说明 | `src/debug/tasks/task_demo.gd`、本文、`docs/gameplay/basic_tea_production.md`、`docs/levels/milk_tea_mvp.md`、`docs/gameplay/warehouse_inventory.md`、`docs/systems/gameplay_bridge.md`、`docs/gameplay/task_system.md` |
 
 ## 实测结果
 

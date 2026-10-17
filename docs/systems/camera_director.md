@@ -73,7 +73,7 @@ MainGame 已通过 `configure_cinematic` 把 CameraDirector 接入 StoryDirector
 
 ## Demo 与验收
 
-编辑器 F6 运行 [camera_demo.tscn](../src/debug/camera/camera_demo.tscn)，或：
+编辑器 F6 运行 [camera_demo.tscn](../../src/debug/camera/camera_demo.tscn)，或：
 
 ```sh
 /Applications/Godot.app/Contents/MacOS/Godot --path . res://src/debug/camera/camera_demo.tscn

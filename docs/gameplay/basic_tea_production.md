@@ -1,6 +1,6 @@
 # 初级奶茶制作
 
-F5 进入标题菜单，选择“新游戏”进入奶茶店；也可 F6 单独运行店铺 `src/core/main.tscn` 或聚落 `src/core/settlement.tscn`。走到奶茶制作台，按 E 打开饮品制作界面。两个场景都由 MainGame 装配营业会话；操作弹窗时停止移动，Esc 或返回按钮关闭后恢复移动。新游戏重置整局，普通场景重载不重置，详见 [启动与新游戏](game_entry.md)。
+F5 进入标题菜单，选择“新游戏”进入奶茶店；也可 F6 单独运行店铺 `src/core/main.tscn` 或聚落 `src/core/settlement.tscn`。走到奶茶制作台，按 E 打开饮品制作界面。两个场景都由 MainGame 装配营业会话；操作弹窗时停止移动，Esc 或返回按钮关闭后恢复移动。新游戏重置整局，普通场景重载不重置，详见 [启动与新游戏](../guides/game_entry.md)。
 
 ## 验收步骤
 
@@ -17,7 +17,7 @@ F5 进入标题菜单，选择“新游戏”进入奶茶店；也可 F6 单独�
 - 原料不符、库存不足、订单全部完成时均不扣库存。完成后成品进入库存；交付任务另在指定 NPC 交互时结算，详见 [成品交付](task_delivery.md)。
 - `WarehouseInventory` 和 `TeaProduction` 由既有 GameState Autoload 持有，MainGame 只绑定服务；UI 仅展示数据和发出带当前订单 ID 的制作请求，拒绝过期订单和同步重入。切换、重进或重载场景均保留库存、成品与队列；只有显式新游戏重置整个会话。完整快照与生命周期见 [统一经营会话](business_session.md)，没有新增文件存档、补货、收入、AI 配方或剧情解锁内容。
 - `TaskDelivery` 复用任务状态、库存和物品奖励；订单板接取首单，制作不自动完成。`tests/verify_task_delivery.gd` 覆盖交付拒绝、一致性和重复奖励保护。
-- GameState 业务事实为 `shop.order_001_delivered` 等任务完成 flag（当前仅配置首单交付） 与 `shop.orders_completed` 最高进度；只适用于当前固定教学队列，不代表跨天订单或完整库存存档。见 [Gameplay Bridge](gameplay_bridge.md)。
+- GameState 业务事实为 `shop.order_001_delivered` 等任务完成 flag（当前仅配置首单交付） 与 `shop.orders_completed` 最高进度；只适用于当前固定教学队列，不代表跨天订单或完整库存存档。见 [Gameplay Bridge](../systems/gameplay_bridge.md)。
 - 仓库和订单板沿用现有交互入口；已配置的剧情交互仍优先由 StoryDirector 路由。
 
 ## 验证

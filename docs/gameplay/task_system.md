@@ -2,13 +2,13 @@
 
 日期：2026-10-17。实现依据为当前工作区，Godot 4.7.2。本文先于实现建立，验证后补充实测记录。
 
-> 后续实现已增加 [成品携带与指定 NPC 交付](../task_delivery.md)：首单不再制作后自动交付，订单板接取、成品入库、NPC 校验、任务完成及物品奖励均以该文和当前源码为准。下文保留 P0 实现时的架构记录与历史实测结果。
+> 后续实现已增加 [成品携带与指定 NPC 交付](task_delivery.md)：首单不再制作后自动交付，订单板接取、成品入库、NPC 校验、任务完成及物品奖励均以该文和当前源码为准。下文保留 P0 实现时的架构记录与历史实测结果。
 
-> 后续 UI 已增加 [委托列表与详情](../task_panel.md)：可通过 HUD 按钮或 J 键查看全部活动任务。本文中的“P0 不提供列表”保留为历史实现范围。
+> 后续 UI 已增加 [委托列表与详情](task_panel.md)：可通过 HUD 按钮或 J 键查看全部活动任务。本文中的“P0 不提供列表”保留为历史实现范围。
 
 ## 仓库审查与复用
 
-- 当前 project.godot 的正式入口为 src/core/settlement.tscn；src/core/main.tscn 是独立店铺。两者复用 MainGame。docs/development_status.md 的入口、经营能力描述已落后于源码。
+- 当前 project.godot 的正式入口为 src/core/settlement.tscn；src/core/main.tscn 是独立店铺。两者复用 MainGame。docs/development/development_status_2026_10_16.md 的入口、经营能力描述已落后于源码。
 - GameState 是唯一跨场景事实源，保存 day、story_stage、flags、variables、completed_events。setter 先提交数据，再同步 state_changed；reset/restore 也先发此信号。没有文件存档。
 - MainGame 在 Systems 装配库存、真实 TeaProduction、DialogueManager、StoryDirector、GameplayBridge；五个 CanvasLayer 的 layer 为 10/20/30/40/50。输入锁合并 UI modal、对白、演出与角色控制，不归任务模块。
 - TeaProduction.make_drink 校验当前订单 ID、配方和库存，原子扣料并提交订单后发 changed。MainGame 读取已完成数，写 shop.order_001_delivered 等 flag 和 shop.orders_completed 的最高值，重复通知不重复计数。WarehouseInventory 独立维护实际库存与发现信息。TeaMaking 是另一种 Demo 配方会话，不可当成真实交付。
@@ -17,7 +17,7 @@
 - GameplayBridge v2 等待真实 flag，并在 process 边界续播，保留 modal/暂停/取消/restore 规则。任务不另建等待器。
 - UIManager 负责屏幕注册和弹窗栈；通用开发工具仅 Debug，已有 GameState 只读查看和有界事件日志可观察任务。任务 HUD 是只读、无焦点、忽略鼠标的 HudLayer 子场景，无须改 UIManager。
 - CaveMap 从场景 TileMapLayer 建立通行信息；目前没有与店铺稳定接通的剧情出入口/地下拾取、潜行或小地图接口。ScreenTransition 是独立视觉组件，不等于已实现地图切换。既有 GameState 测试验证 Autoload 跨场景保留。
-- 已核对 Day1开发.md、day_01_story_flow.md、day01修改版.md、day1_scene01.md 及 order_bridge_demo 的 Story/Dialogue/Phase 和测试。剧情方向包括胖哥布林、神秘文书与格里芬之血；这些内容尚未发布，不能据此生成正式拾取结果或宣称 Day 1 完成。
+- 已核对 [Day 1 执行规格](../design/day_01_development_spec.md)、[原始流程](../design/day_01_story_flow.md)、[修改稿](../design/day_01_story_flow_revised.md)、[试编排稿](../design/day_01_scene_01.md) 及 order_bridge_demo 的 Story/Dialogue/Phase 和测试。剧情方向包括胖哥布林、神秘文书与格里芬之血；这些内容尚未发布，不能据此生成正式拾取结果或宣称 Day 1 完成。
 
 ## 职责与状态流转
 

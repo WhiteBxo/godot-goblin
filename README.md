@@ -2,13 +2,13 @@
 
 Godot 4.7 / GDScript 项目，当前默认进入标题菜单，选择“新游戏”后进入奶茶店。启动框架暂不自动播放剧情，完整 Day 1 仍待接入。
 
-使用 Godot 打开 project.godot，按 F5 运行。标题菜单支持鼠标、Tab 和 Enter；游戏内 WASD / 方向键移动，E 交互，Esc 关闭弹窗或暂停。暂停菜单可以返回标题，再次选择“新游戏”会重置整局。见 [启动与新游戏](docs/game_entry.md)。
+使用 Godot 打开 project.godot，按 F5 运行。标题菜单支持鼠标、Tab 和 Enter；游戏内 WASD / 方向键移动，E 交互，Esc 关闭弹窗或暂停。暂停菜单可以返回标题，再次选择“新游戏”会重置整局。见 [启动与新游戏](docs/guides/game_entry.md)。
 
-新版洞窟聚落保留在 `src/core/settlement.tscn`，可打开后按 F6 运行：15 个功能区域与奶茶店共用连续平地。开发模式下 M 切换全图与跟随视角，Tab 切换剧情动线。见 [新版聚落说明](docs/settlement/README.md)。
+新版洞窟聚落保留在 `src/core/settlement.tscn`，可打开后按 F6 运行：15 个功能区域与奶茶店共用连续平地。开发模式下 M 切换全图与跟随视角，Tab 切换剧情动线。见 [新版聚落说明](docs/levels/settlement/README.md)。
 
-原奶茶店 MVP 保留在 `src/core/main.tscn`，旧洞穴轮廓 demo 保留在 `src/debug/cave_demo/cave_demo.tscn`，可打开对应场景后按 F6 单独运行。
+原奶茶店 MVP 保留在 `src/core/main.tscn`，旧洞穴轮廓调试组件保留在 `src/debug/cave_demo/cave_demo.tscn`；奶茶店可按 F6 单独运行，洞穴组件需由宿主注入关卡和玩家。
 
-独立家具、道具与墙体库提供 208 张透明 PNG 和独立场景。打开 `src/debug/modular_assets/modular_assets_gallery.tscn` 后按 F6 检查；使用方法与素材清单见 [模块化素材说明](docs/modular_assets/README.md)。
+独立家具、道具与墙体库提供 208 张透明 PNG 和独立场景。打开 `src/debug/modular_assets/modular_assets_gallery.tscn` 后按 F6 检查；使用方法与素材清单见 [模块化素材说明](docs/assets/modular_assets/README.md)。
 
 ## 快速开始
 
@@ -43,7 +43,7 @@ godot --path .
 | 对话推进（对话 Demo） | E / Enter / 空格 | 补全逐字文本或推进对白 |
 | 选择对话分支（对话 Demo） | 上下方向键后确认 / 点击选项 | 进入对应分支 |
 
-奶茶店已接入基础配方制作、库存扣减和订单交付，使用方式见 [基础制作说明](docs/basic_tea_production.md)。主场景已创建对话、剧情和角色演出组件，但不会自动播放 Day 1 开场剧情，也没有接通奶茶店与洞穴之间的出入口。
+奶茶店已接入基础配方制作、库存扣减和订单交付，使用方式见 [基础制作说明](docs/gameplay/basic_tea_production.md)。主场景已创建对话、剧情和角色演出组件，但不会自动播放 Day 1 开场剧情，也没有接通奶茶店与洞穴之间的出入口。
 
 ## 独立 Demo
 
@@ -62,7 +62,7 @@ godot --path .
 godot --path . res://src/debug/story/story_demo.tscn
 ```
 
-洞穴地图保留地板、河道、墙体轮廓和通行查询，格子保存在关卡场景的 `TileMapLayer` 中。`src/debug/cave_demo/cave_demo.tscn` 是需要宿主注入关卡与玩家的调试组件，不是独立游戏入口。F2 切换墙体、M 切换全图 / 跟随视角等操作仅用于启用了该组件的 Debug 洞穴场景，当前奶茶店入口不提供这些功能。洞穴编辑、布局导入与截图流程见 [洞穴说明](docs/cave_demo/README.md)。
+洞穴地图保留地板、河道、墙体轮廓和通行查询，格子保存在关卡场景的 `TileMapLayer` 中。`src/debug/cave_demo/cave_demo.tscn` 是需要宿主注入关卡与玩家的调试组件，不是独立游戏入口。F2 切换墙体、M 切换全图 / 跟随视角等操作仅用于启用了该组件的 Debug 洞穴场景，当前奶茶店入口不提供这些功能。洞穴编辑、布局导入与截图流程见 [洞穴说明](docs/levels/cave_demo/README.md)。
 
 ## 目录结构
 
@@ -77,12 +77,12 @@ src/
 └─ debug/         # 独立 Demo、动画预览及开发工具
 assets/           # 地图、角色、字体、音效等素材
 addons/           # 随项目提交的第三方插件
-docs/             # 设计、模块说明及开发现状
+docs/             # 分类文档中心：指南、系统、玩法、关卡、素材、设计与开发记录
 tools/            # 地图与角色素材处理等离线工具
 tests/            # 自动化验证脚本与测试数据
 ```
 
-`MainGame` 负责装配 `Systems` 与 `World`：关卡、动态实体和世界特效分别放入 `LevelRoot`、`EntityRoot`、`EffectRoot`。屏幕 UI 使用 HUD、弹窗、暂停、转场、调试五个独立层；暂停和转场层目前保留为容器。跨场景状态由 `GameState` autoload 管理，目前提供内存快照与恢复，尚无文件存档界面。
+`MainGame` 负责装配 `Systems` 与 `World`：关卡、动态实体和世界特效分别放入 `LevelRoot`、`EntityRoot`、`EffectRoot`。屏幕 UI 使用 HUD、弹窗、暂停、转场、调试五个独立层；暂停菜单由启动流程接入，屏幕转场组件可独立验证。跨场景状态由 `GameState` autoload 管理，目前提供内存快照与恢复，尚无文件存档界面。
 
 ## 验证
 
@@ -105,7 +105,7 @@ godot --headless --path . --script res://tests/verify_actor_director.gd
 
 画面与交互还需在有渲染环境的运行窗口中试玩；自动化脚本不能替代视觉验收。地图编辑器、洞穴及 Debug / Release 边界验证的额外条件见各模块说明。上述命令是验证入口，不代表当前工作区已全部通过。
 
-通用开发者面板在聚落和奶茶店入口均可按 F3 打开，提供状态、角色控制及只读剧情观察；仅 Debug 创建。操作、接线和验收见 [Developer Console](docs/developer_console.md)。
+通用开发者面板在聚落和奶茶店入口均可按 F3 打开，提供状态、角色控制及只读剧情观察；仅 Debug 创建。操作、接线和验收见 [Developer Console](docs/development/developer_console.md)。
 
 ## 导出与协作
 
@@ -115,23 +115,20 @@ godot --headless --path . --script res://tests/verify_actor_director.gd
 - 静态洞穴地图以场景保存的格子为准，JSON 导入须显式执行，避免覆盖手工编辑的布局。
 - 开发约定、目录职责、调试边界和提交规范见 [AGENTS.md](AGENTS.md)。
 
-## 文档索引
+## 文档导航
 
-| 文档 | 内容 |
+完整清单、分类职责与文件命名规则见 **[文档中心](docs/README.md)**。按当前工作选择入口：
+
+| 目的 | 文档入口 |
 | --- | --- |
-| [启动与新游戏](docs/game_entry.md) | 标题、整局重置、返回标题与验证 |
-| [系统开发现状](docs/development_status.md) | 已有能力、使用限制与 Day 1 缺口 |
-| [奶茶店 MVP](docs/milk_tea_mvp.md) | 场景、碰撞、交互与跟随镜头 |
-| [GameState](docs/game_state.md) | 跨场景状态、快照与恢复 |
-| [对话系统](docs/dialogue_system.md) | 对白数据、选项与输入控制 |
-| [StoryDirector](docs/story_director.md) | 事件条件、剧情指令与取消清理 |
-| [ActorDirector](docs/actor_director.md) | 角色注册、移动与表现接口 |
-| [洞穴 Demo](docs/cave_demo/README.md) | 地图编辑、素材处理、截图与历史验证记录 |
-| [Day 1 剧情设计](docs/design/day_01_story_flow.md) | 第一天的目标剧情流程 |
-| [奶茶店与异世界见闻录设计](docs/design/milk_tea_system_and_otherworld_chronicle.md) | 经营与手札系统设计方向 |
-| [玩家素材说明](assets/characters/player/README.md) | 角色素材来源与切帧处理 |
-| [字体说明](assets/fonts/fusion_pixel/README.md) | 像素字体来源与许可 |
+| 启动与试玩 | [启动和新游戏](docs/guides/game_entry.md)、[奶茶店](docs/levels/milk_tea_mvp.md)、[聚落](docs/levels/settlement/README.md) |
+| 编写与编排剧情 | [简版写作指南](docs/guides/story_authoring_fields_quick_guide.md)、[工作流](docs/guides/story_authoring_workflow.md)、[全部指令](docs/guides/story_authoring_commands.md) |
+| 接入 Day 1 | [内容依据与对接约定](docs/design/day_01_integration_contract.md)、[待定清单](docs/story_authoring/day_01_integration_pending.md) |
+| 查看公共 API | [系统说明](docs/README.md#系统与公共接口)：状态、对话、剧情、角色、镜头、音频、UI、转场 |
+| 查看玩法与验收 | [玩法模块](docs/README.md#玩法模块)：制作、库存、交易、任务、采集、见闻录 |
+| 编辑地图或处理素材 | [关卡与地图](docs/README.md#关卡与地图)、[素材与导入](docs/README.md#素材与导入) |
+| 查看策划与原稿 | [设计与剧情源稿](docs/README.md#设计与剧情源稿)，含原始 PDF / Excel 附件 |
+| 调试与了解开发记录 | [开发者面板](docs/development/developer_console.md)、[审查与历史记录](docs/README.md#开发工具与记录) |
+| 参与协作 | [AGENTS.md](AGENTS.md)、[文档分类与命名规范](docs/README.md#分类与命名规范) |
 
-设计文档描述目标功能，模块说明包含历史验证记录；当前入口与配置以代码、场景和 `project.godot` 为准。素材来源及授权信息请查阅对应说明与许可证。
-
-剧情镜头系统的公开 API、Signal、独立 Demo 与验证方式见 [CameraDirector 说明](docs/camera_director.md)。
+设计稿描述目标功能，模块文档中的历史实测不代表当前工作区已重新通过验收。2026-10-16 的开发现状已标为历史快照；当前入口与配置以代码、场景和 `project.godot` 为准。素材来源与授权随对应资源维护。

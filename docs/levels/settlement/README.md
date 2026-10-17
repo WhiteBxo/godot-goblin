@@ -32,7 +32,7 @@ Unity 的 `GoblinCasinoDemo`、`GoblinTavernDemo`、`GoblinTrainingDemo`、`Gobl
 
 `SettlementMap.get_story_anchor()` 提供 `drunken_guard`、`tavern_bartender`、`casino_boss`、`elder_document`、`elder_blood_storage`、`shop_rest_chair`、`shop_workbench` 以及 `night_gather_0..7`。隐藏石盖和书柜仅保留线索锚点，不在普通地点提示中公开。
 
-目前实现地图、实际角色移动、环境碰撞、遮挡、地点说明、三个奶茶店信息交互和夜间采集：`GatherPoints` 在 8 个 `night_gather_*` 锚点放置采集点（`required_flag = world.phase.night`，白天不可采），醒神菇入共享库存并可交给酒馆，详见 [采集与任务物资提交](../gathering.md)。剧情演出、NPC 巡逻/警报、买酒、赌局、雇佣和两天完整任务流程尚未接入。预留锚点不等于已实现对应玩法。
+目前实现地图、实际角色移动、环境碰撞、遮挡、地点说明、三个奶茶店信息交互和夜间采集：`GatherPoints` 在 8 个 `night_gather_*` 锚点放置采集点（`required_flag = world.phase.night`，白天不可采），醒神菇入共享库存并可交给酒馆，详见 [采集与任务物资提交](../../gameplay/gathering.md)。剧情演出、NPC 巡逻/警报、买酒、赌局、雇佣和两天完整任务流程尚未接入。预留锚点不等于已实现对应玩法。
 
 ## 编辑与文件职责
 

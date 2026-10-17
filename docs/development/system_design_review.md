@@ -12,9 +12,9 @@
 
 主要内容来源：
 
-- [Day 2 剧情原稿](source/day_02.pdf)：37 页，含白天营业、醒神菇代购、酒馆、赌场、守卫交付，以及第三天分支。第 2 页是图片形式的流程表，已渲染核对。
-- [食材与饮品表](source/otherworld_ingredients_and_drinks.xlsx)：5 个工作表；有效内容为 10 种现实食材、12 种异世界原料、5 种酒品、6 款人类奶茶配方；哥布林奶茶配方仅填 P01–P10 产品 ID，其余规则字段为空。行数包含空行，不能用工作表最大行号统计内容数量。
-- [系统总纲](milk_tea_system_and_otherworld_chronicle.md)、[Day 1 执行规格](../Day1开发.md)、[任务系统](task_system.md)。
+- [Day 2 剧情原稿](../design/source/day_02.pdf)：37 页，含白天营业、醒神菇代购、酒馆、赌场、守卫交付，以及第三天分支。第 2 页是图片形式的流程表，已渲染核对。
+- [食材与饮品表](../design/source/otherworld_ingredients_and_drinks.xlsx)：5 个工作表；有效内容为 10 种现实食材、12 种异世界原料、5 种酒品、6 款人类奶茶配方；哥布林奶茶配方仅填 P01–P10 产品 ID，其余规则字段为空。行数包含空行，不能用工作表最大行号统计内容数量。
+- [系统总纲](../design/milk_tea_system_and_otherworld_chronicle.md)、[Day 1 执行规格](../design/day_01_development_spec.md)、[任务系统](../gameplay/task_system.md)。
 - 当前实现：`src/core/main.gd`、`src/core/game_state.gd`、`src/core/tasks/`、`src/core/story/`、`src/gameplay/milk_tea/`、`src/resources/milk_tea/`、`src/levels/settlement/` 及相关模块说明。
 
 成熟度按“方向：目的明确”“部分规则：可实现局部，但关键结果仍待定”“可实施：范围和边界足以开发”区分。已有实现另外说明，不用没有依据的完成百分比。
@@ -42,7 +42,7 @@
 | 特殊饮品效果与战斗 | 方向 | 已有描述字段；后续军队需求→商品研发→自保的剧情动机成立 | 效果目标、强度、持续/叠加、配方继承、使用/投掷、命中、敌人反应；当前属性文本不执行效果。按原稿属于后续能力 |
 | 保存、恢复与重开 | 有局部技术接口，整体体验未设计完整 | GameState 跨场景事实与快照；库存有快照；UI 有暂停；Debug 可重启 | 统一会话归属、库存/订单/成品/金钱与剧情一致保存、文件存档、恢复位置与阶段、自动存档、版本迁移、标题/新游戏/章节重开。场景重建目前重置库存和订单 |
 
-基础经营实现参见[初级奶茶制作](../basic_tea_production.md)、[共享库存](../warehouse_inventory.md)；空间边界参见[聚落说明](../settlement/README.md)。
+基础经营实现参见[初级奶茶制作](../gameplay/basic_tea_production.md)、[共享库存](../gameplay/warehouse_inventory.md)；空间边界参见[聚落说明](../levels/settlement/README.md)。
 
 ## 已有基础设施：主要需要内容接入
 
@@ -57,7 +57,7 @@
 
 当前 `project.godot` 默认入口为 `src/core/settlement.tscn`；聚落和独立店铺都调用 `_create_shop_business()` 创建库存与 TeaProduction。MainGame 创建 StoryDirector/Bridge，但没有加载正式两日剧情目录。正式任务目录 `src/resources/tasks/tasks.json` 仅有 `shop.first_order`，激活和最终结束仍需明确剧情事实。
 
-`docs/development_status.md` 仍描述奶茶店入口和静态展示 UI，`docs/gameplay_bridge.md` 的部分接入段落仍称聚落没有真实制作。这些说明已落后于当前装配代码，不能用来判定当前能力缺失。
+`docs/development/development_status_2026_10_16.md` 仍描述奶茶店入口和静态展示 UI，`docs/systems/gameplay_bridge.md` 的部分接入段落仍称聚落没有真实制作。这些说明已落后于当前装配代码，不能用来判定当前能力缺失。
 
 ## 原稿与数据需要先统一的事项
 
@@ -90,7 +90,7 @@
 | P1：较长流程交付前 | 统一文件存档与读取 | 多天、资金和不可逆分支需要可靠恢复 | 版本化快照覆盖面、保存时机、读取校验和无重复结算；可先限制在安全阶段保存，不必做演出逐帧恢复 |
 | P2：后续扩展 | 自由赌博、长期雇佣、完整战斗/潜行、军队经营与 AI 丰富表现 | 目前主要是方向，且依赖前述经济、配方、时间与状态闭环 | 在前置系统可玩后分别做小原型；若首个 Day 2 版本保留自由赌博承诺，需单独提升其设计与实现优先级 |
 
-长期高优先级与当前开发顺序需要区分。[Day 1 执行规格](../Day1开发.md)明确要求先完成线性通关，再进入复杂经济、通用潜行、AI 配方等扩展。本次没有把 Day 2 的雇佣/日历要求反向塞入 Day 1 MVP；Day 1 可使用固定阶段和专用金币事件。若目标已经改为两日可玩版，则 Day 2 表内的 P0 才成为当前阻塞。
+长期高优先级与当前开发顺序需要区分。[Day 1 执行规格](../design/day_01_development_spec.md)明确要求先完成线性通关，再进入复杂经济、通用潜行、AI 配方等扩展。本次没有把 Day 2 的雇佣/日历要求反向塞入 Day 1 MVP；Day 1 可使用固定阶段和专用金币事件。若目标已经改为两日可玩版，则 Day 2 表内的 P0 才成为当前阻塞。
 
 ## 建议下一步交付顺序与验收
 

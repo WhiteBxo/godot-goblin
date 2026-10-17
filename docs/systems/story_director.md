@@ -1,6 +1,6 @@
 # StoryDirector / P0 Cinematic Integration
 
-自然语言编排入口见 [Story Authoring Workflow](story_authoring_workflow.md)，全部 JSON 指令/默认参数见 [编排指令速查](story_authoring_commands.md)。创作源保存在 `docs/design/`，运行时继续使用本页的原有系统与 Schema。
+自然语言编排入口见 [Story Authoring Workflow](../guides/story_authoring_workflow.md)，全部 JSON 指令/默认参数见 [编排指令速查](../guides/story_authoring_commands.md)。创作源保存在 `docs/design/`，运行时继续使用本页的原有系统与 Schema。
 
 `src/core/story/story_library.gd` 负责 JSON 加载和完整校验；`story_director.gd` 只调度步骤。MainGame 在 `Systems` 创建 StoryDirector，传入原有 DialogueManager；Director 通过 `/root/GameState` 取得已有 Autoload，不创建第二份状态。正式入口不加载第一天示例、不自动播放剧情。
 
@@ -89,7 +89,7 @@ Signal 同步调用。收尾期间拒绝递归启动新事件，串联事件请�
 | `set_flag` | `key`：命名空间字符串 | `value` 为 bool，默认 true；设置相同值视为成功 |
 | `set_stage` | `value`：字符串 | 调用 `set_story_stage`；相同阶段视为成功 |
 | `chronicle_unlock` | `entry_id`：命名空间 ID；`title`：非空字符串 | 调用注入的 ChronicleJournal；重复解锁无副作用 |
-| `chronicle_append` | `entry_id`、`record_id`：命名空间 ID；`content`：非空字符串 | 向已解锁条目追加并标为未读；重复记录无副作用。见 [见闻录](chronicle.md) |
+| `chronicle_append` | `entry_id`、`record_id`：命名空间 ID；`content`：非空字符串 | 向已解锁条目追加并标为未读；重复记录无副作用。见 [见闻录](../gameplay/chronicle.md) |
 | `play_sfx` | 非空 `id` 或 `res:// path`，二选一 | 经适配层调用 AudioManager；默认非阻塞，`wait: true` 等自然结束；旧 path 保持兼容；资源/服务缺失或池满发 skipped 并继续 |
 
 目录必须包含 `version: 1` 和 `events` 对象；事件必须有非空 `steps`。未知字段、未知指令、非法类型、负等待值及非法命名空间均拒绝，并报告事件/步骤位置。对白 ID 在 runtime 由 DialogueManager 验证，音效允许留空素材路径对应的占位文件名（路径本身必须是 `res://`）。现有导出 preset 的 `*.json` 已覆盖新数据；以后改用选择场景导出时，必须显式包含 JSON 及其动态引用的音效资源。
@@ -203,7 +203,7 @@ Demo 脚本只注册资源/Marker、加载目录、启动事件和提供重播/�
 
 ## Gameplay Bridge
 
-相邻短事件通过 [Gameplay Bridge 编排规则](story_authoring_workflow.md#自动演出与玩家操作gameplay-bridge) 连接。
+相邻短事件通过 [Gameplay Bridge 编排规则](../guides/story_authoring_workflow.md#自动演出与玩家操作gameplay-bridge) 连接。
 `GameplayBridge` 位于 MainGame/Systems，消费既有 GameState flag（v2）或 TeaMaking 的真实完成 Signal（v1），不执行 Story steps；详见 [Gameplay Bridge](gameplay_bridge.md)。
 ShopUI 制作台提供固定配方按钮；配方规则属于 `src/gameplay/milk_tea/tea_making.gd`。
 输入锁继续由 MainGame 依据 busy/modal/actor 状态计算；ActorDirector 和 CameraDirector 职责保持原样。

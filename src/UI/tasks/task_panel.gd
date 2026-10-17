@@ -11,6 +11,8 @@ signal close_requested
 @onready var _summary: Label = $Margin/Panel/Margin/Content/Header/Summary
 @onready var _close: Button = $Margin/Panel/Margin/Content/Header/Close
 
+var _embedded_close: Button
+
 var _journal: TaskJournal
 var _ids: Array[String] = []
 var _selected_id := ""
@@ -59,7 +61,7 @@ func uses_native_gui_input() -> bool:
 	return true
 
 func get_default_focus() -> Control:
-	return _list if _list.item_count > 0 else _close
+	return _list if _list.item_count > 0 else (_embedded_close if is_instance_valid(_embedded_close) else _close)
 
 func _connect_journal() -> void:
 	if is_instance_valid(_journal) and not _journal.projection_changed.is_connected(_refresh):
@@ -102,7 +104,7 @@ func _refresh() -> void:
 		_title.tooltip_text = ""
 		_set_detail("接取任务后，可在这里查看目标、交付对象和奖励。")
 		if _list.has_focus():
-			_close.grab_focus()
+			get_default_focus().grab_focus()
 		return
 	var selected_index := _ids.find(_selected_id)
 	_list.select(selected_index) # select() does not emit item_selected.
@@ -153,3 +155,13 @@ func _select(index: int) -> void:
 		return
 	_selected_id = _ids[index]
 	_refresh()
+
+## Reuse the browser inside a shared modal without nested chrome.
+func set_embedded(close_button: Button) -> void:
+	_embedded_close = close_button
+	$Dim.hide()
+	$Margin/Panel/Margin/Content/Header.hide()
+	$Margin/Panel/Margin/Content/Hint.hide()
+	for side: String in ["left", "top", "right", "bottom"]:
+		$Margin.add_theme_constant_override("margin_" + side, 0)
+	$Margin/Panel.add_theme_stylebox_override("panel", StyleBoxEmpty.new())

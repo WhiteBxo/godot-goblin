@@ -77,9 +77,9 @@ P0 奖励采用文字元数据，以避免伪造尚未确定的金币/物品数�
 | 文件 | 职责 |
 | --- | --- |
 | src/core/tasks/task_catalog.gd | load_file/load_json(text, references) → Error；get_tasks() 返回静态定义副本；last_error 提供诊断 |
-| src/core/tasks/task_journal.gd | configure(catalog, state) → Error；refresh()；get_task(id)、get_active_tasks()、get_current_main_task()；projection_changed 无参数 |
+| src/core/tasks/task_journal.gd | configure(catalog, state) → Error；refresh()；get_task(id)、get_active_tasks()、get_current_main_task()、has_started_tasks()；projection_changed 无参数 |
 | src/resources/tasks/tasks.json | 唯一正式目录，包含首笔订单任务，不包含测试/地下剧情 |
-| src/UI/tasks/task_hud.gd、task_hud.tscn | bind_journal(journal)，显示当前主线/首个必需目标；260 逻辑像素最大宽度，小视口缩窄 |
+| src/UI/handbook/ | 正式 HUD 仅保留右上角手册图标；委托与异闻录共享页签窗口，不显示常驻任务追踪卡片。旧 TaskHUD 场景仅保留给独立验证使用 |
 | src/core/main.gd | 在 Systems/HudLayer 装配 Journal/HUD，公开 get_task_journal；监听真实订单板展示，复用原有交付映射 |
 | src/UI/milk_tea/shop_ui.gd | 新增 point_opened(id: StringName)，成功 present 后通知宿主；不负责写 GameState |
 | src/debug/tasks/task_demo.gd、task_demo.tscn | F6 可试玩验收宿主，仅 Debug；使用隔离测试 fixture，退出恢复进入前的 GameState |
@@ -178,3 +178,9 @@ python -X utf8 tests/verify_story_authoring.py --godot <上述 exe>：首个 cin
 针对更新后的当前工作区，额外重跑任务系统、TeaProduction、WarehouseInventory、UIManager、MainGame、Dialogue、MilkTeaShop、Settlement、InteractionFeedback 共 9 个测试，全部通过；默认 D3D12 / Forward+ 图形任务测试也再次通过 194 项，截图已刷新。其余表列回归是在这些并发场景/资源更新前执行，未声称最后再次运行。
 
 按本次用户附件要求，本任务未暂存、未创建 commit、未 push；无关新文档与并发提交也全部保留。
+
+## 手册入口与解锁
+
+首个已公开活动任务出现时（包含第一天首笔奶茶订单），宿主将 `ui.handbook.tasks_unlocked` 设为 true。`TaskJournal.has_started_tasks()` 只读查询已公开的活动或完成任务；初次接入、目录重绑定和旧快照恢复均据此补齐解锁事实。Journal 和 UI 不持有另一份可写进度。任务清空后入口保留，新游戏随 GameState 整体重置后隐藏。
+
+`MainGame.open_tasks()` 与 J 键打开统一手册的委托页，未解锁返回 ERR_UNAVAILABLE；手册图标首次优先委托，之后记住当前场景上次页签。`TaskPanel.set_embedded(close_button)` 复用原列表与详情并移除独立遮罩/标题栏，空列表焦点回到共享关闭按钮。正式模态 screen 为 `handbook`，`tasks` / `chronicle` 为其业务别名，切页不释放玩家权限。界面契约见 [UI 系统](../systems/ui_system.md)。

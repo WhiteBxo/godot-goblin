@@ -9,6 +9,8 @@ signal close_requested
 @onready var _summary: Label = $Margin/Panel/Margin/Content/Header/Summary
 @onready var _close: Button = $Margin/Panel/Margin/Content/Header/Close
 
+var _embedded_close: Button
+
 var _journal: ChronicleJournal
 var _ids: Array[String] = []
 var _selected_id := ""
@@ -34,10 +36,10 @@ func uses_native_gui_input() -> bool:
 	return true
 
 func get_default_focus() -> Control:
-	return _list if _list.item_count > 0 else _close
+	return _list if _list.item_count > 0 else (_embedded_close if is_instance_valid(_embedded_close) else _close)
 
 func _on_visibility_changed() -> void:
-	if is_node_ready() and not visible:
+	if is_node_ready() and not is_visible_in_tree():
 		_selected_id = ""
 		_refresh()
 
@@ -73,3 +75,13 @@ func _select(index: int) -> void:
 	_refresh()
 	_text.scroll_to_line(0)
 	_journal.mark_read(_selected_id)
+
+## Reuse the browser inside a shared modal without nested chrome.
+func set_embedded(close_button: Button) -> void:
+	_embedded_close = close_button
+	$Dim.hide()
+	$Margin/Panel/Margin/Content/Header.hide()
+	$Margin/Panel/Margin/Content/Hint.hide()
+	for side: String in ["left", "top", "right", "bottom"]:
+		$Margin.add_theme_constant_override("margin_" + side, 0)
+	$Margin/Panel.add_theme_stylebox_override("panel", StyleBoxEmpty.new())

@@ -8,6 +8,7 @@ signal screen_closed(id: StringName)
 
 var _layers: Dictionary = {}
 var _screens: Dictionary = {}
+var _aliases: Dictionary = {}
 var _stack: Array[StringName] = []
 var _owns_pause := false
 var _exiting := false
@@ -21,7 +22,7 @@ func configure(layers: Dictionary) -> void:
 	get_viewport().gui_focus_changed.connect(_on_focus_changed)
 
 func register_screen(id: StringName, view: Control, layer: StringName, modal: bool) -> Error:
-	if _screens.has(id):
+	if _screens.has(id) or _aliases.has(id):
 		return ERR_ALREADY_EXISTS
 	if id == &"" or not is_instance_valid(view) or not _layers.has(layer):
 		return ERR_INVALID_PARAMETER
@@ -41,13 +42,29 @@ func register_screen(id: StringName, view: Control, layer: StringName, modal: bo
 		view.bind_ui(self, id)
 	return OK
 
+func register_screen_alias(id: StringName, target: StringName, prepare: Callable) -> Error:
+	if _screens.has(id) or _aliases.has(id):
+		return ERR_ALREADY_EXISTS
+	if id == &"" or not _screens.has(target) or not prepare.is_valid():
+		return ERR_INVALID_PARAMETER
+	_aliases[id] = {"target": target, "prepare": prepare}
+	return OK
+
 func open_screen(id: StringName) -> Error:
+	var prepare := Callable()
+	if _aliases.has(id):
+		prepare = _aliases[id].prepare
+		id = _aliases[id].target
 	if _exiting or not _screens.has(id):
 		return ERR_DOES_NOT_EXIST
 	var entry: Dictionary = _screens[id]
 	if not is_instance_valid(entry.view) or not entry.view.is_inside_tree() or entry.view.is_queued_for_deletion():
 		return ERR_UNCONFIGURED
 	if entry.open:
+		if prepare.is_valid():
+			if get_tree().paused or _stack.is_empty() or _stack.back() != id:
+				return ERR_BUSY
+			return prepare.call()
 		return OK
 	if id == &"pause" and not _owns_pause:
 		if get_tree().paused:
@@ -61,6 +78,10 @@ func open_screen(id: StringName) -> Error:
 		for other: Dictionary in _screens.values():
 			if other.open and other.modal and other.layer == &"popup":
 				return ERR_BUSY
+	if prepare.is_valid():
+		var error: Error = prepare.call()
+		if error != OK:
+			return error
 	var focus := get_viewport().gui_get_focus_owner()
 	entry.focus = weakref(focus) if focus != null else null
 	entry.open = true
@@ -72,6 +93,7 @@ func open_screen(id: StringName) -> Error:
 	return OK
 
 func close_screen(id: StringName) -> void:
+	id = _aliases[id].target if _aliases.has(id) else id
 	if not is_open(id):
 		return
 	if id == &"pause" and _owns_pause:
@@ -100,6 +122,7 @@ func _close(id: StringName) -> void:
 	modal_changed.emit()
 
 func is_open(id: StringName) -> bool:
+	id = _aliases[id].target if _aliases.has(id) else id
 	return _screens.has(id) and _screens[id].open
 
 func has_modal() -> bool:
@@ -136,6 +159,9 @@ func set_paused(value: bool) -> void:
 
 ## Explicit removal supports scene tools rebinding a view before the old one exits.
 func unregister_screen(id: StringName) -> void:
+	if _aliases.has(id):
+		_aliases.erase(id)
+		return
 	if not _screens.has(id):
 		return
 	var view: Control = _screens[id].view
@@ -150,6 +176,9 @@ func _unregister(id: StringName) -> void:
 	if is_open(id):
 		close_screen(id)
 	_screens.erase(id)
+	for alias: StringName in _aliases.keys():
+		if _aliases[alias].target == id:
+			_aliases.erase(alias)
 
 func _restore_controls(entry: Dictionary) -> void:
 	for saved: Dictionary in entry.blocked:
@@ -269,6 +298,7 @@ func _exit_tree() -> void:
 	var entries := _screens.duplicate()
 	_stack.clear()
 	_screens.clear()
+	_aliases.clear()
 	for id: StringName in entries:
 		var entry: Dictionary = entries[id]
 		_restore_controls(entry)

@@ -48,6 +48,13 @@ func get_active_tasks() -> Array[Dictionary]:
 			result.append(task.duplicate(true))
 	return result
 
+## Revealed active or completed history, including after restoring an older session.
+func has_started_tasks() -> bool:
+	for task: Dictionary in _projection:
+		if task.revealed and task.status in ["active", "completed"]:
+			return true
+	return false
+
 func get_current_main_task() -> Dictionary:
 	for task in _projection:
 		if task.type == "main" and task.status == "active":

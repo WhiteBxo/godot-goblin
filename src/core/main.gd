@@ -15,10 +15,9 @@ var _ui_manager: UIManager
 var _shop_ui: ShopUI
 var _shop_interaction: ShopInteraction
 var _task_journal: TaskJournal
-var _task_panel: TaskPanel
-var _task_button: Button
+var _handbook: HandbookPanel
+var _handbook_hud: HandbookHUD
 var _chronicle_journal: ChronicleJournal
-var _chronicle_hud: ChronicleHUD
 var _tea_production: TeaProduction
 var _warehouse_inventory: WarehouseInventory
 var _task_catalog: TaskCatalog
@@ -60,6 +59,7 @@ func _ready() -> void:
 	_create_ui_system()
 	_create_chronicle_system()
 	_create_task_system()
+	_create_handbook()
 	_settlement_level = $World/LevelRoot.get_child(0) as SettlementMap
 	if _settlement_level != null:
 		_initialize_settlement()
@@ -150,21 +150,27 @@ func get_chronicle_journal() -> ChronicleJournal:
 	return _chronicle_journal if is_instance_valid(_chronicle_journal) else null
 
 func open_chronicle() -> Error:
-	if day1_story_enabled and not get_node("/root/GameState").get_flag("day1.chronicle_unlocked"):
-		return ERR_UNAVAILABLE
-	if _ui_manager.is_open(&"chronicle"):
-		return OK
-	if get_tree().paused or _ui_manager.has_modal() or (is_instance_valid(_story_director) and _story_director.is_busy()) or (is_instance_valid(_actor_director) and _actor_director.is_actor_controlled(&"player")):
-		return ERR_BUSY
-	return _ui_manager.open_screen(&"chronicle")
+	return _open_handbook(&"chronicle")
 
 func open_tasks() -> Error:
-	if _ui_manager.is_open(&"tasks"):
-		return OK
-	if not _can_start_story() or (is_instance_valid(_story_director) and _story_director.is_busy()) or (is_instance_valid(_actor_director) and _actor_director.is_actor_controlled(&"player")):
+	return _open_handbook(&"tasks")
+
+func open_handbook() -> Error:
+	return _open_handbook(&"handbook")
+
+func _open_handbook(page: StringName) -> Error:
+	_refresh_handbook_access()
+	if not _handbook_hud.visible:
+		return ERR_UNAVAILABLE
+	var blocked := (get_tree().paused
+		or (_ui_manager.has_modal() and not _ui_manager.is_open(&"handbook"))
+		or (is_instance_valid(_scene_travel) and _scene_travel.is_busy())
+		or (is_instance_valid(_story_director) and _story_director.is_busy())
+		or (is_instance_valid(_actor_director) and _actor_director.is_actor_controlled(&"player")))
+	if blocked:
 		return ERR_BUSY
 	_refresh_task_delivery_names()
-	return _ui_manager.open_screen(&"tasks")
+	return _ui_manager.open_screen(page)
 
 func _refresh_task_delivery_names() -> void:
 	var target_names := {}
@@ -183,7 +189,7 @@ func _refresh_task_delivery_names() -> void:
 				var product := inventory.get_definition(id)
 				if product != null:
 					product_names[id] = product.display_name
-	_task_panel.set_delivery_names(target_names, product_names)
+	_handbook.set_delivery_names(target_names, product_names)
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event.is_action_pressed(&"open_tasks") and not event.is_echo():
@@ -195,15 +201,6 @@ func _create_chronicle_system() -> void:
 	_chronicle_journal.name = "ChronicleJournal"
 	$Systems.add_child(_chronicle_journal)
 	_chronicle_journal.configure(get_node("/root/GameState"))
-	var panel: ChroniclePanel = preload("res://src/UI/chronicle/chronicle_panel.tscn").instantiate()
-	_ui_manager.register_screen(&"chronicle", panel, &"popup", true)
-	panel.bind_journal(_chronicle_journal)
-	panel.close_requested.connect(func() -> void: _ui_manager.close_screen(&"chronicle"))
-	_chronicle_hud = preload("res://src/UI/chronicle/chronicle_hud.tscn").instantiate()
-	_ui_manager.register_screen(&"chronicle_hud", _chronicle_hud, &"hud", false)
-	_chronicle_hud.bind_journal(_chronicle_journal)
-	_chronicle_hud.pressed.connect(open_chronicle)
-	_ui_manager.open_screen(&"chronicle_hud")
 
 func _create_task_system() -> void:
 	_task_catalog = TaskCatalog.new()
@@ -216,18 +213,40 @@ func _create_task_system() -> void:
 	_task_journal.name = "TaskJournal"
 	$Systems.add_child(_task_journal)
 	_task_journal.configure(catalog, get_node("/root/GameState"))
-	var hud: TaskHUD = preload("res://src/UI/tasks/task_hud.tscn").instantiate()
-	$HudLayer.add_child(hud)
-	hud.bind_journal(_task_journal)
-	_task_panel = preload("res://src/UI/tasks/task_panel.tscn").instantiate()
-	_ui_manager.register_screen(&"tasks", _task_panel, &"popup", true)
-	_task_panel.bind_journal(_task_journal)
+
+func _create_handbook() -> void:
+	_handbook = preload("res://src/UI/handbook/handbook_panel.tscn").instantiate()
+	_ui_manager.register_screen(&"handbook", _handbook, &"popup", true)
+	_handbook.bind_journals(_task_journal, _chronicle_journal)
+	_handbook.close_requested.connect(func() -> void: _ui_manager.close_screen(&"handbook"))
+	_ui_manager.register_screen_alias(&"tasks", &"handbook", _handbook.select_page.bind(&"tasks"))
+	_ui_manager.register_screen_alias(&"chronicle", &"handbook", _handbook.select_page.bind(&"chronicle"))
+	_handbook_hud = preload("res://src/UI/handbook/handbook_hud.tscn").instantiate()
+	_ui_manager.register_screen(&"handbook_hud", _handbook_hud, &"hud", false)
+	_ui_manager.open_screen(&"handbook_hud")
+	_handbook_hud.pressed.connect(open_handbook)
+	_task_journal.projection_changed.connect(_refresh_handbook_access)
 	_task_journal.projection_changed.connect(_refresh_task_delivery_names)
-	_task_panel.close_requested.connect(func() -> void: _ui_manager.close_screen(&"tasks"))
-	_task_button = preload("res://src/UI/tasks/task_button.tscn").instantiate()
-	_ui_manager.register_screen(&"task_button", _task_button, &"hud", false)
-	_task_button.pressed.connect(open_tasks)
-	_ui_manager.open_screen(&"task_button")
+	_chronicle_journal.changed.connect(_refresh_handbook_access)
+	get_node("/root/GameState").state_changed.connect(_refresh_handbook_access)
+	_refresh_handbook_access()
+
+func _refresh_handbook_access() -> void:
+	if not is_inside_tree() or not is_instance_valid(_handbook):
+		return
+	var state := get_node("/root/GameState")
+	var tasks: bool = state.get_flag("ui.handbook.tasks_unlocked")
+	if not tasks and is_instance_valid(_task_journal) and _task_journal.has_started_tasks():
+		tasks = true
+		if not state.set_flag("ui.handbook.tasks_unlocked"):
+			# GameState rejects writes while restoring; persist migration after commit.
+			_refresh_handbook_access.call_deferred()
+	var chronicle: bool = state.get_flag("day1.chronicle_unlocked") if day1_story_enabled else not _chronicle_journal.get_entries().is_empty()
+	_handbook.refresh_access(tasks, chronicle)
+	if not tasks and not chronicle:
+		_ui_manager.close_screen(&"handbook")
+	_handbook_hud.refresh_access(tasks or chronicle, _chronicle_journal.get_unread_count() if chronicle else 0)
+
 
 func get_active_level() -> Node2D:
 	if _settlement_level != null:
@@ -583,10 +602,8 @@ func _refresh_input_lock() -> void:
 		or (is_instance_valid(_story_director) and _story_director.is_busy())
 		or (is_instance_valid(_actor_director) and _actor_director.is_actor_controlled(&"player"))
 	)
-	if is_instance_valid(_chronicle_hud):
-		_chronicle_hud.disabled = should_lock
-	if is_instance_valid(_task_button):
-		_task_button.disabled = should_lock
+	if is_instance_valid(_handbook_hud):
+		_handbook_hud.disabled = should_lock
 	if should_lock == _input_locked:
 		return
 	var player := get_player() as PlayerController
@@ -673,9 +690,7 @@ func get_day1_controller() -> Day1ShopController:
 func refresh_day1_access() -> void:
 	if not day1_story_enabled:
 		return
-	var unlocked: bool = get_node("/root/GameState").get_flag("day1.chronicle_unlocked")
-	if is_instance_valid(_chronicle_hud):
-		_chronicle_hud.visible = unlocked
+	_refresh_handbook_access()
 	for id: StringName in _npc_points:
 		var available := false
 		for task: Dictionary in _task_catalog.get_tasks():

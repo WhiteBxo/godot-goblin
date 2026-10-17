@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/garden/garden_table.png" id="1_texture"]
+
+[node name="GardenTable" type="Node2D"]
+texture_filter = 1
+metadata/pack = "garden"
+metadata/asset_id = "garden_table"
+metadata/native_size = Vector2i(287, 181)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-143, -179)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]
+
+[node name="SurfaceAnchor" type="Marker2D" parent="."]
+position = Vector2(0, -109)

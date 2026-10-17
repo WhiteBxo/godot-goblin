@@ -1,14 +1,18 @@
 # Godot Goblin
 
-基于 **Godot 4.7 系列 / GDScript** 开发的 2D 游戏原型，围绕奶茶店经营与异世界探索展开。
+Godot 4.7 / GDScript 项目，当前默认进入新版洞窟聚落：15 个功能区域与奶茶店共用连续平地，保留独立可编辑的建筑、外墙、碰撞和前景遮挡。
 
-当前默认进入奶茶店，支持角色移动、场景碰撞和地点交互；对话、剧情事件调度、角色演出及洞穴地图已有基础实现。项目仍处于基础系统与内容接入阶段，完整 Day 1 流程尚未打通。
+使用 Godot 打开 project.godot，按 F5 运行。WASD / 方向键移动，E 查看地点与店内设施，Esc 关闭。开发模式下 M 切换全图与跟随视角，Tab 切换两天剧情动线和补给线。地图说明、预览和验证见 [新版聚落说明](docs/settlement/README.md)。
+
+原奶茶店 MVP 保留在 `src/core/main.tscn`，旧洞穴轮廓 demo 保留在 `src/debug/cave_demo/cave_demo.tscn`，可打开对应场景后按 F6 单独运行。
+
+独立家具、道具与墙体库提供 208 张透明 PNG 和独立场景。打开 `src/debug/modular_assets/modular_assets_gallery.tscn` 后按 F6 检查；使用方法与素材清单见 [模块化素材说明](docs/modular_assets/README.md)。
 
 ## 快速开始
 
 1. 安装 Godot 4.7 系列标准版（GDScript，无需 .NET）。
 2. 在 Godot 项目管理器中导入根目录的 `project.godot`，等待首次资源导入完成。
-3. 按 **F5** 运行项目，入口为 `src/core/main.tscn`。
+3. 按 **F5** 运行项目，入口为 `src/core/settlement.tscn`；奶茶店可打开 `src/core/main.tscn` 后按 F6 单独运行。
 4. 使用 WASD 或方向键移动，靠近仓库、制作台或订单板，按 E 查看对应信息。
 
 当前配置使用 **Forward Plus** 渲染器，Windows 图形驱动为 **D3D12**；逻辑视口为 640 × 360，默认窗口为 1280 × 720。引擎、显示和输入设置以 [project.godot](project.godot) 为准。
@@ -35,7 +39,7 @@ godot --path .
 | 对话推进（对话 Demo） | E / Enter / 空格 | 补全逐字文本或推进对白 |
 | 选择对话分支（对话 Demo） | 上下方向键后确认 / 点击选项 | 进入对应分支 |
 
-奶茶店目前展示订单、库存与配方信息，尚未实现原料扣减、饮品制作、交付和结算。主场景已创建对话、剧情和角色演出组件，但不会自动播放 Day 1 开场剧情，也没有接通奶茶店与洞穴之间的出入口。
+奶茶店已接入基础配方制作、库存扣减和订单交付，使用方式见 [基础制作说明](docs/basic_tea_production.md)。主场景已创建对话、剧情和角色演出组件，但不会自动播放 Day 1 开场剧情，也没有接通奶茶店与洞穴之间的出入口。
 
 ## 独立 Demo
 

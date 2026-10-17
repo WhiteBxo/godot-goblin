@@ -1,0 +1,124 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/14_hearth.png" id="1_3c5im"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_a75nx"]
+size = Vector2(139, 55)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tcyob"]
+size = Vector2(173, 31)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0f5ml"]
+size = Vector2(173, 31)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8oeba"]
+size = Vector2(173, 31)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_iwfom"]
+size = Vector2(173, 31)
+
+[node name="Hearth" type="Node2D" unique_id=1904934336]
+y_sort_enabled = true
+metadata/zone_id = "14_hearth"
+metadata/display_name = "公共火塘"
+metadata/footprint = Rect2(80, 70, 1380, 870)
+
+[node name="PaintedInterior" type="Sprite2D" parent="." unique_id=428480625]
+z_index = -20
+texture = ExtResource("1_3c5im")
+centered = false
+
+[node name="Walls" type="Node2D" parent="." unique_id=1039741737]
+
+[node name="Foreground" type="Node2D" parent="." unique_id=256597791]
+y_sort_enabled = true
+
+[node name="Furniture0" type="Node2D" parent="Foreground" unique_id=1369638032]
+position = Vector2(0, 572)
+
+[node name="@Sprite2D@275" type="Sprite2D" parent="Foreground/Furniture0" unique_id=1717291369]
+position = Vector2(675, -150)
+texture = ExtResource("1_3c5im")
+centered = false
+region_enabled = true
+region_rect = Rect2(675, 422, 177, 160)
+
+[node name="Furniture1" type="Node2D" parent="Foreground" unique_id=416011888]
+position = Vector2(0, 424)
+
+[node name="@Sprite2D@277" type="Sprite2D" parent="Foreground/Furniture1" unique_id=1739178604]
+position = Vector2(499, -81)
+texture = ExtResource("1_3c5im")
+centered = false
+region_enabled = true
+region_rect = Rect2(499, 343, 195, 84)
+
+[node name="Furniture2" type="Node2D" parent="Foreground" unique_id=167387520]
+position = Vector2(0, 424)
+
+[node name="@Sprite2D@279" type="Sprite2D" parent="Foreground/Furniture2" unique_id=1098966541]
+position = Vector2(1010, -82)
+texture = ExtResource("1_3c5im")
+centered = false
+region_enabled = true
+region_rect = Rect2(1010, 342, 199, 88)
+
+[node name="Furniture3" type="Node2D" parent="Foreground" unique_id=591549321]
+position = Vector2(0, 735)
+
+[node name="@Sprite2D@281" type="Sprite2D" parent="Foreground/Furniture3" unique_id=1139302013]
+position = Vector2(499, -81)
+texture = ExtResource("1_3c5im")
+centered = false
+region_enabled = true
+region_rect = Rect2(499, 654, 195, 84)
+
+[node name="Furniture4" type="Node2D" parent="Foreground" unique_id=1564724476]
+position = Vector2(0, 735)
+
+[node name="@Sprite2D@283" type="Sprite2D" parent="Foreground/Furniture4" unique_id=381236005]
+position = Vector2(1010, -82)
+texture = ExtResource("1_3c5im")
+centered = false
+region_enabled = true
+region_rect = Rect2(1010, 653, 199, 88)
+
+[node name="Furniture" type="Node2D" parent="." unique_id=1734815863]
+
+[node name="FireRing" type="StaticBody2D" parent="Furniture" unique_id=416002962]
+collision_mask = 2
+
+[node name="@CollisionShape2D@274" type="CollisionShape2D" parent="Furniture/FireRing" unique_id=1351966837]
+position = Vector2(763.5, 544.5)
+shape = SubResource("RectangleShape2D_a75nx")
+
+[node name="BenchNW" type="StaticBody2D" parent="Furniture" unique_id=1165662224]
+collision_mask = 2
+
+[node name="@CollisionShape2D@276" type="CollisionShape2D" parent="Furniture/BenchNW" unique_id=178558902]
+position = Vector2(596.5, 408.5)
+shape = SubResource("RectangleShape2D_tcyob")
+
+[node name="BenchNE" type="StaticBody2D" parent="Furniture" unique_id=1320020568]
+collision_mask = 2
+
+[node name="@CollisionShape2D@278" type="CollisionShape2D" parent="Furniture/BenchNE" unique_id=984069449]
+position = Vector2(1112.5, 408.5)
+shape = SubResource("RectangleShape2D_0f5ml")
+
+[node name="BenchSW" type="StaticBody2D" parent="Furniture" unique_id=661147537]
+collision_mask = 2
+
+[node name="@CollisionShape2D@280" type="CollisionShape2D" parent="Furniture/BenchSW" unique_id=1844062325]
+position = Vector2(597.5, 719.5)
+shape = SubResource("RectangleShape2D_8oeba")
+
+[node name="BenchSE" type="StaticBody2D" parent="Furniture" unique_id=1503208920]
+collision_mask = 2
+
+[node name="@CollisionShape2D@282" type="CollisionShape2D" parent="Furniture/BenchSE" unique_id=1637341220]
+position = Vector2(1112.5, 719.5)
+shape = SubResource("RectangleShape2D_iwfom")
+
+[node name="Entrance" type="Marker2D" parent="." unique_id=717394129]
+position = Vector2(768, 930)

@@ -1,0 +1,56 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/core/main.gd" id="1_main"]
+[ext_resource type="PackedScene" path="res://src/levels/settlement/settlement_map.tscn" id="2_map"]
+[ext_resource type="PackedScene" path="res://src/gameplay/player/shop_player.tscn" id="3_player"]
+[ext_resource type="PackedScene" path="res://src/core/audio/audio_manager.tscn" id="4_audio"]
+
+[node name="MainGame" type="Node"]
+process_mode = 3
+script = ExtResource("1_main")
+
+[node name="Systems" type="Node" parent="."]
+process_mode = 1
+
+[node name="AudioManager" parent="Systems" instance=ExtResource("4_audio")]
+
+[node name="World" type="Node2D" parent="."]
+process_mode = 1
+texture_filter = 1
+y_sort_enabled = true
+
+[node name="LevelRoot" type="Node2D" parent="World"]
+y_sort_enabled = true
+
+[node name="SettlementMap" parent="World/LevelRoot" instance=ExtResource("2_map")]
+
+[node name="EntityRoot" type="Node2D" parent="World"]
+y_sort_enabled = true
+
+[node name="Player" parent="World/EntityRoot" instance=ExtResource("3_player")]
+z_index = 0
+
+[node name="EffectRoot" type="Node2D" parent="World"]
+y_sort_enabled = true
+
+[node name="HudLayer" type="CanvasLayer" parent="."]
+process_mode = 3
+layer = 10
+
+[node name="PopupLayer" type="CanvasLayer" parent="."]
+process_mode = 3
+layer = 20
+
+[node name="PauseLayer" type="CanvasLayer" parent="."]
+process_mode = 2
+layer = 30
+visible = false
+
+[node name="TransitionLayer" type="CanvasLayer" parent="."]
+process_mode = 3
+layer = 40
+visible = false
+
+[node name="DebugLayer" type="CanvasLayer" parent="."]
+process_mode = 3
+layer = 50

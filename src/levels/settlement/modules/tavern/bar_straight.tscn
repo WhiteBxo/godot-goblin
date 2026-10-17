@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/tavern/bar_straight.png" id="1_texture"]
+
+[node name="BarStraight" type="Node2D"]
+texture_filter = 1
+metadata/pack = "tavern"
+metadata/asset_id = "bar_straight"
+metadata/native_size = Vector2i(334, 176)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-167, -174)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

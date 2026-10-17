@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/walls_fortress_1/wall_east.png" id="1_texture"]
+
+[node name="WallEast" type="Node2D"]
+texture_filter = 1
+metadata/pack = "walls_fortress_1"
+metadata/asset_id = "wall_east"
+metadata/native_size = Vector2i(75, 271)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-37, -269)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]
+
+[node name="TopEnd" type="Marker2D" parent="."]
+position = Vector2(0, -267)
+
+[node name="BottomEnd" type="Marker2D" parent="."]

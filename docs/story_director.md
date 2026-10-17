@@ -202,7 +202,7 @@ Demo 脚本只注册资源/Marker、加载目录、启动事件和提供重播/�
 ## Gameplay Bridge
 
 相邻短事件通过 [Gameplay Bridge 编排规则](story_authoring_workflow.md#自动演出与玩家操作gameplay-bridge) 连接。
-`GameplayBridge` 位于 MainGame/Systems，只消费 GameState 与 TeaMaking 的完成 Signal，不执行 Story steps。
+`GameplayBridge` 位于 MainGame/Systems，消费既有 GameState flag（v2）或 TeaMaking 的真实完成 Signal（v1），不执行 Story steps；详见 [Gameplay Bridge](gameplay_bridge.md)。
 ShopUI 制作台提供固定配方按钮；配方规则属于 `src/gameplay/milk_tea/tea_making.gd`。
 输入锁继续由 MainGame 依据 busy/modal/actor 状态计算；ActorDirector 和 CameraDirector 职责保持原样。
 

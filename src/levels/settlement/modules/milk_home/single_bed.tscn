@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/milk_home/single_bed.png" id="1_texture"]
+
+[node name="SingleBed" type="Node2D"]
+texture_filter = 1
+metadata/pack = "milk_home"
+metadata/asset_id = "single_bed"
+metadata/native_size = Vector2i(182, 346)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-91, -344)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

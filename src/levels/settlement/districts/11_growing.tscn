@@ -1,0 +1,64 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/11_growing.png" id="1_qr6p0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k7xc3"]
+size = Vector2(300, 200)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uqtxp"]
+size = Vector2(168, 48)
+
+[node name="Growing" type="Node2D" unique_id=1588763870]
+y_sort_enabled = true
+metadata/zone_id = "11_growing"
+metadata/display_name = "种植区"
+metadata/footprint = Rect2(80, 70, 1380, 870)
+
+[node name="PaintedInterior" type="Sprite2D" parent="." unique_id=1263820729]
+z_index = -20
+texture = ExtResource("1_qr6p0")
+centered = false
+
+[node name="Walls" type="Node2D" parent="." unique_id=972599530]
+
+[node name="Foreground" type="Node2D" parent="." unique_id=817792547]
+y_sort_enabled = true
+
+[node name="Furniture0" type="Node2D" parent="Foreground" unique_id=84184668]
+position = Vector2(0, 300)
+
+[node name="@Sprite2D@244" type="Sprite2D" parent="Foreground/Furniture0" unique_id=1636453749]
+position = Vector2(110, -258)
+texture = ExtResource("1_qr6p0")
+centered = false
+region_enabled = true
+region_rect = Rect2(110, 42, 340, 310)
+
+[node name="Furniture1" type="Node2D" parent="Foreground" unique_id=497821314]
+position = Vector2(0, 596)
+
+[node name="@Sprite2D@246" type="Sprite2D" parent="Foreground/Furniture1" unique_id=1972576349]
+position = Vector2(668, -115)
+texture = ExtResource("1_qr6p0")
+centered = false
+region_enabled = true
+region_rect = Rect2(668, 481, 175, 117)
+
+[node name="Furniture" type="Node2D" parent="." unique_id=2011408283]
+
+[node name="GardenShed" type="StaticBody2D" parent="Furniture" unique_id=1172481040]
+collision_mask = 2
+
+[node name="@CollisionShape2D@243" type="CollisionShape2D" parent="Furniture/GardenShed" unique_id=1468891545]
+position = Vector2(280, 200)
+shape = SubResource("RectangleShape2D_k7xc3")
+
+[node name="SortingTable" type="StaticBody2D" parent="Furniture" unique_id=1162660650]
+collision_mask = 2
+
+[node name="@CollisionShape2D@245" type="CollisionShape2D" parent="Furniture/SortingTable" unique_id=767322201]
+position = Vector2(756, 572)
+shape = SubResource("RectangleShape2D_uqtxp")
+
+[node name="Entrance" type="Marker2D" parent="." unique_id=1430618220]
+position = Vector2(768, 930)

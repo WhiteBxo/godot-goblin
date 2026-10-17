@@ -1,0 +1,1674 @@
+{
+  "grid": [
+    4,
+    2
+  ],
+  "cell": [
+    384,
+    512
+  ],
+  "packs": [
+    {
+      "id": "tavern",
+      "title": "酒馆",
+      "source": "06_tavern",
+      "kind": "props",
+      "objects": [
+        {
+          "id": "round_table",
+          "description": "空圆木桌，不带椅子或桌面小物",
+          "target_size": [
+            174,
+            150
+          ]
+        },
+        {
+          "id": "wood_stool",
+          "description": "一把独立木凳",
+          "target_size": [
+            58,
+            72
+          ]
+        },
+        {
+          "id": "bar_straight",
+          "description": "一段256像素长的吧台直段",
+          "target_size": [
+            258,
+            140
+          ]
+        },
+        {
+          "id": "bar_corner",
+          "description": "吧台L形转角单元",
+          "target_size": [
+            190,
+            232
+          ]
+        },
+        {
+          "id": "bottle_rack",
+          "description": "酒瓶木架",
+          "target_size": [
+            205,
+            228
+          ]
+        },
+        {
+          "id": "fireplace",
+          "description": "完整独立石壁炉，含烟囱下段",
+          "target_size": [
+            232,
+            230
+          ]
+        },
+        {
+          "id": "ale_barrel",
+          "description": "单只木酒桶",
+          "target_size": [
+            75,
+            100
+          ]
+        },
+        {
+          "id": "skull_banner",
+          "description": "兽骨红色墙旗，不带墙",
+          "target_size": [
+            148,
+            160
+          ]
+        }
+      ]
+    },
+    {
+      "id": "casino",
+      "title": "赌场",
+      "source": "07_casino",
+      "kind": "props",
+      "objects": [
+        {
+          "id": "dice_table",
+          "description": "骨骰绿布赌桌，不带椅子",
+          "target_size": [
+            240,
+            150
+          ]
+        },
+        {
+          "id": "card_table",
+          "description": "卡牌绿布赌桌，不带椅子",
+          "target_size": [
+            240,
+            150
+          ]
+        },
+        {
+          "id": "wheel_table",
+          "description": "符文轮盘桌，不带椅子",
+          "target_size": [
+            240,
+            150
+          ]
+        },
+        {
+          "id": "gambling_stool",
+          "description": "单只赌桌木凳",
+          "target_size": [
+            90,
+            110
+          ]
+        },
+        {
+          "id": "iron_safe",
+          "description": "完整铆钉铁保险箱",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "boss_desk",
+          "description": "空老板账桌，不带椅子和桌面小物",
+          "target_size": [
+            240,
+            150
+          ]
+        },
+        {
+          "id": "collection_rack",
+          "description": "稀有金菇与奖杯收藏架",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "coin_tray",
+          "description": "金币钱袋托盘，不带桌子",
+          "target_size": [
+            90,
+            110
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dining",
+      "title": "聚餐区",
+      "source": "08_dining",
+      "kind": "props",
+      "objects": [
+        {
+          "id": "long_table",
+          "description": "空纵向长木餐桌，不带碗盘或长凳",
+          "target_size": [
+            190,
+            300
+          ]
+        },
+        {
+          "id": "long_bench",
+          "description": "单条纵向长木凳",
+          "target_size": [
+            55,
+            290
+          ]
+        },
+        {
+          "id": "serving_counter",
+          "description": "一段独立分餐木台",
+          "target_size": [
+            240,
+            150
+          ]
+        },
+        {
+          "id": "food_shelf",
+          "description": "碗碟与食材架",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "cooking_pot",
+          "description": "炖汤铁锅",
+          "target_size": [
+            90,
+            110
+          ]
+        },
+        {
+          "id": "dish_stack",
+          "description": "一摞独立碗盘",
+          "target_size": [
+            90,
+            110
+          ]
+        },
+        {
+          "id": "grain_sack",
+          "description": "单只开口粮袋",
+          "target_size": [
+            90,
+            110
+          ]
+        },
+        {
+          "id": "drink_barrel",
+          "description": "单只盛水木桶",
+          "target_size": [
+            220,
+            240
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kitchen",
+      "title": "厨房",
+      "source": "05_kitchen",
+      "kind": "props",
+      "objects": [
+        {
+          "id": "prep_table",
+          "description": "空长木备菜桌，不带砧板、菜刀、食材或墙",
+          "target_size": [
+            240,
+            150
+          ]
+        },
+        {
+          "id": "cauldron",
+          "description": "石圈火床上的完整大锅",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "spit_roast",
+          "description": "转轴烤肉架与烤肉",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "pantry_shelf",
+          "description": "粮袋和调料架",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "stone_sink",
+          "description": "独立石水槽",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "serving_table",
+          "description": "出餐木台",
+          "target_size": [
+            240,
+            150
+          ]
+        },
+        {
+          "id": "meat_rack",
+          "description": "独立挂肉木架",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "vegetable_basket",
+          "description": "蔬菜蘑菇木盆",
+          "target_size": [
+            240,
+            150
+          ]
+        }
+      ]
+    },
+    {
+      "id": "training",
+      "title": "军营",
+      "source": "03_training",
+      "kind": "props",
+      "objects": [
+        {
+          "id": "iron_cage",
+          "description": "单座完整铁笼，正面门",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "strategy_desk",
+          "description": "空战略木桌，不带地图和卷轴",
+          "target_size": [
+            240,
+            150
+          ]
+        },
+        {
+          "id": "training_dummy",
+          "description": "单个木训练假人",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "archery_target",
+          "description": "单个草靶及支脚",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "weapon_rack",
+          "description": "长矛和盾架",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "commander_chair",
+          "description": "战略办公室单把椅子",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "supply_chest",
+          "description": "军用补给箱",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "war_banner",
+          "description": "独立旧军旗，不带墙",
+          "target_size": [
+            220,
+            240
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elder",
+      "title": "长老私房",
+      "source": "10_elder",
+      "kind": "props",
+      "objects": [
+        {
+          "id": "large_bed",
+          "description": "完整较大木床，紫色被褥",
+          "target_size": [
+            200,
+            270
+          ]
+        },
+        {
+          "id": "bookcase",
+          "description": "满书木书架",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "document_desk",
+          "description": "空长老书桌，不带古文书和椅子",
+          "target_size": [
+            240,
+            150
+          ]
+        },
+        {
+          "id": "bone_chair",
+          "description": "骨冠扶手椅",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "meditation_table",
+          "description": "独立圆冥想茶几",
+          "target_size": [
+            240,
+            150
+          ]
+        },
+        {
+          "id": "red_vial",
+          "description": "一只装红色液体的密封药瓶",
+          "target_size": [
+            90,
+            110
+          ]
+        },
+        {
+          "id": "wardrobe",
+          "description": "完整木衣柜",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "floor_cushion",
+          "description": "单只紫色软垫",
+          "target_size": [
+            220,
+            240
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ritual",
+      "title": "祭坛大厅",
+      "source": "09_ritual",
+      "kind": "props",
+      "objects": [
+        {
+          "id": "altar",
+          "description": "完整石祭台，红布与贡碗",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "offering_table",
+          "description": "单段贡品石桌",
+          "target_size": [
+            240,
+            150
+          ]
+        },
+        {
+          "id": "carved_pillar",
+          "description": "一根完整刻纹石柱",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "bone_idol",
+          "description": "独立兽骨图腾，不带墙",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "brazier",
+          "description": "单个石座火盆",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "prayer_mat",
+          "description": "一张编织跪拜垫",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "ritual_banner",
+          "description": "独立红色仪式旗，不带墙",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "secret_cover",
+          "description": "半开石盖与拉环，独立机关，不带台阶或地板",
+          "target_size": [
+            220,
+            240
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lodging",
+      "title": "住宿区",
+      "source": "04_lodging",
+      "kind": "props",
+      "objects": [
+        {
+          "id": "straw_bed",
+          "description": "完整单人草垫木床",
+          "target_size": [
+            200,
+            270
+          ]
+        },
+        {
+          "id": "bedside_chest",
+          "description": "床脚行李箱",
+          "target_size": [
+            200,
+            270
+          ]
+        },
+        {
+          "id": "bedside_table",
+          "description": "单个床头木柜",
+          "target_size": [
+            200,
+            270
+          ]
+        },
+        {
+          "id": "wash_basin",
+          "description": "单个木水盆及矮架",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "coat_rack",
+          "description": "衣物挂钩板与旧衣，不带墙",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "privacy_curtain",
+          "description": "一幅旧绿布帘及挂杆，不带墙",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "bedside_lamp",
+          "description": "小油灯",
+          "target_size": [
+            200,
+            270
+          ]
+        },
+        {
+          "id": "travel_bag",
+          "description": "单只旅行行囊",
+          "target_size": [
+            90,
+            110
+          ]
+        }
+      ]
+    },
+    {
+      "id": "warehouse",
+      "title": "仓库",
+      "source": "12_warehouse",
+      "kind": "props",
+      "objects": [
+        {
+          "id": "stock_rack",
+          "description": "完整木货架及箱罐",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "crate",
+          "description": "单个方木箱",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "crate_stack",
+          "description": "两只不同高的箱垛",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "inventory_desk",
+          "description": "空盘点木桌，不带账本和墨瓶",
+          "target_size": [
+            240,
+            150
+          ]
+        },
+        {
+          "id": "sealed_sack",
+          "description": "单只捆口粮袋",
+          "target_size": [
+            90,
+            110
+          ]
+        },
+        {
+          "id": "clay_jar",
+          "description": "独立带盖陶罐",
+          "target_size": [
+            90,
+            110
+          ]
+        },
+        {
+          "id": "water_barrel",
+          "description": "单只独立木桶",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "rope_coil",
+          "description": "盘绕麻绳",
+          "target_size": [
+            90,
+            110
+          ]
+        }
+      ]
+    },
+    {
+      "id": "milk_shop",
+      "title": "奶茶店营业区",
+      "source": "00_shop",
+      "kind": "props",
+      "objects": [
+        {
+          "id": "shop_counter",
+          "description": "一段256像素长现代奶茶柜台",
+          "target_size": [
+            240,
+            150
+          ]
+        },
+        {
+          "id": "tea_urn",
+          "description": "一台独立奶茶保温桶",
+          "target_size": [
+            90,
+            110
+          ]
+        },
+        {
+          "id": "ingredient_tray",
+          "description": "独立六格配料盒",
+          "target_size": [
+            90,
+            110
+          ]
+        },
+        {
+          "id": "espresso_machine",
+          "description": "独立小型奶茶咖啡制作机",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "cash_register",
+          "description": "独立收银机",
+          "target_size": [
+            90,
+            110
+          ]
+        },
+        {
+          "id": "cup_rack",
+          "description": "杯具壁挂木架，不带墙",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "waiting_bench",
+          "description": "一张完整等候长凳",
+          "target_size": [
+            240,
+            150
+          ]
+        },
+        {
+          "id": "rest_chair",
+          "description": "一把绿色休息扶手椅",
+          "target_size": [
+            220,
+            240
+          ]
+        }
+      ]
+    },
+    {
+      "id": "milk_home",
+      "title": "奶茶店生活区",
+      "source": "00_shop",
+      "kind": "props",
+      "objects": [
+        {
+          "id": "single_bed",
+          "description": "左侧完整单人床",
+          "target_size": [
+            200,
+            270
+          ]
+        },
+        {
+          "id": "home_desk",
+          "description": "一张小书桌，不带凳子",
+          "target_size": [
+            240,
+            150
+          ]
+        },
+        {
+          "id": "home_wardrobe",
+          "description": "木衣柜",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "refrigerator",
+          "description": "完整双层冰箱",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "toilet",
+          "description": "独立马桶",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "bathroom_sink",
+          "description": "独立洗手池",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "shower",
+          "description": "淋浴喷头和水管，不带墙地板",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "storage_rack",
+          "description": "小型原料储物架",
+          "target_size": [
+            220,
+            240
+          ]
+        }
+      ]
+    },
+    {
+      "id": "garden",
+      "title": "种植区",
+      "source": "11_growing",
+      "kind": "props",
+      "objects": [
+        {
+          "id": "white_mushrooms",
+          "description": "一小丛白蘑菇，不带泥土色块",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "blue_mushrooms",
+          "description": "一小丛蓝蘑菇，不带地板",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "herb_basket",
+          "description": "草药木篮",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "garden_fence",
+          "description": "一段矮木栅栏",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "garden_gate",
+          "description": "独立矮木栅门",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "tool_stand",
+          "description": "铁铲草叉工具架",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "watering_bucket",
+          "description": "单只盛水木桶",
+          "target_size": [
+            90,
+            110
+          ]
+        },
+        {
+          "id": "garden_table",
+          "description": "分拣木桌，不带凳子",
+          "target_size": [
+            240,
+            150
+          ]
+        }
+      ]
+    },
+    {
+      "id": "workshop",
+      "title": "河岸工坊",
+      "source": "15_workshop",
+      "kind": "props",
+      "objects": [
+        {
+          "id": "anvil",
+          "description": "独立铁砧和矮底座",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "workbench",
+          "description": "修理工作台",
+          "target_size": [
+            240,
+            150
+          ]
+        },
+        {
+          "id": "forge",
+          "description": "完整小型石炉",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "tool_board",
+          "description": "铁锤钳子工具挂板，不带墙",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "hide_rack",
+          "description": "晒皮木架和兽皮",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "sawhorse",
+          "description": "木工作业锯架",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "timber_stack",
+          "description": "捆扎木材堆",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "small_cart",
+          "description": "完整双轮板车",
+          "target_size": [
+            220,
+            240
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hearth",
+      "title": "公共火塘",
+      "source": "14_hearth",
+      "kind": "props",
+      "objects": [
+        {
+          "id": "stone_firepit",
+          "description": "独立低矮石圈篝火，只含火焰、柴和石圈",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "empty_fire_ring",
+          "description": "没有火焰的空石圈火塘",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "hanging_pot",
+          "description": "独立悬挂小铁锅，不带支架",
+          "target_size": [
+            90,
+            110
+          ]
+        },
+        {
+          "id": "pot_tripod",
+          "description": "空木杆三脚锅架，不带锅",
+          "target_size": [
+            90,
+            110
+          ]
+        },
+        {
+          "id": "bench_front",
+          "description": "一条正面粗木长凳",
+          "target_size": [
+            240,
+            150
+          ]
+        },
+        {
+          "id": "bench_back",
+          "description": "一条背面粗木长凳",
+          "target_size": [
+            240,
+            150
+          ]
+        },
+        {
+          "id": "kindling_pile",
+          "description": "一小堆柴薪",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "water_bucket",
+          "description": "一只装水木桶",
+          "target_size": [
+            90,
+            110
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tabletop",
+      "title": "桌面小道具",
+      "source": "06_tavern",
+      "kind": "props",
+      "objects": [
+        {
+          "id": "beer_mug",
+          "description": "单只麦酒杯",
+          "target_size": [
+            64,
+            72
+          ]
+        },
+        {
+          "id": "wine_bottle",
+          "description": "单只绿色酒瓶",
+          "target_size": [
+            64,
+            72
+          ]
+        },
+        {
+          "id": "candle_holder",
+          "description": "一支蜡烛与小烛台",
+          "target_size": [
+            64,
+            72
+          ]
+        },
+        {
+          "id": "open_book",
+          "description": "一本摊开的账本",
+          "target_size": [
+            64,
+            72
+          ]
+        },
+        {
+          "id": "scroll_bundle",
+          "description": "一组卷轴",
+          "target_size": [
+            64,
+            72
+          ]
+        },
+        {
+          "id": "bone_dice",
+          "description": "三颗骨骰",
+          "target_size": [
+            64,
+            72
+          ]
+        },
+        {
+          "id": "playing_cards",
+          "description": "一小摞独立卡牌",
+          "target_size": [
+            64,
+            72
+          ]
+        },
+        {
+          "id": "coin_pile",
+          "description": "一小堆金币",
+          "target_size": [
+            64,
+            72
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kitchenware",
+      "title": "厨房小道具",
+      "source": "05_kitchen",
+      "kind": "props",
+      "objects": [
+        {
+          "id": "kitchen_knife",
+          "description": "一把独立菜刀",
+          "target_size": [
+            64,
+            72
+          ]
+        },
+        {
+          "id": "chopping_board",
+          "description": "一块空砧板",
+          "target_size": [
+            64,
+            72
+          ]
+        },
+        {
+          "id": "raw_meat",
+          "description": "一块生肉",
+          "target_size": [
+            64,
+            72
+          ]
+        },
+        {
+          "id": "vegetable_bowl",
+          "description": "一盆蔬菜",
+          "target_size": [
+            64,
+            72
+          ]
+        },
+        {
+          "id": "wooden_bowl",
+          "description": "一只空木碗",
+          "target_size": [
+            64,
+            72
+          ]
+        },
+        {
+          "id": "iron_pan",
+          "description": "一口独立铁锅",
+          "target_size": [
+            64,
+            72
+          ]
+        },
+        {
+          "id": "ladle",
+          "description": "一把汤勺",
+          "target_size": [
+            64,
+            72
+          ]
+        },
+        {
+          "id": "herb_bundle",
+          "description": "一束捆好的香草",
+          "target_size": [
+            64,
+            72
+          ]
+        }
+      ]
+    },
+    {
+      "id": "yard",
+      "title": "庭院与集结点",
+      "source": "13_yard",
+      "kind": "props",
+      "objects": [
+        {
+          "id": "cargo_cart",
+          "description": "完整双轮货车",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "cargo_crates",
+          "description": "货物箱垛",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "cargo_sacks",
+          "description": "三只粮袋组合",
+          "target_size": [
+            90,
+            110
+          ]
+        },
+        {
+          "id": "canvas_shelter",
+          "description": "独立敞口遮雨棚，空棚不含货物和地面",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "low_stone_fence",
+          "description": "一段低石矮墙",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "wood_sign",
+          "description": "独立木路牌，无文字",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "muster_flag",
+          "description": "独立旧红旗和旗杆底座",
+          "target_size": [
+            220,
+            240
+          ]
+        },
+        {
+          "id": "outdoor_bench",
+          "description": "单张完整粗木长凳",
+          "target_size": [
+            240,
+            150
+          ]
+        }
+      ]
+    },
+    {
+      "id": "walls_stone_1",
+      "title": "灰石木梁墙体 1",
+      "source": "06_tavern",
+      "kind": "walls",
+      "material": "灰色砌石、深木梁，保持酒馆墙体的石块线条和材质",
+      "objects": [
+        {
+          "id": "wall_north",
+          "description": "后墙直段，横向256像素，正面可见墙面，高140，无柱帽",
+          "target_size": [
+            256,
+            145
+          ]
+        },
+        {
+          "id": "wall_south",
+          "description": "前墙低剖面直段，横向256像素，高100，无柱帽",
+          "target_size": [
+            256,
+            105
+          ]
+        },
+        {
+          "id": "wall_west",
+          "description": "左侧墙直段，竖向256像素，窄墙顶与外侧立面",
+          "target_size": [
+            64,
+            256
+          ]
+        },
+        {
+          "id": "wall_east",
+          "description": "右侧墙直段，竖向256像素，窄墙顶与外侧立面",
+          "target_size": [
+            64,
+            256
+          ]
+        },
+        {
+          "id": "corner_nw",
+          "description": "完整西北L形墙转角，两臂各128像素",
+          "target_size": [
+            160,
+            200
+          ]
+        },
+        {
+          "id": "corner_ne",
+          "description": "完整东北L形墙转角，两臂各128像素",
+          "target_size": [
+            160,
+            200
+          ]
+        },
+        {
+          "id": "door_south",
+          "description": "独立正南门框，两门柱之间敞开宽120像素，无门板",
+          "target_size": [
+            256,
+            220
+          ]
+        },
+        {
+          "id": "wall_post",
+          "description": "一根独立墙体支柱",
+          "target_size": [
+            60,
+            210
+          ]
+        }
+      ]
+    },
+    {
+      "id": "walls_stone_2",
+      "title": "灰石木梁墙体 2",
+      "source": "06_tavern",
+      "kind": "walls",
+      "material": "灰色砌石、深木梁，保持酒馆墙体的石块线条和材质",
+      "objects": [
+        {
+          "id": "corner_sw",
+          "description": "完整西南L形低墙转角，两臂各128像素",
+          "target_size": [
+            160,
+            160
+          ]
+        },
+        {
+          "id": "corner_se",
+          "description": "完整东南L形低墙转角，两臂各128像素",
+          "target_size": [
+            160,
+            160
+          ]
+        },
+        {
+          "id": "door_west",
+          "description": "独立向西敞开的侧门框，无门板",
+          "target_size": [
+            150,
+            256
+          ]
+        },
+        {
+          "id": "door_east",
+          "description": "独立向东敞开的侧门框，无门板",
+          "target_size": [
+            150,
+            256
+          ]
+        },
+        {
+          "id": "window",
+          "description": "独立窗框与窗格，不带墙面",
+          "target_size": [
+            85,
+            100
+          ]
+        },
+        {
+          "id": "wall_torch",
+          "description": "一只独立壁挂火炬与支架，不带墙",
+          "target_size": [
+            55,
+            100
+          ]
+        },
+        {
+          "id": "wall_lamp",
+          "description": "一只独立壁灯与支架，不带墙",
+          "target_size": [
+            55,
+            90
+          ]
+        },
+        {
+          "id": "support_beam",
+          "description": "一根独立横向支撑木梁",
+          "target_size": [
+            256,
+            35
+          ]
+        }
+      ]
+    },
+    {
+      "id": "walls_fortress_1",
+      "title": "赌场深灰墙体 1",
+      "source": "07_casino",
+      "kind": "walls",
+      "material": "深灰石块、近黑包边与少量深木材，保持赌场墙体材质",
+      "objects": [
+        {
+          "id": "wall_north",
+          "description": "后墙直段，横向256像素，正面可见墙面，高140，无柱帽",
+          "target_size": [
+            256,
+            145
+          ]
+        },
+        {
+          "id": "wall_south",
+          "description": "前墙低剖面直段，横向256像素，高100，无柱帽",
+          "target_size": [
+            256,
+            105
+          ]
+        },
+        {
+          "id": "wall_west",
+          "description": "左侧墙直段，竖向256像素，窄墙顶与外侧立面",
+          "target_size": [
+            64,
+            256
+          ]
+        },
+        {
+          "id": "wall_east",
+          "description": "右侧墙直段，竖向256像素，窄墙顶与外侧立面",
+          "target_size": [
+            64,
+            256
+          ]
+        },
+        {
+          "id": "corner_nw",
+          "description": "完整西北L形墙转角，两臂各128像素",
+          "target_size": [
+            160,
+            200
+          ]
+        },
+        {
+          "id": "corner_ne",
+          "description": "完整东北L形墙转角，两臂各128像素",
+          "target_size": [
+            160,
+            200
+          ]
+        },
+        {
+          "id": "door_south",
+          "description": "独立正南门框，两门柱之间敞开宽120像素，无门板",
+          "target_size": [
+            256,
+            220
+          ]
+        },
+        {
+          "id": "wall_post",
+          "description": "一根独立墙体支柱",
+          "target_size": [
+            60,
+            210
+          ]
+        }
+      ]
+    },
+    {
+      "id": "walls_fortress_2",
+      "title": "赌场深灰墙体 2",
+      "source": "07_casino",
+      "kind": "walls",
+      "material": "深灰石块、近黑包边与少量深木材，保持赌场墙体材质",
+      "objects": [
+        {
+          "id": "corner_sw",
+          "description": "完整西南L形低墙转角，两臂各128像素",
+          "target_size": [
+            160,
+            160
+          ]
+        },
+        {
+          "id": "corner_se",
+          "description": "完整东南L形低墙转角，两臂各128像素",
+          "target_size": [
+            160,
+            160
+          ]
+        },
+        {
+          "id": "door_west",
+          "description": "独立向西敞开的侧门框，无门板",
+          "target_size": [
+            150,
+            256
+          ]
+        },
+        {
+          "id": "door_east",
+          "description": "独立向东敞开的侧门框，无门板",
+          "target_size": [
+            150,
+            256
+          ]
+        },
+        {
+          "id": "window",
+          "description": "独立窗框与窗格，不带墙面",
+          "target_size": [
+            85,
+            100
+          ]
+        },
+        {
+          "id": "wall_torch",
+          "description": "一只独立壁挂火炬与支架，不带墙",
+          "target_size": [
+            55,
+            100
+          ]
+        },
+        {
+          "id": "wall_lamp",
+          "description": "一只独立壁灯与支架，不带墙",
+          "target_size": [
+            55,
+            90
+          ]
+        },
+        {
+          "id": "support_beam",
+          "description": "一根独立横向支撑木梁",
+          "target_size": [
+            256,
+            35
+          ]
+        }
+      ]
+    },
+    {
+      "id": "walls_plaster_1",
+      "title": "奶茶店墙体 1",
+      "source": "00_shop",
+      "kind": "walls",
+      "material": "米白粉刷墙面、深棕包边和砖砌外墙，保持奶茶店墙体材质",
+      "objects": [
+        {
+          "id": "wall_north",
+          "description": "后墙直段，横向256像素，正面可见墙面，高140，无柱帽",
+          "target_size": [
+            256,
+            145
+          ]
+        },
+        {
+          "id": "wall_south",
+          "description": "前墙低剖面直段，横向256像素，高100，无柱帽",
+          "target_size": [
+            256,
+            105
+          ]
+        },
+        {
+          "id": "wall_west",
+          "description": "左侧墙直段，竖向256像素，窄墙顶与外侧立面",
+          "target_size": [
+            64,
+            256
+          ]
+        },
+        {
+          "id": "wall_east",
+          "description": "右侧墙直段，竖向256像素，窄墙顶与外侧立面",
+          "target_size": [
+            64,
+            256
+          ]
+        },
+        {
+          "id": "corner_nw",
+          "description": "完整西北L形墙转角，两臂各128像素",
+          "target_size": [
+            160,
+            200
+          ]
+        },
+        {
+          "id": "corner_ne",
+          "description": "完整东北L形墙转角，两臂各128像素",
+          "target_size": [
+            160,
+            200
+          ]
+        },
+        {
+          "id": "door_south",
+          "description": "独立正南门框，两门柱之间敞开宽120像素，无门板",
+          "target_size": [
+            256,
+            220
+          ]
+        },
+        {
+          "id": "wall_post",
+          "description": "一根独立墙体支柱",
+          "target_size": [
+            60,
+            210
+          ]
+        }
+      ]
+    },
+    {
+      "id": "walls_plaster_2",
+      "title": "奶茶店墙体 2",
+      "source": "00_shop",
+      "kind": "walls",
+      "material": "米白粉刷墙面、深棕包边和砖砌外墙，保持奶茶店墙体材质",
+      "objects": [
+        {
+          "id": "corner_sw",
+          "description": "完整西南L形低墙转角，两臂各128像素",
+          "target_size": [
+            160,
+            160
+          ]
+        },
+        {
+          "id": "corner_se",
+          "description": "完整东南L形低墙转角，两臂各128像素",
+          "target_size": [
+            160,
+            160
+          ]
+        },
+        {
+          "id": "door_west",
+          "description": "独立向西敞开的侧门框，无门板",
+          "target_size": [
+            150,
+            256
+          ]
+        },
+        {
+          "id": "door_east",
+          "description": "独立向东敞开的侧门框，无门板",
+          "target_size": [
+            150,
+            256
+          ]
+        },
+        {
+          "id": "window",
+          "description": "独立窗框与窗格，不带墙面",
+          "target_size": [
+            85,
+            100
+          ]
+        },
+        {
+          "id": "wall_torch",
+          "description": "一只独立壁挂火炬与支架，不带墙",
+          "target_size": [
+            55,
+            100
+          ]
+        },
+        {
+          "id": "wall_lamp",
+          "description": "一只独立壁灯与支架，不带墙",
+          "target_size": [
+            55,
+            90
+          ]
+        },
+        {
+          "id": "support_beam",
+          "description": "一根独立横向支撑木梁",
+          "target_size": [
+            256,
+            35
+          ]
+        }
+      ]
+    }
+  ]
+}

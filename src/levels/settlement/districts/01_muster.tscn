@@ -1,0 +1,24 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/01_muster.png" id="1_4uxpj"]
+
+[node name="Muster" type="Node2D" unique_id=1062830464]
+y_sort_enabled = true
+metadata/zone_id = "01_muster"
+metadata/display_name = "撤离集结"
+metadata/footprint = Rect2(80, 70, 1380, 870)
+
+[node name="PaintedInterior" type="Sprite2D" parent="." unique_id=1910087804]
+z_index = -20
+texture = ExtResource("1_4uxpj")
+centered = false
+
+[node name="Walls" type="Node2D" parent="." unique_id=1688573224]
+
+[node name="Foreground" type="Node2D" parent="." unique_id=1742137380]
+y_sort_enabled = true
+
+[node name="Furniture" type="Node2D" parent="." unique_id=1015266053]
+
+[node name="Entrance" type="Marker2D" parent="." unique_id=962376622]
+position = Vector2(768, 930)

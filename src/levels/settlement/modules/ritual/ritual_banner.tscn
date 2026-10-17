@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/ritual/ritual_banner.png" id="1_texture"]
+
+[node name="RitualBanner" type="Node2D"]
+texture_filter = 1
+metadata/pack = "ritual"
+metadata/asset_id = "ritual_banner"
+metadata/native_size = Vector2i(197, 305)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-98, -303)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

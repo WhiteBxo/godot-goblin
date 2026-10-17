@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "source": "res://docs/design/order_bridge_demo.md",
+  "source_sha256": "59483007db6ac6ae98ca2cef12bdce0997609bfe9a52d0351d69a40e14fc7cba",
+  "scene": "res://src/debug/gameplay_bridge/order_bridge_demo.tscn",
+  "story": "res://src/resources/story/order_bridge_demo.json",
+  "dialogue": "res://src/resources/dialogue/order_bridge_demo.json",
+  "phases": "res://src/resources/story/order_bridge_demo_phases.json",
+  "beats": [
+    {
+      "id": "opening",
+      "mode": "自动演出",
+      "event": "order_demo.intro",
+      "start": 0,
+      "count": 2,
+      "dialogues": [
+        "order_demo.opening"
+      ]
+    },
+    {
+      "id": "check_board",
+      "mode": "玩家操作",
+      "trigger": "orders",
+      "expected_event": "order_demo.tutorial"
+    },
+    {
+      "id": "tutorial",
+      "mode": "自动演出",
+      "event": "order_demo.tutorial",
+      "start": 0,
+      "count": 2,
+      "dialogues": [
+        "order_demo.tutorial"
+      ]
+    },
+    {
+      "id": "deliver",
+      "mode": "玩家操作",
+      "phase": {
+        "id": "order_demo.deliver",
+        "after_event": "order_demo.tutorial",
+        "stage": "day1.waiting_order",
+        "completion": {
+          "flag": "shop.order_001_delivered",
+          "allow_existing": true
+        },
+        "completion_flag": "order_demo.delivery_done",
+        "next_event": "order_demo.after_order"
+      }
+    },
+    {
+      "id": "continuation",
+      "mode": "自动演出",
+      "event": "order_demo.after_order",
+      "start": 0,
+      "count": 2,
+      "dialogues": [
+        "order_demo.continuation"
+      ]
+    },
+    {
+      "id": "board_after",
+      "mode": "自动演出",
+      "event": "order_demo.board_after",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "order_demo.board_after"
+      ]
+    }
+  ],
+  "verification": "res://tests/verify_gameplay_bridge.gd"
+}

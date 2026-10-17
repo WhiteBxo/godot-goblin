@@ -17,15 +17,24 @@ func show_production_result(result: Dictionary) -> void:
 	if is_instance_valid(_popup):
 		_popup.show_production_result(result)
 
+@export var help_text := "小小奶茶店 · WASD 移动 · E 交互 · Esc / P 暂停"
+@export var show_help := true
+@export var close_text := "返回店铺  [Esc]"
+
 @onready var _prompt: Label = $Prompt
 var _popup: ShopPopup
 var _manager: UIManager
+
+func _ready() -> void:
+	$Header.text = help_text
+	$Header.visible = show_help
 
 func set_popup_layer(layer: CanvasLayer) -> void:
 	if is_instance_valid(_popup):
 		return
 	_popup = preload("res://src/UI/milk_tea/shop_popup.tscn").instantiate()
 	layer.add_child(_popup)
+	(_popup.get_default_focus() as Button).text = close_text
 	_popup.close_requested.connect(close)
 	if _production != null:
 		_popup.configure_production(_production)

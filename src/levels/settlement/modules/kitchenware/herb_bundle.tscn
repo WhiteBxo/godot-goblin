@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/kitchenware/herb_bundle.png" id="1_texture"]
+
+[node name="HerbBundle" type="Node2D"]
+texture_filter = 1
+metadata/pack = "kitchenware"
+metadata/asset_id = "herb_bundle"
+metadata/native_size = Vector2i(115, 210)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-57, -208)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

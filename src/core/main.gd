@@ -5,11 +5,13 @@ extends Node
 @onready var _active_level: CaveMap = $World/LevelRoot.get_child(0) as CaveMap
 @onready var _player: CavePlayer = $World/EntityRoot/Player as CavePlayer
 var _shop_level: MilkTeaShop
+var _settlement_level: SettlementMap
 var _shop_player: ShopPlayer
 var _ui_manager: UIManager
 var _shop_ui: ShopUI
 var _shop_interaction: ShopInteraction
 var _tea_production: TeaProduction
+var _observed_deliveries := 0
 var _dialogue_manager: DialogueManager
 var _story_director: StoryDirector
 var _actor_director: ActorDirector
@@ -27,6 +29,10 @@ var _debug_panel: DeveloperPanel
 func _ready() -> void:
 	DebugRuntime.apply_release_policy(get_tree())
 	_create_ui_system()
+	_settlement_level = $World/LevelRoot.get_child(0) as SettlementMap
+	if _settlement_level != null:
+		_initialize_settlement()
+		return
 	_shop_level = $World/LevelRoot.get_child(0) as MilkTeaShop
 	if _shop_level != null:
 		_shop_player = $World/EntityRoot/Player as ShopPlayer
@@ -39,6 +45,7 @@ func _ready() -> void:
 		_tea_production = TeaProduction.new()
 		_tea_production.name = "TeaProduction"
 		$Systems.add_child(_tea_production)
+		_tea_production.changed.connect(_on_orders_changed)
 		ui.configure_production(_tea_production)
 		ui.make_requested.connect(func(recipe: Array[String]) -> void: ui.show_production_result(_tea_production.make_drink(recipe)))
 		ui.bind_manager(_ui_manager)
@@ -86,7 +93,34 @@ func _create_ui_system() -> void:
 	_ui_manager.modal_changed.connect(_refresh_input_lock)
 
 func get_active_level() -> Node2D:
+	if _settlement_level != null:
+		return _settlement_level
 	return _shop_level if _shop_level != null else _active_level
+
+func _initialize_settlement() -> void:
+	_shop_player = $World/EntityRoot/Player as ShopPlayer
+	_shop_player.global_position = _settlement_level.get_spawn_position()
+	_shop_player.configure_camera(_settlement_level.get_camera_bounds())
+	_create_camera_system(_shop_player.camera)
+	_shop_ui = preload("res://src/UI/milk_tea/shop_ui.tscn").instantiate()
+	_shop_ui.help_text = "洞窟聚落                  WASD 移动 · E 查看 · Esc 关闭"
+	_shop_ui.show_help = not DebugRuntime.is_enabled()
+	_shop_ui.close_text = "继续探索  [Esc]"
+	$HudLayer.add_child(_shop_ui)
+	_shop_ui.set_popup_layer($PopupLayer)
+	_shop_ui.bind_manager(_ui_manager)
+	_shop_interaction = ShopInteraction.new()
+	_shop_interaction.name = "SettlementInteraction"
+	$Systems.add_child(_shop_interaction)
+	_shop_interaction.configure(_shop_player, _shop_ui, _settlement_level.get_interaction_points(), _route_story_interaction)
+	_create_dialogue_system()
+	_create_gameplay_bridge(false)
+	if DebugRuntime.is_enabled():
+		var preview := Node.new()
+		preview.name = "SettlementPreview"
+		preview.set_script(load("res://src/debug/settlement/settlement_preview.gd"))
+		preview.call("configure", self, $DebugLayer)
+		$Systems.add_child(preview)
 
 func get_tea_production() -> TeaProduction:
 	return _tea_production
@@ -96,6 +130,9 @@ func get_player() -> CharacterBody2D:
 
 func get_dialogue_manager() -> DialogueManager:
 	return _dialogue_manager
+
+func get_interaction_ui() -> ShopUI:
+	return _shop_ui
 
 func get_audio_manager() -> AudioManager:
 	return _audio_manager
@@ -165,15 +202,31 @@ func get_tea_making() -> TeaMaking:
 func get_shop_ui() -> ShopUI:
 	return _shop_ui
 
-func _create_gameplay_bridge() -> void:
-	_tea_making = TeaMaking.new()
-	_tea_making.name = "TeaMaking"
-	$Systems.add_child(_tea_making)
-	_shop_ui.bind_tea_making(_tea_making)
+func _create_gameplay_bridge(with_tea: bool = true) -> void:
+	if with_tea:
+		_create_tea_making()
 	_gameplay_bridge = GameplayBridge.new()
 	_gameplay_bridge.name = "GameplayBridge"
 	$Systems.add_child(_gameplay_bridge)
 	_gameplay_bridge.configure(_story_director, _ui_manager, _tea_making)
+
+func _create_tea_making() -> void:
+	_tea_making = TeaMaking.new()
+	_tea_making.name = "TeaMaking"
+	$Systems.add_child(_tea_making)
+	_shop_ui.bind_tea_making(_tea_making)
+
+func _on_orders_changed() -> void:
+	# changed also refreshes UI: count the committed business result, not notifications.
+	var delivered := _tea_production.get_completed_count()
+	if delivered <= _observed_deliveries:
+		return
+	var previous := _observed_deliveries
+	_observed_deliveries = delivered # Consume before GameState's synchronous listeners.
+	var state := get_node("/root/GameState")
+	for index in range(previous + 1, delivered + 1):
+		state.set_flag("shop.order_%03d_delivered" % index)
+	state.set_variable("shop.orders_completed", maxi(int(state.get_variable("shop.orders_completed", 0)), delivered))
 
 func _can_start_story() -> bool:
 	return (not get_tree().paused and not _ui_manager.has_modal()

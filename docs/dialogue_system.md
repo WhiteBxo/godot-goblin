@@ -27,6 +27,8 @@ if error != OK:
 | `load_dialogues(path: String = "") -> Error` | 空参数重新加载导出的 `dialogue_file` 配置；显式 path 加载其他 JSON。仅 idle 时允许，失败保留旧目录。已加载目录中 ID 不存在时不会静默改载默认文件 |
 | `is_active() -> bool` | 当前是否有对话 |
 | `get_current_line_id() -> String` | 当前行 ID，idle 时为空 |
+| `set_current_portrait(portrait: Texture2D) -> Error` | 即时替换当前句立绘，传 `null` 隐藏；保留文字进度、选项、焦点及左右位置，不发 `line_changed`。下一句重新按 JSON / 默认图解析；idle 或 UI 不可用返回 `ERR_UNCONFIGURED` |
+| `set_speaker_portrait(speaker: String, portrait: Texture2D) -> void` | 更新角色默认图，`null` 移除映射；当前角色同名且该句没有 `portrait` 字段时立即刷新。显式单句图或显式隐藏优先 |
 | `advance() -> void` | 逐字显示时补全文本；完整显示后推进普通对白；选项行等待选择 |
 | `select_choice(index: int) -> void` | 使用从 0 开始的 UI 索引选择分支；逐字显示期间或索引无效时忽略 |
 | `end_dialogue(cancelled: bool = false) -> void` | 结束当前对话；idle 时不重复通知 |
@@ -65,13 +67,33 @@ Signals：`dialogue_started(dialogue_id: String)`、`dialogue_ended(dialogue_id:
 ```
 
 - `speaker` 和 `text` 为必填字符串，可为空；文本支持 Unicode、换行，不启用 BBCode。长文本可滚动阅读。
-- 省略 `portrait` 时，Manager 按 `speaker` 精确匹配导出的 `speaker_portraits` 字典。默认主角、玩家、主角·内心使用围裙男子全身图，胖哥布林、哥布林使用微笑立绘；旁白及其他未配置角色不显示图片。宿主可在 Inspector 或启动前修改该字典，为新角色配置 Texture2D，不依赖 Actor 节点层级。
+- 省略 `portrait` 时，Manager 按 `speaker` 精确匹配导出的 `speaker_portraits` 字典。默认主角、玩家、主角·内心使用用户提供的平静表情全身图 `player_neutral_portrait.png`，胖哥布林、哥布林使用微笑立绘；旁白及其他未配置角色不显示图片。宿主可在 Inspector 或启动前修改该字典，为新角色配置 Texture2D，不依赖 Actor 节点层级。
 - `portrait` 非空时必须为存在的 `res://` Texture2D 路径，优先于角色默认图，可用于单句表情变化；显式 `"portrait": ""` 隐藏该句立绘。每行重新解析，缺图、结束或取消均清除上一张图片。对话使用独立的透明背景 PNG，原始白底素材保留；默认图使用 preload 建立资源依赖。
 - `left_portrait_speakers` 配置主角的姓名（默认主角、主角·内心、玩家），这些角色显示在左侧；其他 NPC 显示在右侧。单句覆盖图片不改变角色所属侧。
 - 普通行用 `next` 指向同一对话中的行；省略或 `""` 表示确认后结束。连续对白必须显式连接。
 - 选项由 `id`、`text` 和可选 `next` 构成。ID 在当前行内唯一，文案非空；`next` 为空表示选择后直接完成。非空 choices 与行级 next 不能同时出现。
 - 加载时校验整个目录及全部分支目标；不会边演出边发现悬空的 `next`。循环分支允许，每次都等待用户确认，不会自动死循环。更新 JSON 后可 idle 时显式 reload。
 - `export_presets.cfg` 已用 `*.json` 导出所有对话文件，测试目录仍被排除。新增导出 preset 时需保留 JSON 包含规则，以及字体许可证规则；改为仅导出选择的场景时需显式包含头像等由 JSON 动态引用的资源。
+
+## 主角立绘与程序切换
+
+用户提供的两张立绘已保存原图到 `assets/characters/apron_man/source/`，运行时使用同目录上级的 `player_neutral_portrait.png`（平静）和 `player_talking_portrait.png`（说话）。两张透明 PNG 共用 390×895 画布与原图裁切范围 `(331, 30, 721, 925)`，保留原比例，切换时不改变人物大小和脚底位置。去除了外部白底、手臂/腿间白底、头发灰白残边和脚下地面；原有 `player_portrait.png` 保留供既有显式引用使用。
+
+```gdscript
+const NEUTRAL: Texture2D = preload("res://assets/characters/apron_man/player_neutral_portrait.png")
+const TALKING: Texture2D = preload("res://assets/characters/apron_man/player_talking_portrait.png")
+
+# 父场景传入 DialogueManager，或通过宿主的公开 getter 取得。
+# 默认图可在启动前配置；即时切换应在对白已启动之后调用。
+dialogue.set_speaker_portrait("主角", NEUTRAL)
+dialogue.start_dialogue("demo.player_expressions")
+dialogue.set_current_portrait(TALKING)
+dialogue.set_current_portrait(null) # 只隐藏当前句，下一句重新解析。
+```
+
+如果切换由对白数据驱动，继续使用现有 v1 JSON 的 `portrait` 路径字段，例如 `"portrait": "res://assets/characters/apron_man/player_talking_portrait.png"`。无需修改 StoryDirector 或正文顺序。程序默认映射按 speaker 精确匹配；`主角·内心`、`玩家` 是独立键，按需分别配置。
+
+重建透明素材（Python 3、Pillow、numpy）：`python tools/art/prepare_player_portraits.py`。来源和抠图规则见 [本次素材导入记录](asset_imports/player_dialogue_portraits.md)。
 
 ## 输入与界面边界
 
@@ -89,9 +111,9 @@ UI 按 640×360 视口设计，底部面板为 560×136px，水平居中、距�
 /Applications/Godot.app/Contents/MacOS/Godot --path . --scene res://src/debug/dialogue/dialogue_demo.tscn
 ```
 
-1. 场景自动进入连续对白；观察角色姓名、头像和逐字显示。
+1. 场景自动进入“主角表情”对白。点击右上方“平静 / 说话 / 隐藏”，观察同一句中立绘立即变化、文字继续显示。按钮在 DebugLayer，能在对话弹层打开时接收鼠标点击。继续推进时第二句使用 JSON 指定的说话表情，第三句恢复平静；结束或 Esc 后清理立绘。返回菜单选择“连续对白 · 两个选项”进行以下分支验证。
 2. E 补全文本，再按推进；到达问题后出现两个选项，按 ↓ + Enter 或点击按钮选择，看到对应的不同回应。
-3. 最后一行确认后返回菜单，显示稳定的选项结果 ID；菜单可重复播放普通对白和连续对白，体验另一个分支。
+3. 最后一行确认后返回菜单，显示稳定的选项结果 ID；菜单可重复播放普通对白、连续对白和主角表情，体验另一个分支。
 4. 对话中 WASD 不移动角色；结束或 Esc 中止后 WASD 恢复移动，角色被限制在试玩区域。
 5. 返回菜单点击“角色立绘 · 切换与隐藏”，依次观察左侧主角 → 右侧胖哥布林 → 旁白（隐藏）→ 左侧主角内心 → 右侧哥布林大笑（单句覆盖）→ 显式隐藏。确认立绘无白底，约上半身露在对话框上方，下半身被面板遮住，不盖住正文或选项。每句用确认键补全文本，再按推进；Esc 中止后立绘消失。F5 的现有 Day 1 主角对白也会自动显示左侧立绘。
 
@@ -106,3 +128,5 @@ UI 按 640×360 视口设计，底部面板为 560×136px，水平居中、距�
 首次 checkout 需要先让 Godot 完成项目导入。对话测试覆盖 JSON 校验、字体字符覆盖、逐字效果、跳过、键盘推进/选择、按钮 dispatch、两个分支、空文本/直接结束选项、完成与取消信号、移除清理、独立试玩宿主及真实 MainGame 输入锁。加 `-- --capture` 需使用有渲染的非 headless 运行，截图输出到 `/private/tmp/dialogue-demo-welcome.png`、`dialogue-demo-choices.png`、`dialogue-choices.png`。
 
 实现依据 Godot 4.7 官方文档：[InputEvent 的处理顺序与消费](https://docs.godotengine.org/en/4.7/tutorials/inputs/inputevent.html)、[RichTextLabel 的 visible_characters](https://docs.godotengine.org/en/4.7/classes/class_richtextlabel.html#class-richtextlabel-property-visible-characters)、[JSON](https://docs.godotengine.org/en/4.7/classes/class_json.html)、[导出资源过滤](https://docs.godotengine.org/en/4.7/tutorials/export/exporting_projects.html#resource-options)。
+
+本次新增 API 与导入素材已在 Godot 4.7.2 验证。官网文档站本次访问返回 403，因此实现前直接核对同版本的官方文档源文件：[TextureRect 4.7.2](https://github.com/godotengine/godot/blob/4.7.2-stable/doc/classes/TextureRect.xml)（替换 `texture`、等比居中与忽略图片最小尺寸）、[ResourceLoader 4.7.2](https://github.com/godotengine/godot/blob/4.7.2-stable/doc/classes/ResourceLoader.xml)（已导入资源加载及缓存复用）。

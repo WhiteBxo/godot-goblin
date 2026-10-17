@@ -65,7 +65,7 @@ offset_top = 16.0
 offset_right = 620.0
 offset_bottom = 44.0
 theme_override_font_sizes/font_size = 24
-text = "对话试玩 · 第一班营业"
+text = "对话试玩 · 立绘表情切换"
 
 [node name="Instructions" type="Label" parent="HudLayer/Screen"]
 offset_left = 20.0
@@ -76,9 +76,9 @@ text = "E / 空格 / Enter：显示全文，再次按下推进\n↑↓ 选择 ·
 
 [node name="Menu" type="VBoxContainer" parent="HudLayer/Screen"]
 offset_left = 20.0
-offset_top = 160.0
+offset_top = 120.0
 offset_right = 300.0
-offset_bottom = 244.0
+offset_bottom = 278.0
 theme_override_constants/separation = 10
 
 [node name="Greeting" type="Button" parent="HudLayer/Screen/Menu"]
@@ -96,6 +96,11 @@ custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 text = "角色立绘 · 切换与隐藏"
 
+[node name="Expressions" type="Button" parent="HudLayer/Screen/Menu"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+text = "主角表情 · 程序即时切换"
+
 [node name="Status" type="Label" parent="HudLayer/Screen"]
 offset_left = 20.0
 offset_top = 290.0
@@ -108,3 +113,41 @@ process_mode = 3
 layer = 20
 
 [node name="DialogueUI" parent="PopupLayer" instance=ExtResource("3")]
+
+[node name="DebugLayer" type="CanvasLayer" parent="."]
+process_mode = 3
+layer = 50
+
+[node name="Screen" type="Control" parent="DebugLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme = SubResource("Theme")
+
+[node name="PortraitControls" type="HBoxContainer" parent="DebugLayer/Screen"]
+visible = false
+offset_left = 360.0
+offset_top = 52.0
+offset_right = 620.0
+offset_bottom = 84.0
+theme_override_constants/separation = 10
+
+[node name="Neutral" type="Button" parent="DebugLayer/Screen/PortraitControls"]
+custom_minimum_size = Vector2(80, 32)
+layout_mode = 2
+text = "平静"
+focus_mode = 0
+
+[node name="Talking" type="Button" parent="DebugLayer/Screen/PortraitControls"]
+custom_minimum_size = Vector2(80, 32)
+layout_mode = 2
+text = "说话"
+focus_mode = 0
+
+[node name="Hidden" type="Button" parent="DebugLayer/Screen/PortraitControls"]
+custom_minimum_size = Vector2(80, 32)
+layout_mode = 2
+text = "隐藏"
+focus_mode = 0

@@ -47,8 +47,7 @@ func present_line(speaker: String, text: String, portrait: Texture2D, choices: A
 	elif not visible:
 		_previous_focus = get_viewport().gui_get_focus_owner()
 	_speaker.text = speaker
-	_portrait.texture = portrait
-	_portrait.visible = portrait != null
+	set_portrait(portrait)
 	_portrait.offset_left = -268.0 if portrait_on_left else 28.0
 	_portrait.offset_right = -28.0 if portrait_on_left else 268.0
 	_text.text = text
@@ -76,6 +75,12 @@ func present_line(speaker: String, text: String, portrait: Texture2D, choices: A
 		reveal_all()
 
 
+## Change only the image; text reveal, choices, focus and placement stay intact.
+func set_portrait(portrait: Texture2D) -> void:
+	_portrait.texture = portrait
+	_portrait.visible = portrait != null
+
+
 func is_revealing() -> bool:
 	return _revealing
 
@@ -94,8 +99,7 @@ func close_dialogue() -> void:
 	if is_instance_valid(_ui_manager):
 		_ui_manager.close_screen(_screen_id)
 	hide()
-	_portrait.texture = null
-	_portrait.hide()
+	set_portrait(null)
 	_revealing = false
 	_clear_choices()
 	if not is_instance_valid(_ui_manager) and is_instance_valid(_previous_focus) and _previous_focus.is_visible_in_tree():

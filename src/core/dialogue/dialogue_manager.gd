@@ -12,9 +12,9 @@ signal line_changed(line_id: String)
 @export var left_portrait_speakers: PackedStringArray = ["主角", "主角·内心", "玩家"]
 ## Exact speaker names; per-line portrait paths override these defaults.
 @export var speaker_portraits: Dictionary[String, Texture2D] = {
-	"主角": preload("res://assets/characters/apron_man/player_portrait.png"),
-	"主角·内心": preload("res://assets/characters/apron_man/player_portrait.png"),
-	"玩家": preload("res://assets/characters/apron_man/player_portrait.png"),
+	"主角": preload("res://assets/characters/apron_man/player_neutral_portrait.png"),
+	"主角·内心": preload("res://assets/characters/apron_man/player_neutral_portrait.png"),
+	"玩家": preload("res://assets/characters/apron_man/player_neutral_portrait.png"),
 	"胖哥布林": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
 	"哥布林": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
 }
@@ -84,6 +84,28 @@ func is_active() -> bool:
 
 func get_current_line_id() -> String:
 	return _line_id
+
+
+## Override the displayed image for this line only, including an explicit null to hide.
+## Does not restart the line or emit line_changed. The next line resolves normally.
+func set_current_portrait(portrait: Texture2D) -> Error:
+	if not is_active() or not is_instance_valid(_ui) or not _ui.is_inside_tree():
+		return ERR_UNCONFIGURED
+	_ui.set_portrait(portrait)
+	return OK
+
+
+## Update a speaker default for future lines; refresh the current line unless it
+## declares an explicit portrait. Null removes the default for this speaker.
+func set_speaker_portrait(speaker: String, portrait: Texture2D) -> void:
+	if portrait == null:
+		speaker_portraits.erase(speaker)
+	else:
+		speaker_portraits[speaker] = portrait
+	if is_active() and is_instance_valid(_ui):
+		var line: Dictionary = _dialogue["lines"][_line_id]
+		if line["speaker"] == speaker and not line.has("portrait"):
+			_ui.set_portrait(portrait)
 
 
 func advance() -> void:

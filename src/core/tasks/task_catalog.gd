@@ -43,6 +43,16 @@ func _keys(data: Dictionary, allowed: Array, context: String) -> bool:
 static func is_number(value: Variant) -> bool:
 	return typeof(value) in [TYPE_INT, TYPE_FLOAT] and is_finite(value)
 
+## Shared by delivery requirements and item rewards: stable IDs with positive ints.
+func _item_quantities(value: Variant, context: String) -> bool:
+	if not value is Dictionary or value.is_empty():
+		return _invalid(context, "Expected item quantities")
+	for id: Variant in value:
+		var amount: Variant = value[id]
+		if not id is String or not id.is_valid_identifier() or not is_number(amount) or amount != floor(amount) or amount < 1 or amount > WarehouseInventory.MAX_QUANTITY:
+			return _invalid(context, "Expected valid item IDs and positive integer quantities")
+	return true
+
 func _text(value: Variant) -> bool:
 	return value is String and not value.strip_edges().is_empty()
 
@@ -116,11 +126,19 @@ func _validate(data: Variant, references: Dictionary) -> bool:
 			return false
 		if task.has("delivery"):
 			var delivery: Variant = task.delivery
-			if not delivery is Dictionary or not _keys(delivery, ["order_id", "product_id", "target_object_id"], context + "/delivery"):
-				return _invalid(context + "/delivery", "Expected three delivery IDs")
-			for field: String in ["order_id", "product_id", "target_object_id"]:
+			if not delivery is Dictionary or not _keys(delivery, ["order_id", "product_id", "items", "target_object_id"], context + "/delivery"):
+				return _invalid(context + "/delivery", "Expected order_id, target_object_id and one requirement")
+			for field: String in ["order_id", "target_object_id"]:
 				if not _text(delivery.get(field)) or not delivery[field].is_valid_identifier():
 					return _invalid(context + "/delivery/" + field, "Expected a stable object/item identifier")
+			# A delivery carries either one finished product or a material list.
+			if delivery.has("product_id") == delivery.has("items"):
+				return _invalid(context + "/delivery", "Expected exactly one of product_id or items")
+			if delivery.has("product_id"):
+				if not _text(delivery.product_id) or not delivery.product_id.is_valid_identifier():
+					return _invalid(context + "/delivery/product_id", "Expected a stable object/item identifier")
+			elif not _item_quantities(delivery.items, context + "/delivery/items"):
+				return false
 			if orders.has(delivery.order_id):
 				return _invalid(context + "/delivery/order_id", "Duplicate order ID")
 			orders[delivery.order_id] = true
@@ -137,13 +155,8 @@ func _validate(data: Variant, references: Dictionary) -> bool:
 				return _invalid(context + "/rewards/text", "Expected a reward object with non-empty text")
 			if not _keys(reward, ["text", "reveal_when", "items"], context + "/rewards"):
 				return false
-			if reward.has("items"):
-				if not reward.items is Dictionary or reward.items.is_empty():
-					return _invalid(context + "/rewards/items", "Expected item quantities")
-				for id: Variant in reward.items:
-					var amount: Variant = reward.items[id]
-					if not id is String or not id.is_valid_identifier() or not is_number(amount) or amount != floor(amount) or amount < 1 or amount > WarehouseInventory.MAX_QUANTITY:
-						return _invalid(context + "/rewards/items", "Expected valid item IDs and positive integer quantities")
+			if reward.has("items") and not _item_quantities(reward.items, context + "/rewards/items"):
+				return false
 
 			if reward.has("reveal_when") and not _condition(reward.reveal_when, context + "/rewards/reveal_when", references):
 				return false

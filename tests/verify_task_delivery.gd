@@ -42,7 +42,7 @@ func _test_schema() -> void:
 		_check(catalog.load_json(JSON.stringify(data)) == ERR_INVALID_DATA, "Reject malformed item rewards")
 	var duplicate := baseline.duplicate(true)
 	duplicate.tasks.append(duplicate.tasks[0].duplicate(true))
-	duplicate.tasks[1].id = "shop.other_task"
+	duplicate.tasks[duplicate.tasks.size() - 1].id = "shop.other_task"
 	_check(catalog.load_json(JSON.stringify(duplicate)) == ERR_INVALID_DATA and "order_id" in catalog.last_error, "Order IDs are unique across tasks")
 	_check(catalog.get_tasks() == baseline.tasks, "Invalid loads preserve delivery catalog")
 

@@ -64,11 +64,11 @@ Demo 开始时临时重置 GameState，离树恢复原快照。测试按钮只�
 ## 验证
 
 ```sh
-/Applications/Godot.app/Contents/MacOS/Godot --headless --path . --log-file /private/tmp/goblin-chronicle-test.log --script res://tests/verify_chronicle.gd
-/Applications/Godot.app/Contents/MacOS/Godot --path . --log-file /private/tmp/goblin-chronicle-visual.log --script res://tests/verify_chronicle.gd -- --capture
+godot --headless --path . --log-file .godot/chronicle-test.log --script res://tests/verify_chronicle.gd
+godot --path . --log-file .godot/chronicle-visual.log --script res://tests/verify_chronicle.gd -- --capture
 ```
 
-专用测试覆盖数据幂等、非法参数/损坏数据、只读副本、跨场景与磁盘快照恢复、真实 Story Loader/Director 调用、HUD/列表刷新、原生键盘已读、隐藏与暂停、弹窗/对白互斥和原有移动锁。窗口版在 640×360、1280×720、1440×720 检查长正文边界、实际窗口尺寸和滚动，并输出 `/private/tmp/goblin-chronicle-<width>x<height>.png`。
+专用测试覆盖数据幂等、非法参数/损坏数据、只读副本、跨场景与磁盘快照恢复、真实 Story Loader/Director 调用、HUD/列表刷新、原生键盘已读、隐藏与暂停、弹窗/对白互斥和原有移动锁。窗口版在 640×360、1280×720、1440×720 检查长正文边界、实际窗口尺寸和滚动，并输出 `.godot/ui-captures/goblin-chronicle-<width>x<height>.png`。
 
 历史独立见闻录验收（统一手册接入前）：Godot 4.7.2 执行结果：专用测试 65 项通过；窗口版附加尺寸/边界/滚动断言 9 项通过并检查截图；UIManager 47 项、StoryDirector 163 项、GameState 120 项、MainGame 73 项、Debug 边界 97 项通过。仅包含本次改动的临时项目副本再次通过专用 65 项和 MainGame 73 项，确认不依赖同工作区的其他未提交功能。
 

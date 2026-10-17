@@ -65,7 +65,7 @@ UIManager 在 Systems 下使用 Always；World 和其他普通 Systems 保持 Pa
 godot --headless --path . --script res://tools/ui/build_theme.gd
 ```
 
-主题覆盖 Button、Label、Panel/PanelContainer、ItemList、TabContainer/TabBar、LineEdit、SpinBox、VScrollBar/HScrollBar、PopupMenu、Tooltip、CheckBox、ProgressBar、HSeparator、RichTextLabel 和容器间距。正文 12px，弹窗标题 24px，标题画面 36px，不使用 14/18。静态样式全部来自主题，场景和脚本用 `theme_type_variation`（Title/H2/Speaker/Hint/Muted/Subtitle/Value/Success/Warning/Danger/Badge/Keycap/PrimaryButton/GhostButton/DangerButton/IconButton/InsetPanel/CardPanel/SunkenPanel/SuccessBar）表达语义，不写 per-node 颜色或字号覆盖。
+主题覆盖 Button、Label、Panel/PanelContainer、ItemList、TabContainer/TabBar、LineEdit、SpinBox、VScrollBar/HScrollBar、PopupMenu、Tooltip、CheckBox、ProgressBar、HSeparator、RichTextLabel 和容器间距。正文 12px，弹窗标题 24px，标题画面 36px，不使用 14/18。静态样式全部来自主题，场景和脚本用 `theme_type_variation`（Title/H2/Speaker/Hint/Muted/Subtitle/Value/Success/Warning/Danger/Badge/Keycap/PrimaryButton/GhostButton/DangerButton/IconButton/InsetPanel/CardPanel/SunkenPanel/ShadePanel/SuccessBar）表达语义，不写 per-node 颜色或字号覆盖。
 
 `src/debug/ui/ui_kit.tscn` 是主题画廊，F6 检查字体层级、按钮状态、面板、ItemList 选中、页签、输入框、进度条与长文本。`tests/verify_ui_theme.gd` 审计场景使用的控件类型、字号范围和 UI 脚本中的 raw Color；`tests/verify_ui_kit.gd` 冒烟加载画廊并输出截图。
 
@@ -97,7 +97,7 @@ godot --path . --log-file .godot/ui-visual.log --script res://tests/verify_ui_ma
 
 统一手册与任务面板的截图分别写入 `.godot/handbook/` 与 `.godot/task_panel/`；主题画廊写入 `.godot/ui_kit/`。窗口截图来自游戏 viewport，不包含宽窗口的比例留白。验收同时断言实际 Window 尺寸，避免只修改截图文件名。
 
-本次主题化、壳重构与店铺界面批次通过：ui_theme 156 项、ui_kit 6 项、ui_manager 47 项（窗口版含尺寸断言 50 项）、handbook 44 项、task_panel 92 项、chronicle 64 项、dialogue 154 项、main_game 73 项、day1_stages_01_02 255 项，以及 milk_tea_shop、warehouse_inventory、business_session、tea_production、tea_recipes、gameplay_bridge、task_delivery、task_system、gathering、interaction_feedback 的对应检查。F6 与 640×360、1280×720 截图已人工检查。
+本次主题化、壳重构与店铺界面批次通过：ui_theme 152 项、ui_kit 6 项、ui_manager 47 项（窗口版含尺寸断言 50 项）、handbook 44 项、task_panel 92 项、chronicle 64 项、dialogue 154 项、main_game 73 项、day1_stages_01_02 255 项，以及 milk_tea_shop、warehouse_inventory、business_session、tea_production、tea_recipes、gameplay_bridge、task_delivery、task_system、gathering、interaction_feedback 的对应检查。F6 与 640×360、1280×720 截图已人工检查。
 
 历史 UI 验收（统一手册接入前）：ui_manager 47 项（窗口版含尺寸断言共 50 项）、main_game 72 项、dialogue 75 项、story_director 147 项、cinematic_integration 286 项、interaction_feedback 46 项、screen_transition 54 项，以及 milk_tea_shop 的移动/碰撞/交互检查。窗口版在项目默认 Metal Forward+ 下完成三种尺寸截图检查；Compatibility 渲染器也通过同一 UI 回归。
 

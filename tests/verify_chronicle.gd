@@ -182,6 +182,7 @@ func _run() -> void:
 	player.set_movement_enabled(true)
 
 	if "--capture" in OS.get_cmdline_user_args():
+		DirAccess.make_dir_recursive_absolute("res://.godot/ui-captures")
 		journal.unlock_entry("test.long", "很长的见闻标题，用于验证自动换行与布局边界")
 		journal.append_record("test.long", "test.long_record", "测试长正文。 [b]保持原文[/b]\n".repeat(55))
 		game.open_chronicle()
@@ -191,9 +192,10 @@ func _run() -> void:
 			await frames(8)
 			await RenderingServer.frame_post_draw
 			check(root.size == dimensions, "Capture window size applied")
-			check(text.get_global_rect().end.x <= panel.size.x and text.get_global_rect().end.y <= panel.size.y, "Long text remains within modal")
+			var panel_rect := panel.get_global_rect()
+			check(text.get_global_rect().end.x <= panel_rect.end.x and text.get_global_rect().end.y <= panel_rect.end.y, "Long text remains within modal")
 			check(text.get_v_scroll_bar().max_value > text.get_v_scroll_bar().page, "Long content scrolls")
-			root.get_texture().get_image().save_png("/private/tmp/goblin-chronicle-%dx%d.png" % [dimensions.x, dimensions.y])
+			root.get_texture().get_image().save_png("res://.godot/ui-captures/goblin-chronicle-%dx%d.png" % [dimensions.x, dimensions.y])
 		ui.close_screen(&"chronicle")
 	game.queue_free()
 	await frames()

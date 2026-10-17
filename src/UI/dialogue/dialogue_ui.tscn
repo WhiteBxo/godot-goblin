@@ -73,7 +73,7 @@ layout_mode = 2
 theme_type_variation = &"Speaker"
 
 [node name="Line" type="HBoxContainer" parent="Panel/Margin/Content"]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 12
@@ -88,7 +88,7 @@ scroll_following = false
 
 [node name="ChoiceScroll" type="ScrollContainer" parent="Panel/Margin/Content"]
 visible = false
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 horizontal_scroll_mode = 0
 follow_focus = true

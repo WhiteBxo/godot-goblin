@@ -1,0 +1,128 @@
+[
+  {
+    "id": "human_customer",
+    "display_name": "普通男顾客",
+    "side_faces_left": false,
+    "animations": {
+      "run_up": {
+        "source": "run_up",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 12,
+        "source_entry": "普通顾客走路和待机/男/走路/合并图片.png"
+      },
+      "run_down": {
+        "source": "run_down",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 8,
+        "source_entry": "普通顾客走路和待机/男/走路/合并图片 2.png"
+      },
+      "run_right": {
+        "source": "run_right",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 11,
+        "source_entry": "普通顾客走路和待机/男/走路/合并图片 3.png"
+      },
+      "idle_down": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 7,
+        "source_entry": "普通顾客走路和待机/男/待机/合并图片.png"
+      },
+      "idle_right": {
+        "source": "idle_right",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 7,
+        "source_entry": "普通顾客走路和待机/男/待机/合并图片 2.png"
+      },
+      "idle_up": {
+        "source": "idle_up",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 9,
+        "source_entry": "普通顾客走路和待机/男/待机/合并图片 3.png"
+      },
+      "run_left": {
+        "source": "run_right",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 11,
+        "source_entry": "普通顾客走路和待机/男/走路/合并图片 3.png"
+      },
+      "idle_left": {
+        "source": "idle_right",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 7,
+        "source_entry": "普通顾客走路和待机/男/待机/合并图片 2.png"
+      }
+    }
+  },
+  {
+    "id": "human_customer_female",
+    "display_name": "普通女顾客",
+    "side_faces_left": false,
+    "animations": {
+      "run_up": {
+        "source": "run_up",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 8,
+        "source_entry": "普通顾客走路和待机/女/走路/合并图片 2.png"
+      },
+      "run_right": {
+        "source": "run_right",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 16,
+        "source_entry": "普通顾客走路和待机/女/走路/合并图片 3.png"
+      },
+      "run_down": {
+        "source": "run_down",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 16,
+        "source_entry": "普通顾客走路和待机/女/走路/合并图片 4.png"
+      },
+      "idle_right": {
+        "source": "idle_right",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 9,
+        "source_entry": "普通顾客走路和待机/女/待机/合并图片.png"
+      },
+      "idle_down": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 13,
+        "source_entry": "普通顾客走路和待机/女/待机/合并图片 2.png"
+      },
+      "idle_up": {
+        "source": "idle_up",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 11,
+        "source_entry": "普通顾客走路和待机/女/待机/合并图片 3.png"
+      },
+      "run_left": {
+        "source": "run_right",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 16,
+        "source_entry": "普通顾客走路和待机/女/走路/合并图片 3.png"
+      },
+      "idle_left": {
+        "source": "idle_right",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 9,
+        "source_entry": "普通顾客走路和待机/女/待机/合并图片.png"
+      }
+    }
+  }
+]

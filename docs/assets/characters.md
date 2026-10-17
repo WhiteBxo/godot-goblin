@@ -55,3 +55,43 @@ Godot F6 打开 `src/debug/characters/character_gallery.tscn`：同时查看 8 �
 实现核对的 Godot 4.7 官方文档：[SpriteFrames](https://docs.godotengine.org/en/4.7/classes/class_spriteframes.html)（帧序列和 FPS）、[AtlasTexture](https://docs.godotengine.org/en/4.7/classes/class_atlastexture.html)（region 裁取及 filter_clip 防止邻格渗色）、[AnimatedSprite2D](https://docs.godotengine.org/en/4.7/classes/class_animatedsprite2d.html)（flip_h、offset 与动画播放）。
 
 本次在 Godot 4.7.2 验证：人物 headless 1295 项通过；Metal Forward+ 实际渲染 1296 项通过（含截图），中文字体与八类人物画面已检查；ActorDirector 165 项、StoryDirector 163 项回归通过；聚落回归通过，验证 16 个区域、剧情锚点、桥梁、真实移动和墙体（48623 个可达采样点）。headless editor 资源导入成功；退出时存在沙盒外 editor_settings 无法保存和编辑器资源清理提示，未出现本次人物资源解析错误。
+
+## 普通男、女顾客（2026-10-17）
+
+用户附件 `普通顾客走路和待机(1).zip` 中的 12 张 PNG 已逐字节导入
+`assets/characters/npc/human_customer/` 和 `human_customer_female/`；忽略
+`__MACOSX` 元数据。附件由用户提供供本项目使用，未附独立许可证文件，授权范围未另行声明。
+源图不裁剪、不重编码，原附件路径记录在
+`src/gameplay/characters/customer_catalog.json` 的 `source_entry` 中。
+
+`human_customer.tscn` 使用红衣男顾客替换原主角动画及蓝色染色，正式店铺已有的
+`human_customer` 自动使用新图。`human_customer_female.tscn` 提供黄裙女顾客，
+可独立复用，尚未加入剧情出场排程。普通哥布林仍使用自己的素材。
+
+两套资源均提供 `run_*`（8 FPS，现有 NPC 行走接口）和 `idle_*`（6 FPS）四向循环，
+左右共用侧面图，由 `SettlementCharacter` 镜像左向。每格 64×64、步长 88，
+逐行取有效帧，排除末尾透明格；保持原有 2 倍等比显示及脚底锚点。
+
+| 角色 | 走路 下 / 右 / 上 | 待机 下 / 右 / 上 |
+| --- | --- | --- |
+| 男顾客 | 8 / 11 / 12 | 7 / 7 / 9 |
+| 女顾客 | 16 / 16 / 8 | 13 / 9 / 11 |
+
+从原 ZIP 重新导入并生成（Python 3 标准库；将附件路径替换为实际路径）：
+
+```sh
+python tools/characters/build_character_frames.py --catalog src/gameplay/characters/customer_catalog.json --archive "普通顾客走路和待机(1).zip"
+```
+
+只重建两套帧资源时省略 `--archive`。默认不加参数仍只重建原 NPC catalog。
+已有源文件内容与 ZIP 不同会拒绝覆盖。
+
+F6 打开 `src/debug/characters/character_gallery.tscn`，右下角两位顾客自动循环
+右、上、左、下行走与停止待机；观察朝向、左右镜像、完整循环与脚底位置。
+`tests/verify_characters.gd` 同时检查这两位顾客的帧边界、非空帧、输入隔离、
+四向朝向与镜像、ActorDirector 真实移动。
+
+此次切帧依据官方 4.7 [AtlasTexture](https://docs.godotengine.org/en/4.7/classes/class_atlastexture.html)
+的 `region`、`filter_clip`，循环与帧率沿用
+[SpriteFrames](https://docs.godotengine.org/en/4.7/classes/class_spriteframes.html)，
+侧向镜像沿用 [AnimatedSprite2D](https://docs.godotengine.org/en/4.7/classes/class_animatedsprite2d.html) 的 `flip_h`。

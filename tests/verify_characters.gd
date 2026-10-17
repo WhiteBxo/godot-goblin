@@ -20,7 +20,8 @@ func _run() -> void:
 	world.add_child(director)
 	director.configure(world)
 	var used_sources: Dictionary = {}
-	for item: Dictionary in catalog:
+	var customers: Array = JSON.parse_string(FileAccess.get_file_as_string("res://src/gameplay/characters/customer_catalog.json"))
+	for item: Dictionary in catalog + customers:
 		var actor: SettlementCharacter = load("res://src/gameplay/characters/%s.tscn" % item.id).instantiate()
 		world.add_child(actor)
 		check(not actor.accepts_player_input, item.id + " must ignore player input")
@@ -49,12 +50,14 @@ func _run() -> void:
 			var face := director.actor_face(actor.actor_id, direction)
 			await face.wait()
 			check(face.succeeded and actor.animated_sprite.animation == StringName("idle_" + direction), item.id + " face " + direction)
+			if item.id.begins_with("human_customer"):
+				check(actor.animated_sprite.flip_h == (direction == &"left"), item.id + " side mirror " + direction)
 		var move := director.actor_move(actor.actor_id, Vector2(48, 0), 120.0)
 		await move.wait()
 		check(move.succeeded and actor.position.distance_to(Vector2(48, 0)) < 0.6, item.id + " actual director movement")
 		actor.queue_free()
 		await process_frame
-	check(used_sources.size() == 31, "All 31 NPC source sheets must be referenced")
+	check(used_sources.size() == 43, "All 43 NPC source sheets must be referenced")
 	# An empty world isolates the player-versus-NPC body from walls and furniture.
 	var solid_actor: SettlementCharacter = load("res://src/gameplay/characters/common_goblin.tscn").instantiate()
 	solid_actor.position = Vector2(300, 300)

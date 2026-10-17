@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://ipw40gedu5f4" path="res://assets/ui/milk_tea/ingredients/green_tea.svg" id="icon_green_tea"]
 [ext_resource type="Texture2D" uid="uid://332ohufkmik3" path="res://assets/ui/milk_tea/ingredients/pearl.svg" id="icon_pearl"]
 [ext_resource type="Texture2D" uid="uid://ieiegoikaomh" path="res://assets/ui/milk_tea/ingredients/syrup.svg" id="icon_syrup"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/insomnia_mushroom.svg" id="icon_insomnia"]
 [ext_resource type="Script" uid="uid://b1nr765u71rxs" path="res://src/resources/milk_tea/ingredient_definition.gd" id="ingredient"]
 
 [sub_resource type="Resource" id="Ingredient_black_tea"]
@@ -49,6 +50,15 @@ display_name = "糖浆"
 icon = ExtResource("icon_syrup")
 category = "syrup"
 
+[sub_resource type="Resource" id="Ingredient_insomnia"]
+script = ExtResource("ingredient")
+id = "insomnia_mushroom"
+display_name = "醒神菇"
+icon = ExtResource("icon_insomnia")
+origin = "otherworld"
+category = "material"
+rarity = "稀有"
+
 [sub_resource type="Resource" id="Product_pearl"]
 script = ExtResource("ingredient")
 id = "pearl_milk_tea"
@@ -72,7 +82,7 @@ category = "product"
 
 [resource]
 script = ExtResource("1")
-ingredients = Array[ExtResource("ingredient")]([SubResource("Ingredient_black_tea"), SubResource("Ingredient_green_tea"), SubResource("Ingredient_creamer"), SubResource("Ingredient_pearl"), SubResource("Ingredient_coconut"), SubResource("Ingredient_syrup"), SubResource("Product_pearl"), SubResource("Product_coconut"), SubResource("Product_plain")])
+ingredients = Array[ExtResource("ingredient")]([SubResource("Ingredient_black_tea"), SubResource("Ingredient_green_tea"), SubResource("Ingredient_creamer"), SubResource("Ingredient_pearl"), SubResource("Ingredient_coconut"), SubResource("Ingredient_syrup"), SubResource("Ingredient_insomnia"), SubResource("Product_pearl"), SubResource("Product_coconut"), SubResource("Product_plain")])
 initial_stock = {
 "black_tea": 12,
 "coconut": 8,

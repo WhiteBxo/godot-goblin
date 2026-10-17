@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "source": "res://docs/design/day1_scene01.md",
+  "source_sha256": "4d6ef462d2249e4ce568a33e5a3f050f6c118cd03cea3b8bbc3d317fd5093a89",
+  "scene": "res://src/debug/story/day1_scene01_demo.tscn",
+  "story": "res://src/resources/story/day1_scene01.json",
+  "dialogue": "res://src/resources/dialogue/day1_scene01.json",
+  "beats": [
+    {
+      "id": "background",
+      "event": "day1.scene01",
+      "start": 0,
+      "count": 2,
+      "dialogues": [
+        "day1.scene01_background"
+      ]
+    },
+    {
+      "id": "customer_arrives",
+      "event": "day1.scene01",
+      "start": 2,
+      "count": 11,
+      "dialogues": [
+        "day1.scene01_order"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "event": "day1.scene01",
+      "timeout": 20,
+      "reading_seconds": 0.05,
+      "expected_skips": []
+    },
+    {
+      "event": "day1.scene01",
+      "state": {
+        "completed_events": [
+          "day1.scene01"
+        ]
+      },
+      "request_error": "ERR_ALREADY_EXISTS"
+    }
+  ]
+}

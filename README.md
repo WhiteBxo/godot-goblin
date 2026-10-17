@@ -1,8 +1,10 @@
 # Godot Goblin
 
-Godot 4.7 / GDScript 项目，当前默认进入新版洞窟聚落：15 个功能区域与奶茶店共用连续平地，保留独立可编辑的建筑、外墙、碰撞和前景遮挡。
+Godot 4.7 / GDScript 项目，当前默认进入标题菜单，选择“新游戏”后进入奶茶店。启动框架暂不自动播放剧情，完整 Day 1 仍待接入。
 
-使用 Godot 打开 project.godot，按 F5 运行。WASD / 方向键移动，E 查看地点与店内设施，Esc 关闭。开发模式下 M 切换全图与跟随视角，Tab 切换两天剧情动线和补给线。地图说明、预览和验证见 [新版聚落说明](docs/settlement/README.md)。
+使用 Godot 打开 project.godot，按 F5 运行。标题菜单支持鼠标、Tab 和 Enter；游戏内 WASD / 方向键移动，E 交互，Esc 关闭弹窗或暂停。暂停菜单可以返回标题，再次选择“新游戏”会重置整局。见 [启动与新游戏](docs/game_entry.md)。
+
+新版洞窟聚落保留在 `src/core/settlement.tscn`，可打开后按 F6 运行：15 个功能区域与奶茶店共用连续平地。开发模式下 M 切换全图与跟随视角，Tab 切换剧情动线。见 [新版聚落说明](docs/settlement/README.md)。
 
 原奶茶店 MVP 保留在 `src/core/main.tscn`，旧洞穴轮廓 demo 保留在 `src/debug/cave_demo/cave_demo.tscn`，可打开对应场景后按 F6 单独运行。
 
@@ -12,7 +14,7 @@ Godot 4.7 / GDScript 项目，当前默认进入新版洞窟聚落：15 个功�
 
 1. 安装 Godot 4.7 系列标准版（GDScript，无需 .NET）。
 2. 在 Godot 项目管理器中导入根目录的 `project.godot`，等待首次资源导入完成。
-3. 按 **F5** 运行项目，入口为 `src/core/settlement.tscn`；奶茶店可打开 `src/core/main.tscn` 后按 F6 单独运行。
+3. 按 **F5** 进入标题菜单，选择“新游戏”进入奶茶店；奶茶店和聚落仍可分别打开 `src/core/main.tscn`、`src/core/settlement.tscn` 后按 F6 单独运行。
 4. 使用 WASD 或方向键移动，靠近仓库、制作台或订单板，按 E 查看对应信息。
 
 当前配置使用 **Forward Plus** 渲染器，Windows 图形驱动为 **D3D12**；逻辑视口为 640 × 360，默认窗口为 1280 × 720。引擎、显示和输入设置以 [project.godot](project.godot) 为准。
@@ -33,6 +35,8 @@ godot --path .
 
 | 操作 | 按键 / 方式 | 可观察结果 |
 | --- | --- | --- |
+| 开始新游戏 | 标题菜单点击 / Tab 后 Enter | 清空上一局进度并进入奶茶店 |
+| 暂停与返回标题 | Esc / P 暂停，选择“返回标题” | 退出当前场景；再次新游戏才重置会话 |
 | 移动 | WASD / 方向键 | 八方向移动，斜向不加速，墙体与家具阻挡角色 |
 | 地点交互 | 靠近金色标记，按 E | 打开仓库、制作台或订单板信息界面 |
 | 关闭店铺弹窗 | Esc / 返回按钮 | 关闭界面并恢复移动；弹窗期间停止移动 |
@@ -115,6 +119,7 @@ godot --headless --path . --script res://tests/verify_actor_director.gd
 
 | 文档 | 内容 |
 | --- | --- |
+| [启动与新游戏](docs/game_entry.md) | 标题、整局重置、返回标题与验证 |
 | [系统开发现状](docs/development_status.md) | 已有能力、使用限制与 Day 1 缺口 |
 | [奶茶店 MVP](docs/milk_tea_mvp.md) | 场景、碰撞、交互与跟随镜头 |
 | [GameState](docs/game_state.md) | 跨场景状态、快照与恢复 |

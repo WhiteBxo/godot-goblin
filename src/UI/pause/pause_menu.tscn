@@ -55,3 +55,15 @@ horizontal_alignment = 1
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 text = "继续游戏"
+
+[node name="ReturnTitle" type="Button" parent="Center/Panel/Margin/Content"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+text = "返回标题"
+
+[node name="Error" type="Label" parent="Center/Panel/Margin/Content"]
+visible = false
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+autowrap_mode = 2
+horizontal_alignment = 1

@@ -1,6 +1,6 @@
 # 初级奶茶制作
 
-F5 从正式聚落入口 `src/core/settlement.tscn` 运行，或 F6 单独运行店铺场景 `src/core/main.tscn`。走到奶茶制作台，按 E 打开饮品制作界面。两个入口都由 MainGame 装配营业会话；操作弹窗时停止移动，Esc 或返回按钮关闭后恢复移动。
+F5 进入标题菜单，选择“新游戏”进入奶茶店；也可 F6 单独运行店铺 `src/core/main.tscn` 或聚落 `src/core/settlement.tscn`。走到奶茶制作台，按 E 打开饮品制作界面。两个场景都由 MainGame 装配营业会话；操作弹窗时停止移动，Esc 或返回按钮关闭后恢复移动。新游戏重置整局，普通场景重载不重置，详见 [启动与新游戏](game_entry.md)。
 
 ## 验收步骤
 

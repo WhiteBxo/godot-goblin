@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="godot-goblin"
-run/main_scene="res://src/core/settlement.tscn"
+run/main_scene="res://src/UI/title/title_menu.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 
 [autoload]

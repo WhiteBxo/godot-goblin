@@ -99,7 +99,13 @@ func _create_ui_system() -> void:
 	$PauseLayer.add_child(pause)
 	_ui_manager.register_screen(&"pause", pause, &"pause", true)
 	pause.resume_requested.connect(func() -> void: _ui_manager.set_paused(false))
+	pause.title_requested.connect(_return_to_title.bind(pause), CONNECT_DEFERRED)
 	_ui_manager.modal_changed.connect(_refresh_input_lock)
+
+func _return_to_title(pause: PauseMenu) -> void:
+	var error := GameEntry.return_to_title(get_tree())
+	if error != OK and is_instance_valid(pause):
+		pause.show_navigation_error(error)
 
 func get_task_journal() -> TaskJournal:
 	return _task_journal if is_instance_valid(_task_journal) else null

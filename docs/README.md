@@ -1,6 +1,6 @@
 # 文档中心
 
-本页索引项目维护的全部文档。首次试玩先读[项目 README](../README.md)和[启动与新游戏](guides/game_entry.md)；开发前读[协作规范](../AGENTS.md)；编排剧情先读[简版写作指南](guides/story_authoring_fields_quick_guide.md)与[编排工作流](guides/story_authoring_workflow.md)。
+本页索引项目维护的全部文档。首次试玩先读[项目 README](../README.md)和[启动与新游戏](guides/game_entry.md)；开发前读[通用协作规范](../AGENTS.md)，再按其中索引读取相关模块的 `AGENTS.md`；编排剧情先读[简版写作指南](guides/story_authoring_fields_quick_guide.md)与[编排工作流](guides/story_authoring_workflow.md)。
 
 ## 分类与命名规范
 
@@ -15,7 +15,7 @@
 | `story_authoring/` | Beat 映射、验证清单及待定项；不供游戏运行时加载。 |
 | `development/` | 开发者面板、审查、优先级与带日期的历史快照。 |
 
-- 目录和文件名使用英文小写 `snake_case`，Markdown 使用 `.md`；中文用于标题与正文。根目录 `README.md`、`AGENTS.md`、许可证和分类入口 `README.md` 沿用约定名称。
+- 目录和文件名使用英文小写 `snake_case`，Markdown 使用 `.md`；中文用于标题与正文。`README.md`、各级 `AGENTS.md` 和许可证沿用约定名称。
 - 文件按主题命名，例如 `warehouse_inventory.md`。剧情天数、场次、阶段统一两位数，例如 `day_01_scene_01.md`、`day_01_stages_01_02_draft.md`。
 - 版本含义写入名字：`_draft` 为草稿、`_revised` 为修改稿、`_development_spec` 为执行规格、`_pending` 为待定清单；原稿与修改稿均保留，不用“最终版”“新版2”覆盖来源关系。
 - 一次性导入记录和历史快照以 `YYYY_MM_DD` 结尾，例如 `user_assets_2026_10_17.md`；持续维护的 API 说明不加日期，文内写明核对日期、版本和验证范围。
@@ -59,6 +59,7 @@
 | 文档 | 文件 / 说明 |
 | --- | --- |
 | [Day 1 前两阶段正式流程](gameplay/day_01_stages_01_02.md) | `day_01_stages_01_02.md` |
+| [Day 1 世界门控、调查与血液特调](gameplay/day_01_world_flow.md) | `day_01_world_flow.md` |
 | [初级奶茶制作](gameplay/basic_tea_production.md) | `basic_tea_production.md` |
 | [统一经营会话](gameplay/business_session.md) | `business_session.md` |
 | [见闻录基础模块](gameplay/chronicle.md) | `chronicle.md` |
@@ -113,6 +114,7 @@
 | [真实订单 Gameplay Bridge 最小示例](design/order_bridge_demo.md) | `order_bridge_demo.md` |
 | [day_02.pdf](design/source/day_02.pdf) | 第二天剧情原始 PDF。 |
 | [otherworld_ingredients_and_drinks.xlsx](design/source/otherworld_ingredients_and_drinks.xlsx) | 食材与饮品原始工作簿。 |
+| [异世界食材与酒品：源稿到运行时映射](design/otherworld_data_mapping.md) | 已接入的 F/W 条目、字段映射、合并项与未接入原因。 |
 
 ## 剧情编排产物
 

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="SoundLibrary" load_steps=33 format=3]
+[gd_resource type="Resource" script_class="SoundLibrary" load_steps=34 format=3]
 
 [ext_resource type="Script" path="res://src/resources/audio/sound_library.gd" id="1"]
 [ext_resource type="AudioStream" path="res://assets/audio/ui/hover.wav" id="s1"]
@@ -33,6 +33,8 @@
 [ext_resource type="AudioStream" path="res://assets/audio/ambience/shop.wav" id="s30"]
 [ext_resource type="AudioStream" path="res://assets/audio/ambience/cave.wav" id="s31"]
 
+[ext_resource type="AudioStream" path="res://assets/audio/music/daily_milk_tea.ogg" id="s32"]
+
 [resource]
 script = ExtResource("1")
 entries = Array[Dictionary]([
@@ -53,5 +55,6 @@ entries = Array[Dictionary]([
 {"id": "ambience.rock_scrape", "label": "岩石摩擦", "loop": false, "streams": [ExtResource("s26")]},
 {"id": "story.goblin", "label": "哥布林含糊嘀咕", "loop": false, "streams": [ExtResource("s27"), ExtResource("s28"), ExtResource("s29")]},
 {"id": "ambience.shop", "label": "奶茶店室内循环", "loop": true, "streams": [ExtResource("s30")]},
-{"id": "ambience.cave", "label": "地下洞穴循环", "loop": true, "streams": [ExtResource("s31")]}
+{"id": "ambience.cave", "label": "地下洞穴循环", "loop": true, "streams": [ExtResource("s31")]},
+{"id": "music.daily_milk_tea", "label": "奶茶店日常 BGM", "loop": true, "loop_offset": 68.279, "streams": [ExtResource("s32")]}
 ])

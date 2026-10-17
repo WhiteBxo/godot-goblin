@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "dialogues": {
+    "day1.scene01_background": {
+      "start": "line_01",
+      "lines": {
+        "line_01": {
+          "speaker": "玩家",
+          "text": "我是一个没什么本事、手头拮据的普通人，",
+          "next": "line_02"
+        },
+        "line_02": {
+          "speaker": "玩家",
+          "text": "被快招公司坑了之后背上债务，开了一家生意惨淡的奶茶店。",
+          "next": "line_03"
+        },
+        "line_03": {
+          "speaker": "玩家",
+          "text": "我想赚钱买房买车、孝敬父母、解决人生大事，",
+          "next": "line_04"
+        },
+        "line_04": {
+          "speaker": "玩家",
+          "text": "但眼下最现实的目标就是别让店倒闭。",
+          "next": "line_05"
+        },
+        "line_05": {
+          "speaker": "玩家",
+          "text": "店里已经连续几天没什么客人啊。"
+        }
+      }
+    },
+    "day1.scene01_order": {
+      "start": "order",
+      "lines": {
+        "order": {
+          "speaker": "顾客",
+          "text": "你好，我要一杯普通奶茶。"
+        }
+      }
+    }
+  }
+}

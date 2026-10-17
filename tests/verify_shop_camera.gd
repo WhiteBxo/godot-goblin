@@ -22,7 +22,7 @@ func _check_view(camera: Camera2D, bounds: Rect2, message: String) -> void:
 	_check(bounds.grow(0.5).encloses(visible_world), message + ": " + str(visible_world))
 
 func _run() -> void:
-	var game: MainGame = load("res://src/core/main.tscn").instantiate()
+	var game: MainGame = load("res://src/debug/story/legacy_shop.tscn").instantiate()
 	root.add_child(game)
 	current_scene = game
 	await _frames(3)

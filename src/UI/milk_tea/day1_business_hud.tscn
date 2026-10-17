@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/UI/milk_tea/day1_business_hud.gd" id="1"]
+[ext_resource type="FontFile" path="res://assets/fonts/fusion_pixel/fusion-pixel-12px-monospaced-zh_hans.otf.woff2" id="2"]
+
+[node name="Day1BusinessHUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1")
+
+[node name="BusinessBalance" type="Label" parent="."]
+offset_left = 20.0
+offset_top = 34.0
+mouse_filter = 2
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 12
+
+[node name="ResumeStory" type="Button" parent="."]
+visible = false
+offset_left = 20.0
+offset_top = 56.0
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 12
+text = "演出已中断 · 继续剧情"

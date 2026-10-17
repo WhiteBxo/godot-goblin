@@ -1,138 +1,54 @@
-# Godot Goblin 开发规范
+# Godot Goblin 通用开发规范
 
-本规范供项目成员和 AI coding agent 使用。用户当前任务的明确要求优先于本文的默认约定。
+本文件适用于整个仓库。用户当前任务的明确要求优先于默认约定；模块细则见下方索引。
 
-## 项目与协作方式
+## 按任务读取规范
 
-- 项目使用 Godot 4.7 系列和 GDScript；引擎、渲染器、插件及输入配置以 `project.godot` 为准。
-- agent 开发 Godot 功能时必须参照与项目引擎版本匹配的 [Godot 官方文档](https://docs.godotengine.org/en/stable/)，只查阅当前任务涉及的节点、API、生命周期和配置说明。
-- 实现前核对官方文档中的用法、限制和版本差异，避免仅凭记忆或照搬其他版本的示例；汇报时提供影响本次实现的关键文档链接。
-- 默认采用“小步自主完成”：完成用户当前任务、执行相关验证、创建对应 commit 后汇报。
-- 开始改动前检查 Git 状态，只阅读当前任务涉及的代码、场景、配置和说明，避免每次扫描整个项目。
-- 保留用户已有改动；不夹带目录重排、全项目格式化、插件升级或无关玩法调整。
-- 用户要求“只分析”“不写代码”“不用运行”或分步确认时，按其要求控制操作范围和开发节奏。
+- 开始前检查 Git 状态，先读本文件，再沿目标文件的目录层级读取适用的各级 `AGENTS.md`；子目录规范在父目录通用规则之上补充模块约束。
+- 根据下表定位模块，进入模块后继续按其索引阅读。跨模块修改要读取双方规范；只读本次涉及的文档、代码、场景与配置，不预读所有模块。
+- 索引中的“还需阅读”同样适用于目录之外的调用方和配套资源。例如编排 Markdown、调整剧情 JSON 或修改宿主绑定，都先读剧情编排规范。
+- 新增模块时，只有存在独立职责或关键契约才增加模块 `AGENTS.md`，并更新直接上级索引；不复制整份通用规则，也不把模块细节堆回根目录。
 
-## 目录职责
-
-以下路径均相对项目根目录。优先使用现有分类，并在分类下按功能建立子目录。
-
-| 目录 | 职责 |
+| 修改范围 / 任务 | 规范入口 |
 | --- | --- |
-| `src/core/` | 游戏入口、场景切换、跨模块协调 |
-| `src/gameplay/` | 玩家、交互对象等玩法模块，按功能建立子目录 |
-| `src/levels/` | 关卡场景、关卡控制脚本及专属布局数据 |
-| `src/UI/` | HUD、菜单、界面场景与脚本，保留现有目录大小写 |
-| `src/resources/` | 可复用 Resource、TileSet 和共享数据定义 |
-| `src/shaders/` | Shader 与相关配置 |
-| `src/debug/` | 独立试玩场景、调试展示和截图入口 |
-| `assets/map/` | 地图图片、图集及原始素材；其他素材按用途建立 `assets/` 子目录 |
-| `addons/` | 随项目提交的第三方插件，保留许可证和版本信息 |
+| 游戏入口、MainGame、GameState、场景内服务与核心系统 | [src/core/AGENTS.md](src/core/AGENTS.md)，内含剧情、对话、角色、镜头、音频、任务、交易、导航和见闻录索引 |
+| 玩家、NPC、交互、采集、制作、库存与房间表现 | [src/gameplay/AGENTS.md](src/gameplay/AGENTS.md)，继续按功能进入子模块 |
+| 关卡、地图布局、出生点、TileMap 与通行规则 | [src/levels/AGENTS.md](src/levels/AGENTS.md)，内含店铺、聚落和洞穴索引 |
+| HUD、菜单、弹窗、暂停、UI 管理与屏幕转场 | [src/UI/AGENTS.md](src/UI/AGENTS.md) |
+| 共享 Resource、运行时 JSON、TileSet 与导出资源 | [src/resources/AGENTS.md](src/resources/AGENTS.md) |
+| Shader、遮挡与材质参数 | [src/shaders/AGENTS.md](src/shaders/AGENTS.md) |
+| 独立试玩、截图、开发者面板与 Debug / Release 边界 | [src/debug/AGENTS.md](src/debug/AGENTS.md) |
+| 图片、角色、地图、音频、字体及导入设置 | [assets/AGENTS.md](assets/AGENTS.md)，地图另读 [assets/map/AGENTS.md](assets/map/AGENTS.md) |
+| 文档分类、维护与链接 | [docs/AGENTS.md](docs/AGENTS.md) |
+| 自然语言剧情编排、局部 Beat、剧情源稿与编排产物 | [docs/design/AGENTS.md](docs/design/AGENTS.md) 与 [src/core/story/AGENTS.md](src/core/story/AGENTS.md) |
+| 命令行工具、素材处理与剧情校验工具 | [tools/AGENTS.md](tools/AGENTS.md) |
+| 选择验证级别、运行或修改测试 | [tests/AGENTS.md](tests/AGENTS.md)；纯文档按下方规则局部检查 |
+| 第三方插件、插件配置与运行时边界 | [addons/AGENTS.md](addons/AGENTS.md) |
 
-- 同一功能的场景和配套脚本就近放置，例如玩家场景与脚本放在 `src/gameplay/player/`。
-- 关卡专属数据跟随关卡；跨关卡复用的数据放在 `src/resources/`。
-- 需要命令行工具、交接资料或自动化测试时，分别使用根目录 `tools/`、`docs/`、`tests/`。
-- 按实际任务需要创建目录，保留仍需追踪的空目录中的 `.gitkeep`。
+## 项目与模块边界
 
-## 场景与代码职责
+- 项目使用 Godot 4.7 系列和 GDScript；引擎、入口、渲染器、autoload、插件及输入配置以 `project.godot` 为准，历史文档不覆盖实际配置。
+- 开发 Godot 功能前，查阅与项目引擎版本匹配的 [Godot 官方文档](https://docs.godotengine.org/en/stable/)，只核对本次节点、API、生命周期及配置的用法、限制和版本差异；汇报影响实现的关键文档链接。
+- 入口负责组装，地图负责地图，角色负责自身行为，UI 负责显示与界面交互。功能场景应能独立配置与验证，避免一个脚本同时承担多个模块职责。
+- 模块内部可以引用自己的子节点；跨模块通过公开方法、signal、Callable 或共同父场景传入依赖，不依赖对方内部节点层级。
+- 普通玩法逻辑留在对应场景；确有跨场景生命周期需求的共享状态才使用 autoload。调试、截图和素材处理放在专用模块或工具中。
+- 同一功能的场景和脚本就近放置；关卡专属数据跟随关卡，共享定义放 `src/resources/`；工具、文档和测试分别放 `tools/`、`docs/`、`tests/`。按需创建目录，保留仍需追踪的 `.gitkeep`。
 
-- 入口负责组装和初始化；地图负责地图；玩家负责输入与移动；UI 负责显示和界面交互。
-- 功能场景应能独立配置和验证，避免让一个脚本同时承担地图生成、角色行为、UI 和开发工具职责。
-- 模块内部可以引用自己的子节点；跨模块通过公开方法、signal 或父场景传入依赖。
-- 避免依赖其他模块内部的节点层级；需要协作的场景由共同父场景管理关系。
-- 普通玩法逻辑放在对应场景中；确有跨场景生命周期需求的共享状态才使用 autoload。
-- 调试、截图和素材处理流程放在调试场景或工具中，避免混入正式游戏入口。
+## 命名、文件与配置
 
-## 主场景架构
+- 新文件、目录、变量与 function 使用 `snake_case`；节点和类使用 `PascalCase`，常量使用 `UPPER_SNAKE_CASE`。`AGENTS.md`、`README.md` 等约定文件名保留；现有 `src/UI/`、`src/levels/milkTea/` 等路径大小写不随任务重命名，引用必须一致。
+- GDScript 使用 Tab 缩进，优先明确类型注解或类型推断，按 Godot 生命周期组织回调。
+- 文本使用 UTF-8、LF、一个末尾换行符，不留行尾空格。格式调整仅限本次相关内容。
+- 移动或重命名脚本时保留对应 `.uid`，同步检查场景、资源及脚本中的路径引用。
+- `.godot/` 缓存不提交，也不作为源资源依赖。素材、共享数据与文档的额外规则分别见对应模块规范。
+- 修改 `project.godot` 只调整任务必要的配置，核对 autoload、插件和 InputMap 的依赖。
 
-主场景是 `src/core/main.tscn`，根节点和 script class 为 `MainGame`，类型为 `Node`。
+## 执行、验证与交付
 
-```text
-MainGame
-├─ Systems
-│  ├─ DeveloperTools（Debug 运行时创建）
-│  └─ CaveDemoController（洞穴专属 Debug 组件）
-├─ World
-│  ├─ LevelRoot
-│  ├─ EntityRoot
-│  └─ EffectRoot
-├─ HudLayer
-├─ PopupLayer
-├─ PauseLayer
-├─ TransitionLayer
-└─ DebugLayer
-   ├─ DeveloperPanel（Debug 运行时创建）
-   └─ DebugOverlay（洞穴专属 Debug 显示）
-```
-
-- 新内容按职责挂到对应容器，避免重新堆到主场景根节点。
-- `Systems` 放场景内的管理与协调组件；`World` 是世界坐标容器，地图放 `LevelRoot`，动态实体放 `EntityRoot`，世界特效放 `EffectRoot`。
-- `HudLayer` 放正式游戏 HUD，`PopupLayer` 放背包和对话等通用弹窗，暂停界面放 `PauseLayer`，屏幕转场放 `TransitionLayer`。
-- 调试控制组件归 `Systems`，调试显示归 `DebugLayer`，代码按功能放在 `src/debug/`。
-- 正式关卡初始化不能依赖调试组件。通用开发工具放 `src/debug/developer_tools/`，通过 Callable 或公开接口注入操作目标；洞穴布局对比、墙体切换和截图留在洞穴专属调试组件。
-- 使用 `OS.has_feature("debug")` 区分开发与 Release；Release 不创建调试节点、不响应调试按键或截图/布局参数。开发时可在内存中将 `debug/developer_tools/enabled` 设为 false 关闭工具，不能借此在 Release 启用工具。
-- 第三方开发插件的 runtime 边界优先在项目侧管理；MainGame 启动 Release 时停止 MCPRuntimeProbe 的处理，避免无 debugger 时逐帧轮询，不修改插件源码。
-- `MainGame` 负责取得引用和初始化，通过公开 getter 提供当前关卡、玩家和调试组件；跨模块不要依赖其内部节点路径。
-- 初始化顺序为选择布局、绑定玩家移动查询、设置出生点与跟随镜头、启动调试组件。
-- 五个屏幕层都使用 `CanvasLayer`，关闭 `follow_viewport_enabled`；按 HUD、弹窗、暂停、转场、调试分别固定 `layer` 为 10、20、30、40、50。
-- `MainGame` 使用 `Always`，`Systems` 和 `World` 使用 `Pausable`；`Systems` 中确需暂停期间工作的组件单独使用 `Always`。
-- 普通屏幕层使用 `Always`，`PauseLayer` 使用 `WhenPaused`；空的屏幕层不应截获输入，非交互调试 Control 使用 `MOUSE_FILTER_IGNORE`。
-- 主场景框架保留各容器生命周期，既有插件 autoload 不迁入 `Systems`；暂停菜单、转场动画等按具体任务实现。
-
-## 自然语言剧情编排
-
-- 用户给出 `docs/design/` 下的 Markdown 并要求「编排这段剧情」或修改局部 Beat 时，必须执行 [剧情编排工作流](docs/story_authoring_workflow.md)，按需核对 [全部指令及参数](docs/story_authoring_commands.md) 和 [StoryDirector](docs/story_director.md) 的实际 Loader / dispatch。
-- Markdown 是剧情唯一内容来源，先保留或更新原稿，再生成现有 v1 Dialogue / Story JSON 和 `docs/story_authoring/` 的 Beat 映射/验证清单；不得扩写对白、改变节奏或把顺序硬编码进 GDScript。
-- 自动匹配目标宿主实际注册的 Actor、Marker、音频和场景资源；明确的位置/资源可自主配置，无法确认的空间、关键素材或缺少的表现能力记录为 pending，不编造、不扩展通用系统。
-- 混合演出与玩法的 Beat 声明「执行模式：自动演出 / 玩家操作」和「玩法完成条件」；按编排工作流拆成现有 StoryDirector 短事件与 Gameplay Bridge phase 数据，禁止 busy 中解锁、在 StoryDirector 写玩法规则或在宿主硬编码顺序。
-- 局部修改只调整对应 Beat 区间、关联对白和必要依赖；验证原加载器、全部引用和真实 StoryDirector 执行，再做相关回归。每次汇报简短变更、待确认项、Godot F6 入口及 commit。
-
-## 命名与格式
-
-- 新文件、目录、变量和 function 使用 `snake_case`；现有 `src/UI/` 保留大小写，引用必须一致。
-- 节点与类使用 `PascalCase`；常量使用 `UPPER_SNAKE_CASE`。
-- GDScript 使用 Tab 缩进，优先使用明确的类型注解或类型推断；按 Godot 生命周期组织回调。
-- 文本使用 UTF-8、LF 换行和一个末尾换行符，避免行尾空格。
-- 格式调整限定在本次任务涉及的内容，不对无关文件执行批量格式化。
-
-## 数据、资源与配置
-
-- 第一天与第二天的地图接口遵循 [场景连接约定](docs/design/scene_connections.md)：公共街道分别连接长老居所与商业街；夜间潜入区域只有左下一个对外接口，右下封闭。
-- 常规地图的线条基准为 `assets/map/settlement/source/style_milk_tea.png`（新版奶茶店参考）：清晰近黑描边、阶梯像素边缘、有限平涂及克制阴影。各区域的装修应服从自身用途，不能把酒馆、军营等都装修成奶茶店。
-- 洞窟聚落采用一整片大洞窟内的连续平地；岩壁集中在整片地图外围。单个场景以人造建筑或开放功能区组织，禁止把每个区域围成独立小洞穴或悬空地台。整图中的建筑必须表现外墙厚度和外侧。
-- 以约 110 世界像素高的主角校准门口、家具和步行距离；场景素材保持原始比例。发现尺寸或布局不合适时调用 imagegen 重新生成，不通过拉伸整张素材修正。地面原尺寸裁片平铺、相机统一缩放与遮挡裁片不改变素材比例。
-
-- 玩家输入统一使用 InputMap actions，避免在多个脚本中直接写死按键。
-- 地图布局、出生点和可调参数放在对应数据或 Resource 中，保留清楚的单位和坐标约定。
-- 格子与世界坐标转换集中处理，明确地图原点和变换，避免多个脚本重复写死格子尺寸。
-- 地图显示与可行走规则分别表达；修改贴图时核对碰撞和行走行为，避免无意改变玩法。
-- 供成员编辑的静态地图必须将格子保存到关卡场景的 `TileMapLayer`；运行时以保存的地板格建立通行规则，避免启动时清空或用旧 JSON 覆盖手工布局。边缘与墙体等派生显示由编辑工具同步更新，JSON 导入必须显式执行。
-- 移动或重命名脚本时同步保留对应 `.uid`，检查场景、资源和脚本中的路径引用。
-- 素材与必要的 `.import` 设置一同管理；`.godot/` 缓存不提交、不作为源资源依赖。
-- 源素材和派生素材区分保存，记录素材来源及必要的处理步骤，保留可复现的生成方式。
-- 复用的 TileSet 保存为外部 Resource；JSON 等外部数据需要纳入导出配置。
-- 修改 `project.godot` 时只调整任务必要的配置，核对 autoload、插件和输入项之间的依赖。
-
-## 插件边界
-
-- 日常开发按需检查插件依赖，避免对 `addons/` 做无关的全面审查或批量修改。
-- 优先通过配置或项目代码中的封装接入插件，保留随项目提交的插件源码、许可证和 UID。
-- 插件源码修改或版本升级应单独提交，记录原因、版本变化及相关验证结果。
-
-## 解释、验证与汇报
-
-- 默认用中文沟通，保留 `function`、`module`、`runtime`、`dispatch`、`fallback` 等关键英文术语。
-- 解释英文文档时先按意群说明，再解释影响理解的关键词，并对应具体变量、分支和调用链。
-- 重点说明代码实际做了什么、为什么这样做及边界行为；文档与代码不一致时，以实际代码为准。
-- 根据改动选择静态检查、已有自动化测试或相关场景运行，修复本次任务引入的问题。
-- 只有测试能验证实际行为或重要边界时才新增测试，避免为低影响修改建立重复实现的测试。
-- 涉及画面、手感或交互时，提供明确的试玩步骤和可观察的验收结果。
-- 区分已执行的检查、已确认的结果和待验证事项；未运行或无法验证时如实说明。
-- 纯文档修改检查内容、Markdown 和 Git diff，无需运行整个游戏。
-- 完成后简要汇报改动内容、相关文件、验证结果、必要的试玩事项及 commit。
-
-## Git 提交
-
-- 每次改动完成后，必须创建一个对应的 git commit，以便后续追踪和回滚
-- 提交前检查 diff 和暂存范围，只暂存本次任务文件，不混入用户已有的其他改动。
-- 每个 commit 表达一个完整、可回滚的改动，提交信息使用清楚的 `feat`、`fix`、`refactor`、`docs` 或 `chore` 前缀。
-- push 按用户任务范围执行，不把本地提交自动理解为需要推送远端。
+- 默认小步自主完成：完成任务、执行必要验证、创建对应 commit 后汇报。用户要求只分析、不写代码、不运行或分步确认时，按其范围和节奏执行。
+- 保留用户已有改动；不夹带目录重排、全项目格式化、插件升级或无关玩法调整。
+- 开始验证前，用一两句说明“本次风险点 → 要执行的检查”。代码、场景和数据按 [tests/AGENTS.md](tests/AGENTS.md) 选择最低必要级别，有明确风险才升级。
+- 纯文档只检查内容、Markdown 链接、格式与 Git diff，不运行引擎或项目测试。文档中的命令是候选清单，不能直接当成本次必跑清单。
+- 如实报告改动、相关文件、实际检查结果、未执行项及原因、无关历史失败和 commit。涉及画面、手感或交互时，给出试玩入口、步骤和可观察结果。
+- 每次改动完成后必须创建一个完整、可回滚的 commit。提交前检查 diff 和暂存范围，只暂存本次文件，不混入用户已有改动。
+- 提交信息使用清楚的 `feat`、`fix`、`refactor`、`docs` 或 `chore` 前缀；是否 push 由用户任务决定，不因本地提交自动推送。

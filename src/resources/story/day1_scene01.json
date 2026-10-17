@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "events": {
+    "day1.scene01": {
+      "once": true,
+      "steps": [
+        {
+          "command": "actor_face",
+          "actor": "player",
+          "direction": "down"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.scene01_background"
+        },
+        {
+          "command": "wait",
+          "seconds": 2
+        },
+        {
+          "command": "play_sfx",
+          "id": "shop.door_bell",
+          "wait": true
+        },
+        {
+          "command": "actor_face",
+          "actor": "player",
+          "direction": "down"
+        },
+        {
+          "command": "camera_focus",
+          "target": "door",
+          "duration": 0.9
+        },
+        {
+          "command": "actor_spawn",
+          "actor": "customer",
+          "scene": "res://src/debug/cinematic/customer.tscn",
+          "target": "door"
+        },
+        {
+          "command": "camera_focus",
+          "actor": "customer",
+          "duration": 0.8,
+          "wait": false
+        },
+        {
+          "command": "actor_move",
+          "actor": "customer",
+          "target": "aisle",
+          "speed": 120,
+          "timeout": 8
+        },
+        {
+          "command": "actor_move",
+          "actor": "customer",
+          "target": "counter",
+          "speed": 120,
+          "timeout": 8
+        },
+        {
+          "command": "actor_face",
+          "actor": "customer",
+          "direction": "up"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.scene01_order"
+        },
+        {
+          "command": "camera_reset"
+        }
+      ]
+    }
+  }
+}

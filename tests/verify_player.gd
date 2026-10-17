@@ -3,6 +3,8 @@ extends SceneTree
 var _failures: Array[String] = []
 
 func _initialize() -> void:
+	# Keep one-step acceleration checks stable when the host is busy rendering.
+	Engine.max_physics_steps_per_frame = 1
 	call_deferred("_run")
 
 func _check(condition: bool, message: String) -> void:
@@ -30,11 +32,12 @@ func _run() -> void:
 		root.add_child(player)
 		await _frames(2)
 		_check(player.motion_mode == CharacterBody2D.MOTION_MODE_FLOATING, "Player uses top-down motion")
-		_check(player.collision_layer == 2 and player.collision_mask == 1, "Player detects existing walls and interaction areas")
+		var solid_mask := (1 << (PlayerController.WORLD_LAYER - 1)) | (1 << (PlayerController.NPC_LAYER - 1))
+		_check(player.collision_layer == 1 << (PlayerController.PLAYER_LAYER - 1) and player.collision_mask == solid_mask, "Player detects walls, interaction areas and solid NPC bodies")
 		var sprite := player.animated_sprite
 		for direction in ["down", "left", "right", "up"]:
-			_check(sprite.sprite_frames.get_frame_count("idle_" + direction) == 1, "One neutral idle frame: " + direction)
-			_check(sprite.sprite_frames.get_frame_count("run_" + direction) == 16, "Sixteen-frame run cycle: " + direction)
+			_check(sprite.sprite_frames.get_frame_count("idle_" + direction) >= 8, "Animated idle cycle: " + direction)
+			_check(sprite.sprite_frames.get_frame_count("walk_" + direction) >= 8, "Supplied walk cycle: " + direction)
 		var directions := {"down": "move_down", "left": "move_left", "right": "move_right", "up": "move_up"}
 		for direction: String in directions:
 			Input.action_press(directions[direction])
@@ -43,10 +46,10 @@ func _run() -> void:
 			_check(sprite.speed_scale < player.animation_speed, "Step cadence slows down during acceleration")
 			await _frames(20)
 			_check(is_equal_approx(player.velocity.length(), player.speed), "Cardinal reaches configured speed")
-			_check(sprite.animation == StringName("run_" + direction), "Movement selects facing animation: " + direction)
+			_check(sprite.animation == StringName("walk_" + direction), "Movement selects facing animation: " + direction)
 			var progress_before := sprite.frame + sprite.frame_progress
 			await _frames(4)
-			_check(not is_equal_approx(sprite.frame + sprite.frame_progress, progress_before), "Run animation advances")
+			_check(not is_equal_approx(sprite.frame + sprite.frame_progress, progress_before), "Walk animation advances")
 			Input.action_release(directions[direction])
 			await _frames(1)
 			_check(player.velocity.length() > 0.0 and player.velocity.length() < player.speed, "Releasing input decelerates smoothly")
@@ -71,7 +74,7 @@ func _run() -> void:
 		Input.action_release("move_right")
 		Input.action_press("move_up")
 		await _frames(1)
-		_check(sprite.animation == &"run_up" and sprite.frame >= 5, "Turning keeps the current step phase")
+		_check(sprite.animation == &"walk_up" and sprite.frame >= 3, "Turning keeps the current step phase")
 		Input.action_release("move_up")
 		Input.action_press("move_right")
 		await _frames(1)

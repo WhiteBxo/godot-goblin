@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://src/core/main.tscn" id="1"]
+
+[node name="MainGame" instance=ExtResource("1")]
+day1_story_enabled = false

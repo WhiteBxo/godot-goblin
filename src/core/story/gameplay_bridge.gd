@@ -18,19 +18,23 @@ var _inflight := ""
 var _enabled := false
 var _requesting := false
 var _waiting := false
+var _flag_armed := false
+var _invalidated := false
 
-func configure(director: StoryDirector, ui: UIManager, tea: TeaMaking) -> void:
+func configure(director: StoryDirector, ui: UIManager, tea: TeaMaking = null) -> void:
 	_director = director
 	_ui = ui
 	_tea = tea
 	_state = get_node("/root/GameState") as StateData
-	_tea.recipe_completed.connect(_on_recipe_completed)
-	_state.state_reset.connect(stop)
-	_state.state_restored.connect(stop)
+	if is_instance_valid(_tea):
+		_tea.recipe_completed.connect(_on_recipe_completed)
+		_tea.tree_exiting.connect(stop)
+	_state.state_changed.connect(_on_state_changed)
+	_state.state_reset.connect(stop.bind(true))
+	_state.state_restored.connect(stop.bind(true))
 	_director.event_finished.connect(_on_event_finished)
 	_director.tree_exiting.connect(stop)
 	_ui.tree_exiting.connect(stop)
-	_tea.tree_exiting.connect(stop)
 
 ## Reload/resume is explicit: restore never replays story effects automatically.
 func load_phases(path: String) -> Error:
@@ -45,21 +49,33 @@ func load_phases(path: String) -> Error:
 		last_error = "Phase JSON line %d: %s" % [parser.get_error_line(), parser.get_error_message()]
 		return ERR_PARSE_ERROR
 	var data: Variant = parser.data
-	if not data is Dictionary or data.size() != 2 or typeof(data.get("version")) not in [TYPE_INT, TYPE_FLOAT] or data.version != 1 or not data.get("phases") is Array:
+	if not data is Dictionary or data.size() != 2 or typeof(data.get("version")) not in [TYPE_INT, TYPE_FLOAT] or (data.version != 1 and data.version != 2) or not data.get("phases") is Array:
 		return _invalid_phase(path)
 	var links: Array[Dictionary] = []
 	var used: Dictionary = {}
 	for link: Variant in data.phases:
-		if not link is Dictionary or link.size() != 6 or not link.has_all(["id", "after_event", "stage", "recipe", "completion_flag", "next_event"]):
+		var source_key := "recipe" if data.version == 1 else "completion"
+		if not link is Dictionary or link.size() != 6 or not link.has_all(["id", "after_event", "stage", source_key, "completion_flag", "next_event"]):
 			return _invalid_phase(path)
 		for key: String in link:
+			if key == "completion":
+				continue
 			if not link[key] is String or link[key].is_empty():
 				return _invalid_phase(path)
 		for key: String in ["id", "after_event", "completion_flag", "next_event"]:
 			if not StoryLibrary.is_namespaced(link[key]):
 				return _invalid_phase(path)
-		if not TeaMaking.RECIPES.has(link.recipe) or link.after_event == link.next_event:
+		if link.after_event == link.next_event:
 			return _invalid_phase(path)
+		if data.version == 1:
+			if not is_instance_valid(_tea) or not _tea.has_recipe(link.recipe):
+				return _invalid_phase(path)
+		else:
+			var condition: Variant = link.completion
+			if not condition is Dictionary or condition.size() != 2 or not condition.has_all(["flag", "allow_existing"]):
+				return _invalid_phase(path)
+			if not StoryLibrary.is_namespaced(condition.flag) or not condition.allow_existing is bool or condition.flag == link.completion_flag:
+				return _invalid_phase(path)
 		for key: String in ["id", "stage", "completion_flag", "after_event", "next_event"]:
 			var unique: String = key + ":" + link[key]
 			if used.has(unique):
@@ -72,11 +88,16 @@ func load_phases(path: String) -> Error:
 	last_error = ""
 	return OK
 
-func stop() -> void:
+func stop(preserve_wait: bool = false) -> void:
+	var previous := _active
 	_enabled = false
 	_inflight = ""
 	_active = {}
 	_waiting = false
+	_flag_armed = false
+	_invalidated = false
+	if not preserve_wait and previous.has("completion"):
+		_state.set_variable(previous.id + ".bridge_wait", null)
 	if is_instance_valid(_tea) and not _tea.is_queued_for_deletion():
 		_tea.cancel()
 
@@ -91,6 +112,16 @@ func allows_story_start() -> bool:
 			return false
 	return true
 
+## Independent read-only snapshot for tooling. Reads existing fields only: it
+## never loads phases, dispatches continuations or mutates wait/reservation state.
+func get_runtime_status() -> Dictionary:
+	var link: Dictionary = _active
+	return {"enabled": _enabled, "phase_count": _links.size(),
+		"phase_id": str(link.get("id", "")), "stage": str(link.get("stage", "")),
+		"next_event": str(link.get("next_event", "")), "waiting": _waiting,
+		"inflight": _inflight, "allows_story_start": allows_story_start(),
+		"last_error": last_error}
+
 func _eligible(link: Dictionary) -> bool:
 	return (_state.story_stage == link.stage and _state.is_event_completed(link.after_event)
 		and not _state.is_event_completed(link.next_event))
@@ -98,12 +129,19 @@ func _eligible(link: Dictionary) -> bool:
 func _process(_delta: float) -> void:
 	if not _enabled:
 		return
-	if not is_instance_valid(_director) or not is_instance_valid(_ui) or not is_instance_valid(_tea):
+	if not is_instance_valid(_director) or not is_instance_valid(_ui) or (_active.has("recipe") and not is_instance_valid(_tea)):
 		stop()
 		return
-	if not _active.is_empty() and not _eligible(_active):
+	if _invalidated or (not _active.is_empty() and not _eligible(_active)):
 		stop() # External stage changes invalidate pending sessions and continuations.
 		return
+	if _active.has("completion"):
+		_on_state_changed()
+		if not _enabled:
+			return
+		_save_flag_wait()
+		if not _enabled or _invalidated:
+			return
 	if not _inflight.is_empty() or _director.is_busy() or get_tree().paused:
 		return
 	if _active.is_empty():
@@ -111,8 +149,17 @@ func _process(_delta: float) -> void:
 			if _eligible(link):
 				_active = link
 				_waiting = _state.get_flag(link.completion_flag)
-				if not _waiting:
+				if not _waiting and link.has("recipe"):
 					_session = _tea.begin(link.recipe)
+				elif not _waiting:
+					var saved: Variant = _state.get_variable(link.id + ".bridge_wait")
+					var resumed: bool = saved is Dictionary and saved.get("flag") == link.completion.flag and saved.get("armed") == true
+					_flag_armed = resumed or link.completion.allow_existing or not _state.get_flag(link.completion.flag)
+					_on_state_changed()
+					if _enabled:
+						_save_flag_wait()
+				if not _enabled:
+					return
 				phase_started.emit(link.id)
 				return # Never start a continuation in the activation callback stack.
 	if _active.is_empty() or not _waiting or _ui.has_modal():
@@ -126,21 +173,46 @@ func _process(_delta: float) -> void:
 		return
 	if error != OK:
 		_inflight = ""
-	if error == ERR_BUSY:
-		return
-	if error != OK:
 		last_error = "Continuation %s rejected (%d): %s" % [next, error, _director.last_error]
 		stop()
 		continuation_failed.emit(next, error)
 		return
+	var previous := _active
 	_active = {}
 	_waiting = false
-	_tea.cancel()
+	if previous.has("completion"):
+		_state.set_variable(previous.id + ".bridge_wait", null)
+	if is_instance_valid(_tea):
+		_tea.cancel()
+
+func _on_state_changed() -> void:
+	# Record only an active wait. Never activate/start story from synchronous signals.
+	if not _enabled or _active.is_empty():
+		return
+	if not _eligible(_active):
+		_invalidated = true
+		return
+	if _waiting or not _active.has("completion"):
+		return
+	var satisfied := _state.get_flag(_active.completion.flag)
+	if not satisfied:
+		_flag_armed = true
+	elif _flag_armed:
+		_waiting = true
+
+func _save_flag_wait() -> void:
+	# Mutate snapshots only from the process boundary, never inside restore_state's
+	# state_changed notification (which precedes state_restored).
+	_state.set_variable(_active.id + ".bridge_wait", {"flag": _active.completion.flag, "armed": _flag_armed})
+	if _enabled and not _invalidated and not _active.is_empty() and _eligible(_active) and _waiting:
+		_state.set_flag(_active.completion_flag)
 
 func _on_recipe_completed(recipe: String, session: int) -> void:
-	if not _enabled or _active.is_empty() or _waiting or session != _session:
+	if not _enabled or _invalidated or _active.is_empty() or _waiting or session != _session:
 		return
-	if recipe != _active.recipe or not _eligible(_active) or _director.is_busy() or get_tree().paused:
+	if not _active.has("recipe") or recipe != _active.recipe or not _eligible(_active) or _director.is_busy() or get_tree().paused:
+		return
+	if not is_instance_valid(_tea) or not _tea.is_completed_session(recipe, session):
 		return
 	_waiting = true
 	_state.set_flag(_active.completion_flag)

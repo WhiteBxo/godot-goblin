@@ -1,17 +1,16 @@
 [gd_scene format=3 uid="uid://db43al0ecqpdg"]
 
 [ext_resource type="Script" uid="uid://bvkqqmktf3g4o" path="res://src/levels/milkTea/milk_tea_shop.gd" id="1_p60we"]
-[ext_resource type="Texture2D" path="res://assets/map/milkTea/shop_interior_rooms.png" id="2_map"]
+[ext_resource type="Texture2D" uid="uid://ck6r3h1pe45ex" path="res://assets/map/milkTea/shop_interior_rooms.png" id="2_map"]
 [ext_resource type="PackedScene" path="res://src/gameplay/interaction/interaction_point.tscn" id="3_xdoh7"]
 [ext_resource type="PackedScene" path="res://src/gameplay/rooms/room_reveal.tscn" id="5_room"]
-[ext_resource type="Texture2D" path="res://assets/map/milkTea/room_occlusion/bedroom_reference.png" id="6_bedroom_roof"]
-[ext_resource type="Texture2D" path="res://assets/map/milkTea/room_occlusion/bathroom_reference.webp" id="7_bathroom_roof"]
+[ext_resource type="Texture2D" uid="uid://nkx0crlti17w" path="res://assets/map/milkTea/room_occlusion/bedroom_reference.png" id="6_bedroom_roof"]
+[ext_resource type="Texture2D" uid="uid://dtkfujuilha5d" path="res://assets/map/milkTea/room_occlusion/bathroom_reference.webp" id="7_bathroom_roof"]
+[ext_resource type="Shader" uid="uid://cri6we4d0xpvo" path="res://src/shaders/occlusion_cutout.gdshader" id="8_cutout"]
+[ext_resource type="Script" uid="uid://bx8pixv32pxds" path="res://src/gameplay/rooms/doorframe_foreground.gd" id="9_frame"]
 
-[ext_resource type="Shader" path="res://src/shaders/occlusion_cutout.gdshader" id="8_cutout"]
-[ext_resource type="Script" path="res://src/gameplay/rooms/doorframe_foreground.gd" id="9_frame"]
-
-[sub_resource type="ShaderMaterial" id="Material_Cutout"]
-shader = ExtResource("8_cutout")
+[ext_resource type="Script" path="res://src/core/navigation/scene_exit.gd" id="travel_exit"]
+[ext_resource type="Script" path="res://src/core/navigation/scene_entrance.gd" id="travel_entrance"]
 
 [sub_resource type="RectangleShape2D" id="Shape_NorthWall"]
 size = Vector2(1144, 48)
@@ -50,7 +49,7 @@ size = Vector2(34, 270)
 size = Vector2(188, 26)
 
 [sub_resource type="RectangleShape2D" id="Shape_BedroomDoorJamb"]
-size = Vector2(22, 64)
+size = Vector2(29.200012, 64)
 
 [sub_resource type="RectangleShape2D" id="Shape_StorageEastWall"]
 size = Vector2(34, 296)
@@ -59,7 +58,7 @@ size = Vector2(34, 296)
 size = Vector2(72, 38)
 
 [sub_resource type="RectangleShape2D" id="Shape_HallPanelWest"]
-size = Vector2(58, 104)
+size = Vector2(66, 104)
 
 [sub_resource type="RectangleShape2D" id="Shape_HallPanelEast"]
 size = Vector2(12, 104)
@@ -74,7 +73,7 @@ size = Vector2(35, 113)
 size = Vector2(37, 118)
 
 [sub_resource type="RectangleShape2D" id="Shape_ServiceDivider"]
-size = Vector2(89, 122)
+size = Vector2(97.19995, 122)
 
 [sub_resource type="RectangleShape2D" id="Shape_HallPlant"]
 size = Vector2(39, 41)
@@ -125,7 +124,7 @@ size = Vector2(512, 48)
 size = Vector2(55, 147)
 
 [sub_resource type="RectangleShape2D" id="Shape_FrontCounter"]
-size = Vector2(491, 52)
+size = Vector2(491, 78.40001)
 
 [sub_resource type="RectangleShape2D" id="Shape_RightBench"]
 size = Vector2(33, 135)
@@ -148,9 +147,12 @@ size = Vector2(40, 37)
 [sub_resource type="RectangleShape2D" id="Shape_LobbyBin"]
 size = Vector2(40, 33)
 
+[sub_resource type="ShaderMaterial" id="Material_Cutout"]
+shader = ExtResource("8_cutout")
+
 [node name="MilkTeaShop" type="Node2D" unique_id=378149397]
-scale = Vector2(1.25, 1.25)
 texture_filter = 1
+scale = Vector2(1.25, 1.25)
 script = ExtResource("1_p60we")
 
 [node name="Background" type="Sprite2D" parent="." unique_id=661289050]
@@ -158,194 +160,198 @@ texture = ExtResource("2_map")
 centered = false
 
 [node name="Spawn" type="Marker2D" parent="." unique_id=297029601]
-position = Vector2(1048, 553)
+position = Vector2(956, 365.6)
 
 [node name="WallsAndFurniture" type="StaticBody2D" parent="." unique_id=1232831600]
 collision_mask = 2
 
-[node name="NorthWall" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(688.0, 79.0)
+[node name="NorthWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=375186251]
+position = Vector2(688, 79)
 shape = SubResource("Shape_NorthWall")
 
-[node name="WestWall" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(133.0, 381.5)
+[node name="WestWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1723697007]
+position = Vector2(133, 381.5)
 shape = SubResource("Shape_WestWall")
 
-[node name="EastWall" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(1243.0, 381.5)
+[node name="EastWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1572814160]
+position = Vector2(1243, 381.5)
 shape = SubResource("Shape_EastWall")
 
-[node name="SouthBoundary" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(596.0, 686.0)
+[node name="SouthBoundary" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1426774414]
+position = Vector2(596, 686)
 shape = SubResource("Shape_SouthBoundary")
 
-[node name="EntranceEastWall" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(1214.0, 686.0)
+[node name="EntranceEastWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1064046387]
+position = Vector2(1214, 686)
 shape = SubResource("Shape_EntranceEastWall")
 
-[node name="EntranceWestJamb" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(1082.0, 685.5)
+[node name="EntranceWestJamb" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1399103588]
+position = Vector2(1082, 685.5)
 shape = SubResource("Shape_EntranceWestJamb")
 
-[node name="EntranceEastJamb" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(1162.0, 685.5)
+[node name="EntranceEastJamb" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=579630956]
+position = Vector2(1162, 685.5)
 shape = SubResource("Shape_EntranceEastJamb")
 
-[node name="EntranceWestEdge" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(1080.5, 732.0)
+[node name="EntranceWestEdge" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=670086716]
+position = Vector2(1080.5, 732)
 shape = SubResource("Shape_EntranceWestEdge")
 
-[node name="EntranceEastEdge" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(1166.5, 732.0)
+[node name="EntranceEastEdge" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1250650303]
+position = Vector2(1166.5, 732)
 shape = SubResource("Shape_EntranceEastEdge")
 
-[node name="EntranceEnd" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(1123.5, 759.0)
+[node name="EntranceEnd" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1851737869]
+position = Vector2(1123.5, 759)
 shape = SubResource("Shape_EntranceEnd")
 
-[node name="BedroomEastWall" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(412.0, 216.0)
+[node name="BedroomEastWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=501385620]
+position = Vector2(412, 216)
 shape = SubResource("Shape_BedroomEastWall")
 
-[node name="BedroomSouthWall" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(232.0, 425.0)
+[node name="BedroomSouthWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=2116257031]
+position = Vector2(232, 425)
 shape = SubResource("Shape_BedroomSouthWall")
 
-[node name="BedroomDoorJamb" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(321.0, 467.0)
+[node name="BedroomDoorJamb" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=258815145]
+position = Vector2(324.59995, 466.9999)
+scale = Vector2(0.99999994, 0.99999994)
 shape = SubResource("Shape_BedroomDoorJamb")
 
-[node name="StorageEastWall" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(634.0, 229.0)
+[node name="StorageEastWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=523461112]
+position = Vector2(634, 229)
 shape = SubResource("Shape_StorageEastWall")
 
-[node name="StorageSouthWall" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(597.0, 359.0)
+[node name="StorageSouthWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=229429730]
+position = Vector2(597, 359)
 shape = SubResource("Shape_StorageSouthWall")
 
-[node name="HallPanelWest" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(425.0, 402.0)
+[node name="HallPanelWest" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1397415550]
+position = Vector2(420.99994, 401.99994)
+scale = Vector2(0.99999994, 0.99999994)
 shape = SubResource("Shape_HallPanelWest")
 
-[node name="HallPanelEast" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(460.0, 402.0)
+[node name="HallPanelEast" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1036112723]
+position = Vector2(460, 402)
 shape = SubResource("Shape_HallPanelEast")
 
-[node name="BathroomNorthWall" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(223.0, 441.5)
+[node name="BathroomNorthWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1229471626]
+position = Vector2(223, 441.5)
 shape = SubResource("Shape_BathroomNorthWall")
 
-[node name="BathroomEastWall" type="CollisionShape2D" parent="WallsAndFurniture"]
+[node name="BathroomEastWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1417433548]
 position = Vector2(316.5, 555.5)
 shape = SubResource("Shape_BathroomEastWall")
 
-[node name="HallSouthDivider" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(630.5, 619.0)
+[node name="HallSouthDivider" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=2146128937]
+position = Vector2(630.5, 619)
 shape = SubResource("Shape_HallSouthDivider")
 
-[node name="ServiceDivider" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(605.5, 439.0)
+[node name="ServiceDivider" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=543647688]
+position = Vector2(601.3999, 438.99994)
+scale = Vector2(0.99999994, 0.99999994)
 shape = SubResource("Shape_ServiceDivider")
 
-[node name="HallPlant" type="CollisionShape2D" parent="WallsAndFurniture"]
+[node name="HallPlant" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=971914904]
 position = Vector2(587.5, 497.5)
 shape = SubResource("Shape_HallPlant")
 
-[node name="Bed" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(190.0, 279.5)
+[node name="Bed" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1906604182]
+position = Vector2(190, 279.5)
 shape = SubResource("Shape_Bed")
 
-[node name="BedroomDesk" type="CollisionShape2D" parent="WallsAndFurniture"]
+[node name="BedroomDesk" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1686591503]
 position = Vector2(276.5, 243.5)
 shape = SubResource("Shape_BedroomDesk")
 
-[node name="Wardrobe" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(358.0, 203.5)
+[node name="Wardrobe" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1986508441]
+position = Vector2(358, 203.5)
 shape = SubResource("Shape_Wardrobe")
 
-[node name="BedroomChair" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(278.5, 278.0)
+[node name="BedroomChair" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1979133736]
+position = Vector2(278.5, 278)
 shape = SubResource("Shape_BedroomChair")
 
-[node name="BedroomSideTable" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(191.0, 390.0)
+[node name="BedroomSideTable" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=2060781310]
+position = Vector2(191, 390)
 shape = SubResource("Shape_BedroomSideTable")
 
-[node name="BedroomLaundry" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(366.0, 290.0)
+[node name="BedroomLaundry" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1523067265]
+position = Vector2(366, 290)
 shape = SubResource("Shape_BedroomLaundry")
 
-[node name="StorageShelves" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(489.5, 225.0)
+[node name="StorageShelves" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=59270994]
+position = Vector2(489.5, 225)
 shape = SubResource("Shape_StorageShelves")
 
-[node name="StorageFridge" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(582.0, 233.0)
+[node name="StorageFridge" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=600522722]
+position = Vector2(582, 233)
 shape = SubResource("Shape_StorageFridge")
 
-[node name="StorageFruit" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(463.0, 314.5)
+[node name="StorageFruit" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1674681415]
+position = Vector2(463, 314.5)
 shape = SubResource("Shape_StorageFruit")
 
-[node name="StorageBox" type="CollisionShape2D" parent="WallsAndFurniture"]
+[node name="StorageBox" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1292397511]
 position = Vector2(594.5, 324.5)
 shape = SubResource("Shape_StorageBox")
 
-[node name="BathroomSink" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(254.5, 555.0)
+[node name="BathroomSink" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=507683032]
+position = Vector2(254.5, 555)
 shape = SubResource("Shape_BathroomSink")
 
-[node name="BathroomToilet" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(181.0, 630.5)
+[node name="BathroomToilet" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1864126032]
+position = Vector2(181, 630.5)
 shape = SubResource("Shape_BathroomToilet")
 
-[node name="HallCrates" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(543.0, 634.5)
+[node name="HallCrates" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=542634554]
+position = Vector2(543, 634.5)
 shape = SubResource("Shape_HallCrates")
 
-[node name="BackEquipment" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(913.0, 270.0)
+[node name="BackEquipment" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=184021392]
+position = Vector2(913, 270)
 shape = SubResource("Shape_BackEquipment")
 
-[node name="RightEquipment" type="CollisionShape2D" parent="WallsAndFurniture"]
+[node name="RightEquipment" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1185454511]
 position = Vector2(1197.5, 367.5)
 shape = SubResource("Shape_RightEquipment")
 
-[node name="FrontCounter" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(979.5, 475.0)
+[node name="FrontCounter" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1517139496]
+position = Vector2(980.79987, 459.19998)
+scale = Vector2(0.99999976, 0.99999976)
 shape = SubResource("Shape_FrontCounter")
 
-[node name="RightBench" type="CollisionShape2D" parent="WallsAndFurniture"]
+[node name="RightBench" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=665061689]
 position = Vector2(1207.5, 596.5)
 shape = SubResource("Shape_RightBench")
 
-[node name="RightPlant" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(1201.0, 514.0)
+[node name="RightPlant" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=34689908]
+position = Vector2(1201, 514)
 shape = SubResource("Shape_RightPlant")
 
-[node name="LobbyPlantLeft" type="CollisionShape2D" parent="WallsAndFurniture"]
+[node name="LobbyPlantLeft" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=2066730401]
 position = Vector2(676.5, 637.5)
 shape = SubResource("Shape_LobbyPlantLeft")
 
-[node name="LobbyPlantMiddle" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(723.5, 646.0)
+[node name="LobbyPlantMiddle" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=986034844]
+position = Vector2(723.5, 646)
 shape = SubResource("Shape_LobbyPlantMiddle")
 
-[node name="LobbyBench" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(842.5, 642.0)
+[node name="LobbyBench" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=577689224]
+position = Vector2(842.5, 642)
 shape = SubResource("Shape_LobbyBench")
 
-[node name="LobbyPlantRight" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(962.0, 645.5)
+[node name="LobbyPlantRight" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=2135322720]
+position = Vector2(962, 645.5)
 shape = SubResource("Shape_LobbyPlantRight")
 
-[node name="LobbyBin" type="CollisionShape2D" parent="WallsAndFurniture"]
-position = Vector2(1007.0, 647.5)
+[node name="LobbyBin" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=569150503]
+position = Vector2(1007, 647.5)
 shape = SubResource("Shape_LobbyBin")
 
-[node name="Rooms" type="Node2D" parent="."]
+[node name="Rooms" type="Node2D" parent="." unique_id=251552359]
 
-[node name="Bedroom" parent="Rooms" instance=ExtResource("5_room")]
+[node name="Bedroom" parent="Rooms" unique_id=1859549277 instance=ExtResource("5_room")]
 
 [node name="Interior" parent="Rooms/Bedroom" index="0"]
 polygon = PackedVector2Array(150, 103, 394, 103, 394, 480, 334, 480, 334, 411, 150, 411)
@@ -354,13 +360,13 @@ polygon = PackedVector2Array(150, 103, 394, 103, 394, 480, 334, 480, 334, 411, 1
 visible = false
 polygon = PackedVector2Array(151, 104, 394, 104, 394, 411, 151, 411)
 
-[node name="Roof" type="Polygon2D" parent="Rooms/Bedroom/Occlusion"]
+[node name="Roof" type="Polygon2D" parent="Rooms/Bedroom/Occlusion" index="1" unique_id=1728770193]
 material = SubResource("Material_Cutout")
-polygon = PackedVector2Array(151, 104, 394, 104, 394, 340, 334, 370, 334, 411, 151, 411)
 texture = ExtResource("6_bedroom_roof")
+polygon = PackedVector2Array(151, 104, 394, 104, 394, 340, 334, 370, 334, 411, 151, 411)
 uv = PackedVector2Array(37, 33, 118, 33, 118, 111, 99, 121, 99, 139, 37, 139)
 
-[node name="Bathroom" parent="Rooms" instance=ExtResource("5_room")]
+[node name="Bathroom" parent="Rooms" unique_id=851759711 instance=ExtResource("5_room")]
 
 [node name="Interior" parent="Rooms/Bathroom" index="0"]
 polygon = PackedVector2Array(150, 448, 299, 448, 299, 612, 334, 612, 334, 664, 150, 664)
@@ -369,125 +375,124 @@ polygon = PackedVector2Array(150, 448, 299, 448, 299, 612, 334, 612, 334, 664, 1
 visible = false
 polygon = PackedVector2Array(151, 450, 298, 450, 298, 664, 151, 664)
 
-[node name="Roof" type="Polygon2D" parent="Rooms/Bathroom/Occlusion"]
+[node name="Roof" type="Polygon2D" parent="Rooms/Bathroom/Occlusion" index="1" unique_id=1702559764]
 material = SubResource("Material_Cutout")
-polygon = PackedVector2Array(151, 450, 298, 450, 298, 664, 151, 664)
 texture = ExtResource("7_bathroom_roof")
+polygon = PackedVector2Array(151, 450, 298, 450, 298, 664, 151, 664)
 uv = PackedVector2Array(12, 108, 64, 122, 64, 207, 12, 193)
 
-[node name="Doorframes" type="Node2D" parent="."]
+[node name="Doorframes" type="Node2D" parent="." unique_id=706412467]
 
-[node name="Bedroom" type="Node2D" parent="Doorframes"]
+[node name="Bedroom" type="Node2D" parent="Doorframes" unique_id=575523994]
 script = ExtResource("9_frame")
-baseline_y = 480.0
 
-[node name="Lintel" type="Polygon2D" parent="Doorframes/Bedroom"]
-polygon = PackedVector2Array(327, 367, 395, 337, 401, 340, 401, 354, 340, 382, 327, 378)
+[node name="Lintel" type="Polygon2D" parent="Doorframes/Bedroom" unique_id=613698931]
 texture = ExtResource("2_map")
+polygon = PackedVector2Array(327, 367, 395, 337, 401, 340, 401, 354, 340, 382, 327, 378)
 uv = PackedVector2Array(327, 367, 395, 337, 401, 340, 401, 354, 340, 382, 327, 378)
 
-[node name="LeftPost" type="Polygon2D" parent="Doorframes/Bedroom"]
-polygon = PackedVector2Array(327, 367, 340, 373, 340, 477, 327, 483)
+[node name="LeftPost" type="Polygon2D" parent="Doorframes/Bedroom" unique_id=1444181741]
 texture = ExtResource("2_map")
+polygon = PackedVector2Array(327, 367, 340, 373, 340, 477, 327, 483)
 uv = PackedVector2Array(327, 367, 340, 373, 340, 477, 327, 483)
 
-[node name="RightPost" type="Polygon2D" parent="Doorframes/Bedroom"]
-polygon = PackedVector2Array(388, 352, 400, 346, 400, 455, 388, 455)
+[node name="RightPost" type="Polygon2D" parent="Doorframes/Bedroom" unique_id=1217310154]
 texture = ExtResource("2_map")
+polygon = PackedVector2Array(388, 352, 400, 346, 400, 455, 388, 455)
 uv = PackedVector2Array(388, 352, 400, 346, 400, 455, 388, 455)
 
-[node name="BathroomUpper" type="Node2D" parent="Doorframes"]
+[node name="BathroomUpper" type="Node2D" parent="Doorframes" unique_id=36242341]
 script = ExtResource("9_frame")
 baseline_y = 612.0
 
-[node name="Frame" type="Polygon2D" parent="Doorframes/BathroomUpper"]
-polygon = PackedVector2Array(299, 498, 334, 498, 334, 612, 299, 612)
+[node name="Frame" type="Polygon2D" parent="Doorframes/BathroomUpper" unique_id=784507058]
 texture = ExtResource("2_map")
+polygon = PackedVector2Array(299, 498, 334, 498, 334, 612, 299, 612)
 uv = PackedVector2Array(299, 498, 334, 498, 334, 612, 299, 612)
 
-[node name="BathroomLower" type="Node2D" parent="Doorframes"]
+[node name="BathroomLower" type="Node2D" parent="Doorframes" unique_id=175218454]
 script = ExtResource("9_frame")
 baseline_y = 677.0
 
-[node name="Frame" type="Polygon2D" parent="Doorframes/BathroomLower"]
-polygon = PackedVector2Array(299, 664, 335, 664, 335, 677, 299, 677)
+[node name="Frame" type="Polygon2D" parent="Doorframes/BathroomLower" unique_id=402154722]
 texture = ExtResource("2_map")
+polygon = PackedVector2Array(299, 664, 335, 664, 335, 677, 299, 677)
 uv = PackedVector2Array(299, 664, 335, 664, 335, 677, 299, 677)
 
-[node name="EquipmentForeground" type="Node2D" parent="."]
+[node name="EquipmentForeground" type="Node2D" parent="." unique_id=1624000172]
 
-[node name="Counter" type="Node2D" parent="EquipmentForeground"]
+[node name="Counter" type="Node2D" parent="EquipmentForeground" unique_id=1687929775]
 script = ExtResource("9_frame")
 baseline_y = 501.0
 
-[node name="Counter" type="Polygon2D" parent="EquipmentForeground/Counter"]
+[node name="Counter" type="Polygon2D" parent="EquipmentForeground/Counter" unique_id=1313236028]
 texture = ExtResource("2_map")
 polygon = PackedVector2Array(734, 410, 1226, 410, 1226, 501, 734, 501)
 uv = PackedVector2Array(734, 410, 1226, 410, 1226, 501, 734, 501)
 
-[node name="DisplayShelf" type="Polygon2D" parent="EquipmentForeground/Counter"]
+[node name="DisplayShelf" type="Polygon2D" parent="EquipmentForeground/Counter" unique_id=308574839]
 texture = ExtResource("2_map")
 polygon = PackedVector2Array(969, 380, 1035, 380, 1035, 455, 969, 455)
 uv = PackedVector2Array(969, 380, 1035, 380, 1035, 455, 969, 455)
 
-[node name="CashRegister" type="Polygon2D" parent="EquipmentForeground/Counter"]
+[node name="CashRegister" type="Polygon2D" parent="EquipmentForeground/Counter" unique_id=1500151315]
 texture = ExtResource("2_map")
 polygon = PackedVector2Array(825, 394, 849, 394, 849, 409, 870, 409, 870, 445, 819, 445, 819, 410, 825, 410)
 uv = PackedVector2Array(825, 394, 849, 394, 849, 409, 870, 409, 870, 445, 819, 445, 819, 410, 825, 410)
 
-[node name="Terminal" type="Polygon2D" parent="EquipmentForeground/Counter"]
+[node name="Terminal" type="Polygon2D" parent="EquipmentForeground/Counter" unique_id=1642286286]
 texture = ExtResource("2_map")
 polygon = PackedVector2Array(803, 417, 818, 417, 818, 437, 803, 437)
 uv = PackedVector2Array(803, 417, 818, 417, 818, 437, 803, 437)
 
-[node name="Bottle" type="Polygon2D" parent="EquipmentForeground/Counter"]
+[node name="Bottle" type="Polygon2D" parent="EquipmentForeground/Counter" unique_id=552443920]
 texture = ExtResource("2_map")
 polygon = PackedVector2Array(941, 410, 952, 410, 958, 418, 958, 448, 939, 448, 939, 418)
 uv = PackedVector2Array(941, 410, 952, 410, 958, 418, 958, 448, 939, 448, 939, 418)
 
-[node name="BackEquipment" type="Node2D" parent="EquipmentForeground"]
+[node name="BackEquipment" type="Node2D" parent="EquipmentForeground" unique_id=1372902062]
 script = ExtResource("9_frame")
 baseline_y = 294.0
 
-[node name="Worktop" type="Polygon2D" parent="EquipmentForeground/BackEquipment"]
+[node name="Worktop" type="Polygon2D" parent="EquipmentForeground/BackEquipment" unique_id=1874903449]
 texture = ExtResource("2_map")
 polygon = PackedVector2Array(657, 212, 1169, 212, 1169, 294, 657, 294)
 uv = PackedVector2Array(657, 212, 1169, 212, 1169, 294, 657, 294)
 
-[node name="TeaUrns" type="Polygon2D" parent="EquipmentForeground/BackEquipment"]
+[node name="TeaUrns" type="Polygon2D" parent="EquipmentForeground/BackEquipment" unique_id=1449653111]
 texture = ExtResource("2_map")
 polygon = PackedVector2Array(775, 152, 908, 152, 912, 211, 775, 211)
 uv = PackedVector2Array(775, 152, 908, 152, 912, 211, 775, 211)
 
-[node name="Ingredients" type="Polygon2D" parent="EquipmentForeground/BackEquipment"]
+[node name="Ingredients" type="Polygon2D" parent="EquipmentForeground/BackEquipment" unique_id=1588891215]
 texture = ExtResource("2_map")
 polygon = PackedVector2Array(922, 190, 998, 190, 998, 251, 922, 251)
 uv = PackedVector2Array(922, 190, 998, 190, 998, 251, 922, 251)
 
-[node name="CoffeeMachine" type="Polygon2D" parent="EquipmentForeground/BackEquipment"]
+[node name="CoffeeMachine" type="Polygon2D" parent="EquipmentForeground/BackEquipment" unique_id=1456358772]
 texture = ExtResource("2_map")
 polygon = PackedVector2Array(1015, 170, 1068, 170, 1068, 246, 1015, 246)
 uv = PackedVector2Array(1015, 170, 1068, 170, 1068, 246, 1015, 246)
 
-[node name="RightEquipment" type="Node2D" parent="EquipmentForeground"]
+[node name="RightEquipment" type="Node2D" parent="EquipmentForeground" unique_id=1286335332]
 script = ExtResource("9_frame")
 baseline_y = 441.0
 
-[node name="Appliance" type="Polygon2D" parent="EquipmentForeground/RightEquipment"]
+[node name="Appliance" type="Polygon2D" parent="EquipmentForeground/RightEquipment" unique_id=825283736]
 texture = ExtResource("2_map")
 polygon = PackedVector2Array(1170, 293, 1225, 293, 1225, 441, 1170, 441)
 uv = PackedVector2Array(1170, 293, 1225, 293, 1225, 441, 1170, 441)
 
-[node name="Storage" type="Node2D" parent="EquipmentForeground"]
+[node name="Storage" type="Node2D" parent="EquipmentForeground" unique_id=273727508]
 script = ExtResource("9_frame")
 baseline_y = 292.0
 
-[node name="Cabinet" type="Polygon2D" parent="EquipmentForeground/Storage"]
+[node name="Cabinet" type="Polygon2D" parent="EquipmentForeground/Storage" unique_id=403513708]
 texture = ExtResource("2_map")
 polygon = PackedVector2Array(437, 134, 540, 134, 540, 286, 437, 286)
 uv = PackedVector2Array(437, 134, 540, 134, 540, 286, 437, 286)
 
-[node name="Fridge" type="Polygon2D" parent="EquipmentForeground/Storage"]
+[node name="Fridge" type="Polygon2D" parent="EquipmentForeground/Storage" unique_id=1682876343]
 texture = ExtResource("2_map")
 polygon = PackedVector2Array(550, 154, 615, 154, 615, 292, 550, 292)
 uv = PackedVector2Array(550, 154, 615, 154, 615, 292, 550, 292)
@@ -535,9 +540,9 @@ description = "珍珠奶茶 · 配方
 红茶 × 1 + 牛奶 × 1 + 珍珠 × 1
 
 1. 加入茶底与牛奶
-2. 加入珍珠和糖浆，摇匀封杯
+2. 加入珍珠和糖浆，完成制作并入库
 
-MVP 展示界面，暂不消耗库存。"
+成功制作扣除原料，携带成品交给指定顾客。"
 feedback_rect = Rect2(-74, -147, 148, 145)
 
 [node name="Marker" parent="InteractionPoints/TeaStation" index="1"]
@@ -546,9 +551,56 @@ visible = false
 [node name="Label" parent="InteractionPoints/TeaStation" index="2"]
 visible = false
 
+[node name="StoryPositions" type="Node2D" parent="."]
+
+[node name="day1_player" type="Marker2D" parent="StoryPositions"]
+position = Vector2(956, 365.6)
+
+[node name="day1_door" type="Marker2D" parent="StoryPositions"]
+position = Vector2(1123, 710)
+
+[node name="day1_aisle" type="Marker2D" parent="StoryPositions"]
+position = Vector2(1123, 550)
+
+[node name="day1_counter" type="Marker2D" parent="StoryPositions"]
+position = Vector2(844, 550)
+
+[node name="day1_group_a" type="Marker2D" parent="StoryPositions"]
+position = Vector2(760, 550)
+
+[node name="day1_group_b" type="Marker2D" parent="StoryPositions"]
+position = Vector2(850, 550)
+
+[node name="day1_group_c" type="Marker2D" parent="StoryPositions"]
+position = Vector2(940, 550)
+
+[node name="SceneExits" type="Node2D" parent="."]
+
+[node name="ShopDoor" parent="SceneExits" instance=ExtResource("3_xdoh7")]
+position = Vector2(1123, 700)
+script = ExtResource("travel_exit")
+interaction_id = &"shop_exit"
+display_name = "走出奶茶店"
+destination_scene = "res://src/core/settlement.tscn"
+destination_entrance = &"shop_door"
+feedback_rect = Rect2(-30, -55, 60, 60)
+
+[node name="Marker" parent="SceneExits/ShopDoor" index="1"]
+visible = false
+
+[node name="Label" parent="SceneExits/ShopDoor" index="2"]
+visible = false
+
+[node name="SceneEntrances" type="Node2D" parent="."]
+
+[node name="StreetDoor" type="Marker2D" parent="SceneEntrances"]
+position = Vector2(1123, 650)
+script = ExtResource("travel_entrance")
+entrance_id = &"street_door"
+facing = 3
+
 [editable path="Rooms/Bedroom"]
 [editable path="Rooms/Bathroom"]
-
 [editable path="InteractionPoints/OrderBoard"]
 [editable path="InteractionPoints/Storage"]
 [editable path="InteractionPoints/TeaStation"]

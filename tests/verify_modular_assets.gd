@@ -35,7 +35,7 @@ func _run() -> void:
 	gallery.show_pack(1)
 	_check(gallery.get_pack_index() == 1, "Gallery selection must switch independent objects")
 	if "--capture" in OS.get_cmdline_user_args():
-		var dest := ProjectSettings.globalize_path("res://docs/modular_assets/captures")
+		var dest := ProjectSettings.globalize_path("res://docs/assets/modular_assets/captures")
 		DirAccess.make_dir_recursive_absolute(dest)
 		for shot: Array in [[0, "tavern_godot"], [1, "casino_godot"], [17, "stone_walls_godot"]]:
 			gallery.show_pack(shot[0])

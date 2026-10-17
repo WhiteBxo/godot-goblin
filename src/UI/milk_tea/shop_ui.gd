@@ -2,16 +2,30 @@ class_name ShopUI
 extends Control
 ## HUD facade; the popup is a separate scene owned by its screen layer.
 
+signal point_opened(id: StringName)
 signal opened
 signal closed
-signal make_requested(recipe: Array[String])
+signal craft_requested(materials: Array[String])
 var _production: TeaProduction
+var _inventory: WarehouseInventory
+
+func configure_inventory(inventory: WarehouseInventory) -> void:
+	_inventory = inventory
+	if is_instance_valid(_popup):
+		_popup.configure_inventory(inventory)
 
 func configure_production(production: TeaProduction) -> void:
 	_production = production
 	if is_instance_valid(_popup):
 		_popup.configure_production(production)
-		_popup.make_requested.connect(func(recipe: Array[String]) -> void: make_requested.emit(recipe))
+
+func show_order_requirements(message: String) -> void:
+	if is_instance_valid(_popup):
+		_popup.show_order_requirements(message)
+
+func show_interaction_result(message: String) -> void:
+	if is_instance_valid(_popup):
+		_popup.show_interaction_result(message)
 
 func show_production_result(result: Dictionary) -> void:
 	if is_instance_valid(_popup):
@@ -36,9 +50,11 @@ func set_popup_layer(layer: CanvasLayer) -> void:
 	layer.add_child(_popup)
 	(_popup.get_default_focus() as Button).text = close_text
 	_popup.close_requested.connect(close)
+	_popup.craft_requested.connect(func(materials: Array[String]) -> void: craft_requested.emit(materials))
+	if _inventory != null:
+		_popup.configure_inventory(_inventory)
 	if _production != null:
 		_popup.configure_production(_production)
-		_popup.make_requested.connect(func(recipe: Array[String]) -> void: make_requested.emit(recipe))
 
 func bind_manager(manager: UIManager) -> void:
 	_manager = manager
@@ -69,6 +85,7 @@ func open(point: InteractionPoint) -> void:
 		_popup.show()
 		_popup.get_default_focus().grab_focus()
 	_popup.present(point)
+	point_opened.emit(point.interaction_id)
 	_prompt.hide()
 	opened.emit()
 

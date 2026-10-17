@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "phases": [
+    {
+      "id": "task_test.delivery",
+      "after_event": "task_test.accept",
+      "stage": "task_test.waiting",
+      "completion": {
+        "flag": "shop.order_001_delivered",
+        "allow_existing": true
+      },
+      "completion_flag": "task_test.delivery_ready",
+      "next_event": "task_test.finish"
+    }
+  ]
+}

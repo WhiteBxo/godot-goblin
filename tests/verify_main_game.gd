@@ -49,7 +49,11 @@ func _verify() -> void:
 		check(not screen_layer.follow_viewport_enabled, "Screen layer stays fixed: " + name)
 		var expected_mode := Node.PROCESS_MODE_WHEN_PAUSED if name == "PauseLayer" else Node.PROCESS_MODE_ALWAYS
 		check(screen_layer.process_mode == expected_mode, "Screen layer process mode: " + name)
-		if name in ["HudLayer", "TransitionLayer"]:
+		if name == "HudLayer":
+			var task_hud := screen_layer.get_node("TaskHUD") as TaskHUD
+			check(task_hud != null and not task_hud.visible, "Shared task HUD remains hidden without an active task")
+			check(screen_layer.get_node("ChronicleHUD") is ChronicleHUD and screen_layer.get_node("ChronicleHUD").visible, "Chronicle button belongs to HUD")
+		if name == "TransitionLayer":
 			check(screen_layer.get_child_count() == 0, "Unused UI layer remains empty: " + name)
 	check(game.get_ui_manager() != null, "MainGame exposes scene-local UI manager")
 	check(game.get_node("PopupLayer/DialogueUI") != null, "Dialogue belongs to PopupLayer")
@@ -160,7 +164,7 @@ func _verify() -> void:
 # This suite exercises the supported cave host and its developer tools explicitly.
 # The default shop host has its own movement/interaction suite.
 func _make_cave_game() -> MainGame:
-	var game: MainGame = load("res://src/core/main.tscn").instantiate()
+	var game: MainGame = load("res://src/debug/story/legacy_shop.tscn").instantiate()
 	var levels := game.get_node("World/LevelRoot")
 	levels.get_child(0).free()
 	levels.add_child(load("res://src/levels/cave/cave_map.tscn").instantiate())

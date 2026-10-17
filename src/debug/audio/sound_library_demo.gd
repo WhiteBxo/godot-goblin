@@ -2,7 +2,7 @@ extends Control
 ## F6 preview. Uses the existing service, including ownership and UI/SFX routing.
 
 const LIBRARY: SoundLibrary = preload("res://src/resources/audio/sound_library.tres")
-const CATEGORIES := ["全部", "ui", "shop", "player", "story", "ambience"]
+const CATEGORIES := ["全部", "ui", "shop", "player", "story", "ambience", "music"]
 
 @onready var audio: AudioManager = $AudioManager
 var _owner := RefCounted.new()
@@ -29,7 +29,8 @@ func _ready() -> void:
 		var streams: Array = entry["streams"]
 		for index in range(streams.size()):
 			_rows.append({"id": SoundLibrary.variant_id(entry["id"], index, streams.size()),
-				"label": entry["label"], "stream": streams[index], "loop": entry["loop"]})
+				"label": entry["label"], "stream": streams[index], "loop": entry["loop"],
+				"loop_offset": entry.get("loop_offset", 0.0)})
 	_filter(0)
 	audio.sound_finished.connect(_on_finished)
 	_status.text = "就绪 · %d 个音效 · 点击列表查看，双击播放" % _rows.size() if errors.is_empty() else "\n".join(errors)
@@ -53,7 +54,7 @@ func _build_ui() -> void:
 	var column := VBoxContainer.new()
 	margin.add_child(column)
 	var title := Label.new()
-	title.text = "GOBLIN / SOUND LIBRARY 01    ·    原创程序音效"
+	title.text = "GOBLIN / SOUND LIBRARY 01    ·    音效与音乐试听"
 	column.add_child(title)
 	var toolbar := HBoxContainer.new()
 	column.add_child(toolbar)
@@ -127,7 +128,7 @@ func _select(index: int) -> void:
 	var stream := row["stream"] as AudioStream
 	_details.text = "%s · %s\n%s\n%.3f 秒%s" % [row["id"], row["label"],
 		stream.resource_path if stream else "缺失 AudioStream",
-		stream.get_length() if stream else 0.0, " · 循环音连续试听 6 秒" if row["loop"] else ""]
+		stream.get_length() if stream else 0.0, " · 末尾回到 %.3f 秒（连续试听仅 6 秒）" % row["loop_offset"] if row["loop"] else ""]
 
 
 func play_selected() -> void:

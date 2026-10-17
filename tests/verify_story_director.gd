@@ -50,7 +50,7 @@ func _until(predicate: Callable, message: String) -> void:
 
 
 func _new_game() -> void:
-	_game = load("res://src/core/main.tscn").instantiate()
+	_game = load("res://src/debug/story/legacy_shop.tscn").instantiate()
 	root.add_child(_game)
 	_director = _game.get_story_director()
 	_manager = _game.get_dialogue_manager()
@@ -81,6 +81,7 @@ func _run() -> void:
 	await _dispose()
 	await _test_lifecycle()
 	await _test_demo_and_routes()
+	await _test_stage_pages()
 	_state.restore_state(before)
 	print("STORY_DIRECTOR: %s (%d checks, %d failures)" % ["PASS" if _failures.is_empty() else "FAIL", _checks, _failures.size()])
 	quit(0 if _failures.is_empty() else 1)
@@ -347,4 +348,55 @@ func _test_demo_and_routes() -> void:
 	# Fresh production MainGame must never load or autoplay demo data.
 	_new_game()
 	_check(not _director.is_busy() and not _manager.is_active(), "Production scene never auto-plays unfinished story")
+	await _dispose()
+
+func _test_stage_pages() -> void:
+	_state.reset_state()
+	_new_game()
+	_director.load_events("res://src/resources/story/order_bridge_demo.json")
+	_manager.load_dialogues("res://src/resources/dialogue/order_bridge_demo.json")
+	_state.set_story_stage("day1.before_order")
+	_check(_director.request_interaction("orders") == ERR_DOES_NOT_EXIST, "Page route requires completed opening")
+	_state.complete_event("order_demo.intro")
+	_check(_director.request_interaction("orders") == OK, "Before-order page selects tutorial")
+	await _until(_manager.is_active, "Tutorial page reaches dialogue")
+	_ui.reveal_all()
+	_manager.advance()
+	await _until(func() -> bool: return not _director.is_busy(), "Tutorial page finishes")
+	_check(_state.story_stage == "day1.waiting_order" and _director.request_interaction("orders") == ERR_DOES_NOT_EXIST, "Waiting stage leaves order board to ShopUI fallback")
+	_state.set_story_stage("day1.after_order")
+	_check(_director.request_interaction("orders") == ERR_DOES_NOT_EXIST, "After-order page requires real delivery and continuation")
+	_state.complete_event("order_demo.after_order")
+	_state.set_flag("shop.order_001_delivered")
+	_check(_director.request_interaction("orders") == OK, "After-order page selects special dialogue")
+	await _until(_manager.is_active, "Special page reaches dialogue")
+	_ui.reveal_all()
+	_manager.advance()
+	await _until(func() -> bool: return not _director.is_busy(), "Special page finishes")
+	_check(_director.request_interaction("orders") == ERR_DOES_NOT_EXIST, "Consumed once page falls back")
+	_check(_director.request_interaction("storage") == ERR_DOES_NOT_EXIST, "Unmapped point keeps fallback")
+	# Document/test first-match priority instead of changing runtime routing semantics.
+	var path := "user://route-overlap-%d.json" % OS.get_process_id()
+	var data := {"version": 1, "events": {
+		"route.broad": {"once": false, "trigger": "orders", "conditions": {"stage": "route.overlap"}, "steps": [{"command": "set_flag", "key": "route.broad"}]},
+		"route.special": {"once": false, "trigger": "orders", "conditions": {"stage": "route.overlap", "flags": {"route.special_enabled": true}}, "steps": [{"command": "set_flag", "key": "route.special"}]}
+	}}
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(JSON.stringify(data))
+	file.close()
+	_director.load_events(path)
+	_state.set_story_stage("route.overlap")
+	_state.set_flag("route.special_enabled")
+	_director.request_interaction("orders")
+	await _until(func() -> bool: return not _director.is_busy(), "Overlapping fixture completes")
+	_check(_state.get_flag("route.broad") and not _state.get_flag("route.special"), "Earlier broad event masks later specific event")
+	data.events["route.broad"].conditions["flags"] = {"route.special_enabled": false}
+	file = FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(JSON.stringify(data))
+	file.close()
+	_director.load_events(path)
+	_director.request_interaction("orders")
+	await _until(func() -> bool: return not _director.is_busy(), "Disjoint route fixture completes")
+	_check(_state.get_flag("route.special"), "Mutually exclusive flags fix route shadowing through data")
+	DirAccess.remove_absolute(path)
 	await _dispose()

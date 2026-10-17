@@ -163,7 +163,7 @@ func _near_reachable(at: Vector2) -> bool:
 	return false
 
 func _captures(main: MainGame) -> void:
-	var dest := ProjectSettings.globalize_path("res://docs/settlement/captures")
+	var dest := ProjectSettings.globalize_path("res://docs/levels/settlement/captures")
 	DirAccess.make_dir_recursive_absolute(dest)
 	var preview: Node = main.get_node("Systems/SettlementPreview")
 	preview.set_overview(true)

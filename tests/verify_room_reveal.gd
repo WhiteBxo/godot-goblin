@@ -2,7 +2,7 @@ extends SceneTree
 
 var _checks := 0
 var _failures: Array[String] = []
-const GAME := preload("res://src/core/main.tscn")
+const GAME := preload("res://src/debug/story/legacy_shop.tscn")
 
 func _initialize() -> void:
 	_run.call_deferred()

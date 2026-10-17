@@ -1,6 +1,14 @@
 {
   "version": 1,
   "dialogues": {
+    "demo.player_expressions": {
+      "start": "neutral",
+      "lines": {
+        "neutral": {"speaker": "主角", "text": "同一句对话中，点击上方的平静、说话或隐藏按钮，可以即时切换立绘；文字进度保持不变。", "next": "talking"},
+        "talking": {"speaker": "主角", "portrait": "res://assets/characters/apron_man/player_talking_portrait.png", "text": "这一句在对白数据里指定了说话表情。继续后会恢复角色默认立绘。", "next": "default"},
+        "default": {"speaker": "主角", "text": "现在回到默认的平静表情。结束或按 Esc 后，立绘会一起消失。"}
+      }
+    },
     "demo.speaker_portraits": {
       "start": "player",
       "lines": {

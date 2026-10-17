@@ -5,9 +5,15 @@
 [ext_resource type="PackedScene" path="res://src/gameplay/player/shop_player.tscn" id="3_player"]
 [ext_resource type="PackedScene" path="res://src/core/audio/audio_manager.tscn" id="4_audio"]
 
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/fat_goblin.tscn" id="npc_customer"]
+
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/common_goblin.tscn" id="npc_common"]
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/human_customer.tscn" id="npc_human"]
+
 [node name="MainGame" type="Node" unique_id=1512212887]
 process_mode = 3
 script = ExtResource("1_main")
+day1_story_enabled = true
 
 [node name="Systems" type="Node" parent="." unique_id=601625153]
 process_mode = 1
@@ -25,6 +31,39 @@ texture_filter = 1
 [node name="EntityRoot" type="Node2D" parent="World" unique_id=133438663]
 
 [node name="Player" parent="World/EntityRoot" unique_id=5727926 instance=ExtResource("3_player")]
+
+[node name="FatGoblin" parent="World/EntityRoot" instance=ExtResource("npc_customer")]
+position = Vector2(1325, 730)
+
+[node name="HumanCustomer" parent="World/EntityRoot" instance=ExtResource("npc_human")]
+visible = false
+actor_id = &"human_customer"
+display_name = "人类顾客"
+position = Vector2(1403.75, 887.5)
+
+[node name="GoblinCustomer" parent="World/EntityRoot" instance=ExtResource("npc_common")]
+visible = false
+actor_id = &"goblin_customer"
+display_name = "哥布林顾客"
+position = Vector2(1403.75, 887.5)
+
+[node name="GoblinA" parent="World/EntityRoot" instance=ExtResource("npc_common")]
+visible = false
+actor_id = &"goblin_a"
+display_name = "哥布林甲"
+position = Vector2(1403.75, 887.5)
+
+[node name="GoblinB" parent="World/EntityRoot" instance=ExtResource("npc_common")]
+visible = false
+actor_id = &"goblin_b"
+display_name = "哥布林乙"
+position = Vector2(1403.75, 887.5)
+
+[node name="GoblinC" parent="World/EntityRoot" instance=ExtResource("npc_common")]
+visible = false
+actor_id = &"goblin_c"
+display_name = "哥布林丙"
+position = Vector2(1403.75, 887.5)
 
 [node name="EffectRoot" type="Node2D" parent="World" unique_id=466167947]
 

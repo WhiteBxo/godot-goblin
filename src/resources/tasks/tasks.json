@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "tasks": [
+    {
+      "id": "shop.first_order",
+      "type": "main",
+      "title": "完成第一笔订单",
+      "description": "查看订单板接单，制作成品后携带给胖哥布林。",
+      "activate_when": {
+        "type": "flag",
+        "key": "task.shop.first_order.active"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "shop.order_001_delivered"
+      },
+      "objectives": [
+        {
+          "id": "check_orders",
+          "text": "前往订单板查看订单",
+          "complete_when": {
+            "type": "flag",
+            "key": "shop.orders_viewed"
+          }
+        },
+        {
+          "id": "deliver_order",
+          "text": "将珍珠奶茶交给胖哥布林",
+          "complete_when": {
+            "type": "flag",
+            "key": "shop.order_001_delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "order_001",
+        "product_id": "pearl_milk_tea",
+        "target_object_id": "fat_goblin"
+      },
+      "rewards": {
+        "text": "糖浆 × 1",
+        "items": {
+          "syrup": 1
+        }
+      }
+    },
+    {
+      "id": "tavern.insomnia_order",
+      "type": "commission",
+      "title": "酒馆的醒神菇委托",
+      "description": "酒馆人物想要三朵醒神菇。夜里到聚落各处的夜光菌丛采集，再回来交付。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "world.phase.night"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "task.tavern.insomnia.active"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "tavern.insomnia.delivered"
+      },
+      "objectives": [
+        {
+          "id": "gather_mushrooms",
+          "text": "采集醒神菇",
+          "complete_when": {
+            "type": "variable_at_least",
+            "key": "gather.total.insomnia_mushroom",
+            "value": 3
+          }
+        },
+        {
+          "id": "deliver_mushrooms",
+          "text": "把醒神菇交给酒馆人物",
+          "complete_when": {
+            "type": "flag",
+            "key": "tavern.insomnia.delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "order_insomnia_01",
+        "items": {
+          "insomnia_mushroom": 3
+        },
+        "target_object_id": "tavern"
+      },
+      "rewards": {
+        "text": "糖浆 × 2（占位）",
+        "items": {
+          "syrup": 2
+        }
+      }
+    }
+  ]
+}

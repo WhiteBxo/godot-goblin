@@ -32,7 +32,7 @@ func tap(key: Key, echo: bool = false) -> void:
 	await process_frame
 
 func _run() -> void:
-	game = load("res://src/core/main.tscn").instantiate()
+	game = load("res://src/debug/story/legacy_shop.tscn").instantiate()
 	root.add_child(game)
 	current_scene = game
 	await frames()

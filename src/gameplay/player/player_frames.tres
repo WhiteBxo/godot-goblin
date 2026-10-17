@@ -1,15 +1,30 @@
-[gd_resource type="SpriteFrames" load_steps=14 format=3]
+[gd_resource type="SpriteFrames" format=3 uid="uid://pkbw0260v2ds"]
 
-[ext_resource type="Texture2D" path="res://assets/characters/player/player_sheet.png" id="1_sheet"]
-
-[sub_resource type="AtlasTexture" id="Frame_down_0"]
-atlas = ExtResource("1_sheet")
-region = Rect2(166, 60, 200, 300)
-filter_clip = true
+[ext_resource type="Texture2D" uid="uid://cwurdp6aaylwi" path="res://assets/characters/player/player_sheet.png" id="1_sheet"]
 
 [sub_resource type="AtlasTexture" id="Frame_down_1"]
 atlas = ExtResource("1_sheet")
 region = Rect2(443, 60, 200, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_left_1"]
+atlas = ExtResource("1_sheet")
+region = Rect2(443, 404, 200, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_right_1"]
+atlas = ExtResource("1_sheet")
+region = Rect2(443, 744, 200, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_up_1"]
+atlas = ExtResource("1_sheet")
+region = Rect2(443, 1084, 200, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_down_0"]
+atlas = ExtResource("1_sheet")
+region = Rect2(166, 60, 200, 300)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Frame_down_2"]
@@ -22,11 +37,6 @@ atlas = ExtResource("1_sheet")
 region = Rect2(166, 404, 200, 300)
 filter_clip = true
 
-[sub_resource type="AtlasTexture" id="Frame_left_1"]
-atlas = ExtResource("1_sheet")
-region = Rect2(443, 404, 200, 300)
-filter_clip = true
-
 [sub_resource type="AtlasTexture" id="Frame_left_2"]
 atlas = ExtResource("1_sheet")
 region = Rect2(720, 404, 200, 300)
@@ -37,11 +47,6 @@ atlas = ExtResource("1_sheet")
 region = Rect2(166, 744, 200, 300)
 filter_clip = true
 
-[sub_resource type="AtlasTexture" id="Frame_right_1"]
-atlas = ExtResource("1_sheet")
-region = Rect2(443, 744, 200, 300)
-filter_clip = true
-
 [sub_resource type="AtlasTexture" id="Frame_right_2"]
 atlas = ExtResource("1_sheet")
 region = Rect2(720, 744, 200, 300)
@@ -50,11 +55,6 @@ filter_clip = true
 [sub_resource type="AtlasTexture" id="Frame_up_0"]
 atlas = ExtResource("1_sheet")
 region = Rect2(166, 1084, 200, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Frame_up_1"]
-atlas = ExtResource("1_sheet")
-region = Rect2(443, 1084, 200, 300)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Frame_up_2"]
@@ -68,8 +68,32 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Frame_down_1")
 }],
-"loop": true,
+"loop": 1,
 "name": &"idle_down",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Frame_left_1")
+}],
+"loop": 1,
+"name": &"idle_left",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Frame_right_1")
+}],
+"loop": 1,
+"name": &"idle_right",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Frame_up_1")
+}],
+"loop": 1,
+"name": &"idle_up",
 "speed": 8.0
 }, {
 "frames": [{
@@ -85,16 +109,8 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Frame_down_2")
 }],
-"loop": true,
+"loop": 1,
 "name": &"walk_down",
-"speed": 8.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("Frame_left_1")
-}],
-"loop": true,
-"name": &"idle_left",
 "speed": 8.0
 }, {
 "frames": [{
@@ -110,16 +126,8 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Frame_left_2")
 }],
-"loop": true,
+"loop": 1,
 "name": &"walk_left",
-"speed": 8.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("Frame_right_1")
-}],
-"loop": true,
-"name": &"idle_right",
 "speed": 8.0
 }, {
 "frames": [{
@@ -135,16 +143,8 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Frame_right_2")
 }],
-"loop": true,
+"loop": 1,
 "name": &"walk_right",
-"speed": 8.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("Frame_up_1")
-}],
-"loop": true,
-"name": &"idle_up",
 "speed": 8.0
 }, {
 "frames": [{
@@ -160,7 +160,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Frame_up_2")
 }],
-"loop": true,
+"loop": 1,
 "name": &"walk_up",
 "speed": 8.0
 }]

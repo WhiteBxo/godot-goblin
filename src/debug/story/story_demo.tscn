@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://src/debug/story/story_demo.gd" id="1"]
-[ext_resource type="PackedScene" path="res://src/core/main.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://src/debug/story/legacy_shop.tscn" id="2"]
 [ext_resource type="FontFile" path="res://assets/fonts/fusion_pixel/fusion-pixel-12px-monospaced-zh_hans.otf.woff2" id="3"]
 
 [sub_resource type="Theme" id="Theme"]

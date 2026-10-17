@@ -17,6 +17,7 @@ var last_error: String = ""
 var _library := StoryLibrary.new()
 var _state: StateData
 var _loaded: bool = false
+var _loaded_path: String = ""
 var _manager: DialogueManager
 var _can_start: Callable
 var _event_id: String = ""
@@ -34,6 +35,12 @@ var _actors: ActorDirector
 var _cameras: CameraDirector
 var _actions: Dictionary = {}
 var _used_camera := false
+var _chronicle: ChronicleJournal
+
+
+func set_chronicle_journal(journal: ChronicleJournal) -> void:
+	cancel_event("Chronicle service replaced")
+	_chronicle = journal
 
 
 func _ready() -> void:
@@ -93,12 +100,46 @@ func _on_camera_recovered(reason: String) -> void:
 
 func load_events(path: String = "") -> Error:
 	if is_busy() or _finishing:
-		return ERR_BUSY
-	var error := _library.load_file(event_file if path.is_empty() else path)
+		return _reject(ERR_BUSY, "Another story sequence is running or finishing")
+	var source := event_file if path.is_empty() else path
+	var error := _library.load_file(source)
 	last_error = _library.last_error
 	if error == OK:
 		_loaded = true
+		_loaded_path = source
 	return error
+
+
+## Read-only runtime information; observing never loads or starts an event.
+func get_runtime_status() -> Dictionary:
+	return {"loaded": _loaded, "event_count": _library.get_event_ids().size(),
+		"event_id": _event_id, "step_index": _index if is_busy() else -1, "last_error": last_error}
+
+
+## Catalogue IDs in alphabetical order for display only; interaction routing still
+## follows the JSON order. Observing never loads or starts an event.
+func get_event_ids() -> Array[String]:
+	var ids: Array[String] = []
+	ids.assign(_library.get_event_ids())
+	ids.sort()
+	return ids
+
+
+## Read-only projection of one event joined with current GameState facts.
+## Empty when the ID is unknown; never consumes `once`, conditions or steps.
+func get_event_summary(id: String) -> Dictionary:
+	var event := _library.get_event(id)
+	if event.is_empty():
+		return {}
+	var steps: Array = event.get("steps", [])
+	return {"once": bool(event.get("once", true)), "trigger": String(event.get("trigger", "")),
+		"step_count": steps.size(), "conditions_met": _conditions_met(event.get("conditions", {})),
+		"completed": is_instance_valid(_state) and _state.is_event_completed(id)}
+
+
+## Path of the last successful load, so tools reload what the host actually loaded.
+func get_event_source_path() -> String:
+	return _loaded_path if not _loaded_path.is_empty() else event_file
 
 
 func is_busy() -> bool:
@@ -184,6 +225,11 @@ func _reject(error: Error, message: String) -> Error:
 	return error
 
 
+## Same rules as request_event, but observation reports instead of rejecting.
+func _conditions_met(conditions: Dictionary) -> bool:
+	return is_instance_valid(_state) and _matches(conditions)
+
+
 func _matches(conditions: Dictionary) -> bool:
 	if conditions.has("day") and _state.current_day != int(conditions["day"]):
 		return false
@@ -245,6 +291,18 @@ func _process(_delta: float) -> void:
 			_state.set_flag(step["key"], step.get("value", true))
 		"set_stage":
 			_state.set_story_stage(step["value"])
+		"chronicle_unlock", "chronicle_append":
+			if not is_instance_valid(_chronicle):
+				_finish(false, "ChronicleJournal unavailable")
+				return
+			var error: Error
+			if step.command == "chronicle_unlock":
+				error = _chronicle.unlock_entry(step.entry_id, step.title)
+			else:
+				error = _chronicle.append_record(step.entry_id, step.record_id, step.content)
+			if _is_current(generation) and error != OK:
+				_finish(false, "Chronicle command failed (%d): %s" % [error, step.entry_id])
+				return
 		"play_sfx", "play_bgm", "stop_bgm", "fade_bgm":
 			_dispatch_audio(step, generation)
 			return

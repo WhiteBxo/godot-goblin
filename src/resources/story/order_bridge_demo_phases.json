@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "phases": [
+    {
+      "id": "order_demo.deliver",
+      "after_event": "order_demo.tutorial",
+      "stage": "day1.waiting_order",
+      "completion": {
+        "flag": "shop.order_001_delivered",
+        "allow_existing": true
+      },
+      "completion_flag": "order_demo.delivery_done",
+      "next_event": "order_demo.after_order"
+    }
+  ]
+}

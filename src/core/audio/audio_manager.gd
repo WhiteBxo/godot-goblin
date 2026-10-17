@@ -16,6 +16,7 @@ var _music: AudioStreamPlayer
 var _music_id: String = ""
 var _music_tween: Tween
 var _music_action: AudioAction
+var _bgm_streams: Dictionary[String, AudioStream] = {}
 var _players: Array[AudioStreamPlayer] = []
 var _active: Dictionary = {}
 var _next_handle: int = 1
@@ -37,24 +38,33 @@ func _ready() -> void:
 		_players.append(player)
 
 
-func register_sound(id: String, stream: AudioStream) -> Error:
+func register_sound(id: String, stream: AudioStream, bgm_config: Dictionary = {}) -> Error:
 	if id.is_empty() or stream == null:
 		last_error = "Audio registration requires an id and AudioStream"
 		return ERR_INVALID_PARAMETER
+	var music_stream: AudioStream
+	if not bgm_config.is_empty():
+		music_stream = _prepare_bgm(id, stream, bgm_config)
+		if music_stream == null:
+			return ERR_INVALID_PARAMETER
 	sounds[id] = stream
+	_bgm_streams.erase(id)
+	if music_stream != null:
+		_bgm_streams[id] = music_stream
 	last_error = ""
 	return OK
 
 
 ## Different tracks fade out then fade in, each leg lasting fade_seconds.
 ## Latest valid request wins. Replaying the current id adjusts volume, not position.
-func play_bgm(id: String, fade_seconds: float = 0.5, volume_db: float = 0.0) -> Error:
+func play_bgm(id: String, fade_seconds: float = 0.5, volume_db: float = 0.0, restart: bool = false) -> Error:
 	if not _available() or not _valid_fade(fade_seconds, volume_db):
 		return ERR_INVALID_PARAMETER
 	var stream := _resolve(id)
 	if stream == null:
 		return ERR_DOES_NOT_EXIST
-	if _music.playing and _music_id == id and _music.stream == stream:
+	stream = _bgm_streams.get(id, stream)
+	if not restart and _music.playing and _music_id == id and _music.stream == stream:
 		return fade_bgm(volume_db, fade_seconds)
 	_kill_music_tween()
 	_music_action = AudioAction.new()
@@ -193,6 +203,32 @@ func _resolve(id: String) -> AudioStream:
 	if stream == null:
 		last_error = "Unknown or empty audio id: " + id
 	return stream
+
+
+## Only the BGM copy receives loop overrides; SFX/UI keep the original stream.
+func _prepare_bgm(id: String, stream: AudioStream, config: Dictionary) -> AudioStream:
+	var offset: Variant = config.get("loop_offset", 0.0)
+	var looping: Variant = config.get("loop", true)
+	var length := stream.get_length()
+	if not (offset is float or offset is int) or not is_finite(float(offset)):
+		last_error = "BGM %s: loop_offset must be a finite number in seconds" % id
+	elif not looping is bool:
+		last_error = "BGM %s: loop must be a bool" % id
+	elif offset < 0.0 or not is_finite(length) or length <= 0.0 or offset >= length:
+		last_error = "BGM %s: loop_offset must satisfy 0 <= offset < duration (%s seconds)" % [id, length]
+	elif not stream is AudioStreamOggVorbis:
+		last_error = "BGM %s: loop overrides require AudioStreamOggVorbis; unsupported format %s" % [id, stream.get_class()]
+	else:
+		var music_stream := stream.duplicate() as AudioStreamOggVorbis
+		if music_stream != null:
+			music_stream.loop = looping
+			music_stream.loop_offset = float(offset)
+			# REAPER file end is the loop end, regardless of imported beat metadata.
+			music_stream.beat_count = 0
+			return music_stream
+		last_error = "BGM %s: failed to duplicate AudioStreamOggVorbis" % id
+	push_warning(last_error)
+	return null
 
 
 func _play_sound(stream: AudioStream, bus: StringName, owner: RefCounted, volume_db: float) -> int:

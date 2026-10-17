@@ -32,6 +32,9 @@ size = Vector2(125, 64)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_oywy8"]
 size = Vector2(157, 45)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_story_gate"]
+size = Vector2(210, 32)
+
 [node name="Elder" type="Node2D" unique_id=1952610508]
 y_sort_enabled = true
 metadata/zone_id = "10_elder"
@@ -212,3 +215,11 @@ shape = SubResource("RectangleShape2D_oywy8")
 
 [node name="Entrance" type="Marker2D" parent="." unique_id=1959509723]
 position = Vector2(765, 943)
+
+[node name="StoryGate" type="StaticBody2D" parent="Walls"]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/StoryGate"]
+position = Vector2(765, 887)
+shape = SubResource("RectangleShape2D_story_gate")

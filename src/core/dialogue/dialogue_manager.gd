@@ -12,9 +12,9 @@ signal line_changed(line_id: String)
 @export var left_portrait_speakers: PackedStringArray = ["主角", "主角·内心", "玩家"]
 ## Exact speaker names; per-line portrait paths override these defaults.
 @export var speaker_portraits: Dictionary[String, Texture2D] = {
-	"主角": preload("res://assets/characters/apron_man/player_portrait.png"),
-	"主角·内心": preload("res://assets/characters/apron_man/player_portrait.png"),
-	"玩家": preload("res://assets/characters/apron_man/player_portrait.png"),
+	"主角": preload("res://assets/characters/apron_man/player_neutral_portrait.png"),
+	"主角·内心": preload("res://assets/characters/apron_man/player_neutral_portrait.png"),
+	"玩家": preload("res://assets/characters/apron_man/player_neutral_portrait.png"),
 	"胖哥布林": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
 	"哥布林": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
 }
@@ -27,6 +27,7 @@ var _dialogue_id: String = ""
 var _line_id: String = ""
 var _dialogue: Dictionary = {}
 var _loaded: bool = false
+var _loaded_path: String = ""
 var _selecting: bool = false
 
 
@@ -49,11 +50,19 @@ func configure(ui: DialogueUI, can_start: Callable = Callable()) -> void:
 func load_dialogues(path: String = "") -> Error:
 	if is_active():
 		return ERR_BUSY
-	var error := _library.load_file(dialogue_file if path.is_empty() else path)
+	var source := dialogue_file if path.is_empty() else path
+	var error := _library.load_file(source)
 	last_error = _library.last_error
 	if error == OK:
 		_loaded = true
+		_loaded_path = source
 	return error
+
+
+## Path of the last successful load; empty until a catalogue is loaded, so tools
+## can tell "never loaded" from the exported default.
+func get_dialogue_source_path() -> String:
+	return _loaded_path
 
 
 func start_dialogue(id: String) -> Error:
@@ -84,6 +93,28 @@ func is_active() -> bool:
 
 func get_current_line_id() -> String:
 	return _line_id
+
+
+## Override the displayed image for this line only, including an explicit null to hide.
+## Does not restart the line or emit line_changed. The next line resolves normally.
+func set_current_portrait(portrait: Texture2D) -> Error:
+	if not is_active() or not is_instance_valid(_ui) or not _ui.is_inside_tree():
+		return ERR_UNCONFIGURED
+	_ui.set_portrait(portrait)
+	return OK
+
+
+## Update a speaker default for future lines; refresh the current line unless it
+## declares an explicit portrait. Null removes the default for this speaker.
+func set_speaker_portrait(speaker: String, portrait: Texture2D) -> void:
+	if portrait == null:
+		speaker_portraits.erase(speaker)
+	else:
+		speaker_portraits[speaker] = portrait
+	if is_active() and is_instance_valid(_ui):
+		var line: Dictionary = _dialogue["lines"][_line_id]
+		if line["speaker"] == speaker and not line.has("portrait"):
+			_ui.set_portrait(portrait)
 
 
 func advance() -> void:

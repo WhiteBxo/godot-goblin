@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "events": {
+    "console.skip": {
+      "steps": [
+        {
+          "command": "set_flag",
+          "key": "console.never",
+          "when": {"flags": {"console.absent": true}}
+        }
+      ]
+    }
+  }
+}

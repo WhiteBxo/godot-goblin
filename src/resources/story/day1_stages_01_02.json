@@ -1,0 +1,384 @@
+{
+  "version": 1,
+  "events": {
+    "day1.opening": {
+      "once": true,
+      "conditions": {
+        "day": 1
+      },
+      "steps": [
+        {
+          "command": "actor_face",
+          "actor": "player",
+          "direction": "down"
+        },
+        {
+          "command": "play_bgm",
+          "id": "music.daily_milk_tea",
+          "fade": 1,
+          "volume_db": -12
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.shop_opening"
+        },
+        {
+          "command": "play_sfx",
+          "id": "shop.door_bell",
+          "wait": true
+        },
+        {
+          "command": "actor_show",
+          "actor": "human_customer"
+        },
+        {
+          "command": "camera_focus",
+          "actor": "human_customer",
+          "duration": 0.9
+        },
+        {
+          "command": "actor_move",
+          "actor": "human_customer",
+          "target": "day1_aisle"
+        },
+        {
+          "command": "actor_move",
+          "actor": "human_customer",
+          "target": "day1_counter"
+        },
+        {
+          "command": "actor_face",
+          "actor": "human_customer",
+          "direction": "up"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.first_human_customer"
+        },
+        {
+          "command": "set_flag",
+          "key": "day1.human_open"
+        },
+        {
+          "command": "set_stage",
+          "value": "day1.wait_human"
+        },
+        {
+          "command": "camera_reset"
+        }
+      ]
+    },
+    "day1.first_goblin": {
+      "once": true,
+      "conditions": {
+        "day": 1,
+        "stage": "day1.wait_human",
+        "completed_events": [
+          "day1.opening"
+        ],
+        "flags": {
+          "day1.human_done": true
+        }
+      },
+      "steps": [
+        {
+          "command": "actor_move",
+          "actor": "human_customer",
+          "target": "day1_aisle"
+        },
+        {
+          "command": "actor_move",
+          "actor": "human_customer",
+          "target": "day1_door"
+        },
+        {
+          "command": "actor_hide",
+          "actor": "human_customer"
+        },
+        {
+          "command": "camera_focus",
+          "actor": "player",
+          "duration": 0.8
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.shop_quiet_again"
+        },
+        {
+          "command": "play_sfx",
+          "id": "shop.door_bell",
+          "wait": true
+        },
+        {
+          "command": "actor_show",
+          "actor": "goblin_customer"
+        },
+        {
+          "command": "camera_focus",
+          "actor": "goblin_customer",
+          "duration": 0.9
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_customer",
+          "target": "day1_aisle"
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_customer",
+          "target": "day1_counter"
+        },
+        {
+          "command": "actor_face",
+          "actor": "goblin_customer",
+          "direction": "up"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.goblin_first_customer"
+        },
+        {
+          "command": "set_flag",
+          "key": "day1.goblin_open"
+        },
+        {
+          "command": "set_stage",
+          "value": "day1.wait_goblin"
+        },
+        {
+          "command": "camera_reset"
+        }
+      ]
+    },
+    "day1.group_arrival": {
+      "once": true,
+      "conditions": {
+        "day": 1,
+        "stage": "day1.wait_goblin",
+        "completed_events": [
+          "day1.first_goblin"
+        ],
+        "flags": {
+          "day1.goblin_done": true
+        }
+      },
+      "steps": [
+        {
+          "command": "actor_move",
+          "actor": "goblin_customer",
+          "target": "day1_aisle"
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_customer",
+          "target": "day1_door"
+        },
+        {
+          "command": "actor_hide",
+          "actor": "goblin_customer"
+        },
+        {
+          "command": "camera_focus",
+          "actor": "player",
+          "duration": 0.8
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.goblin_coin_reaction"
+        },
+        {
+          "command": "play_sfx",
+          "id": "shop.door_bell",
+          "wait": true
+        },
+        {
+          "command": "actor_show",
+          "actor": "goblin_a"
+        },
+        {
+          "command": "camera_focus",
+          "actor": "goblin_a",
+          "duration": 0.9
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_a",
+          "target": "day1_aisle"
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_a",
+          "target": "day1_group_a"
+        },
+        {
+          "command": "actor_face",
+          "actor": "goblin_a",
+          "direction": "up"
+        },
+        {
+          "command": "actor_show",
+          "actor": "goblin_b"
+        },
+        {
+          "command": "camera_focus",
+          "actor": "goblin_b",
+          "duration": 0.9
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_b",
+          "target": "day1_aisle"
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_b",
+          "target": "day1_group_b"
+        },
+        {
+          "command": "actor_face",
+          "actor": "goblin_b",
+          "direction": "up"
+        },
+        {
+          "command": "actor_show",
+          "actor": "goblin_c"
+        },
+        {
+          "command": "camera_focus",
+          "actor": "goblin_c",
+          "duration": 0.9
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_c",
+          "target": "day1_aisle"
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_c",
+          "target": "day1_group_c"
+        },
+        {
+          "command": "actor_face",
+          "actor": "goblin_c",
+          "direction": "up"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.goblin_group_customers"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.chronicle_unlocked"
+        },
+        {
+          "command": "chronicle_unlock",
+          "entry_id": "chronicle.casino",
+          "title": "赌场"
+        },
+        {
+          "command": "chronicle_unlock",
+          "entry_id": "chronicle.griffin_blood",
+          "title": "格里芬之血"
+        },
+        {
+          "command": "chronicle_unlock",
+          "entry_id": "chronicle.elder",
+          "title": "长老"
+        },
+        {
+          "command": "set_flag",
+          "key": "day1.chronicle_unlocked"
+        },
+        {
+          "command": "set_flag",
+          "key": "day1.group_open"
+        },
+        {
+          "command": "set_stage",
+          "value": "day1.wait_group"
+        },
+        {
+          "command": "camera_reset"
+        }
+      ]
+    },
+    "day1.ending": {
+      "once": true,
+      "conditions": {
+        "day": 1,
+        "stage": "day1.wait_group",
+        "completed_events": [
+          "day1.group_arrival"
+        ],
+        "flags": {
+          "day1.group_done": true
+        }
+      },
+      "steps": [
+        {
+          "command": "actor_move",
+          "actor": "goblin_a",
+          "target": "day1_aisle"
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_a",
+          "target": "day1_door"
+        },
+        {
+          "command": "actor_hide",
+          "actor": "goblin_a"
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_b",
+          "target": "day1_aisle"
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_b",
+          "target": "day1_door"
+        },
+        {
+          "command": "actor_hide",
+          "actor": "goblin_b"
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_c",
+          "target": "day1_aisle"
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_c",
+          "target": "day1_door"
+        },
+        {
+          "command": "actor_hide",
+          "actor": "goblin_c"
+        },
+        {
+          "command": "camera_focus",
+          "actor": "player",
+          "duration": 0.8
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.coins_raise_suspicion"
+        },
+        {
+          "command": "set_flag",
+          "key": "day1.stages_01_02_completed"
+        },
+        {
+          "command": "set_stage",
+          "value": "day1.investigate_coins"
+        },
+        {
+          "command": "camera_reset"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,219 @@
+{
+  "version": 1,
+  "tasks": [
+    {
+      "id": "panel.main",
+      "type": "main",
+      "title": "完成第一笔订单（窗口测试）",
+      "description": "确认订单要求，制作成品后携带给胖哥布林。这是独立 UI 测试任务，不触发真实接单或结算。",
+      "activate_when": {
+        "type": "flag",
+        "key": "task.panel.active"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "task.panel.main_done"
+      },
+      "objectives": [
+        {
+          "id": "board",
+          "text": "前往订单板查看订单",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.panel.board"
+          }
+        },
+        {
+          "id": "delivery",
+          "text": "将珍珠奶茶交给胖哥布林",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.panel.delivery"
+          }
+        },
+        {
+          "id": "optional",
+          "text": "听取额外建议",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.panel.advice"
+          },
+          "required": false
+        }
+      ],
+      "delivery": {
+        "order_id": "panel_order",
+        "product_id": "pearl_milk_tea",
+        "target_object_id": "fat_goblin"
+      },
+      "rewards": {
+        "text": "糖浆 × 1（仅测试展示）"
+      }
+    },
+    {
+      "id": "panel.counter",
+      "type": "commission",
+      "title": "核对聚落补给与探索记录：用于检查长标题省略及完整提示",
+      "description": "在聚落中核对物资。\n这段较长的测试说明用于检查文本换行、独立滚动以及刷新后的滚动位置。\n这段较长的测试说明用于检查文本换行、独立滚动以及刷新后的滚动位置。\n这段较长的测试说明用于检查文本换行、独立滚动以及刷新后的滚动位置。\n这段较长的测试说明用于检查文本换行、独立滚动以及刷新后的滚动位置。\n这段较长的测试说明用于检查文本换行、独立滚动以及刷新后的滚动位置。\n这段较长的测试说明用于检查文本换行、独立滚动以及刷新后的滚动位置。\n这段较长的测试说明用于检查文本换行、独立滚动以及刷新后的滚动位置。\n这段较长的测试说明用于检查文本换行、独立滚动以及刷新后的滚动位置。\n",
+      "activate_when": {
+        "type": "flag",
+        "key": "task.panel.active"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "task.panel.counter_done"
+      },
+      "objectives": [
+        {
+          "id": "count",
+          "text": "核对三份补给",
+          "complete_when": {
+            "type": "variable_at_least",
+            "key": "task.panel.count",
+            "value": 3
+          }
+        },
+        {
+          "id": "note_1",
+          "text": "检查第 1 份记录，核对来源、目标与后续交付说明。",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.panel.note_1"
+          },
+          "required": false
+        },
+        {
+          "id": "note_2",
+          "text": "检查第 2 份记录，核对来源、目标与后续交付说明。",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.panel.note_2"
+          },
+          "required": false
+        },
+        {
+          "id": "note_3",
+          "text": "检查第 3 份记录，核对来源、目标与后续交付说明。",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.panel.note_3"
+          },
+          "required": false
+        },
+        {
+          "id": "note_4",
+          "text": "检查第 4 份记录，核对来源、目标与后续交付说明。",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.panel.note_4"
+          },
+          "required": false
+        },
+        {
+          "id": "note_5",
+          "text": "检查第 5 份记录，核对来源、目标与后续交付说明。",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.panel.note_5"
+          },
+          "required": false
+        },
+        {
+          "id": "note_6",
+          "text": "检查第 6 份记录，核对来源、目标与后续交付说明。",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.panel.note_6"
+          },
+          "required": false
+        },
+        {
+          "id": "note_7",
+          "text": "检查第 7 份记录，核对来源、目标与后续交付说明。",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.panel.note_7"
+          },
+          "required": false
+        },
+        {
+          "id": "note_8",
+          "text": "检查第 8 份记录，核对来源、目标与后续交付说明。",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.panel.note_8"
+          },
+          "required": false
+        }
+      ]
+    },
+    {
+      "id": "panel.hidden",
+      "type": "commission",
+      "title": "尚未揭示的交付委托",
+      "description": "仅用于委托窗口验收，不进入正式任务目录。",
+      "activate_when": {
+        "type": "flag",
+        "key": "task.panel.active"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "task.panel.hidden_done"
+      },
+      "objectives": [
+        {
+          "id": "hidden",
+          "text": "检查隐藏地点的线索",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.panel.hidden_goal"
+          },
+          "reveal_when": {
+            "type": "flag",
+            "key": "task.panel.objective_revealed"
+          }
+        }
+      ],
+      "reveal_when": {
+        "type": "flag",
+        "key": "task.panel.revealed"
+      },
+      "delivery": {
+        "order_id": "panel_hidden_order",
+        "product_id": "plain_milk_tea",
+        "target_object_id": "unknown_actor"
+      },
+      "rewards": {
+        "text": "隐藏奖励说明",
+        "reveal_when": {
+          "type": "flag",
+          "key": "task.panel.reward_revealed"
+        }
+      }
+    },
+    {
+      "id": "panel.simple",
+      "type": "commission",
+      "title": "回顾告示内容",
+      "description": "仅用于委托窗口验收，不进入正式任务目录。",
+      "activate_when": {
+        "type": "flag",
+        "key": "task.panel.active"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "task.panel.simple_done"
+      },
+      "objectives": [
+        {
+          "id": "read",
+          "text": "阅读告示内容",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.panel.read"
+          }
+        }
+      ]
+    }
+  ]
+}

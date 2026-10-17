@@ -1,0 +1,184 @@
+{
+  "version": 1,
+  "source": "res://docs/design/day_01_stages_01_02_draft.md",
+  "source_sha256": "b7be487bbb413f47da9ff4bccc209ec27b25ccbac90bfd7f934a9b1e1e9b89b4",
+  "scene": "res://src/core/main.tscn",
+  "story": "res://src/resources/story/day1_stages_01_02.json",
+  "dialogue": "res://src/resources/dialogue/day1_stages_01_02.json",
+  "phases": "res://src/resources/story/day1_stages_01_02_phases.json",
+  "beats": [
+    {
+      "id": "shop_opening",
+      "mode": "自动演出",
+      "event": "day1.opening",
+      "start": 0,
+      "count": 3,
+      "dialogues": [
+        "day1.shop_opening"
+      ]
+    },
+    {
+      "id": "first_human_customer",
+      "mode": "自动演出",
+      "event": "day1.opening",
+      "start": 3,
+      "count": 10,
+      "dialogues": [
+        "day1.first_human_customer"
+      ]
+    },
+    {
+      "id": "first_drink_tutorial",
+      "mode": "玩家操作",
+      "phase": {
+        "id": "day1.first_drink_tutorial",
+        "after_event": "day1.opening",
+        "stage": "day1.wait_human",
+        "completion": {
+          "flag": "day1.human_settled",
+          "allow_existing": true
+        },
+        "completion_flag": "day1.human_done",
+        "next_event": "day1.first_goblin"
+      }
+    },
+    {
+      "id": "stage_one_end",
+      "mode": "自动演出",
+      "event": "day1.first_goblin",
+      "start": 0,
+      "count": 3,
+      "dialogues": []
+    },
+    {
+      "id": "shop_quiet_again",
+      "mode": "自动演出",
+      "event": "day1.first_goblin",
+      "start": 3,
+      "count": 2,
+      "dialogues": [
+        "day1.shop_quiet_again"
+      ]
+    },
+    {
+      "id": "goblin_first_customer",
+      "mode": "自动演出",
+      "event": "day1.first_goblin",
+      "start": 5,
+      "count": 10,
+      "dialogues": [
+        "day1.goblin_first_customer"
+      ]
+    },
+    {
+      "id": "goblin_first_order",
+      "mode": "玩家操作",
+      "phase": {
+        "id": "day1.goblin_first_order",
+        "after_event": "day1.first_goblin",
+        "stage": "day1.wait_goblin",
+        "completion": {
+          "flag": "day1.goblin_settled",
+          "allow_existing": true
+        },
+        "completion_flag": "day1.goblin_done",
+        "next_event": "day1.group_arrival"
+      }
+    },
+    {
+      "id": "goblin_coin_reaction",
+      "mode": "自动演出",
+      "event": "day1.group_arrival",
+      "start": 0,
+      "count": 5,
+      "dialogues": [
+        "day1.goblin_coin_reaction"
+      ]
+    },
+    {
+      "id": "goblin_group_customers",
+      "mode": "自动演出",
+      "event": "day1.group_arrival",
+      "start": 5,
+      "count": 17,
+      "dialogues": [
+        "day1.goblin_group_customers"
+      ]
+    },
+    {
+      "id": "chronicle_unlocked",
+      "mode": "自动演出",
+      "event": "day1.group_arrival",
+      "start": 22,
+      "count": 8,
+      "dialogues": [
+        "day1.chronicle_unlocked"
+      ]
+    },
+    {
+      "id": "goblin_group_orders",
+      "mode": "玩家操作",
+      "phase": {
+        "id": "day1.goblin_group_orders",
+        "after_event": "day1.group_arrival",
+        "stage": "day1.wait_group",
+        "completion": {
+          "flag": "day1.group_settled",
+          "allow_existing": true
+        },
+        "completion_flag": "day1.group_done",
+        "next_event": "day1.ending"
+      }
+    },
+    {
+      "id": "coins_raise_suspicion",
+      "mode": "自动演出",
+      "event": "day1.ending",
+      "start": 0,
+      "count": 14,
+      "dialogues": [
+        "day1.coins_raise_suspicion"
+      ]
+    }
+  ],
+  "verification": "res://tests/verify_day1_stages_01_02.gd",
+  "setup": "res://src/resources/story/day1_stages_01_02_setup.json",
+  "business_profile": "day1",
+  "actors": {
+    "player": "res://src/gameplay/player/shop_player.tscn",
+    "human_customer": "res://src/gameplay/characters/human_customer.tscn",
+    "goblin_customer": "res://src/gameplay/characters/common_goblin.tscn",
+    "goblin_a": "res://src/gameplay/characters/common_goblin.tscn",
+    "goblin_b": "res://src/gameplay/characters/common_goblin.tscn",
+    "goblin_c": "res://src/gameplay/characters/common_goblin.tscn"
+  },
+  "markers": {
+    "level": "res://src/levels/milkTea/milk_tea_shop.tscn",
+    "container": "StoryPositions",
+    "ids": [
+      "day1_player",
+      "day1_door",
+      "day1_aisle",
+      "day1_counter",
+      "day1_group_a",
+      "day1_group_b",
+      "day1_group_c"
+    ]
+  },
+  "audio": {
+    "library": "res://src/resources/audio/sound_library.tres",
+    "ids": [
+      "music.daily_milk_tea",
+      "shop.door_bell",
+      "shop.order_open",
+      "shop.tea_pour"
+    ],
+    "unused": "shop.sealer: no sealing operation in current production flow"
+  },
+  "portraits": {
+    "explicit": {
+      "day1.coins_raise_suspicion/line_2": "res://assets/characters/apron_man/player_bad_laugh.png"
+    },
+    "fallback": "Unprovided expressions retain speaker default; unconfirmed fat-goblin portraits are not bound."
+  }
+}

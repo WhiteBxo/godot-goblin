@@ -134,6 +134,16 @@ func set_paused(value: bool) -> void:
 		_layers[&"pause"].hide()
 	pause_changed.emit(value)
 
+## Explicit removal supports scene tools rebinding a view before the old one exits.
+func unregister_screen(id: StringName) -> void:
+	if not _screens.has(id):
+		return
+	var view: Control = _screens[id].view
+	var callback := _unregister.bind(id)
+	if is_instance_valid(view) and view.tree_exiting.is_connected(callback):
+		view.tree_exiting.disconnect(callback)
+	_unregister(id)
+
 func _unregister(id: StringName) -> void:
 	if not _screens.has(id):
 		return
@@ -227,6 +237,10 @@ func _input(event: InputEvent) -> void:
 				request_back()
 		return
 	if not has_modal():
+		return
+	var top_view: Control = _screens[_stack.back()].view
+	# Some screens use native Control navigation (OptionButton popups, TextEdit scrolling).
+	if top_view.has_method("uses_native_gui_input") and top_view.uses_native_gui_input():
 		return
 	var actions: Array[StringName] = [&"interact", &"ui_accept", &"ui_up", &"ui_down", &"ui_left", &"ui_right", &"ui_focus_next", &"ui_focus_prev"]
 	for action in actions:

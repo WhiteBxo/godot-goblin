@@ -12,15 +12,16 @@ from PIL import Image, ImageDraw, ImageFilter
 ROOT = Path(__file__).resolve().parents[2]
 ART = ROOT / "assets/characters/apron_man"
 SOURCES = ("player_neutral.jpg", "player_talking.png")
-PADDING = 16
+# Keep the established canvas and registration when cleanup removes residue.
+PORTRAIT_CROP = (331, 30, 721, 925)
 # Original-canvas white gaps between the bent arm/torso and between the legs.
 BACKGROUND_SEEDS = ((463, 465), (553, 765))
 # Boot outlines in the shared (303, 25) crop coordinates. The original painted
 # ground shadow contains white/gray paper; exclude it from the reusable cutout.
 BOOT_OUTLINES = (
-    ((159, 795), (230, 795), (231, 804), (233, 812), (233, 818),
-     (238, 825), (244, 831), (251, 837), (259, 841), (265, 847),
-     (270, 854), (272, 861), (273, 867), (271, 873), (264, 877),
+    ((159, 795), (230, 795), (230, 804), (230, 812), (230, 818),
+     (233, 825), (237, 831), (241, 836), (247, 842), (255, 848),
+     (262, 854), (268, 860), (271, 867), (271, 873), (264, 877),
      (251, 880), (232, 882), (209, 883), (196, 880), (183, 874),
      (173, 868), (164, 861), (158, 857), (154, 850), (154, 837),
      (155, 824), (157, 811)),
@@ -40,6 +41,11 @@ def remove_background(path: Path) -> Image.Image:
     # hair highlights, eyes and colored skin remain inside the foreground.
     hair_matte = (rgb.min(axis=2) >= 65) & (np.ptp(rgb, axis=2) <= 30)
     near_white[:305] |= hair_matte[:305]
+    # Shoe edges meet a painted ground shadow, whose gray matte is darker than
+    # the white paper. Follow light, neutral pixels from outside to the black
+    # boot outline; enclosed sole highlights remain inside the foreground.
+    boot_matte = (rgb.min(axis=2) >= 55) & (np.ptp(rgb, axis=2) <= 35)
+    near_white[760:] |= boot_matte[760:]
     # A transparent border joins all four edges into one flood-fill seed.
     mask = Image.fromarray(np.pad(near_white.astype(np.uint8) * 255, 1, constant_values=255)).copy()
     ImageDraw.floodfill(mask, (0, 0), 128)
@@ -69,13 +75,7 @@ def main() -> None:
     images = [remove_background(ART / "source" / name) for name in SOURCES]
     if len({image.size for image in images}) != 1:
         raise ValueError("Expression source canvases must have identical dimensions")
-    bounds = [image.getbbox() for image in images]
-    crop = (
-        max(0, min(box[0] for box in bounds) - PADDING),
-        max(0, min(box[1] for box in bounds) - PADDING),
-        min(images[0].width, max(box[2] for box in bounds) + PADDING),
-        min(images[0].height, max(box[3] for box in bounds) + PADDING),
-    )
+    crop = PORTRAIT_CROP
     for name, image in zip(SOURCES, images):
         target = ART / (Path(name).stem + "_portrait.png")
         image.crop(crop).save(target, optimize=True)

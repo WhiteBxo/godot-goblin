@@ -228,6 +228,10 @@ func _test_speaker_portraits() -> void:
 			_check(image.get_pixel(276, 28).a == 0.0 and image.get_pixel(196, 32).a == 0.0 and image.get_pixel(107, 92).a == 0.0, "Hair tips and gaps have no gray-white matte residue: " + path)
 			_check(image.get_pixel(132, 435).a == 0.0 and image.get_pixel(222, 735).a == 0.0, "The arm and leg gaps are transparent: " + path)
 			_check(image.get_pixel(89, 840).a == 0.0, "No white ground remains outside the boot silhouette: " + path)
+			var boot_rim_clear := true
+			for point: Vector2i in [Vector2i(127, 827), Vector2i(203, 814), Vector2i(240, 849), Vector2i(371, 828), Vector2i(239, 856)]:
+				boot_rim_clear = boot_rim_clear and image.get_pixelv(point).a == 0.0
+			_check(boot_rim_clear, "Both toes, instep, heel and sole have no leftover paper rim: " + path)
 		_check(image.get_pixel(0, 0).a == 0.0 and image.get_pixel(image.get_width() - 1, image.get_height() - 1).a == 0.0, "Portrait background corners are transparent: " + path)
 	_check(_manager.start_dialogue("demo.speaker_portraits") == OK, "Portrait demo starts through the real manager")
 	var portrait: TextureRect = _ui.get_node("Portrait")

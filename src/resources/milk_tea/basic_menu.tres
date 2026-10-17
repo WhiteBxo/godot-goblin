@@ -49,9 +49,30 @@ display_name = "糖浆"
 icon = ExtResource("icon_syrup")
 category = "syrup"
 
+[sub_resource type="Resource" id="Product_pearl"]
+script = ExtResource("ingredient")
+id = "pearl_milk_tea"
+display_name = "珍珠奶茶（成品）"
+icon = ExtResource("icon_pearl")
+category = "product"
+
+[sub_resource type="Resource" id="Product_coconut"]
+script = ExtResource("ingredient")
+id = "coconut_milk_tea"
+display_name = "椰果茉莉奶茶（成品）"
+icon = ExtResource("icon_coconut")
+category = "product"
+
+[sub_resource type="Resource" id="Product_plain"]
+script = ExtResource("ingredient")
+id = "plain_milk_tea"
+display_name = "原味奶茶（成品）"
+icon = ExtResource("icon_creamer")
+category = "product"
+
 [resource]
 script = ExtResource("1")
-ingredients = Array[ExtResource("ingredient")]([SubResource("Ingredient_black_tea"), SubResource("Ingredient_green_tea"), SubResource("Ingredient_creamer"), SubResource("Ingredient_pearl"), SubResource("Ingredient_coconut"), SubResource("Ingredient_syrup")])
+ingredients = Array[ExtResource("ingredient")]([SubResource("Ingredient_black_tea"), SubResource("Ingredient_green_tea"), SubResource("Ingredient_creamer"), SubResource("Ingredient_pearl"), SubResource("Ingredient_coconut"), SubResource("Ingredient_syrup"), SubResource("Product_pearl"), SubResource("Product_coconut"), SubResource("Product_plain")])
 initial_stock = {
 "black_tea": 12,
 "coconut": 8,
@@ -70,14 +91,17 @@ initial_discovery = {
 }
 orders = Array[Dictionary]([{
 "id": "order_001",
+"product_id": "pearl_milk_tea",
 "name": "珍珠奶茶",
 "recipe": ["black_tea", "creamer", "pearl", "syrup"]
 }, {
 "id": "order_002",
+"product_id": "coconut_milk_tea",
 "name": "椰果茉莉奶茶",
 "recipe": ["green_tea", "creamer", "coconut", "syrup"]
 }, {
 "id": "order_003",
+"product_id": "plain_milk_tea",
 "name": "原味奶茶",
 "recipe": ["black_tea", "creamer", "syrup"]
 }])

@@ -43,7 +43,7 @@ basic_menu.tres → WarehouseInventory（数量、发现、已知属性组）
 
 TeaProduction 保留 `get_stock`、`get_ingredients`、`get_order`、`get_completed_count`、`make_drink` 等 API。独立使用时先 `configure(inventory)`；未配置不能制作，不能再次绑定另一份库存重置营业进度。
 
-`make_drink(recipe, order_id = "")` 先验证当前订单和配方，将重复 ID 汇总成所需份数，再检查整组库存。提交阶段没有 await，订单进度与全部扣料在通知前完成，失败则保留原状态。提交锁持续到同步通知结束，监听器不能重入制作。旧的单参数调用仍按当前订单制作；正式 UI 始终传递显示的订单 ID，拒绝过期请求。订单全部完成后拒绝继续制作。MainGame 仍按已观察交付数去重，重复 changed 不会增加业务事实或重复触发剧情奖励。
+`make_drink(recipe, order_id = "")` 先验证当前订单和配方，将重复 ID 汇总成所需份数，再检查整组库存。提交阶段没有 await，订单进度与全部扣料在通知前完成，失败则保留原状态。提交锁持续到同步通知结束，监听器不能重入制作。旧的单参数调用仍按当前订单制作；正式 UI 始终传递显示的订单 ID，拒绝过期请求。订单全部完成后拒绝继续制作。制作成功增加 `category=product` 成品，不写交付事实。TaskDelivery 在指定 NPC 交互时校验任务并通过 `try_exchange` 合并扣成品与发放物品奖励；重复 changed 不会完成任务。详见 [成品交付](task_delivery.md)。
 
 WarehousePanel 位于现有 ShopPopup 内，使用现有 theme、返回按钮、UIManager focus 和移动锁。三个筛选项是全部 / 人类食材 / 异世界食材。左侧图标、名称、数量，右侧详情可滚动；缺货仍可查看详情。库存 changed 自动刷新仓库列表及制作台选项，订单变化刷新订单板。UI 不保存或修改库存。图标是本次直接编写的 16×16 SVG 像素风源文件，位于 `assets/ui/milk_tea/ingredients/`，随附 Godot `.import` 设置，无需生成派生图片。
 
@@ -87,7 +87,7 @@ Gameplay Bridge 测试会在 user:// 写临时 JSON，需要允许写入该目�
 
 2026-10-17 使用 Godot 4.7.2 实测以上十个脚本全部通过：仓库 125 checks、Gameplay Bridge 246 checks、UIManager 47 checks、GameState 120 checks、主场景 72 checks、设备 36 checks、交互反馈 46 checks；制作、移动及聚落验证均 PASS。仓库另外在 Metal Forward+ 图形模式通过 125 checks，已检查两个入口的渲染截图。沙箱内的 macOS 证书读取/编辑器设置写入提示与业务断言无关；Gameplay Bridge 临时 user:// 写入在允许该目录写入后重跑通过。
 
-非 headless 运行仓库测试附加 `-- --capture`，输出 `.godot/warehouse_main.png` 和 `.godot/warehouse_settlement.png`，不提交缓存截图。F5 或 F6 店铺场景后，E 打开仓库查看默认六种材料，筛选异世界应为空；Esc 后移动恢复。制作 #001 后，红茶/奶精/珍珠/糖浆各减一，重开仓库仍保持扣料，订单板与制作台均显示 #002；按原教学配方完成三单后不能再交付。
+非 headless 运行仓库测试附加 `-- --capture`，输出 `.godot/warehouse_main.png` 和 `.godot/warehouse_settlement.png`，不提交缓存截图。F5 或 F6 店铺场景后，E 打开仓库查看默认六种材料，筛选异世界应为空；Esc 后移动恢复。制作 #001 后成品入库，红茶/奶精/珍珠/糖浆各减一，重开仓库仍保持扣料，订单板与制作台均显示 #002；按原教学配方制作三杯后不能重复制作；首单在胖哥布林交付才结算。
 
 ## Godot 4.7 官方依据
 

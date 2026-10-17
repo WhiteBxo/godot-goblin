@@ -19,6 +19,14 @@ func configure_production(production: TeaProduction) -> void:
 	if is_instance_valid(_popup):
 		_popup.configure_production(production)
 
+func show_order_requirements(message: String) -> void:
+	if is_instance_valid(_popup):
+		_popup.show_order_requirements(message)
+
+func show_interaction_result(message: String) -> void:
+	if is_instance_valid(_popup):
+		_popup.show_interaction_result(message)
+
 func show_production_result(result: Dictionary) -> void:
 	if is_instance_valid(_popup):
 		_popup.show_production_result(result)

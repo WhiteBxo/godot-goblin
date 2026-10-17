@@ -95,6 +95,7 @@ func _validate(data: Variant, references: Dictionary) -> bool:
 	if not _keys(data, ["version", "tasks"], "Tasks"):
 		return false
 	var used := {}
+	var orders := {}
 	for index in range(data.tasks.size()):
 		var task: Variant = data.tasks[index]
 		var context := "tasks[%d]" % index
@@ -104,7 +105,7 @@ func _validate(data: Variant, references: Dictionary) -> bool:
 			return _invalid(context + "/id", "Invalid or duplicate task ID '%s'" % task.get("id"))
 		used[task.id] = true
 		context += "(" + task.id + ")"
-		if not _keys(task, ["id", "type", "title", "description", "activate_when", "complete_when", "objectives", "location_id", "difficulty", "rewards", "reveal_when"], context):
+		if not _keys(task, ["id", "type", "title", "description", "activate_when", "complete_when", "objectives", "location_id", "difficulty", "rewards", "reveal_when", "delivery"], context):
 			return false
 		if task.get("type") not in ["main", "commission"]:
 			return _invalid(context + "/type", "Expected main or commission")
@@ -113,6 +114,19 @@ func _validate(data: Variant, references: Dictionary) -> bool:
 				return _invalid(context + "/" + field, "Expected non-empty text")
 		if not _condition(task.get("activate_when"), context + "/activate_when", references) or not _condition(task.get("complete_when"), context + "/complete_when", references, true):
 			return false
+		if task.has("delivery"):
+			var delivery: Variant = task.delivery
+			if not delivery is Dictionary or not _keys(delivery, ["order_id", "product_id", "target_object_id"], context + "/delivery"):
+				return _invalid(context + "/delivery", "Expected three delivery IDs")
+			for field: String in ["order_id", "product_id", "target_object_id"]:
+				if not _text(delivery.get(field)) or not delivery[field].is_valid_identifier():
+					return _invalid(context + "/delivery/" + field, "Expected a stable object/item identifier")
+			if orders.has(delivery.order_id):
+				return _invalid(context + "/delivery/order_id", "Duplicate order ID")
+			orders[delivery.order_id] = true
+			if task.complete_when.type != "flag":
+				return _invalid(context + "/complete_when", "Delivery completion requires a flag")
+
 		if not _presentation(task, context, references):
 			return false
 		if task.has("difficulty") and task.difficulty not in ["low", "medium", "high"]:
@@ -121,8 +135,16 @@ func _validate(data: Variant, references: Dictionary) -> bool:
 			var reward: Variant = task.rewards
 			if not reward is Dictionary or not _text(reward.get("text")):
 				return _invalid(context + "/rewards/text", "Expected a reward object with non-empty text")
-			if not _keys(reward, ["text", "reveal_when"], context + "/rewards"):
+			if not _keys(reward, ["text", "reveal_when", "items"], context + "/rewards"):
 				return false
+			if reward.has("items"):
+				if not reward.items is Dictionary or reward.items.is_empty():
+					return _invalid(context + "/rewards/items", "Expected item quantities")
+				for id: Variant in reward.items:
+					var amount: Variant = reward.items[id]
+					if not id is String or not id.is_valid_identifier() or not is_number(amount) or amount != floor(amount) or amount < 1 or amount > WarehouseInventory.MAX_QUANTITY:
+						return _invalid(context + "/rewards/items", "Expected valid item IDs and positive integer quantities")
+
 			if reward.has("reveal_when") and not _condition(reward.reveal_when, context + "/rewards/reveal_when", references):
 				return false
 		if not _objectives(task.get("objectives"), context + "/objectives", references):

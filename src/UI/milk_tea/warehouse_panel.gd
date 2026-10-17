@@ -58,7 +58,7 @@ func refresh() -> void:
 			selected = index
 	if _list.item_count == 0:
 		_selected_id = ""
-		_details.text = "暂无已发现食材。"
+		_details.text = "暂无已发现物品。"
 		return
 	selected = maxi(selected, 0)
 	_list.select(selected)
@@ -67,7 +67,7 @@ func refresh() -> void:
 func _select_item(index: int) -> void:
 	_selected_id = _list.get_item_metadata(index)
 	var ingredient := _inventory.get_ingredient_view(_selected_id)
-	var category: String = {"tea": "茶底", "milk": "奶基底", "syrup": "糖浆", "topping": "小料"}.get(ingredient.category, ingredient.category)
+	var category: String = {"tea": "茶底", "milk": "奶基底", "syrup": "糖浆", "topping": "小料", "product": "成品"}.get(ingredient.category, ingredient.category)
 	_details.text = "%s · %d 份%s\n来源：%s · 用途：%s\n稀有度：%s\n已知风味：%s\n战斗属性：%s\n特殊效果：%s\n获取方式：%s" % [
 		ingredient.name, ingredient.quantity, " · 缺货" if ingredient.quantity == 0 else "",
 		"人类食材" if ingredient.origin == "human" else "异世界食材", category, ingredient.rarity,

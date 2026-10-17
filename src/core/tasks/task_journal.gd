@@ -36,9 +36,9 @@ func _disconnect_state() -> void:
 		_state.state_changed.disconnect(refresh)
 
 func get_task(id: String) -> Dictionary:
-	for task in _projection:
-		if task.id == id:
-			return task.duplicate(true)
+	for task in _definitions:
+		if task.id == id and is_instance_valid(_state):
+			return _project(task)
 	return {}
 
 func get_active_tasks() -> Array[Dictionary]:

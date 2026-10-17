@@ -106,10 +106,25 @@ func has_materials(materials: Variant) -> bool:
 
 ## No notification or mutation occurs until every entry passes validation.
 func try_consume(materials: Variant) -> bool:
-	if not has_materials(materials):
+	return try_exchange(materials, {})
+
+## Validate costs and gains together, including capacity, before publishing either.
+func try_exchange(materials: Variant, acquired: Variant) -> bool:
+	if not materials is Dictionary or not acquired is Dictionary or (materials.is_empty() and acquired.is_empty()):
 		return false
+	if not materials.is_empty() and not has_materials(materials):
+		return false
+	for id: Variant in acquired:
+		if not _has_id(id) or not _is_quantity(acquired[id]):
+			return false
+		var remaining: int = get_stock(id) - int(materials.get(id, 0))
+		if remaining > MAX_QUANTITY - acquired[id]:
+			return false
 	for id: String in materials:
 		_state[id].quantity -= materials[id]
+	for id: String in acquired:
+		_state[id].quantity += acquired[id]
+		_state[id].discovered = true
 	changed.emit()
 	return true
 

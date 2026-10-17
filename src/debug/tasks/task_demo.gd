@@ -22,7 +22,7 @@ func _ready() -> void:
 	if error != OK:
 		push_error("Task acceptance fixture could not start (%d): %s" % [error, director.last_error])
 	var hint := Label.new()
-	hint.text = "任务 P0 测试 · 查看订单板 → 制作交付 → 关闭弹窗"
+	hint.text = "任务 P0 测试 · 订单板接单 → 制作入库 → 胖哥布林交付 → 关窗"
 	hint.position = Vector2(16, 30)
 	hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hint.theme = preload("res://src/resources/ui/game_theme.tres")

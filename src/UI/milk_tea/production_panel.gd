@@ -31,7 +31,7 @@ func _ready() -> void:
 		column.add_child(selector)
 		_selectors.append(selector)
 	_make = Button.new()
-	_make.text = "制作并交付 · 常温 / 少糖"
+	_make.text = "制作并入库 · 常温 / 少糖"
 	_make.custom_minimum_size.y = 32
 	_make.pressed.connect(_request_make)
 	add_child(_make)

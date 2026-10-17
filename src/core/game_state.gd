@@ -87,6 +87,20 @@ func set_variable(key: String, value: Variant) -> bool:
 	return true
 
 
+## Commit related gameplay facts before notifying synchronous observers.
+func apply_flags(flags: Dictionary) -> Error:
+	for key: Variant in flags:
+		if not key is String or not _is_namespaced_key(key) or not flags[key] is bool:
+			return ERR_INVALID_DATA
+	var changed := false
+	for key: String in flags:
+		changed = changed or not _flags.has(key) or _flags[key] != flags[key]
+		_flags[key] = flags[key]
+	if changed:
+		state_changed.emit()
+	return OK
+
+
 func get_variables() -> Dictionary[String, Variant]:
 	return _variables.duplicate(true)
 

@@ -41,7 +41,7 @@ func _test_inventory() -> void:
 	inventory.changed.connect(func() -> void: notifications.append(inventory.to_dict()))
 	_check(inventory.get_ingredients().size() == 6, "Teaching inventory contains exactly the six configured ingredients")
 	for definition in WarehouseInventory.CATALOG.ingredients:
-		_check(inventory.get_stock(definition.id) == WarehouseInventory.CATALOG.initial_stock[definition.id] and inventory.is_discovered(definition.id), "Initial quantity/discovery matches catalog: " + definition.id)
+		_check(inventory.get_stock(definition.id) == WarehouseInventory.CATALOG.initial_stock.get(definition.id, 0) and inventory.is_discovered(definition.id) == WarehouseInventory.CATALOG.initial_stock.has(definition.id), "Initial quantity/discovery matches catalog: " + definition.id)
 		_check(definition.icon != null, "Each configured ingredient has an icon")
 	_check(inventory.add_ingredient("black_tea", 2) and inventory.get_stock("black_tea") == 14 and notifications.size() == 1, "Adding stock commits and notifies once")
 	var before := inventory.to_dict()

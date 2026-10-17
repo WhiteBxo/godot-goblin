@@ -15,7 +15,9 @@ var _chronicle_journal: ChronicleJournal
 var _chronicle_hud: ChronicleHUD
 var _tea_production: TeaProduction
 var _warehouse_inventory: WarehouseInventory
-var _observed_deliveries := 0
+var _task_catalog: TaskCatalog
+var _task_delivery: TaskDelivery
+var _npc_points: Dictionary = {}
 var _dialogue_manager: DialogueManager
 var _story_director: StoryDirector
 var _actor_director: ActorDirector
@@ -54,7 +56,7 @@ func _ready() -> void:
 		var interaction := ShopInteraction.new()
 		interaction.name = "ShopInteraction"
 		$Systems.add_child(interaction)
-		interaction.configure(_shop_player, ui, _shop_level.get_interaction_points(), _route_story_interaction)
+		interaction.configure(_shop_player, ui, _with_npc_points(_shop_level.get_interaction_points()), _route_story_interaction)
 		_shop_ui = ui
 		_shop_interaction = interaction
 		var feedback := InteractionFeedback.new()
@@ -125,7 +127,8 @@ func _create_chronicle_system() -> void:
 	_ui_manager.open_screen(&"chronicle_hud")
 
 func _create_task_system() -> void:
-	var catalog := TaskCatalog.new()
+	_task_catalog = TaskCatalog.new()
+	var catalog := _task_catalog
 	var error := catalog.load_file("res://src/resources/tasks/tasks.json")
 	if error != OK:
 		push_error("Could not load tasks: " + catalog.last_error)
@@ -159,7 +162,7 @@ func _initialize_settlement() -> void:
 	_shop_interaction = ShopInteraction.new()
 	_shop_interaction.name = "SettlementInteraction"
 	$Systems.add_child(_shop_interaction)
-	_shop_interaction.configure(_shop_player, _shop_ui, _settlement_level.get_interaction_points(), _route_story_interaction)
+	_shop_interaction.configure(_shop_player, _shop_ui, _with_npc_points(_settlement_level.get_interaction_points()), _route_story_interaction)
 	_create_dialogue_system()
 	_create_gameplay_bridge(false)
 	if DebugRuntime.is_enabled():
@@ -183,7 +186,13 @@ func _create_shop_business(ui: ShopUI) -> void:
 	_tea_production.name = "TeaProduction"
 	$Systems.add_child(_tea_production)
 	_tea_production.configure(_warehouse_inventory)
-	_tea_production.changed.connect(_on_orders_changed)
+	_task_delivery = TaskDelivery.new()
+	_task_delivery.name = "TaskDelivery"
+	$Systems.add_child(_task_delivery)
+	var error := _task_delivery.configure(_task_catalog, _task_journal, get_node("/root/GameState"), _warehouse_inventory)
+	if error != OK:
+		push_error("Could not configure task delivery (%d)" % error)
+	_task_delivery.delivered.connect(func(_order_id: String) -> void: _on_orders_changed())
 	ui.point_opened.connect(_on_shop_point_opened)
 	ui.configure_inventory(_warehouse_inventory)
 	ui.configure_production(_tea_production)
@@ -217,11 +226,35 @@ func get_story_director() -> StoryDirector:
 func get_actor_director() -> ActorDirector:
 	return _actor_director if is_instance_valid(_actor_director) else null
 
+func get_task_delivery() -> TaskDelivery:
+	return _task_delivery
+
+func _with_npc_points(points: Array[InteractionPoint]) -> Array[InteractionPoint]:
+	for entity in $World/EntityRoot.get_children():
+		if not entity is SettlementCharacter:
+			continue
+		var point: InteractionPoint = preload("res://src/gameplay/interaction/interaction_point.tscn").instantiate()
+		point.name = "InteractionPoint"
+		point.interaction_id = entity.actor_id
+		point.display_name = entity.display_name
+		point.description = entity.story_role
+		entity.add_child(point)
+		points.append(point)
+		_npc_points[point.interaction_id] = point
+	return points
+
 func _route_story_interaction(id: StringName) -> Error:
-	# An unavailable service or absent route falls through to the existing ShopUI.
-	if not is_instance_valid(_story_director):
-		return ERR_DOES_NOT_EXIST
-	return _story_director.request_interaction(String(id))
+	# Existing story routes retain priority; delivery is a gameplay fallback.
+	if is_instance_valid(_story_director):
+		var error := _story_director.request_interaction(String(id))
+		if error != ERR_DOES_NOT_EXIST:
+			return error
+	if _npc_points.has(id) and is_instance_valid(_task_delivery):
+		var result := _task_delivery.deliver_to(String(id))
+		_shop_ui.open(_npc_points[id])
+		_shop_ui.show_interaction_result(result.message)
+		return OK if result.ok else ERR_UNAVAILABLE
+	return ERR_DOES_NOT_EXIST
 
 func _create_dialogue_system() -> void:
 	_actor_director = ActorDirector.new()
@@ -288,18 +321,18 @@ func _create_tea_making() -> void:
 func _on_shop_point_opened(id: StringName) -> void:
 	if id == &"orders":
 		get_node("/root/GameState").set_flag("shop.orders_viewed")
+		for order: Dictionary in _task_delivery.get_orders():
+			_task_delivery.accept_order(order.order_id)
+		var names := {}
+		for point: InteractionPoint in _npc_points.values():
+			names[String(point.interaction_id)] = point.display_name
+		var requirements := _task_delivery.get_requirements_text(names)
+		_shop_ui.show_order_requirements("已接取交付订单：\n" + requirements + "\n制作后携带成品到指定 NPC 按 E 交付。" if not requirements.is_empty() else "当前没有待交付订单。")
 
 func _on_orders_changed() -> void:
-	# changed also refreshes UI: count the committed business result, not notifications.
-	var delivered := _tea_production.get_completed_count()
-	if delivered <= _observed_deliveries:
-		return
-	var previous := _observed_deliveries
-	_observed_deliveries = delivered # Consume before GameState's synchronous listeners.
+	# Preserve the existing business counter, now sourced only from committed receipts.
 	var state := get_node("/root/GameState")
-	for index in range(previous + 1, delivered + 1):
-		state.set_flag("shop.order_%03d_delivered" % index)
-	state.set_variable("shop.orders_completed", maxi(int(state.get_variable("shop.orders_completed", 0)), delivered))
+	state.set_variable("shop.orders_completed", maxi(int(state.get_variable("shop.orders_completed", 0)), _task_delivery.get_completed_count()))
 
 func _can_start_story() -> bool:
 	return (not get_tree().paused and not _ui_manager.has_modal()

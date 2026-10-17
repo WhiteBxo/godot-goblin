@@ -114,7 +114,7 @@ func _make() -> void:
 	if order.is_empty():
 		return
 	await _interact("tea_station")
-	var panel: CraftingPanel = _game.get_node("PopupLayer/Modal/Center/Panel/Margin/Content/ProductionPanel")
+	var panel: CraftingPanel = _game.get_shop_ui().get_popup().get_crafting_panel()
 	var before := _state.to_dict()
 	panel.clear_selection()
 	panel.submit()
@@ -124,7 +124,7 @@ func _make() -> void:
 		await frames()
 		check(_state.to_dict() == before, "Closing an unfinished production screen never completes an order")
 		await _interact("tea_station")
-		panel = _game.get_node("PopupLayer/Modal/Center/Panel/Margin/Content/ProductionPanel")
+		panel = _game.get_shop_ui().get_popup().get_crafting_panel()
 	panel.clear_selection()
 	for id: String in order.recipe:
 		panel.add_material(id)

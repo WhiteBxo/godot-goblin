@@ -296,14 +296,14 @@ func _check_panel() -> void:
 	await process_frame
 	await process_frame
 	var ui: ShopUI = main.get_node("HudLayer/ShopUI")
-	var modal: Control = main.get_node("PopupLayer/Modal")
+	var popup: ShopPopup = main.get_node("PopupLayer/Modal")
 	var station: InteractionPoint
 	for point: InteractionPoint in (main.get_active_level() as MilkTeaShop).get_interaction_points():
 		if point.interaction_id == &"tea_station":
 			station = point
 	ui.open(station)
 	await process_frame
-	var panel: CraftingPanel = main.get_node("PopupLayer/Modal/Center/Panel/Margin/Content/ProductionPanel")
+	var panel: CraftingPanel = popup.get_crafting_panel()
 	_check(panel.visible, "Crafting panel opens at the tea station")
 	_check(root.gui_get_focus_owner() == panel.get_node("Body/Left/MaterialList"), "Focus starts on the material list")
 	_check(not panel.is_craft_enabled(), "Empty selection cannot be submitted")
@@ -327,7 +327,7 @@ func _check_panel() -> void:
 		root.size = size
 		await process_frame
 		await process_frame
-		_check(modal.get_node("Center/Panel").size.x <= size.x and modal.get_node("Center/Panel").size.y <= size.y, "Crafting panel fits the viewport: " + str(size))
+		_check(popup.get_panel_rect().size.x <= size.x and popup.get_panel_rect().size.y <= size.y, "Crafting panel fits the viewport: " + str(size))
 	root.size = Vector2i(1280, 720)
 	_check(panel.select_recipe("pearl_milk_tea"), "A known recipe auto-fills without owning a product")
 	_check(panel.selected_materials() == PEARL, "Recipe selection replaces all tray materials")

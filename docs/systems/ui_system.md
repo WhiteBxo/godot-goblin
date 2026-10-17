@@ -43,7 +43,7 @@ UIManager 在 Systems 下使用 Always；World 和其他普通 Systems 保持 Pa
 - `handle_ui_input(event)`：处理栈顶的确认和方向输入，当前用于对白。Tab 导航由管理器处理。
 - `on_ui_closed()`：同步结束业务生命周期；对白在此请求 DialogueManager 取消。此回调发生在界面已出栈、隐藏之后，应可重复安全调用。
 
-模态界面组合 `src/UI/components/modal_shell.tscn`：壳负责遮罩、外边距、Panel 边框、标题、关闭按钮与页脚，内容场景只提供列表、详情和输入。手册由 `ModalShell + HandbookBody`（`TabContainer` + `TaskPage` / `ChroniclePage`）组成，`TaskPopup` 仅用于测试与 F6 预览。内容页不得再复制 Dim、Panel、Header 或 Close；`ModalShell.get_panel_rect()` 与 `get_close_button()` 供测试和宿主使用。
+模态界面组合 `src/UI/components/modal_shell.tscn`：壳负责遮罩、外边距、Panel 边框、标题、关闭按钮与页脚，内容场景只提供列表、详情和输入。手册由 `ModalShell + HandbookBody`（`TabContainer` + `TaskPage` / `ChroniclePage`）组成，店铺由 `ModalShell + ShopPage`（`CraftingPanel` / `WarehousePanel` 为内容组件）组成，`TaskPopup` 仅用于测试与 F6 预览。内容页不得再复制 Dim、Panel、Header 或 Close；`ModalShell.get_panel_rect()` 与 `get_close_button()` 供测试和宿主使用。底部交互提示使用 `PromptBar`（Keycap + 卡片面板），不再在各 HUD 里手写颜色。
 
 当前 `popup` 层模态互斥，`pause` 可覆盖 popup；通用 HUD 使用非模态注册。`pause` 是管理器保留 ID；通过 open_screen("pause") 或 set_paused(true) 均会取得暂停。不要在 pause 层注册其他业务界面。
 
@@ -97,7 +97,7 @@ godot --path . --log-file .godot/ui-visual.log --script res://tests/verify_ui_ma
 
 统一手册与任务面板的截图分别写入 `.godot/handbook/` 与 `.godot/task_panel/`；主题画廊写入 `.godot/ui_kit/`。窗口截图来自游戏 viewport，不包含宽窗口的比例留白。验收同时断言实际 Window 尺寸，避免只修改截图文件名。
 
-本次主题化与壳重构批次通过：ui_theme 147 项、ui_kit 6 项、ui_manager 47 项（窗口版含尺寸断言 50 项）、handbook 44 项、task_panel 92 项、chronicle 64 项、dialogue 154 项、main_game 73 项、day1_stages_01_02 255 项，以及 milk_tea_shop 的移动 / 碰撞 / 交互检查。F6 与 640×360、1280×720 截图已人工检查。
+本次主题化、壳重构与店铺界面批次通过：ui_theme 156 项、ui_kit 6 项、ui_manager 47 项（窗口版含尺寸断言 50 项）、handbook 44 项、task_panel 92 项、chronicle 64 项、dialogue 154 项、main_game 73 项、day1_stages_01_02 255 项，以及 milk_tea_shop、warehouse_inventory、business_session、tea_production、tea_recipes、gameplay_bridge、task_delivery、task_system、gathering、interaction_feedback 的对应检查。F6 与 640×360、1280×720 截图已人工检查。
 
 历史 UI 验收（统一手册接入前）：ui_manager 47 项（窗口版含尺寸断言共 50 项）、main_game 72 项、dialogue 75 项、story_director 147 项、cinematic_integration 286 项、interaction_feedback 46 项、screen_transition 54 项，以及 milk_tea_shop 的移动/碰撞/交互检查。窗口版在项目默认 Metal Forward+ 下完成三种尺寸截图检查；Compatibility 渲染器也通过同一 UI 回归。
 

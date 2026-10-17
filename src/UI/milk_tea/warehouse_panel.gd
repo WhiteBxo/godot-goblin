@@ -45,6 +45,12 @@ func configure(inventory: WarehouseInventory) -> void:
 	_inventory.changed.connect(refresh)
 	refresh()
 
+func get_list() -> ItemList:
+	return _list
+
+func get_details() -> Label:
+	return _details
+
 func refresh() -> void:
 	if not is_instance_valid(_inventory):
 		return

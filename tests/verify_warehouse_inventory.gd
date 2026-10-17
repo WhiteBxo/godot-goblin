@@ -181,18 +181,18 @@ func _test_session(scene_path: String) -> void:
 	var popup: ShopPopup = main.get_node("PopupLayer/Modal")
 	ui.open(points[&"storage"])
 	await process_frame
-	_check(popup._warehouse_panel.visible and not (main.get_player() as PlayerController).movement_enabled, "Warehouse uses the existing modal and movement lock")
-	_check(inventory.try_consume({"black_tea": 12}) and "缺货" in popup._warehouse_panel._list.get_item_text(0), "Open warehouse reacts to external stock changes")
+	_check(popup.get_warehouse_panel().visible and not (main.get_player() as PlayerController).movement_enabled, "Warehouse uses the existing modal and movement lock")
+	_check(inventory.try_consume({"black_tea": 12}) and "缺货" in popup.get_warehouse_panel().get_list().get_item_text(0), "Open warehouse reacts to external stock changes")
 	for size: Vector2i in [Vector2i(640, 360), Vector2i(1280, 720)]:
 		root.size = size
 		await process_frame
 		await process_frame
-		_check(popup.get_node("Center/Panel").size.x <= size.x and popup.get_node("Center/Panel").size.y <= size.y, "Warehouse fits the configured gameplay viewport: " + str(size))
+		_check(popup.get_panel_rect().size.x <= size.x and popup.get_panel_rect().size.y <= size.y, "Warehouse fits the configured gameplay viewport: " + str(size))
 	inventory.add_ingredient("black_tea", 12)
 	ui.close()
 	_check((main.get_player() as PlayerController).movement_enabled, "Closing warehouse restores movement")
 	ui.open(points[&"tea_station"])
-	_check(popup.get_crafting_panel().visible and not popup._warehouse_panel.visible, "Station switches to production controls")
+	_check(popup.get_crafting_panel().visible and not popup.get_warehouse_panel().visible, "Station switches to production controls")
 	inventory.try_consume({"pearl": 8})
 	_check(not popup.get_crafting_panel().is_material_available("pearl"), "Open production selectors refresh from the same stock")
 	inventory.add_ingredient("pearl", 8)
@@ -200,16 +200,16 @@ func _test_session(scene_path: String) -> void:
 	_check(production.make_drink(["black_tea", "creamer", "pearl", "syrup"], "order_001").ok, "Session production succeeds")
 	ui.close()
 	ui.open(points[&"orders"])
-	_check("椰果茉莉奶茶" in popup.get_node("Center/Panel/Margin/Content/DescriptionScroll/Description").text, "Order board reads the same committed progress")
+	_check("椰果茉莉奶茶" in popup.get_page().get_description_text(), "Order board reads the same committed progress")
 	ui.close()
 	ui.open(points[&"storage"])
-	_check("红茶  11" in popup._warehouse_panel._list.get_item_text(0), "Reopened warehouse retains consumed stock")
+	_check("红茶  11" in popup.get_warehouse_panel().get_list().get_item_text(0), "Reopened warehouse retains consumed stock")
 	ui.close()
 	ui.open(points[&"tea_station"])
 	_check(production.get_completed_count() == 1 and "椰果茉莉奶茶" in popup.get_crafting_panel().order_text(), "Reopened station retains order progress")
 	ui.close()
 	ui.open(points[&"orders"])
-	_check(production.make_drink(["green_tea", "creamer", "coconut", "syrup"], "order_002").ok and "原味奶茶" in popup.get_node("Center/Panel/Margin/Content/DescriptionScroll/Description").text, "An open order board refreshes committed progress automatically")
+	_check(production.make_drink(["green_tea", "creamer", "coconut", "syrup"], "order_002").ok and "原味奶茶" in popup.get_page().get_description_text(), "An open order board refreshes committed progress automatically")
 	if "--capture" in OS.get_cmdline_user_args() and DisplayServer.get_name() != "headless":
 		ui.close()
 		ui.open(points[&"storage"])

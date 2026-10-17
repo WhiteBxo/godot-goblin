@@ -42,6 +42,7 @@ func _ready() -> void:
 	_redo.pressed.connect(redo_selected_product)
 	_clear.pressed.connect(func() -> void: clear_selection())
 	_craft.pressed.connect(func() -> void: submit())
+	_result.visible = false
 	_refresh_preview()
 
 func configure(production: TeaProduction) -> void:
@@ -65,6 +66,7 @@ func refresh(clear_result: bool = false) -> void:
 	if clear_result:
 		_result.text = ""
 		_result.theme_type_variation = &""
+		_result.visible = false
 	_rebuild_chips()
 	_refresh_preview()
 	_sync_selected_product()
@@ -176,6 +178,7 @@ func show_result(result: Dictionary) -> void:
 	_last_result = result.duplicate(true)
 	var succeeded: bool = bool(result.get("ok", false))
 	_result.text = str(result.get("message", ""))
+	_result.visible = not _result.text.is_empty()
 	_result.theme_type_variation = &"Success" if succeeded else &"Warning"
 	if succeeded:
 		_selected.clear()
@@ -254,6 +257,7 @@ func _after_selection_change(clear_result: bool) -> void:
 	if clear_result:
 		_result.text = ""
 		_result.theme_type_variation = &""
+		_result.visible = false
 	_rebuild_chips()
 	_refresh_preview()
 

@@ -9,6 +9,9 @@ signal craft_requested(materials: Array[String], quantity: int)
 var _production: TeaProduction
 var _inventory: WarehouseInventory
 
+func get_popup() -> ShopPopup:
+	return _popup
+
 func configure_inventory(inventory: WarehouseInventory) -> void:
 	_inventory = inventory
 	if is_instance_valid(_popup):
@@ -35,7 +38,7 @@ func show_production_result(result: Dictionary) -> void:
 @export var show_help := true
 @export var close_text := "返回店铺  [Esc]"
 
-@onready var _prompt: Label = $Prompt
+@onready var _prompt: PromptBar = $Prompt
 var _popup: ShopPopup
 var _manager: UIManager
 
@@ -72,8 +75,10 @@ func bind_tea_making(tea: TeaMaking) -> void:
 		)
 
 func show_prompt(point: InteractionPoint) -> void:
-	_prompt.text = "[E] " + point.display_name if point != null else ""
-	_prompt.visible = point != null and not is_open()
+	if point == null or is_open():
+		_prompt.clear()
+	else:
+		_prompt.show_prompt(point.display_name)
 
 func open(point: InteractionPoint) -> void:
 	if not is_instance_valid(_popup):
@@ -86,7 +91,7 @@ func open(point: InteractionPoint) -> void:
 		_popup.get_default_focus().grab_focus()
 	_popup.present(point)
 	point_opened.emit(point.interaction_id)
-	_prompt.hide()
+	_prompt.clear()
 	opened.emit()
 
 func close() -> void:

@@ -40,12 +40,12 @@ func _run() -> void:
 	var audio: AudioManager = _demo.audio
 	var feedback: InteractionFeedback = _demo.feedback
 	var points: Array[InteractionPoint] = _demo.points
-	var prompt: Label = ui.get_node("Prompt")
+	var prompt: PromptBar = ui.get_node("Prompt")
 	interaction.interaction_succeeded.connect(func(_point: InteractionPoint) -> void: _successes += 1)
 	interaction.target_changed.connect(func(_point: InteractionPoint) -> void: _changes += 1)
 	_check(interaction.get_target() == points[1] and prompt.visible, "Real Area2D detects initial target")
-	_check(prompt.text == "[E] 仓库" and prompt.mouse_filter == Control.MOUSE_FILTER_IGNORE, "Compact prompt names target without intercepting input")
-	_check(prompt.get_theme_font_size("font_size") == 12, "Prompt uses native 12 px pixel font")
+	_check(prompt.get_key_text() == "E" and prompt.get_text() == "仓库" and prompt.mouse_filter == Control.MOUSE_FILTER_IGNORE, "Compact prompt names target without intercepting input")
+	_check(prompt.get_text_label().get_theme_font_size("font_size") == 12, "Prompt uses native 12 px pixel font")
 	player.position = Vector2(275, 220)
 	player.facing = PlayerController.Facing.RIGHT
 	await _frames()

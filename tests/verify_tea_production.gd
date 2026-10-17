@@ -28,15 +28,14 @@ func _run() -> void:
 			station = point
 		if point.interaction_id == &"storage":
 			storage = point
-	var modal: Control = main.get_node("PopupLayer/Modal")
-	var content: VBoxContainer = modal.get_node("Center/Panel/Margin/Content")
-	var panel: CraftingPanel = content.get_node("ProductionPanel")
+	var popup: ShopPopup = main.get_node("PopupLayer/Modal")
+	var panel: CraftingPanel = popup.get_crafting_panel()
 	ui.open(station)
 	await process_frame
 	await process_frame
 	_check(panel.visible and ui.is_open(), "Station must open the production controls")
-	_check(modal.get_node("Center/Panel").size.y <= root.size.y, "Production panel must fit viewport height")
-	_check(modal.get_node("Center/Panel").size.x <= root.size.x, "Production panel must fit viewport width")
+	_check(popup.get_panel_rect().size.y <= root.size.y, "Production panel must fit viewport height")
+	_check(popup.get_panel_rect().size.x <= root.size.x, "Production panel must fit viewport width")
 	_select(panel, [])
 	panel.submit()
 	_check(production.get_completed_count() == 0 and production.get_stock("syrup") == 10, "Incomplete selection must not consume stock")
@@ -48,8 +47,8 @@ func _run() -> void:
 	_check(production.get_completed_count() == 1 and production.get_stock("black_tea") == 11 and production.get_stock("pearl") == 7 and production.get_stock("creamer") == 11 and production.get_stock("syrup") == 9, "Button must complete order and consume each ingredient exactly once")
 	ui.close()
 	ui.open(storage)
-	var warehouse: WarehousePanel = content.get_node("WarehousePanel")
-	_check(not panel.visible and warehouse.visible and "红茶  11" in warehouse._list.get_item_text(0), "Storage must show shared updated stock")
+	var warehouse: WarehousePanel = popup.get_warehouse_panel()
+	_check(not panel.visible and warehouse.visible and "红茶  11" in warehouse.get_list().get_item_text(0), "Storage must show shared updated stock")
 	ui.close()
 	ui.open(station)
 	_check(production.get_completed_count() == 1 and "椰果茉莉奶茶" in panel.order_text(), "Reopening must retain progress and show next order")

@@ -11,13 +11,13 @@ script = ExtResource("script")
 [node name="Body" type="HBoxContainer" parent="."]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 10
+theme_override_constants/separation = 12
 
 [node name="Left" type="VBoxContainer" parent="Body"]
 custom_minimum_size = Vector2(216, 0)
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 
 [node name="MaterialList" type="ItemList" parent="Body/Left"]
 layout_mode = 2
@@ -36,6 +36,7 @@ autowrap_mode = 2
 [node name="RedoButton" type="Button" parent="Body/Left"]
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
+theme_type_variation = &"GhostButton"
 disabled = true
 text = "一键重做"
 
@@ -43,14 +44,15 @@ text = "一键重做"
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 4
+theme_override_constants/separation = 2
 
 [node name="RecipeTitle" type="Label" parent="Body/Right"]
 layout_mode = 2
+theme_type_variation = &"H2"
 text = "配方 · 点击自动填料"
 
 [node name="RecipeList" type="ItemList" parent="Body/Right"]
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 size_flags_vertical = 3
 allow_reselect = true
@@ -72,6 +74,7 @@ text = "已选材料"
 [node name="ClearButton" type="Button" parent="Body/Right/SelectedHeader"]
 custom_minimum_size = Vector2(48, 20)
 layout_mode = 2
+theme_type_variation = &"GhostButton"
 disabled = true
 text = "清空"
 
@@ -87,18 +90,20 @@ size_flags_horizontal = 3
 columns = 2
 
 [node name="PreviewLine" type="Label" parent="Body/Right"]
-custom_minimum_size = Vector2(0, 20)
+custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 autowrap_mode = 2
 
 [node name="Batch" type="HBoxContainer" parent="Body/Right"]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="BatchLabel" type="Label" parent="Body/Right/Batch"]
 layout_mode = 2
 text = "杯数"
 
 [node name="Quantity" type="SpinBox" parent="Body/Right/Batch"]
+custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 size_flags_horizontal = 3
 min_value = 1.0
@@ -109,16 +114,18 @@ update_on_text_changed = true
 
 [node name="Maximum" type="Button" parent="Body/Right/Batch"]
 layout_mode = 2
+theme_type_variation = &"GhostButton"
 text = "最大"
 disabled = true
 
 [node name="CraftButton" type="Button" parent="Body/Right"]
 custom_minimum_size = Vector2(0, 28)
 layout_mode = 2
+theme_type_variation = &"PrimaryButton"
 disabled = true
 text = "合成并入库"
 
 [node name="ResultLabel" type="Label" parent="Body/Right"]
-custom_minimum_size = Vector2(0, 20)
+custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 autowrap_mode = 2

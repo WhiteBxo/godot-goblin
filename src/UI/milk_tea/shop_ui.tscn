@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://src/UI/milk_tea/shop_ui.gd" id="1"]
 [ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="theme"]
-[ext_resource type="FontFile" path="res://assets/fonts/fusion_pixel/fusion-pixel-12px-monospaced-zh_hans.otf.woff2" id="font"]
+[ext_resource type="PackedScene" path="res://src/UI/components/prompt_bar.tscn" id="prompt"]
 
 [node name="ShopUI" type="Control"]
 layout_mode = 3
@@ -28,22 +28,15 @@ theme_override_constants/shadow_offset_y = 1
 text = "小小奶茶店 · WASD 移动 · E 交互 · Esc / P 暂停"
 autowrap_mode = 2
 
-[node name="Prompt" type="Label" parent="."]
+[node name="Prompt" parent="." instance=ExtResource("prompt")]
 visible = false
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 16.0
-offset_right = -16.0
-offset_top = -32.0
+offset_top = -40.0
 offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
 mouse_filter = 2
-theme_override_colors/font_color = Color(1, 0.88, 0.62, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 1
-theme_override_constants/shadow_offset_y = 1
-theme_override_fonts/font = ExtResource("font")
-theme_override_font_sizes/font_size = 12
-text_overrun_behavior = 3
-horizontal_alignment = 1

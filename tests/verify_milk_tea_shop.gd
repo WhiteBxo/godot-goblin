@@ -92,7 +92,7 @@ func _run() -> void:
 		_check(ui.get_node("Prompt").visible, "Approach must display the interaction prompt")
 		await _key(KEY_E)
 		_check(ui.is_open(), "E must open UI: " + point.display_name)
-		_check(main.get_node("PopupLayer/Modal/Center/Panel/Margin/Content/Title").text == point.display_name, "UI title must match point")
+		_check(ui.get_popup().get_title() == point.display_name, "UI title must match point")
 		var position_before := player.global_position
 		Input.action_press("move_right")
 		await _frames(5)

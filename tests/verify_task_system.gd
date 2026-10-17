@@ -277,7 +277,7 @@ func _test_real_orders_and_story() -> void:
 	_check(inventory.to_dict() == scarce and state.to_dict() == scarce_facts and not state.get_flag("shop.order_001_delivered"), "Shortage never reports delivery or partially consumes materials")
 	inventory.restore_state(stock_before)
 	shop.open(points[&"tea_station"])
-	var panel: CraftingPanel = game.get_node("PopupLayer/Modal/Center/Panel/Margin/Content/ProductionPanel")
+	var panel: CraftingPanel = game.get_shop_ui().get_popup().get_crafting_panel()
 	panel.clear_selection()
 	panel.submit()
 	_check(production.get_completed_count() == 0 and not state.get_flag("shop.order_001_delivered"), "Incomplete UI submission does not complete task")

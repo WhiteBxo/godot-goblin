@@ -39,6 +39,7 @@ func _ready() -> void:
 	_typography(column)
 	_buttons(column)
 	_panels(column)
+	_prompt(column)
 	_lists(column)
 	_tabs(column)
 	_inputs(column)
@@ -120,6 +121,15 @@ func _panels(parent: VBoxContainer) -> void:
 		var label := _label(spec[1], &"")
 		panel.add_child(label)
 		row.add_child(panel)
+
+
+func _prompt(parent: VBoxContainer) -> void:
+	var box := _section(parent, "交互提示")
+	_caption(box, "PromptBar 由 Keycap + 面板组成，位于屏幕底部居中。")
+	var prompt := preload("res://src/UI/components/prompt_bar.tscn").instantiate()
+	prompt.custom_minimum_size = Vector2(0, 40)
+	box.add_child(prompt)
+	prompt.show_prompt("收银台")
 
 
 func _lists(parent: VBoxContainer) -> void:

@@ -357,7 +357,7 @@ func _test_host() -> void:
 	await _frames()
 	await _press_interact()
 	_check(ui.is_open() and inventory.get_stock(MUSHROOM) == 1, "Nighttime E gathers into the shared inventory")
-	_check("采集成功" in game.get_node("PopupLayer/Modal/Center/Panel/Margin/Content/DescriptionScroll/Description").text, "Popup reports the harvest")
+	_check("采集成功" in game.get_shop_ui().get_popup().get_page().get_description_text(), "Popup reports the harvest")
 	ui.close()
 	await _frames()
 	await _press_interact()

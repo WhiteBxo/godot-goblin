@@ -61,7 +61,7 @@ func _intro() -> void:
 	await _until(_tea.is_active, "Successful opening activates gameplay")
 
 func _finish_recipe() -> void:
-	var buttons := _game.get_node("PopupLayer/Modal/Center/Panel/Margin/Content/Ingredients")
+	var buttons := _game.get_shop_ui().get_popup().get_page().get_ingredients()
 	for button: Button in buttons.get_children():
 		_check(not button.disabled, "Ingredient button enabled: " + button.text)
 		button.pressed.emit() # Exercise the same UI callbacks as mouse/keyboard activation.
@@ -257,7 +257,7 @@ func _test_multiple_phases() -> void:
 	_tea.recipe_completed.emit("pearl_milk_tea", -1)
 	_check(not _state.get_flag("bridge.second_done"), "Stale session completion ignored")
 	_shop.open(_station)
-	for button: Button in _game.get_node("PopupLayer/Modal/Center/Panel/Margin/Content/Ingredients").get_children():
+	for button: Button in _game.get_shop_ui().get_popup().get_page().get_ingredients().get_children():
 		button.pressed.emit()
 	_check(_state.get_flag("bridge.second_done"), "Second session completes its own flag")
 	_shop.close()
@@ -334,7 +334,7 @@ func _test_real_orders() -> void:
 	_check(_shop.is_open() and not _director.is_busy(), "Waiting-order stage falls back to real order UI")
 	_shop.close()
 	await _interact(_station)
-	var panel: CraftingPanel = _game.get_node("PopupLayer/Modal/Center/Panel/Margin/Content/ProductionPanel")
+	var panel: CraftingPanel = _game.get_shop_ui().get_popup().get_crafting_panel()
 	panel.clear_selection()
 	panel.submit()
 	_check(production.get_completed_count() == 0 and not _state.get_flag("shop.order_001_delivered"), "Failed UI recipe cannot satisfy production fact")

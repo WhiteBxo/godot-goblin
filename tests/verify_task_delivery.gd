@@ -196,13 +196,13 @@ func _test_host(path: String) -> void:
 	await _frames()
 	await _press_interact()
 	_check(ui.is_open() and game.get_task_journal().get_task("shop.first_order").status == "active", "E on order board accepts task: " + path)
-	_check("胖哥布林" in game.get_node("PopupLayer/Modal/Center/Panel/Margin/Content/DescriptionScroll/Description").text, "Board displays delivery recipient")
+	_check("胖哥布林" in game.get_shop_ui().get_popup().get_page().get_description_text(), "Board displays delivery recipient")
 	await _capture("delivery_" + path.get_file().get_basename() + "_board")
 	ui.close()
 	player.global_position = station.global_position
 	await _frames()
 	await _press_interact()
-	var panel: CraftingPanel = game.get_node("PopupLayer/Modal/Center/Panel/Margin/Content/ProductionPanel")
+	var panel: CraftingPanel = game.get_shop_ui().get_popup().get_crafting_panel()
 	panel.clear_selection()
 	for id: String in ["black_tea", "creamer", "pearl", "syrup"]:
 		panel.add_material(id)

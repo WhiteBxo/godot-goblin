@@ -181,6 +181,7 @@ func _run() -> void:
 	quit(0 if failures.is_empty() else 1)
 
 func capture_visuals(shop: ShopUI, point: InteractionPoint, manager: UIManager, dialogue: DialogueManager) -> void:
+	DirAccess.make_dir_recursive_absolute("res://.godot/ui-captures")
 	for size in [Vector2i(640, 360), Vector2i(1280, 720), Vector2i(1440, 720)]:
 		root.size = size
 		await create_timer(0.25, true).timeout
@@ -190,11 +191,11 @@ func capture_visuals(shop: ShopUI, point: InteractionPoint, manager: UIManager, 
 		shop.open(point)
 		await frames(3)
 		await RenderingServer.frame_post_draw
-		root.get_texture().get_image().save_png("/private/tmp/goblin-ui-shop-%dx%d.png" % [size.x, size.y])
+		root.get_texture().get_image().save_png("res://.godot/ui-captures/goblin-ui-shop-%dx%d.png" % [size.x, size.y])
 		manager.set_paused(true)
 		await frames(3)
 		await RenderingServer.frame_post_draw
-		root.get_texture().get_image().save_png("/private/tmp/goblin-ui-pause-%dx%d.png" % [size.x, size.y])
+		root.get_texture().get_image().save_png("res://.godot/ui-captures/goblin-ui-pause-%dx%d.png" % [size.x, size.y])
 		manager.set_paused(false)
 		shop.close()
 		dialogue.start_dialogue("demo.greeting")
@@ -203,5 +204,5 @@ func capture_visuals(shop: ShopUI, point: InteractionPoint, manager: UIManager, 
 		ui.reveal_all()
 		await frames(3)
 		await RenderingServer.frame_post_draw
-		root.get_texture().get_image().save_png("/private/tmp/goblin-ui-dialogue-%dx%d.png" % [size.x, size.y])
+		root.get_texture().get_image().save_png("res://.godot/ui-captures/goblin-ui-dialogue-%dx%d.png" % [size.x, size.y])
 		dialogue.end_dialogue(true)

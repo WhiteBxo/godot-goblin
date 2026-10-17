@@ -6,8 +6,7 @@ extends VBoxContainer
 signal craft_requested(materials: Array[String], quantity: int)
 
 const CATEGORY_ORDER: Dictionary = {"tea": 0, "milk": 1, "syrup": 2, "topping": 3, "material": 4}
-const COLOR_OK := Color("bde3a5")
-const COLOR_WARN := Color("ffd08c")
+const Tokens := preload("res://src/resources/ui/ui_tokens.gd")
 
 var _production: TeaProduction
 var _selected: Array[String] = []
@@ -65,7 +64,7 @@ func refresh(clear_result: bool = false) -> void:
 	_order_line.text = _production.get_order_text()
 	if clear_result:
 		_result.text = ""
-		_result.remove_theme_color_override("font_color")
+		_result.theme_type_variation = &""
 	_rebuild_chips()
 	_refresh_preview()
 	_sync_selected_product()
@@ -102,7 +101,7 @@ func _rebuild_recipes() -> void:
 		var index := _recipe_list.add_item("%s · %s" % [_production.get_item_name(recipe.product_id), "可做 %d 杯" % maximum if maximum > 0 else "材料不足或库存已满"])
 		_recipe_list.set_item_metadata(index, recipe.product_id)
 		if maximum == 0:
-			_recipe_list.set_item_custom_fg_color(index, COLOR_WARN)
+			_recipe_list.set_item_custom_fg_color(index, Tokens.WARNING)
 		_recipe_list.set_item_tooltip(index, " + ".join(_production.get_recipe_names(recipe.materials)))
 		if TeaRecipe.key_for(_selected) == recipe.get_material_key():
 			_recipe_list.select(index)
@@ -177,7 +176,7 @@ func show_result(result: Dictionary) -> void:
 	_last_result = result.duplicate(true)
 	var succeeded: bool = bool(result.get("ok", false))
 	_result.text = str(result.get("message", ""))
-	_result.add_theme_color_override("font_color", COLOR_OK if succeeded else COLOR_WARN)
+	_result.theme_type_variation = &"Success" if succeeded else &"Warning"
 	if succeeded:
 		_selected.clear()
 		_selected_product_id = ""
@@ -254,7 +253,7 @@ func _after_selection_change(clear_result: bool) -> void:
 	_rebuild_recipes()
 	if clear_result:
 		_result.text = ""
-		_result.remove_theme_color_override("font_color")
+		_result.theme_type_variation = &""
 	_rebuild_chips()
 	_refresh_preview()
 
@@ -335,7 +334,7 @@ func _make_chip(id: String, amount: int) -> Control:
 	label.clip_text = true
 	label.text = "%s ×%d / %d" % [_production.get_item_name(id), amount * int(_quantity.value), _production.get_stock(id)]
 	if _production.get_stock(id) < amount:
-		label.add_theme_color_override("font_color", COLOR_WARN)
+		label.theme_type_variation = &"Warning"
 	var remove := Button.new()
 	remove.text = "×"
 	remove.tooltip_text = "移除一份"
@@ -359,13 +358,13 @@ func _refresh_preview() -> void:
 	match str(preview.code):
 		"ok":
 			_preview.text = "→ %s ×%d%s" % [preview.product_name, int(_quantity.value), "（计入当前订单）" if preview.advances_order else ""]
-			_preview.add_theme_color_override("font_color", COLOR_OK)
+			_preview.theme_type_variation = &"Success"
 		"empty":
 			_preview.text = "点击上方配方自动填料，或从左侧选择原料"
-			_preview.remove_theme_color_override("font_color")
+			_preview.theme_type_variation = &""
 		_:
 			_preview.text = str(preview.message)
-			_preview.add_theme_color_override("font_color", COLOR_WARN)
+			_preview.theme_type_variation = &"Warning"
 	_craft.disabled = preview.code != "ok"
 	_craft.text = "制作 %d 杯并入库" % int(_quantity.value)
 

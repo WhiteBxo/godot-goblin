@@ -1,9 +1,11 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://src/UI/milk_tea/crafting_panel.gd" id="script"]
+[ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="theme"]
 
 [node name="CraftingPanel" type="VBoxContainer"]
 size_flags_vertical = 3
+theme = ExtResource("theme")
 script = ExtResource("script")
 
 [node name="Body" type="HBoxContainer" parent="."]

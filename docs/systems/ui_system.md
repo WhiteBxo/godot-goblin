@@ -55,9 +55,17 @@ UIManager 在 Systems 下使用 Always；World 和其他普通 Systems 保持 Pa
 - 节点离树自动注销，移除模态和失效焦点引用；UIManager 销毁会关闭界面、结束活动对白并释放其取得的暂停。外部已有暂停不会被取得或解除。
 - 独立 interaction demo 由宿主监听 ShopUI opened/closed 管理操作锁；独立 DialogueUI demo 保留本地输入，不依赖 MainGame。
 
-## 主题与 F6 验收
+## 主题、组件与 F6 验收
 
-共享主题是 `src/resources/ui/game_theme.tres`，各正式 UI 根显式引用，独立预览也能使用。正文使用现有 12px 像素字体；Title 使用 24px，Speaker 和 Hint 是主题 variation。面板沿用暖棕底色与金棕边框，按钮具备 normal、hover、pressed、focus、disabled 样式。使用 Container、anchors 和滚动容器约束长文本。
+共享主题是 `src/resources/ui/game_theme.tres`，各正式 UI 根显式引用，独立预览也能使用；项目级 `gui/theme/custom` 保持未设置，Debug 与第三方面板不被统一换皮。主题由 `src/resources/ui/ui_tokens.gd` 生成，颜色、字号、间距、圆角与控件高度只在 tokens 定义。修改 tokens 后运行：
+
+```sh
+godot --headless --path . --script res://tools/ui/build_theme.gd
+```
+
+主题覆盖 Button、Label、Panel/PanelContainer、ItemList、TabContainer/TabBar、LineEdit、SpinBox、VScrollBar/HScrollBar、PopupMenu、Tooltip、CheckBox、ProgressBar、HSeparator、RichTextLabel 和容器间距。正文 12px，弹窗标题 24px，标题画面 36px，不使用 14/18。静态样式全部来自主题，场景和脚本用 `theme_type_variation`（Title/H2/Speaker/Hint/Muted/Subtitle/Value/Success/Warning/Danger/Badge/Keycap/PrimaryButton/GhostButton/DangerButton/IconButton/InsetPanel/CardPanel/SunkenPanel/SuccessBar）表达语义，不写 per-node 颜色或字号覆盖。
+
+`src/debug/ui/ui_kit.tscn` 是主题画廊，F6 检查字体层级、按钮状态、面板、ItemList 选中、页签、输入框、进度条与长文本。`tests/verify_ui_theme.gd` 审计场景使用的控件类型、字号范围和 UI 脚本中的 raw Color；`tests/verify_ui_kit.gd` 冒烟加载画廊并输出截图。
 
 打开 `src/debug/ui/ui_demo.tscn`，F6：
 
@@ -74,18 +82,20 @@ Demo 的测试按钮只在 Debug 创建；正式 UI 和暂停功能不依赖 Deb
 引擎：Godot 4.7.2。使用以下入口；将 `<name>` 替换为测试名。
 
 ```sh
-/Applications/Godot.app/Contents/MacOS/Godot --headless --path . --log-file /private/tmp/goblin-ui-test.log --script res://tests/verify_<name>.gd
+godot --headless --path . --log-file .godot/ui-test.log --script res://tests/verify_<name>.gd
 ```
 
-相关测试为 `ui_manager`、`main_game`、`milk_tea_shop`、`dialogue`、`story_director`、`cinematic_integration`、`interaction_feedback`、`screen_transition`。主场景架构测试显式构建洞穴 fixture 保留开发工具覆盖，默认店铺的实际交互由 milk_tea_shop 与 ui_manager 验证。
+相关测试为 `ui_manager`、`ui_theme`、`ui_kit`、`handbook`、`task_panel`、`chronicle`、`main_game`、`milk_tea_shop`、`dialogue`、`story_director`、`cinematic_integration`、`interaction_feedback`、`screen_transition`。主场景架构测试显式构建洞穴 fixture 保留开发工具覆盖，默认店铺的实际交互由 milk_tea_shop 与 ui_manager 验证。
 
-窗口版 UI 验证同时输出三种尺寸的店铺、对白和暂停截图至 `/private/tmp/goblin-ui-{shop,dialogue,pause}-<width>x<height>.png`：
+窗口版 UI 验证同时输出三种尺寸的店铺、对白和暂停截图至 `.godot/ui-captures/goblin-ui-{shop,dialogue,pause}-<width>x<height>.png`：
 
 ```sh
-/Applications/Godot.app/Contents/MacOS/Godot --path . --log-file /private/tmp/goblin-ui-visual.log --script res://tests/verify_ui_manager.gd -- --capture
+godot --path . --log-file .godot/ui-visual.log --script res://tests/verify_ui_manager.gd -- --capture
 ```
 
-窗口截图来自游戏 viewport，不包含宽窗口的比例留白。验收同时断言实际 Window 尺寸，避免只修改截图文件名。
+统一手册与任务面板的截图分别写入 `.godot/handbook/` 与 `.godot/task_panel/`；主题画廊写入 `.godot/ui_kit/`。窗口截图来自游戏 viewport，不包含宽窗口的比例留白。验收同时断言实际 Window 尺寸，避免只修改截图文件名。
+
+本次主题化批次通过：ui_theme 131 项、ui_kit 6 项、ui_manager 47 项（窗口版含尺寸断言 50 项）、handbook 41 项、task_panel 92 项、chronicle 64 项、dialogue 154 项、main_game 73 项、day1_stages_01_02 255 项，以及 milk_tea_shop 的移动 / 碰撞 / 交互检查。F6 与 640×360、1280×720 截图已人工检查。
 
 历史 UI 验收（统一手册接入前）：ui_manager 47 项（窗口版含尺寸断言共 50 项）、main_game 72 项、dialogue 75 项、story_director 147 项、cinematic_integration 286 项、interaction_feedback 46 项、screen_transition 54 项，以及 milk_tea_shop 的移动/碰撞/交互检查。窗口版在项目默认 Metal Forward+ 下完成三种尺寸截图检查；Compatibility 渲染器也通过同一 UI 回归。
 

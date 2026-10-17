@@ -1,14 +1,7 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://src/UI/tasks/task_panel.gd" id="1"]
 [ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="2"]
-
-[sub_resource type="StyleBoxFlat" id="ListStyle"]
-bg_color = Color(0.12, 0.075, 0.05, 1)
-content_margin_left = 8.0
-content_margin_top = 8.0
-content_margin_right = 8.0
-content_margin_bottom = 8.0
 
 [node name="TaskPanel" type="Control"]
 visible = false
@@ -29,7 +22,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0, 0, 0, 0.65)
+color = Color(0.043, 0.027, 0.02, 0.72)
 
 [node name="Margin" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -38,10 +31,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
 
 [node name="Panel" type="PanelContainer" parent="Margin"]
 layout_mode = 2
@@ -71,12 +64,8 @@ size_flags_vertical = 3
 theme_override_constants/separation = 16
 
 [node name="Entries" type="ItemList" parent="Margin/Panel/Margin/Content/Body"]
-custom_minimum_size = Vector2(180, 0)
+custom_minimum_size = Vector2(176, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.91, 0.77, 1)
-theme_override_colors/font_selected_color = Color(1, 0.82, 0.48, 1)
-theme_override_styles/panel = SubResource("ListStyle")
-theme_override_constants/v_separation = 12
 allow_reselect = true
 allow_search = false
 
@@ -87,8 +76,7 @@ size_flags_vertical = 3
 
 [node name="Title" type="Label" parent="Margin/Panel/Margin/Content/Body/Detail"]
 layout_mode = 2
-theme_type_variation = &"Speaker"
-theme_override_font_sizes/font_size = 18
+theme_type_variation = &"H2"
 text_overrun_behavior = 3
 
 [node name="Text" type="RichTextLabel" parent="Margin/Panel/Margin/Content/Body/Detail"]

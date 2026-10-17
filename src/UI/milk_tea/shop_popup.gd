@@ -4,8 +4,9 @@ extends Control
 signal close_requested
 signal craft_requested(materials: Array[String], quantity: int)
 
-const LAYOUT_NORMAL: Dictionary = {"center": 40, "margin_x": 24, "margin_y": 20, "gap": 12, "title": 24, "close": 32}
-const LAYOUT_CRAFTING: Dictionary = {"center": 16, "margin_x": 12, "margin_y": 10, "gap": 8, "title": 18, "close": 26}
+const Tokens := preload("res://src/resources/ui/ui_tokens.gd")
+const LAYOUT_NORMAL: Dictionary = {"center": 16, "margin_x": 12, "margin_y": 12, "gap": 12, "title": Tokens.FONT_TITLE, "close": 28}
+const LAYOUT_CRAFTING: Dictionary = {"center": 16, "margin_x": 12, "margin_y": 12, "gap": 8, "title": Tokens.FONT_BODY, "close": 24}
 
 var _production: TeaProduction
 var _crafting_panel: CraftingPanel

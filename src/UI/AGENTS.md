@@ -20,6 +20,14 @@ UI 使用 Godot 原生 Control、Container、Theme。总体接口见 [UI 系统]
 - 保持稳定 screen ID、打开 / 关闭和取消生命周期；模态堆叠、焦点、暂停与底层处理状态由 UIManager 统一管理，不让各弹窗各自维护竞争状态。
 - 内容来自对应业务服务或资源；展示层不解析剧情步骤、修改任务事实、直接扣库存或发放奖励。
 
+## 主题与组件
+
+静态样式只来自 `src/resources/ui/game_theme.tres`，数值来源是 `src/resources/ui/ui_tokens.gd`；改 tokens 后运行 `godot --headless --path . --script res://tools/ui/build_theme.gd` 重建，不手改生成结果。正式 UI 根显式引用主题，不使用项目级全局主题。
+
+- 场景和脚本用 `theme_type_variation` 表达 Title / H2 / Hint / Muted / Success / Warning / Danger / Badge / Keycap / PrimaryButton / GhostButton / IconButton / InsetPanel 等语义，不写 per-node 颜色、字号或 `ListStyle` 覆盖。
+- 新增控件类型必须补主题条目，并通过 `tests/verify_ui_theme.gd` 的类型、字号与 raw Color 审计。
+- `src/debug/ui/ui_kit.tscn` 是 F6 主题画廊；新增可复用控件先在画廊展示，再接入正式界面。
+
 ## 按功能继续阅读
 
 | 目录 / 内容 | 相关模块规范 |
@@ -33,4 +41,4 @@ UI 使用 Godot 原生 Control、Container、Theme。总体接口见 [UI 系统]
 | `hud/`：业务阶段与交互提示 | 按实际显示内容读 [剧情规范](../core/story/AGENTS.md) 或 [交互规范](../gameplay/interaction/AGENTS.md) |
 | `title/`、`pause/`：新游戏、返回标题与暂停 | [核心入口规范](../core/AGENTS.md)；暂停栈另读管理规范 |
 
-候选验证：`tests/verify_ui_manager.gd` 与直接涉及的模块测试；局部画面 / 参数调整只做目标界面检查和 F6 观察。按 [验证分级](../../tests/AGENTS.md) 选择，报告键鼠、关闭 / 取消与锁恢复的实际结果。
+候选验证：`tests/verify_ui_manager.gd` 与直接涉及的模块测试；主题或样式调整加 `tests/verify_ui_theme.gd`、`tests/verify_ui_kit.gd`。局部画面 / 参数调整只做目标界面检查和 F6 观察。按 [验证分级](../../tests/AGENTS.md) 选择，报告键鼠、关闭 / 取消与锁恢复的实际结果。

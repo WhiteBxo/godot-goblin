@@ -22,23 +22,25 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-color = Color(0, 0, 0, 0.65)
+color = Color(0.043, 0.027, 0.02, 0.72)
 
 [node name="Margin" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
 
 [node name="Panel" type="PanelContainer" parent="Margin"]
 layout_mode = 2
+theme_type_variation = &"InsetPanel"
 
 [node name="Content" type="VBoxContainer" parent="Margin/Panel"]
 layout_mode = 2
+theme_override_constants/separation = 12
 
 [node name="Header" type="HBoxContainer" parent="Margin/Panel/Content"]
 layout_mode = 2
@@ -46,11 +48,12 @@ layout_mode = 2
 [node name="Title" type="Label" parent="Margin/Panel/Content/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_type_variation = &"Speaker"
+theme_type_variation = &"Title"
 text = "手册"
 
 [node name="Close" type="Button" parent="Margin/Panel/Content/Header"]
 layout_mode = 2
+theme_type_variation = &"GhostButton"
 text = "关闭"
 
 [node name="Pages" type="TabContainer" parent="Margin/Panel/Content"]

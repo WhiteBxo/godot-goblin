@@ -10,7 +10,7 @@
 | `milk_tea/`：食材、菜单、配方 | [制作与库存](../gameplay/milk_tea/AGENTS.md) |
 | `audio/`：音频映射与资源表 | [音频模块](../core/audio/AGENTS.md) |
 | `tilesets/`：共享 TileSet | [关卡规范](../levels/AGENTS.md) |
-| `ui/`：Theme 与共享 UI 数据 | [UI 规范](../UI/AGENTS.md) |
+| `ui/`：Theme 与共享 UI 数据 | [UI 规范](../UI/AGENTS.md)；tokens 由 [build_theme.gd](../../tools/ui/build_theme.gd) 生成 |
 
 - 数据结构、合法字段和默认值以实际 Resource 定义与 Loader 为准；修改前查看直接消费者，不依据历史示例猜测 Schema，不往严格 JSON 插入 Beat 注释等开发元数据。
 - 保持稳定资源 / 事件 / 物品 ID 和路径大小写；变更 ID 或类型时同步引用方与必要验证，避免只改显示名称就改业务键。

@@ -1,0 +1,22 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/disappeared_street/rim_1_3.png" id="1"]
+
+[node name="Rim13" type="Node2D" unique_id=1874730172]
+texture_filter = 1
+metadata/asset_id = "rim_1_3"
+metadata/native_size = Vector2i(388, 260)
+
+[node name="Visual" type="Sprite2D" parent="." unique_id=1235246037]
+position = Vector2(-194, -260)
+texture = ExtResource("1")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="." unique_id=1248318426]
+
+[node name="RockCollision" type="StaticBody2D" parent="." unique_id=2138662168]
+collision_mask = 2
+
+[node name="Silhouette0" type="CollisionPolygon2D" parent="RockCollision" unique_id=111633053]
+position = Vector2(-194, -260)
+polygon = PackedVector2Array(29, 139, 10, 153, 9, 153, 3, 175, 2, 175, 2, 258, 205, 258, 189, 242, 189, 241, 182, 242, 176, 242, 172, 247, 170, 247, 163, 226, 163, 223, 154, 217, 154, 215, 130, 221, 128, 221, 118, 243, 118, 244, 108, 237, 108, 236, 101, 237, 97, 237, 89, 207, 89, 204, 74, 191, 70, 191, 60, 159, 60, 157, 38, 140, 38, 138, 29, 138)

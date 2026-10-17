@@ -1,0 +1,22 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/disappeared_street/rim_0_1.png" id="1"]
+
+[node name="Rim01" type="Node2D" unique_id=748626129]
+texture_filter = 1
+metadata/asset_id = "rim_0_1"
+metadata/native_size = Vector2i(388, 260)
+
+[node name="Visual" type="Sprite2D" parent="." unique_id=1178299464]
+position = Vector2(-194, -260)
+texture = ExtResource("1")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="." unique_id=49567845]
+
+[node name="RockCollision" type="StaticBody2D" parent="." unique_id=1410709343]
+collision_mask = 2
+
+[node name="Silhouette0" type="CollisionPolygon2D" parent="RockCollision" unique_id=637131792]
+position = Vector2(-194, -260)
+polygon = PackedVector2Array(2, 258, 54, 258, 47, 243, 46, 243, 39, 204, 39, 200, 12, 176, 12, 174, 20, 173, 23, 173, 32, 163, 32, 155, 40, 158, 40, 160, 56, 159, 60, 159, 74, 143, 75, 143, 73, 127, 73, 121, 60, 89, 59, 89, 72, 71, 73, 71, 66, 11, 66, 2, 2, 2)

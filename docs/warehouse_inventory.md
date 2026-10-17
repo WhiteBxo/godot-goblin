@@ -2,7 +2,9 @@
 
 ## 数据与生命周期
 
-`basic_menu.tres` 是唯一食材目录及教学默认配置。`TeaMenu.ingredients` 使用 `Array[IngredientDefinition]`，可在 Inspector 编辑 ID、名称、图标、origin、category、稀有度、风味标签、战斗属性、特殊效果和获取来源。origin 为 `human` / `otherworld`；category 为 `tea` / `milk` / `syrup` / `topping`，两者独立。战斗属性和效果目前只作为描述数据，不实现战斗或效果执行系统。
+`basic_menu.tres` 是唯一食材目录及教学默认配置。`TeaMenu.ingredients` 使用 `Array[IngredientDefinition]`，可在 Inspector 编辑 ID、名称、图标、origin、category、稀有度、风味标签、战斗属性、特殊效果和获取来源。origin 为 `human` / `otherworld`；category 为 `tea` / `milk` / `syrup` / `topping` / `product` / `material`，两者独立。战斗属性和效果目前只作为描述数据，不实现战斗或效果执行系统。
+
+`material` 用于不在奶茶配方里的采集材料。目录现有唯一的异世界材料是醒神菇 `insomnia_mushroom`（`origin = otherworld`、稀有），默认 0 份且未发现；只有夜间采集点入库时才 `discovered`，此后在仓库的「异世界食材」筛选里可见。采集与交付见 [采集与任务物资提交](gathering.md)。
 
 `initial_stock` 单位为份，六种初始数量保持 12 / 12 / 12 / 8 / 8 / 10。`initial_discovery` 的键是初始已发现的食材 ID，值是已知属性组列表。默认六种人类材料均已知，没有新增异世界剧情内容。新增食材只需编辑该资源；没有初始库存或发现配置的食材默认数量为零且未发现。
 

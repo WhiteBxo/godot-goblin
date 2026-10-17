@@ -4,7 +4,7 @@
 
 ## 数据与复用
 
-任务继续使用 TaskCatalog / TaskJournal，状态仍来自 GameState 的激活与完成条件。交付任务只新增以下配置（每次交付固定一件）：
+任务继续使用 TaskCatalog / TaskJournal，状态仍来自 GameState 的激活与完成条件。交付任务支持两种互斥的需求，`product_id` 与 `items` 必须恰好出现一个：
 
 ```json
 "delivery": {
@@ -14,7 +14,17 @@
 }
 ```
 
-`order_id` 在任务目录中唯一；成品必须是菜单中 `category = "product"` 的物品；NPC ID 直接复用 SettlementCharacter.actor_id。交付完成条件使用既有 `complete_when` 的 flag，不通过伪造剧情完成事件结算。
+```json
+"delivery": {
+  "order_id": "order_insomnia_01",
+  "items": {"insomnia_mushroom": 3},
+  "target_object_id": "tavern"
+}
+```
+
+`order_id` 在任务目录中唯一；`product_id` 必须是菜单中 `category = "product"` 的物品；`items` 是 `{物品 ID: 正整数}`，物品只需存在于目录中，可一次提交多种材料多份；NPC ID 直接复用 SettlementCharacter.actor_id。交付完成条件使用既有 `complete_when` 的 flag，不通过伪造剧情完成事件结算。
+
+材料需求与成品需求共用同一套结算：`get_requirement()` 把两种配置统一成 `{item_id: 数量}`（JSON 数字在此转成 int，库存 API 只接受 int），`try_submit(order_id, target_object_id)` 是规范入口，扣减仍由一次 `WarehouseInventory.try_exchange(需求, 奖励)` 完成。旧的 `try_deliver(order_id, product_id, target_object_id)` 保留为兼容包装：成品订单校验 `product_id` 一致，材料订单要求传入空字符串。
 
 原奖励字段仅用于展示，没有实际结算器。按本次确认，在现有 `rewards` 中增加可选的 `items`，复用 WarehouseInventory 发放物品，不引入货币或新奖励框架：
 
@@ -41,10 +51,12 @@
 
 - 未配置或未知订单、成品 ID 不匹配、交付对象不匹配。
 - 任务未激活、已完成，或已有交付回执。
-- 成品不足、奖励物品不存在、奖励数量非法或容量溢出。
+- 成品或材料不足、奖励物品不存在、奖励数量非法或容量溢出。
 - 制作或交付的同步回调重入。
 
-前述失败不扣物品、不写完成事实、不发奖励。目录完整校验后替换；配置阶段验证成品类别和奖励引用。奖励容量不足时整笔拒绝，可腾出库存后重试。若批量事实提交被拒绝，则在库存通知前恢复原快照。
+前述失败不扣物品、不写完成事实、不发奖励。目录完整校验后替换；配置阶段验证成品类别、材料物品引用和奖励引用。奖励容量不足时整笔拒绝，可腾出库存后重试。若批量事实提交被拒绝，则在库存通知前恢复原快照。
+
+材料与制作共用一份库存：两边都走 `try_exchange` 的整组校验，先扣先得，不会把数量扣成负数，详见 [采集与任务物资提交](gathering.md)。
 
 ## 试玩
 
@@ -61,6 +73,7 @@
 | 范围 | 文件 |
 | --- | --- |
 | 交付系统 | `src/core/tasks/task_delivery.gd`、对应 `.uid` |
+| 材料需求 | `task_catalog.gd` 的 `delivery.items` 校验；`task_delivery.gd` 的 `get_requirement` / `try_submit`（详见 [采集与任务物资提交](gathering.md)） |
 | 原任务/状态 | `src/core/tasks/task_catalog.gd`、`src/core/tasks/task_journal.gd`、`src/core/game_state.gd` |
 | 制作/库存 | `src/gameplay/milk_tea/tea_production.gd`、`src/gameplay/milk_tea/warehouse_inventory.gd` |
 | 数据 | `src/resources/tasks/tasks.json`、`src/resources/milk_tea/basic_menu.tres`、`src/resources/milk_tea/ingredient_definition.gd` |

@@ -2,7 +2,7 @@
 
 默认入口为 `src/core/settlement.tscn`，F5 可试玩。15 个参考功能区加上奶茶店，共 16 个独立场景，连接在一片连续洞窟平地上。建筑采用完整背墙、侧墙和可见外墙面，前墙用剖面表现内部；种植、工坊、火塘、庭院和集结点保持开放。唯一一圈洞窟岩壁位于整图外围。
 
-WASD / 方向键移动，E 查看地点和店内设施，Esc 关闭。Debug 模式下 M 切换全图与跟随镜头，Tab 依次显示第一天动线、第二天动线和河岸补给线。路线显示是开发检查工具。
+WASD / 方向键移动，E 查看地点和店内设施，Esc 关闭。Debug 模式下 M 切换全图与跟随镜头，Tab 依次显示第一天动线、第二天动线和河岸补给线，F4 切换白天/夜晚以便验收夜间采集。路线显示与昼夜切换都是开发检查工具。
 
 ![实际 Godot 整图](captures/full_map.png)
 
@@ -32,7 +32,7 @@ Unity 的 `GoblinCasinoDemo`、`GoblinTavernDemo`、`GoblinTrainingDemo`、`Gobl
 
 `SettlementMap.get_story_anchor()` 提供 `drunken_guard`、`tavern_bartender`、`casino_boss`、`elder_document`、`elder_blood_storage`、`shop_rest_chair`、`shop_workbench` 以及 `night_gather_0..7`。隐藏石盖和书柜仅保留线索锚点，不在普通地点提示中公开。
 
-目前实现地图、实际角色移动、环境碰撞、遮挡、地点说明及三个奶茶店信息交互。剧情演出、NPC 巡逻/警报、采集结算、买酒、赌局、雇佣和两天完整任务流程尚未接入。预留锚点不等于已实现对应玩法。
+目前实现地图、实际角色移动、环境碰撞、遮挡、地点说明、三个奶茶店信息交互和夜间采集：`GatherPoints` 在 8 个 `night_gather_*` 锚点放置采集点（`required_flag = world.phase.night`，白天不可采），醒神菇入共享库存并可交给酒馆，详见 [采集与任务物资提交](../gathering.md)。剧情演出、NPC 巡逻/警报、买酒、赌局、雇佣和两天完整任务流程尚未接入。预留锚点不等于已实现对应玩法。
 
 ## 编辑与文件职责
 

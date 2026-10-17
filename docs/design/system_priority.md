@@ -40,6 +40,16 @@
 
 实施顺序建议：系统 1 与 2 一起做（同一份状态/判定链），再做 3，最后 4。3 与 4 都要改 `src/resources/tasks/tasks.json`，需等剧情分支合并后统一加条目，避免目录冲突。
 
+## 实施记录：系统 4 已完成
+
+2026-10-17 落地「采集与任务物资提交」，实现说明见 [采集与任务物资提交](../gathering.md)。
+
+- 8 个 `night_gather_*` 锚点改为 `GatherPoints` 下的采集点实例，采集入共享库存，已采状态写 `GameState` 的 flags/variables。
+- `delivery` 新增互斥的 `items` 材料清单，复用同一份扣减、完成 flag 与回执；成品订单与旧三参 API 保持兼容。
+- 昼夜条件是事实 flag（`world.phase.night`），**不是**系统 1 的 phase 状态机：本轮没有新增 GameState 字段、没有推进入口，也没有升快照 schema。系统 1 接好后只需写这个 flag，采集侧不用改。
+- `tasks.json` 的 `tavern.insomnia_order`、`basic_menu.tres` 的醒神菇、`settlement_map.tscn` 的 8 个点位都标注为占位，等剧情分支合并后按正式清单替换。
+- 系统 1、2、3 与自由制作均未改动。
+
 ## P1：P0 完成后的下一个
 
 | # | 系统 | 为什么排在这里 | 最小交付 |

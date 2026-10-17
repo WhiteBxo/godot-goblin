@@ -13,10 +13,10 @@
 
 ## 运行与场景
 
-- 使用 Godot 4.7 系列打开根目录的 project.godot，F5 启动洞穴试玩入口。
+- 使用 Godot 4.7 系列打开根目录的 project.godot。当前 F5 默认启动聚落，`src/core/main.tscn` 的 F6 启动奶茶店；本节操作针对 `tests/verify_main_game.gd` 组装的洞穴宿主。
 - WASD / 方向键移动；F2 切换石砖墙体、纯色轮廓和关闭墙体；M 切换全图与跟随镜头。
-- 右下角“开发者工具”可在运行中选择玩家移速 1×、2×、4×、8×，每次启动默认 1×。倍率基于 Player 的 speed（默认 122 px/s），不累乘、不写回场景；恢复 1× 即恢复基础速度。移动查询按小步执行，避免高倍率跳过不可走区域。
-- 默认启动 src/core/main.tscn，根节点为 MainGame；World/LevelRoot 挂载 CaveMap，World/EntityRoot 挂载 Player，World/EffectRoot 预留世界特效。
+- 按 F3 打开通用 Console，在“角色”页可在运行中选择玩家移速 1×、2×、4×、8×，每次启动默认 1×。倍率基于 Player 的 speed（默认 122 px/s），不累乘、不写回场景；恢复 1× 即恢复基础速度。移动查询按小步执行，避免高倍率跳过不可走区域。
+- 洞穴宿主根节点为 MainGame；World/LevelRoot 挂载 CaveMap，World/EntityRoot 挂载 Player，World/EffectRoot 预留世界特效。
 - Debug 运行时，MainGame 在 Systems 中创建通用 DeveloperTools 和洞穴专属 CaveDemoController，在 DebugLayer 中创建 DeveloperPanel 和 DebugOverlay。Release 不创建这些节点。src/debug/cave_demo/cave_demo.tscn 是调试组件的场景，不是游戏入口。
 - 当前试玩提示属于 DebugLayer/DebugOverlay；HudLayer 预留正式游戏 HUD，PopupLayer 预留弹窗，PauseLayer 与 TransitionLayer 为空且默认隐藏。
 - 主场景通过 get_active_level()、get_player()、get_debug_tools() 和 get_demo_tools() 提供引用；后两个 getter 分别返回通用和洞穴专属调试组件，工具关闭或 Release 时返回 null。初始化顺序为选择布局、绑定移动查询、设置出生点与跟随镜头、启动可选调试组件，正常启动不依赖调试组件。
@@ -42,7 +42,7 @@ godot --headless --path . --script res://tools/map/import_cave_layout.gd -- --la
 
 相关实现依据：[TileMapLayer 数据与 changed signal](https://docs.godotengine.org/en/stable/classes/class_tilemaplayer.html)、[Terrain 编辑](https://docs.godotengine.org/en/stable/tutorials/2d/using_tilesets.html#creating-terrain-sets-autotiling)、[在编辑器中运行 @tool](https://docs.godotengine.org/en/stable/tutorials/plugins/running_code_in_the_editor.html)。
 
-移速工具使用 [OptionButton 的 item_selected signal](https://docs.godotengine.org/en/stable/classes/class_optionbutton.html#class-optionbutton-signal-item-selected) 将选择交给调试控制器，再通过玩家公开接口设置倍率。屏幕空白和提示使用 [Control.MOUSE_FILTER_IGNORE](https://docs.godotengine.org/en/stable/classes/class_control.html#enum-control-mousefilter)，只有工具区域接收鼠标。
+移速工具使用 [OptionButton 的 item_selected signal](https://docs.godotengine.org/en/stable/classes/class_optionbutton.html#class-optionbutton-signal-item-selected) 将选择交给调试控制器，再通过玩家公开接口设置倍率。洞穴非交互提示使用 [Control.MOUSE_FILTER_IGNORE](https://docs.godotengine.org/en/4.7/classes/class_control.html#enum-control-mousefilter)；Console 收起时不截获鼠标，展开时作为 modal 阻断底层输入。
 
 ## 数据与资源
 
@@ -93,9 +93,9 @@ godot --path . -- --capture-atlas-compare
 
 ## 通用开发者工具
 
-DeveloperTools 通过 configure(set_multiplier, get_multiplier, panel) 接收两个 Callable 和 DeveloperPanel，不依赖 CavePlayer 或 CaveMap 类型。新角色只需提供倍率设置和读取接口；setter 应接受 1、2、4、8，getter 返回实际生效的倍率。配置成功返回 OK，依赖缺失或工具关闭返回 ERR_UNCONFIGURED 并隐藏面板。重新 configure 会断开旧面板的 signal 并切换目标，初始倍率恢复 1×。
+通用面板现覆盖聚落、奶茶店与洞穴宿主。F3 打开/关闭，默认收起；状态、角色、剧情三个页签提供实时观察、移速、回出生点、确认重启与有界日志。完整接线、缺失能力处理和测试记录见 [Developer Console](../developer_console.md)。
 
-面板的 speed_multiplier_selected signal 交给 DeveloperTools.set_player_speed_multiplier()，组件校验允许倍率后调用 setter，再通过 getter 同步显示。MainGame 注入玩家公开接口；CaveDemoController 只管理洞穴专属调试行为。组件场景挂 Systems 并使用 Always，面板挂 DebugLayer；全屏根 Control 忽略鼠标，只有面板区域接收输入。
+`DeveloperTools.configure(set_multiplier, get_multiplier, panel, context = {})` 保留两个 Callable 的原接口；重绑不重置已有倍率。角色能力缺失返回 ERR_UNCONFIGURED，仍可只读观察；工具关闭时隐藏面板。MainGame 注入公开 API 与场景服务，CaveDemoController 继续独立管理布局、墙体、全图与截图。UIManager 管理 Console 的 modal 焦点与底层输入屏蔽。
 
 DebugRuntime.is_enabled() 同时检查 debug feature 和开发开关；Release 无法通过开发开关启用工具。DebugRuntime.apply_release_policy() 在 MainGame 启动时停止第三方 MCPRuntimeProbe 的处理，不改写 autoload 配置或插件源码。
 
@@ -106,7 +106,7 @@ godot --headless --path . --script res://tests/verify_debug_build.gd
 
 构建边界测试需分别在 Debug 和 Release export template 执行；只用编辑器运行 PCK 仍带 debug feature，不能作为 Release 验收。依据：[Feature tags](https://docs.godotengine.org/en/4.7/tutorials/export/feature_tags.html)、[Containers](https://docs.godotengine.org/en/4.7/tutorials/ui/gui_containers.html)、[pixel snap 限制](https://docs.godotengine.org/en/4.7/classes/class_projectsettings.html#class-projectsettings-property-rendering-2d-snap-snap-2d-transforms-to-pixel)。
 
-本轮真实构建验收在临时项目副本中将 verify_debug_build.gd 的检查改为等价 Node 入口场景，然后分别导出 Debug 和 Release EXE；正式主场景和导出配置未替换为测试入口。两种构建均验证出生与移动；Debug 验证倍率和旧布局，Release 验证调试节点缺席、调试按键无效、旧布局参数无效及 MCP 轮询停止。
+此前洞穴版本的真实构建验收在临时项目副本中将 verify_debug_build.gd 的检查改为等价 Node 入口场景，然后分别导出 Debug 和 Release EXE；正式主场景和导出配置未替换为测试入口。两种构建均验证出生与移动；Debug 验证倍率和旧布局，Release 验证调试节点缺席、调试按键无效、旧布局参数无效及 MCP 轮询停止。
 
 屏幕层的 layer 分别为 10、20、30、40、50，关闭 follow_viewport_enabled。MainGame 和调试组件使用 Always，Systems 与 World 使用 Pausable，PauseLayer 使用 WhenPaused；此次没有新增暂停操作入口或转场功能。
 

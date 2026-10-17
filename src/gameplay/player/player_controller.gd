@@ -16,6 +16,7 @@ const DIRECTION_NAMES: Array[StringName] = [&"down", &"left", &"right", &"up"]
 
 var facing: Facing = Facing.DOWN
 var movement_enabled := true
+var speed_multiplier := 1.0
 var _performance_owner: WeakRef
 
 @onready var animated_sprite: AnimatedSprite2D = $Visual/AnimatedSprite2D
@@ -75,8 +76,19 @@ func get_emote_offset() -> Vector2:
 func get_facing_vector() -> Vector2:
 	return [Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT, Vector2.UP][facing]
 
+func set_speed_multiplier(multiplier: float) -> void:
+	if multiplier in [1.0, 2.0, 4.0, 8.0]:
+		speed_multiplier = multiplier
+
+func get_speed_multiplier() -> float:
+	return speed_multiplier
+
+func teleport_to(world_position: Vector2) -> void:
+	stop_performance_motion()
+	global_position = world_position
+
 func get_movement_speed() -> float:
-	return speed
+	return speed * speed_multiplier
 
 func set_movement_enabled(enabled: bool) -> void:
 	movement_enabled = enabled

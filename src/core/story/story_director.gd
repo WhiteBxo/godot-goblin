@@ -101,6 +101,12 @@ func load_events(path: String = "") -> Error:
 	return error
 
 
+## Read-only runtime information; observing never loads or starts an event.
+func get_runtime_status() -> Dictionary:
+	return {"loaded": _loaded, "event_count": _library.get_event_ids().size(),
+		"event_id": _event_id, "step_index": _index if is_busy() else -1, "last_error": last_error}
+
+
 func is_busy() -> bool:
 	return not _event_id.is_empty()
 

@@ -16,11 +16,12 @@ UIManager 在 Systems 下使用 Always；World 和其他普通 Systems 保持 Pa
 
 ## 接入接口
 
-`configure(layers)` 接收 StringName 到 CanvasLayer 的映射，目前使用 `hud`、`popup`、`pause`。MainGame 创建、注入并注册暂停菜单。
+`configure(layers)` 接收 StringName 到 CanvasLayer 的映射，目前使用 `hud`、`popup`、`pause`、`debug`。MainGame 创建、注入并注册暂停菜单。
 
 | API | 行为 |
 | --- | --- |
 | `register_screen(id, view, layer, modal) -> Error` | 添加无父节点的界面或迁至指定层；初始隐藏。重复 ID 或同一 view 返回 ERR_ALREADY_EXISTS；空 ID、无效 view 或未知层返回 ERR_INVALID_PARAMETER |
+| `unregister_screen(id)` | 关闭并注销界面，断开原 view 的离树回调；供工具替换面板使用，旧 view 随后离树不会注销新 view |
 | `open_screen(id) -> Error` | 显示界面，模态入栈；已打开则无副作用。未知 ID 返回 ERR_DOES_NOT_EXIST，待删除/离树 view 返回 ERR_UNCONFIGURED；popup 冲突或暂停中打开 popup 返回 ERR_BUSY |
 | `close_screen(id)` | 关闭界面；未打开则无副作用。对白经过取消接口结束活动 session；关闭 pause 同时恢复管理器取得的暂停 |
 | `request_back()` | 恢复暂停，或关闭栈顶，或在无模态时打开暂停 |
@@ -33,6 +34,7 @@ UIManager 在 Systems 下使用 Always；World 和其他普通 Systems 保持 Pa
 
 - `get_default_focus() -> Control`：打开和恢复时的默认焦点；没有可选项可返回 null。
 - `bind_ui(manager, id)`：切换为管理器输入路由；未绑定时保留独立场景输入。
+- `uses_native_gui_input() -> bool`：返回 true 时由原生 Control 处理确认、方向和 Tab；用于 Developer Console 的 OptionButton 和只读 TextEdit，其他界面的输入分发不变。
 - `handle_ui_input(event)`：处理栈顶的确认和方向输入，当前用于对白。Tab 导航由管理器处理。
 - `on_ui_closed()`：同步结束业务生命周期；对白在此请求 DialogueManager 取消。此回调发生在界面已出栈、隐藏之后，应可重复安全调用。
 

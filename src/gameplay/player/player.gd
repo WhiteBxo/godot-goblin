@@ -7,17 +7,11 @@ extends PlayerController
 
 var walkability_query: Callable
 var overview_enabled := false
-var speed_multiplier := 1.0
 
-func set_speed_multiplier(multiplier: float) -> void:
-	if multiplier in [1.0, 2.0, 4.0, 8.0]:
-		speed_multiplier = multiplier
-
-func get_movement_speed() -> float:
-	return speed * speed_multiplier
-
-func get_speed_multiplier() -> float:
-	return speed_multiplier
+func teleport_to(world_position: Vector2) -> void:
+	super.teleport_to(world_position)
+	camera.reset_smoothing()
+	camera.force_update_scroll()
 
 func configure(query: Callable) -> void:
 	walkability_query = query

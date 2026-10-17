@@ -33,6 +33,7 @@ func _ready() -> void:
 	_settlement_level = $World/LevelRoot.get_child(0) as SettlementMap
 	if _settlement_level != null:
 		_initialize_settlement()
+		_create_debug_components()
 		return
 	_shop_level = $World/LevelRoot.get_child(0) as MilkTeaShop
 	if _shop_level != null:
@@ -57,10 +58,11 @@ func _ready() -> void:
 		feedback.configure(interaction, _audio_manager)
 		_create_dialogue_system()
 		_create_gameplay_bridge()
+		_create_debug_components()
 		return
 	var error := _active_level.load_error
 	if DebugRuntime.is_enabled():
-		_create_debug_components()
+		_create_cave_debug_components()
 		error = _demo_tools.apply_layout_override()
 	if error != OK:
 		push_error("Could not initialize MainGame level (error %d)" % error)
@@ -70,8 +72,9 @@ func _ready() -> void:
 	_player.global_position = _active_level.get_spawn_position()
 	_player.follow_player()
 	_create_dialogue_system()
-	if _debug_tools != null:
-		_debug_tools.configure(_player.set_speed_multiplier, _player.get_speed_multiplier, _debug_panel)
+	_create_debug_components()
+	if _demo_tools != null:
+		_demo_tools.capture_started.connect(_debug_tools.close_panel)
 		_demo_tools.start()
 
 func get_ui_manager() -> UIManager:
@@ -81,7 +84,7 @@ func _create_ui_system() -> void:
 	_ui_manager = UIManager.new()
 	_ui_manager.name = "UIManager"
 	$Systems.add_child(_ui_manager)
-	_ui_manager.configure({&"hud": $HudLayer, &"popup": $PopupLayer, &"pause": $PauseLayer})
+	_ui_manager.configure({&"hud": $HudLayer, &"popup": $PopupLayer, &"pause": $PauseLayer, &"debug": $DebugLayer})
 	var pause: PauseMenu = preload("res://src/UI/pause/pause_menu.tscn").instantiate()
 	$PauseLayer.add_child(pause)
 	_ui_manager.register_screen(&"pause", pause, &"pause", true)
@@ -290,14 +293,48 @@ func get_demo_tools() -> CaveDemoController:
 	return _demo_tools
 
 func _create_debug_components() -> void:
-	var panel: DeveloperPanel = load("res://src/debug/developer_tools/developer_panel.tscn").instantiate()
-	_debug_panel = panel
-	$DebugLayer.add_child(panel)
+	if not DebugRuntime.is_enabled():
+		return
+	var player := get_player() as PlayerController
+	_debug_panel = load("res://src/debug/developer_tools/developer_panel.tscn").instantiate()
+	$DebugLayer.add_child(_debug_panel)
 	_debug_tools = load("res://src/debug/developer_tools/developer_tools.tscn").instantiate()
 	$Systems.add_child(_debug_tools)
+	_debug_tools.configure(player.set_speed_multiplier, player.get_speed_multiplier, _debug_panel, {
+		"status": _get_developer_status,
+		"respawn": _return_player_to_spawn,
+		"restart": _restart_current_scene,
+		"can_control": _can_control_debug_player,
+		"can_restart": func() -> bool: return get_tree().current_scene == self,
+		"state": get_node_or_null("/root/GameState"),
+		"story": get_story_director(),
+		"ui_manager": _ui_manager,
+	})
+
+func _get_developer_status() -> Dictionary:
+	var level := get_active_level()
+	return {"scene": scene_file_path, "level": level.name, "position": get_player().global_position}
+
+func _can_control_debug_player() -> bool:
+	var player := get_player() as PlayerController
+	return (DebugRuntime.is_enabled() and is_instance_valid(player)
+		and not player.is_performance_controlled()
+		and not (is_instance_valid(_story_director) and _story_director.is_busy())
+		and not (is_instance_valid(_dialogue_manager) and _dialogue_manager.is_active()))
+
+func _return_player_to_spawn() -> void:
+	if _can_control_debug_player():
+		(get_player() as PlayerController).teleport_to(get_active_level().get_spawn_position())
+
+func _restart_current_scene() -> void:
+	if not DebugRuntime.is_enabled() or get_tree().current_scene != self:
+		return
+	# Reload the host scene, retaining cross-scene GameState through its autoload.
+	get_tree().reload_current_scene.call_deferred()
+
+func _create_cave_debug_components() -> void:
 	var overlay: CaveDebugOverlay = load("res://src/debug/cave_demo/debug_overlay.tscn").instantiate()
 	$DebugLayer.add_child(overlay)
 	_demo_tools = load("res://src/debug/cave_demo/cave_demo.tscn").instantiate()
 	$Systems.add_child(_demo_tools)
 	_demo_tools.configure(_active_level, _player, overlay)
-	_demo_tools.capture_started.connect(panel.hide)

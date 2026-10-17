@@ -101,6 +101,8 @@ godot --headless --path . --script res://tests/verify_actor_director.gd
 
 画面与交互还需在有渲染环境的运行窗口中试玩；自动化脚本不能替代视觉验收。地图编辑器、洞穴及 Debug / Release 边界验证的额外条件见各模块说明。上述命令是验证入口，不代表当前工作区已全部通过。
 
+通用开发者面板在聚落和奶茶店入口均可按 F3 打开，提供状态、角色控制及只读剧情观察；仅 Debug 创建。操作、接线和验收见 [Developer Console](docs/developer_console.md)。
+
 ## 导出与协作
 
 - [export_presets.cfg](export_presets.cfg) 提供 `Windows Desktop` 预设；导出前安装与本机引擎匹配的导出模板，并选择输出路径。

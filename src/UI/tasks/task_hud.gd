@@ -55,7 +55,7 @@ func _disconnect_journal() -> void:
 		_journal.projection_changed.disconnect(_refresh)
 
 func _resize_card() -> void:
-	offset_left = -minf(260.0, maxf(1.0, get_viewport_rect().size.x - 32.0)) - 16.0
+	offset_right = offset_left + minf(208.0, maxf(1.0, get_viewport_rect().size.x - 32.0))
 
 func _refresh() -> void:
 	if not is_node_ready():

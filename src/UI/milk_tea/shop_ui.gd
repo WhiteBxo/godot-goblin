@@ -65,7 +65,7 @@ func select_formula(materials: Array, iced := false) -> bool:
 func show_formula_result(result: Dictionary) -> void:
 	_popup.show_formula_result(result)
 
-@export var help_text := "小小奶茶店 · WASD 移动 · E 交互 · Esc / P 暂停"
+@export var help_text := "小小奶茶店"
 @export var show_help := true
 @export var close_text := "返回店铺  [Esc]"
 

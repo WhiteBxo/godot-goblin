@@ -554,8 +554,7 @@ func _initialize_settlement() -> void:
 	_shop_player.configure_camera(_settlement_level.get_camera_bounds())
 	_create_camera_system(_shop_player.camera)
 	_shop_ui = preload("res://src/UI/milk_tea/shop_ui.tscn").instantiate()
-	_shop_ui.help_text = "洞窟聚落                  WASD 移动 · E 交互 · Esc / P 暂停"
-	_shop_ui.show_help = not DebugRuntime.is_enabled()
+	_shop_ui.help_text = "洞窟聚落"
 	_shop_ui.close_text = "继续探索  [Esc]"
 	$HudLayer.add_child(_shop_ui)
 	_shop_ui.set_popup_layer($PopupLayer)
@@ -617,10 +616,7 @@ func _initialize_room_map(map: Node2D) -> void:
 	if map.has_method(&"configure_depth_sort"):
 		map.call(&"configure_depth_sort", $World/EntityRoot)
 	_shop_ui = preload("res://src/UI/milk_tea/shop_ui.tscn").instantiate()
-	_shop_ui.help_text = "房间                  WASD 移动 · E 交互 · Esc / P 暂停"
-	if chapter_map and map.get_chapter_host() == "settlement":
-		_shop_ui.help_text = "陌生的洞窟聚落 · WASD 移动 · E 调查 · Esc / P 暂停"
-	_shop_ui.show_help = not DebugRuntime.is_enabled()
+	_shop_ui.help_text = map.map_title if map is RpgMakerMap else "房间"
 	_shop_ui.close_text = "继续探索  [Esc]"
 	$HudLayer.add_child(_shop_ui)
 	_shop_ui.set_popup_layer($PopupLayer)

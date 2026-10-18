@@ -16,16 +16,14 @@ theme = ExtResource("theme")
 script = ExtResource("1")
 
 [node name="Header" type="Label" parent="."]
-offset_left = 20.0
-offset_top = 8.0
+offset_left = 16.0
+offset_top = 16.0
 anchor_right = 1.0
-offset_right = -16.0
-offset_bottom = 32.0
+offset_right = -168.0
+offset_bottom = 36.0
 mouse_filter = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 1
-theme_override_constants/shadow_offset_y = 1
-text = "小小奶茶店 · WASD 移动 · E 交互 · Esc / P 暂停"
+theme_type_variation = &"H2"
+text = "小小奶茶店"
 autowrap_mode = 2
 
 [node name="Prompt" parent="." instance=ExtResource("prompt")]

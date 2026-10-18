@@ -1,6 +1,10 @@
 # Day 2 对接待定与能力缺口
 
-核对日期：2026-10-18。配套 [Day 2 初稿](../design/day_02_stages_01_05_draft.md)，来源 [day_02.pdf](../design/source/day_02.pdf)。本文不是剧情来源，不补对白、数值、坐标或机制规则；编号供跨机器引用，解决时先更新初稿，再更新产物与验证。与 Day 1 共用的问题引用 [Day 1 待定清单](day_01_integration_pending.md)的 P 编号。
+核对日期：2026-10-18。配套 [Day 2 初稿](../design/day_02_stages_01_05_draft.md)，来源 [day_02.pdf](../design/source/day_02.pdf)。本文不是剧情来源，不补对白、数值、坐标或机制规则；编号供跨机器引用，解决时先更新正式来源（已迁移用工程，未迁移用初稿），再更新产物与验证。与 Day 1 共用的问题引用 [Day 1 待定清单](day_01_integration_pending.md)的 P 编号。
+
+本轮 29 Beat 已存入[待发布工程](day2_stages_01_05_project.json)，后续内容以工程为正式编辑来源；[交接清单](day_01_02_authoring_handoff.md)记录真实接口、任务／订单／角色需求和验证边界。全部区间仍 pending，未开放 Day 2 宿主。
+
+能力补记：A 的日程／失败／期限／取消终态已实现（缺正式规则）；B 的营业调度组件已实现，期间并行工作区新增 A 的原子营业持久／关店接口及 B.configure_session 适配（仍缺正式规则、配置和宿主接线，不纳入本次 commit）；C 的静态报价购买与两局真实结算已实现（缺正式配置、动态折扣与宿主接线）；人物记录的独立 CharacterJournal、UI 与 Story 指令随后也出现在并行工作区（D10）。采集／材料提交已存在，临时代购组件尚未发现。下文“没有系统”的旧证据不覆盖上述能力。来源文字、日期冲突与未定数值仍原样保留。
 
 <a id="d01"></a>
 ## D01 日程、昼夜与换天
@@ -86,6 +90,8 @@
 - **需决定**：人物记录是否为独立 UI；长期雇佣与队伍的最小范围。
 - **可继续**：系统提示文案保留；不使用见闻录条目冒充人物记录。
 
+本轮期间新增的 `src/core/characters/character_journal.gd` 提供独立 unlock_character／append_record／查询／已读接口，MainGame 与 StoryDirector 正在并行接入 `character_unlock/character_append`。本项不再把人物记录笼统记作“系统不存在”；正式守卫身份、稳定人物记录 ID 与触发仍需集成确认，其原文正文已存于工程。雇佣／队伍能力与机制仍 pending；本轮不验收并行组件、不将它混入剧情提交。
+
 <a id="d11"></a>
 ## D11 胖哥布林的店内状态与表现
 
@@ -109,3 +115,21 @@
 - **证据**：当前实现取血 `day1_griffin_blood` × 1，特调配方整份消耗；Day 1 原稿「胖哥布林望着剩下的格里芬之血」、Day 2「将剩余的格里芬之血收起来」「被收在一旁的格里芬之血」均要求制作后仍有剩余。
 - **需决定**：取得量与配方用量，或剩余仅为演出道具；进入 Day 2 后血液是否仍在库存、能否被出售 / 归还（S02 主角曾考虑卖掉或放回）。见 [P07](day_01_integration_pending.md#p07)。
 - **可继续**：不改台词；在决定前不调整现有配方或取得量。
+
+2026-10-18 细化：血液 Resource 已有 `uses_per_portion=5`，但当前正式固定特调走整份扣料，且血液 `free_recipe_allowed=false`。按次自由配方能力不能自动解决“剩余”与原稿“玩家自行决定用量”；本项保持 pending，不增加取得量或暗改配方。
+
+<a id="d14"></a>
+## D14 营业组件的生产持久接口与正式配置
+
+- **影响**：`s02_business_open`、四组固定剧情顾客、`s02_stage_end`。
+- **证据**：[B 的接口](../gameplay/business_scheduler.md)原以 `configure` 注入 load_snapshot／commit_snapshot／close_session；本轮期间并行工作区已新增 GameState.bind_business_session/load_business_session/commit_business_session/close_business_session，以及 B.configure_session 生产适配。实际正式 Day 2 尚未调用或配置。`request_close` 只在真实提交并回读 closed 后发完成，不因全部交单而自动关店。
+- **需补接线**：集成负责人在完整任务目录绑定后，给 B.configure_session 提供正式 plan 与明确 close_rule，B.CustomerVisit 绑定实际路线；D04 决定人数、订单和出场规则，D01 决定关店与日程。未定关店规则保持空配置，不能用空门槛默认完成。每组先查询 `is_group_served()` 再订阅通知；并行新增接口由其负责人验收，不用本轮内容检查代替模块测试。
+- **可继续**：四组对白与交付前后边界已保存，订单和 Actor ID 留在需求清单；不复制夹具价格、数量，不用空组或全局制作计数构成完成。
+
+<a id="d15"></a>
+## D15 交易、赌局事实与 Story 的数据边界
+
+- **影响**：`s03_amber_wine`、`s04_first_round`／`s04_second_round`／`s04_leave_casino`。
+- **证据**：[C 的组件](../gameplay/day_02_trade.md)提供购买、第一局、第二局奖励与免除接口；StoryDirector 实际 dispatch 没有调用这些业务的指令。购买当前只支持会话开始前确定的同源静态价格；剧情中途折扣缺少钱包原子报价／资格接口。赌场 win 回执与债务 cancelled 是独立持久边界。
+- **需补接线**：集成负责人在批准的自动／玩家边界调用真实业务并消费其回执；恢复查询 `get_status()` 和 A.get_task_result 后续办免除。D07/D08 决定商品价格／限量、奖励、身份、赌局操作模式和债务规则。赌场自由赌博仍无实现，不能发布“自由探索含赌博机器已开放”的提示。
+- **可继续**：精确保存成功前后的原文段落，Phase 草案保留 pending；不发明 purchase/casino command，不用 `set_flag`、先全价买再退款或空奖励替代真实结算。

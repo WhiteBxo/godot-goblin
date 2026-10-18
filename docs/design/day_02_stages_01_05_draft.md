@@ -2,6 +2,8 @@
 
 整理日期：2026-10-18。来源为 [day_02.pdf](source/day_02.pdf)（37 页；第 2 页流程表为图片）。本稿按 `Beat` 逐字整理全部对白、系统提示、任务提示与见闻录正文，补充执行模式、完成条件和绑定候选，供后续按[编排工作流](../guides/story_authoring_workflow.md)生成运行时 JSON。原稿错字、重复句与标题疑点逐字保留并登记于 [Day 2 待定清单](../story_authoring/day_02_integration_pending.md)，不在本稿修正。
 
+编排交接（2026-10-18）：内容已逐字存入 [Day 2 工程](../story_authoring/day2_stages_01_05_project.json)的开发期 `pending` 集合，后续修改以工程及稳定 ID 为正式来源，本 MD 保留初稿。`pending` 不参与 StoryProject 编译；空派生产物未接入正式宿主，Day 2 仍为占位。A/B/C/D 实际接口和集成需求见[交接清单](../story_authoring/day_01_02_authoring_handoff.md)，下文历史能力记录不覆盖该核对。
+
 - **前置剧情**：[Day 1 第三至第六阶段初稿](day_01_stages_03_06_draft.md)，以 `day1.s06.completed` 结束；胖哥布林留在店里休息。
 - **宿主场景**：奶茶店 `src/core/main.tscn`（S01、S02、S05 店内段）；聚落 `src/core/settlement.tscn`（S03 酒馆、S04 赌场、S05 街道与守卫处）。聚落已有锚点 `06_tavern_entrance`、`tavern_bartender`、`07_casino_entrance`、`casino_boss`、`drunken_guard`、`night_gather_0`–`7`，均未由 MainGame 注册为 Story 位置。
 - **启动方式**：S01 在 Day 2 白天开始时自动播放；其余由前段成功结束、营业进度或地点交互触发，具体触发点见各 Beat 与 [D01](../story_authoring/day_02_integration_pending.md#d01)。
@@ -997,4 +999,4 @@
 - 事件拆分建议（规划名）：`day2.s01.morning`（wakes 至 stage_end）；`day2.s02.business_open`、`day2.s02.festival_order` / `festival_after`、`day2.s02.elder_order` / `elder_after`、`day2.s02.emissary_order` / `emissary_after`、`day2.s02.rumor_order` / `rumor_after`、`day2.s02.errand`；`day2.s03.amber_wine`、`day2.s03.commission_token`、`day2.s03.to_casino`；`day2.s04.casino`（afraid_to_enter 至 stake）、`day2.s04.rounds`、`day2.s04.leave`；`day2.s05.street`、`day2.s05.back_in_shop`、`day2.s05.special_after`、`day2.s05.guard_greet`、`day2.s05.guard_after`、`day2.s05.useful_guard`、`day2.s05.unsolved`。
 - Dialogue ID 与 Day 1 规则一致：`day2.<阶段>.<去掉阶段前缀的 Beat ID>`，分段时追加 `_order` / `_after`。分支 `s03_tavern_commission` 用 `when.flags` 区分 `day2.s03.has_gathered` 的正反值。
 - Bridge phase 预留：`day2.bridge.festival_order`、`day2.bridge.elder_order`、`day2.bridge.emissary_order`、`day2.bridge.rumor_order`、`day2.bridge.errand_runner`、`day2.bridge.amber_wine`、`day2.bridge.casino_reward`、`day2.bridge.special_drink`、`day2.bridge.guard_delivery`、`day2.bridge.guard_reward`。
-- 本稿未生成运行时 JSON：Day 2 的营业订单、购买、赌局、换昼夜和交付报酬均无业务写入者（D01–D09）。阻塞解除后可先编排纯演出段：`s01_fat_goblin_wakes` 至 `s01_stage_end`（不含任务与资金转交时可独立播放）、`s04_casino_boss`、`s04_stake`、`s05_useful_guard`、`s05_unsolved`。
+- 当前只生成空发布集合与映射：A 日程／任务终态、B 营业组件、C 购买／固定赌局组件已存在，正式配置与宿主接线仍缺（D01–D09、D14/D15），不能继续把它们写成“系统未实现”。对白、分支与玩家操作 Phase 草案已在工程 `pending` 中编排；缺身份、空间、金额或机制的事件仍不发布，不删除任务／资金转交来冒充可播放整段。

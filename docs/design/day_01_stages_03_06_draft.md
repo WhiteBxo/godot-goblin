@@ -2,6 +2,8 @@
 
 整理日期：2026-10-18。本稿把 [Day 1 修改版](day_01_story_flow_revised.md)第三至第六阶段按 `Beat` 拆分，供后续按[编排工作流](../guides/story_authoring_workflow.md)生成 Story / Dialogue / Phase JSON。对白、系统提示、见闻录正文、选项均逐字取自修改版；本稿只补 Beat 标题、执行模式、完成条件和绑定候选，不新增台词、反应或数值。
 
+编排交接（2026-10-18）：内容已逐字存入 [S03–S06 工程](../story_authoring/day1_stages_03_06_project.json)的开发期 `pending` 集合，后续修改以工程及稳定 ID 为正式来源，本 MD 保留初稿。由于各段仍有来源／接线阻塞，编译集合为空，旧运行时产物保留；`pending` 不参与 StoryProject 编译。实际接口、逐 Beat 映射和发布条件见[交接清单](../story_authoring/day_01_02_authoring_handoff.md)。下文“未注册／未实现”是整理时记录，最新核对见交接清单，不据此反向覆盖当前代码。
+
 - **前置剧情**：S01–S02 已迁移为结构化工程 [day1_stages_01_02_project.json](../story_authoring/day1_stages_01_02_project.json)，结束于 `day1.investigate_coins`，本稿不重复。
 - **宿主场景**：S03–S05 为聚落 `src/core/settlement.tscn`（同一张地图含奶茶店外街道、长老宅等区域）；S04 店内段与 S06 为奶茶店 `src/core/main.tscn`。店内 / 店外切换与准确出入口见 [P13](../story_authoring/day_01_integration_pending.md#p13)。
 - **启动方式**：各阶段由前一阶段成功结束及对应真实业务事实触发；玩家操作段以 Gameplay Bridge v2 等待事实。所有触发点在发布前须接入宿主实际调用，只写 `conditions` 不会自动开播。
@@ -482,4 +484,4 @@
 - Dialogue ID 采用 `day1.<阶段>.<去掉阶段前缀的 Beat ID>`，例如 Beat `s04_commission_choice` → `day1.s04.commission_choice`；选项 ID 固定为 `accept` / `refuse`。
 - Bridge phase 预留：`day1.bridge.s03_exploration`、`day1.bridge.fat_goblin_order`（若为玩家操作）、`day1.bridge.blood_drink`。S05 潜入各步由 Day1StealthService 判定，是否经 Bridge 续播待 P09。
 - 未确认空间位置一律不写坐标；聚落锚点须由宿主 register_position 后才能作为 target。
-- 本稿未生成运行时 JSON：S03–S06 每个阶段都至少有一个触发或成功事实受 P01 / P06–P10 / P13 / P14 阻塞，按工作流不发布可播放的伪版本。阻塞解除后，可先编排 `s04_griffin_faith`、`s04_griffin_blood`、`s04_commission_choice`、`s06_reaction` 等内容明确的纯演出段。
+- 当前仅生成空发布集合的工程映射：S03–S06 每个阶段都至少有一个触发或成功事实受 P01 / P06–P10 / P13 / P14 阻塞，旧运行时 JSON 保留，不发布可播放的伪版本。内容明确的对白、文书和分支已在工程 `pending` 中编排；仍需完整动作、前置事实与宿主验证，不能仅凭文本确定就发布整段。

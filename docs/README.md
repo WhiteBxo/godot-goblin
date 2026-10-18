@@ -142,6 +142,9 @@ Beat 映射、验证清单及待定项；不供游戏运行时加载。
 | [day1_scene01.json](story_authoring/day1_scene01.json) | 生成的 Beat 映射 / 验证清单，保留原资源名。 |
 | [Day 1 对接待定与能力缺口](story_authoring/day_01_integration_pending.md) | 正式剧情对接待定项及能力缺口。 |
 | [Day 2 对接待定与能力缺口](story_authoring/day_02_integration_pending.md) | Day 2 初稿的待定项（D 编号）。 |
+| [Day 1 后四阶段与 Day 2 五阶段编排交接](story_authoring/day_01_02_authoring_handoff.md) | 待发布工程、A/B/C/D 实码接口、任务／订单／角色绑定与发布条件。 |
+| [Day 1 S03–S06 Beat 映射](story_authoring/day1_stages_03_06_beat_map.md) | 24 Beat 的来源、事件／Phase 草案、阻塞与实际验证。 |
+| [Day 2 S01–S05 Beat 映射](story_authoring/day2_stages_01_05_beat_map.md) | 29 Beat 的来源、事件／Phase 草案、阻塞与实际验证。 |
 | [gameplay_bridge_demo_bridge.json](story_authoring/gameplay_bridge_demo_bridge.json) | 生成的 Beat 映射 / 验证清单，保留原资源名。 |
 | [order_bridge_demo_bridge.json](story_authoring/order_bridge_demo_bridge.json) | 生成的 Beat 映射 / 验证清单，保留原资源名。 |
 

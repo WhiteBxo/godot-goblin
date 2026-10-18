@@ -1,0 +1,3757 @@
+{
+	"version": 1.0,
+	"format": "goblin_story_project",
+	"next_step_id": 1.0,
+	"manifest": {
+		"version": 1.0,
+		"source": "res://docs/design/day_01_stages_03_06_draft.md",
+		"source_sha256": "2f5365b226e1cce76e166058b0dcb3eb4855e79d20297b0045432e1f309c9b96",
+		"scene": "res://src/core/main.tscn",
+		"story": "res://src/resources/story/day1_stages_03_06.json",
+		"dialogue": "res://src/resources/dialogue/day1_stages_03_06.json",
+		"phases": "res://src/resources/story/day1_stages_03_06_phases.json",
+		"manifest_path": "res://docs/story_authoring/day1_stages_03_06_bridge.json",
+		"publication_status": "pending",
+		"pending_beat_ids": [
+			"s03_coin_inspect",
+			"s03_street_gone",
+			"s03_limited_exploration",
+			"s03_back_to_door",
+			"s04_fat_goblin_arrives",
+			"s04_fat_goblin_order",
+			"s04_first_taste",
+			"s04_griffin_faith",
+			"s04_griffin_blood",
+			"s04_map_handover",
+			"s04_commission_choice",
+			"s05_step1_outside",
+			"s05_step2_throw",
+			"s05_step3_bribe",
+			"s05_drunken_guard",
+			"s05_final_patrol",
+			"s05_document",
+			"s05_blood_acquired",
+			"s05_escape",
+			"s05_shop_system_update",
+			"s06_pondering",
+			"s06_blood_drink",
+			"s06_reaction",
+			"s06_help_and_rest"
+		],
+		"handoff": "res://docs/story_authoring/day_01_02_authoring_handoff.md"
+	},
+	"events": {},
+	"beats": [],
+	"dialogues": {},
+	"previews": {},
+	"pending": {
+		"purpose": "开发期编排内容，不参与 StoryProject.compile；确认来源、空间与业务后，按稳定 ID 逐段迁入正式 events/beats/dialogues。F3 表单仅显示已发布集合；完整工程 JSON 保留本对象。",
+		"source_context": "# Day 1 第三至第六阶段：剧情演出初稿\n\n整理日期：2026-10-18。本稿把 [Day 1 修改版](day_01_story_flow_revised.md)第三至第六阶段按 `Beat` 拆分，供后续按[编排工作流](../guides/story_authoring_workflow.md)生成 Story / Dialogue / Phase JSON。对白、系统提示、见闻录正文、选项均逐字取自修改版；本稿只补 Beat 标题、执行模式、完成条件和绑定候选，不新增台词、反应或数值。\n\n编排交接（2026-10-18）：内容已逐字存入 [S03–S06 工程](../story_authoring/day1_stages_03_06_project.json)的开发期 `pending` 集合，后续修改以工程及稳定 ID 为正式来源，本 MD 保留初稿。由于各段仍有来源／接线阻塞，编译集合为空，旧运行时产物保留；`pending` 不参与 StoryProject 编译。实际接口、逐 Beat 映射和发布条件见[交接清单](../story_authoring/day_01_02_authoring_handoff.md)。下文“未注册／未实现”是整理时记录，最新核对见交接清单，不据此反向覆盖当前代码。\n\n- **前置剧情**：S01–S02 已迁移为结构化工程 [day1_stages_01_02_project.json](../story_authoring/day1_stages_01_02_project.json)，结束于 `day1.investigate_coins`，本稿不重复。\n- **宿主场景**：S03–S05 为聚落 `src/core/settlement.tscn`（同一张地图含奶茶店外街道、长老宅等区域）；S04 店内段与 S06 为奶茶店 `src/core/main.tscn`。店内 / 店外切换与准确出入口见 [P13](../story_authoring/day_01_integration_pending.md#p13)。\n- **启动方式**：各阶段由前一阶段成功结束及对应真实业务事实触发；玩家操作段以 Gameplay Bridge v2 等待事实。所有触发点在发布前须接入宿主实际调用，只写 `conditions` 不会自动开播。\n- **播放次数**：均为一次（`once: true`）；取消后可人工重试，不重复发物、扣钱或写成功事实。\n- **剧情范围**：从主角拿着古怪金币准备出店，到胖哥布林喝下特调后被安排在店里休息。Day 2 从次日清晨开始，见 [Day 2 初稿](day_02_stages_01_05_draft.md)。\n- **说话人约定**（沿用 S01–S02）：内心独白为「主角·内心」，出声为「主角」，系统提示为「系统」；说话人名称不等于 Actor ID。\n- **立绘约定**：沿用 S01–S02；主角默认 `res://assets/characters/apron_man/player_neutral_portrait.png`。原稿未标注表情，本稿不逐句添加。胖哥布林首次登场「显示角色立绘与角色名称」，候选 `res://assets/characters/goblin/goblin_smiling_portrait.png` / `goblin_laughing_portrait.png`，正式指定待确认。\n- **音频约定**：修改版 S03–S06 没有指定任何音乐或音效。S04 店内段若仍在奶茶店营业场景，沿用 S01–S02 的 `music.daily_milk_tea`，不重新播放；其余段落不添加音频。\n- **开发者秘密（不得展示为玩家可见内容）**：衣柜连接两个世界、长老对「变量」的怀疑与搜查、格里芬之血的毒性与长老的隐瞒。它们只作为叙事约束保留在修改版「开发者须知」，不写进对白或见闻录。\n\n## 现有能力与 ID 基线\n\n以 2026-10-18 源码与文档为准；「规划」表示须由业务实现发布，不能在 Story JSON 中用 `set_flag` 冒充。\n\n| 类别 | ID | 状态 |\n| --- | --- | --- |\n| 阶段 | `day1.investigate_coins`、`day1.s03`、`day1.s05`、`day1.s06`、`day1.s06.wait_blood_drink` | 已被 Day1Access / Day1WorldController 消费；`day1.s04` 当前不开放出店 |\n| 见闻录 | `chronicle.casino`、`chronicle.griffin_blood`、`chronicle.elder` | S02 已解锁（空白）；本稿新增条目候选 `chronicle.griffin`、`chronicle.emissary`，沿用已实现的 `chronicle.*` 前缀，而非约定中规划的 `day1.chronicle.*` |\n| 委托 | `day1.s04.commission_accepted` | 已被世界门控消费；由 S04 选择汇合后的 Story 写入 |\n| 地图 | `day1.s04.map_available` | 宿主 `unlock_map()` 验证装配后写入；Story 无对应 command，需宿主接线 |\n| 潜入 | `day1.s05.guard_payment_completed`、`day1.s05.escape_completed` | 组件只消费，当前没有正式写入者（P06 / P08） |\n| 调查 / 拾取 | `day1_elder_document` → `day1.s05.document_read`；`day1_blood_storage` → `day1_griffin_blood` × 1 与 `day1.s05.blood_acquired`；`drunken_guard` 仅调查回执 | 已实现；三点均要求 S05、夜晚与委托已接受 |\n| 返店 | `day1.s05.returned_shop` | 实际走奶茶店 street_door 入口且已取血时写入 |\n| 特调 | 配方产物 `day1_blood_milk_tea`；订单 `day1_s06_blood_drink`；`day1.s06.blood_drink_delivered` | 已实现；用量选择未实现（P07） |\n| 聚落锚点 | `00_shop_entrance`、`shop_rest_chair`、`shop_workbench`、`drunken_guard`、`elder_document`、`elder_blood_storage`、`10_elder_entrance` | 地图中存在；MainGame 未自动 register_position，不能直接作 Story target |\n| 角色 | `player`、`fat_goblin`、`guard`、`common_goblin` | 已注册；`guard` 不等于醉酒守卫或宅邸双卫（P09） |\n\n## 第三阶段：消失的街道\n\n- 时间 / 场景：白天 · 店铺外（修改版标题下写「店铺外」，但首段检查金币发生在出门前）。\n\n",
+		"source_alternatives": "（待 P14 决定替代或合并）\n\n以下内容只出现在修改版第四阶段正文，原样保留供决策，不在上方 Beat 中重复播放：\n\n- 登场叙述：主角还在店外观察周围的环境，一个体型圆滚滚的哥布林主动凑了过来……以为这是格里芬又派来的新商铺。\n- 见闻录（正文写法，与补充版措辞不同）：\n  - 伟大的格里芬：「哥布林普遍崇拜并畏惧的存在。传说它会惩罚懒惰、不守规矩的哥布林。」\n  - 长老：「被视为格里芬在人间的权威代表，主持仪式，并宣称能够将格里芬的力量转化为对哥布林的庇护。」\n  - 格里芬使者：「长老宣称，偶尔到来的行脚商是格里芬派来的使者，他们带来的商品是对勤劳者的奖励。」\n  - 格里芬之血：「已知信息：据胖哥布林所说，格里芬之血是长老掌管的珍贵圣物，饮用后可以获得格里芬的庇护。」「真实功效：暂未确认。」（若采用，记录 ID 候选 `chronicle.griffin_blood.s04_first`）\n- 主角·内心：「珍贵材料？听起来就能卖上价钱。」\n- 长老外出缘由：「长老今晚要外出寻欢作乐」（补充版为祭拜格里芬）。\n- 系统提示与地图说明：「获得哥布林洞穴地图，地图功能已解锁。」——与补充版同句，只播放一次。\n- 拒绝后的内心：「我都欠这么多钱了，再不想办法赚钱，真要活不下去了。好不容易有个机会，我还管什么危险不危险？赌一把！」（补充版拒绝分支使用不同内心台词）\n\n",
+		"chapters": {
+			"s03": [
+				"s03_coin_inspect",
+				"s03_street_gone",
+				"s03_limited_exploration",
+				"s03_back_to_door"
+			],
+			"s04": [
+				"s04_fat_goblin_arrives",
+				"s04_fat_goblin_order",
+				"s04_first_taste",
+				"s04_griffin_faith",
+				"s04_griffin_blood",
+				"s04_map_handover",
+				"s04_commission_choice"
+			],
+			"s05": [
+				"s05_step1_outside",
+				"s05_step2_throw",
+				"s05_step3_bribe",
+				"s05_drunken_guard",
+				"s05_final_patrol",
+				"s05_document",
+				"s05_blood_acquired",
+				"s05_escape",
+				"s05_shop_system_update"
+			],
+			"s06": [
+				"s06_pondering",
+				"s06_blood_drink",
+				"s06_reaction",
+				"s06_help_and_rest"
+			]
+		},
+		"beats": [
+			{
+				"id": "s03_coin_inspect",
+				"status": "pending",
+				"mode": "自动演出",
+				"host": "shop",
+				"event_id": "day1.s03.coin_inspect",
+				"blocked_by": [
+					"P13"
+				],
+				"source_start": 38.0,
+				"source_end": 50.0,
+				"source_markdown": "### Beat s03_coin_inspect\n\n- 执行模式：自动演出\n- 前置条件：`day1.ending` 已完成，阶段为 `day1.investigate_coins`。\n- 触发：待确认——S02 结束后立即续播，或玩家与店门 / 出口交互时播放（[P13](../story_authoring/day_01_integration_pending.md#p13)）。\n- 角色：主角。\n- 演出：主角低头检查手里的金币，发现它们颜色暗沉、沾满污渍，上面还刻着一种陌生的怪物。\n- 对白：\n  - 主角·内心：「这什么破玩意儿……该不会真有人拿假币买奶茶吧？」\n- 演出：他越想越气，决定追出去找刚才那几个顾客问个清楚。\n- 结束状态：设置阶段 `day1.s03`（允许出店）。\n- 验收：独白结束后玩家可操作，能通过店门离开奶茶店。\n\n",
+				"dialogues": [
+					{
+						"id": "day1.s03.coin_inspect",
+						"segment": "before",
+						"source_lines": [
+							46.0
+						]
+					}
+				],
+				"ordered_lines": [
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 0.0,
+						"source_line": 46.0,
+						"dialogue": "day1.s03.coin_inspect",
+						"line": "line_1"
+					}
+				],
+				"chronicles": [],
+				"steps": [
+					{
+						"id": "s03_coin_inspect_before",
+						"data": {
+							"command": "dialogue",
+							"id": "day1.s03.coin_inspect"
+						},
+						"segment": "before"
+					}
+				]
+			},
+			{
+				"id": "s03_street_gone",
+				"status": "pending",
+				"mode": "自动演出",
+				"host": "settlement",
+				"event_id": "day1.s03.street_gone",
+				"blocked_by": [
+					"P13"
+				],
+				"source_start": 51.0,
+				"source_end": 61.0,
+				"source_markdown": "### Beat s03_street_gone\n\n- 执行模式：自动演出\n- 前置条件：`s03_coin_inspect` 完成；玩家**实际**从奶茶店出口进入聚落（真实出店事实，名称待 P13 发布；不以阶段切换冒充）。\n- 角色：主角。\n- 位置：候选 `00_shop_entrance`（未注册，P13）。\n- 演出：刚一出门，主角就愣住了。原本熟悉的街道消失了。店铺外是一片陌生的洞窟聚落，四周遍布粗糙的石头建筑和简陋的摊位，远处隐约能看见几个晃动的身影。\n- 对白：\n  - 主角·内心：「……我店门口什么时候变成这样了？」\n- 验收：主角停在店门外，独白结束后进入有限探索。\n\n",
+				"dialogues": [
+					{
+						"id": "day1.s03.street_gone",
+						"segment": "before",
+						"source_lines": [
+							59.0
+						]
+					}
+				],
+				"ordered_lines": [
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 0.0,
+						"source_line": 59.0,
+						"dialogue": "day1.s03.street_gone",
+						"line": "line_1"
+					}
+				],
+				"chronicles": [],
+				"steps": [
+					{
+						"id": "s03_street_gone_before",
+						"data": {
+							"command": "dialogue",
+							"id": "day1.s03.street_gone"
+						},
+						"segment": "before"
+					}
+				]
+			},
+			{
+				"id": "s03_limited_exploration",
+				"status": "pending",
+				"mode": "玩家操作",
+				"host": "settlement",
+				"event_id": null,
+				"blocked_by": [
+					"P13"
+				],
+				"source_start": 62.0,
+				"source_end": 77.0,
+				"source_markdown": "### Beat s03_limited_exploration\n\n- 执行模式：玩家操作\n- 前置条件：`s03_street_gone` 完成，阶段 `day1.s03`。\n- 玩家目标：在店铺周边进行有限探索，观察环境，寻找线索。\n- 原稿示例（明确为「这里仅试举例」，**不是**已批准的必查点）：\n  - 明亮的摊位区：附近摆着一些简陋的摊位，地上散落着与手中金币相似的硬币。主角小心翼翼地靠近查看，发现这里似乎真的有人长期生活。\n  - 空荡荡的街道：四周没有行人，只有远处传来的模糊说话声和脚步声。主角犹豫了一下，最终决定不再往远处走。\n  - 昏暗的洞窟岔路：前方光线逐渐消失，深处传来不明声响。玩家尝试继续前进时，主角停下脚步。\n    - 主角·内心：「黑灯瞎火的，谁知道里面有什么？不去。」\n- 范围要求：探索范围通过主角的心理活动和即时反应体现，而非单纯依靠空气墙。\n- 玩法完成条件：`day1.s03.exploration_completed`（规划，无写入者）；观察点集合与结束判定待 [P13](../story_authoring/day_01_integration_pending.md#p13)。\n- 是否接受历史结果：不适用（尚无业务事实）。\n- 取消 / 重试：探索不消耗资源；离开再回来不重复播放已完成的示例反应。\n- 验收：玩家只能在店铺附近活动；尝试深入岔路时出现原稿反应；满足结束条件后进入下一 Beat。\n\n",
+				"dialogues": [
+					{
+						"id": "day1.s03.limited_exploration",
+						"segment": "before",
+						"source_lines": [
+							71.0
+						]
+					}
+				],
+				"ordered_lines": [
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 0.0,
+						"source_line": 71.0,
+						"dialogue": "day1.s03.limited_exploration",
+						"line": "line_1"
+					}
+				],
+				"chronicles": [],
+				"steps": [
+					{
+						"id": "s03_limited_exploration_before",
+						"data": {
+							"command": "dialogue",
+							"id": "day1.s03.limited_exploration"
+						},
+						"segment": "before"
+					}
+				]
+			},
+			{
+				"id": "s03_back_to_door",
+				"status": "pending",
+				"mode": "自动演出",
+				"host": "settlement",
+				"event_id": "day1.s03.back_to_door",
+				"blocked_by": [
+					"P13",
+					"P14"
+				],
+				"source_start": 78.0,
+				"source_end": 87.0,
+				"source_markdown": "### Beat s03_back_to_door\n\n- 执行模式：自动演出\n- 前置条件：`day1.s03.exploration_completed`（经 Bridge 输出 `day1.bridge.s03_exploration.completed`）。\n- 演出：探索结束后，主角退回店门口，望着眼前完全陌生的环境，又看了看身后的奶茶店。\n- 对白：\n  - 主角·内心：「……完了，我这店不会真穿越了吧？」\n- 结束状态：设置阶段 `day1.s04`。\n- 验收：主角站在店门口，进入胖哥布林登场段。\n\n",
+				"dialogues": [
+					{
+						"id": "day1.s03.back_to_door",
+						"segment": "before",
+						"source_lines": [
+							84.0
+						]
+					}
+				],
+				"ordered_lines": [
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 0.0,
+						"source_line": 84.0,
+						"dialogue": "day1.s03.back_to_door",
+						"line": "line_1"
+					}
+				],
+				"chronicles": [],
+				"steps": [
+					{
+						"id": "s03_back_to_door_before",
+						"data": {
+							"command": "dialogue",
+							"id": "day1.s03.back_to_door"
+						},
+						"segment": "before"
+					}
+				]
+			},
+			{
+				"id": "s04_fat_goblin_arrives",
+				"status": "pending",
+				"mode": "自动演出",
+				"host": "pending",
+				"event_id": "day1.s04.commission",
+				"blocked_by": [
+					"P04",
+					"P05",
+					"P13",
+					"P14"
+				],
+				"source_start": 92.0,
+				"source_end": 134.0,
+				"source_markdown": "### Beat s04_fat_goblin_arrives\n\n- 执行模式：自动演出\n- 前置条件：`s03_back_to_door` 完成，阶段 `day1.s04`。\n- 角色：主角、胖哥布林（`fat_goblin`，首次显示立绘与名称）。\n- 位置：补充版为店内柜台前；正文为店外（P14）。\n- 演出：胖哥布林走进店里，看到柜台上的菜单，立刻凑了过来。\n- 对白：\n  - 胖哥布林：「日安！愿格里芬垂顾你！你就是新的格里芬使者吧？你们家卖什么的？」\n  - 胖哥布林：「哎呀，我可算等到了！我们哥布林洞窟的食物，我都快吃腻了！每次就盼着你们格里芬使者来，能吃到点新鲜玩意儿！」\n  - 胖哥布林：「哈哈哈，虽然我不挑食，但是也不能啥都吃呀！大家都叫我胖哥布林，就是因为我太爱吃了。不过嘛，胖一点又怎么了？能吃是福啊！」\n  - 主角·内心：「……这家伙话也太多了。」\n  - 主角·内心：「不过，他好像知道不少东西。或许可以趁机问问这里的情况。」\n  - 主角：「格里芬使者……是什么？」\n  - 胖哥布林：「啊？你不知道？」\n  - 胖哥布林：「你难道不是被伟大的格里芬派来，为我们哥布林洞窟播撒来自黄金乡的食粮吗？」\n  - 主角·内心：「这家伙在说什么？为什么突然用词这么装？格里芬我倒是有印象，刚刚那几个哥布林也这么说，还提到什么长老……」\n  - 主角·内心：「不行，刚到这个地方，还不知道周围是什么情况，不能随便暴露自己的底细。先顺着他的话说吧。」\n  - 主角：「我这不是刚来嘛，还人生地不熟的。先做点生意，慢慢熟悉这里。」\n  - 主角：「我们店里卖的是奶茶，可是好东西。你要不要尝尝？先看看菜单。」\n- 演出：胖哥布林低头看向菜单，眼睛一下子亮了起来。\n- 对白：\n  - 胖哥布林：「哟！还真有不少花样啊！你们格里芬使者带来的东西就是新鲜！」\n  - 胖哥布林：「我们这边也有那什么奶茶……是叫这个名儿吧？不过可没有你们这么多花样！」\n  - 胖哥布林：「让我看看啊……这个六金币，这个七金币……嚯！这个居然要十金币？」\n  - 胖哥布林：「嘶……是不便宜啊。不过，难得有新东西嘛！」\n  - 主角·内心：「这些哥布林居然这么自然地接受了我的长相和这家店，甚至连价目表都能直接看懂。」\n  - 主角·内心：「看来，这个世界的文字至少和我原来认识的文字有相通之处，物价好像也没有太大的变动……至于他们为什么把我当成什么格里芬使者，恐怕得再打听打听。」\n  - 主角·内心：「不过现在还不能急着问，先别引起他的怀疑。」\n  - 主角：「都是都是你没尝过的口味。既然难得来一趟，不如挑一杯试试？」（原文「都是都是」疑为笔误，逐字保留，见 [P16](../story_authoring/day_01_integration_pending.md#p16)）\n  - 胖哥布林：「哈哈哈！你说得对！那我可得好好尝尝！」\n- 演出：胖哥布林在菜单上挑选了一番，最终点了一杯奶茶。（原注：等奶茶系统设计完之后想具体是啥品类）\n- 对白：\n  - 胖哥布林：「就这个吧！看着就不错！」\n- 演出：主角开始制作奶茶。胖哥布林则趴在柜台边，眼巴巴地盯着操作过程，不时探头张望。\n- 对白：\n  - 胖哥布林：「哎，这个是什么？那个又是什么？都放进去就行了吗？」\n  - 主角：「……你先等着，做好了就给你。」\n  - 胖哥布林：「好好好！我不催，我不催！」\n- 编排说明：原稿制作过程中的三句对白发生在「主角开始制作」之后；若下一 Beat 确定为玩家操作，因对白不能与玩家操作同时进行，这三句放在操作开始前播放，顺序不变。\n- 结束状态：若为玩家操作，设置阶段 `day1.s04.wait_fat_goblin_order`（规划）。\n- 验收：胖哥布林点单完成；音乐不重新播放。\n\n",
+				"dialogues": [
+					{
+						"id": "day1.s04.fat_goblin_arrives",
+						"segment": "before",
+						"source_lines": [
+							100.0,
+							101.0,
+							102.0,
+							103.0,
+							104.0,
+							105.0,
+							106.0,
+							107.0,
+							108.0,
+							109.0,
+							110.0,
+							111.0,
+							114.0,
+							115.0,
+							116.0,
+							117.0,
+							118.0,
+							119.0,
+							120.0,
+							121.0,
+							122.0,
+							125.0,
+							128.0,
+							129.0,
+							130.0
+						]
+					}
+				],
+				"ordered_lines": [
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 0.0,
+						"source_line": 100.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_1"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 1.0,
+						"source_line": 101.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_2"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 2.0,
+						"source_line": 102.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_3"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 3.0,
+						"source_line": 103.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_4"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 4.0,
+						"source_line": 104.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_5"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 5.0,
+						"source_line": 105.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_6"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 6.0,
+						"source_line": 106.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_7"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 7.0,
+						"source_line": 107.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_8"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 8.0,
+						"source_line": 108.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_9"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 9.0,
+						"source_line": 109.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_10"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 10.0,
+						"source_line": 110.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_11"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 11.0,
+						"source_line": 111.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_12"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 12.0,
+						"source_line": 114.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_13"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 13.0,
+						"source_line": 115.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_14"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 14.0,
+						"source_line": 116.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_15"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 15.0,
+						"source_line": 117.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_16"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 16.0,
+						"source_line": 118.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_17"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 17.0,
+						"source_line": 119.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_18"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 18.0,
+						"source_line": 120.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_19"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 19.0,
+						"source_line": 121.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_20"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 20.0,
+						"source_line": 122.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_21"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 21.0,
+						"source_line": 125.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_22"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 22.0,
+						"source_line": 128.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_23"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 23.0,
+						"source_line": 129.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_24"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 24.0,
+						"source_line": 130.0,
+						"dialogue": "day1.s04.fat_goblin_arrives",
+						"line": "line_25"
+					}
+				],
+				"chronicles": [],
+				"steps": [
+					{
+						"id": "s04_fat_goblin_arrives_before",
+						"data": {
+							"command": "dialogue",
+							"id": "day1.s04.fat_goblin_arrives"
+						},
+						"segment": "before"
+					}
+				]
+			},
+			{
+				"id": "s04_fat_goblin_order",
+				"status": "pending",
+				"mode": "待确认（[P14](../story_authoring/day_01_integration_pending.md#p14)：原稿只写「主角开始制作奶茶」「没过多久，奶茶做好了」）。",
+				"host": "pending",
+				"event_id": null,
+				"blocked_by": [
+					"P04",
+					"P05",
+					"P11",
+					"P14"
+				],
+				"source_start": 135.0,
+				"source_end": 143.0,
+				"source_markdown": "### Beat s04_fat_goblin_order\n\n- 执行模式：待确认（[P14](../story_authoring/day_01_integration_pending.md#p14)：原稿只写「主角开始制作奶茶」「没过多久，奶茶做好了」）。\n- 玩家目标（若为玩家操作）：制作胖哥布林点的奶茶并交给 `fat_goblin`。\n- 玩法完成条件（若为玩家操作）：订单 `day1_s04_fat_goblin_order`（规划）真实交付，业务事实名待发布；配方未定（原注「等奶茶系统设计完之后想具体是啥品类」，[P04](../story_authoring/day_01_integration_pending.md#p04)）；是否收款、收哪种货币未定（P05 / P11）。\n- 是否接受历史结果：唯一订单的持久交付回执，建议 `allow_existing: true`（待确认）。\n- 若定为自动演出：「没过多久，奶茶做好了」以演出处理，不发放任何物品或货币。\n- 验收：胖哥布林拿到奶茶后进入试饮段。\n\n",
+				"dialogues": [],
+				"ordered_lines": [],
+				"chronicles": [],
+				"steps": []
+			},
+			{
+				"id": "s04_first_taste",
+				"status": "pending",
+				"mode": "自动演出",
+				"host": "pending",
+				"event_id": "day1.s04.after_order",
+				"blocked_by": [
+					"P04",
+					"P14"
+				],
+				"source_start": 144.0,
+				"source_end": 159.0,
+				"source_markdown": "### Beat s04_first_taste\n\n- 执行模式：自动演出\n- 前置条件：胖哥布林已拿到奶茶（玩家操作时为 Bridge 输出 flag）。\n- 演出：胖哥布林接过杯子，迫不及待地尝了一口。\n- 对白：\n  - 胖哥布林：「嚯——！虽然贵了点，不过好吃啊！下次我还来！」\n  - 主角·内心：「嘴上嫌贵，喝起来倒是一点也不含糊。」\n  - 胖哥布林：「对了对了！你们格里芬使者是不是经常去别的地方？还有没有什么新鲜吃食？最好是能吃的、稀奇的、以前没见过的！」\n  - 主角·内心：「……这家伙果然满脑子都是吃的。」\n  - 主角：「你这么喜欢新鲜东西，平时应该很关注这些吧？」\n  - 胖哥布林：「那当然！吃可是头等大事啊！」\n  - 主角：「那我倒有些事情想问问你。比如，你刚才说的格里芬，还有你们这里的长老……」\n- 演出：胖哥布林立刻来了精神，放下杯子，开始滔滔不绝地讲起自己知道的事情。\n- 验收：直接衔接信仰介绍，不切场。\n\n",
+				"dialogues": [
+					{
+						"id": "day1.s04.first_taste",
+						"segment": "before",
+						"source_lines": [
+							150.0,
+							151.0,
+							152.0,
+							153.0,
+							154.0,
+							155.0,
+							156.0
+						]
+					}
+				],
+				"ordered_lines": [
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 0.0,
+						"source_line": 150.0,
+						"dialogue": "day1.s04.first_taste",
+						"line": "line_1"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 1.0,
+						"source_line": 151.0,
+						"dialogue": "day1.s04.first_taste",
+						"line": "line_2"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 2.0,
+						"source_line": 152.0,
+						"dialogue": "day1.s04.first_taste",
+						"line": "line_3"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 3.0,
+						"source_line": 153.0,
+						"dialogue": "day1.s04.first_taste",
+						"line": "line_4"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 4.0,
+						"source_line": 154.0,
+						"dialogue": "day1.s04.first_taste",
+						"line": "line_5"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 5.0,
+						"source_line": 155.0,
+						"dialogue": "day1.s04.first_taste",
+						"line": "line_6"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 6.0,
+						"source_line": 156.0,
+						"dialogue": "day1.s04.first_taste",
+						"line": "line_7"
+					}
+				],
+				"chronicles": [],
+				"steps": [
+					{
+						"id": "s04_first_taste_before",
+						"data": {
+							"command": "dialogue",
+							"id": "day1.s04.first_taste"
+						},
+						"segment": "before"
+					}
+				]
+			},
+			{
+				"id": "s04_griffin_faith",
+				"status": "pending",
+				"mode": "自动演出",
+				"host": "pending",
+				"event_id": "day1.s04.after_order",
+				"blocked_by": [
+					"P14"
+				],
+				"source_start": 160.0,
+				"source_end": 211.0,
+				"source_markdown": "### Beat s04_griffin_faith\n\n- 执行模式：自动演出\n- 前置条件：`s04_first_taste` 完成（建议与上一 Beat 同一短事件）。\n- 演出：胖哥布林还在兴致勃勃地喝着奶茶。主角趁机向他打听起格里芬的事情。\n- 对白：\n  - 胖哥布林：「说起来，你怎么一直问我格里芬啊？你真不知道？」\n  - 主角：「我都说了我刚来，还有很多事情不清楚。你就给我讲讲呗。」\n  - 胖哥布林：「啊？你真不知道啊？那你看看你手上的金币！这上面不就有伟大的格里芬吗？」\n- 演出：胖哥布林指了指主角手里的金币。\n- 对白：\n  - 主角·内心：「啊？这玩意真的是金币？？难道我要赚翻了？！」\n  - 主角：「啊，我知道，我知道！确实很伟大啊。」\n  - 主角·内心：「呼……差点露馅。幸好穿越之前看过几本异世界轻小说。格里芬……听起来和地球上的狮鹫差不多嘛，鹰头、狮身，还长着翅膀。别说，还有点帅。」\n  - 胖哥布林：「嘿嘿！那当然！伟大的格里芬啊！我们都敬畏它！」\n  - 胖哥布林：「长老是最懂格里芬的人，负责主持仪式、传达它的意志。长老说，偶尔来的行脚商都是格里芬派来的使者，他们带来的稀奇商品，就是对勤劳守规矩的哥布林的赏赐！」\n- 见闻录（补充版写法；与正文写法的取舍见本阶段末尾）：\n  - `chronicle_unlock` `chronicle.griffin`「伟大的格里芬」→ `chronicle_append` 记录 `chronicle.griffin.s04_first`：「哥布林普遍敬畏的存在。胖哥布林称，格里芬会惩罚不守规矩的哥布林，也会庇护他们。其真实存在与具体情况尚未确认。」\n  - `chronicle_append` `chronicle.elder` 记录 `chronicle.elder.s04_first`：「被哥布林视为最了解格里芬的人，负责主持仪式、传达格里芬的意志，并解释格里芬的规矩。」\n  - `chronicle_unlock` `chronicle.emissary`「格里芬使者」→ `chronicle_append` 记录 `chronicle.emissary.s04_first`：「据胖哥布林所说，长老将偶尔到来的行脚商称为格里芬派来的使者。使者带来的稀奇商品，被视为格里芬对勤劳、守规矩的哥布林的赏赐。」\n- 对白：\n  - 主角·内心：「格里芬到底是真实存在的，还是只是传说？不过，确实有个长老一直在传达所谓的格里芬的意志。」\n  - 主角·内心：「而且这些哥布林似乎既害怕它，又尊敬它……倒是有意思。」\n  - 主角：「你刚才说，格里芬会惩罚不守规矩的哥布林？怎么个惩罚法？」\n- 演出：胖哥布林脸上的笑容顿时僵了一下，左右张望，随后压低了声音。\n- 对白：\n  - 胖哥布林：「嘘！这种事可不能随便乱说！」\n  - 主角：「……不是你自己说的吗？」\n  - 胖哥布林：「我、我只是提醒你！不勤劳、不守规矩的哥布林，要是背负了不敬畏格里芬的罪孽，可是会消失的！」\n  - 主角：「消失？」\n  - 胖哥布林：「对！就是消失！你知道吗？前几天我听说，军营里有个老混子哥布林失踪了！据说地上还留下了几片大羽毛……」\n  - 主角：「……真的假的？」\n  - 主角·内心：「怎么还有随机伤人事件？！那哥布林是被吃了吗？」\n- 演出：胖哥布林越说越紧张，突然又像是想起什么似的，挺起胸膛。\n- 对白：\n  - 胖哥布林：「不过你也不用太担心！伟大的格里芬虽然令人恐惧，但它只会惩戒不守规矩的家伙！」\n  - 胖哥布林：「像我就不一样了！我可是很守规矩的！就是……就是能吃了点。格里芬肯定不会惩罚我的！」\n  - 主角：「……嗯嗯，它肯定不会惩罚你的。」\n  - 主角·内心：「明明怕得要死，还非得嘴硬。」\n- 演出：胖哥布林重新拿起奶茶，喝了一大口，仿佛这样就能让自己安心下来。\n- 对白：\n  - 胖哥布林：「不过话说回来，你自己都是格里芬派来的，怎么能什么都不知道呢？」\n  - 主角：「……」\n  - 胖哥布林：「嘿嘿，难道你有什么事情瞒着我？」\n  - 主角：「我不是说了嘛，刚来，对这里还不熟悉。」\n  - 胖哥布林：「哈哈哈！别紧张，我开玩笑的！」\n- 演出：胖哥布林笑了一阵，又摆出一副郑重其事的样子。\n- 对白：\n  - 胖哥布林：「不过啊，伟大的格里芬之所以伟大，可不只是因为它会惩罚坏家伙！」\n  - 主角：「哦？那还有什么？」\n- 验收：见闻录新增「伟大的格里芬」「格里芬使者」，「长老」补充一条记录；不打开见闻录 UI。\n\n",
+				"dialogues": [
+					{
+						"id": "day1.s04.griffin_faith",
+						"segment": "before",
+						"source_lines": [
+							166.0,
+							167.0,
+							168.0,
+							171.0,
+							172.0,
+							173.0,
+							174.0,
+							175.0,
+							181.0,
+							182.0,
+							183.0,
+							186.0,
+							187.0,
+							188.0,
+							189.0,
+							190.0,
+							191.0,
+							192.0,
+							195.0,
+							196.0,
+							197.0,
+							198.0,
+							201.0,
+							202.0,
+							203.0,
+							204.0,
+							205.0,
+							208.0,
+							209.0
+						]
+					}
+				],
+				"ordered_lines": [
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 0.0,
+						"source_line": 166.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_1"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 1.0,
+						"source_line": 167.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_2"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 2.0,
+						"source_line": 168.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_3"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 3.0,
+						"source_line": 171.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_4"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 4.0,
+						"source_line": 172.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_5"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 5.0,
+						"source_line": 173.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_6"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 6.0,
+						"source_line": 174.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_7"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 7.0,
+						"source_line": 175.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_8"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 8.0,
+						"source_line": 181.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_9"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 9.0,
+						"source_line": 182.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_10"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 10.0,
+						"source_line": 183.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_11"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 11.0,
+						"source_line": 186.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_12"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 12.0,
+						"source_line": 187.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_13"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 13.0,
+						"source_line": 188.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_14"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 14.0,
+						"source_line": 189.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_15"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 15.0,
+						"source_line": 190.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_16"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 16.0,
+						"source_line": 191.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_17"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 17.0,
+						"source_line": 192.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_18"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 18.0,
+						"source_line": 195.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_19"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 19.0,
+						"source_line": 196.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_20"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 20.0,
+						"source_line": 197.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_21"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 21.0,
+						"source_line": 198.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_22"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 22.0,
+						"source_line": 201.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_23"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 23.0,
+						"source_line": 202.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_24"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 24.0,
+						"source_line": 203.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_25"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 25.0,
+						"source_line": 204.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_26"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 26.0,
+						"source_line": 205.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_27"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 27.0,
+						"source_line": 208.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_28"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 28.0,
+						"source_line": 209.0,
+						"dialogue": "day1.s04.griffin_faith",
+						"line": "line_29"
+					}
+				],
+				"chronicles": [
+					{
+						"source_line": 177.0,
+						"steps": [
+							{
+								"command": "chronicle_unlock",
+								"entry_id": "chronicle.griffin",
+								"title": "伟大的格里芬"
+							},
+							{
+								"command": "chronicle_append",
+								"entry_id": "chronicle.griffin",
+								"record_id": "chronicle.griffin.s04_first",
+								"content": "哥布林普遍敬畏的存在。胖哥布林称，格里芬会惩罚不守规矩的哥布林，也会庇护他们。其真实存在与具体情况尚未确认。"
+							}
+						],
+						"status": "pending",
+						"entry_must_exist": false
+					},
+					{
+						"source_line": 178.0,
+						"steps": [
+							{
+								"command": "chronicle_append",
+								"entry_id": "chronicle.elder",
+								"record_id": "chronicle.elder.s04_first",
+								"content": "被哥布林视为最了解格里芬的人，负责主持仪式、传达格里芬的意志，并解释格里芬的规矩。"
+							}
+						],
+						"status": "pending",
+						"entry_must_exist": true
+					},
+					{
+						"source_line": 179.0,
+						"steps": [
+							{
+								"command": "chronicle_unlock",
+								"entry_id": "chronicle.emissary",
+								"title": "格里芬使者"
+							},
+							{
+								"command": "chronicle_append",
+								"entry_id": "chronicle.emissary",
+								"record_id": "chronicle.emissary.s04_first",
+								"content": "据胖哥布林所说，长老将偶尔到来的行脚商称为格里芬派来的使者。使者带来的稀奇商品，被视为格里芬对勤劳、守规矩的哥布林的赏赐。"
+							}
+						],
+						"status": "pending",
+						"entry_must_exist": false
+					}
+				],
+				"steps": [
+					{
+						"id": "s04_griffin_faith_before",
+						"data": {
+							"command": "dialogue",
+							"id": "day1.s04.griffin_faith"
+						},
+						"segment": "before"
+					}
+				]
+			},
+			{
+				"id": "s04_griffin_blood",
+				"status": "pending",
+				"mode": "自动演出",
+				"host": "pending",
+				"event_id": "day1.s04.after_order",
+				"blocked_by": [
+					"P14"
+				],
+				"source_start": 212.0,
+				"source_end": 243.0,
+				"source_markdown": "### Beat s04_griffin_blood\n\n- 执行模式：自动演出\n- 前置条件：`s04_griffin_faith` 完成。\n- 演出：胖哥布林眼睛一亮，神秘兮兮地凑近主角。\n- 对白：\n  - 胖哥布林：「嘿嘿！你终于问到重点了！伟大的格里芬之所以伟大，就是因为它会用自己的血哺育我们！」\n  - 主角：「血还能哺育你们？」\n  - 胖哥布林：「那当然！格里芬之血可是珍贵的圣物！据说里面蕴含着格里芬的力量，能赐予我们智慧，让我们挣好多好多金币！」\n  - 胖哥布林：「不仅如此！有了格里芬的庇护，赌博就能赢个盆满钵满，晚上睡觉也能安安稳稳，绝对不会被抓走！」\n  - 主角·内心：「……这都快把格里芬说成万能许愿机了。」\n  - 主角：「这么厉害？那你喝过？」\n- 演出：胖哥布林顿时语塞，挠了挠脑袋。\n- 对白：\n  - 胖哥布林：「呃……这个嘛，格里芬之血可不是随随便便就能喝到的！那是圣物，平时由长老亲自保管，只有特殊的时候才能得到！」\n  - 主角：「既然这么珍贵，你就不想尝尝？」\n  - 胖哥布林：「想啊！我做梦都想！你想想，要是喝上一口，说不定以后每次赌博都能赢！到时候金币还不是哗啦啦地往口袋里流？把你奶茶店里每种奶茶都喝一遍，也不在话下！」\n  - 主角·内心：「好家伙，前面还说格里芬会赐予智慧，结果这家伙满脑子还是金币、赌博和吃东西。」\n  - 主角：「既然你这么想要，为什么不自己去找长老要？」\n  - 胖哥布林：「你以为我不想吗？格里芬之血可是长老亲自保管的！不过，嘿嘿，今天倒是有个好机会。长老要亲自去祭拜伟大的格里芬，整晚都不会回来，宅邸今天是空的！」\n  - 主角：「所以呢？」\n  - 胖哥布林：「趁这个时候进去，说不定就能弄到一点格里芬之血！」\n  - 主角：「……你让我去偷长老的东西？」\n  - 胖哥布林：「哎呀，别说得那么难听嘛！而且你是格里芬使者，跟我们不一样！这两天比较特殊，我们这些普通哥布林要是靠近宅邸，说不定就会被伟大的格里芬察觉。可你说不定能悄悄进去！」\n  - 主角：「你他妈不是很敬畏格里芬吗？怎么还要偷东西？」\n  - 胖哥布林：「我当然敬畏啊！我就是想尝尝嘛！再说了，这么稀罕的东西，要是能拿来做成奶茶，肯定能卖得很好！只要你帮我弄到手，以后我每天都来买你的奶茶！」\n  - 主角·内心：「每天都来买奶茶……格里芬之血听起来又确实是个稀罕玩意，要是能做成特调，说不定真能赚一笔。」\n  - 主角·内心：「可是，偷了长老的东西，被发现了怎么办？……但我现在都快穷疯了！要钱没钱，要命……命倒是还有一条。」\n  - 主角·内心：「不行！还是不敢啊！！」\n- 见闻录：补充版本段没有见闻录正文。正文版的「格里芬之血」记录见本阶段末尾，是否追加待 P14。\n- 验收：长老外出缘由此处为「亲自去祭拜伟大的格里芬」；与正文及 S05「外出寻欢作乐」的冲突保留在 P14，不改对白。\n\n",
+				"dialogues": [
+					{
+						"id": "day1.s04.griffin_blood",
+						"segment": "before",
+						"source_lines": [
+							218.0,
+							219.0,
+							220.0,
+							221.0,
+							222.0,
+							223.0,
+							226.0,
+							227.0,
+							228.0,
+							229.0,
+							230.0,
+							231.0,
+							232.0,
+							233.0,
+							234.0,
+							235.0,
+							236.0,
+							237.0,
+							238.0,
+							239.0,
+							240.0
+						]
+					}
+				],
+				"ordered_lines": [
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 0.0,
+						"source_line": 218.0,
+						"dialogue": "day1.s04.griffin_blood",
+						"line": "line_1"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 1.0,
+						"source_line": 219.0,
+						"dialogue": "day1.s04.griffin_blood",
+						"line": "line_2"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 2.0,
+						"source_line": 220.0,
+						"dialogue": "day1.s04.griffin_blood",
+						"line": "line_3"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 3.0,
+						"source_line": 221.0,
+						"dialogue": "day1.s04.griffin_blood",
+						"line": "line_4"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 4.0,
+						"source_line": 222.0,
+						"dialogue": "day1.s04.griffin_blood",
+						"line": "line_5"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 5.0,
+						"source_line": 223.0,
+						"dialogue": "day1.s04.griffin_blood",
+						"line": "line_6"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 6.0,
+						"source_line": 226.0,
+						"dialogue": "day1.s04.griffin_blood",
+						"line": "line_7"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 7.0,
+						"source_line": 227.0,
+						"dialogue": "day1.s04.griffin_blood",
+						"line": "line_8"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 8.0,
+						"source_line": 228.0,
+						"dialogue": "day1.s04.griffin_blood",
+						"line": "line_9"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 9.0,
+						"source_line": 229.0,
+						"dialogue": "day1.s04.griffin_blood",
+						"line": "line_10"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 10.0,
+						"source_line": 230.0,
+						"dialogue": "day1.s04.griffin_blood",
+						"line": "line_11"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 11.0,
+						"source_line": 231.0,
+						"dialogue": "day1.s04.griffin_blood",
+						"line": "line_12"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 12.0,
+						"source_line": 232.0,
+						"dialogue": "day1.s04.griffin_blood",
+						"line": "line_13"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 13.0,
+						"source_line": 233.0,
+						"dialogue": "day1.s04.griffin_blood",
+						"line": "line_14"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 14.0,
+						"source_line": 234.0,
+						"dialogue": "day1.s04.griffin_blood",
+						"line": "line_15"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 15.0,
+						"source_line": 235.0,
+						"dialogue": "day1.s04.griffin_blood",
+						"line": "line_16"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 16.0,
+						"source_line": 236.0,
+						"dialogue": "day1.s04.griffin_blood",
+						"line": "line_17"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 17.0,
+						"source_line": 237.0,
+						"dialogue": "day1.s04.griffin_blood",
+						"line": "line_18"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 18.0,
+						"source_line": 238.0,
+						"dialogue": "day1.s04.griffin_blood",
+						"line": "line_19"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 19.0,
+						"source_line": 239.0,
+						"dialogue": "day1.s04.griffin_blood",
+						"line": "line_20"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 20.0,
+						"source_line": 240.0,
+						"dialogue": "day1.s04.griffin_blood",
+						"line": "line_21"
+					}
+				],
+				"chronicles": [],
+				"steps": [
+					{
+						"id": "s04_griffin_blood_before",
+						"data": {
+							"command": "dialogue",
+							"id": "day1.s04.griffin_blood"
+						},
+						"segment": "before"
+					}
+				]
+			},
+			{
+				"id": "s04_map_handover",
+				"status": "pending",
+				"mode": "自动演出（地图解锁需宿主能力）",
+				"host": "pending",
+				"event_id": "day1.s04.map_handover",
+				"blocked_by": [
+					"P14",
+					"P16"
+				],
+				"source_start": 244.0,
+				"source_end": 263.0,
+				"source_markdown": "### Beat s04_map_handover\n\n- 执行模式：自动演出（地图解锁需宿主能力）\n- 前置条件：`s04_griffin_blood` 完成。补充版小节编号从「三」直接跳到「五」，原稿没有「四」（[P16](../story_authoring/day_01_integration_pending.md#p16)）。\n- 对白：\n  - 胖哥布林：「对了，给你这个！你刚来这里，肯定还不熟悉路。」\n- 演出：胖哥布林递给主角一张洞穴地图。\n- 对白：\n  - 主角：「你连地图都准备好了？」\n  - 胖哥布林：「那当然！上面标了主要的地方。长老的房间在洞穴深处，具体怎么进去，你得自己找找了。」\n  - 主角：「……你还真是把麻烦都安排给我了。」\n  - 胖哥布林：「哈哈哈！能者多劳嘛！」\n  - 系统：「获得哥布林洞穴地图，地图功能已解锁。」\n- 业务：系统提示前须由宿主调用 `unlock_map()` 并确认写入 `day1.s04.map_available`；Story 没有对应 command，未接线时不发布这句提示（[P14](../story_authoring/day_01_integration_pending.md#p14)）。地图只展示已知区域与主要地点，长老房间等隐藏区域不开放。\n- 演出：主角查看地图，确认长老居所的大致位置。（「查看地图」是否要求玩家实际打开 M 地图作为完成条件，待 P14。）\n- 对白：\n  - 主角·内心：「长老今晚不在，地图也有了。风险肯定有，但要是能弄到这种稀有材料，说不定真能赚上一笔。」\n  - 主角·内心：「我现在可没资格嫌钱来得麻烦。只要不是毫无胜算，倒是值得试试。」（原文此段为上一段内心的续段，未单独标说话人）\n- 验收：地图解锁事实真实存在后才出现提示。\n\n",
+				"dialogues": [
+					{
+						"id": "day1.s04.map_handover",
+						"segment": "before",
+						"source_lines": [
+							249.0,
+							252.0,
+							253.0,
+							254.0,
+							255.0,
+							256.0,
+							260.0,
+							261.0
+						]
+					}
+				],
+				"ordered_lines": [
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 0.0,
+						"source_line": 249.0,
+						"dialogue": "day1.s04.map_handover",
+						"line": "line_1"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 1.0,
+						"source_line": 252.0,
+						"dialogue": "day1.s04.map_handover",
+						"line": "line_2"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 2.0,
+						"source_line": 253.0,
+						"dialogue": "day1.s04.map_handover",
+						"line": "line_3"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 3.0,
+						"source_line": 254.0,
+						"dialogue": "day1.s04.map_handover",
+						"line": "line_4"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 4.0,
+						"source_line": 255.0,
+						"dialogue": "day1.s04.map_handover",
+						"line": "line_5"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 5.0,
+						"source_line": 256.0,
+						"dialogue": "day1.s04.map_handover",
+						"line": "line_6"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 6.0,
+						"source_line": 260.0,
+						"dialogue": "day1.s04.map_handover",
+						"line": "line_7"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 7.0,
+						"source_line": 261.0,
+						"dialogue": "day1.s04.map_handover",
+						"line": "line_8"
+					}
+				],
+				"chronicles": [],
+				"steps": [
+					{
+						"id": "s04_map_handover_before",
+						"data": {
+							"command": "dialogue",
+							"id": "day1.s04.map_handover"
+						},
+						"segment": "before"
+					}
+				]
+			},
+			{
+				"id": "s04_commission_choice",
+				"status": "pending",
+				"mode": "自动演出（含选项；伪选择，两条路径汇合）",
+				"host": "pending",
+				"event_id": "day1.s04.commission_choice",
+				"blocked_by": [
+					"P01",
+					"P14"
+				],
+				"source_start": 264.0,
+				"source_end": 291.0,
+				"source_markdown": "### Beat s04_commission_choice\n\n- 执行模式：自动演出（含选项；伪选择，两条路径汇合）\n- 前置条件：`s04_map_handover` 完成。\n- 选项（同一对白行，稳定 ID）：\n  - `accept`：「接受委托」\n  - `refuse`：「拒绝委托」\n- 选择「接受委托」：\n  - 主角：「行，我去看看。但能不能拿到，我可不保证。」\n  - 胖哥布林：「好！我就知道你是个爽快人！」\n  - 主角：「先说好，真出了什么事，我可不会替你背锅。」\n  - 胖哥布林：「放心放心！愿格里芬垂顾你！」\n  - 主角·内心：「但愿这趟真能值回票价。」\n- 选择「拒绝委托」：\n  - 主角：「不行，风险太大，我不干。」\n  - 胖哥布林：「哎呀，别急着拒绝嘛！你不是正缺钱吗？这么稀罕的东西，可不是天天都有机会碰上的！」\n  - 主角：「你倒是挺会挑时候说话。」\n  - 胖哥布林：「长老今晚又不在，你有地图，至少知道该往哪儿找。进去看看而已，说不定很快就能回来呢？」\n  - 演出：主角再次看向地图，沉默片刻。\n  - 主角·内心：「长老不在，地图也有了。风险不小，但也不是完全没机会。」\n  - 主角·内心：「我现在最缺的就是钱。要是能弄到这种稀有材料，或许就能赚上一笔……」\n  - 主角：「……好吧，我去看看。但要是出了什么事，你也别想装作什么都不知道。」\n  - 胖哥布林：「哈哈哈！我等你的好消息！愿格里芬垂顾你！」\n  - 主角：「……最好真有好消息。」\n- 结束状态：两条路径结束后写 `day1.s04.commission_accepted`，再设置阶段 `day1.s05`；夜晚由 Day1WorldController 经 DayPhase 建立。不存在永久拒绝分支。\n- 待确认：从白天到夜晚的过渡表现与玩家需执行的操作（[P01](../story_authoring/day_01_integration_pending.md#p01)、P14）。\n- 验收：两种选择都写入委托接受事实；进入夜间后长老宅门洞按门控放行条件变化。\n\n",
+				"dialogues": [
+					{
+						"id": "day1.s04.commission_choice_accept",
+						"segment": "accept",
+						"source_lines": [
+							272.0,
+							273.0,
+							274.0,
+							275.0,
+							276.0
+						]
+					},
+					{
+						"id": "day1.s04.commission_choice_refuse",
+						"segment": "refuse",
+						"source_lines": [
+							278.0,
+							279.0,
+							280.0,
+							281.0,
+							283.0,
+							284.0,
+							285.0,
+							286.0,
+							287.0
+						]
+					}
+				],
+				"ordered_lines": [
+					{
+						"kind": "dialogue",
+						"group": "accept",
+						"index": 0.0,
+						"source_line": 272.0,
+						"dialogue": "day1.s04.commission_choice_accept",
+						"line": "line_1"
+					},
+					{
+						"kind": "dialogue",
+						"group": "accept",
+						"index": 1.0,
+						"source_line": 273.0,
+						"dialogue": "day1.s04.commission_choice_accept",
+						"line": "line_2"
+					},
+					{
+						"kind": "dialogue",
+						"group": "accept",
+						"index": 2.0,
+						"source_line": 274.0,
+						"dialogue": "day1.s04.commission_choice_accept",
+						"line": "line_3"
+					},
+					{
+						"kind": "dialogue",
+						"group": "accept",
+						"index": 3.0,
+						"source_line": 275.0,
+						"dialogue": "day1.s04.commission_choice_accept",
+						"line": "line_4"
+					},
+					{
+						"kind": "dialogue",
+						"group": "accept",
+						"index": 4.0,
+						"source_line": 276.0,
+						"dialogue": "day1.s04.commission_choice_accept",
+						"line": "line_5"
+					},
+					{
+						"kind": "dialogue",
+						"group": "refuse",
+						"index": 0.0,
+						"source_line": 278.0,
+						"dialogue": "day1.s04.commission_choice_refuse",
+						"line": "line_1"
+					},
+					{
+						"kind": "dialogue",
+						"group": "refuse",
+						"index": 1.0,
+						"source_line": 279.0,
+						"dialogue": "day1.s04.commission_choice_refuse",
+						"line": "line_2"
+					},
+					{
+						"kind": "dialogue",
+						"group": "refuse",
+						"index": 2.0,
+						"source_line": 280.0,
+						"dialogue": "day1.s04.commission_choice_refuse",
+						"line": "line_3"
+					},
+					{
+						"kind": "dialogue",
+						"group": "refuse",
+						"index": 3.0,
+						"source_line": 281.0,
+						"dialogue": "day1.s04.commission_choice_refuse",
+						"line": "line_4"
+					},
+					{
+						"kind": "dialogue",
+						"group": "refuse",
+						"index": 4.0,
+						"source_line": 283.0,
+						"dialogue": "day1.s04.commission_choice_refuse",
+						"line": "line_5"
+					},
+					{
+						"kind": "dialogue",
+						"group": "refuse",
+						"index": 5.0,
+						"source_line": 284.0,
+						"dialogue": "day1.s04.commission_choice_refuse",
+						"line": "line_6"
+					},
+					{
+						"kind": "dialogue",
+						"group": "refuse",
+						"index": 6.0,
+						"source_line": 285.0,
+						"dialogue": "day1.s04.commission_choice_refuse",
+						"line": "line_7"
+					},
+					{
+						"kind": "dialogue",
+						"group": "refuse",
+						"index": 7.0,
+						"source_line": 286.0,
+						"dialogue": "day1.s04.commission_choice_refuse",
+						"line": "line_8"
+					},
+					{
+						"kind": "dialogue",
+						"group": "refuse",
+						"index": 8.0,
+						"source_line": 287.0,
+						"dialogue": "day1.s04.commission_choice_refuse",
+						"line": "line_9"
+					}
+				],
+				"chronicles": [],
+				"steps": [
+					{
+						"id": "s04_commission_choice_choice",
+						"data": {
+							"command": "dialogue",
+							"id": "day1.s04.commission_choice"
+						},
+						"segment": "choice"
+					},
+					{
+						"id": "s04_commission_choice_accept",
+						"data": {
+							"command": "dialogue",
+							"id": "day1.s04.commission_choice_accept",
+							"when": {
+								"choice": {
+									"dialogue": "day1.s04.commission_choice",
+									"line": "choice",
+									"id": "accept"
+								}
+							}
+						},
+						"segment": "accept"
+					},
+					{
+						"id": "s04_commission_choice_refuse",
+						"data": {
+							"command": "dialogue",
+							"id": "day1.s04.commission_choice_refuse",
+							"when": {
+								"choice": {
+									"dialogue": "day1.s04.commission_choice",
+									"line": "choice",
+									"id": "refuse"
+								}
+							}
+						},
+						"segment": "refuse"
+					}
+				],
+				"choice": {
+					"dialogue": "day1.s04.commission_choice",
+					"line": "choice",
+					"options": [
+						"accept",
+						"refuse"
+					],
+					"branches": {
+						"accept": "day1.s04.commission_choice_accept",
+						"refuse": "day1.s04.commission_choice_refuse"
+					}
+				}
+			},
+			{
+				"id": "s05_step1_outside",
+				"status": "pending",
+				"mode": "玩家操作（教学）",
+				"host": "settlement",
+				"event_id": null,
+				"blocked_by": [
+					"P09",
+					"P13"
+				],
+				"source_start": 313.0,
+				"source_end": 321.0,
+				"source_markdown": "### Beat s05_step1_outside\n\n- 执行模式：玩家操作（教学）\n- 前置条件：`day1.s04.commission_accepted`、阶段 `day1.s05`、`world.phase.night`。\n- 演出说明：主角根据胖哥布林提供的地图来到哥布林聚集地外，准备潜入长老宅邸，寻找格里芬之血。系统首次开放委托功能，提示玩家查看当前任务。\n- 玩家目标：基础移动；打开任务面板查看委托目标；查看任务小地图，通过黄点高亮确认目标位置；前往聚集地入口。\n- 玩法完成条件：到达聚集地入口（区域事实待 P09 / P13）；任务 `day1.s04.blood_commission` 激活由 `day1.s04.commission_accepted` 投影。\n- 原稿没有本步的对白或系统提示原文，不补写教学文案。\n\n",
+				"dialogues": [],
+				"ordered_lines": [],
+				"chronicles": [],
+				"steps": []
+			},
+			{
+				"id": "s05_step2_throw",
+				"status": "pending",
+				"mode": "玩家操作（教学）",
+				"host": "settlement",
+				"event_id": null,
+				"blocked_by": [
+					"P05",
+					"P09"
+				],
+				"source_start": 322.0,
+				"source_end": 329.0,
+				"source_markdown": "### Beat s05_step2_throw\n\n- 执行模式：玩家操作（教学）\n- 场景：哥布林聚集地入口。入口处有一名哥布林守卫，直接通过会被发现。\n- 玩家目标：1. 学习投掷金币。2. 将金币投向远离入口的位置，利用声响吸引守卫注意力。3. 趁守卫转移注意力时，通过入口进入聚集地。\n- 玩法完成条件：Day1StealthService 判定玩家未被发现通过入口（入口守卫角色、站位与通过区域未绑定，P09）。投掷消耗真实 `strange_coin` 库存，不用钱包代替（P05）。\n- 失败 / 重试：被发现后按组件的局部检查点重试；检查点位置待 P09。\n\n",
+				"dialogues": [],
+				"ordered_lines": [],
+				"chronicles": [],
+				"steps": []
+			},
+			{
+				"id": "s05_step3_bribe",
+				"status": "pending",
+				"mode": "玩家操作（教学）",
+				"host": "settlement",
+				"event_id": null,
+				"blocked_by": [
+					"P06",
+					"P09"
+				],
+				"source_start": 330.0,
+				"source_end": 337.0,
+				"source_markdown": "### Beat s05_step3_bribe\n\n- 执行模式：玩家操作（教学）\n- 场景：长老宅邸外。门口有两名卫兵把守，单纯投掷金币无法直接通过。\n- 玩家目标：1. 投掷金币，吸引守卫注意力。2. 接近守卫，触发对话与谈判。3. 通过贿赂使守卫放行。4. 进入长老宅邸。\n- 玩法完成条件：`day1.s05.guard_payment_completed`（真实扣款回执，当前无写入者，P06）+ 配置指定的放行事实；宅邸第二卫不能被一枚币引开。\n- 待确认：谈判对白原稿未提供，不补写；金额、币种、余额不足处理（P06）。\n\n",
+				"dialogues": [],
+				"ordered_lines": [],
+				"chronicles": [],
+				"steps": []
+			},
+			{
+				"id": "s05_drunken_guard",
+				"status": "pending",
+				"mode": "自动演出（含支付，支付须为真实业务）",
+				"host": "settlement",
+				"event_id": "day1.s05.drunken_guard",
+				"blocked_by": [
+					"P06",
+					"P09",
+					"D02"
+				],
+				"source_start": 338.0,
+				"source_end": 364.0,
+				"source_markdown": "### Beat s05_drunken_guard\n\n- 执行模式：自动演出（含支付，支付须为真实业务）\n- 前置条件：潜入过程中「必然会在某个节点被一名哥布林守卫撞见」；节点未定（P06 / P09）。候选锚点 `drunken_guard`（地图标记，非 Actor）；角色身份未定，`guard` 只是候选。\n- 演出：这名守卫醉醺醺的，明显没有认真履行职责。他拦住主角，却没有仔细检查，也没有追问主角正在做什么。\n- 对白：\n  - 醉酒守卫：「喂！你，站住！」\n- 演出：主角心里一紧，以为自己要被当场抓获。守卫打量了他几眼，忽然摆出一副理所当然的样子。\n- 对白：\n  - 醉酒守卫：「既然是格里芬派来的使者，就别到处乱跑！使者就该待在指定的地方做生意，懂不懂？」\n- 演出：主角一愣，立刻意识到对方把自己当成了行脚商。\n- 对白：\n  - 主角·内心：「……啊？还有这种好事？」\n- 演出：守卫并没有进一步盘问，反而开始抱怨最近手头拮据，喝酒的钱都快不够了。主角抓住机会，提出给他一些金币，希望他别再管自己。守卫收下金币，态度立刻缓和下来。不过，他似乎并不满足于这点钱。\n- 业务：「守卫收下金币」须为真实支付（金额 / 币种 / 是否与 step3 共用支付未定，P06）；未支付时不播放其后的放行段。\n- 对白：\n  - 醉酒守卫：「光给钱有什么意思？我还不如直接买点喝的。」\n- 演出：他听说主角经营奶茶店，便提出要预订一杯特殊的奶茶，并约定第二天傍晚来取。这杯奶茶需要用到的特殊原料，并不在普通摊贩那里出售，而是与洞窟外围的赌场和酒馆有关。守卫说出了原料的来源，却没有打算替主角准备。\n- 对白：\n  - 醉酒守卫：「明天傍晚，给我弄一杯来。要是没有……嘿嘿，那咱们可得重新聊聊了。」\n- 演出：主角只能答应。\n- 对白：\n  - 主角·内心：「……我这是开奶茶店，还是接黑帮订单呢？」\n- 演出：守卫拿着金币，心满意足地离开，没有继续追究主角的行动。\n- 结束状态：记录次日特殊订单伏笔（任务 / 事实名在 Day 2 统一，见 [Day 2 待定 D02](../story_authoring/day_02_integration_pending.md#d02)）；不要求当日取得材料。\n- 编排说明：原文只以叙述交代「说出了原料的来源」，没有对应台词，不补写。\n\n",
+				"dialogues": [
+					{
+						"id": "day1.s05.drunken_guard",
+						"segment": "before",
+						"source_lines": [
+							344.0,
+							347.0,
+							350.0
+						]
+					},
+					{
+						"id": "day1.s05.drunken_guard_after_payment",
+						"segment": "after_payment",
+						"source_lines": [
+							354.0,
+							357.0,
+							360.0
+						]
+					}
+				],
+				"ordered_lines": [
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 0.0,
+						"source_line": 344.0,
+						"dialogue": "day1.s05.drunken_guard",
+						"line": "line_1"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 1.0,
+						"source_line": 347.0,
+						"dialogue": "day1.s05.drunken_guard",
+						"line": "line_2"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 2.0,
+						"source_line": 350.0,
+						"dialogue": "day1.s05.drunken_guard",
+						"line": "line_3"
+					},
+					{
+						"kind": "dialogue",
+						"group": "after_payment",
+						"index": 0.0,
+						"source_line": 354.0,
+						"dialogue": "day1.s05.drunken_guard_after_payment",
+						"line": "line_1"
+					},
+					{
+						"kind": "dialogue",
+						"group": "after_payment",
+						"index": 1.0,
+						"source_line": 357.0,
+						"dialogue": "day1.s05.drunken_guard_after_payment",
+						"line": "line_2"
+					},
+					{
+						"kind": "dialogue",
+						"group": "after_payment",
+						"index": 2.0,
+						"source_line": 360.0,
+						"dialogue": "day1.s05.drunken_guard_after_payment",
+						"line": "line_3"
+					}
+				],
+				"chronicles": [],
+				"steps": [
+					{
+						"id": "s05_drunken_guard_before",
+						"data": {
+							"command": "dialogue",
+							"id": "day1.s05.drunken_guard"
+						},
+						"segment": "before"
+					},
+					{
+						"id": "s05_drunken_guard_after_payment",
+						"data": {
+							"command": "dialogue",
+							"id": "day1.s05.drunken_guard_after_payment"
+						},
+						"segment": "after_payment"
+					}
+				]
+			},
+			{
+				"id": "s05_final_patrol",
+				"status": "pending",
+				"mode": "玩家操作",
+				"host": "settlement",
+				"event_id": null,
+				"blocked_by": [
+					"P09"
+				],
+				"source_start": 365.0,
+				"source_end": 370.0,
+				"source_markdown": "### Beat s05_final_patrol\n\n- 执行模式：玩家操作\n- 来源：第三部分「主角继续深入洞窟，最终抵达长老的居所附近。长老今晚外出寻欢作乐，暂时不在房间内，但居所仍有一定防备。主角需要避开最后的巡逻，才能进入存放格里芬之血的区域。」\n- 玩法完成条件：避开最后的巡逻进入宅内存放区域；巡逻角色、路线与判定待 P09。与 step3「门口双卫」是否同一组防备待确认。\n\n",
+				"dialogues": [],
+				"ordered_lines": [],
+				"chronicles": [],
+				"steps": []
+			},
+			{
+				"id": "s05_document",
+				"status": "pending",
+				"mode": "玩家操作（调查）+ 自动演出",
+				"host": "settlement",
+				"event_id": "day1.s05.document",
+				"blocked_by": [
+					"P08",
+					"P17"
+				],
+				"source_start": 371.0,
+				"source_end": 395.0,
+				"source_markdown": "### Beat s05_document\n\n- 执行模式：玩家操作（调查）+ 自动演出\n- 前置条件：玩家在宅内，与 `day1_elder_document` 交互（锚点 `elder_document`）。\n- 系统：「发现神秘文书！」\n- 演出：主角趁着长老不在，匆匆翻看文书。纸页已经泛黄破损，边缘留有明显的撕裂痕迹。主角翻看文书，发现其中有几段文字虽然残缺，却仍然可以辨认。（原注：美术可以把这个做出来）\n- 文书正文（标题「关于黄金乡的记录」，逐行展示）：\n\n  > ……黄金乡并非传说中虚构之地。\n  >\n  > 关于其存在的记载，最早见于……\n  >\n  > 若要实现原定计划，必须确认「变量」是否出现。\n  >\n  > 在此之前，不得擅自采取行动。\n  >\n  > ……其余事项，待进一步确认后再议。\n\n- 演出：然而，记录中的部分关键文字已经缺失，主角无法判断「变量」究竟指什么，也不知道所谓的原定计划具体是什么。\n- 对白：\n  - 主角·内心：「黄金乡……变量……原定计划？」\n  - 主角·内心：「这老头到底在研究什么啊？」\n- 玩法完成条件：`day1.s05.document_read`（展示并关闭面板时写入，已实现）。文书是否必读 / 是否成为持有物品、与取血的先后待 [P08](../story_authoring/day_01_integration_pending.md#p08)；step4「取得两件物品」与详细段落「翻看」写法不同。\n- 验收：不展示任何衣柜、长老怀疑「变量」等开发者信息。\n\n",
+				"dialogues": [
+					{
+						"id": "day1.s05.document",
+						"segment": "before",
+						"source_lines": [
+							375.0
+						]
+					},
+					{
+						"id": "day1.s05.document_document",
+						"segment": "document",
+						"source_lines": [
+							379.0
+						]
+					},
+					{
+						"id": "day1.s05.document_after_document",
+						"segment": "after_document",
+						"source_lines": [
+							391.0,
+							392.0
+						]
+					}
+				],
+				"ordered_lines": [
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 0.0,
+						"source_line": 375.0,
+						"dialogue": "day1.s05.document",
+						"line": "line_1"
+					},
+					{
+						"kind": "document",
+						"group": "document",
+						"index": 0.0,
+						"source_line": 379.0,
+						"dialogue": "day1.s05.document_document",
+						"line": "line_1"
+					},
+					{
+						"kind": "dialogue",
+						"group": "after_document",
+						"index": 0.0,
+						"source_line": 391.0,
+						"dialogue": "day1.s05.document_after_document",
+						"line": "line_1"
+					},
+					{
+						"kind": "dialogue",
+						"group": "after_document",
+						"index": 1.0,
+						"source_line": 392.0,
+						"dialogue": "day1.s05.document_after_document",
+						"line": "line_2"
+					}
+				],
+				"chronicles": [],
+				"steps": [
+					{
+						"id": "s05_document_before",
+						"data": {
+							"command": "dialogue",
+							"id": "day1.s05.document"
+						},
+						"segment": "before"
+					},
+					{
+						"id": "s05_document_document",
+						"data": {
+							"command": "dialogue",
+							"id": "day1.s05.document_document"
+						},
+						"segment": "document"
+					},
+					{
+						"id": "s05_document_after_document",
+						"data": {
+							"command": "dialogue",
+							"id": "day1.s05.document_after_document"
+						},
+						"segment": "after_document"
+					}
+				]
+			},
+			{
+				"id": "s05_blood_acquired",
+				"status": "pending",
+				"mode": "玩家操作（拾取）",
+				"host": "settlement",
+				"event_id": null,
+				"blocked_by": [
+					"P07",
+					"P08",
+					"D13"
+				],
+				"source_start": 396.0,
+				"source_end": 403.0,
+				"source_markdown": "### Beat s05_blood_acquired\n\n- 执行模式：玩家操作（拾取）\n- 前置条件：与 `day1_blood_storage` 交互（锚点 `elder_blood_storage`）。\n- 演出：此时，他终于找到了存放格里芬之血的地方。主角顾不上继续探究文书的秘密，拿到格里芬之血。\n- 玩法完成条件：`day1_griffin_blood` × 1 真实入库并写 `day1.s05.blood_acquired`（已实现）。取得量是否为 1 份待 [P07](../story_authoring/day_01_integration_pending.md#p07)；Day 2 需要「剩余的格里芬之血」，见 [D13](../story_authoring/day_02_integration_pending.md#d13)。\n- 结束状态：任务更新，提示玩家撤离（提示原文未提供，不补写）。\n\n",
+				"dialogues": [],
+				"ordered_lines": [],
+				"chronicles": [],
+				"steps": []
+			},
+			{
+				"id": "s05_escape",
+				"status": "pending",
+				"mode": "玩家操作",
+				"host": "settlement",
+				"event_id": null,
+				"blocked_by": [
+					"P08",
+					"P09"
+				],
+				"source_start": 404.0,
+				"source_end": 413.0,
+				"source_markdown": "### Beat s05_escape\n\n- 执行模式：玩家操作\n- 来源冲突（[P08](../story_authoring/day_01_integration_pending.md#p08)）：\n  - 教学 step5：玩家准备撤离时，发现哥布林聚集地内出现阻碍，原有撤离路线无法直接通过。触发制造混乱教学：1. 拾取场景中的火把。2. 将火把投向周围的可燃物，引发火势。3. 利用火灾造成的混乱，吸引哥布林注意力。4. 趁机穿过受阻区域，前往聚集地出口。\n  - 教学 step6：玩家成功逃离聚集地，带着格里芬之血与神秘文书返回安全区域，完成第一天的夜间潜入。\n  - 详细段落：趁着守卫尚未发现异常，沿原路返回奶茶店。\n- 玩法完成条件：`day1.s05.escape_completed`（组件消费；正式 escape_zone、火把来源、可燃物、检查点均未配置，P09）→ 实际进入奶茶店入口写 `day1.s05.returned_shop`（已实现）。\n- 验收：两种来源都保留，不删除混乱桥段，也不强行插入详细段落。\n\n",
+				"dialogues": [],
+				"ordered_lines": [],
+				"chronicles": [],
+				"steps": []
+			},
+			{
+				"id": "s05_shop_system_update",
+				"status": "pending",
+				"mode": "自动演出 + 玩家操作（打开奶茶店系统）",
+				"host": "shop",
+				"event_id": "day1.s05.return_shop",
+				"blocked_by": [
+					"P07",
+					"P16"
+				],
+				"source_start": 414.0,
+				"source_end": 423.0,
+				"source_markdown": "### Beat s05_shop_system_update\n\n- 执行模式：自动演出 + 玩家操作（打开奶茶店系统）\n- 前置条件：`day1.s05.returned_shop`。\n- 演出：返回奶茶店之后，主角打开奶茶店系统，发现原有的食材栏目发生了变化。\n- 系统新增食材分类（原文）：人类食材——奶茶店原本储存的基础原料；异世界食材——从哥布林世界获得的特殊食材。格里芬之血被自动登记至「异世界食材」栏目。玩家可以查看它的基本信息，并在饮品制作界面中将其作为可选原料。\n- 系统：原文「**系统提示：**」后没有正文，直接接「本阶段结束。」——提示内容缺失，不补写（[P16](../story_authoring/day_01_integration_pending.md#p16)）。\n- 能力：仓库已有「异世界食材」筛选，血液配方在 `day1.s06` 且已取血、已返店时开放；分类首次出现的演示方式待定。\n- 结束状态：设置阶段 `day1.s06`。主角成功取得格里芬之血；「黄金乡」与「变量」成为尚未解开的伏笔。\n\n",
+				"dialogues": [],
+				"ordered_lines": [],
+				"chronicles": [],
+				"steps": []
+			},
+			{
+				"id": "s06_pondering",
+				"status": "pending",
+				"mode": "自动演出",
+				"host": "shop",
+				"event_id": "day1.s06.pondering",
+				"blocked_by": [
+					"P07"
+				],
+				"source_start": 429.0,
+				"source_end": 436.0,
+				"source_markdown": "### Beat s06_pondering\n\n- 执行模式：自动演出\n- 前置条件：阶段 `day1.s06`。\n- 演出：主角带着格里芬之血返回奶茶店，终于完成了胖哥布林委托的第一步。他看着手里的材料，开始琢磨该怎么把它做成一杯能卖上价钱的特调。主角既没有相关知识，也不了解格里芬之血的真正性质，只觉得这东西既然如此珍贵，加入得越多，做出来的饮料应该就越特别。\n- 对白：无。叙述不转为台词；是否以旁白文本框展示待定。\n- 结束状态：设置阶段 `day1.s06.wait_blood_drink`。\n\n",
+				"dialogues": [],
+				"ordered_lines": [],
+				"chronicles": [],
+				"steps": []
+			},
+			{
+				"id": "s06_blood_drink",
+				"status": "pending",
+				"mode": "玩家操作",
+				"host": "shop",
+				"event_id": null,
+				"blocked_by": [
+					"P07",
+					"P10",
+					"D13"
+				],
+				"source_start": 437.0,
+				"source_end": 445.0,
+				"source_markdown": "### Beat s06_blood_drink\n\n- 执行模式：玩家操作\n- 玩家目标：接取特调订单，在制作台将格里芬之血加入奶茶，自行决定用量，完成第一杯特调，交给胖哥布林。\n- 原稿顺序：制作之后「胖哥布林一直惦记着这杯饮料，很快便来到店里取货」，再由主角递交。胖哥布林到店的演出位置（`shop_rest_chair` 等候选未注册）待定；若需要他先到店才能交付，则在制作与交付之间插入一段到店演出，不添加台词。\n- 玩法完成条件：`day1.s06.blood_drink_delivered`（订单 `day1_s06_blood_drink` 交付给 `fat_goblin`，已实现）；`allow_existing: true`。\n- 未实现：用量选择 `day1.s06.blood_amount`（类型 / 范围 / 是否影响结果均未定，[P07](../story_authoring/day_01_integration_pending.md#p07)）。原稿明确「因缺乏相关知识而加入过量」，不得改成固定档位。\n- 验收：制成不等于喝下；错人、缺成品、重复交付不完成。\n\n",
+				"dialogues": [],
+				"ordered_lines": [],
+				"chronicles": [],
+				"steps": []
+			},
+			{
+				"id": "s06_reaction",
+				"status": "pending",
+				"mode": "自动演出",
+				"host": "shop",
+				"event_id": "day1.s06.reaction",
+				"blocked_by": [
+					"P07",
+					"P10"
+				],
+				"source_start": 446.0,
+				"source_end": 467.0,
+				"source_markdown": "### Beat s06_reaction\n\n- 执行模式：自动演出\n- 前置条件：Bridge 输出 `day1.bridge.blood_drink.completed`。\n- 演出：主角将刚做好的特调递给他。胖哥布林迫不及待地接过饮料，闻了闻，满脸期待。\n- 对白：\n  - 胖哥布林：「这就是格里芬之血做的？看起来就不一般！我早就想尝尝了！」\n- 演出：他没有丝毫怀疑，咕嘟咕嘟地喝了起来。胖哥布林突然捂住喉咙，身体剧烈抽搐起来。他的眼睛向上翻去，嘴角不断冒出白沫，刚喝下去的特调也被吐了出来。（抽搐 / 吐沫 / 倒下没有现成动画，[P10](../story_authoring/day_01_integration_pending.md#p10)；不以未写明的镜头震动或表情代替）\n- 对白：\n  - 主角：「卧槽？！你怎么了？！」\n- 演出：主角顿时慌了神。他原本只是想把好不容易弄到的稀有材料做成一杯高价特调，没想到顾客竟然当场出了问题。\n- 对白：\n  - 主角·内心：「等等！不就是加了点格里芬之血吗？！这玩意儿不是哥布林的圣物吗？！」\n- 演出：胖哥布林倒在地上，四肢仍在抽搐。主角赶紧放下手里的东西，想把他扶起来，却又不知道该从哪里下手。\n- 对白：\n  - 主角：「喂！胖哥布林！你醒醒！你不是说这东西能带来庇护吗？！」\n- 演出：胖哥布林根本无法回答。主角看着地上吐出的饮料，脑子里乱成一团。\n- 对白：\n  - 主角·内心：「是格里芬之血本身有问题？还是我加得太多了？可这东西不是他们一直供奉着的吗？！」\n- 演出：他完全不知道自己究竟做错了什么，只能先想办法让胖哥布林脱离危险。\n- 验收：异常演出期间玩家输入锁定，由 MainGame 统一处理。\n\n",
+				"dialogues": [
+					{
+						"id": "day1.s06.reaction",
+						"segment": "before",
+						"source_lines": [
+							452.0,
+							455.0,
+							458.0,
+							461.0,
+							464.0
+						]
+					}
+				],
+				"ordered_lines": [
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 0.0,
+						"source_line": 452.0,
+						"dialogue": "day1.s06.reaction",
+						"line": "line_1"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 1.0,
+						"source_line": 455.0,
+						"dialogue": "day1.s06.reaction",
+						"line": "line_2"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 2.0,
+						"source_line": 458.0,
+						"dialogue": "day1.s06.reaction",
+						"line": "line_3"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 3.0,
+						"source_line": 461.0,
+						"dialogue": "day1.s06.reaction",
+						"line": "line_4"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 4.0,
+						"source_line": 464.0,
+						"dialogue": "day1.s06.reaction",
+						"line": "line_5"
+					}
+				],
+				"chronicles": [],
+				"steps": [
+					{
+						"id": "s06_reaction_before",
+						"data": {
+							"command": "dialogue",
+							"id": "day1.s06.reaction"
+						},
+						"segment": "before"
+					}
+				]
+			},
+			{
+				"id": "s06_help_and_rest",
+				"status": "pending",
+				"mode": "待确认（原稿列为玩家操作「帮助胖哥布林，并安排他暂时留在店里休息」，但没有操作方式，[P10](../story_authoring/day_01_integration_pending.md#p10)）",
+				"host": "shop",
+				"event_id": "day1.s06.help_and_rest",
+				"blocked_by": [
+					"P01",
+					"P10",
+					"D13"
+				],
+				"source_start": 468.0,
+				"source_end": 480.0,
+				"source_markdown": "### Beat s06_help_and_rest\n\n- 执行模式：待确认（原稿列为玩家操作「帮助胖哥布林，并安排他暂时留在店里休息」，但没有操作方式，[P10](../story_authoring/day_01_integration_pending.md#p10)）\n- 演出：过了好一阵，胖哥布林的抽搐才逐渐缓和。他仍然虚弱得说不出话，主角也不敢再让他碰那杯饮料。\n- 对白：\n  - 主角·内心：「……这下麻烦大了。」\n  - 主角·内心：「这玩意儿根本不是什么普通的食品原料。」\n  - 主角·内心：「可问题是——为什么他们会把这种东西当成圣物？」\n- 演出：胖哥布林望着剩下的格里芬之血，眼中第一次出现了恐惧。他一直相信，只要得到格里芬的庇护，自己就能过上好日子。可刚才发生的一切，让他连这份信仰都开始动摇了。\n- 衔接说明：「望着剩下的格里芬之血」说明制作后仍有剩余血液，与当前 × 1 取得、配方整份消耗的实现冲突（[D13](../story_authoring/day_02_integration_pending.md#d13)）。\n- 结束状态：写 `day1.s06.completed`。Day 2 开场为胖哥布林仍瘫在店里的椅子上；章末画面、日期显示与换天操作待 P01 / P10。\n- 验收：本章叙事完成；不新增「第一天结束」字幕或回标题等原稿未写内容。\n\n",
+				"dialogues": [
+					{
+						"id": "day1.s06.help_and_rest",
+						"segment": "before",
+						"source_lines": [
+							473.0,
+							474.0,
+							475.0
+						]
+					}
+				],
+				"ordered_lines": [
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 0.0,
+						"source_line": 473.0,
+						"dialogue": "day1.s06.help_and_rest",
+						"line": "line_1"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 1.0,
+						"source_line": 474.0,
+						"dialogue": "day1.s06.help_and_rest",
+						"line": "line_2"
+					},
+					{
+						"kind": "dialogue",
+						"group": "before",
+						"index": 2.0,
+						"source_line": 475.0,
+						"dialogue": "day1.s06.help_and_rest",
+						"line": "line_3"
+					}
+				],
+				"chronicles": [],
+				"steps": [
+					{
+						"id": "s06_help_and_rest_before",
+						"data": {
+							"command": "dialogue",
+							"id": "day1.s06.help_and_rest"
+						},
+						"segment": "before"
+					}
+				]
+			}
+		],
+		"dialogues": {
+			"day1.s03.coin_inspect": {
+				"start": "line_1",
+				"lines": {
+					"line_1": {
+						"speaker": "主角·内心",
+						"text": "这什么破玩意儿……该不会真有人拿假币买奶茶吧？",
+						"next": ""
+					}
+				}
+			},
+			"day1.s03.street_gone": {
+				"start": "line_1",
+				"lines": {
+					"line_1": {
+						"speaker": "主角·内心",
+						"text": "……我店门口什么时候变成这样了？",
+						"next": ""
+					}
+				}
+			},
+			"day1.s03.limited_exploration": {
+				"start": "line_1",
+				"lines": {
+					"line_1": {
+						"speaker": "主角·内心",
+						"text": "黑灯瞎火的，谁知道里面有什么？不去。",
+						"next": ""
+					}
+				}
+			},
+			"day1.s03.back_to_door": {
+				"start": "line_1",
+				"lines": {
+					"line_1": {
+						"speaker": "主角·内心",
+						"text": "……完了，我这店不会真穿越了吧？",
+						"next": ""
+					}
+				}
+			},
+			"day1.s04.fat_goblin_arrives": {
+				"start": "line_1",
+				"lines": {
+					"line_1": {
+						"speaker": "胖哥布林",
+						"text": "日安！愿格里芬垂顾你！你就是新的格里芬使者吧？你们家卖什么的？",
+						"next": "line_2"
+					},
+					"line_2": {
+						"speaker": "胖哥布林",
+						"text": "哎呀，我可算等到了！我们哥布林洞窟的食物，我都快吃腻了！每次就盼着你们格里芬使者来，能吃到点新鲜玩意儿！",
+						"next": "line_3"
+					},
+					"line_3": {
+						"speaker": "胖哥布林",
+						"text": "哈哈哈，虽然我不挑食，但是也不能啥都吃呀！大家都叫我胖哥布林，就是因为我太爱吃了。不过嘛，胖一点又怎么了？能吃是福啊！",
+						"next": "line_4"
+					},
+					"line_4": {
+						"speaker": "主角·内心",
+						"text": "……这家伙话也太多了。",
+						"next": "line_5"
+					},
+					"line_5": {
+						"speaker": "主角·内心",
+						"text": "不过，他好像知道不少东西。或许可以趁机问问这里的情况。",
+						"next": "line_6"
+					},
+					"line_6": {
+						"speaker": "主角",
+						"text": "格里芬使者……是什么？",
+						"next": "line_7"
+					},
+					"line_7": {
+						"speaker": "胖哥布林",
+						"text": "啊？你不知道？",
+						"next": "line_8"
+					},
+					"line_8": {
+						"speaker": "胖哥布林",
+						"text": "你难道不是被伟大的格里芬派来，为我们哥布林洞窟播撒来自黄金乡的食粮吗？",
+						"next": "line_9"
+					},
+					"line_9": {
+						"speaker": "主角·内心",
+						"text": "这家伙在说什么？为什么突然用词这么装？格里芬我倒是有印象，刚刚那几个哥布林也这么说，还提到什么长老……",
+						"next": "line_10"
+					},
+					"line_10": {
+						"speaker": "主角·内心",
+						"text": "不行，刚到这个地方，还不知道周围是什么情况，不能随便暴露自己的底细。先顺着他的话说吧。",
+						"next": "line_11"
+					},
+					"line_11": {
+						"speaker": "主角",
+						"text": "我这不是刚来嘛，还人生地不熟的。先做点生意，慢慢熟悉这里。",
+						"next": "line_12"
+					},
+					"line_12": {
+						"speaker": "主角",
+						"text": "我们店里卖的是奶茶，可是好东西。你要不要尝尝？先看看菜单。",
+						"next": "line_13"
+					},
+					"line_13": {
+						"speaker": "胖哥布林",
+						"text": "哟！还真有不少花样啊！你们格里芬使者带来的东西就是新鲜！",
+						"next": "line_14"
+					},
+					"line_14": {
+						"speaker": "胖哥布林",
+						"text": "我们这边也有那什么奶茶……是叫这个名儿吧？不过可没有你们这么多花样！",
+						"next": "line_15"
+					},
+					"line_15": {
+						"speaker": "胖哥布林",
+						"text": "让我看看啊……这个六金币，这个七金币……嚯！这个居然要十金币？",
+						"next": "line_16"
+					},
+					"line_16": {
+						"speaker": "胖哥布林",
+						"text": "嘶……是不便宜啊。不过，难得有新东西嘛！",
+						"next": "line_17"
+					},
+					"line_17": {
+						"speaker": "主角·内心",
+						"text": "这些哥布林居然这么自然地接受了我的长相和这家店，甚至连价目表都能直接看懂。",
+						"next": "line_18"
+					},
+					"line_18": {
+						"speaker": "主角·内心",
+						"text": "看来，这个世界的文字至少和我原来认识的文字有相通之处，物价好像也没有太大的变动……至于他们为什么把我当成什么格里芬使者，恐怕得再打听打听。",
+						"next": "line_19"
+					},
+					"line_19": {
+						"speaker": "主角·内心",
+						"text": "不过现在还不能急着问，先别引起他的怀疑。",
+						"next": "line_20"
+					},
+					"line_20": {
+						"speaker": "主角",
+						"text": "都是都是你没尝过的口味。既然难得来一趟，不如挑一杯试试？",
+						"next": "line_21"
+					},
+					"line_21": {
+						"speaker": "胖哥布林",
+						"text": "哈哈哈！你说得对！那我可得好好尝尝！",
+						"next": "line_22"
+					},
+					"line_22": {
+						"speaker": "胖哥布林",
+						"text": "就这个吧！看着就不错！",
+						"next": "line_23"
+					},
+					"line_23": {
+						"speaker": "胖哥布林",
+						"text": "哎，这个是什么？那个又是什么？都放进去就行了吗？",
+						"next": "line_24"
+					},
+					"line_24": {
+						"speaker": "主角",
+						"text": "……你先等着，做好了就给你。",
+						"next": "line_25"
+					},
+					"line_25": {
+						"speaker": "胖哥布林",
+						"text": "好好好！我不催，我不催！",
+						"next": ""
+					}
+				}
+			},
+			"day1.s04.first_taste": {
+				"start": "line_1",
+				"lines": {
+					"line_1": {
+						"speaker": "胖哥布林",
+						"text": "嚯——！虽然贵了点，不过好吃啊！下次我还来！",
+						"next": "line_2"
+					},
+					"line_2": {
+						"speaker": "主角·内心",
+						"text": "嘴上嫌贵，喝起来倒是一点也不含糊。",
+						"next": "line_3"
+					},
+					"line_3": {
+						"speaker": "胖哥布林",
+						"text": "对了对了！你们格里芬使者是不是经常去别的地方？还有没有什么新鲜吃食？最好是能吃的、稀奇的、以前没见过的！",
+						"next": "line_4"
+					},
+					"line_4": {
+						"speaker": "主角·内心",
+						"text": "……这家伙果然满脑子都是吃的。",
+						"next": "line_5"
+					},
+					"line_5": {
+						"speaker": "主角",
+						"text": "你这么喜欢新鲜东西，平时应该很关注这些吧？",
+						"next": "line_6"
+					},
+					"line_6": {
+						"speaker": "胖哥布林",
+						"text": "那当然！吃可是头等大事啊！",
+						"next": "line_7"
+					},
+					"line_7": {
+						"speaker": "主角",
+						"text": "那我倒有些事情想问问你。比如，你刚才说的格里芬，还有你们这里的长老……",
+						"next": ""
+					}
+				}
+			},
+			"day1.s04.griffin_faith": {
+				"start": "line_1",
+				"lines": {
+					"line_1": {
+						"speaker": "胖哥布林",
+						"text": "说起来，你怎么一直问我格里芬啊？你真不知道？",
+						"next": "line_2"
+					},
+					"line_2": {
+						"speaker": "主角",
+						"text": "我都说了我刚来，还有很多事情不清楚。你就给我讲讲呗。",
+						"next": "line_3"
+					},
+					"line_3": {
+						"speaker": "胖哥布林",
+						"text": "啊？你真不知道啊？那你看看你手上的金币！这上面不就有伟大的格里芬吗？",
+						"next": "line_4"
+					},
+					"line_4": {
+						"speaker": "主角·内心",
+						"text": "啊？这玩意真的是金币？？难道我要赚翻了？！",
+						"next": "line_5"
+					},
+					"line_5": {
+						"speaker": "主角",
+						"text": "啊，我知道，我知道！确实很伟大啊。",
+						"next": "line_6"
+					},
+					"line_6": {
+						"speaker": "主角·内心",
+						"text": "呼……差点露馅。幸好穿越之前看过几本异世界轻小说。格里芬……听起来和地球上的狮鹫差不多嘛，鹰头、狮身，还长着翅膀。别说，还有点帅。",
+						"next": "line_7"
+					},
+					"line_7": {
+						"speaker": "胖哥布林",
+						"text": "嘿嘿！那当然！伟大的格里芬啊！我们都敬畏它！",
+						"next": "line_8"
+					},
+					"line_8": {
+						"speaker": "胖哥布林",
+						"text": "长老是最懂格里芬的人，负责主持仪式、传达它的意志。长老说，偶尔来的行脚商都是格里芬派来的使者，他们带来的稀奇商品，就是对勤劳守规矩的哥布林的赏赐！",
+						"next": "line_9"
+					},
+					"line_9": {
+						"speaker": "主角·内心",
+						"text": "格里芬到底是真实存在的，还是只是传说？不过，确实有个长老一直在传达所谓的格里芬的意志。",
+						"next": "line_10"
+					},
+					"line_10": {
+						"speaker": "主角·内心",
+						"text": "而且这些哥布林似乎既害怕它，又尊敬它……倒是有意思。",
+						"next": "line_11"
+					},
+					"line_11": {
+						"speaker": "主角",
+						"text": "你刚才说，格里芬会惩罚不守规矩的哥布林？怎么个惩罚法？",
+						"next": "line_12"
+					},
+					"line_12": {
+						"speaker": "胖哥布林",
+						"text": "嘘！这种事可不能随便乱说！",
+						"next": "line_13"
+					},
+					"line_13": {
+						"speaker": "主角",
+						"text": "……不是你自己说的吗？",
+						"next": "line_14"
+					},
+					"line_14": {
+						"speaker": "胖哥布林",
+						"text": "我、我只是提醒你！不勤劳、不守规矩的哥布林，要是背负了不敬畏格里芬的罪孽，可是会消失的！",
+						"next": "line_15"
+					},
+					"line_15": {
+						"speaker": "主角",
+						"text": "消失？",
+						"next": "line_16"
+					},
+					"line_16": {
+						"speaker": "胖哥布林",
+						"text": "对！就是消失！你知道吗？前几天我听说，军营里有个老混子哥布林失踪了！据说地上还留下了几片大羽毛……",
+						"next": "line_17"
+					},
+					"line_17": {
+						"speaker": "主角",
+						"text": "……真的假的？",
+						"next": "line_18"
+					},
+					"line_18": {
+						"speaker": "主角·内心",
+						"text": "怎么还有随机伤人事件？！那哥布林是被吃了吗？",
+						"next": "line_19"
+					},
+					"line_19": {
+						"speaker": "胖哥布林",
+						"text": "不过你也不用太担心！伟大的格里芬虽然令人恐惧，但它只会惩戒不守规矩的家伙！",
+						"next": "line_20"
+					},
+					"line_20": {
+						"speaker": "胖哥布林",
+						"text": "像我就不一样了！我可是很守规矩的！就是……就是能吃了点。格里芬肯定不会惩罚我的！",
+						"next": "line_21"
+					},
+					"line_21": {
+						"speaker": "主角",
+						"text": "……嗯嗯，它肯定不会惩罚你的。",
+						"next": "line_22"
+					},
+					"line_22": {
+						"speaker": "主角·内心",
+						"text": "明明怕得要死，还非得嘴硬。",
+						"next": "line_23"
+					},
+					"line_23": {
+						"speaker": "胖哥布林",
+						"text": "不过话说回来，你自己都是格里芬派来的，怎么能什么都不知道呢？",
+						"next": "line_24"
+					},
+					"line_24": {
+						"speaker": "主角",
+						"text": "……",
+						"next": "line_25"
+					},
+					"line_25": {
+						"speaker": "胖哥布林",
+						"text": "嘿嘿，难道你有什么事情瞒着我？",
+						"next": "line_26"
+					},
+					"line_26": {
+						"speaker": "主角",
+						"text": "我不是说了嘛，刚来，对这里还不熟悉。",
+						"next": "line_27"
+					},
+					"line_27": {
+						"speaker": "胖哥布林",
+						"text": "哈哈哈！别紧张，我开玩笑的！",
+						"next": "line_28"
+					},
+					"line_28": {
+						"speaker": "胖哥布林",
+						"text": "不过啊，伟大的格里芬之所以伟大，可不只是因为它会惩罚坏家伙！",
+						"next": "line_29"
+					},
+					"line_29": {
+						"speaker": "主角",
+						"text": "哦？那还有什么？",
+						"next": ""
+					}
+				}
+			},
+			"day1.s04.griffin_blood": {
+				"start": "line_1",
+				"lines": {
+					"line_1": {
+						"speaker": "胖哥布林",
+						"text": "嘿嘿！你终于问到重点了！伟大的格里芬之所以伟大，就是因为它会用自己的血哺育我们！",
+						"next": "line_2"
+					},
+					"line_2": {
+						"speaker": "主角",
+						"text": "血还能哺育你们？",
+						"next": "line_3"
+					},
+					"line_3": {
+						"speaker": "胖哥布林",
+						"text": "那当然！格里芬之血可是珍贵的圣物！据说里面蕴含着格里芬的力量，能赐予我们智慧，让我们挣好多好多金币！",
+						"next": "line_4"
+					},
+					"line_4": {
+						"speaker": "胖哥布林",
+						"text": "不仅如此！有了格里芬的庇护，赌博就能赢个盆满钵满，晚上睡觉也能安安稳稳，绝对不会被抓走！",
+						"next": "line_5"
+					},
+					"line_5": {
+						"speaker": "主角·内心",
+						"text": "……这都快把格里芬说成万能许愿机了。",
+						"next": "line_6"
+					},
+					"line_6": {
+						"speaker": "主角",
+						"text": "这么厉害？那你喝过？",
+						"next": "line_7"
+					},
+					"line_7": {
+						"speaker": "胖哥布林",
+						"text": "呃……这个嘛，格里芬之血可不是随随便便就能喝到的！那是圣物，平时由长老亲自保管，只有特殊的时候才能得到！",
+						"next": "line_8"
+					},
+					"line_8": {
+						"speaker": "主角",
+						"text": "既然这么珍贵，你就不想尝尝？",
+						"next": "line_9"
+					},
+					"line_9": {
+						"speaker": "胖哥布林",
+						"text": "想啊！我做梦都想！你想想，要是喝上一口，说不定以后每次赌博都能赢！到时候金币还不是哗啦啦地往口袋里流？把你奶茶店里每种奶茶都喝一遍，也不在话下！",
+						"next": "line_10"
+					},
+					"line_10": {
+						"speaker": "主角·内心",
+						"text": "好家伙，前面还说格里芬会赐予智慧，结果这家伙满脑子还是金币、赌博和吃东西。",
+						"next": "line_11"
+					},
+					"line_11": {
+						"speaker": "主角",
+						"text": "既然你这么想要，为什么不自己去找长老要？",
+						"next": "line_12"
+					},
+					"line_12": {
+						"speaker": "胖哥布林",
+						"text": "你以为我不想吗？格里芬之血可是长老亲自保管的！不过，嘿嘿，今天倒是有个好机会。长老要亲自去祭拜伟大的格里芬，整晚都不会回来，宅邸今天是空的！",
+						"next": "line_13"
+					},
+					"line_13": {
+						"speaker": "主角",
+						"text": "所以呢？",
+						"next": "line_14"
+					},
+					"line_14": {
+						"speaker": "胖哥布林",
+						"text": "趁这个时候进去，说不定就能弄到一点格里芬之血！",
+						"next": "line_15"
+					},
+					"line_15": {
+						"speaker": "主角",
+						"text": "……你让我去偷长老的东西？",
+						"next": "line_16"
+					},
+					"line_16": {
+						"speaker": "胖哥布林",
+						"text": "哎呀，别说得那么难听嘛！而且你是格里芬使者，跟我们不一样！这两天比较特殊，我们这些普通哥布林要是靠近宅邸，说不定就会被伟大的格里芬察觉。可你说不定能悄悄进去！",
+						"next": "line_17"
+					},
+					"line_17": {
+						"speaker": "主角",
+						"text": "你他妈不是很敬畏格里芬吗？怎么还要偷东西？",
+						"next": "line_18"
+					},
+					"line_18": {
+						"speaker": "胖哥布林",
+						"text": "我当然敬畏啊！我就是想尝尝嘛！再说了，这么稀罕的东西，要是能拿来做成奶茶，肯定能卖得很好！只要你帮我弄到手，以后我每天都来买你的奶茶！",
+						"next": "line_19"
+					},
+					"line_19": {
+						"speaker": "主角·内心",
+						"text": "每天都来买奶茶……格里芬之血听起来又确实是个稀罕玩意，要是能做成特调，说不定真能赚一笔。",
+						"next": "line_20"
+					},
+					"line_20": {
+						"speaker": "主角·内心",
+						"text": "可是，偷了长老的东西，被发现了怎么办？……但我现在都快穷疯了！要钱没钱，要命……命倒是还有一条。",
+						"next": "line_21"
+					},
+					"line_21": {
+						"speaker": "主角·内心",
+						"text": "不行！还是不敢啊！！",
+						"next": ""
+					}
+				}
+			},
+			"day1.s04.map_handover": {
+				"start": "line_1",
+				"lines": {
+					"line_1": {
+						"speaker": "胖哥布林",
+						"text": "对了，给你这个！你刚来这里，肯定还不熟悉路。",
+						"next": "line_2"
+					},
+					"line_2": {
+						"speaker": "主角",
+						"text": "你连地图都准备好了？",
+						"next": "line_3"
+					},
+					"line_3": {
+						"speaker": "胖哥布林",
+						"text": "那当然！上面标了主要的地方。长老的房间在洞穴深处，具体怎么进去，你得自己找找了。",
+						"next": "line_4"
+					},
+					"line_4": {
+						"speaker": "主角",
+						"text": "……你还真是把麻烦都安排给我了。",
+						"next": "line_5"
+					},
+					"line_5": {
+						"speaker": "胖哥布林",
+						"text": "哈哈哈！能者多劳嘛！",
+						"next": "line_6"
+					},
+					"line_6": {
+						"speaker": "系统",
+						"text": "获得哥布林洞穴地图，地图功能已解锁。",
+						"next": "line_7"
+					},
+					"line_7": {
+						"speaker": "主角·内心",
+						"text": "长老今晚不在，地图也有了。风险肯定有，但要是能弄到这种稀有材料，说不定真能赚上一笔。",
+						"next": "line_8"
+					},
+					"line_8": {
+						"speaker": "主角·内心",
+						"text": "我现在可没资格嫌钱来得麻烦。只要不是毫无胜算，倒是值得试试。",
+						"next": ""
+					}
+				}
+			},
+			"day1.s04.commission_choice_accept": {
+				"start": "line_1",
+				"lines": {
+					"line_1": {
+						"speaker": "主角",
+						"text": "行，我去看看。但能不能拿到，我可不保证。",
+						"next": "line_2"
+					},
+					"line_2": {
+						"speaker": "胖哥布林",
+						"text": "好！我就知道你是个爽快人！",
+						"next": "line_3"
+					},
+					"line_3": {
+						"speaker": "主角",
+						"text": "先说好，真出了什么事，我可不会替你背锅。",
+						"next": "line_4"
+					},
+					"line_4": {
+						"speaker": "胖哥布林",
+						"text": "放心放心！愿格里芬垂顾你！",
+						"next": "line_5"
+					},
+					"line_5": {
+						"speaker": "主角·内心",
+						"text": "但愿这趟真能值回票价。",
+						"next": ""
+					}
+				}
+			},
+			"day1.s04.commission_choice_refuse": {
+				"start": "line_1",
+				"lines": {
+					"line_1": {
+						"speaker": "主角",
+						"text": "不行，风险太大，我不干。",
+						"next": "line_2"
+					},
+					"line_2": {
+						"speaker": "胖哥布林",
+						"text": "哎呀，别急着拒绝嘛！你不是正缺钱吗？这么稀罕的东西，可不是天天都有机会碰上的！",
+						"next": "line_3"
+					},
+					"line_3": {
+						"speaker": "主角",
+						"text": "你倒是挺会挑时候说话。",
+						"next": "line_4"
+					},
+					"line_4": {
+						"speaker": "胖哥布林",
+						"text": "长老今晚又不在，你有地图，至少知道该往哪儿找。进去看看而已，说不定很快就能回来呢？",
+						"next": "line_5"
+					},
+					"line_5": {
+						"speaker": "主角·内心",
+						"text": "长老不在，地图也有了。风险不小，但也不是完全没机会。",
+						"next": "line_6"
+					},
+					"line_6": {
+						"speaker": "主角·内心",
+						"text": "我现在最缺的就是钱。要是能弄到这种稀有材料，或许就能赚上一笔……",
+						"next": "line_7"
+					},
+					"line_7": {
+						"speaker": "主角",
+						"text": "……好吧，我去看看。但要是出了什么事，你也别想装作什么都不知道。",
+						"next": "line_8"
+					},
+					"line_8": {
+						"speaker": "胖哥布林",
+						"text": "哈哈哈！我等你的好消息！愿格里芬垂顾你！",
+						"next": "line_9"
+					},
+					"line_9": {
+						"speaker": "主角",
+						"text": "……最好真有好消息。",
+						"next": ""
+					}
+				}
+			},
+			"day1.s04.commission_choice": {
+				"start": "choice",
+				"lines": {
+					"choice": {
+						"speaker": "",
+						"text": "",
+						"choices": [
+							{
+								"id": "accept",
+								"text": "接受委托",
+								"next": ""
+							},
+							{
+								"id": "refuse",
+								"text": "拒绝委托",
+								"next": ""
+							}
+						]
+					}
+				}
+			},
+			"day1.s05.drunken_guard": {
+				"start": "line_1",
+				"lines": {
+					"line_1": {
+						"speaker": "醉酒守卫",
+						"text": "喂！你，站住！",
+						"next": "line_2"
+					},
+					"line_2": {
+						"speaker": "醉酒守卫",
+						"text": "既然是格里芬派来的使者，就别到处乱跑！使者就该待在指定的地方做生意，懂不懂？",
+						"next": "line_3"
+					},
+					"line_3": {
+						"speaker": "主角·内心",
+						"text": "……啊？还有这种好事？",
+						"next": ""
+					}
+				}
+			},
+			"day1.s05.drunken_guard_after_payment": {
+				"start": "line_1",
+				"lines": {
+					"line_1": {
+						"speaker": "醉酒守卫",
+						"text": "光给钱有什么意思？我还不如直接买点喝的。",
+						"next": "line_2"
+					},
+					"line_2": {
+						"speaker": "醉酒守卫",
+						"text": "明天傍晚，给我弄一杯来。要是没有……嘿嘿，那咱们可得重新聊聊了。",
+						"next": "line_3"
+					},
+					"line_3": {
+						"speaker": "主角·内心",
+						"text": "……我这是开奶茶店，还是接黑帮订单呢？",
+						"next": ""
+					}
+				}
+			},
+			"day1.s05.document": {
+				"start": "line_1",
+				"lines": {
+					"line_1": {
+						"speaker": "系统",
+						"text": "发现神秘文书！",
+						"next": ""
+					}
+				}
+			},
+			"day1.s05.document_document": {
+				"start": "line_1",
+				"lines": {
+					"line_1": {
+						"speaker": "",
+						"text": "……黄金乡并非传说中虚构之地。\n\n关于其存在的记载，最早见于……\n\n若要实现原定计划，必须确认「变量」是否出现。\n\n在此之前，不得擅自采取行动。\n\n……其余事项，待进一步确认后再议。",
+						"next": ""
+					}
+				}
+			},
+			"day1.s05.document_after_document": {
+				"start": "line_1",
+				"lines": {
+					"line_1": {
+						"speaker": "主角·内心",
+						"text": "黄金乡……变量……原定计划？",
+						"next": "line_2"
+					},
+					"line_2": {
+						"speaker": "主角·内心",
+						"text": "这老头到底在研究什么啊？",
+						"next": ""
+					}
+				}
+			},
+			"day1.s06.reaction": {
+				"start": "line_1",
+				"lines": {
+					"line_1": {
+						"speaker": "胖哥布林",
+						"text": "这就是格里芬之血做的？看起来就不一般！我早就想尝尝了！",
+						"next": "line_2"
+					},
+					"line_2": {
+						"speaker": "主角",
+						"text": "卧槽？！你怎么了？！",
+						"next": "line_3"
+					},
+					"line_3": {
+						"speaker": "主角·内心",
+						"text": "等等！不就是加了点格里芬之血吗？！这玩意儿不是哥布林的圣物吗？！",
+						"next": "line_4"
+					},
+					"line_4": {
+						"speaker": "主角",
+						"text": "喂！胖哥布林！你醒醒！你不是说这东西能带来庇护吗？！",
+						"next": "line_5"
+					},
+					"line_5": {
+						"speaker": "主角·内心",
+						"text": "是格里芬之血本身有问题？还是我加得太多了？可这东西不是他们一直供奉着的吗？！",
+						"next": ""
+					}
+				}
+			},
+			"day1.s06.help_and_rest": {
+				"start": "line_1",
+				"lines": {
+					"line_1": {
+						"speaker": "主角·内心",
+						"text": "……这下麻烦大了。",
+						"next": "line_2"
+					},
+					"line_2": {
+						"speaker": "主角·内心",
+						"text": "这玩意儿根本不是什么普通的食品原料。",
+						"next": "line_3"
+					},
+					"line_3": {
+						"speaker": "主角·内心",
+						"text": "可问题是——为什么他们会把这种东西当成圣物？",
+						"next": ""
+					}
+				}
+			}
+		},
+		"phases": [
+			{
+				"beat": "s03_limited_exploration",
+				"id": "day1.bridge.s03_exploration",
+				"status": "pending",
+				"after_event": "day1.s03.street_gone",
+				"stage": "day1.s03",
+				"source_flag": "day1.s03.exploration_completed",
+				"completion_flag": "day1.bridge.s03_exploration.completed",
+				"next_event": "day1.s03.back_to_door",
+				"allow_existing": null,
+				"owner": "探索业务（无正式写入者）",
+				"missing": "观察点集合、历史策略与结束判定 P13",
+				"config": null
+			},
+			{
+				"beat": "s04_fat_goblin_order",
+				"id": "day1.bridge.fat_goblin_order",
+				"status": "pending",
+				"after_event": "day1.s04.commission",
+				"stage": "day1.s04.wait_fat_goblin_order",
+				"source_flag": null,
+				"completion_flag": "day1.bridge.fat_goblin_order.completed",
+				"next_event": "day1.s04.after_order",
+				"allow_existing": true,
+				"owner": "TaskDelivery（订单未配置）",
+				"missing": "P14 模式与场所；P04/P05 配方、金额、币种；真实整笔回执",
+				"config": null
+			},
+			{
+				"beat": "s06_blood_drink",
+				"id": "day1.bridge.blood_drink",
+				"status": "pending",
+				"after_event": "day1.s06.pondering",
+				"stage": "day1.s06.wait_blood_drink",
+				"source_flag": "day1.s06.blood_drink_delivered",
+				"completion_flag": "day1.bridge.blood_drink.completed",
+				"next_event": "day1.s06.reaction",
+				"allow_existing": true,
+				"owner": "TaskDelivery / GameState.commit_delivery",
+				"missing": "已存在真实交付事实，但 P07 用量、P10 到店与表现、D13 剩余量未解决；不发布简化版",
+				"config": {
+					"id": "day1.bridge.blood_drink",
+					"after_event": "day1.s06.pondering",
+					"stage": "day1.s06.wait_blood_drink",
+					"completion": {
+						"flag": "day1.s06.blood_drink_delivered",
+						"allow_existing": true
+					},
+					"completion_flag": "day1.bridge.blood_drink.completed",
+					"next_event": "day1.s06.reaction"
+				}
+			}
+		],
+		"release_gate": "全部依赖有来源与真实业务写入者，路由/恢复/F6 通过后才发布；不可直接把待发布对白指令串当作完整演出。",
+		"cases": [
+			{
+				"id": "day1.s03_coin_inspect.source",
+				"beat": "s03_coin_inspect",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s03_coin_inspect.route",
+				"beat": "s03_coin_inspect",
+				"status": "pending",
+				"blocked_by": [
+					"P13"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s03_street_gone.source",
+				"beat": "s03_street_gone",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s03_street_gone.route",
+				"beat": "s03_street_gone",
+				"status": "pending",
+				"blocked_by": [
+					"P13"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s03_limited_exploration.source",
+				"beat": "s03_limited_exploration",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s03_limited_exploration.route",
+				"beat": "s03_limited_exploration",
+				"status": "pending",
+				"blocked_by": [
+					"P13"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s03_back_to_door.source",
+				"beat": "s03_back_to_door",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s03_back_to_door.route",
+				"beat": "s03_back_to_door",
+				"status": "pending",
+				"blocked_by": [
+					"P13",
+					"P14"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s04_fat_goblin_arrives.source",
+				"beat": "s04_fat_goblin_arrives",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s04_fat_goblin_arrives.route",
+				"beat": "s04_fat_goblin_arrives",
+				"status": "pending",
+				"blocked_by": [
+					"P04",
+					"P05",
+					"P13",
+					"P14"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s04_fat_goblin_order.source",
+				"beat": "s04_fat_goblin_order",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s04_fat_goblin_order.route",
+				"beat": "s04_fat_goblin_order",
+				"status": "pending",
+				"blocked_by": [
+					"P04",
+					"P05",
+					"P11",
+					"P14"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s04_first_taste.source",
+				"beat": "s04_first_taste",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s04_first_taste.route",
+				"beat": "s04_first_taste",
+				"status": "pending",
+				"blocked_by": [
+					"P04",
+					"P14"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s04_griffin_faith.source",
+				"beat": "s04_griffin_faith",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s04_griffin_faith.route",
+				"beat": "s04_griffin_faith",
+				"status": "pending",
+				"blocked_by": [
+					"P14"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s04_griffin_blood.source",
+				"beat": "s04_griffin_blood",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s04_griffin_blood.route",
+				"beat": "s04_griffin_blood",
+				"status": "pending",
+				"blocked_by": [
+					"P14"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s04_map_handover.source",
+				"beat": "s04_map_handover",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s04_map_handover.route",
+				"beat": "s04_map_handover",
+				"status": "pending",
+				"blocked_by": [
+					"P14",
+					"P16"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s04_commission_choice.source",
+				"beat": "s04_commission_choice",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s04_commission_choice.route",
+				"beat": "s04_commission_choice",
+				"status": "pending",
+				"blocked_by": [
+					"P01",
+					"P14"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s05_step1_outside.source",
+				"beat": "s05_step1_outside",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s05_step1_outside.route",
+				"beat": "s05_step1_outside",
+				"status": "pending",
+				"blocked_by": [
+					"P09",
+					"P13"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s05_step2_throw.source",
+				"beat": "s05_step2_throw",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s05_step2_throw.route",
+				"beat": "s05_step2_throw",
+				"status": "pending",
+				"blocked_by": [
+					"P05",
+					"P09"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s05_step3_bribe.source",
+				"beat": "s05_step3_bribe",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s05_step3_bribe.route",
+				"beat": "s05_step3_bribe",
+				"status": "pending",
+				"blocked_by": [
+					"P06",
+					"P09"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s05_drunken_guard.source",
+				"beat": "s05_drunken_guard",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s05_drunken_guard.route",
+				"beat": "s05_drunken_guard",
+				"status": "pending",
+				"blocked_by": [
+					"P06",
+					"P09",
+					"D02"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s05_final_patrol.source",
+				"beat": "s05_final_patrol",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s05_final_patrol.route",
+				"beat": "s05_final_patrol",
+				"status": "pending",
+				"blocked_by": [
+					"P09"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s05_document.source",
+				"beat": "s05_document",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s05_document.route",
+				"beat": "s05_document",
+				"status": "pending",
+				"blocked_by": [
+					"P08",
+					"P17"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s05_blood_acquired.source",
+				"beat": "s05_blood_acquired",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s05_blood_acquired.route",
+				"beat": "s05_blood_acquired",
+				"status": "pending",
+				"blocked_by": [
+					"P07",
+					"P08",
+					"D13"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s05_escape.source",
+				"beat": "s05_escape",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s05_escape.route",
+				"beat": "s05_escape",
+				"status": "pending",
+				"blocked_by": [
+					"P08",
+					"P09"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s05_shop_system_update.source",
+				"beat": "s05_shop_system_update",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s05_shop_system_update.route",
+				"beat": "s05_shop_system_update",
+				"status": "pending",
+				"blocked_by": [
+					"P07",
+					"P16"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s06_pondering.source",
+				"beat": "s06_pondering",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s06_pondering.route",
+				"beat": "s06_pondering",
+				"status": "pending",
+				"blocked_by": [
+					"P07"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s06_blood_drink.source",
+				"beat": "s06_blood_drink",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s06_blood_drink.route",
+				"beat": "s06_blood_drink",
+				"status": "pending",
+				"blocked_by": [
+					"P07",
+					"P10",
+					"D13"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s06_reaction.source",
+				"beat": "s06_reaction",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s06_reaction.route",
+				"beat": "s06_reaction",
+				"status": "pending",
+				"blocked_by": [
+					"P07",
+					"P10"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s06_help_and_rest.source",
+				"beat": "s06_help_and_rest",
+				"status": "static",
+				"checks": [
+					"逐字文本/标点/重复/内心与出声",
+					"稳定 ID 与来源行范围",
+					"自动演出和真实业务边界分别记录"
+				]
+			},
+			{
+				"id": "day1.s06_help_and_rest.route",
+				"beat": "s06_help_and_rest",
+				"status": "pending",
+				"blocked_by": [
+					"P01",
+					"P10",
+					"D13"
+				],
+				"checks": [
+					"正式触发调用与正确宿主",
+					"条件正反与 once 已消费",
+					"取消/重建后不重复业务",
+					"缺资源或业务失败不续播"
+				],
+				"fixture": null
+			},
+			{
+				"id": "day1.s04.commission_choice.accept",
+				"beat": "s04_commission_choice",
+				"status": "pending",
+				"fixture": null,
+				"choices": {
+					"day1.s04.commission_choice/choice": "accept"
+				},
+				"expected": "仅选择对应原文路径；两路真实汇合一次，不重复地图或任务",
+				"blocked_by": [
+					"P01",
+					"P14"
+				]
+			},
+			{
+				"id": "day1.s04.commission_choice.refuse",
+				"beat": "s04_commission_choice",
+				"status": "pending",
+				"fixture": null,
+				"choices": {
+					"day1.s04.commission_choice/choice": "refuse"
+				},
+				"expected": "仅选择对应原文路径；两路真实汇合一次，不重复地图或任务",
+				"blocked_by": [
+					"P01",
+					"P14"
+				]
+			},
+			{
+				"id": "day1.bridge.s03_exploration.source_false",
+				"beat": "s03_limited_exploration",
+				"status": "pending",
+				"fixture": null,
+				"condition": {
+					"source": "day1.s03.exploration_completed",
+					"value": false
+				},
+				"expected": "缺物、错误对象、业务失败或关闭 UI 不写源事实、不写 Bridge 输出、不续播",
+				"blocked_by": [
+					"P13"
+				]
+			},
+			{
+				"id": "day1.bridge.s03_exploration.source_true",
+				"beat": "s03_limited_exploration",
+				"status": "pending",
+				"fixture": null,
+				"condition": {
+					"source": "day1.s03.exploration_completed",
+					"value": true
+				},
+				"expected": "真实业务提交且前置事件、stage、模态与暂停条件全部满足后才续播；恢复不重复发奖",
+				"blocked_by": [
+					"P13"
+				]
+			},
+			{
+				"id": "day1.bridge.fat_goblin_order.source_false",
+				"beat": "s04_fat_goblin_order",
+				"status": "pending",
+				"fixture": null,
+				"condition": {
+					"source": null,
+					"value": false
+				},
+				"expected": "缺物、错误对象、业务失败或关闭 UI 不写源事实、不写 Bridge 输出、不续播",
+				"blocked_by": [
+					"P04",
+					"P05",
+					"P11",
+					"P14"
+				]
+			},
+			{
+				"id": "day1.bridge.fat_goblin_order.source_true",
+				"beat": "s04_fat_goblin_order",
+				"status": "pending",
+				"fixture": null,
+				"condition": {
+					"source": null,
+					"value": true
+				},
+				"expected": "真实业务提交且前置事件、stage、模态与暂停条件全部满足后才续播；恢复不重复发奖",
+				"blocked_by": [
+					"P04",
+					"P05",
+					"P11",
+					"P14"
+				]
+			},
+			{
+				"id": "day1.bridge.blood_drink.source_false",
+				"beat": "s06_blood_drink",
+				"status": "pending",
+				"fixture": null,
+				"condition": {
+					"source": "day1.s06.blood_drink_delivered",
+					"value": false
+				},
+				"expected": "缺物、错误对象、业务失败或关闭 UI 不写源事实、不写 Bridge 输出、不续播",
+				"blocked_by": [
+					"P07",
+					"P10",
+					"D13"
+				]
+			},
+			{
+				"id": "day1.bridge.blood_drink.source_true",
+				"beat": "s06_blood_drink",
+				"status": "pending",
+				"fixture": null,
+				"condition": {
+					"source": "day1.s06.blood_drink_delivered",
+					"value": true
+				},
+				"expected": "真实业务提交且前置事件、stage、模态与暂停条件全部满足后才续播；恢复不重复发奖",
+				"blocked_by": [
+					"P07",
+					"P10",
+					"D13"
+				]
+			}
+		],
+		"event_drafts": {
+			"review.day1.s03_coin_inspect_before": {
+				"once": true,
+				"steps": [
+					{
+						"command": "dialogue",
+						"id": "day1.s03.coin_inspect"
+					}
+				]
+			},
+			"review.day1.s03_street_gone_before": {
+				"once": true,
+				"steps": [
+					{
+						"command": "dialogue",
+						"id": "day1.s03.street_gone"
+					}
+				]
+			},
+			"review.day1.s03_limited_exploration_before": {
+				"once": true,
+				"steps": [
+					{
+						"command": "dialogue",
+						"id": "day1.s03.limited_exploration"
+					}
+				]
+			},
+			"review.day1.s03_back_to_door_before": {
+				"once": true,
+				"steps": [
+					{
+						"command": "dialogue",
+						"id": "day1.s03.back_to_door"
+					}
+				]
+			},
+			"review.day1.s04_fat_goblin_arrives_before": {
+				"once": true,
+				"steps": [
+					{
+						"command": "dialogue",
+						"id": "day1.s04.fat_goblin_arrives"
+					}
+				]
+			},
+			"review.day1.s04_first_taste_before": {
+				"once": true,
+				"steps": [
+					{
+						"command": "dialogue",
+						"id": "day1.s04.first_taste"
+					}
+				]
+			},
+			"review.day1.s04_griffin_faith_before": {
+				"once": true,
+				"steps": [
+					{
+						"command": "dialogue",
+						"id": "day1.s04.griffin_faith"
+					}
+				]
+			},
+			"review.day1.s04_griffin_blood_before": {
+				"once": true,
+				"steps": [
+					{
+						"command": "dialogue",
+						"id": "day1.s04.griffin_blood"
+					}
+				]
+			},
+			"review.day1.s04_map_handover_before": {
+				"once": true,
+				"steps": [
+					{
+						"command": "dialogue",
+						"id": "day1.s04.map_handover"
+					}
+				]
+			},
+			"review.day1.s04_commission_choice_choice": {
+				"once": true,
+				"steps": [
+					{
+						"command": "dialogue",
+						"id": "day1.s04.commission_choice"
+					},
+					{
+						"command": "dialogue",
+						"id": "day1.s04.commission_choice_accept",
+						"when": {
+							"choice": {
+								"dialogue": "day1.s04.commission_choice",
+								"line": "choice",
+								"id": "accept"
+							}
+						}
+					},
+					{
+						"command": "dialogue",
+						"id": "day1.s04.commission_choice_refuse",
+						"when": {
+							"choice": {
+								"dialogue": "day1.s04.commission_choice",
+								"line": "choice",
+								"id": "refuse"
+							}
+						}
+					}
+				]
+			},
+			"review.day1.s05_drunken_guard_before": {
+				"once": true,
+				"steps": [
+					{
+						"command": "dialogue",
+						"id": "day1.s05.drunken_guard"
+					}
+				]
+			},
+			"review.day1.s05_drunken_guard_after_payment": {
+				"once": true,
+				"steps": [
+					{
+						"command": "dialogue",
+						"id": "day1.s05.drunken_guard_after_payment"
+					}
+				]
+			},
+			"review.day1.s05_document_before": {
+				"once": true,
+				"steps": [
+					{
+						"command": "dialogue",
+						"id": "day1.s05.document"
+					}
+				]
+			},
+			"review.day1.s05_document_document": {
+				"once": true,
+				"steps": [
+					{
+						"command": "dialogue",
+						"id": "day1.s05.document_document"
+					}
+				]
+			},
+			"review.day1.s05_document_after_document": {
+				"once": true,
+				"steps": [
+					{
+						"command": "dialogue",
+						"id": "day1.s05.document_after_document"
+					}
+				]
+			},
+			"review.day1.s06_reaction_before": {
+				"once": true,
+				"steps": [
+					{
+						"command": "dialogue",
+						"id": "day1.s06.reaction"
+					}
+				]
+			},
+			"review.day1.s06_help_and_rest_before": {
+				"once": true,
+				"steps": [
+					{
+						"command": "dialogue",
+						"id": "day1.s06.help_and_rest"
+					}
+				]
+			}
+		}
+	}
+}

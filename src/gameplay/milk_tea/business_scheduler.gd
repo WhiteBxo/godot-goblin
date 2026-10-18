@@ -1,6 +1,6 @@
 class_name BusinessScheduler
 extends Node
-## Disposable coordination. A owns durable snapshots; TaskDelivery owns settlement.
+## Disposable coordination. GameState owns durable snapshots; TaskDelivery settles.
 
 signal changed
 signal projection_reset
@@ -11,7 +11,7 @@ signal business_completed(session_id: String)
 signal operation_failed(error: Error)
 
 const StateData = preload("res://src/core/game_state.gd")
-const STATUSES := ["entering", "waiting", "leaving", "departed"]
+const SESSION_RULES = preload("res://src/gameplay/milk_tea/business_session_rules.gd")
 
 var _session_id := ""
 var _stages: Dictionary = {}
@@ -30,7 +30,21 @@ var _recover_departures: Dictionary = {}
 ## plan: {session_id, stages:[{id, ordinary_customers:[], story_customers:[]}]}
 ## customer: {id, actor_ids:[String], order_ids:[String]}. No recipes or prices here.
 ## load(session_id)->Dictionary; commit(session_id, expected, next)->Error.
-## close has the same arguments and atomically persists closed with A's close facts.
+## Production adapter. Missing authored close rules keep closing unavailable.
+func configure_session(plan: Dictionary, state: StateData, delivery: TaskDelivery, close_rule: Dictionary = {}) -> Error:
+	if _changing or not _session_id.is_empty():
+		return ERR_BUSY
+	if not is_instance_valid(state) or not is_instance_valid(delivery):
+		return ERR_INVALID_PARAMETER
+	if _parse_plan(plan, delivery).is_empty():
+		return ERR_INVALID_DATA
+	var error := state.bind_business_session(plan, close_rule)
+	if error != OK:
+		return error
+	return configure(plan, state, delivery, state.load_business_session, state.commit_business_session,
+		state.close_business_session if not close_rule.is_empty() else Callable())
+
+## close has the same arguments and atomically persists closed with its close facts.
 func configure(plan: Dictionary, state: StateData, delivery: TaskDelivery,
 		load_snapshot: Callable = Callable(), commit_snapshot: Callable = Callable(),
 		close_session: Callable = Callable()) -> Error:
@@ -215,7 +229,7 @@ func confirm_departure(group_id: String) -> Error:
 		return ERR_UNAVAILABLE
 	return _transition(before, group_id, "departed")
 
-## Default is pending. A decides the close rule, target phase and atomic facts.
+## Default is pending. Authored rules decide the target phase and close facts.
 func request_close() -> Error:
 	var before := _snapshot()
 	if before.is_empty():
@@ -283,62 +297,9 @@ func _snapshot() -> Dictionary:
 	if not value is Dictionary:
 		return {}
 	if value.is_empty():
-		return {"version": 1, "published_stages": [], "groups": {}, "closed": false}
-	if value.size() != 4 or not value.get("version") is int or value.version != 1 or not value.get("published_stages") is Array or not value.get("groups") is Dictionary or not value.get("closed") is bool:
-		return {}
-	var seen: Dictionary = {}
-	for stage: Variant in value.published_stages:
-		if not stage is String or not _stages.has(stage) or seen.has(stage):
-			return {}
-		seen[stage] = true
-	for id: Variant in value.groups:
-		if not id is String or not _groups.has(id) or value.groups[id] not in STATUSES or _groups[id].stage_id not in seen:
-			return {}
-	return value.duplicate(true)
+		return SESSION_RULES.empty_snapshot()
+	var definition := {"stages": _stages, "groups": _groups, "orders": _order_groups}
+	return value.duplicate(true) if SESSION_RULES.valid_snapshot(value, definition) else {}
 
 func _parse_plan(plan: Dictionary, delivery: TaskDelivery) -> Dictionary:
-	if not _valid_id(plan.get("session_id")) or not plan.get("stages") is Array or plan.stages.is_empty():
-		return {}
-	var orders: Dictionary = {}
-	for order: Dictionary in delivery.get_orders():
-		orders[order.order_id] = order
-	var result := {"stages": {}, "groups": {}, "orders": {}}
-	var actors: Dictionary = {}
-	for stage: Variant in plan.stages:
-		if not stage is Dictionary or not _valid_id(stage.get("id")) or result.stages.has(stage.id):
-			return {}
-		result.stages[stage.id] = []
-		for kind: String in ["ordinary", "story"]:
-			var customers: Variant = stage.get(kind + "_customers", [])
-			if not customers is Array:
-				return {}
-			for customer: Variant in customers:
-				if not customer is Dictionary or not _valid_id(customer.get("id")) or result.groups.has(customer.id) or not _unique_ids(customer.get("actor_ids")) or not _unique_ids(customer.get("order_ids")):
-					return {}
-				for actor: String in customer.actor_ids:
-					if actors.has(actor):
-						return {}
-					actors[actor] = true
-				for id: String in customer.order_ids:
-					if not orders.has(id) or result.orders.has(id) or orders[id].target_object_id not in customer.actor_ids:
-						return {}
-					result.orders[id] = customer.id
-				var group: Dictionary = customer.duplicate(true)
-				group.stage_id = stage.id
-				group.kind = kind
-				result.groups[customer.id] = group
-				result.stages[stage.id].append(customer.id)
-	return result
-
-func _unique_ids(value: Variant) -> bool:
-	if not value is Array or value.is_empty():
-		return false
-	var seen: Dictionary = {}
-	for id: Variant in value:
-		if not _valid_id(id) or seen.has(id):
-			return false
-		seen[id] = true
-	return true
-
-func _valid_id(value: Variant) -> bool:
-	return value is String and not value.strip_edges().is_empty()
+	return SESSION_RULES.parse_plan(plan, delivery.get_orders())

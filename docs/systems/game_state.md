@@ -55,6 +55,10 @@ GameState 提供完整 v5 内存快照接口，文件读写由独立[存档系�
 
 `validate_snapshot(data: Dictionary) -> Error` 复用完整校验与已支持迁移，不替换状态或发通知；`can_take_snapshot() -> bool` 在事务、重置 / 恢复及同步通知期间返回 false。存档协调器需先检查后取完整快照；场景内的对白、演出和潜入等安全条件由宿主额外判断。
 
+## 营业会话
+
+营业调度的持久数据存于保留前缀 `variables["business.session.<session_id>"]`，仅经 `bind_business_session`、`load_business_session`、`commit_business_session` 与 `close_business_session` 接入，普通 `set_variable` 拒绝写入。关闭营业时将会话、完成事实、合法相邻日程迁移和到期任务结果同次提交，再通知；恢复／新游戏沿用整体替换，不重发营业完成或奖励。规则、错误码和正式接线边界见[营业与顾客调度](../gameplay/business_scheduler.md#gamestate-持久与关店契约)，相关验证为 `tests/verify_business_persistence.gd`。这是 v5 变量内的可选业务结构，不新增顶层 schema 字段。
+
 ## 验证
 
 ```sh

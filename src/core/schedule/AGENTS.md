@@ -17,7 +17,7 @@
 
 ## 唯一写入者
 
-正式流程通过 `DayPhase.advance_to(state, day, phase)` 或兼容的 `DayPhase.enter_night()` / `DayPhase.enter_day()` 写这两个键。剧情、UI、Debug 需要切换阶段时调用它们，不要直接 `set_variable("world.phase")` 或 `set_flag("world.phase.night")`。
+正式流程通过 `DayPhase.advance_to(state, day, phase)` 或兼容的 `DayPhase.enter_night()` / `DayPhase.enter_day()` 写这两个键。营业关店使用 `GameState.close_business_session()` 的复合提交，以同一 `DayPhase.is_adjacent_point()` 规则一次写入关店、日期／昼夜和任务结果，禁止先关店再单独推进。剧情、UI、Debug 的其他阶段切换调用 DayPhase，不要直接 `set_variable("world.phase")` 或 `set_flag("world.phase.night")`。
 
 允许读取方：`SceneExit.are_conditions_met`（经 GameState 读 flag）、`GatherPoint` 的 `required_flag`、地图夜景覆盖层、任务截止判定。
 

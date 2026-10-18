@@ -7,7 +7,7 @@
 - 菜单、食材、配方及相关 Resource 使用现有数据定义，不把目录与配方硬编码进 UI；修改资源读 [共享资源规范](../../resources/AGENTS.md)，核对稳定 ID、类别与实际消费者。
 - 制作前校验完整原料、配方和请求；扣料、产生成品、记录进度保持整体提交与重复请求保护，失败不部分扣除，也不重复增加成品。
 - 制作完成只将成品入库，指定 NPC 交付与任务完成由 [任务模块](../../core/tasks/AGENTS.md) 处理；不要恢复为制作后自动交付。
-- 营业阶段与顾客组使用 BusinessScheduler / CustomerVisit，接口见 [营业与顾客调度](../../../docs/gameplay/business_scheduler.md)。持久提交、关店事实由集成方注入；缺失时保持 pending，不直接写 GameState 或根据交付数量推导关店。
+- 营业阶段与顾客组使用 BusinessScheduler / CustomerVisit，接口见 [营业与顾客调度](../../../docs/gameplay/business_scheduler.md)。生产接入优先 `configure_session()`，绑定 GameState 的原子营业提交；集成方提供明确的 plan 与 close_rule，规则缺失时关店保持 pending，不经普通变量 setter 写营业快照或根据交付数量推导关店。
 - 顾客路线使用宿主注入的 ActorDirector、稳定 Actor ID 与实际拐点，遵守 [角色规范](../../core/actors/AGENTS.md)；不要与剧情控制器竞争同一角色的动作所有权。候选验证为 `verify_business_scheduler.gd`。
 - 改弹窗操作同时读 [UI 规范](../../UI/AGENTS.md)；真实动作完成才发布业务事实，剧情 / Bridge 只消费结果，不在展示层伪造成功。
 

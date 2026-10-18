@@ -11,6 +11,7 @@ signal state_restored
 const SCHEMA_VERSION: int = 5
 const DAY1_MENU: TeaMenu = preload("res://src/resources/milk_tea/day1_menu.tres")
 const MAX_VALUE_DEPTH: int = 32
+const BUSINESS_SESSIONS = preload("res://src/gameplay/milk_tea/business_session_rules.gd")
 
 var _business_profile := "tutorial"
 
@@ -35,6 +36,7 @@ var _completed_events: Dictionary[String, bool] = {}
 var _task_results: Dictionary = {}
 # Static bindings survive scene disposal; reset/restore replace only session facts.
 var _task_definitions: Array[Dictionary] = []
+var _business_sessions: Dictionary = {}
 var _economy: WalletTransactions
 var _warehouse_inventory: WarehouseInventory
 var _tea_production: TeaProduction
@@ -230,6 +232,119 @@ func _on_business_changed() -> void:
 		_notify_state_changed()
 
 
+## Bind authored rules, never UI progress. The full task catalog must be bound first.
+## Scene reconstruction repeats the same binding; rules are not saved as live state.
+func bind_business_session(plan: Dictionary, close_rule: Dictionary = {}) -> Error:
+	if _session_busy():
+		return ERR_BUSY
+	var orders: Array[Dictionary] = []
+	for task: Dictionary in _task_definitions:
+		if task.has("delivery"):
+			orders.append(task.delivery)
+	var definition := BUSINESS_SESSIONS.parse_plan(plan, orders)
+	if definition.is_empty():
+		return ERR_INVALID_DATA
+	var rule := BUSINESS_SESSIONS.parse_close_rule(close_rule, definition) if not close_rule.is_empty() else {}
+	if not close_rule.is_empty() and rule.is_empty():
+		return ERR_INVALID_DATA
+	var binding := {"definition": definition, "close_rule": rule}
+	var id: String = plan.session_id
+	var key: String = BUSINESS_SESSIONS.PREFIX + id
+	if _variables.has(key):
+		if not _valid_business_snapshot(_variables[key], binding, _flags, _current_day, DayPhase.get_phase(self)):
+			return ERR_INVALID_DATA
+		if _business_sessions.has(id) and not _same_value(_business_sessions[id], binding):
+			return ERR_ALREADY_EXISTS
+	_business_sessions[id] = binding.duplicate(true)
+	return OK
+
+func load_business_session(session_id: String) -> Dictionary:
+	if not BUSINESS_SESSIONS.valid_session_id(session_id):
+		return {}
+	return get_variable(BUSINESS_SESSIONS.PREFIX + session_id, {})
+
+## Compare/replace under the same guard as deliveries, wallet and restoration.
+func commit_business_session(session_id: String, expected: Dictionary, next: Dictionary) -> Error:
+	var error := _check_business_write(session_id, expected, next)
+	if error != OK:
+		return error
+	if _same_value(expected, next):
+		return OK
+	if not BUSINESS_SESSIONS.valid_transition(expected, next, _business_sessions[session_id].definition, _flags):
+		return ERR_UNAVAILABLE
+	_publish_business_session(session_id, next)
+	return OK
+
+## Close, completion fact, phase mirrors and deadline outcomes publish together.
+## No close rule means pending, including when every configured order was served.
+func close_business_session(session_id: String, expected: Dictionary, next: Dictionary) -> Error:
+	var error := _check_business_write(session_id, expected, next)
+	if error != OK:
+		return error
+	var binding: Dictionary = _business_sessions[session_id]
+	var rule: Dictionary = binding.close_rule
+	if rule.is_empty():
+		return ERR_UNCONFIGURED
+	if expected.closed:
+		return OK if _same_value(expected, next) else ERR_UNAVAILABLE
+	var closed := expected.duplicate(true)
+	closed.closed = true
+	if not _same_value(closed, next) or _current_day != rule.from.day or DayPhase.get_phase(self) != rule.from.phase:
+		return ERR_UNAVAILABLE
+	if not BUSINESS_SESSIONS.can_close(expected, binding.definition, rule, _flags):
+		return ERR_UNAVAILABLE
+	_publish_business_session(session_id, next, rule)
+	return OK
+
+func _check_business_write(session_id: String, expected: Dictionary, next: Dictionary) -> Error:
+	if _session_busy() or (is_inside_tree() and get_tree().paused):
+		return ERR_BUSY
+	if not _business_sessions.has(session_id):
+		return ERR_UNCONFIGURED
+	var definition: Dictionary = _business_sessions[session_id].definition
+	if not BUSINESS_SESSIONS.valid_snapshot(expected, definition) or not BUSINESS_SESSIONS.valid_snapshot(next, definition):
+		return ERR_INVALID_DATA
+	var current := load_business_session(session_id)
+	if current.is_empty():
+		current = BUSINESS_SESSIONS.empty_snapshot()
+	return OK if _same_value(current, expected) else ERR_BUSY
+
+func _publish_business_session(session_id: String, next: Dictionary, close_rule: Dictionary = {}) -> void:
+	_ensure_business()
+	_replacing = true
+	var locked := _warehouse_inventory.is_session_locked()
+	_warehouse_inventory.set_session_locked(true)
+	_variables[BUSINESS_SESSIONS.PREFIX + session_id] = next.duplicate(true)
+	if not close_rule.is_empty():
+		_current_day = close_rule.to.day
+		_variables[DayPhase.PHASE_VARIABLE] = close_rule.to.phase
+		_flags[DayPhase.NIGHT_FLAG] = close_rule.to.phase == DayPhase.NIGHT_PHASE
+		_flags[close_rule.completed_flag] = true
+	_notify_state_changed()
+	_warehouse_inventory.set_session_locked(locked)
+	_replacing = false
+
+func _valid_business_snapshot(value: Variant, binding: Dictionary, flags: Dictionary, day: int, phase: String) -> bool:
+	var definition: Dictionary = binding.get("definition", {})
+	if not BUSINESS_SESSIONS.valid_snapshot(value, definition):
+		return false
+	if definition.is_empty():
+		return true
+	for id: String in value.groups:
+		if value.groups[id] in ["leaving", "departed"] and not BUSINESS_SESSIONS.group_served(definition.groups[id], flags):
+			return false
+	var rule: Dictionary = binding.get("close_rule", {})
+	if rule.is_empty():
+		return true
+	if value.closed != flags.get(rule.completed_flag, false):
+		return false
+	if not value.closed:
+		return true
+	var boundary := {"day": rule.to.day, "phase": rule.to.phase, "boundary": "at"}
+	# Story permission can be revoked later; the committed closure remains final.
+	return BUSINESS_SESSIONS.close_requirements_met(value, definition, rule, flags, false) and DayPhase.is_deadline_reached_at(day, phase, boundary)
+
+
 ## Delivery holds this through all synchronous notifications, including receipts.
 func begin_business_transaction() -> bool:
 	if _session_busy():
@@ -294,7 +409,7 @@ func get_variable(key: String, default_value: Variant = null) -> Variant:
 ## Values: null, bool, int, finite float, String, Array, string-keyed Dictionary.
 ## Containers may nest up to MAX_VALUE_DEPTH; Objects and cycles are rejected.
 func set_variable(key: String, value: Variant) -> bool:
-	if _replacing or not _is_namespaced_key(key) or not _is_story_value(value):
+	if _replacing or key.begins_with(BUSINESS_SESSIONS.PREFIX) or not _is_namespaced_key(key) or not _is_story_value(value):
 		return false
 	if _variables.has(key) and _same_value(_variables[key], value):
 		return false
@@ -501,6 +616,10 @@ func _is_valid_snapshot(data: Dictionary) -> bool:
 	for key: Variant in data["variables"]:
 		if not key is String or not _is_namespaced_key(key) or not _is_story_value(data["variables"][key]):
 			return false
+		if key.begins_with(BUSINESS_SESSIONS.PREFIX):
+			var id: String = key.trim_prefix(BUSINESS_SESSIONS.PREFIX)
+			if not BUSINESS_SESSIONS.valid_session_id(id) or not _valid_business_snapshot(data.variables[key], _business_sessions.get(id, {}), data.flags, data.current_day, DayPhase.phase_from_facts(data.variables, data.flags)):
+				return false
 	if not _valid_task_results(data.task_results):
 		return false
 	var seen_events: Dictionary[String, bool] = {}

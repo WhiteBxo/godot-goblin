@@ -1,6 +1,6 @@
 # 营业与顾客调度接口
 
-核对日期：2026-10-18，Godot 4.7.2。组件尚未装配进正式宿主；Day 1 原有五单、剧情、任务实例、公共菜单及 MainGame 未修改。Day 2 的人数、配方、价格、客流和关店条件不由本组件决定。
+核对日期：2026-10-18，Godot 4.7.2。已接通 GameState 的生产持久接口及可配置的原子关店／日程提交，尚未装配进正式宿主；Day 1 原有五单、剧情、任务实例、公共菜单及 MainGame 未修改。Day 2 的人数、配方、价格、客流和关店条件仍需正式配置。
 
 ## 组件与订单边界
 
@@ -12,6 +12,8 @@
 ## 配置与公开接口
 
 `configure(plan, state, delivery, load_snapshot, commit_snapshot, close_session)` 接受已配置的共享服务。后面三个 Callable 可缺省；缺少读取／提交接口时可组装，营业操作返回 `ERR_UNAVAILABLE`。
+
+生产接入使用 `configure_session(plan, state, delivery, close_rule = {})`，自动绑定 GameState 的读取、比较提交与关店入口；完整 TaskCatalog 须先由 TaskJournal 绑定。省略 close_rule 时可以发布阶段和接待顾客，关店仍返回 `ERR_UNAVAILABLE`。原 Callable 入口保留给已有调用方和隔离测试。
 
 ```gdscript
 var plan := {
@@ -42,16 +44,16 @@ var plan := {
 | `get_group(group_id)` | 返回配置、kind、stage_id、status、served 的独立副本 |
 | `get_progress()` / `changed` | 返回订单已交付／总数、顾客组已服务／总数／已离场、已发布阶段／总数、closed 和持久／关店接口就绪状态。进度是配置内的范围，不代表正式一天的客流定额 |
 | `customer_transition(group_id, status)` / `stage_published(id)` | 成功持久提交后发布的实时转换；不会在普通 refresh 或恢复时重播 |
-| `request_close()` / `business_completed(session_id)` | 只调用 A 注入的真实关店提交。缺失时 pending；成功并回读确认 closed 后发一次，重复请求静默成功。交完所有单也不会自行发信号 |
+| `request_close()` / `business_completed(session_id)` | 生产入口校验显式关店规则后同次提交 closed、完成 flag、日期／昼夜与到期结果。规则缺失时 pending；成功并回读确认 closed 后发一次，重复请求静默成功。交完所有单也不会自行发信号 |
 | `projection_reset` | 恢复／新局时要求表现取消旧动作并重新投影，不是新的业务完成事实 |
 
 Day 2 四组固定剧情顾客均使用上述接口，各自配置独立 group_id、实际 Actor 和订单。阶段发布、出场时机、交付后对白、离场次序仍由正式剧情协调器决定；组件不硬编码四组 Beat，也不自动激活任务。
 
 `CustomerVisit.configure(scheduler, director, group_id, members)` 的 members 包含每个组员：`actor_id`、`entry`、`waiting`、`exit`；未注册角色可提供 `scene: PackedScene`。位置使用已注册 Marker ID 或宿主确认的 Vector2。可选 `arrival_route` / `departure_route` 是实际拐点，`speed` / `timeout` 沿用 ActorDirector 的 120 / 15 秒默认值。没有寻路，不增加 timeout 掩盖碰撞阻挡。已有稳定 Actor 优先复用；动态角色只在确需显示时生成，dormant/departed 不生成角色。
 
-## A 负责的持久与关店契约
+## GameState 持久与关店契约
 
-已向 A 列明需求。A 确认可采用以下结构，但明确当前 `set_variable()` 不完全满足通知期拒绝重入，因此未批准直接作为最终提交接口；本组件没有直接写 GameState，也没有运行时第二份持久仓库。
+持久数据只存于现有 GameState.variables；`business.session.` 是保留前缀，普通 `set_variable` 拒绝写入，调用方必须走专用事务。纯规则校验位于 `business_session_rules.gd`，与调度器共用，不持有第二份运行时状态。
 
 ```text
 variables["business.session.<session_id>"] = {
@@ -64,24 +66,48 @@ variables["business.session.<session_id>"] = {
 
 未出场组不写入 groups。该结构随现有完整快照保存；不新增顶层 Schema，不复制接受、交付、库存、钱包或交易回执。
 
-| 注入函数 | A 需要保证 |
+| GameState 生产接口 | 行为 |
 | --- | --- |
-| `load_snapshot(session_id) -> Dictionary` | 返回独立快照；缺失时返回 `{}`，组件按未开始处理。非法版本、重复／未知阶段、未知顾客状态等整包拒绝业务 |
-| `commit_snapshot(session_id, expected, next) -> Error` | 比较当前归一化快照与 expected；整包替换 next 后再通知。失败不部分写。通知／交易／恢复期间拒绝写入，跨组件请求也遵守同一个 guard |
-| `close_session(session_id, expected, next) -> Error` | 单独的可信关店入口，next.closed 为 true；验证正式关店规则后整体提交所需事实。如关店同时推进日程，应由共享入口一并处理；仅返回 OK 而未实际提交 closed，组件返回 `ERR_INVALID_DATA`，不发完成信号 |
+| `bind_business_session(plan, close_rule = {}) -> Error` | 从已绑定的完整任务目录校验真实订单和目标。静态绑定不写事实、不通知；场景重建重复绑定相同规则。已有会话拒绝静默换规则 |
+| `load_business_session(session_id) -> Dictionary` | 返回独立快照；缺失返回 `{}`，调度器按未开始处理 |
+| `commit_business_session(session_id, expected, next) -> Error` | 比较当前归一化快照与 expected，过期预期返回 `ERR_BUSY`。只允许一次阶段发布或一次合法顾客转换，拒绝回退、删组和伪造交付后离场；普通提交不能关店 |
+| `close_business_session(session_id, expected, next) -> Error` | 校验规则、来源日期／阶段及真实回执，再原子提交 closed、完成 flag、目标日期／昼夜和任务结果。无规则返回 `ERR_UNCONFIGURED`；重复已完成状态静默成功 |
 
-`expected` 对尚未创建的会话是 `{version:1, published_stages:[], groups:{}, closed:false}`。Callable 返回原生 Error/int。提交不能 await；不得在营业状态写入后另行失败，组件无法回滚外部半提交。组件通知期也拒绝自身重入；该保护不能替代共享状态的 guard。
+`expected` 对尚未创建的会话是 `{version:1, published_stages:[], groups:{}, closed:false}`。生产提交共享钱包／交付的 guard；GameState 同步通知期间锁定库存，拒绝另一营业组件、钱包、制作、日程、新游戏及恢复的重入。暂停期间拒绝营业写入。失败不写任何事实；相同快照不重复通知。原 Callable 扩展仍须自行满足同样的提交契约。
 
-场景重建复用同一个持久读取入口及共享服务。entering 恢复到 waiting 位置，再确认到达；leaving 恢复到出口隐藏，再确认离场，不重放整条路线。等待中的普通顾客若已有全部回执（交付后尚未来得及提交离场便切场景），恢复为离场投影。固定组保留 waiting，`is_group_served()` 返回 true，剧情可继续放行。恢复时允许确认新实际完成的投影边界，但不重发旧 entering/leaving、group_served、stage_published 或 business_completed。新局需由 A 清空该会话快照，同时正常重置原有业务服务。
+close_rule 必须完整提供以下字段，不从交付数量推断默认条件：
+
+| 字段 | 配置与校验 |
+| --- | --- |
+| `from` / `to` | `{day, phase}`，只允许 DayPhase 的相邻迁移，例如已确认某日白天到同日夜晚；day 接受整数值的 JSON number |
+| `required_stages` | 必须已发布的阶段 ID 数组 |
+| `served_groups` | 必须已有全部真实交付回执的顾客组 ID 数组 |
+| `departed_groups` | 必须实际确认离场且有交付回执的顾客组 ID 数组 |
+| `required_flags` | 关店当刻必须为真的剧情许可／业务事实数组 |
+| `completed_flag` | 关店同次写入的持久完成事实，不能覆盖昼夜镜像或经营 profile |
+
+所有数组均须显式给出且无重复引用；显式空数组允许已配置的手动关店，缺失字段不等于空数组。未知阶段／顾客、跳日、非法日期和冲突完成 flag 拒绝绑定。正式 Day 2 规则仍未确定，没有将测试里的订单数、日期或许可 flag 写入正式资源。
+
+场景重建复用同一个持久读取入口及共享服务。entering 恢复到 waiting 位置，再确认到达；leaving 恢复到出口隐藏，再确认离场，不重放整条路线。等待中的普通顾客若已有全部回执（交付后尚未来得及提交离场便切场景），恢复为离场投影。固定组保留 waiting，`is_group_served()` 返回 true，剧情可继续放行。恢复时允许确认新实际完成的投影边界，但不重发旧 entering/leaving、group_served、stage_published 或 business_completed。
+
+生产新游戏随 GameState 完整替换清空营业变量；静态规则保留供同一配置重建。营业数据沿用完整快照 v5，不增加顶层字段。完整恢复先校验保留前缀下的版本、结构、重复阶段及状态；已绑定时同时校验目录、离场回执、关店事实和最早可能日期。冷启动可先恢复、后绑定，绑定时再次核对实际目录。历史关店不会因之后撤销临时许可 flag 而重新开放，不重放付款或结束信号。
 
 ## 公共文件接线需求
 
-1. A 补齐上述带 guard 的原子营业提交入口、快照恢复与清空；关店规则未定前保持 close Callable 缺省。日程／期限继续使用 [DayPhase 与任务结果接口](../systems/schedule_and_task_results.md)，组件不直接推进日程。
-2. 集成宿主在共享目录、Journal、Delivery 和 ActorDirector 配置完成后创建 Scheduler，每组创建 CustomerVisit；注入 EntityRoot、真实角色资源、Marker 和分段路线。无需修改正式任务 Schema 或公共菜单。
+1. 上述生产提交接口已完成。集成方提供明确的 plan 和 close_rule；未定前省略规则，不自行选择关店门槛。日程／期限继续使用 [DayPhase 与任务结果接口](../systems/schedule_and_task_results.md)；关店通过共享复合提交应用同一相邻迁移规则。
+2. 集成宿主在共享目录、Journal、Delivery 和 ActorDirector 配置完成后创建 Scheduler，调用 configure_session；每组创建 CustomerVisit，注入 EntityRoot、真实角色资源、Marker 和分段路线。无需修改正式任务 Schema 或公共菜单。
 3. 正式剧情协调器按时调用 publish/request_arrival，先查询 is_group_served 再订阅通知，交付对白结束后 request_departure。不要同时让 Day1ShopController/StoryDirector 与 CustomerVisit 控制同一 Actor。Day 1 现有五单继续沿用原控制器，迁入调度前须由集成方明确角色控制权和旧检查点迁移。
 4. HUD 可订阅 changed 并读取 get_progress；既有订单板和制作消费者已随门控自动刷新。宿主销毁时一并销毁 Scheduler/Visit 和场景角色，新场景重新绑定门控；不要在 UI 重建时重置共享服务。
 
 ## 验证与试玩
+
+生产存储验证：`Godot_v4.7.2-stable_win64_console.exe --headless --path . --script res://tests/verify_business_persistence.gd`。2026-10-18 使用 Godot 4.7.2，94 项通过；另由测试启动两个独立引擎进程，分别读取等待接单和已关店快照。覆盖真实制作／指定交付／钱币奖励、过期预期拒绝、跨组件重入、暂停、非法恢复、场景重建、关店换夜与任务到期的完整通知、重复关店及新游戏。存档使用 PID 隔离目录和测试检查点，不写玩家正式存档。
+
+本批相关回归共 43 个检查脚本，38 个通过。其余 gathering、dialogue 的旧接单断言，以及 cinematic_integration、story_authoring 的开场移动受阻，均在改动前复现；day1_stages_01_02 本轮两项倒茶计数失败，在 `7af642e` 隔离基线中复现一项同类失败。GameState 126、日程与任务结果 100、营业调度 188、文件存档 25、跨进程存档边界 18 项均通过。新增生产检查在 `7af642e` 仅叠加本批代码的隔离副本中也通过 94 项，没有脚本错误；工作区其余并发剧情／人物记录改动未计入本批提交。
+
+日志和隔离副本保留于忽略目录 `.godot/verification/business_persistence/`；副本含素材、插件和导入缓存 junction，勿递归进入链接目标清理。初次隔离集成漏带 UID 缓存，产生插件 autoload 无法解析诊断；补齐同基线 UID 缓存后，新增检查重新通过且无上述诊断。工作区首次新增检查也遇到并发新增 CharacterJournal 尚未导入的解析错误；刷新类缓存后再验通过。部分既有测试退出仍报告资源未释放。未执行人工画面试玩、Release 导出或正式两天通关，本批没有新增正式顾客路线／关店入口。
+
+下述为调度组件首次交付的历史记录。正式 F5 尚未装配新营业 plan；不能将生产接口及夹具验证视为正式 Day 2 通关。
 
 命令：`Godot_v4.7.2-stable_win64_console.exe --headless --path . --script res://tests/verify_business_scheduler.gd`。这是可独立运行的组件验收，使用测试专属内存适配器，不代表 A 的生产持久接口已经接入。测试四组固定顾客使用从现有订单克隆的夹具，其中一组有两单以验证部分交付；这些数量与奖励不是 Day 2 正式规则。
 

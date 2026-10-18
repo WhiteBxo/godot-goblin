@@ -55,10 +55,15 @@ static func advance_to(state: Node, day: int, phase: String) -> Error:
 		return ERR_INVALID_DATA
 	if state.current_day == day and current == phase:
 		return OK
-	var adjacent: bool = (current == DAY_PHASE and phase == NIGHT_PHASE and day == state.current_day) or (current == NIGHT_PHASE and phase == DAY_PHASE and day > state.current_day and day - state.current_day == 1)
-	if not adjacent:
+	if not is_adjacent_point(state.current_day, current, day, phase):
 		return ERR_INVALID_PARAMETER
 	return OK if _write_phase(state, phase) else ERR_BUSY
+
+## Shared by compound business commits; validation must not publish a partial phase.
+static func is_adjacent_point(from_day: int, from_phase: String, day: int, phase: String) -> bool:
+	if not is_valid_point(from_day, from_phase) or not is_valid_point(day, phase):
+		return false
+	return (from_phase == DAY_PHASE and phase == NIGHT_PHASE and day == from_day) or (from_phase == NIGHT_PHASE and phase == DAY_PHASE and day > from_day and day - from_day == 1)
 
 static func is_valid_point(day: Variant, phase: Variant) -> bool:
 	return day is int and day >= 1 and phase is String and phase in [DAY_PHASE, NIGHT_PHASE]

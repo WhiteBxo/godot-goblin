@@ -1,5 +1,7 @@
 # 异世界食材与酒品：源稿到运行时映射
 
+> 2026-10-19：本文继续描述旧来源的实际 ID 与字段映射。现行设计改以 [2.0 原料](recipe_ingredients_revised.md)和[新经济规则](milk_tea_economy_revised.md)为准；当前导入器仍读 10-18 附件，尚未导入经营 T 编号，勿将下文“已同步”理解为新经济已上线。开发差距见[实现方案](milk_tea_economy_implementation_plan.md)。
+
 运行时字段映射基线：2026-10-17；图标引用更新：2026-10-18。旧源稿 [otherworld_ingredients_and_drinks.xlsx](source/otherworld_ingredients_and_drinks.xlsx)，运行时目录 [day1_menu.tres](../../src/resources/milk_tea/day1_menu.tres)，校验脚本 [verify_otherworld_catalog.gd](../../tests/verify_otherworld_catalog.gd)。
 
 本文件记录旧源稿到现有运行时的映射。2026-10-18 新增的[原料规则表](recipe_ingredients_revised.md)与[配方专项设计](milk_tea_recipe_system_revised.md)作为后续设计依据，其数值、市场价格和使用次数已通过[原料导入工具](../gameplay/milk_tea_recipe_data.md)同步到两个菜单；下表仍专门记录旧表 price / 描述等来源字段，不要把本文旧字段当成新版设计。旧表保留 W/H 数据与图鉴描述等互补内容，见[更新说明](milk_tea_recipe_update_2026_10_18.md)。

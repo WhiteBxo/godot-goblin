@@ -133,10 +133,12 @@
 | [真实订单 Gameplay Bridge 最小示例](design/order_bridge_demo.md) | `order_bridge_demo.md` |
 | [day_02.pdf](design/source/day_02.pdf) | 第二天剧情原始 PDF。 |
 | [Day 2 五个阶段：剧情演出初稿](design/day_02_stages_01_05_draft.md) | 由 day_02.pdf 逐字整理的 Beat 化初稿。 |
-| [奶茶配方系统 V0.1](design/milk_tea_recipe_system_revised.md) | 新专项设计正文，含原文 12 张表格预览。 |
-| [22 种原料配置更新](design/recipe_ingredients_revised.md) | 新表可读快照；运行时导入见第一期数据层。 |
+| [经营与战斗经济规则（10-19）](design/milk_tea_economy_revised.md) | 现行设计：人类 3G、哥布林持久槽位定价、爆品 150G、战斗独立采购及来源冲突。 |
+| [新经济实现方案](design/milk_tea_economy_implementation_plan.md) | 基于当前代码的差距、价格账本、原子奖励、存档迁移和四期验收；尚未实施。 |
+| [奶茶配方系统 V0.1](design/milk_tea_recipe_system_revised.md) | 保留原文与 12 张表格；售价等冲突规则由 10-19 经济方案替代。 |
+| [22 种原料 2.0 配置](design/recipe_ingredients_revised.md) | 10-19 可读快照，修正七项等级编号；运行时仍读 10-18 来源。 |
 | [2026-10-18 配方资料更新与旧稿处理](design/milk_tea_recipe_update_2026_10_18.md) | 导入当时记录及后续运行时实现入口。 |
-| [设计原始附件索引](design/source/README.md) | 新 DOCX/Excel 与保留旧稿。 |
+| [设计原始附件索引](design/source/README.md) | 10-19 Excel/PDF、新旧来源关系与内容哈希，保留旧稿。 |
 | [otherworld_ingredients_and_drinks.xlsx](design/source/otherworld_ingredients_and_drinks.xlsx) | 旧运行时基线及 W/H、图鉴互补资料。 |
 | [异世界食材与酒品：源稿到运行时映射](design/otherworld_data_mapping.md) | 已接入的 F/W 条目、字段映射、合并项与未接入原因。 |
 

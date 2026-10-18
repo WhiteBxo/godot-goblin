@@ -1,5 +1,7 @@
 # 奶茶配方数据层（第一期）
 
+> 2026-10-19 设计更新：[2.0 原料](../design/recipe_ingredients_revised.md)修正七个等级编号，[新经济规则](../design/milk_tea_economy_revised.md)引入 T1–T5 定价及独立战斗价格。下文仍描述当前实现：导入器读 10-18 表，未导入经营等级，本次没有执行导入。现状与扩展顺序见[实现方案](../design/milk_tea_economy_implementation_plan.md)。
+
 本期提供原料定义、离线导入、投掷参数与按次使用的库存接口。自由调配、配方成品库存和饮品图鉴已由[第二期](free_tea_recipes.md)接入；投掷效果现由[第三期](drink_throw_effects.md)执行。现有教学制作、交付与潜行流程保留。
 
 ## 数据来源与导入

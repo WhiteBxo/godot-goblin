@@ -1,5 +1,7 @@
 # 自由调配、饮品图鉴与交付（第二期）
 
+> 2026-10-19 设计与实现边界：本文保留当前 API 行为；普通 20G、爆品固定售价和可自由组合纯人类原料均属待替换实现。[新经济设计](../design/milk_tea_economy_revised.md)要求人类六款固定 3G、哥布林槽位价格首次登记后保存、爆品首次发现奖励 150G；加冰继续不改价格。价格账本、奖励事务与迁移见[实现方案](../design/milk_tea_economy_implementation_plan.md)。本次未实现这些变更。
+
 实现依据为[奶茶配方系统设计](../design/milk_tea_recipe_system_revised.md)，原料来源及按次库存见[第一期数据层](milk_tea_recipe_data.md)。本期接入自由制作、配方成品、图鉴及通用订单要求；参数生成后的守卫效果现已由[第三期执行器](drink_throw_effects.md)接入。
 
 ## 规则与配置

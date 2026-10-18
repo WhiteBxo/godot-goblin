@@ -33,3 +33,6 @@ func show_navigation_error(error: Error) -> void:
 
 func get_default_focus() -> Control:
 	return _resume
+
+func set_save_status(text: String) -> void:
+	$Center/Panel/Margin/Content/SaveStatus.text = text

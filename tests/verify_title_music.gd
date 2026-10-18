@@ -29,7 +29,12 @@ func _wait_for_gap(music: TitleMusic) -> void:
 
 
 func _run() -> void:
+	ProjectSettings.set_setting("persistence/save_directory", "user://verification/title_music_%d" % OS.get_process_id())
 	ProjectSettings.set_setting("debug/developer_tools/enabled", false)
+	# Drain the engine's initial loading frame before timing playback. Its delta
+	# can exceed one second and expire a new timer before the first Tween tick.
+	await process_frame
+	await process_frame
 	var music_bus := AudioServer.get_bus_index(&"Music")
 	var bus_volume := AudioServer.get_bus_volume_db(music_bus)
 	_check(change_scene_to_file(GameEntry.TITLE_SCENE) == OK, "Load real title")

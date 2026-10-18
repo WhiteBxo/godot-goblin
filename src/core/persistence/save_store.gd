@@ -46,12 +46,16 @@ func save(snapshot: Dictionary, checkpoint_id: String, saved_at: int = -1) -> Er
 	last_error = ""
 	return OK
 
-func load_save() -> Dictionary:
+func load_save(preflight: Callable = Callable()) -> Dictionary:
 	var primary := _read_file(_path("autosave.dat"))
+	if primary.error == OK and preflight.is_valid():
+		primary.error = preflight.call(primary.data)
 	if primary.error == OK:
 		last_error = ""
 		return primary
 	var backup := _read_file(_path("autosave.bak"))
+	if backup.error == OK and preflight.is_valid():
+		backup.error = preflight.call(backup.data)
 	if backup.error == OK:
 		backup.used_backup = true
 		last_error = "正式存档不可用，已读取上一份有效备份。"

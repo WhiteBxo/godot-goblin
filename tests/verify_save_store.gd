@@ -51,6 +51,9 @@ func _run() -> void:
 	invalid.schema_version = 999
 	check(store.save(invalid, "day1.wait_human.shop") == ERR_INVALID_DATA, "Unknown state schema is rejected")
 	invalid = snapshot.duplicate(true)
+	invalid.current_day = 2
+	check(store.save(invalid, "day1.wait_human.shop") == ERR_INVALID_DATA, "A checkpoint only accepts its declared day and phase")
+	invalid = snapshot.duplicate(true)
 	invalid.variables["world.phase"] = "night"
 	invalid.flags["world.phase.night"] = false
 	check(store.save(invalid, "day1.wait_human.shop") == ERR_INVALID_DATA, "Conflicting phase facts cannot become a checkpoint")
@@ -68,6 +71,8 @@ func _run() -> void:
 	check(store.save(snapshot, "day1.wait_human.shop", 103) != OK and store.load_save().data.saved_at == 100, "Failed final rename preserves primary")
 	store.fail_replace = false
 	check(store.save(snapshot, "day1.wait_human.shop", 104) == OK, "Save can retry after a failed replacement")
+	loaded = store.load_save(func(value: Dictionary) -> Error: return ERR_UNCONFIGURED if value.saved_at == 104 else OK)
+	check(loaded.error == OK and loaded.used_backup, "Unavailable recovery resources also fall back before navigation")
 	var file := FileAccess.open(_directory.path_join("autosave.dat"), FileAccess.WRITE)
 	file.store_string("truncated")
 	file.close()

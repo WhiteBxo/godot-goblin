@@ -103,6 +103,7 @@ func _snapshot(game: MainGame, name: String) -> void:
 	_check(root.get_texture().get_image().save_png("/tmp/goblin_scene_travel_" + name + ".png") == OK, "Capture " + name)
 
 func _run() -> void:
+	ProjectSettings.set_setting("persistence/save_directory", "user://verification/scene_travel_%d" % OS.get_process_id())
 	_capture = "--capture" in OS.get_cmdline_user_args()
 	ProjectSettings.set_setting("debug/developer_tools/enabled", "--with-tools" in OS.get_cmdline_user_args())
 	root.size = Vector2i(1280, 720)

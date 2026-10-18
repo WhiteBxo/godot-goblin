@@ -11,7 +11,26 @@ var _game: MainGame
 var _state: Node
 var _setup: Dictionary
 var _opening_pending := false
+var _boundary_ready := false
+var _recovery_blocked := false
 var last_error := ""
+
+static func preflight_recovery(snapshot: Dictionary) -> Error:
+	var setup: Variant = JSON.parse_string(FileAccess.get_file_as_string(SETUP))
+	if not setup is Dictionary or not setup.get("checkpoints") is Array:
+		return ERR_INVALID_DATA
+	var selected := "__missing__"
+	for candidate: Dictionary in setup.checkpoints:
+		if candidate.event.is_empty() or candidate.event in snapshot.completed_events:
+			selected = candidate.stage
+			break
+	if selected != snapshot.story_stage:
+		return ERR_INVALID_DATA
+	var error := StoryLibrary.new().load_file(STORY)
+	return DialogueLibrary.new().load_file(DIALOGUE) if error == OK else error
+
+func is_recovery_ready() -> bool:
+	return _boundary_ready and not _recovery_blocked and last_error.is_empty()
 
 func configure(game: MainGame) -> Error:
 	_game = game
@@ -57,6 +76,7 @@ func _apply_exit_gates(exits: Array[SceneExit]) -> void:
 				exit.required_flags = flags
 
 func _schedule_resume() -> void:
+	_boundary_ready = false
 	_opening_pending = false
 	_resume_boundary.call_deferred()
 
@@ -112,9 +132,11 @@ func _resume_boundary(preserve_player_position: bool = false) -> void:
 	_game.get_business_hud().show_resume(false)
 	_opening_pending = checkpoint.event.is_empty()
 	_refresh()
+	_boundary_ready = true
+	_recovery_blocked = false
 
 func _process(_delta: float) -> void:
-	if _opening_pending and (not is_instance_valid(_game.get_scene_travel()) or not _game.get_scene_travel().is_busy()) and not get_tree().paused and not _game.get_ui_manager().has_modal() and not _game.get_story_director().is_busy():
+	if _opening_pending and not _game.is_session_initializing() and (not is_instance_valid(_game.get_scene_travel()) or not _game.get_scene_travel().is_busy()) and not get_tree().paused and not _game.get_ui_manager().has_modal() and not _game.get_story_director().is_busy():
 		_opening_pending = false
 		var error := _game.get_story_director().request_event(_setup.opening_event)
 		if error != OK:
@@ -122,6 +144,7 @@ func _process(_delta: float) -> void:
 			_show_resume()
 
 func _event_finished(_id: String, ok: bool, _reason: String) -> void:
+	_recovery_blocked = not ok
 	if not ok and not Day1ChapterController.owns_stage(_state, "shop"):
 		_show_resume()
 	_refresh()

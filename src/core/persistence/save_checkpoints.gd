@@ -3,7 +3,7 @@ extends RefCounted
 ## Authored recovery boundaries, not a serialization of the scene tree.
 
 const DEFAULT_PATH := "res://src/resources/persistence/checkpoints.json"
-const KEYS := ["id", "scene", "entrance", "stage", "after_event", "before_event", "required_flags", "recovery"]
+const KEYS := ["id", "scene", "entrance", "stage", "day", "phase", "after_event", "before_event", "required_flags", "recovery"]
 const SCENES := ["res://src/core/main.tscn", "res://src/core/settlement.tscn"]
 var last_error := ""
 var _entries: Array[Dictionary] = []
@@ -28,6 +28,11 @@ func load_data(data: Variant) -> Error:
 				return _invalid()
 		if entry.id.is_empty() or ids.has(entry.id) or entry.scene not in SCENES or entry.recovery not in ["opening", "shop", "chapter"] or not entry.required_flags is Array:
 			return _invalid()
+		if typeof(entry.day) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(entry.day) or entry.day != floor(entry.day) or entry.day < 1 or entry.day >= 9223372036854775807 or entry.phase not in ["day", "night"]:
+			return _invalid()
+		for event_id: String in [entry.after_event, entry.before_event]:
+			if not event_id.is_empty() and not StoryLibrary.is_namespaced(event_id):
+				return _invalid()
 		for flag: Variant in entry.required_flags:
 			if not flag is String or not StoryLibrary.is_namespaced(flag):
 				return _invalid()
@@ -50,7 +55,7 @@ func find_checkpoint(snapshot: Dictionary, scene: String) -> Dictionary:
 	return {}
 
 func matches(entry: Dictionary, snapshot: Dictionary) -> bool:
-	if entry.is_empty() or snapshot.get("story_stage") != entry.stage:
+	if entry.is_empty() or snapshot.get("story_stage") != entry.stage or snapshot.get("current_day") != entry.day:
 		return false
 	var business: Variant = snapshot.get("business")
 	if not business is Dictionary or business.get("profile_id") != "day1":
@@ -62,6 +67,8 @@ func matches(entry: Dictionary, snapshot: Dictionary) -> bool:
 		return false
 	var phase: Variant = variables.get(DayPhase.PHASE_VARIABLE, "night" if flags.get(DayPhase.NIGHT_FLAG, false) else "day")
 	if phase not in ["day", "night"] or (flags.has(DayPhase.NIGHT_FLAG) and flags[DayPhase.NIGHT_FLAG] != (phase == "night")):
+		return false
+	if phase != entry.phase:
 		return false
 	if not entry.after_event.is_empty() and entry.after_event not in events:
 		return false

@@ -20,8 +20,10 @@ var _requesting := false
 var _waiting := false
 var _flag_armed := false
 var _invalidated := false
+var _can_advance: Callable
 
-func configure(director: StoryDirector, ui: UIManager, tea: TeaMaking = null) -> void:
+func configure(director: StoryDirector, ui: UIManager, tea: TeaMaking = null, can_advance: Callable = Callable()) -> void:
+	_can_advance = can_advance
 	_director = director
 	_ui = ui
 	_tea = tea
@@ -127,6 +129,8 @@ func _eligible(link: Dictionary) -> bool:
 		and not _state.is_event_completed(link.next_event))
 
 func _process(_delta: float) -> void:
+	if _can_advance.is_valid() and not _can_advance.call():
+		return
 	if not _enabled:
 		return
 	if not is_instance_valid(_director) or not is_instance_valid(_ui) or (_active.has("recipe") and not is_instance_valid(_tea)):

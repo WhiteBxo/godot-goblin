@@ -24,6 +24,7 @@ var _auto_pending := false
 var _refresh_pending := false
 var _staged_for := "__unstaged__"
 var _failed_auto_events: Dictionary = {}
+var _recovery_blocked := false
 
 ## The settlement has no other story host, so it owns every Day 1 stage there
 ## (including the S02 -> S03 hand-off). In the shop it owns only S03 onward.
@@ -99,6 +100,7 @@ func _load_setup(path: String) -> Error:
 	return OK
 
 func _on_session_replaced() -> void:
+	_recovery_blocked = false
 	_loaded = false
 	_auto_pending = false
 	_failed_auto_events.clear()
@@ -106,6 +108,7 @@ func _on_session_replaced() -> void:
 	_activate.call_deferred()
 
 func _on_event_finished(id: String, ok: bool, _reason: String) -> void:
+	_recovery_blocked = not ok
 	if id in _setup.auto_events:
 		if ok:
 			_failed_auto_events.erase(id)
@@ -139,6 +142,24 @@ func _activate() -> void:
 
 func is_loaded() -> bool:
 	return _loaded
+
+## Unpublished stages need an authored actor setup as well as a save declaration.
+## The published S02 ending has no actors and deliberately uses an empty setup.
+func preflight_recovery(stage: String, host: String) -> Error:
+	var error := _load_setup(SETUP)
+	if error != OK:
+		return error
+	if stage != "day1.investigate_coins":
+		var found := false
+		for entry: Dictionary in _setup.scene_setups:
+			found = found or (entry.stage == stage and entry.host == host)
+		if not found:
+			return ERR_UNCONFIGURED
+	error = StoryLibrary.new().load_file(_setup.story)
+	return DialogueLibrary.new().load_file(_setup.dialogue) if error == OK else error
+
+func is_recovery_ready() -> bool:
+	return _loaded and not _recovery_blocked and last_error.is_empty() and _staged_for == _state.story_stage and (_state.story_stage == "day1.investigate_coins" or not get_scene_setup().is_empty())
 
 ## The first matching entry for this host and the exact current stage, or {}.
 func get_scene_setup() -> Dictionary:
@@ -215,7 +236,7 @@ func _derive_facts() -> void:
 
 ## Waits for the same quiet moment as the shop opening: no travel, pause, modal or story.
 func _process(_delta: float) -> void:
-	if not _auto_pending or not _loaded:
+	if not _auto_pending or not _loaded or _game.is_session_initializing():
 		return
 	var travel := _game.get_scene_travel()
 	if (is_instance_valid(travel) and travel.is_busy()) or get_tree().paused or _game.get_ui_manager().has_modal():

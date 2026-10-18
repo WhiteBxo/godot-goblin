@@ -76,6 +76,7 @@ func _is_fresh_day1(defaults: Dictionary) -> bool:
 		and not _state.is_event_completed("entry.completed"))
 
 func _run() -> void:
+	ProjectSettings.set_setting("persistence/save_directory", "user://verification/game_entry_%d" % OS.get_process_id())
 	_capture = "--capture" in OS.get_cmdline_user_args()
 	ProjectSettings.set_setting("debug/developer_tools/enabled", false)
 	_state = root.get_node("GameState")
@@ -194,10 +195,11 @@ func _run() -> void:
 	_check(old_audio.get_ref() == null and old_dialogue.get_ref() == null and old_ui.get_ref() == null, "Scene audio, dialogue and UI are freed")
 	_check(_state.to_dict() == old_run, "Return to title preserves session until explicit new game")
 	title = current_scene as TitleMenu
-	_check(root.gui_get_focus_owner() == _button(title, "NewGame"), "Returned title owns focus")
+	_check(root.gui_get_focus_owner() == _button(title, "Continue"), "Returned title focuses the persisted game")
 	# Synthetic duplicate presses also cover code paths beyond native disabled GUI.
 	_button(title, "NewGame").pressed.emit()
 	_button(title, "NewGame").pressed.emit()
+	title.get_node("Center/Panel/Margin/Content/Confirmation/Confirm").pressed.emit()
 	await _wait_for_scene(GameEntry.GAME_SCENE)
 	game = current_scene as MainGame
 	_check(_is_fresh_day1(defaults), "Second new game clears stock, cups, queue, money, receipts, tasks and journal")
@@ -224,6 +226,7 @@ func _run() -> void:
 		return
 	_check(not paused, "Keyboard return releases pause")
 	await _click(_button(current_scene as TitleMenu, "NewGame"))
+	await _click(current_scene.get_node("Center/Panel/Margin/Content/Confirmation/Confirm"))
 	if not await _wait_for_scene(GameEntry.GAME_SCENE):
 		quit(1)
 		return

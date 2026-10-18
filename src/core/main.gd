@@ -1,6 +1,8 @@
 class_name MainGame
 extends Node
 
+signal session_initialized(error: Error)
+
 @export var day1_story_enabled := false
 @export var interaction_audio_scene: PackedScene = preload("res://src/core/audio/interaction_audio.tscn")
 var _interaction_audio: InteractionAudio
@@ -49,6 +51,12 @@ var _scene_exits: Dictionary[StringName, SceneExit] = {}
 var _input_locked: bool = false
 var _movement_before_dialogue: bool = true
 var _interaction_before_dialogue: bool = true
+var _save_coordinator: SaveCoordinator
+var _pause_menu: PauseMenu
+var _session_initializing := false
+var _new_saved_session := false
+var _restore_checkpoint: Dictionary = {}
+var _arrival_records_travel := true
 
 var _debug_tools: DeveloperTools
 var _demo_tools: CaveDemoController
@@ -75,6 +83,7 @@ func _ready() -> void:
 	if _settlement_level != null:
 		_initialize_settlement()
 		_create_debug_components()
+		_create_save_system()
 		return
 	_shop_level = $World/LevelRoot.get_child(0) as MilkTeaShop
 	if _shop_level != null:
@@ -115,6 +124,7 @@ func _ready() -> void:
 		_create_trigger_zones(_shop_level)
 		_create_scene_travel(_shop_level.get_scene_exits())
 		_create_debug_components()
+		_create_save_system()
 		return
 	var error := _active_level.load_error
 	if DebugRuntime.is_enabled():
@@ -156,6 +166,7 @@ func _create_ui_system() -> void:
 	$Systems.add_child(_ui_manager)
 	_ui_manager.configure({&"hud": $HudLayer, &"popup": $PopupLayer, &"pause": $PauseLayer, &"debug": $DebugLayer})
 	var pause: PauseMenu = preload("res://src/UI/pause/pause_menu.tscn").instantiate()
+	_pause_menu = pause
 	$PauseLayer.add_child(pause)
 	_ui_manager.register_screen(ScreenIds.PAUSE, pause, &"pause", true)
 	pause.resume_requested.connect(func() -> void: _ui_manager.set_paused(false))
@@ -301,7 +312,7 @@ func get_active_level() -> Node2D:
 	return _shop_level if _shop_level != null else _active_level
 
 ## Called on a detached, instantiated destination, before the source is removed.
-func prepare_scene_arrival(id: StringName) -> Error:
+func prepare_scene_arrival(id: StringName, record_travel: bool = true) -> Error:
 	if is_inside_tree() or id == &"":
 		return ERR_INVALID_PARAMETER
 	var level := get_node_or_null("World/LevelRoot")
@@ -314,6 +325,7 @@ func prepare_scene_arrival(id: StringName) -> Error:
 	if map.get_scene_entrance(id) == null:
 		return ERR_DOES_NOT_EXIST
 	_arrival_entrance = id
+	_arrival_records_travel = record_travel
 	return OK
 
 func _place_player(level: Node2D) -> void:
@@ -328,6 +340,84 @@ func has_scene_arrival() -> bool:
 
 func get_scene_travel() -> SceneTravel:
 	return _scene_travel
+
+func prepare_new_session() -> void:
+	_session_initializing = true
+	_new_saved_session = true
+
+## Restore uses the authored landing but never publishes an actual travel receipt.
+func prepare_saved_checkpoint(checkpoint: Dictionary, snapshot: Dictionary) -> Error:
+	if is_inside_tree() or checkpoint.get("scene") != scene_file_path:
+		return ERR_INVALID_PARAMETER
+	var catalog := SaveCheckpoints.new()
+	if catalog.get_checkpoint(str(checkpoint.get("id", ""))) != checkpoint or catalog.validate_checkpoint(checkpoint.id, snapshot) != OK:
+		return ERR_INVALID_DATA
+	var error := OK
+	if not checkpoint.entrance.is_empty():
+		error = prepare_scene_arrival(StringName(checkpoint.entrance), false)
+	if error != OK:
+		return error
+	if checkpoint.recovery == "chapter":
+		var chapter := Day1ChapterController.new()
+		error = chapter.preflight_recovery(snapshot.story_stage, "shop" if scene_file_path == GameEntry.GAME_SCENE else "settlement")
+		chapter.free()
+	else:
+		error = Day1ShopController.preflight_recovery(snapshot)
+	if error != OK:
+		return error
+	_restore_checkpoint = checkpoint.duplicate(true)
+	_session_initializing = true
+	return OK
+
+func is_session_initializing() -> bool:
+	return _session_initializing
+
+func get_save_coordinator() -> SaveCoordinator:
+	return _save_coordinator
+
+func _create_save_system() -> void:
+	if not GameEntry.is_save_session_active() or not day1_story_enabled:
+		return
+	var store := GameEntry.create_save_store()
+	_save_coordinator = SaveCoordinator.new()
+	_save_coordinator.name = "SaveCoordinator"
+	$Systems.add_child(_save_coordinator)
+	_save_coordinator.configure(get_node("/root/GameState"), store,
+		func() -> Dictionary: return store.checkpoints.find_checkpoint(get_node("/root/GameState").to_dict(), scene_file_path),
+		_can_save_checkpoint, _finish_session_initialization if _session_initializing else Callable(), _new_saved_session)
+	var status: Label = preload("res://src/UI/hud/save_status.tscn").instantiate()
+	$HudLayer.add_child(status)
+	_save_coordinator.status_changed.connect(func(text: String) -> void:
+		status.text = text
+		_pause_menu.set_save_status(text)
+	)
+	status.text = _save_coordinator.get_status_text()
+	_pause_menu.set_save_status(status.text)
+	_refresh_input_lock()
+
+func _can_save_checkpoint() -> bool:
+	if get_tree().paused or _ui_manager.has_modal() or _story_director.is_busy() or _dialogue_manager.is_active():
+		return false
+	if (is_instance_valid(_scene_travel) and _scene_travel.is_busy()) or _shop_player.is_performance_controlled():
+		return false
+	if is_instance_valid(_title_card) and _title_card.is_showing():
+		return false
+	# An entire stealth attempt is a single checkpoint interval, including failure.
+	if is_instance_valid(_stealth_service) and _stealth_service.status in [Day1StealthService.Status.RUNNING, Day1StealthService.Status.FAILED, Day1StealthService.Status.INTERCEPTED]:
+		return false
+	var state := get_node("/root/GameState")
+	if Day1ChapterController.owns_stage(state, "shop" if _shop_level != null else "settlement"):
+		return is_instance_valid(_chapter_controller) and _chapter_controller.is_recovery_ready()
+	return is_instance_valid(_day1_controller) and _day1_controller.is_recovery_ready()
+
+func _finish_session_initialization(error: Error) -> void:
+	if error == OK and not _restore_checkpoint.is_empty():
+		var state := get_node("/root/GameState")
+		if state.story_stage != _restore_checkpoint.stage:
+			error = ERR_INVALID_DATA
+	_session_initializing = false
+	_refresh_input_lock()
+	session_initialized.emit(error)
 
 func _create_scene_travel(exits: Array[SceneExit]) -> void:
 	for point in exits:
@@ -608,7 +698,7 @@ func _create_world_controller() -> void:
 	_world_controller.configure(get_node("/root/GameState"), get_active_level(), actors, _npc_points)
 	_shop_ui.closed.connect(_complete_story_document)
 	# Only a successfully instantiated destination can publish an arrival fact.
-	if _shop_level != null and _arrival_entrance == &"street_door":
+	if _shop_level != null and _arrival_entrance == &"street_door" and _arrival_records_travel:
 		_world_controller.record_shop_arrival()
 
 func _complete_story_document() -> void:
@@ -689,7 +779,7 @@ func _create_gameplay_bridge(with_tea: bool = true) -> void:
 	_gameplay_bridge = GameplayBridge.new()
 	_gameplay_bridge.name = "GameplayBridge"
 	$Systems.add_child(_gameplay_bridge)
-	_gameplay_bridge.configure(_story_director, _ui_manager, _tea_making)
+	_gameplay_bridge.configure(_story_director, _ui_manager, _tea_making, func() -> bool: return not _session_initializing)
 
 func _create_tea_making() -> void:
 	_tea_making = TeaMaking.new()
@@ -713,7 +803,7 @@ func _refresh_order_requirements(ui: ShopUI) -> void:
 	ui.show_order_requirements("已接取订单：\n" + requirements + "\n准备所需成品或物资，携带到指定 NPC 按 E 交付。" if not requirements.is_empty() else "当前没有待交付订单。")
 
 func _can_start_story() -> bool:
-	return (not get_tree().paused and not _ui_manager.has_modal()
+	return (not _session_initializing and not get_tree().paused and not _ui_manager.has_modal()
 		and (not is_instance_valid(_stealth_service) or _stealth_service.status != Day1StealthService.Status.FAILED)
 		and (not is_instance_valid(_scene_travel) or not _scene_travel.is_busy())
 		and (not is_instance_valid(_gameplay_bridge) or _gameplay_bridge.allows_story_start()))
@@ -733,7 +823,8 @@ func _on_actor_control_changed(actor_id: StringName, _controlled: bool) -> void:
 
 func _refresh_input_lock() -> void:
 	var should_lock := (
-		(is_instance_valid(_scene_travel) and _scene_travel.is_busy())
+		_session_initializing
+		or (is_instance_valid(_scene_travel) and _scene_travel.is_busy())
 		or (is_instance_valid(_ui_manager) and _ui_manager.has_modal())
 		or (is_instance_valid(_dialogue_manager) and _dialogue_manager.is_active())
 		or (is_instance_valid(_story_director) and _story_director.is_busy())

@@ -51,6 +51,12 @@ theme_type_variation = &"Hint"
 text = "Esc / P 返回游戏"
 horizontal_alignment = 1
 
+[node name="SaveStatus" type="Label" parent="Center/Panel/Margin/Content"]
+layout_mode = 2
+theme_type_variation = &"Muted"
+text = "尚未自动保存；将在安全检查点保存。"
+horizontal_alignment = 1
+
 [node name="Resume" type="Button" parent="Center/Panel/Margin/Content"]
 metadata/ui_press_sound = "ui.cancel"
 custom_minimum_size = Vector2(0, 32)

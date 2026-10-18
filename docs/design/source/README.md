@@ -8,5 +8,6 @@
 | [原料规则更新表](recipe_ingredients_revised_2026_10_18.xlsx) | 2026-10-18 新增；22 种原料、21 字段。可读快照见[原料配置](../recipe_ingredients_revised.md)。 |
 | [食材与酒水旧表](otherworld_ingredients_and_drinks.xlsx) | 2026-10-17 导入的运行时来源基线，保留 W/H 配方和图鉴等互补信息；重叠原料设计以更新表为准。 |
 | [Day 2 剧情 PDF](day_02.pdf) | 剧情原稿，本批未更改。 |
+| [卷轴文书设计稿](scroll_document_mockup_2026_10_18.jpg) | 2026-10-18 的 1329×764 卷轴示意图，正文已烘焙进像素，仅作参考；同批素材归类见[导入记录](../../assets/imports/2026-10-18_story_and_creature_assets.md)。 |
 
 新表 22 种原料的运行时导入、自由配方和图鉴分别见[数据层](../../gameplay/milk_tea_recipe_data.md)与[自由配方](../../gameplay/free_tea_recipes.md)。新旧差异及导入当时范围见[更新说明](../milk_tea_recipe_update_2026_10_18.md)。

@@ -542,11 +542,11 @@ func _can_leave_scene() -> bool:
 		and not _story_director.is_busy() and not _dialogue_manager.is_active()
 		and _gameplay_bridge.allows_scene_travel())
 
-func _on_scene_travel_failed(point: SceneExit, _error: Error) -> void:
+func _on_scene_travel_failed(point: SceneExit, error: Error) -> void:
 	if get_tree().paused or _ui_manager.has_modal():
 		return
 	_shop_ui.open(point)
-	_shop_ui.show_interaction_result("暂时无法通过这扇门，请重试。")
+	_shop_ui.show_interaction_result(point.unavailable_message if error == ERR_UNAVAILABLE else "暂时无法通过这扇门，请重试。")
 
 func _initialize_settlement() -> void:
 	_shop_player = $World/EntityRoot/Player as ShopPlayer

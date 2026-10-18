@@ -8,6 +8,8 @@ extends InteractionPoint
 @export var required_flags: Array[StringName] = []
 ## Exact chapter stages or dot-separated operation substages; empty admits all.
 @export var allowed_stages: Array[String] = []
+## Level-authored directions shown only when the destination gate rejects entry.
+@export_multiline var unavailable_message := "暂时无法通过这扇门，请重试。"
 
 ## Empty conditions always pass; a missing state fails closed.
 func are_conditions_met(state: Node) -> bool:

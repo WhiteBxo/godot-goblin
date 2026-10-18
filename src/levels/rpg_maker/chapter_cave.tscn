@@ -112,6 +112,7 @@ destination_scene = "res://src/core/tavern.tscn"
 destination_entrance = &"exterior_door"
 
 allowed_stages = Array[String](["day2", "day3"])
+unavailable_message = "酒馆尚未开放。先完成当前委托，第二天夜晚再来找裂牙。"
 
 [node name="CasinoDoor" parent="Exits" instance=ExtResource("point")]
 
@@ -130,6 +131,7 @@ destination_scene = "res://src/core/casino.tscn"
 destination_entrance = &"exterior_door"
 
 allowed_stages = Array[String](["day2.s04", "day2.s05"])
+unavailable_message = "先去居民区右下方的酒馆，听取裂牙的委托，再来赌场。"
 
 [node name="ElderDoor" parent="Exits" instance=ExtResource("point")]
 
@@ -149,6 +151,19 @@ destination_entrance = &"exterior_door"
 
 allowed_stages = Array[String](["day1.s05"])
 required_flags = Array[StringName](["day1.s05.drunken_paid", "day1.s05.guard_payment_completed"])
+unavailable_message = "宅门由两名守卫把守。沿门前道路向左，在双卫之间按 E 交涉（10G）；还需先处理更西边的醉酒守卫。侧路可以抵达这里，进门仍须取得双方放行。"
+
+[node name="CollisionShape2D" parent="Exits/ShopDoor"]
+position = Vector2(0, 12)
+
+[node name="CollisionShape2D" parent="Exits/TavernDoor"]
+position = Vector2(0, 12)
+
+[node name="CollisionShape2D" parent="Exits/CasinoDoor"]
+position = Vector2(0, 12)
+
+[node name="CollisionShape2D" parent="Exits/ElderDoor"]
+position = Vector2(0, 12)
 
 [node name="StoryPositions" type="Node2D" parent="."]
 
@@ -369,7 +384,8 @@ required_stages = Array[String](["day1.s05"])
 
 [node name="MansionPayment" parent="Interactions" node_paths=PackedStringArray("required_actors") instance=ExtResource("point")]
 required_actors = Array[NodePath]([NodePath("../../Characters/MansionLure"), NodePath("../../Characters/MansionGate")])
-position = Vector2(1656, 456)
+position = Vector2(1752, 504)
+feedback_rect = Rect2(-64, -112, 128, 112)
 interaction_id = &"mansion_payment"
 display_name = "宅邸双卫 · 10G"
 description = "支付10G给两名守卫，本次往返放行。"

@@ -92,6 +92,8 @@ func _verify_map(index: int) -> void:
 			"Chapter bindings retain the imported cells: %s/%s" % [CHAPTERS[index], layer])
 	imported.free()
 	var reachable := _reachable_cells(map, map.world_to_cell(map.get_spawn_position()))
+	if map.chapter_host == &"settlement":
+		await _verify_door_approaches(map)
 	for entrance: Node in map.get_node("Entrances").get_children():
 		_check(map.get_scene_entrance(entrance.entrance_id) == entrance, "Stable named entrance lookup")
 		_check(map.can_stand_at(entrance.global_position, Vector2(17, 10)), "Entrance fits native player feet: " + entrance.name)
@@ -119,6 +121,25 @@ func _verify_map(index: int) -> void:
 	_check(data.regions.size() == 2, "Map exposes only requested known exterior locations")
 	_check(map.get_scene_entrance(&"unknown") == null, "Unknown entrances fail closed")
 	map.free()
+	await process_frame
+
+func _verify_door_approaches(map: RpgChapterMap) -> void:
+	var player: FloorAwareShopPlayer = load("res://src/gameplay/player/rpg_player.tscn").instantiate()
+	player.get_node("Camera2D").enabled = false
+	root.add_child(player)
+	player.set_physics_process(false)
+	for id: String in ["shop", "tavern", "casino", "elder"]:
+		var arrival := map.get_scene_entrance(StringName(id + "_door"))
+		var door: SceneExit
+		for point: SceneExit in map.get_scene_exits():
+			if String(point.interaction_id) == id + "_enter":
+				door = point
+		for offset: float in [-24.0, 0.0, 24.0]:
+			player.teleport_to(arrival.global_position + Vector2(offset, 0))
+			for tick in range(4):
+				await physics_frame
+			_check(map.can_stand_at(player.global_position, Vector2(8.5, 5)) and door.is_available(), "Returned player can find door from left/center/right: %s %s" % [id, offset])
+	player.free()
 	await process_frame
 
 func _reachable_cells(map: RpgMakerMap, start: Vector2i) -> Dictionary:

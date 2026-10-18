@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://src/gameplay/interaction/interaction_point.tscn" id="base"]
+
+[node name="InteractionPoint" instance=ExtResource("base")]
+feedback_rect = Rect2(-9, -9, 18, 18)
+
+[node name="CollisionShape2D" parent="."]
+scale = Vector2(0.5, 0.5)
+
+[node name="Marker" parent="."]
+scale = Vector2(0.5, 0.5)

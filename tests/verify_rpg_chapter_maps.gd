@@ -19,10 +19,39 @@ func _check(ok: bool, text: String) -> void:
 func _run() -> void:
 	for index in CHAPTERS.size():
 		await _verify_map(index)
+	await _verify_interaction_reach()
 	_verify_presentation_profiles()
 	await _verify_host()
 	print("RPG_CHAPTER_MAPS: %d checks, %d failures" % [_checks, _failures.size()])
 	quit(0 if _failures.is_empty() else 1)
+
+func _verify_interaction_reach() -> void:
+	var world := Node2D.new()
+	root.add_child(world)
+	var player: FloorAwareShopPlayer = load("res://src/gameplay/player/rpg_player.tscn").instantiate()
+	player.get_node("Camera2D").enabled = false
+	world.add_child(player)
+	player.set_physics_process(false)
+	var point: InteractionPoint = load("res://src/gameplay/interaction/rpg_interaction_point.tscn").instantiate()
+	point.position = Vector2(160, 100)
+	world.add_child(point)
+	player.teleport_to(Vector2(100, 100))
+	for tick in range(4):
+		await physics_frame
+	_check(not point.is_available(), "RPG interaction rejects the old 60-world-pixel reach")
+	player.teleport_to(Vector2(125, 100))
+	for tick in range(4):
+		await physics_frame
+	_check(point.is_available(), "Approaching within the reduced reach enables actual physics interaction")
+	var shop_point: InteractionPoint = load("res://src/gameplay/interaction/interaction_point.tscn").instantiate()
+	shop_point.position = Vector2(160, 100)
+	world.add_child(shop_point)
+	player.teleport_to(Vector2(100, 100))
+	for tick in range(4):
+		await physics_frame
+	_check(shop_point.is_available() and not point.is_available(), "RPG shrink does not change the shop's original interaction resource")
+	world.queue_free()
+	await process_frame
 
 ## Inspect independently instantiated hosts so shared scene overrides cannot leak.
 func _verify_presentation_profiles() -> void:
@@ -76,6 +105,16 @@ func _verify_map(index: int) -> void:
 			destination.free()
 	for point: InteractionPoint in map.get_interaction_points():
 		_check(reachable.has(map.world_to_cell(point.global_position)), "Story point reachable: " + point.name)
+	for point: InteractionPoint in map.get_interaction_points() + map.get_scene_exits() + map.get_gather_points():
+		_check(point.get_node("CollisionShape2D").global_scale == Vector2.ONE * 0.5, "All RPG interactions, doors and gathering points use the same reach scale: " + point.name)
+	if map.chapter_host == &"settlement":
+		_check(map.get_node("DrunkenEncounter/CollisionShape2D").global_scale == Vector2.ONE * 0.5, "NPC encounter trigger follows the half-size character range")
+	var setup := map.get_stealth_setup()
+	if setup != null:
+		_check(setup.throw_range == 230.0 and setup.effect_scale == 0.5, "RPG throw range and effect distances are halved")
+		for guard: Day1GuardResponse in setup.guards:
+			_check(guard.sight_range == (60.0 if guard.role == Day1GuardResponse.Role.ENTRANCE else 30.0) and guard.hearing_range == 180.0, "Guard sight and hearing follow the reduced world scale")
+			_check(guard.discovery_seconds == 0.6 and guard.distraction_seconds == 6.0 and guard.sight_half_angle == 85.0, "Scaling distance preserves guard timing and sight angle")
 	var data := map.get_map_data(["settlement.shop", "settlement.elder"])
 	_check(data.regions.size() == 2, "Map exposes only requested known exterior locations")
 	_check(map.get_scene_entrance(&"unknown") == null, "Unknown entrances fail closed")
@@ -108,6 +147,8 @@ func _verify_host() -> void:
 	_check(game.get_player() is FloorAwareShopPlayer, "Real player uses native floor constraint")
 	_check(game.get_player().camera.zoom == Vector2.ONE, "Formal RPG host uses the compensated 1x camera after initialization")
 	_check(game.get_task_delivery() != null, "Chapter room has real delivery service")
+	var owner: SettlementCharacter = game.get_actor_director().get_actor(&"tavern")
+	_check(owner.get_node("InteractionPoint/CollisionShape2D").global_scale == Vector2.ONE * 0.5, "Dynamically assembled NPC interaction also has half reach")
 	_check(game.get_actor_director().get_position(&"tavern_bartender") != null, "Chapter room registers scene Marker")
 	_check(game.unlock_map() == OK, "Map assembles inside a room")
 	var point := map.get_scene_exits()[0]

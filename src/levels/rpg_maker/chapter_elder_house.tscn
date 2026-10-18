@@ -6,7 +6,7 @@
 
 [ext_resource type="Script" path="res://src/core/navigation/scene_entrance.gd" id="entrance"]
 
-[ext_resource type="PackedScene" path="res://src/gameplay/interaction/interaction_point.tscn" id="point"]
+[ext_resource type="PackedScene" path="res://src/gameplay/interaction/rpg_interaction_point.tscn" id="point"]
 
 [ext_resource type="Script" path="res://src/core/navigation/scene_exit.gd" id="exit"]
 
@@ -110,4 +110,6 @@ description = "带锁的柜格，里面只有一支封蜡小瓶。标签写着�
 [node name="StealthSetup" type="Node" parent="."]
 script = ExtResource("stealth")
 wallet_coins = true
+throw_range = 230.0
+effect_scale = 0.5
 interior_only = true

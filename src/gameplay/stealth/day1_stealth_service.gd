@@ -288,6 +288,8 @@ func _on_action_triggered(action: StringName, _direction: Vector2) -> void:
 	if generation != _generation or not can_accept_input():
 		return
 	var projectile := Day1ThrowProjectile.new()
+	projectile.speed *= _setup.effect_scale
+	projectile.scale = Vector2.ONE * _setup.effect_scale
 	projectile.kind = pending.kind
 	projectile.destination = pending.target
 	projectile.payload = pending.get("payload", {})
@@ -312,7 +314,7 @@ func _resolve_impact(result: Dictionary) -> void:
 			affected = guard.distract(result.position) or affected
 	elif result.kind == &"drink":
 		var area := DrinkEffectArea.new()
-		area.configure(result.payload)
+		area.configure(result.payload, _setup.effect_scale)
 		_effects.add_child(area)
 		area.global_position = result.position
 		_areas.append(area)
@@ -328,7 +330,7 @@ func _resolve_impact(result: Dictionary) -> void:
 			affected = true
 			_confusion_created = true
 			for guard: Day1GuardResponse in _setup.guards:
-				guard.confuse(target.global_position, target.confusion_radius, target.confusion_seconds)
+				guard.confuse(target.global_position, target.confusion_radius * _setup.effect_scale, target.confusion_seconds)
 	message = ("守卫转移了注意力" if affected else "声响没有引开守卫") if result.kind == &"coin" else ("火把点燃了目标，附近守卫陷入混乱" if affected else "火把没有点燃目标")
 	if result.kind == &"drink":
 		message = "饮品已落地，效果区域正在生效"

@@ -6,7 +6,7 @@
 
 [ext_resource type="Script" path="res://src/core/navigation/scene_entrance.gd" id="entrance"]
 
-[ext_resource type="PackedScene" path="res://src/gameplay/interaction/interaction_point.tscn" id="point"]
+[ext_resource type="PackedScene" path="res://src/gameplay/interaction/rpg_interaction_point.tscn" id="point"]
 
 [ext_resource type="Script" path="res://src/core/navigation/scene_exit.gd" id="exit"]
 

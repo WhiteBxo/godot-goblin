@@ -641,6 +641,9 @@ func _initialize_room_map(map: Node2D) -> void:
 	points.append_array(exits)
 	_shop_interaction = ShopInteraction.new()
 	_shop_interaction.name = "RoomInteraction"
+	if map is RpgMakerMap:
+		_shop_interaction.switch_margin = 6.0
+		_shop_interaction.facing_weight = 12.0
 	$Systems.add_child(_shop_interaction)
 	_shop_interaction.configure(_shop_player, _shop_ui, points, _route_story_interaction)
 	if is_instance_valid(_order_board):
@@ -826,7 +829,8 @@ func _with_npc_points(points: Array[InteractionPoint]) -> Array[InteractionPoint
 	for entity in $World/EntityRoot.get_children():
 		if not entity is SettlementCharacter:
 			continue
-		var point: InteractionPoint = preload("res://src/gameplay/interaction/interaction_point.tscn").instantiate()
+		var point_scene: PackedScene = preload("res://src/gameplay/interaction/rpg_interaction_point.tscn") if get_active_level() is RpgMakerMap else preload("res://src/gameplay/interaction/interaction_point.tscn")
+		var point: InteractionPoint = point_scene.instantiate()
 		point.name = "InteractionPoint"
 		point.interaction_id = entity.actor_id
 		point.display_name = entity.display_name

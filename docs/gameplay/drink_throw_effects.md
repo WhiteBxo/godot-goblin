@@ -12,7 +12,7 @@
 
 ## 区域与守卫
 
-`DrinkEffectArea` 属于场景内 EffectRoot，由服务的物理 tick 推进，不另开 Timer 或 Autoload。基础区域是以落点为中心、边长 `area_cells × cell` 的正方形；当前一格 64 像素、基础持续 3 秒，扩散后最多 9×9 格，持续上限 30 秒。数值从 `throw_tuning.tres` 经配方参数传入，执行器不另维护一份平衡表。
+`DrinkEffectArea` 属于场景内 EffectRoot，由服务的物理 tick 推进，不另开 Timer 或 Autoload。基础区域是以落点为中心、边长 `area_cells × cell` 的正方形；当前一格 64 像素、基础持续 3 秒，扩散后最多 9×9 格，持续上限 30 秒。数值从 `throw_tuning.tres` 经配方参数传入，执行器不另维护一份平衡表。RPG 地图通过 `Day1StealthSetup.effect_scale=0.5` 把空间参数映射到半尺寸角色：区域单元实际为 32 世界像素，飞行速度、投掷物美术、脉冲范围、聚拢 / 击退 / 驱离距离及可燃物混乱半径均减半。配方原始 `cell=64` 与库存记录不变，持续时间、脉冲周期、伤害、层数和角度不缩放；独立玩法预览默认 `effect_scale=1.0`。
 
 | 效果 | 当前行为与同原料叠层 |
 | --- | --- |

@@ -18,6 +18,8 @@ extends Node
 @export var required_items: Dictionary = {"day1_griffin_blood": 1}
 @export var confusion_required := false
 @export_range(1.0, 1200.0) var throw_range := 460.0
+## World-space scale for projectile speed/art and recipe effect distances; time is unchanged.
+@export_range(0.1, 4.0, 0.05) var effect_scale := 1.0
 
 func get_issues(inventory: WarehouseInventory, actor_lookup: Callable) -> PackedStringArray:
 	var issues := PackedStringArray()

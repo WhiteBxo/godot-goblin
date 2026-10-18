@@ -13,6 +13,7 @@ var attached_guard: Day1GuardResponse
 var _wait := 0.0
 var _pulse := 0.0
 var _entered := {}
+var _distance_scale := 1.0
 var _cell := 1.0
 var _side := 1.0
 var _max_duration := 1.0
@@ -20,9 +21,10 @@ var _max_cells := 1.0
 var _modifiers: Dictionary = {}
 var _effects: Dictionary = {}
 
-func configure(parameters: Dictionary) -> void:
+func configure(parameters: Dictionary, distance_scale: float = 1.0) -> void:
 	payload = parameters.duplicate(true)
-	_cell = float(payload.cell)
+	_distance_scale = distance_scale
+	_cell = float(payload.cell) * _distance_scale
 	_side = float(payload.area_cells) * _cell
 	_max_duration = float(payload.max_duration)
 	_max_cells = float(payload.max_area_cells)
@@ -129,7 +131,7 @@ func _apply(delta: float, setup: Day1StealthSetup, space: PhysicsDirectSpaceStat
 		if _effects.has("toxic") and _effects.toxic.get("repel", false) and guard.state != Day1GuardResponse.State.STUNNED:
 			var offset := guard.actor.global_position - global_position
 			var direction := offset.normalized() if not offset.is_zero_approx() else Vector2.RIGHT
-			affected = guard.displace(direction * guard.actor.get_movement_speed() * int(_effects.toxic.stacks) * delta) or affected
+			affected = guard.displace(direction * guard.actor.get_movement_speed() * _distance_scale * int(_effects.toxic.stacks) * delta) or affected
 	if _effects.has("burn") and _effects.burn.get("ignite", false):
 		for target: Day1FlammableTarget in setup.flammable_targets:
 			if contains_point(target.global_position) and reaches(target.global_position, space):
@@ -138,7 +140,7 @@ func _apply(delta: float, setup: Day1StealthSetup, space: PhysicsDirectSpaceStat
 					confusion_created = true
 					for guard: Day1GuardResponse in setup.guards:
 						if guard.can_receive_drink() and reaches(guard.actor.global_position, space):
-							guard.confuse(target.global_position, target.confusion_radius, target.confusion_seconds)
+							guard.confuse(target.global_position, target.confusion_radius * _distance_scale, target.confusion_seconds)
 	if _effects.has("corrode"):
 		var corrosion: Dictionary = _effects.corrode
 		for target: Day1DestructibleTarget in setup.destructible_targets:
@@ -163,6 +165,6 @@ func _draw() -> void:
 		color = Color(0.45, 0.85, 0.1, 0.2)
 	var rect := Rect2(Vector2.ONE * -_side * 0.5, Vector2.ONE * _side)
 	draw_rect(rect, color)
-	draw_rect(rect, Color(color, 0.8), false, 2.0)
+	draw_rect(rect, Color(color, 0.8), false, 2.0 * _distance_scale)
 	if pulse_count > 0:
-		draw_circle(Vector2.ZERO, 5.0, Color.GOLD)
+		draw_circle(Vector2.ZERO, 5.0 * _distance_scale, Color.GOLD)

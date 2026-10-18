@@ -76,6 +76,7 @@ func _run() -> void:
 		_test_inventory()
 		_test_states()
 		await _test_areas()
+		await _test_scaled_profile()
 		await _test_service()
 	if "--capture" in OS.get_cmdline_user_args():
 		await _capture()
@@ -246,6 +247,36 @@ func _test_areas() -> void:
 	_check(not wood.destroyed and wood.damage == 0.0 and wood.blocker.collision_layer == 1 and wood.visual.visible, "Retry restores wooden crate durability, visual and collision")
 	await _frames()
 	_reset()
+
+func _test_scaled_profile() -> void:
+	_setup.effect_scale = 0.5
+	_setup.throw_range = 230.0
+	var id: String = _demo.sample_ids[7]
+	var stock := _inventory.get_drink_stock(id)
+	var canonical: Dictionary = _inventory.get_drink_record(id).throw.duplicate(true)
+	_check(_service.select_drink(id) == OK, "Scaled profile selects a real owned cup")
+	_check(_service.request_throw(_player.global_position + Vector2(231, 0)) == ERR_UNAVAILABLE, "Scaled throw rejects a target just beyond 230 world pixels")
+	_check(_inventory.get_drink_stock(id) == stock and _player.get_active_action().is_empty(), "Out-of-range throw consumes no cup and starts no action")
+	_check(_service.request_throw(_player.global_position + Vector2(200, 0)) == OK, "Scaled throw accepts a target inside the new range")
+	await _until(func() -> bool: return not _service.get("_projectiles").is_empty(), "Scaled animation releases a physical projectile")
+	var projectile: Day1ThrowProjectile = _service.get("_projectiles")[0]
+	var origin := projectile.global_position
+	projectile.advance(0.1, _world)
+	_check(is_equal_approx(projectile.global_position.distance_to(origin), 26.0) and projectile.scale == Vector2.ONE * 0.5, "Projectile halves actual flight distance per tick and displayed size")
+	_service.set_physics_process(true)
+	await _until(func() -> bool: return not _service.get_active_areas().is_empty(), "Scaled projectile lands through the real service")
+	_service.set_physics_process(false)
+	var area := _service.get_active_areas()[0]
+	var half_side := float(canonical.area_cells) * float(canonical.cell) * 0.25
+	_check(area.contains_point(area.global_position + Vector2(half_side - 1, 0)) and not area.contains_point(area.global_position + Vector2(half_side + 1, 0)), "Scaled drink field applies its reduced geometric boundary")
+	_check(area.payload == canonical and _inventory.get_drink_record(id).throw == canonical, "World scaling leaves recipe payload and saved drink parameters unchanged")
+	_check(area.remaining > float(canonical.duration) - 0.2 and area.remaining <= float(canonical.duration), "World scaling preserves effect duration")
+	await _until(func() -> bool: return _player.get_active_action().is_empty(), "Scaled throw animation finishes")
+	_service.cancel_attempt()
+	_setup.effect_scale = 1.0
+	_setup.throw_range = 460.0
+	_service.begin_attempt()
+	_results.clear()
 
 func _test_service() -> void:
 	_service.set_physics_process(true)

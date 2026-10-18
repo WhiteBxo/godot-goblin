@@ -36,6 +36,14 @@
 
 tutorial 首单配置沿用 `shop.first_order`，完成事实为 `shop.order_001_delivered`。一杯珍珠奶茶交给胖哥布林后返还糖浆一份，数值仅为可验证的教学配置。没有 `items` 的任务不产生库存奖励。TaskJournal 的奖励投影仍只显示原 text/reveal_when，不暴露结算数据。
 
+### 散客订单（营业玩法）
+
+`src/resources/tasks/day1_daily_orders.json` 是第一批不挂在任何剧情 beat 上的普通订单，已并入 `Day1ChapterController.TASK_FILES`。三条 `commission` 各要一款固定成品，交付给柜台的哥布林散客，`rewards.money = 10`（与普通成品奶茶 10G／杯的基准一致），`reveal_when` 与 `activate_when` 都是 `day1.group_settled`——剧情五单结算完，营业继续，玩家自己接、自己做、自己收钱。
+
+它们复用上面同一条交付路径：`accept_order` 写各自的 `accepted_flag`，`try_submit` 走一次原子结算，回执 `delivery.<order_id>.completed` 防二次交付，订单板由 `OrderBoardModel` 直接投影，没有新增代码分支。`tests/verify_daily_orders.gd` 覆盖解锁前不可接、解锁后可接、空货架拒绝、结算 +10G、重复交付被拒、订单板显示真实报酬。
+
+现状是**一次性订单池**：每条只能结算一次，扩容只需往同一个文件加条目。每天刷新或无限接单需要任务结果（`get_task_result`）支持重置，尚未实现；营业计划层面的顾客组调度见 `BusinessScheduler` 的 `ordinary_customers`，等 Day 2 宿主接入时再启用。
+
 ## 执行流程
 
 1. MainGame 装配 Systems/TaskDelivery，注入原目录、Journal、GameState 和共享库存。打开订单板只查看；每单点击“接取订单”后调用 `accept_order()`，重复接取返回 `ERR_ALREADY_EXISTS`。已有 StoryDirector 路由继续优先。

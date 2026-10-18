@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "tasks": [
+    {
+      "id": "day1.daily.tea_a",
+      "type": "commission",
+      "title": "散客 · 珍珠奶茶",
+      "description": "柜台前的散客点了一杯珍珠奶茶。接单、做好、当场交付收款。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day1.group_settled"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day1.group_settled"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day1.daily.tea_a.delivered"
+      },
+      "objectives": [
+        {
+          "id": "view",
+          "text": "查看订单并接单",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.day1.daily.tea_a.active"
+          }
+        },
+        {
+          "id": "deliver",
+          "text": "交付并收款",
+          "complete_when": {
+            "type": "flag",
+            "key": "day1.daily.tea_a.delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day1_daily_tea_a",
+        "product_id": "pearl_milk_tea",
+        "target_object_id": "goblin_a",
+        "accepted_flag": "task.day1.daily.tea_a.active"
+      },
+      "rewards": {
+        "text": "10G",
+        "money": 10
+      }
+    },
+    {
+      "id": "day1.daily.tea_b",
+      "type": "commission",
+      "title": "散客 · 椰果茉莉奶茶",
+      "description": "柜台前的散客点了一杯椰果茉莉奶茶。接单、做好、当场交付收款。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day1.group_settled"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day1.group_settled"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day1.daily.tea_b.delivered"
+      },
+      "objectives": [
+        {
+          "id": "view",
+          "text": "查看订单并接单",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.day1.daily.tea_b.active"
+          }
+        },
+        {
+          "id": "deliver",
+          "text": "交付并收款",
+          "complete_when": {
+            "type": "flag",
+            "key": "day1.daily.tea_b.delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day1_daily_tea_b",
+        "product_id": "coconut_milk_tea",
+        "target_object_id": "goblin_b",
+        "accepted_flag": "task.day1.daily.tea_b.active"
+      },
+      "rewards": {
+        "text": "10G",
+        "money": 10
+      }
+    },
+    {
+      "id": "day1.daily.tea_c",
+      "type": "commission",
+      "title": "散客 · 原味奶茶",
+      "description": "柜台前的散客点了一杯原味奶茶。接单、做好、当场交付收款。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day1.group_settled"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day1.group_settled"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day1.daily.tea_c.delivered"
+      },
+      "objectives": [
+        {
+          "id": "view",
+          "text": "查看订单并接单",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.day1.daily.tea_c.active"
+          }
+        },
+        {
+          "id": "deliver",
+          "text": "交付并收款",
+          "complete_when": {
+            "type": "flag",
+            "key": "day1.daily.tea_c.delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day1_daily_tea_c",
+        "product_id": "plain_milk_tea",
+        "target_object_id": "goblin_c",
+        "accepted_flag": "task.day1.daily.tea_c.active"
+      },
+      "rewards": {
+        "text": "10G",
+        "money": 10
+      }
+    }
+  ]
+}

@@ -9,6 +9,7 @@ const SETUP := "res://src/resources/story/day1_stages_03_06_setup.json"
 const TASK_FILES: Array[String] = [
 	"res://src/resources/tasks/day1_stages_01_02.json",
 	"res://src/resources/tasks/day1_stages_03_06.json",
+	"res://src/resources/tasks/day1_daily_orders.json",
 ]
 const SOUND_LIBRARY := "res://src/resources/audio/sound_library.tres"
 const SETUP_KEYS := ["story", "dialogue", "phases", "auto_events", "derived_facts", "scene_setups"]

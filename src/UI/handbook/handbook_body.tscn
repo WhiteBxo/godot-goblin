@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://src/UI/handbook/handbook_body.gd" id="1"]
 [ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="2"]
 [ext_resource type="PackedScene" path="res://src/UI/tasks/task_page.tscn" id="3"]
 [ext_resource type="PackedScene" path="res://src/UI/chronicle/chronicle_page.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://src/UI/milk_tea/drink_encyclopedia_panel.tscn" id="5"]
 
 [node name="HandbookBody" type="VBoxContainer"]
 size_flags_vertical = 3
@@ -19,4 +20,7 @@ size_flags_vertical = 3
 layout_mode = 2
 
 [node name="Chronicle" parent="Pages" instance=ExtResource("4")]
+layout_mode = 2
+
+[node name="Drinks" parent="Pages" instance=ExtResource("5")]
 layout_mode = 2

@@ -260,6 +260,15 @@ func move_direction(direction: Vector2, delta: float) -> void:
 	var movement_ratio := distance / maxf(delta * get_movement_speed(), 0.001)
 	_update_animation(distance > 0.01, movement_ratio)
 
+## World effects displace bodies through collision without taking story control
+## or changing facing (a stunned actor must keep looking in the same direction).
+func displace_by(motion: Vector2) -> Vector2:
+	if not movement_enabled or is_performance_controlled() or not motion.is_finite() or not is_visible_in_tree():
+		return Vector2.ZERO
+	var previous := global_position
+	move_and_collide(motion)
+	return global_position - previous
+
 func _move_velocity(_delta: float) -> void:
 	move_and_slide()
 

@@ -49,7 +49,7 @@ func _run() -> void:
 	ui.close()
 	ui.open(storage)
 	var warehouse: WarehousePanel = popup.get_warehouse_panel()
-	_check(not panel.visible and warehouse.visible and "红茶  11" in warehouse.get_list().get_item_text(0), "Storage must show shared updated stock")
+	_check(not panel.is_visible_in_tree() and warehouse.is_visible_in_tree() and "红茶  11" in warehouse.get_list().get_item_text(0), "Storage must show shared updated stock")
 	ui.close()
 	ui.open(station)
 	_check(production.get_completed_count() == 1 and "椰果茉莉奶茶" in panel.order_text(), "Reopening must retain progress and show next order")

@@ -95,6 +95,22 @@ source_ids = PackedStringArray("F03")
 form = "固体"
 processing_methods = PackedStringArray("榨汁")
 description = "一种价格昂贵的洞窟菌类。胖哥布林委托主角购买的关键材料，关系到他的心智衰退与恢复。它的用途远不止调味，其稀缺性也让普通哥布林难以负担。"
+; generated:recipe_ingredients
+can_be_base = true
+base_suffix = "特调"
+free_recipe_allowed = true
+sweetness = 0
+sourness = 0
+bitterness = 2
+spiciness = 0
+milkiness = 0
+booziness = 0
+recipe_flavors = PackedStringArray("苦味", "草木气息")
+recipe_textures = PackedStringArray("多汁")
+recipe_effects = PackedStringArray("提神")
+market_price = 50
+uses_per_portion = 5
+throw_kind = ""
 
 [sub_resource type="Resource" id="Product_pearl"]
 script = ExtResource("ingredient")
@@ -136,6 +152,22 @@ category = "milk"
 flavor_tags = PackedStringArray("奶香浓厚", "甜味明显", "入口顺滑但略显腻口")
 source_ids = PackedStringArray("C01")
 description = "米黄色奶茶液体，质地浓稠。"
+; generated:recipe_ingredients
+can_be_base = true
+base_suffix = "奶茶"
+free_recipe_allowed = true
+sweetness = 3
+sourness = 0
+bitterness = 0
+spiciness = 0
+milkiness = 3
+booziness = 0
+recipe_flavors = PackedStringArray("奶香", "甜味")
+recipe_textures = PackedStringArray("浓稠", "丝滑")
+recipe_effects = PackedStringArray()
+market_price = 0
+uses_per_portion = 5
+throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_industrial_green_tea"]
 script = ExtResource("ingredient")
@@ -147,6 +179,22 @@ category = "tea"
 flavor_tags = PackedStringArray("茶味清淡单薄", "带有轻微苦涩感")
 source_ids = PackedStringArray("C02")
 description = "淡黄绿色茶汤，质地清透。"
+; generated:recipe_ingredients
+can_be_base = true
+base_suffix = "茶"
+free_recipe_allowed = true
+sweetness = 0
+sourness = 0
+bitterness = 1
+spiciness = 0
+milkiness = 0
+booziness = 0
+recipe_flavors = PackedStringArray("茶香", "苦味")
+recipe_textures = PackedStringArray("清透")
+recipe_effects = PackedStringArray()
+market_price = 0
+uses_per_portion = 5
+throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_mint_syrup"]
 script = ExtResource("ingredient")
@@ -158,6 +206,22 @@ category = "syrup"
 flavor_tags = PackedStringArray("糖浆甜味浓重", "薄荷凉感强烈而直接")
 source_ids = PackedStringArray("C03")
 description = "鲜绿色糖浆，质地黏稠。"
+; generated:recipe_ingredients
+can_be_base = false
+base_suffix = ""
+free_recipe_allowed = true
+sweetness = 3
+sourness = 0
+bitterness = 0
+spiciness = 0
+milkiness = 0
+booziness = 0
+recipe_flavors = PackedStringArray("薄荷", "甜味")
+recipe_textures = PackedStringArray("黏稠")
+recipe_effects = PackedStringArray("强烈清凉感")
+market_price = 0
+uses_per_portion = 5
+throw_kind = "paralyze"
 
 [sub_resource type="Resource" id="Ingredient_instant_coffee_concentrate"]
 script = ExtResource("ingredient")
@@ -169,6 +233,22 @@ category = "tea"
 flavor_tags = PackedStringArray("焦苦味突出", "带有速溶咖啡特有的酸涩感")
 source_ids = PackedStringArray("C04")
 description = "深褐色咖啡液体。"
+; generated:recipe_ingredients
+can_be_base = true
+base_suffix = "咖啡"
+free_recipe_allowed = true
+sweetness = 0
+sourness = 1
+bitterness = 3
+spiciness = 0
+milkiness = 0
+booziness = 0
+recipe_flavors = PackedStringArray("咖啡香", "苦味", "酸味")
+recipe_textures = PackedStringArray()
+recipe_effects = PackedStringArray("提神")
+market_price = 0
+uses_per_portion = 5
+throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_brown_sugar_boba"]
 script = ExtResource("ingredient")
@@ -180,6 +260,22 @@ category = "topping"
 flavor_tags = PackedStringArray("黑糖甜味浓郁", "珍珠软糯弹韧", "略有黏牙感")
 source_ids = PackedStringArray("C05")
 description = "乌黑圆润的珍珠，表面裹着黑糖浆。"
+; generated:recipe_ingredients
+can_be_base = false
+base_suffix = ""
+free_recipe_allowed = true
+sweetness = 3
+sourness = 0
+bitterness = 0
+spiciness = 0
+milkiness = 0
+booziness = 0
+recipe_flavors = PackedStringArray("黑糖香", "甜味")
+recipe_textures = PackedStringArray("软糯", "弹韧", "黏稠")
+recipe_effects = PackedStringArray()
+market_price = 0
+uses_per_portion = 5
+throw_kind = "sticky"
 
 [sub_resource type="Resource" id="Ingredient_mint_choc_crisp"]
 script = ExtResource("ingredient")
@@ -191,6 +287,22 @@ category = "topping"
 flavor_tags = PackedStringArray("巧克力甜味明显", "入口酥脆", "带有薄荷凉感")
 source_ids = PackedStringArray("C06")
 description = "黑绿相间的细碎巧克力颗粒。"
+; generated:recipe_ingredients
+can_be_base = false
+base_suffix = ""
+free_recipe_allowed = true
+sweetness = 2
+sourness = 0
+bitterness = 1
+spiciness = 0
+milkiness = 0
+booziness = 0
+recipe_flavors = PackedStringArray("可可香", "薄荷")
+recipe_textures = PackedStringArray("颗粒感", "酥脆")
+recipe_effects = PackedStringArray("强烈清凉感")
+market_price = 0
+uses_per_portion = 5
+throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_ice"]
 script = ExtResource("ingredient")
@@ -202,6 +314,22 @@ category = "material"
 flavor_tags = PackedStringArray("没有明显味道", "主要提供冰凉感并稀释饮品")
 source_ids = PackedStringArray("C07")
 description = "透明冰块，表面带有水珠。"
+; generated:recipe_ingredients
+can_be_base = false
+base_suffix = ""
+free_recipe_allowed = true
+sweetness = 0
+sourness = 0
+bitterness = 0
+spiciness = 0
+milkiness = 0
+booziness = 0
+recipe_flavors = PackedStringArray()
+recipe_textures = PackedStringArray("清透")
+recipe_effects = PackedStringArray("强烈清凉感")
+market_price = 0
+uses_per_portion = 5
+throw_kind = "mine"
 
 [sub_resource type="Resource" id="Ingredient_cocoa_powder"]
 script = ExtResource("ingredient")
@@ -213,6 +341,22 @@ category = "material"
 flavor_tags = PackedStringArray("可可香气明显", "微苦带甜", "粉感略重")
 source_ids = PackedStringArray("C08")
 description = "棕色细粉末。"
+; generated:recipe_ingredients
+can_be_base = false
+base_suffix = ""
+free_recipe_allowed = true
+sweetness = 1
+sourness = 0
+bitterness = 2
+spiciness = 0
+milkiness = 0
+booziness = 0
+recipe_flavors = PackedStringArray("可可香", "苦味", "甜味")
+recipe_textures = PackedStringArray("粉感")
+recipe_effects = PackedStringArray()
+market_price = 0
+uses_per_portion = 5
+throw_kind = "burst"
 
 [sub_resource type="Resource" id="Ingredient_apple_jam"]
 script = ExtResource("ingredient")
@@ -224,6 +368,22 @@ category = "topping"
 flavor_tags = PackedStringArray("苹果甜香明显", "酸味较淡", "甜度偏高")
 source_ids = PackedStringArray("C09")
 description = "金黄色浓稠果酱。"
+; generated:recipe_ingredients
+can_be_base = false
+base_suffix = ""
+free_recipe_allowed = true
+sweetness = 3
+sourness = 1
+bitterness = 0
+spiciness = 0
+milkiness = 0
+booziness = 0
+recipe_flavors = PackedStringArray("果香", "甜味")
+recipe_textures = PackedStringArray("浓稠", "黏稠")
+recipe_effects = PackedStringArray()
+market_price = 0
+uses_per_portion = 5
+throw_kind = "contagion"
 
 [sub_resource type="Resource" id="Ingredient_strawberry_jam"]
 script = ExtResource("ingredient")
@@ -235,6 +395,22 @@ category = "topping"
 flavor_tags = PackedStringArray("草莓香甜浓郁", "略带酸味", "质地黏稠")
 source_ids = PackedStringArray("C10")
 description = "红色或粉红色浓稠果酱。"
+; generated:recipe_ingredients
+can_be_base = false
+base_suffix = ""
+free_recipe_allowed = true
+sweetness = 3
+sourness = 2
+bitterness = 0
+spiciness = 0
+milkiness = 0
+booziness = 0
+recipe_flavors = PackedStringArray("果香", "甜味", "酸味")
+recipe_textures = PackedStringArray("浓稠", "黏稠")
+recipe_effects = PackedStringArray()
+market_price = 0
+uses_per_portion = 5
+throw_kind = "corrode"
 
 [sub_resource type="Resource" id="Product_classic_boba"]
 script = ExtResource("ingredient")
@@ -316,6 +492,22 @@ source_ids = PackedStringArray("F01")
 form = "液体"
 processing_methods = PackedStringArray("免加工")
 description = "洞窟潮湿石壁上凝结的青绿色植物汁液。当地哥布林常用它调制廉价饮品，据说能缓解饭后的胀满感。"
+; generated:recipe_ingredients
+can_be_base = true
+base_suffix = "特调"
+free_recipe_allowed = true
+sweetness = 1
+sourness = 2
+bitterness = 1
+spiciness = 0
+milkiness = 0
+booziness = 1
+recipe_flavors = PackedStringArray("酸味", "发酵味")
+recipe_textures = PackedStringArray("黏稠")
+recipe_effects = PackedStringArray()
+market_price = 10
+uses_per_portion = 5
+throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_sugar_yam"]
 script = ExtResource("ingredient")
@@ -331,6 +523,22 @@ source_ids = PackedStringArray("F02")
 form = "固体"
 processing_methods = PackedStringArray("切丁", "切块")
 description = "生长在洞窟深处的块茎，外皮灰紫，内部质地柔软。切块后容易吸收饮品的甜味，是增加饱腹感的常见配料"
+; generated:recipe_ingredients
+can_be_base = false
+base_suffix = ""
+free_recipe_allowed = true
+sweetness = 2
+sourness = 0
+bitterness = 0
+spiciness = 0
+milkiness = 0
+booziness = 0
+recipe_flavors = PackedStringArray("甜味")
+recipe_textures = PackedStringArray("软糯", "丝滑")
+recipe_effects = PackedStringArray()
+market_price = 10
+uses_per_portion = 5
+throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_firefly_cap"]
 script = ExtResource("ingredient")
@@ -346,6 +554,22 @@ source_ids = PackedStringArray("F04")
 form = "固体"
 processing_methods = PackedStringArray("切块", "榨汁")
 description = "菌盖会散发蓝绿色荧光的特殊蘑菇。榨汁后能形成带有微光的饮品，饮用者偶尔会感到轻微眩晕，因而常被用于猎奇特调。"
+; generated:recipe_ingredients
+can_be_base = false
+base_suffix = ""
+free_recipe_allowed = true
+sweetness = 1
+sourness = 0
+bitterness = 0
+spiciness = 0
+milkiness = 0
+booziness = 0
+recipe_flavors = PackedStringArray("甜味")
+recipe_textures = PackedStringArray("丝滑")
+recipe_effects = PackedStringArray("发光", "眩晕")
+market_price = 50
+uses_per_portion = 5
+throw_kind = "lure"
 
 [sub_resource type="Resource" id="Ingredient_goblin_firebrew"]
 script = ExtResource("ingredient")
@@ -362,6 +586,22 @@ form = "液体"
 processing_methods = PackedStringArray("免加工")
 price = 4
 description = "哥布林酒馆常见的标准烈酒，采用传统谷物发酵与蒸馏工艺制成。没有精致的香气，也谈不上顺滑，却凭借强烈的酒劲受到老酒客欢迎。"
+; generated:recipe_ingredients
+can_be_base = true
+base_suffix = "特调"
+free_recipe_allowed = true
+sweetness = 2
+sourness = 0
+bitterness = 2
+spiciness = 3
+milkiness = 0
+booziness = 3
+recipe_flavors = PackedStringArray("辛辣", "酒香")
+recipe_textures = PackedStringArray("液态")
+recipe_effects = PackedStringArray("醉酒", "灼热感")
+market_price = 20
+uses_per_portion = 5
+throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_griffin_amber_wine"]
 script = ExtResource("ingredient")
@@ -378,6 +618,22 @@ form = "液体"
 processing_methods = PackedStringArray("免加工")
 price = 60
 description = "以格里芬纹章为标志的高档酒品，常出现在富裕哥布林的宴席与重要社交场合。民间流传着饮用此酒便能得到格里芬庇佑的说法，但这种传闻从未得到公开证实。"
+; generated:recipe_ingredients
+can_be_base = true
+base_suffix = "特调"
+free_recipe_allowed = true
+sweetness = 3
+sourness = 0
+bitterness = 1
+spiciness = 1
+milkiness = 0
+booziness = 3
+recipe_flavors = PackedStringArray("酒香", "蜜甜", "木香")
+recipe_textures = PackedStringArray("液态")
+recipe_effects = PackedStringArray("醉酒")
+market_price = 100
+uses_per_portion = 5
+throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_red_mottled_wood"]
 script = ExtResource("ingredient")
@@ -393,6 +649,22 @@ source_ids = PackedStringArray("F07")
 form = "固体"
 processing_methods = PackedStringArray("切丁", "免加工")
 description = "经过特殊腌制的刺激性木质配料，性质类似槟榔。赌场顾客喜欢边喝饮品边咀嚼它，认为这样能保持精神、缓解烦躁。"
+; generated:recipe_ingredients
+can_be_base = false
+base_suffix = ""
+free_recipe_allowed = true
+sweetness = 1
+sourness = 0
+bitterness = 2
+spiciness = 0
+milkiness = 0
+booziness = 0
+recipe_flavors = PackedStringArray("苦味", "咸味", "甜味", "木香", "辛辣")
+recipe_textures = PackedStringArray("坚韧耐嚼")
+recipe_effects = PackedStringArray()
+market_price = 20
+uses_per_portion = 5
+throw_kind = "toxic"
 
 [sub_resource type="Resource" id="Ingredient_honey_amber_crystal"]
 script = ExtResource("ingredient")
@@ -408,6 +680,22 @@ source_ids = PackedStringArray("F08")
 form = "固体"
 processing_methods = PackedStringArray("切块")
 description = "外观像琥珀的天然甜味晶体。研碎后可以加入饮品，融化时会释放浓厚甜香。长期偏好甜食的顾客尤其喜欢它。"
+; generated:recipe_ingredients
+can_be_base = false
+base_suffix = ""
+free_recipe_allowed = true
+sweetness = 3
+sourness = 0
+bitterness = 0
+spiciness = 0
+milkiness = 0
+booziness = 0
+recipe_flavors = PackedStringArray("甜味")
+recipe_textures = PackedStringArray("颗粒感")
+recipe_effects = PackedStringArray()
+market_price = 20
+uses_per_portion = 5
+throw_kind = "vortex"
 
 [sub_resource type="Resource" id="Ingredient_phantom_gold_mushroom"]
 script = ExtResource("ingredient")
@@ -423,6 +711,22 @@ source_ids = PackedStringArray("F10")
 form = "固体"
 processing_methods = PackedStringArray("切块")
 description = "一种带有金色纹理的特殊蘑菇，在昏暗环境中也十分醒目。据说吃了它就能发财，因此深受赌徒追捧。它与赌场及守卫订单相关的材料线有所联系，具体用途由对应任务揭示。"
+; generated:recipe_ingredients
+can_be_base = false
+base_suffix = ""
+free_recipe_allowed = true
+sweetness = 1
+sourness = 0
+bitterness = 0
+spiciness = 0
+milkiness = 0
+booziness = 0
+recipe_flavors = PackedStringArray("甜味", "坚果香")
+recipe_textures = PackedStringArray("坚韧耐嚼")
+recipe_effects = PackedStringArray()
+market_price = 100
+uses_per_portion = 5
+throw_kind = "phantom"
 
 [sub_resource type="Resource" id="Ingredient_rainbow_cube"]
 script = ExtResource("ingredient")
@@ -438,6 +742,22 @@ source_ids = PackedStringArray("F11")
 form = "胶体"
 processing_methods = PackedStringArray("切丁")
 description = "一种具有致幻作用的奇异凝胶，切成规整的小方块后会随观察角度呈现不同色彩。食用后，感官可能逐渐失真，现实与幻觉的界限也会变得模糊。赌场老板将其作为稀有藏品保存，其真正的危险性却远不止外观所展示的那样。"
+; generated:recipe_ingredients
+can_be_base = false
+base_suffix = ""
+free_recipe_allowed = true
+sweetness = 0
+sourness = 0
+bitterness = 1
+spiciness = 0
+milkiness = 0
+booziness = 0
+recipe_flavors = PackedStringArray("薄荷", "金属味")
+recipe_textures = PackedStringArray("胶状", "酥脆", "丝滑")
+recipe_effects = PackedStringArray("致幻", "强烈清凉感")
+market_price = 100
+uses_per_portion = 5
+throw_kind = "hallucinate"
 
 [sub_resource type="Resource" id="Ingredient_scorch_tongue_pepper"]
 script = ExtResource("ingredient")
@@ -453,6 +773,22 @@ source_ids = PackedStringArray("F12")
 form = "固体"
 processing_methods = PackedStringArray("切丁", "榨汁")
 description = "一种生长在公共火塘附近的奇异果实，外皮鲜红，果实越成熟，辣味就越强烈。传说有些哥布林会直接生嚼它，以此证明自己够不够硬气。"
+; generated:recipe_ingredients
+can_be_base = false
+base_suffix = ""
+free_recipe_allowed = true
+sweetness = 0
+sourness = 0
+bitterness = 0
+spiciness = 3
+milkiness = 0
+booziness = 0
+recipe_flavors = PackedStringArray("辛辣", "烟熏味")
+recipe_textures = PackedStringArray("坚韧耐嚼")
+recipe_effects = PackedStringArray("灼热感")
+market_price = 50
+uses_per_portion = 5
+throw_kind = "burn"
 
 [sub_resource type="Resource" id="Ingredient_sour_moss_ale"]
 script = ExtResource("ingredient")
@@ -512,6 +848,22 @@ source_ids = PackedStringArray("F09")
 form = "液体"
 processing_methods = PackedStringArray("免加工")
 description = "被哥布林奉为神圣恩赐的特殊液体。饮用后可能引发严重眩晕、呕吐等反应，但部分信徒仍坚信它能够洗清罪孽、带来庇护。其真实性质与信仰解释之间存在明显矛盾。"
+; generated:recipe_ingredients
+can_be_base = true
+base_suffix = "特调"
+free_recipe_allowed = false
+sweetness = 0
+sourness = 2
+bitterness = 3
+spiciness = 0
+milkiness = 0
+booziness = 3
+recipe_flavors = PackedStringArray("苦味", "腥味", "铁锈味")
+recipe_textures = PackedStringArray("浓稠", "黏稠")
+recipe_effects = PackedStringArray()
+market_price = -1
+uses_per_portion = 5
+throw_kind = ""
 
 [sub_resource type="Resource" id="Product_day1_blood_milk_tea"]
 script = ExtResource("ingredient")

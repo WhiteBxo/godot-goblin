@@ -48,9 +48,9 @@ GameState.state_changed.connect(_refresh_from_state)
 _refresh_from_state()
 ```
 
-`to_dict() -> Dictionary` 返回 `schema_version = 2` 的独立原生 Variant 快照，包含 `current_day`、`story_stage`、`flags`、`variables`、`completed_events`（排序后的字符串数组）、`business`（完整库存子快照、制作订单 ID 前缀）及 `economy`（钱包、同一库存、商人余量、交易与领奖回执）。`restore_state(data: Dictionary) -> Error` 先检查全部字段、版本、命名空间、值类型及经营数据，再整体替换；无效数据返回 `ERR_INVALID_DATA`，保留原状态且无通知；相同状态返回 `OK` 且无通知，事件数组顺序不影响比较。所有八个字段必需；`business.inventory` 与 `economy.inventory` 必须完全一致，顶层额外字段忽略。旧 v1 缺少经营状态，拒绝恢复以免覆盖或猜测剧情对应的物品状态。迁移策略待确认。
+`to_dict() -> Dictionary` 返回 `schema_version = 4` 的独立原生 Variant 快照，包含 `current_day`、`story_stage`、`flags`、`variables`、`completed_events`（排序后的字符串数组）、`business`（profile_id、v3 库存子快照、制作订单 ID 前缀及自由制作请求回执）及 `economy`（钱包、同一库存、商人余量、交易与领奖回执）。`restore_state(data: Dictionary) -> Error` 先检查全部字段、版本、命名空间、值类型及经营数据，再整体替换；无效数据返回 `ERR_INVALID_DATA`，保留原状态且无通知；相同状态返回 `OK` 且无通知，事件数组顺序不影响比较。所有八个字段必需；`business.inventory` 与 `economy.inventory` 必须完全一致，顶层额外字段忽略。旧 v1 缺少经营状态，拒绝恢复以免覆盖或猜测剧情对应的物品状态。旧完整 v2/v3 可迁移，补空配方成品、图鉴和自由制作请求回执，保留已有开封次数；v2 另补 tutorial 配置与古怪金币空条目。详见[配方快照边界](../gameplay/free_tea_recipes.md#快照与迁移)。
 
-当前仅提供完整 v2 内存快照接口，没有文件读写或存档格式选择。后续存档适配层需保留 Variant 类型；普通 JSON 会将数字解析为浮点数，不能直接保证原生快照类型往返，应在适配层编码/恢复类型后再调用 `restore_state`。
+当前提供完整 v4 内存快照接口，没有文件读写或存档格式选择。后续存档适配层需保留 Variant 类型；普通 JSON 会将数字解析为浮点数，不能直接保证原生快照类型往返，应在适配层编码/恢复类型后再调用 `restore_state`。
 
 ## 验证
 

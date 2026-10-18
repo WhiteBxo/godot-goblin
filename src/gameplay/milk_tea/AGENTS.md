@@ -1,6 +1,6 @@
 # 制作流程与共享库存
 
-根据任务读 [初级制作](../../../docs/gameplay/basic_tea_production.md)、[库存](../../../docs/gameplay/warehouse_inventory.md) 与 [统一经营会话](../../../docs/gameplay/business_session.md)；接口与配置以当前代码为准，历史教学步骤不覆盖新实现。
+根据任务读[自由调配与图鉴](../../../docs/gameplay/free_tea_recipes.md)、[初级制作](../../../docs/gameplay/basic_tea_production.md)、[库存](../../../docs/gameplay/warehouse_inventory.md) 与 [统一经营会话](../../../docs/gameplay/business_session.md)；接口与配置以当前代码为准，历史教学步骤不覆盖新实现。
 
 - TeaMaking 负责制作入口的协调，TeaProduction 负责制作规则与进度，WarehouseInventory 负责物品数量与发现信息；界面只提交请求并显示结果。
 - 复用 GameState 提供的唯一跨场景库存和制作服务。钱包、制作、采集与交付使用同一库存，不在场景或弹窗重建时创建业务副本或重置队列。

@@ -62,6 +62,7 @@
 | [Day 1 前两阶段正式流程](gameplay/day_01_stages_01_02.md) | `day_01_stages_01_02.md` |
 | [Day 1 世界门控、调查与血液特调](gameplay/day_01_world_flow.md) | `day_01_world_flow.md` |
 | [Day 1 投掷与守卫反应](gameplay/day_01_stealth.md) | 玩法组件、正式绑定缺口与局部重试 |
+| [饮品投掷与区域效果（第三期）](gameplay/drink_throw_effects.md) | 扣杯、六种效果、区域修饰、可腐蚀物及独立试玩 |
 | [初级奶茶制作](gameplay/basic_tea_production.md) | `basic_tea_production.md` |
 | [订单板、按单制作与交付追踪](gameplay/order_system.md) | 逐单接取、暖纸订单笺、共享库存与 HUD |
 | [统一经营会话](gameplay/business_session.md) | `business_session.md` |
@@ -73,6 +74,8 @@
 | [任务 / 委托系统（P0）](gameplay/task_system.md) | `task_system.md` |
 | [钱包与原子交易](gameplay/wallet_transactions.md) | `wallet_transactions.md` |
 | [仓库与共享库存（第一阶段）](gameplay/warehouse_inventory.md) | `warehouse_inventory.md` |
+| [奶茶配方数据层（第一期）](gameplay/milk_tea_recipe_data.md) | Excel 导入、投掷参数、按次库存与旧快照迁移 |
+| [自由调配、饮品图鉴与交付（第二期）](gameplay/free_tea_recipes.md) | 三槽配置、配方计算、动态成品、图鉴及通用订单 |
 
 ## 关卡与地图
 
@@ -120,7 +123,7 @@
 | [day_02.pdf](design/source/day_02.pdf) | 第二天剧情原始 PDF。 |
 | [Day 2 五个阶段：剧情演出初稿](design/day_02_stages_01_05_draft.md) | 由 day_02.pdf 逐字整理的 Beat 化初稿。 |
 | [奶茶配方系统 V0.1](design/milk_tea_recipe_system_revised.md) | 新专项设计正文，含原文 12 张表格预览。 |
-| [22 种原料配置更新](design/recipe_ingredients_revised.md) | 新表可读快照，数值未同步到运行时。 |
+| [22 种原料配置更新](design/recipe_ingredients_revised.md) | 新表可读快照；运行时导入见第一期数据层。 |
 | [2026-10-18 配方资料更新与旧稿处理](design/milk_tea_recipe_update_2026_10_18.md) | 新旧资料适用范围、冲突与待确认项。 |
 | [设计原始附件索引](design/source/README.md) | 新 DOCX/Excel 与保留旧稿。 |
 | [otherworld_ingredients_and_drinks.xlsx](design/source/otherworld_ingredients_and_drinks.xlsx) | 旧运行时基线及 W/H、图鉴互补资料。 |

@@ -155,6 +155,15 @@ func _build_buttons(theme: Theme) -> void:
 	theme.set_constant("h_separation", "Button", 6)
 	theme.set_constant("icon_max_width", "Button", T.ICON_SMALL)
 
+	for state: String in ["normal", "hover", "pressed", "disabled", "focus"]:
+		theme.set_stylebox(state, "OptionButton", theme.get_stylebox(state, "Button"))
+	for item: String in theme.get_color_list("Button"):
+		theme.set_color(item, "OptionButton", theme.get_color(item, "Button"))
+	theme.set_constant("h_separation", "OptionButton", T.SPACE_2)
+	theme.set_constant("arrow_margin", "OptionButton", T.SPACE_2)
+	theme.set_constant("modulate_arrow", "OptionButton", 1)
+	theme.set_font_size("font_size", "OptionButton", T.FONT_BODY)
+
 	theme.set_type_variation("PrimaryButton", "Button")
 	theme.set_stylebox("normal", "PrimaryButton",
 		_flat(T.ACCENT, T.ACCENT_STRONG, 1, T.RADIUS_BUTTON, T.SPACE_3, T.SPACE_1, T.SPACE_3, T.SPACE_1))

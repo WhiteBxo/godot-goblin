@@ -172,6 +172,8 @@ func _show_task(task: Dictionary) -> void:
 			for id: String in task.delivery.items:
 				materials.append("%s × %s" % [_product_names.get(id, "物资待确认"), _number(task.delivery.items[id])])
 			lines.append("交付物资：" + "、".join(materials))
+		elif task.delivery.has("drink"):
+			lines.append("交付饮品：" + DrinkFormula.requirement_text(task.delivery.drink, _product_names))
 		else:
 			lines.append("交付成品：" + String(_product_names.get(task.delivery.product_id, "成品待确认")))
 	lines.append("\n奖励：" + String(task.rewards.get("text", "暂无奖励说明")))

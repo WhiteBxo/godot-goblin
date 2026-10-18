@@ -168,6 +168,9 @@ func open_tasks() -> Error:
 func open_handbook() -> Error:
 	return _open_handbook(ScreenIds.HANDBOOK)
 
+func open_drinks() -> Error:
+	return _open_handbook(ScreenIds.DRINKS)
+
 func _open_handbook(page: StringName) -> Error:
 	_refresh_handbook_access()
 	if not _handbook_hud.visible:
@@ -192,8 +195,12 @@ func _refresh_task_delivery_names() -> void:
 		target_names[String(point.interaction_id)] = point.display_name
 	var product_names := {}
 	var inventory: WarehouseInventory = get_node("/root/GameState").get_warehouse_inventory()
+	for definition: IngredientDefinition in WarehouseInventory.CATALOG.ingredients:
+		product_names[definition.id] = definition.display_name
 	for task: Dictionary in _task_journal.get_active_tasks():
 		if not task.delivery.is_empty():
+			if task.delivery.has("drink"):
+				continue
 			var required: Dictionary = task.delivery.items if task.delivery.has("items") else {String(task.delivery.product_id): 1}
 			for id: String in required:
 				var product := inventory.get_definition(id)
@@ -234,9 +241,13 @@ func _create_handbook() -> void:
 	_handbook = preload("res://src/UI/handbook/handbook_panel.tscn").instantiate()
 	_ui_manager.register_screen(ScreenIds.HANDBOOK, _handbook, &"popup", true)
 	_handbook.bind_journals(_task_journal, _chronicle_journal)
+	_handbook.bind_inventory(get_node("/root/GameState").get_warehouse_inventory())
+	_handbook.get_drinks_page().remake_requested.connect(func(materials: Array[String], iced: bool) -> void:
+		_handbook.get_drinks_page().show_remake_result(is_instance_valid(_shop_ui) and _shop_ui.select_formula(materials, iced)))
 	_handbook.close_requested.connect(func() -> void: _ui_manager.close_screen(ScreenIds.HANDBOOK))
 	_ui_manager.register_screen_alias(ScreenIds.TASKS, ScreenIds.HANDBOOK, _handbook.select_page.bind(ScreenIds.TASKS))
 	_ui_manager.register_screen_alias(ScreenIds.CHRONICLE, ScreenIds.HANDBOOK, _handbook.select_page.bind(ScreenIds.CHRONICLE))
+	_ui_manager.register_screen_alias(ScreenIds.DRINKS, ScreenIds.HANDBOOK, _handbook.select_page.bind(ScreenIds.DRINKS))
 	_handbook_hud = preload("res://src/UI/handbook/handbook_hud.tscn").instantiate()
 	_ui_manager.register_screen(ScreenIds.HANDBOOK_HUD, _handbook_hud, &"hud", false)
 	_ui_manager.open_screen(ScreenIds.HANDBOOK_HUD)
@@ -244,6 +255,7 @@ func _create_handbook() -> void:
 	_task_journal.projection_changed.connect(_refresh_handbook_access)
 	_task_journal.projection_changed.connect(_refresh_task_delivery_names)
 	_chronicle_journal.changed.connect(_refresh_handbook_access)
+	get_node("/root/GameState").get_warehouse_inventory().changed.connect(_refresh_handbook_access)
 	get_node("/root/GameState").state_changed.connect(_refresh_handbook_access)
 	_refresh_handbook_access()
 
@@ -258,10 +270,11 @@ func _refresh_handbook_access() -> void:
 			# GameState rejects writes while restoring; persist migration after commit.
 			_refresh_handbook_access.call_deferred()
 	var chronicle: bool = state.get_flag("day1.chronicle_unlocked") if day1_story_enabled else not _chronicle_journal.get_entries().is_empty()
-	_handbook.refresh_access(tasks, chronicle)
-	if not tasks and not chronicle:
+	var drinks: bool = not state.get_warehouse_inventory().get_drinks(true).is_empty()
+	_handbook.refresh_access(tasks, chronicle, drinks)
+	if not tasks and not chronicle and not drinks:
 		_ui_manager.close_screen(ScreenIds.HANDBOOK)
-	_handbook_hud.refresh_access(tasks or chronicle, _chronicle_journal.get_unread_count() if chronicle else 0)
+	_handbook_hud.refresh_access(tasks or chronicle or drinks, _chronicle_journal.get_unread_count() if chronicle else 0)
 
 
 func get_active_level() -> Node2D:
@@ -452,6 +465,11 @@ func _create_shop_business(ui: ShopUI) -> void:
 		if day1_story_enabled and result.ok:
 			_audio_manager.play_sfx("shop.tea_pour")
 		ui.show_production_result(result))
+	ui.formula_requested.connect(func(materials: Array[String], iced: bool) -> void:
+		var result := _tea_production.craft_formula(materials, 1, "", iced)
+		if day1_story_enabled and result.ok:
+			_audio_manager.play_sfx("shop.tea_pour")
+		ui.show_formula_result(result))
 
 func get_player() -> CharacterBody2D:
 	return _shop_player if is_instance_valid(_shop_player) else (_player if is_instance_valid(_player) else null)

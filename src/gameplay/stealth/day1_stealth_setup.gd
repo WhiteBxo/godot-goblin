@@ -4,6 +4,7 @@ extends Node
 
 @export var guards: Array[Day1GuardResponse] = []
 @export var flammable_targets: Array[Day1FlammableTarget] = []
+@export var destructible_targets: Array[Day1DestructibleTarget] = []
 @export var checkpoint: Marker2D
 @export var escape_zone: Area2D
 @export var coin_item_id := "strange_coin"
@@ -56,6 +57,11 @@ func get_issues(inventory: WarehouseInventory, actor_lookup: Callable) -> Packed
 	for target: Variant in flammable_targets:
 		if not is_instance_valid(target) or not target.is_confirmed() or target_ids.has(target.target_id):
 			issues.append("可燃目标缺少有效碰撞、唯一 ID 或确认依据（P09）")
+		else:
+			target_ids[target.target_id] = true
+	for target: Variant in destructible_targets:
+		if not is_instance_valid(target) or not target.is_confirmed() or target_ids.has(target.target_id):
+			issues.append("可腐蚀目标缺少有效阻挡、唯一 ID 或确认依据")
 		else:
 			target_ids[target.target_id] = true
 	return issues

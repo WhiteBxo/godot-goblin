@@ -1,0 +1,18 @@
+{
+  "source": "奶茶材料.docx (2026-10-18 user design), mapped onto docs/design/source/recipe_ingredients_revised_2026_10_18.xlsx",
+  "note": "Bases and F09 carry no role. Every number lives in src/resources/milk_tea/throw_tuning.tres.",
+  "roles": {
+    "F04": "lure",
+    "F07": "toxic",
+    "F12": "burn",
+    "C10": "corrode",
+    "C03": "paralyze",
+    "F11": "hallucinate",
+    "C08": "burst",
+    "C05": "sticky",
+    "C09": "contagion",
+    "C07": "mine",
+    "F08": "vortex",
+    "F10": "phantom"
+  }
+}

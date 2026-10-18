@@ -15,6 +15,7 @@
 | 钱包与原子交易 | [economy/AGENTS.md](economy/AGENTS.md) |
 | 场景出入口与切换 | [navigation/AGENTS.md](navigation/AGENTS.md) |
 | 见闻录状态 | [chronicle/AGENTS.md](chronicle/AGENTS.md) |
+| 人物解锁、情报记录与查看 | [characters/AGENTS.md](characters/AGENTS.md) |
 | 日程阶段（白天 / 夜晚）与出店门控 | [schedule/AGENTS.md](schedule/AGENTS.md) |
 | 文件存档、安全检查点与继续游戏 | [persistence/AGENTS.md](persistence/AGENTS.md) |
 

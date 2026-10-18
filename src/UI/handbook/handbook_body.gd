@@ -1,20 +1,26 @@
 class_name HandbookBody
 extends VBoxContainer
-## Shared handbook content: tabs and the two browser pages. No modal chrome here.
+## Shared handbook content: tabs and browser pages. No modal chrome here.
 
 @onready var _pages: TabContainer = %Pages
 @onready var _tasks: TaskPanel = $Pages/Tasks
 @onready var _chronicle: ChroniclePanel = $Pages/Chronicle
 @onready var _drinks: DrinkEncyclopediaPanel = $Pages/Drinks
+@onready var _characters: CharacterRecordsPanel = $Pages/Characters
 
 var _tasks_available := false
 var _chronicle_available := false
 var _drinks_available := false
+var _characters_available := false
 
 func _ready() -> void:
 	_pages.set_tab_title(0, "委托")
 	_pages.set_tab_title(1, "异闻录")
 	_pages.set_tab_title(2, "饮品图鉴")
+	_pages.set_tab_title(3, "人物记录")
+
+func bind_characters(journal: CharacterJournal) -> void:
+	_characters.bind_journal(journal)
 
 func bind_inventory(inventory: WarehouseInventory) -> void:
 	_drinks.configure(inventory)
@@ -26,25 +32,27 @@ func bind_journals(tasks: TaskJournal, chronicle: ChronicleJournal) -> void:
 func set_delivery_names(target_names: Dictionary, product_names: Dictionary) -> void:
 	_tasks.set_delivery_names(target_names, product_names)
 
-func refresh_access(tasks: bool, chronicle: bool, drinks := false) -> void:
+func refresh_access(tasks: bool, chronicle: bool, drinks := false, characters := false) -> void:
 	_tasks_available = tasks
 	_chronicle_available = chronicle
 	_drinks_available = drinks
+	_characters_available = characters
 	_pages.set_tab_hidden(0, not tasks)
 	_pages.set_tab_hidden(1, not chronicle)
 	_pages.set_tab_hidden(2, not drinks)
-	if _pages.current_tab < 0 or not [tasks, chronicle, drinks][_pages.current_tab]:
+	_pages.set_tab_hidden(3, not characters)
+	if _pages.current_tab < 0 or not [tasks, chronicle, drinks, characters][_pages.current_tab]:
 		prefer_first_available()
 
 func prefer_first_available() -> void:
-	_pages.current_tab = 0 if _tasks_available else 1 if _chronicle_available else 2 if _drinks_available else -1
+	_pages.current_tab = 0 if _tasks_available else 1 if _chronicle_available else 2 if _drinks_available else 3 if _characters_available else -1
 
 func select_page(page: StringName) -> Error:
-	if (page == &"tasks" and not _tasks_available) or (page == &"chronicle" and not _chronicle_available) or (page == &"drinks" and not _drinks_available):
+	if (page == ScreenIds.TASKS and not _tasks_available) or (page == ScreenIds.CHRONICLE and not _chronicle_available) or (page == ScreenIds.DRINKS and not _drinks_available) or (page == ScreenIds.CHARACTERS and not _characters_available):
 		return ERR_UNAVAILABLE
-	if page not in [&"tasks", &"chronicle", &"drinks"]:
+	if page not in [ScreenIds.TASKS, ScreenIds.CHRONICLE, ScreenIds.DRINKS, ScreenIds.CHARACTERS]:
 		return ERR_INVALID_PARAMETER
-	_pages.current_tab = {&"tasks": 0, &"chronicle": 1, &"drinks": 2}[page]
+	_pages.current_tab = {ScreenIds.TASKS: 0, ScreenIds.CHRONICLE: 1, ScreenIds.DRINKS: 2, ScreenIds.CHARACTERS: 3}[page]
 	return OK
 
 func get_default_focus() -> Control:
@@ -62,3 +70,6 @@ func get_chronicle_page() -> ChroniclePanel:
 
 func get_drinks_page() -> DrinkEncyclopediaPanel:
 	return _drinks
+
+func get_characters_page() -> CharacterRecordsPanel:
+	return _characters

@@ -1,6 +1,6 @@
 class_name HandbookPanel
 extends UIScreen
-## Shared modal for tasks and chronicle: ModalShell chrome + HandbookBody tabs.
+## Shared handbook modal: ModalShell chrome + HandbookBody tabs.
 
 @onready var _shell: ModalShell = $ModalShell
 
@@ -18,11 +18,14 @@ func bind_journals(tasks: TaskJournal, chronicle: ChronicleJournal) -> void:
 func bind_inventory(inventory: WarehouseInventory) -> void:
 	_body.bind_inventory(inventory)
 
+func bind_characters(journal: CharacterJournal) -> void:
+	_body.bind_characters(journal)
+
 func set_delivery_names(target_names: Dictionary, product_names: Dictionary) -> void:
 	_body.set_delivery_names(target_names, product_names)
 
-func refresh_access(tasks: bool, chronicle: bool, drinks := false) -> void:
-	_body.refresh_access(tasks, chronicle, drinks)
+func refresh_access(tasks: bool, chronicle: bool, drinks := false, characters := false) -> void:
+	_body.refresh_access(tasks, chronicle, drinks, characters)
 
 func select_page(page: StringName) -> Error:
 	var error := _body.select_page(page)
@@ -47,6 +50,9 @@ func get_chronicle_page() -> ChroniclePanel:
 
 func get_drinks_page() -> DrinkEncyclopediaPanel:
 	return _body.get_drinks_page()
+
+func get_characters_page() -> CharacterRecordsPanel:
+	return _body.get_characters_page()
 
 func get_close_button() -> Button:
 	return _shell.get_close_button()

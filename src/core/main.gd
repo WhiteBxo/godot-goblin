@@ -28,6 +28,7 @@ var _map_registered := false
 var _handbook: HandbookPanel
 var _handbook_hud: HandbookHUD
 var _chronicle_journal: ChronicleJournal
+var _character_journal: CharacterJournal
 var _tea_production: TeaProduction
 var _warehouse_inventory: WarehouseInventory
 var _task_catalog: TaskCatalog
@@ -77,6 +78,7 @@ func _ready() -> void:
 	_create_audio_feedback()
 	_create_ui_system()
 	_create_chronicle_system()
+	_create_character_system()
 	_create_task_system()
 	_create_handbook()
 	_settlement_level = $World/LevelRoot.get_child(0) as SettlementMap
@@ -188,6 +190,12 @@ func get_task_journal() -> TaskJournal:
 func get_chronicle_journal() -> ChronicleJournal:
 	return _chronicle_journal if is_instance_valid(_chronicle_journal) else null
 
+func get_character_journal() -> CharacterJournal:
+	return _character_journal if is_instance_valid(_character_journal) else null
+
+func open_characters() -> Error:
+	return _open_handbook(ScreenIds.CHARACTERS)
+
 func open_chronicle() -> Error:
 	return _open_handbook(ScreenIds.CHRONICLE)
 
@@ -266,10 +274,17 @@ func _create_task_system() -> void:
 	$Systems.add_child(_task_journal)
 	_task_journal.configure(catalog, get_node("/root/GameState"))
 
+func _create_character_system() -> void:
+	_character_journal = CharacterJournal.new()
+	_character_journal.name = "CharacterJournal"
+	$Systems.add_child(_character_journal)
+	_character_journal.configure(get_node("/root/GameState"))
+
 func _create_handbook() -> void:
 	_handbook = preload("res://src/UI/handbook/handbook_panel.tscn").instantiate()
 	_ui_manager.register_screen(ScreenIds.HANDBOOK, _handbook, &"popup", true)
 	_handbook.bind_journals(_task_journal, _chronicle_journal)
+	_handbook.bind_characters(_character_journal)
 	_handbook.bind_inventory(get_node("/root/GameState").get_warehouse_inventory())
 	_handbook.get_drinks_page().remake_requested.connect(func(materials: Array[String], iced: bool) -> void:
 		_handbook.get_drinks_page().show_remake_result(is_instance_valid(_shop_ui) and _shop_ui.select_formula(materials, iced)))
@@ -277,6 +292,7 @@ func _create_handbook() -> void:
 	_ui_manager.register_screen_alias(ScreenIds.TASKS, ScreenIds.HANDBOOK, _handbook.select_page.bind(ScreenIds.TASKS))
 	_ui_manager.register_screen_alias(ScreenIds.CHRONICLE, ScreenIds.HANDBOOK, _handbook.select_page.bind(ScreenIds.CHRONICLE))
 	_ui_manager.register_screen_alias(ScreenIds.DRINKS, ScreenIds.HANDBOOK, _handbook.select_page.bind(ScreenIds.DRINKS))
+	_ui_manager.register_screen_alias(ScreenIds.CHARACTERS, ScreenIds.HANDBOOK, _handbook.select_page.bind(ScreenIds.CHARACTERS))
 	_handbook_hud = preload("res://src/UI/handbook/handbook_hud.tscn").instantiate()
 	_ui_manager.register_screen(ScreenIds.HANDBOOK_HUD, _handbook_hud, &"hud", false)
 	_ui_manager.open_screen(ScreenIds.HANDBOOK_HUD)
@@ -284,6 +300,7 @@ func _create_handbook() -> void:
 	_task_journal.projection_changed.connect(_refresh_handbook_access)
 	_task_journal.projection_changed.connect(_refresh_task_delivery_names)
 	_chronicle_journal.changed.connect(_refresh_handbook_access)
+	_character_journal.changed.connect(_refresh_handbook_access)
 	get_node("/root/GameState").get_warehouse_inventory().changed.connect(_refresh_handbook_access)
 	get_node("/root/GameState").state_changed.connect(_refresh_handbook_access)
 	_refresh_handbook_access()
@@ -300,10 +317,11 @@ func _refresh_handbook_access() -> void:
 			_refresh_handbook_access.call_deferred()
 	var chronicle: bool = state.get_flag("day1.chronicle_unlocked") if day1_story_enabled else not _chronicle_journal.get_entries().is_empty()
 	var drinks: bool = not state.get_warehouse_inventory().get_drinks(true).is_empty()
-	_handbook.refresh_access(tasks, chronicle, drinks)
-	if not tasks and not chronicle and not drinks:
+	var characters: bool = not _character_journal.get_characters().is_empty()
+	_handbook.refresh_access(tasks, chronicle, drinks, characters)
+	if not tasks and not chronicle and not drinks and not characters:
 		_ui_manager.close_screen(ScreenIds.HANDBOOK)
-	_handbook_hud.refresh_access(tasks or chronicle or drinks, _chronicle_journal.get_unread_count() if chronicle else 0)
+	_handbook_hud.refresh_access(tasks or chronicle or drinks or characters, _chronicle_journal.get_unread_count() if chronicle else 0, _character_journal.get_unread_count())
 
 
 func get_active_level() -> Node2D:
@@ -734,6 +752,7 @@ func _create_dialogue_system() -> void:
 	$Systems.add_child(_story_director)
 	_story_director.configure(_dialogue_manager, _can_start_story)
 	_story_director.set_chronicle_journal(_chronicle_journal)
+	_story_director.set_character_journal(_character_journal)
 	_story_director.configure_cinematic(_actor_director, _camera_director)
 	_story_director.tree_exiting.connect(_on_story_exiting)
 	_story_director.set_audio_adapter(StoryAudioAdapter.new(_audio_manager))

@@ -11,8 +11,10 @@ func _ready() -> void:
 			style.set_content_margin(side, 4.0)
 		add_theme_stylebox_override(state, style)
 
-func refresh_access(available: bool, unread: int) -> void:
+func refresh_access(available: bool, unread: int, characters_unread: int = 0) -> void:
 	visible = available
 	focus_mode = Control.FOCUS_ALL if available else Control.FOCUS_NONE
-	_dot.visible = available and unread > 0
+	_dot.visible = available and unread + characters_unread > 0
 	tooltip_text = "手册（J）" + (" · 异闻录 %d 条未读" % unread if unread > 0 else "")
+	if characters_unread > 0:
+		tooltip_text += " · 人物记录 %d 位未读" % characters_unread

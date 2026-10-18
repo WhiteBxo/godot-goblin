@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "events": {
+    "character_test.discover": {
+      "once": false,
+      "steps": [
+        {
+          "command": "character_unlock",
+          "character_id": "characters.drunken_guard",
+          "name": "醉酒守卫"
+        },
+        {
+          "command": "character_append",
+          "character_id": "characters.drunken_guard",
+          "record_id": "guard.identity",
+          "content": "身份——哥布林守卫"
+        },
+        {
+          "command": "character_append",
+          "character_id": "characters.drunken_guard",
+          "record_id": "guard.traits",
+          "content": "特征——经常醉酒，对格里芬使者的身份似乎缺乏严格核验"
+        },
+        {
+          "command": "character_append",
+          "character_id": "characters.drunken_guard",
+          "record_id": "guard.encounter",
+          "content": "已知交集——曾误将主角认作格里芬使者，并委托主角制作特殊奶茶"
+        }
+      ]
+    },
+    "character_test.append": {
+      "once": false,
+      "steps": [
+        {
+          "command": "character_append",
+          "character_id": "characters.drunken_guard",
+          "record_id": "guard.judgment",
+          "content": "主角的判断——此人或许具有利用价值，未来可以尝试拉拢。"
+        }
+      ]
+    }
+  }
+}

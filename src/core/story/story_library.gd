@@ -160,6 +160,18 @@ func _step(step: Variant, context: String) -> bool:
 				fields.append_array(["record_id", "content"])
 				if not is_namespaced(step.get("record_id")) or not _text(step.get("content")):
 					return _invalid(context, "chronicle_append requires a namespaced record_id and non-empty content")
+		"character_unlock", "character_append":
+			fields.append("character_id")
+			if not is_namespaced(step.get("character_id")):
+				return _invalid(context, "character requires a namespaced character_id")
+			if step.command == "character_unlock":
+				fields.append("name")
+				if not _text(step.get("name")):
+					return _invalid(context, "character_unlock requires a non-empty name")
+			else:
+				fields.append_array(["record_id", "content"])
+				if not is_namespaced(step.get("record_id")) or not _text(step.get("content")):
+					return _invalid(context, "character_append requires a namespaced record_id and non-empty content")
 		"play_sfx":
 			fields.append_array(["path", "id", "wait"])
 			if not step.get("wait", false) is bool:

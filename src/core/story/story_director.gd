@@ -36,12 +36,17 @@ var _cameras: CameraDirector
 var _actions: Dictionary = {}
 var _used_camera := false
 var _chronicle: ChronicleJournal
+var _characters: CharacterJournal
 var _title_card: TitleCard
 
 
 func set_chronicle_journal(journal: ChronicleJournal) -> void:
 	cancel_event("Chronicle service replaced")
 	_chronicle = journal
+
+func set_character_journal(journal: CharacterJournal) -> void:
+	cancel_event("Character service replaced")
+	_characters = journal
 
 
 func set_title_card(card: TitleCard) -> void:
@@ -313,6 +318,18 @@ func _process(_delta: float) -> void:
 				error = _chronicle.append_record(step.entry_id, step.record_id, step.content)
 			if _is_current(generation) and error != OK:
 				_finish(false, "Chronicle command failed (%d): %s" % [error, step.entry_id])
+				return
+		"character_unlock", "character_append":
+			if not is_instance_valid(_characters):
+				_finish(false, "CharacterJournal unavailable")
+				return
+			var error: Error
+			if step.command == "character_unlock":
+				error = _characters.unlock_character(step.character_id, step.name)
+			else:
+				error = _characters.append_record(step.character_id, step.record_id, step.content)
+			if _is_current(generation) and error != OK:
+				_finish(false, "Character command failed (%d): %s" % [error, step.character_id])
 				return
 		"pay_items":
 			var costs := {}

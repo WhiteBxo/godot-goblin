@@ -70,6 +70,7 @@
 | [营业与顾客调度](gameplay/business_scheduler.md) | 阶段发布、普通／固定顾客、出入场组件与 A 的持久接线需求 |
 | [统一经营会话](gameplay/business_session.md) | `business_session.md` |
 | [见闻录基础模块](gameplay/chronicle.md) | `chronicle.md` |
+| [人物记录](gameplay/character_records.md) | 人物解锁、情报追加、手册查看与剧情接口 |
 | [采集点与任务物资提交](gameplay/gathering.md) | `gathering.md` |
 | [2D 交互反馈](gameplay/interaction_feedback.md) | `interaction_feedback.md` |
 | [成品携带与指定 NPC 交付](gameplay/task_delivery.md) | `task_delivery.md` |

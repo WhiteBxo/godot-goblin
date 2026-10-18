@@ -41,6 +41,7 @@ UI 使用 Godot 原生 Control、Container、Theme。总体接口见 [UI 系统]
 | `milk_tea/`：制作与仓库界面 | [制作与库存规范](../gameplay/milk_tea/AGENTS.md) |
 | `tasks/`：任务列表、详情与 HUD | [任务规范](../core/tasks/AGENTS.md) |
 | `chronicle/`：见闻录入口、列表与详情 | [见闻录规范](../core/chronicle/AGENTS.md) |
+| `characters/`：人物记录列表与详情 | [人物记录规范](../core/characters/AGENTS.md) |
 | `hud/`：业务阶段与交互提示 | 按实际显示内容读 [剧情规范](../core/story/AGENTS.md) 或 [交互规范](../gameplay/interaction/AGENTS.md) |
 | `title/`、`pause/`：新游戏、返回标题与暂停 | [核心入口规范](../core/AGENTS.md)；暂停栈另读管理规范 |
 

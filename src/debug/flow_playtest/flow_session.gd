@@ -7,7 +7,7 @@ const Fixture = preload("res://src/debug/flow_playtest/flow_fixture.gd")
 const StateData = preload("res://src/core/game_state.gd")
 enum Stage { READY, ARRIVING, ORDER, MAKE, DELIVER, DEPARTING, CLOSE, TAVERN, ROUND_ONE, ROUND_TWO, DEBT, COMPLETE, ERROR }
 const INSTRUCTIONS := ["点击营业开始", "顾客正在走向柜台…", "打开订单板，接取测试订单", "打开制作台，手动制作 1 杯",
-	"成品已入库；点击真实交付", "交付已结算；顾客正在离开…", "顾客已离开；请主动关店", "已进入夜晚；购买测试酒",
+	"成品已入库；点击真实交付", "交付已结算；顾客正在离开…", "交付已结算；请主动关店", "已进入夜晚；购买测试酒",
 	"手动结算第 1 局：固定净赢", "手动结算第 2 局：固定净输", "交出刚买的测试酒，免除测试债务", "试玩完成；可查仓库或重新试玩", "流程失败；请重新试玩"]
 
 var state: StateData
@@ -18,6 +18,7 @@ var stage: Stage = Stage.READY
 var receipts: Array[String] = []
 var _arrive: Callable
 var _depart: Callable
+var _generation := 0
 
 func configure(arrive: Callable, depart: Callable) -> void:
 	_arrive = arrive
@@ -38,13 +39,46 @@ func configure(arrive: Callable, depart: Callable) -> void:
 	add_child(orders)
 	orders.configure(catalog, journal, state, state.get_warehouse_inventory(), state.get_tea_production(), delivery)
 	orders.set_target_names({Fixture.CUSTOMER: "测试顾客", Fixture.CREDITOR: "测试债权人"})
+	state.state_restored.connect(resume_business)
+	state.state_reset.connect(resume_business)
+	resume_business()
+
+## Recover business from durable facts, not local stages or success notifications.
+## Actor positions and departure animations are deliberately not a save format.
+func resume_business() -> void:
+	_generation += 1
+	var economy := state.get_transactions().to_dict()
+	if state.get_flag("delivery." + Fixture.DEBT_ORDER + ".completed") or state.get_flag(Fixture.WAIVED):
+		stage = Stage.COMPLETE
+	elif economy.requests.has("test.flow.round_two"):
+		stage = Stage.DEBT
+	elif economy.requests.has("test.flow.round_one"):
+		stage = Stage.ROUND_TWO
+	elif economy.requests.has("test.flow.purchase"):
+		stage = Stage.ROUND_ONE
+	elif DayPhase.is_night(state):
+		stage = Stage.TAVERN
+	elif state.get_flag("delivery." + Fixture.ORDER + ".completed") or state.get_flag(Fixture.DELIVERED):
+		stage = Stage.CLOSE
+	elif state.get_tea_production().to_dict().completed_order_ids.has(Fixture.ORDER):
+		stage = Stage.DELIVER
+	elif delivery.is_order_accepted(Fixture.ORDER):
+		stage = Stage.MAKE
+	elif state.get_flag(Fixture.ARRIVAL):
+		stage = Stage.ORDER
+	else:
+		stage = Stage.READY
+	# Logs describe this presentation session only; never pretend to replay events.
+	receipts.clear()
+	_note("已查询持久业务状态；角色演出进度不在快照中" if stage != Stage.READY else "等待玩家营业开始")
 
 func start_business() -> void:
 	if stage != Stage.READY:
 		return
 	_advance(Stage.ARRIVING, "测试营业开始（手动）")
+	var generation := _generation
 	var ok: bool = await _arrive.call()
-	if not is_inside_tree():
+	if not is_inside_tree() or generation != _generation:
 		return
 	if not ok or not state.set_flag(Fixture.ARRIVAL):
 		_advance(Stage.ERROR, "顾客到达动作失败；未开放接单")
@@ -71,8 +105,9 @@ func submit_delivery() -> void:
 		_note(result.message)
 		return
 	_advance(Stage.DEPARTING, "TaskDelivery：消耗成品；测试收入 +%d" % result.money_delta)
+	var generation := _generation
 	var ok: bool = await _depart.call()
-	if is_inside_tree():
+	if is_inside_tree() and generation == _generation:
 		_advance(Stage.CLOSE if ok else Stage.ERROR, "ActorAction：测试顾客已离场" if ok else "离场失败；禁止关店")
 
 func close_business() -> void:

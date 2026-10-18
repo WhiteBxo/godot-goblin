@@ -50,3 +50,45 @@ godot --path . --script res://tests/verify_flow_playtest.gd -- --flow-captures
 第二条会运行自动化验收并将 6 张运行截图保存到 `/tmp/goblin_flow_*.png`；自动化仅存在于测试脚本，F6 入口保留每一步玩家操作。
 
 本次核对的 Godot 4.7 官方契约：[可选构造参数与场景实例化](https://docs.godotengine.org/en/4.7/classes/class_object.html#class-object-private-method-init)、[视口本地坐标输入与 GUI 路由](https://docs.godotengine.org/en/4.7/classes/class_viewport.html#class-viewport-method-push-input)。因此构造参数保留默认值，输入验证明确使用视口坐标。
+
+## 组合流程文件恢复验证（2026-10-18）
+
+使用已有 GameState v4 完整原生快照边界，测试适配层以 `FileAccess.store_var(snapshot, false)` 写入真实文件，关闭文件后由独立 Godot 进程 `get_var(false)` 读取，再交给 `restore_state`。仅在购买 / 制作 / 交付 / 结算公开方法返回、业务提交锁释放后取快照；顾客离场可以仍在等待。没有在提交通知内部保存，没有定义正式存档点或增加正式存档系统。
+
+复现（仓库根目录）：
+
+```sh
+python3 tests/verify_flow_persistence.py
+# 其他 Godot 安装位置可增加 --godot /absolute/path/to/godot
+```
+
+[Python 驱动](../../../tests/verify_flow_persistence.py) 创建独占临时目录，启动 1 个写入进程和 8 个全新读取进程，所有业务存档与引擎日志都用显式临时路径，结束后清理。复用本入口、Fixture 菜单和隔离 GameState；不读取或修改玩家存档，不 reset / restore 正式 autoload。`project.godot` 不变；本机 Godot 的 `--user-data-dir` 不生效，因此不以该参数作为隔离依据。[Godot 测试](../../../tests/verify_flow_persistence.gd) 不写 `user://`。
+
+| 文件检查点 | 恢复后的业务 / 可继续操作 | 余额 / 酒 / 糖浆 / 商店余量 |
+| --- | --- | --- |
+| 顾客交付已提交、尚在离场 | 茶任务 completed，交付回执保留；可主动关店 | 60 / 0 / 1 / 1 |
+| 主动关店后重建场景 | 保持夜晚，等待酒馆购买 | 60 / 0 / 1 / 1 |
+| 购买已提交、尚未更新成功展示 | 根据购买回执开放首局，不再次购买 | 51 / 1 / 1 / 0 |
+| 第一局结算、第二局尚未开始 | 首局领奖及请求回执保留，只开放第二局 | 63 / 1 / 2 / 0 |
+| 原夹具第二局固定亏损已结算、未免债 | 第二次扣款回执保留，等待交酒 | 56 / 1 / 2 / 0 |
+| 债务已经免除 | 两个任务 completed，交付计数 2，债务 0 | 56 / 0 / 2 / 0 |
+| 完成后新游戏 | 完整快照等于新建夹具默认值，任务未激活、回执清空、白天 | 40 / 0 / 2 / 1 |
+| 第二局奖励已到账、尚未免债（补充业务探针） | 奖励请求与 claim 回执保留，查询回执后继续真实交酒免债 | 68 / 1 / 3 / 0 |
+
+前六个检查点的红茶、奶精、珍珠各剩 1，成品为 0；新游戏恢复各 2。所有恢复都比较完整快照，逐项查询余额、物品、原料、商店余量、营业昼夜、任务终态、交付计数和业务回执，恢复不发 `transaction_finished`、`delivered` 或 `event_completed`。重复扣款、购买、同请求 / 换请求领奖、茶与酒交付都被拒绝且完整快照不变；未完成检查点继续办理到免债，再核对最终业务结果。
+
+**补充探针的范围**：现有可玩赌场夹具是固定 +12 / -7，并没有第二局奖励。本次仅在测试新建的菜单副本中注入 `test_flow_second_reward_probe`（钱 +5、糖浆 +1），从真实首局文件恢复，用现有 `claim_reward` 提交后另存文件并跨进程恢复。它验证第二笔奖励到账与免债之间的业务边界，不修改共享 Resource、原试玩规则或正式赌场；其续办消费者直接查询回执后调用真实 TaskDelivery，不代表默认试玩面板支持此奖励变体。
+
+基线及修复：未改动的 HEAD 上，七个原流程读取检查点中六个已经正确恢复业务数据，却仍停在本地 `READY`，只有新游戏正确。缺陷位于本试玩适配层：阶段和展示日志未从持久事实重建。`FlowSession.resume_business()` 现在在组装、`state_restored` 和 `state_reset` 时查询任务事实、制作记录、DayPhase 及交易回执；不会重放成功通知、再次提交业务或改写任务终态。额外取消测试还复现了旧到达回调污染新游戏，以及旧离场回调覆盖已恢复营业阶段；增加会话代次校验，丢弃替换状态之前的异步结果。
+
+恢复的范围是业务进度。交付前后演员的位置、移动时间与剧情演出游标不在 GameState 快照中；在新场景恢复已交付状态后直接开放关店，既不重播交付，也不声称顾客离场演出已恢复。F6 仍按上方步骤手动游玩；文件验证由测试驱动调用公开服务，不新增存读档按钮。正式地图、酒馆 UI、正式赌场 / 债务服务及未接线剧情没有因此获得验收。
+
+本次实际验证（Godot 4.7.2.stable，headless）：
+
+- 组合文件恢复：**408 项，0 失败**（写入进程 48；八个读取进程依次 50、50、51、52、53、54、30、20）。最后只调整异步取消用例后重跑写入侧；读取侧代码与检查点业务未变，沿用此前通过结果。
+- `verify_flow_playtest.gd`：75 项通过；`verify_debug_build.gd`：97 项通过，仍不等于真实 Release 导出验收。
+- 直接相关回归：`verify_game_state.gd` 124 项、`verify_business_session.gd` 48 项、`verify_task_delivery.gd` 69 项及 `verify_day_phase.gd` 均通过。
+- `verify_business_session` 退出时有 6 个 ObjectDB / 3 个 Resource 未释放诊断；用仅还原本任务适配层到 HEAD 的独立基线复跑，也有未释放诊断（8 / 4），不是本任务新增的通过条件失败。macOS 沙箱的 CA 证书读取提示也在基线存在，与业务断言无关，未据此扩大修复。
+- 未重跑完整项目回归、正式剧情和图形截图验收：改动仅在独立 Debug 编排及其测试，不涉及核心快照格式、正式玩法或画面布局。上文历史记录的 Day 1 音效 / 旧剧情演出失败，本次未重跑，也不宣称消除。
+
+实现依据：[Godot 4.7 原生 Variant 文件序列化](https://docs.godotengine.org/en/4.7/tutorials/io/binary_serialization_api.html)说明 `store_var/get_var` 的类型序列化边界；该页标注部分内容尚未针对 4.7 更新，本次以实际 4.7.2 文件跨进程往返补充验证。[信号连接契约](https://docs.godotengine.org/en/4.7/classes/class_object.html#enum-object-connectflags)用于区分提交通知与恢复后的主动状态查询。

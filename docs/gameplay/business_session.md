@@ -35,7 +35,7 @@ make_drink 原子扣料并入库成品，不写交付事实。TaskDelivery 保�
 
 GameState 原生 Variant 完整快照为 schema_version = 5，包含剧情字段、business.profile_id、business.inventory、business.production.completed_order_ids / formula_requests 及 economy。库存子快照为 v3，含原料开封次数、配方杯数 drinks 和首次发现 encyclopedia；规则见[自由调配](free_tea_recipes.md#快照与迁移)。economy 包含余额、库存、商人余量与交易/领奖回执。business.inventory 和 economy.inventory 是同一库存的独立副本，恢复时必须完全一致；制作 ID 必须为所选配置的连续前缀。
 
-v5 另含 task_results 持久终态，完整 v2/v3/v4 补空并静默归一化，见[日程与任务结果](../systems/schedule_and_task_results.md)。完整 v2/v3 快照补空自由饮品、图鉴及制作请求回执，保留已有原料开封次数。v2 另外迁移为 tutorial 配置，为旧库存补入未发现、数量为零的古怪硬币。v1 只有剧情数据，无法判断对应经营进度，继续拒绝恢复；缺字段、乱序、重复、未知 ID 和损坏快照同样整体拒绝。校验失败不改变状态或发通知，相同快照静默恢复。正式入口在已声明的安全检查点自动保存完整会话，并通过标题继续游戏恢复。
+v5 另含 task_results 持久终态，完整 v2/v3/v4 补空并静默归一化，见[日程与任务结果](../systems/schedule_and_task_results.md)。完整 v2/v3 快照补空自由饮品、图鉴及制作请求回执，保留已有原料开封次数。v2 另外迁移为 tutorial 配置，为旧库存补入未发现、数量为零的古怪金币。v1 只有剧情数据，无法判断对应经营进度，继续拒绝恢复；缺字段、乱序、重复、未知 ID 和损坏快照同样整体拒绝。校验失败不改变状态或发通知，相同快照静默恢复。正式入口在已声明的安全检查点自动保存完整会话，并通过标题继续游戏恢复。
 
 子服务快照只用于组件验证与内部事务，完整经营恢复必须调用 GameState。原生 var_to_bytes / bytes_to_var 保留数值类型，普通 JSON 不能直接保证 GameState 的原生类型约定。
 

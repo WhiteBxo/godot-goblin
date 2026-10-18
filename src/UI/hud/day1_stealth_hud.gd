@@ -57,7 +57,7 @@ func _process(_delta: float) -> void:
 	if not is_instance_valid(setup):
 		return
 	var inventory := _service.get_inventory()
-	$Panel/Content/Actions/Coin.text = "古怪硬币 %d%s" % [inventory.get_stock(setup.coin_item_id), " · 已选" if _service.selected_kind == &"coin" else ""]
+	$Panel/Content/Actions/Coin.text = "古怪金币 %d%s" % [inventory.get_stock(setup.coin_item_id), " · 已选" if _service.selected_kind == &"coin" else ""]
 	$Panel/Content/Actions/Torch.text = "火把 %d%s" % [inventory.get_stock(setup.torch_item_id), " · 已选" if _service.selected_kind == &"torch" else ""]
 	$Panel/Content/Actions/Retry.visible = _service.is_blocking()
 	$Panel/Content/Actions/Start.visible = _service.status == Day1StealthService.Status.IDLE

@@ -130,7 +130,7 @@ func _run() -> void:
 	await press(&"interact")
 	check(state.get_flag("day1.group_c_settled") and inventory.get_stock("strange_coin") == coins + 1, "Actual E interaction settles the selected customer once")
 	check(not ui.is_open() and not _game.get_ui_manager().has_modal() and _game.get_player().movement_enabled, "Settlement feedback keeps gameplay available")
-	check("交付成功" in ui.get_feedback_text() and "古怪硬币" in ui.get_feedback_text(), "Nonmodal feedback reports actual committed reward")
+	check("交付成功" in ui.get_feedback_text() and "古怪金币" in ui.get_feedback_text(), "Nonmodal feedback reports actual committed reward")
 	check(_game.get_order_board().get_tracked_entry().order_id != "day1_group_c", "Completed tracking falls back to another active order")
 	await capture("delivered_640")
 	var settled := state.to_dict()

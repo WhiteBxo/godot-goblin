@@ -108,7 +108,7 @@ func _select_item(index: int) -> void:
 	_image.texture = ingredient.icon
 	Artwork.show_materials(_materials, _inventory, [])
 	if ingredient.category == "story_item":
-		_details.text = "%s · %d 枚\n任务道具\n古怪硬币上印着某种兽类，价值未知。" % [ingredient.name, ingredient.quantity]
+		_details.text = "%s · %d 枚\n剧情物品\n金币上印着某种兽类，价值未知。" % [ingredient.name, ingredient.quantity]
 		return
 	var category: String = {"tea": "茶底", "milk": "奶基底", "syrup": "糖浆", "topping": "小料", "product": "成品", "material": "原料"}.get(ingredient.category, ingredient.category)
 	var lines: PackedStringArray = ["%s · %d 份%s" % [ingredient.name, ingredient.quantity, " · 缺货" if ingredient.quantity == 0 else ""],

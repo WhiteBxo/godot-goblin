@@ -357,7 +357,7 @@ func _run() -> void:
 	check(_lines.size() == _authored_line_count and _events_failed.is_empty(), "All authored dialogue lines execute without actor or audio failure")
 	check(_state.get_variable("shop.orders_completed") == 5 and _game.get_tea_production().get_completed_count() == 5, "Five crafted and independently settled orders")
 	check(_game.get_transactions().get_balance() == 10 and _game.get_warehouse_inventory().get_stock("strange_coin") == 4, "Final totals are income 10 and four strange coins")
-	check(_game.get_business_hud().get_node("BusinessBalance").text == "营业收入 10G    古怪硬币 4", "HUD follows the actual committed wallet and story-item balance")
+	check(_game.get_business_hud().get_node("BusinessBalance").text == "营业收入 10G    古怪金币 4", "HUD follows the actual committed wallet and story-item balance")
 	check(_state.current_day == 1 and _state.story_stage == "day1.investigate_coins", "Stops at same-day investigation intent")
 	check(_game.get_chronicle_journal().get_unread_count() == 3, "Opening the list does not falsely mark entries read")
 	var final := _state.to_dict()

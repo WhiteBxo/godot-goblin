@@ -138,11 +138,11 @@ category = "product"
 [sub_resource type="Resource" id="Item_coin"]
 script = ExtResource("ingredient")
 id = "strange_coin"
-display_name = "古怪硬币"
+display_name = "古怪金币"
 icon = ExtResource("icon_coin")
 origin = "otherworld"
 category = "story_item"
-acquisition_sources = PackedStringArray("顾客支付；古怪硬币上印着某种兽类，价值未知。")
+acquisition_sources = PackedStringArray("顾客支付；金币上印着某种兽类，价值未知。")
 
 [sub_resource type="Resource" id="Ingredient_creamer_milk_tea_base"]
 script = ExtResource("ingredient")

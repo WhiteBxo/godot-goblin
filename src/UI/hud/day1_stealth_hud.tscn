@@ -44,7 +44,7 @@ mouse_filter = 2
 [node name="Coin" type="Button" parent="Panel/Content/Actions"]
 layout_mode = 2
 theme_type_variation = &"GhostButton"
-text = "古怪硬币"
+text = "古怪金币"
 
 [node name="Torch" type="Button" parent="Panel/Content/Actions"]
 layout_mode = 2

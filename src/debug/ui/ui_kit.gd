@@ -120,6 +120,12 @@ func _buttons(parent: VBoxContainer) -> void:
 	var icon := _button("×", &"IconButton")
 	icon.custom_minimum_size = Vector2(28, 28)
 	row.add_child(icon)
+	var selector := OptionButton.new()
+	selector.add_item("选择饮品")
+	selector.add_item("薄荷冰奶茶 ×2")
+	selector.add_item("售空饮品")
+	selector.set_item_disabled(2, true)
+	_row(box).add_child(selector)
 
 
 func _panels(parent: VBoxContainer) -> void:

@@ -8,6 +8,8 @@
 
 `initial_stock` 单位为份，六种初始数量保持 12 / 12 / 12 / 8 / 8 / 10。`initial_discovery` 的键是初始已发现的食材 ID，值是已知属性组列表。默认六种人类材料均已知，没有新增异世界剧情内容。新增食材只需编辑该资源；没有初始库存或发现配置的食材默认数量为零且未发现。
 
+原料表内的 22 种原料现支持每份 5 次，旧教学原料、成品与剧情物品仍为每份 1 次。库存新增 `get_uses`、`has_uses`、`try_spend_uses`，仓库显示当前份与总剩余次数；现有教学制作和交付继续按整份扣除。字段、换份规则和迁移详见[奶茶配方数据层](milk_tea_recipe_data.md)。
+
 GameState Autoload 持有 WalletTransactions（其内部拥有唯一的 WarehouseInventory）和一个 TeaProduction。钱包交易、制作与交付复用同一库存。MainGame 在正式聚落 `settlement.tscn` 与独立店铺 `main.tscn` 中绑定同一份库存和制作服务：
 
 ```text
@@ -47,26 +49,29 @@ TeaProduction 保留 `get_stock`、`get_ingredients`、`get_order`、`get_comple
 
 `make_drink(recipe, order_id = "")` 先验证当前订单和配方，将重复 ID 汇总成所需份数，再检查整组库存。提交阶段没有 await，订单进度与全部扣料在通知前完成，失败则保留原状态。提交锁持续到同步通知结束，监听器不能重入制作。旧的单参数调用仍按当前订单制作；正式 UI 始终传递显示的订单 ID，拒绝过期请求。订单全部完成后拒绝继续制作。制作成功增加 `category=product` 成品，不写交付事实。TaskDelivery 在指定 NPC 交互时校验任务并通过 `try_exchange` 合并扣成品与发放物品奖励；重复 changed 不会完成任务。详见 [成品交付](task_delivery.md)。
 
-WarehousePanel 位于现有 ShopPopup 内，使用现有 theme、返回按钮、UIManager focus 和移动锁。三个筛选项是全部 / 人类食材 / 异世界食材。左侧图标、名称、数量，右侧详情可滚动；缺货仍可查看详情。库存 changed 自动刷新仓库列表及制作台选项，订单变化刷新订单板。UI 不保存或修改库存。图标是本次直接编写的 16×16 SVG 像素风源文件，位于 `assets/ui/milk_tea/ingredients/`，随附 Godot `.import` 设置，无需生成派生图片。
+WarehousePanel 位于现有 ShopPopup 内，使用现有 theme、返回按钮、UIManager focus 和移动锁。筛选项为全部 / 人类食材 / 异世界食材 / 剧情物品；动态配方成品列在“全部”中。左侧图标、名称、数量，右侧详情可滚动；缺货仍可查看详情。库存 changed 自动刷新仓库列表及制作台选项，订单变化刷新订单板。UI 不保存或修改库存。图标是本次直接编写的 16×16 SVG 像素风源文件，位于 `assets/ui/milk_tea/ingredients/`，随附 Godot `.import` 设置，无需生成派生图片。
 
 ## 序列化边界
 
 ```json
 {
-  "schema_version": 1,
+  "schema_version": 3,
   "ingredients": {
     "black_tea": {
       "quantity": 12,
+      "used": 0,
       "discovered": true,
       "known_properties": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"]
     }
-  }
+  },
+  "drinks": {},
+  "encyclopedia": {}
 }
 ```
 
-示例仅展示一个条目；真实快照必须完整包含目录中的全部 ID。恢复前验证版本、ID 集、计数、发现与属性组，任何条目失败则全部不变；相同快照不重复通知。支持 `JSON.stringify` / `JSON.parse_string` 往返后的整数表示，拒绝小数、无穷值及非法发现状态。
+示例仅展示一个条目；真实快照必须完整包含目录中的全部 ID。恢复前验证版本、ID 集、计数、当前份已用次数、发现与属性组，任何条目失败则全部不变；相同快照不重复通知。旧库存 v1 迁移为 `used = 0`，旧 v1/v2 均补空 `drinks` 与 `encyclopedia`；动态配方字段见[自由调配](free_tea_recipes.md#快照与迁移)。支持 `JSON.stringify` / `JSON.parse_string` 往返后的整数表示，拒绝小数、无穷值及非法发现状态。
 
-库存子快照不包含静态定义、订单进度或剧情数据，不能单独作为完整营业存档。GameState v2 快照已统一包含库存、成品、制作订单 ID 和剧情/交付事实，完整营业恢复使用 GameState.restore_state。没有数据库、存档界面或自动存档。
+库存子快照不包含静态定义、订单进度或剧情数据，不能单独作为完整营业存档。GameState v4 快照统一包含库存、配方成品与图鉴、制作订单 ID / 自由制作请求回执和剧情/交付事实，并支持旧库存子快照迁移；完整营业恢复使用 GameState.restore_state。没有数据库、存档界面或自动存档。
 
 ## 验证与试玩
 
@@ -98,4 +103,4 @@ Gameplay Bridge 测试会在 user:// 写临时 JSON，需要允许写入该目�
 - [ItemList](https://docs.godotengine.org/en/4.7/classes/class_itemlist.html)：使用 item metadata 保存稳定 ID，固定图标尺寸；程序 select 后显式更新详情，不依赖用户选择信号。
 - [Object / ConnectFlags](https://docs.godotengine.org/en/4.7/classes/class_object.html#enum-object-connectflags)：默认连接立即调用监听器，因此制作提交在通知前更新完整状态，并在通知期间保留重入锁。
 
-钱包、购买、奖励与库存一起纳入 GameState v2 快照，详见 [钱包与原子交易](wallet_transactions.md)。原有库存增减与发现 API 保持兼容；购买和奖励应使用交易服务。
+钱包、购买、奖励与库存一起纳入 GameState v4 快照，详见 [钱包与原子交易](wallet_transactions.md)。原有库存增减与发现 API 保持兼容；购买和奖励应使用交易服务。

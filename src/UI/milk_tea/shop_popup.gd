@@ -5,6 +5,7 @@ extends UIScreen
 signal craft_requested(materials: Array[String], quantity: int)
 signal accept_requested(order_id: String)
 signal track_requested(order_id: String)
+signal formula_requested(materials: Array[String], iced: bool)
 
 @onready var _shell: ModalShell = $ModalShell
 
@@ -17,9 +18,16 @@ func _ready() -> void:
 		func(materials: Array[String], quantity: int) -> void: craft_requested.emit(materials, quantity))
 	_page.accept_requested.connect(func(id: String) -> void: accept_requested.emit(id))
 	_page.track_requested.connect(func(id: String) -> void: track_requested.emit(id))
+	_page.formula_requested.connect(formula_requested.emit)
 
 func configure_orders(model: OrderBoardModel) -> void:
 	_page.configure_orders(model)
+
+func select_formula(materials: Array, iced := false) -> bool:
+	return _page.select_formula(materials, iced)
+
+func show_formula_result(result: Dictionary) -> void:
+	_page.show_formula_result(result)
 
 func present(point: InteractionPoint) -> void:
 	_shell.set_title("今日订单" if point.interaction_id == &"orders" else point.display_name)

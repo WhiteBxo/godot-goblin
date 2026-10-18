@@ -16,6 +16,7 @@ var _recipes: Array[TeaRecipe] = []
 var _by_key: Dictionary = {}
 var _by_product: Dictionary = {}
 var _recipe_errors := PackedStringArray()
+var _formula_requests: Dictionary = {}
 
 func _init() -> void:
 	_rebuild_recipes()
@@ -31,7 +32,7 @@ func to_dict() -> Dictionary:
 	var ids: Array[String] = []
 	for index in range(_completed):
 		ids.append(_menu.orders[index].id)
-	return {"completed_order_ids": ids}
+	return {"completed_order_ids": ids, "formula_requests": _formula_requests.duplicate()}
 
 ## The selected order queue only allows a completed prefix, never gaps.
 func is_valid_snapshot(data: Variant) -> bool:
@@ -43,6 +44,12 @@ func is_valid_snapshot(data: Variant) -> bool:
 	for index in range(ids.size()):
 		if not ids[index] is String or ids[index] != _menu.orders[index].id:
 			return false
+	if data.has("formula_requests"):
+		if not data.formula_requests is Dictionary:
+			return false
+		for request_id: Variant in data.formula_requests:
+			if not request_id is String or request_id.strip_edges().is_empty() or not data.formula_requests[request_id] is bool or not data.formula_requests[request_id]:
+				return false
 	return true
 
 func restore_state(data: Variant) -> Error:
@@ -50,8 +57,9 @@ func restore_state(data: Variant) -> Error:
 		return ERR_BUSY
 	if not is_valid_snapshot(data):
 		return ERR_INVALID_DATA
-	if _completed != data.completed_order_ids.size():
+	if _completed != data.completed_order_ids.size() or _formula_requests != data.get("formula_requests", {}):
 		_completed = data.completed_order_ids.size()
+		_formula_requests = data.get("formula_requests", {}).duplicate()
 		changed.emit()
 	return OK
 
@@ -77,6 +85,35 @@ func get_ingredients() -> Array[Dictionary]:
 
 func get_stock(id: String) -> int:
 	return _inventory.get_stock(id) if is_instance_valid(_inventory) else 0
+
+func get_recipe_slots() -> int:
+	return _inventory.get_recipe_slots() if is_instance_valid(_inventory) else 0
+
+func get_formula_choices(base_only := false) -> Array[Dictionary]:
+	return _inventory.get_formula_choices(base_only) if is_instance_valid(_inventory) else []
+
+func preview_formula(materials: Array, quantity: int = 1, iced := false) -> Dictionary:
+	if not is_instance_valid(_inventory):
+		return {"ok": false, "code": "busy", "message": "制作系统尚未就绪。"}
+	return _inventory.preview_formula(materials, quantity, iced)
+
+## Independent of the teaching queue. Its progress and story facts never advance.
+func craft_formula(materials: Array, quantity: int = 1, request_id: String = "", iced := false) -> Dictionary:
+	if _submitting or not is_instance_valid(_inventory) or _inventory.is_session_locked() or (is_instance_valid(_state) and _state.get_transactions().is_busy()):
+		return {"ok": false, "code": "busy", "message": "制作系统正在提交或会话正在更新。"}
+	if not request_id.is_empty() and (request_id.strip_edges().is_empty() or _formula_requests.has(request_id)):
+		return {"ok": false, "code": "duplicate_request", "message": "该制作请求已处理或编号无效。"}
+	_submitting = true
+	var day := int(_state.current_day) if is_instance_valid(_state) else 1
+	if not request_id.is_empty():
+		_formula_requests[request_id] = true
+	var result := _inventory.try_make_formula(materials, quantity, day, iced)
+	if result.ok:
+		changed.emit()
+	elif not request_id.is_empty():
+		_formula_requests.erase(request_id)
+	_submitting = false
+	return result
 
 func get_completed_count() -> int:
 	return _completed

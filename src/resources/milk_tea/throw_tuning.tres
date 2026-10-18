@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="ThrowTuning" format=3]
+
+[ext_resource type="Script" path="res://src/resources/milk_tea/throw_tuning.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+cell = 64.0
+base_duration = 3.0
+max_area_cells = 9.0
+max_duration = 30.0
+modifiers = {
+"burst": {"name": "扩散/击退", "area_cells_add": 4.0, "push_cells": 2.0},
+"sticky": {"name": "粘留/延时", "duration_add": 10.0},
+"contagion": {"name": "附着/传染", "follow_seconds": 8.0, "follow_area_cells": 3.0},
+"mine": {"name": "地雷化", "arm_trigger_cells": 1.0, "arm_timeout": 3.0},
+"vortex": {"name": "聚拢", "pull_cells": 5.0},
+"phantom": {"name": "静音/穿墙", "silent": true, "ignore_walls": true}
+}
+effects = {
+"lure": {"name": "引诱", "pulse_seconds": 1.0, "pulse_cells": 3.0},
+"toxic": {"name": "毒气", "repel": true},
+"burn": {"name": "灼烧", "ignite": true, "confuse": true},
+"corrode": {"name": "腐蚀/迟缓", "detect_multiplier": 3.0, "damage_per_second": 1.0},
+"paralyze": {"name": "麻痹/定身", "stun": true},
+"hallucinate": {"name": "致幻", "confuse": true}
+}

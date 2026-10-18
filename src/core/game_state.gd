@@ -7,7 +7,7 @@ signal event_completed(event_id: String)
 signal state_reset
 signal state_restored
 
-const SCHEMA_VERSION: int = 3
+const SCHEMA_VERSION: int = 4
 const DAY1_MENU: TeaMenu = preload("res://src/resources/milk_tea/day1_menu.tres")
 const MAX_VALUE_DEPTH: int = 32
 
@@ -107,13 +107,13 @@ func _publish_profile_fact() -> void:
 		_flags["business.profile.day1"] = true
 
 ## All fallible validation precedes mutation; publish only the complete result.
-func commit_delivery(costs: Dictionary, rewards: Dictionary, money: int, facts: Dictionary, count: int, request_id: String, notify: Callable = Callable()) -> Error:
+func commit_delivery(costs: Dictionary, rewards: Dictionary, money: int, facts: Dictionary, count: int, request_id: String, notify: Callable = Callable(), drink_costs: Dictionary = {}) -> Error:
 	if _session_busy():
 		return ERR_BUSY
 	for key: Variant in facts:
 		if not key is String or not _is_namespaced_key(key) or not facts[key] is bool:
 			return ERR_INVALID_DATA
-	var draft := _economy.prepare_delivery(costs, rewards, money, request_id)
+	var draft := _economy.prepare_delivery(costs, rewards, money, request_id, drink_costs)
 	if draft.is_empty():
 		return ERR_INVALID_DATA
 	var before := _economy.to_dict()
@@ -437,20 +437,30 @@ func _replace_session(data: Dictionary, new_game: bool) -> void:
 
 
 func _migrate_snapshot(data: Dictionary) -> Dictionary:
-	if data.get("schema_version") != 2:
+	if not data.get("schema_version") is int or data.schema_version not in [2, 3, SCHEMA_VERSION]:
 		return data
 	var migrated := data.duplicate(true)
 	if not migrated.get("business") is Dictionary or not migrated.get("economy") is Dictionary or not migrated.business.get("inventory") is Dictionary or not migrated.economy.get("inventory") is Dictionary:
 		return data
 	if not _same_value(migrated.business.inventory, migrated.economy.inventory):
 		return data
-	for inventory: Dictionary in [migrated.business.inventory, migrated.economy.inventory]:
-		if not inventory.get("ingredients") is Dictionary:
-			return data
-		if not inventory.ingredients.has("strange_coin"):
-			inventory.ingredients["strange_coin"] = {"quantity": 0, "discovered": false, "known_properties": []}
+	if data.schema_version == 2:
+		for inventory: Dictionary in [migrated.business.inventory, migrated.economy.inventory]:
+			if not inventory.get("ingredients") is Dictionary:
+				return data
+			if not inventory.ingredients.has("strange_coin"):
+				inventory.ingredients["strange_coin"] = {"quantity": 0, "discovered": false, "known_properties": []}
+				if inventory.get("schema_version") in [2, WarehouseInventory.SCHEMA_VERSION]:
+					inventory.ingredients.strange_coin["used"] = 0
+		migrated.schema_version = SCHEMA_VERSION
+		migrated.business["profile_id"] = "tutorial"
+	# v4 adds formula products and the encyclopedia to the shared inventory. Old
+	# sessions keep their fixed products; no recipe/discovery is invented for them.
 	migrated.schema_version = SCHEMA_VERSION
-	migrated.business["profile_id"] = "tutorial"
+	migrated.business.inventory = WarehouseInventory.migrate_snapshot(migrated.business.inventory)
+	migrated.economy.inventory = WarehouseInventory.migrate_snapshot(migrated.economy.inventory)
+	if data.schema_version in [2, 3] and migrated.business.get("production") is Dictionary and not migrated.business.production.has("formula_requests"):
+		migrated.business.production["formula_requests"] = {}
 	return migrated
 
 func _is_valid_snapshot(data: Dictionary) -> bool:
@@ -478,6 +488,8 @@ func _is_valid_snapshot(data: Dictionary) -> bool:
 	if not data.business is Dictionary or not data.business.has_all(["profile_id", "inventory", "production"]) or data.business.profile_id not in ["tutorial", "day1"]:
 		return false
 	if not _same_value(data.economy.inventory, data.business.inventory):
+		return false
+	if not data.business.production is Dictionary or not data.business.production.has_all(["completed_order_ids", "formula_requests"]):
 		return false
 	_ensure_business()
 	var production_candidate := TeaProduction.new()

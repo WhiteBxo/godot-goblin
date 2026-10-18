@@ -5,6 +5,7 @@ const UI_ROOT := "res://src/UI"
 const ALLOWED_UNTHEMED := ["Control", "ColorRect", "TextureRect", "CenterContainer", "BoxContainer", "HFlowContainer"]
 const REQUIRED_STYLES := {
 	"Button": ["normal", "hover", "pressed", "disabled", "focus"],
+	"OptionButton": ["normal", "hover", "pressed", "disabled", "focus"],
 	"ItemList": ["panel", "focus", "selected", "selected_focus"],
 	"TabContainer": ["tab_selected", "tab_unselected", "tab_hovered", "tab_disabled", "panel"],
 	"TabBar": ["tab_selected", "tab_unselected"],

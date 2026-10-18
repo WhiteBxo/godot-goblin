@@ -329,6 +329,11 @@ func _check_panel() -> void:
 		await process_frame
 		await process_frame
 		_check(popup.get_panel_rect().size.x <= size.x and popup.get_panel_rect().size.y <= size.y, "Crafting panel fits the viewport: " + str(size))
+		var submit_button: Button = panel.get_node("Body/Right/CraftButton")
+		submit_button.grab_focus()
+		await process_frame
+		await process_frame
+		_check((panel.get_parent() as ScrollContainer).get_global_rect().encloses(submit_button.get_global_rect()), "Keyboard focus exposes the teaching submit button in a small viewport")
 	root.size = Vector2i(1280, 720)
 	_check(panel.select_recipe("pearl_milk_tea"), "A known recipe auto-fills without owning a product")
 	_check(panel.selected_materials() == PEARL, "Recipe selection replaces all tray materials")

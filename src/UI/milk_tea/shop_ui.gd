@@ -8,6 +8,7 @@ signal closed
 signal craft_requested(materials: Array[String], quantity: int)
 signal accept_requested(order_id: String)
 signal track_requested(order_id: String)
+signal formula_requested(materials: Array[String], iced: bool)
 var _production: TeaProduction
 var _inventory: WarehouseInventory
 var _orders: OrderBoardModel
@@ -57,6 +58,12 @@ func show_production_result(result: Dictionary) -> void:
 	if is_instance_valid(_popup):
 		_popup.show_production_result(result)
 
+func select_formula(materials: Array, iced := false) -> bool:
+	return is_instance_valid(_popup) and _popup.select_formula(materials, iced)
+
+func show_formula_result(result: Dictionary) -> void:
+	_popup.show_formula_result(result)
+
 @export var help_text := "小小奶茶店 · WASD 移动 · E 交互 · Esc / P 暂停"
 @export var show_help := true
 @export var close_text := "返回店铺  [Esc]"
@@ -80,6 +87,7 @@ func set_popup_layer(layer: CanvasLayer) -> void:
 	_popup.craft_requested.connect(func(materials: Array[String], quantity: int) -> void: craft_requested.emit(materials, quantity))
 	_popup.accept_requested.connect(func(id: String) -> void: accept_requested.emit(id))
 	_popup.track_requested.connect(func(id: String) -> void: track_requested.emit(id))
+	_popup.formula_requested.connect(formula_requested.emit)
 	if _inventory != null:
 		_popup.configure_inventory(_inventory)
 	if _production != null:

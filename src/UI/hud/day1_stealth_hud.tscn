@@ -66,3 +66,10 @@ layout_mode = 2
 mouse_filter = 2
 theme_type_variation = &"Muted"
 text = "鼠标指向落点 · 投掷（默认 F）"
+
+[node name="Drinks" type="OptionButton" parent="Panel/Content"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+text = "选择饮品 · 投掷消耗 1 杯"
+clip_text = true
+fit_to_longest_item = false

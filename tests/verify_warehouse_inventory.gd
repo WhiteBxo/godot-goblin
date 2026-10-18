@@ -70,7 +70,7 @@ func _test_inventory() -> void:
 	var restores: Array[bool] = []
 	restored.changed.connect(func() -> void: restores.append(true))
 	_check(restored.restore_state(valid) == OK and restores.is_empty(), "Identical restore does not emit duplicate notifications")
-	for bad: Variant in [null, [], {}, {"schema_version": 2, "ingredients": valid.ingredients}]:
+	for bad: Variant in [null, [], {}, {"schema_version": WarehouseInventory.SCHEMA_VERSION + 1, "ingredients": valid.ingredients}]:
 		_check(restored.restore_state(bad) == ERR_INVALID_DATA, "Reject invalid snapshot structure/version")
 	for bad: Variant in [-1, 0.5, true, "3", INF, NAN, WarehouseInventory.MAX_QUANTITY + 1]:
 		var invalid := valid.duplicate(true)

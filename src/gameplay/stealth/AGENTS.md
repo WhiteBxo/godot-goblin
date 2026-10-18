@@ -7,5 +7,6 @@
 - 四个守卫职责必须绑定不同的实际 SettlementCharacter；guard_captain 不得充当宅邸第二卫，drunken_guard Marker 不是 Actor。
 - 支付业务仍由既有交易接口负责。本模块不写 guard_payment_completed，只消费已确认的放行事实；剧情事件由宿主请求。
 - 玩家锁由 MainGame 合并协调。失败、重试、取消、reset/restore 与退出必须清理投掷物、燃烧和感知计时；不回滚已消耗资源或调查回执。
+- 饮品扣杯沿用注入的共享库存，区域由服务物理 tick 推进。区域 / 可腐蚀物绑定及状态优先级见[饮品投掷](../../../docs/gameplay/drink_throw_effects.md)；不得把加冰命名选项变成地雷能力，或把普通位移改为穿墙传送。
 
-接口、待定项及试玩见 [玩法说明](../../../docs/gameplay/day_01_stealth.md)。模块验证为 tests/verify_day1_stealth.gd，加正式宿主接线检查；按 [测试规范](../../../tests/AGENTS.md) 选择范围。
+接口、待定项及试玩见 [玩法说明](../../../docs/gameplay/day_01_stealth.md)。模块验证为 tests/verify_day1_stealth.gd、tests/verify_drink_throw.gd，加正式宿主接线检查；按 [测试规范](../../../tests/AGENTS.md) 选择范围。

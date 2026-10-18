@@ -15,11 +15,14 @@ func _ready() -> void:
 func bind_journals(tasks: TaskJournal, chronicle: ChronicleJournal) -> void:
 	_body.bind_journals(tasks, chronicle)
 
+func bind_inventory(inventory: WarehouseInventory) -> void:
+	_body.bind_inventory(inventory)
+
 func set_delivery_names(target_names: Dictionary, product_names: Dictionary) -> void:
 	_body.set_delivery_names(target_names, product_names)
 
-func refresh_access(tasks: bool, chronicle: bool) -> void:
-	_body.refresh_access(tasks, chronicle)
+func refresh_access(tasks: bool, chronicle: bool, drinks := false) -> void:
+	_body.refresh_access(tasks, chronicle, drinks)
 
 func select_page(page: StringName) -> Error:
 	var error := _body.select_page(page)
@@ -41,6 +44,9 @@ func get_tasks_page() -> TaskPanel:
 
 func get_chronicle_page() -> ChroniclePanel:
 	return _body.get_chronicle_page()
+
+func get_drinks_page() -> DrinkEncyclopediaPanel:
+	return _body.get_drinks_page()
 
 func get_close_button() -> Button:
 	return _shell.get_close_button()

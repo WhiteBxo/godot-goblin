@@ -30,6 +30,17 @@ func configure(catalog: TaskCatalog, journal: TaskJournal, state: StateData, inv
 			for id: String in delivery.items:
 				if inventory.get_definition(id) == null:
 					return ERR_INVALID_DATA
+		elif delivery.has("drink"):
+			if inventory != state.get_warehouse_inventory():
+				return ERR_INVALID_DATA
+			if delivery.drink.has("formula"):
+				var formula := inventory.calculate_formula(delivery.drink.formula, false)
+				if not formula.ok or not DrinkFormula.matches(formula, delivery.drink):
+					return ERR_INVALID_DATA
+			if delivery.drink.has("base_id"):
+				var base := inventory.get_definition(delivery.drink.base_id)
+				if base == null or not base.can_be_base or not base.free_recipe_allowed:
+					return ERR_INVALID_DATA
 		else:
 			var product := inventory.get_definition(delivery.product_id)
 			if product == null or product.category != "product":
@@ -57,6 +68,8 @@ func get_requirement(order_id: String) -> Dictionary:
 	if not _orders.has(order_id):
 		return {}
 	var delivery: Dictionary = _orders[order_id].delivery
+	if delivery.has("drink"):
+		return {}
 	if delivery.has("items"):
 		# JSON numbers arrive as floats; the inventory only accepts ints.
 		var requirement := {}
@@ -113,6 +126,8 @@ func get_requirements_text(target_names: Dictionary = {}) -> String:
 		if _state.get_flag(_receipt_key(order_id)) or not view.get("revealed", false) or view.get("status") != "active":
 			continue
 		var parts := PackedStringArray()
+		if task.delivery.has("drink"):
+			parts.append("自由饮品：" + DrinkFormula.requirement_text(task.delivery.drink, _ingredient_names()))
 		var requirement := get_requirement(order_id)
 		for id: String in requirement:
 			var definition := _inventory.get_definition(id)
@@ -141,7 +156,7 @@ func deliver_to(target_object_id: String, preferred_order_id: String = "") -> Di
 		if _state.get_flag(_receipt_key(order_id)) or not is_order_accepted(order_id):
 			continue
 		active_fallback = order_id
-		if _inventory.has_materials(get_requirement(order_id)):
+		if (task.delivery.has("drink") and not _matching_drink(task.delivery.drink).is_empty()) or (not task.delivery.has("drink") and _inventory.has_materials(get_requirement(order_id))):
 			return try_submit(order_id, target_object_id)
 	if not active_fallback.is_empty():
 		return try_submit(active_fallback, target_object_id)
@@ -150,7 +165,7 @@ func deliver_to(target_object_id: String, preferred_order_id: String = "") -> Di
 	return _failure("该 NPC 不是当前订单的交付对象。")
 
 ## Canonical entry point. Products and materials both commit through one schedule.
-func try_submit(order_id: String, target_object_id: String) -> Dictionary:
+func try_submit(order_id: String, target_object_id: String, drink_id: String = "") -> Dictionary:
 	if _committing or not _ready_for_delivery():
 		return _failure("交付系统尚未就绪或正在提交。", order_id)
 	if not _orders.has(order_id):
@@ -170,6 +185,14 @@ func try_submit(order_id: String, target_object_id: String) -> Dictionary:
 			missing.append("%s ×%d" % [_inventory.get_definition(id).display_name, shortfall])
 	if not missing.is_empty():
 		return _failure("还缺：" + "、".join(missing) + "。", order_id)
+	var drink_costs := {}
+	var sale_price := 0
+	if task.delivery.has("drink"):
+		var drink := _matching_drink(task.delivery.drink, drink_id)
+		if drink.is_empty():
+			return _failure("没有符合订单要求的饮品。未消耗库存。", order_id)
+		drink_costs[drink.id] = 1
+		sale_price = int(drink.price)
 	var rewards := {}
 	for id: String in task.get("rewards", {}).get("items", {}):
 		rewards[id] = int(task.rewards.items[id])
@@ -190,7 +213,9 @@ func try_submit(order_id: String, target_object_id: String) -> Dictionary:
 				complete = complete and (member == order_id or _state.get_flag(_receipt_key(member)))
 			if complete:
 				facts[batch.completion_flag] = true
-		var error := _state.commit_delivery(requirement, rewards, int(task.get("rewards", {}).get("money", 0)), facts, get_completed_count() + 1, "delivery:" + order_id, delivered.emit.bind(order_id))
+		# Explicitly configured money (including zero) overrides the formula price.
+		var money := int(task.get("rewards", {}).get("money", sale_price))
+		var error := _state.commit_delivery(requirement, rewards, money, facts, get_completed_count() + 1, "delivery:" + order_id, delivered.emit.bind(order_id), drink_costs)
 		_committing = false
 		if error != OK:
 			return _failure("交付结算失败：请检查成品、奖励容量或钱包上限。未消耗库存。", order_id)
@@ -244,12 +269,26 @@ func try_deliver(order_id: String, product_id: String, target_object_id: String)
 	if not _orders.has(order_id):
 		return _failure("订单不存在。", order_id)
 	var delivery: Dictionary = _orders[order_id].delivery
+	if delivery.has("drink"):
+		return try_submit(order_id, target_object_id, product_id)
 	if delivery.has("product_id"):
 		if product_id != delivery.product_id:
 			return _failure("成品或交付对象与订单不符。未消耗库存。", order_id)
 	elif not product_id.is_empty():
 		return _failure("该订单需要物资，不需要成品。未消耗库存。", order_id)
 	return try_submit(order_id, target_object_id)
+
+func _matching_drink(requirement: Dictionary, preferred_id: String = "") -> Dictionary:
+	for drink: Dictionary in _inventory.get_drinks():
+		if (preferred_id.is_empty() or drink.id == preferred_id) and DrinkFormula.matches(drink, requirement):
+			return drink
+	return {}
+
+func _ingredient_names() -> Dictionary:
+	var names := {}
+	for ingredient: IngredientDefinition in WarehouseInventory.CATALOG.ingredients:
+		names[ingredient.id] = ingredient.display_name
+	return names
 
 func _ready_for_delivery() -> bool:
 	return is_instance_valid(_journal) and is_instance_valid(_state) and is_instance_valid(_inventory) and not _inventory.is_session_locked()

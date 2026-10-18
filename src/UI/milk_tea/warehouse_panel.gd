@@ -60,10 +60,20 @@ func refresh() -> void:
 	for ingredient in _inventory.get_ingredients(origin):
 		if (_filter.selected == 3 and ingredient.category != "story_item") or (_filter.selected in [1, 2] and ingredient.category == "story_item"):
 			continue
-		var index := _list.add_item("%s  %d%s" % [ingredient.name, ingredient.quantity, " · 缺货" if ingredient.quantity == 0 else ""], ingredient.icon)
+		var quantity := "%d" % ingredient.quantity
+		if int(ingredient.uses_per_portion) > 1:
+			quantity = "%d 份（本份余 %d 次）" % [ingredient.quantity, ingredient.current_portion_uses]
+		var index := _list.add_item("%s  %s%s" % [ingredient.name, quantity, " · 缺货" if ingredient.quantity == 0 else ""], ingredient.icon)
 		_list.set_item_metadata(index, ingredient.id)
 		if ingredient.id == _selected_id:
 			selected = index
+	if _filter.selected == 0:
+		for drink: Dictionary in _inventory.get_drinks():
+			var index := _list.add_item("%s · %d 杯" % [drink.name, drink.quantity])
+			_list.set_item_metadata(index, drink.id)
+			_list.set_item_tooltip(index, drink.name)
+			if drink.id == _selected_id:
+				selected = index
 	if _list.item_count == 0:
 		_selected_id = ""
 		_details.text = "暂无已发现物品。"
@@ -74,6 +84,10 @@ func refresh() -> void:
 
 func _select_item(index: int) -> void:
 	_selected_id = _list.get_item_metadata(index)
+	var drink := _inventory.get_drink_record(_selected_id)
+	if not drink.is_empty():
+		_details.text = DrinkFormula.describe(drink) + "\n库存：%d 杯" % drink.quantity
+		return
 	var ingredient := _inventory.get_ingredient_view(_selected_id)
 	if ingredient.category == "story_item":
 		_details.text = "%s · %d 枚\n剧情物品\n金币上印着某种兽类，价值未知。" % [ingredient.name, ingredient.quantity]
@@ -82,6 +96,8 @@ func _select_item(index: int) -> void:
 	var lines: PackedStringArray = ["%s · %d 份%s" % [ingredient.name, ingredient.quantity, " · 缺货" if ingredient.quantity == 0 else ""],
 		"来源：%s · 用途：%s" % ["人类食材" if ingredient.origin == "human" else "异世界食材", category],
 		"稀有度：%s" % ingredient.rarity]
+	if int(ingredient.uses_per_portion) > 1:
+		lines.append("每份 %d 次 · 本份剩余 %d 次 · 总剩余 %d 次" % [ingredient.uses_per_portion, ingredient.current_portion_uses, ingredient.uses])
 	# Spreadsheet-only fields stay hidden until the item itself is discovered.
 	if not str(ingredient.form).is_empty():
 		lines.append("形态：%s · 加工：%s" % [ingredient.form, _property_text(ingredient.processing_methods)])

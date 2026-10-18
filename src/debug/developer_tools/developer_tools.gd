@@ -404,6 +404,8 @@ func _delivery_requirements() -> Dictionary:
 			continue
 		var requirement: Dictionary = _delivery.get_requirement(order_id)
 		var parts := PackedStringArray()
+		if order.has("drink"):
+			parts.append("自由饮品：" + DrinkFormula.requirement_text(order.drink))
 		for id: String in requirement:
 			parts.append("%s ×%d" % [_item_name(id), int(requirement[id])])
 		if not grouped.has(target):

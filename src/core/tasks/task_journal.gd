@@ -114,6 +114,8 @@ func _project(task: Dictionary) -> Dictionary:
 		delivery = {"target_object_id": task.delivery.target_object_id}
 		if task.delivery.has("items"):
 			delivery.items = task.delivery.items.duplicate(true)
+		elif task.delivery.has("drink"):
+			delivery.drink = task.delivery.drink.duplicate(true)
 		else:
 			delivery.product_id = task.delivery.product_id
 	return {"id": task.id, "type": task.type, "status": status, "revealed": revealed,

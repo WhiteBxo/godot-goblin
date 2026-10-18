@@ -154,14 +154,22 @@ func _prepare_and_commit(kind: String, request_id: Variant, subject: Variant, qu
 	return result
 
 ## Pure preparation. GameState commits this draft with the delivery facts under its lock.
-func prepare_delivery(costs: Dictionary, rewards: Dictionary, money: int, request_id: String) -> Dictionary:
+func prepare_delivery(costs: Dictionary, rewards: Dictionary, money: int, request_id: String, drink_costs: Dictionary = {}) -> Dictionary:
 	if is_busy() or not _id(request_id) or not _amount(money, true) or _requests.has(request_id):
 		return {}
 	if (not costs.is_empty() and not _inventory.has_materials(costs)) or _balance > LIMIT - money:
 		return {}
 	var next := to_dict()
+	for id: Variant in drink_costs:
+		if not id is String or not _amount(drink_costs[id]) or _inventory.get_drink_stock(id) < drink_costs[id]:
+			return {}
+		next.inventory.drinks[id] -= drink_costs[id]
 	for id: String in costs:
-		next.inventory.ingredients[id].quantity -= costs[id]
+		var entry: Dictionary = next.inventory.ingredients[id]
+		entry.quantity -= costs[id]
+		# Mirrors WarehouseInventory.try_exchange: the opened portion leaves last.
+		if entry.quantity == 0:
+			entry.used = 0
 	for id: String in rewards:
 		if _inventory.get_definition(id) == null or not _amount(rewards[id]):
 			return {}
@@ -203,6 +211,9 @@ func validate_state(data: Variant) -> Error:
 func restore_state(data: Variant, notify: bool = true) -> Error:
 	if is_busy():
 		return ERR_BUSY
+	if data is Dictionary and data.has("inventory"):
+		data = data.duplicate(true)
+		data.inventory = WarehouseInventory.migrate_snapshot(data.inventory)
 	_busy = true
 	var before := to_dict()
 	var error := _replace(data)

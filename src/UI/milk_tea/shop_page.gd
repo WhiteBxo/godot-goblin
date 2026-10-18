@@ -6,9 +6,12 @@ extends VBoxContainer
 signal craft_requested(materials: Array[String], quantity: int)
 signal accept_requested(order_id: String)
 signal track_requested(order_id: String)
+signal formula_requested(materials: Array[String], iced: bool)
 
 var _production: TeaProduction
 var _crafting_panel: CraftingPanel
+var _formula_panel: FreeCraftingPanel
+var _making_tabs: TabContainer
 var _warehouse_panel: WarehousePanel
 var _point_id: StringName
 var _order_requirements := "制作后成品进入库存，携带到指定 NPC 按 E 交付。"
@@ -47,15 +50,20 @@ func get_order_crafting_page() -> OrderCraftingPage:
 func select_crafting_mode(free: bool) -> void:
 	_craft_modes.current_tab = 1 if free else 0
 	_refresh_recipe()
-	if free and is_instance_valid(_crafting_panel) and is_visible_in_tree():
-		_crafting_panel.grab_default_focus()
+	if free and is_instance_valid(_making_tabs) and is_visible_in_tree():
+		if _making_tabs.current_tab == 1:
+			_formula_panel.get_default_focus().grab_focus()
+		else:
+			_crafting_panel.grab_default_focus()
 
 func get_default_focus() -> Control:
 	if _board.visible:
 		return _board.get_default_focus()
 	if _order_crafting.visible:
 		return _order_crafting.get_default_focus()
-	if is_instance_valid(_crafting_panel) and _crafting_panel.visible:
+	if is_instance_valid(_formula_panel) and _formula_panel.is_visible_in_tree():
+		return _formula_panel.get_default_focus()
+	if is_instance_valid(_crafting_panel) and _crafting_panel.is_visible_in_tree():
 		return _crafting_panel.get_default_focus()
 	return null
 
@@ -86,8 +94,8 @@ func _refresh_recipe() -> void:
 	_ingredients.visible = _station and demo_recipe
 	_recipe_status.visible = _station and demo_recipe
 	_body.visible = crafting or _point_id == &"storage"
-	if is_instance_valid(_crafting_panel):
-		_crafting_panel.visible = crafting and not order_mode
+	if is_instance_valid(_making_tabs):
+		_making_tabs.visible = crafting and not order_mode
 	if is_instance_valid(_warehouse_panel):
 		_warehouse_panel.visible = _point_id == &"storage"
 	_description_scroll.visible = (not _station or demo_recipe) and _point_id != &"storage" and not _board.visible
@@ -112,7 +120,9 @@ func present(point: InteractionPoint) -> void:
 		if is_instance_valid(_orders):
 			_order_crafting.present()
 		_crafting_panel.refresh(true)
-		if _crafting_panel.visible:
+		if _making_tabs.is_visible_in_tree() and _making_tabs.current_tab == 1:
+			_formula_panel.get_default_focus().grab_focus()
+		elif _crafting_panel.is_visible_in_tree():
 			_crafting_panel.grab_default_focus()
 	elif _point_id == &"orders":
 		if is_instance_valid(_orders):
@@ -135,13 +145,43 @@ func configure_production(production: TeaProduction) -> void:
 	_production = production
 	_production.changed.connect(_refresh_order_board)
 	if not is_instance_valid(_crafting_panel):
+		_making_tabs = TabContainer.new()
+		_making_tabs.name = "MakingTabs"
+		_making_tabs.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		_body.add_child(_making_tabs)
+		var teaching_scroll := ScrollContainer.new()
+		teaching_scroll.name = "Teaching"
+		teaching_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		teaching_scroll.follow_focus = true
+		_making_tabs.add_child(teaching_scroll)
 		_crafting_panel = preload("res://src/UI/milk_tea/crafting_panel.tscn").instantiate()
 		_crafting_panel.name = "CraftingPanel"
-		_crafting_panel.visible = false
-		_body.add_child(_crafting_panel)
+		_crafting_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		teaching_scroll.add_child(_crafting_panel)
+		_making_tabs.set_tab_title(0, "教学配方")
 		_crafting_panel.craft_requested.connect(
 			func(materials: Array[String], quantity: int) -> void: craft_requested.emit(materials, quantity))
+		_formula_panel = preload("res://src/UI/milk_tea/free_crafting_panel.tscn").instantiate()
+		_making_tabs.add_child(_formula_panel)
+		_making_tabs.set_tab_title(1, "自由调配")
+		_formula_panel.formula_requested.connect(formula_requested.emit)
 	_crafting_panel.configure(production)
+	_formula_panel.configure(production)
+	_refresh_recipe()
+
+func get_formula_panel() -> FreeCraftingPanel:
+	return _formula_panel
+
+func select_formula(materials: Array, iced := false) -> bool:
+	if not is_instance_valid(_formula_panel) or not _formula_panel.select_formula(materials, iced):
+		return false
+	_craft_modes.current_tab = 1
+	_making_tabs.current_tab = 1
+	_refresh_recipe()
+	return true
+
+func show_formula_result(result: Dictionary) -> void:
+	_formula_panel.show_result(result)
 
 func get_crafting_panel() -> CraftingPanel:
 	return _crafting_panel
@@ -159,7 +199,11 @@ func get_description_label() -> Label:
 	return _description
 
 func uses_native_gui_input() -> bool:
-	return _board.visible or _order_crafting.visible or (is_instance_valid(_crafting_panel) and _crafting_panel.visible and _crafting_panel.uses_native_gui_input())
+	if _board.visible or _order_crafting.visible:
+		return true
+	if is_instance_valid(_formula_panel) and _formula_panel.is_visible_in_tree():
+		return true
+	return is_instance_valid(_crafting_panel) and _crafting_panel.is_visible_in_tree() and _crafting_panel.uses_native_gui_input()
 
 func _refresh_order_board() -> void:
 	if _point_id == &"orders":

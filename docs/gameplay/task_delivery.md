@@ -4,7 +4,7 @@
 
 ## 数据与复用
 
-任务继续使用 TaskCatalog / TaskJournal，状态仍来自 GameState 的激活与完成条件。交付任务支持两种互斥的需求，`product_id` 与 `items` 必须恰好出现一个：
+任务继续使用 TaskCatalog / TaskJournal，状态仍来自 GameState 的激活与完成条件。交付任务支持三种互斥的需求，`product_id`、`items` 与 `drink` 必须恰好出现一个。下面列静态成品与物资示例；自由饮品的要求、价格及原子结算见[第二期自由调配](free_tea_recipes.md#通用订单)：
 
 ```json
 "delivery": {
@@ -24,9 +24,9 @@
 
 `order_id` 在任务目录中唯一；`product_id` 必须是菜单中 `category = "product"` 的物品；`items` 是 `{物品 ID: 正整数}`，物品只需存在于目录中，可一次提交多种材料多份；NPC ID 直接复用 SettlementCharacter.actor_id。交付完成条件使用既有 `complete_when` 的 flag，不通过伪造剧情完成事件结算。
 
-材料需求与成品需求共用同一套结算：`get_requirement()` 把两种配置统一成 `{item_id: 数量}`（JSON 数字在此转成 int，库存 API 只接受 int），`try_submit(order_id, target_object_id)` 是规范入口，扣减仍由一次 `WarehouseInventory.try_exchange(需求, 奖励)` 完成。旧的 `try_deliver(order_id, product_id, target_object_id)` 保留为兼容包装：成品订单校验 `product_id` 一致，材料订单要求传入空字符串。
+材料需求与成品需求共用同一套结算：`get_requirement()` 把两种配置统一成 `{item_id: 数量}`（JSON 数字在此转成 int，库存 API 只接受 int），`try_submit(order_id, target_object_id, drink_id = "")` 是规范入口，扣减仍由一次 `WarehouseInventory.try_exchange(需求, 奖励)` 完成。旧的 `try_deliver(order_id, product_id, target_object_id)` 保留为兼容包装：成品订单校验 `product_id` 一致，材料订单要求传入空字符串。
 
-`rewards.text` 仅用于展示；可选的 `items` 通过 WarehouseInventory 发放物品，`money` 通过现有 WalletTransactions 发放营业收入，沿用各任务既有奖励配置：
+`rewards.items` 通过共享库存结算物品，`rewards.money` 经已有钱包事务结算收入；自由饮品订单未显式配置金额时使用配方售价。物品示例：
 
 ```json
 "rewards": {"text": "糖浆 × 1", "items": {"syrup": 1}}

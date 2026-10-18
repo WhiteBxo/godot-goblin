@@ -6,9 +6,11 @@
 
 ## 规则与配置
 
-`src/resources/milk_tea/recipe_rules.tres` 是槽位数、普通售价、爆品表和投掷参数的共享入口，两个菜单的 `TeaMenu.recipe_rules` 引用它。当前 `slot_count = 3`，基底占一槽，辅料可空、可重复；改槽位数后界面自动生成选项，不改变配方 ID。已有较长配方可恢复和交付，但超出当前槽位时不能重做。
+`src/resources/milk_tea/recipe_rules.tres` 是槽位数、普通售价、爆品表和投掷参数的共享入口，两个菜单的 `TeaMenu.recipe_rules` 引用它。当前 `slot_count = 3`，每杯必须且只能有一个基底，最多再加两个辅料；辅料可空、可重复。`RecipeRules.MAX_SLOTS = 3` 同时限制新配方计算、报价与界面，旧配置即使设置更大的槽位数也不能突破三槽上限，不改变配方 ID。已有较长配方仍可读取，但不能重做或重新报价。
 
 `DrinkFormula.evaluate(materials, lookup, rules, enforce_slots = true, iced = false)` 是无副作用的计算入口，`materials` 第一项为基底，其余为辅料。基底必须同时允许作为基底和用于普通配方；全部原料都必须允许普通配方。F09 格里芬之血不进入自由制作，已有剧情特调继续使用教学规则。
+
+`can_be_base`（可作为基底）与 `free_recipe_allowed`（普通配方可用）是独立条件：第一槽额外检查基底资格，后两槽只检查普通配方资格，不因原料也具备基底资格而拒绝。槽位决定本杯角色，多个具备基底资格的原料不会变成多个基底。例如 `[instant_coffee_concentrate, creamer_milk_tea_base]` 使用咖啡基底、植脂末辅料，名称仍以“咖啡”结尾；交换两者后改为“奶茶”结尾，且配方 ID 不同。经营报价仍另需至少一种哥布林原料，纯人类组合的已有报价限制不变。
 
 - 六项口味以基底数值起算；每份辅料某项数值达到 3 才加到该项。重复辅料分别贡献。
 - 风味、口感、特殊效果三组标签分别合并去重。

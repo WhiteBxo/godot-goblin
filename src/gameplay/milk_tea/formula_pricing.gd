@@ -4,7 +4,7 @@ extends RefCounted
 ## receipts or shared-Resource writes: the caller supplies the integer picker and
 ## commits the returned record itself.
 
-const MAX_SLOTS := 3
+const MAX_SLOTS := RecipeRules.MAX_SLOTS
 const SCHEMA_VERSION := 1
 
 ## Canonical slot order: the base, then additives sorted by ID with one slot per
@@ -12,7 +12,7 @@ const SCHEMA_VERSION := 1
 static func canonical(materials: Variant, lookup: Callable, slot_limit: int = MAX_SLOTS) -> Dictionary:
 	if not materials is Array or materials.is_empty():
 		return _failure("invalid_formula", "请选择一个基底。")
-	if slot_limit < 1 or slot_limit > 16 or materials.size() > slot_limit:
+	if slot_limit < 1 or slot_limit > 16 or materials.size() > mini(slot_limit, MAX_SLOTS):
 		return _failure("slots", "原料超过当前槽位数量。")
 	var ids: Array[String] = []
 	for id: Variant in materials:
@@ -27,6 +27,8 @@ static func canonical(materials: Variant, lookup: Callable, slot_limit: int = MA
 	if base.economy_scope != "trade":
 		return _failure("restricted", "该基底不能用于经营配方。")
 	var goblin_slot := false
+	# All slots need ordinary-recipe permission. Only ids[0] is the base;
+	# additive slots never reject an ingredient for also having base eligibility.
 	for id: String in ids:
 		var definition: IngredientDefinition = lookup.call(id)
 		if definition == null or not definition.free_recipe_allowed or definition.economy_scope != "trade":

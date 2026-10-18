@@ -63,7 +63,7 @@ func get_stock(id: Variant) -> int:
 	return _state[id].quantity if _has_id(id) else 0
 
 func get_recipe_slots() -> int:
-	return _rules.slot_count if _rules != null else 0
+	return mini(_rules.slot_count, RecipeRules.MAX_SLOTS) if _rules != null else 0
 
 func get_economy_rules() -> EconomyRules:
 	return _economy_rules
@@ -85,6 +85,7 @@ func get_formula_choices(base_only := false) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	for id: String in _definitions:
 		var definition: IngredientDefinition = _definitions[id]
+		# Additive choices include ordinary ingredients with either base eligibility.
 		if id != DrinkFormula.ICE_ID and is_discovered(id) and definition.free_recipe_allowed and (not base_only or definition.can_be_base):
 			var flavors := definition.recipe_flavors.duplicate() if is_property_known(id, "flavor_tags") else PackedStringArray(["未知风味"])
 			result.append({"id": id, "name": definition.display_name, "flavors": flavors, "uses": get_uses(id)})

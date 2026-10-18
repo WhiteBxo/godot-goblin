@@ -104,6 +104,12 @@ func _test_pure_quotes() -> void:
 	# F09 is a legal base yet story-only, so it never enters an ordinary quote.
 	var blood := FormulaPricing.range_for(["day1_griffin_blood", T1], lookup, rules)
 	_check(not blood.ok and blood.code == "restricted", "Quest-only blood cannot be priced")
+	var blood_additive := FormulaPricing.range_for([BASE, "day1_griffin_blood"], lookup, rules)
+	_check(not blood_additive.ok and blood_additive.code == "restricted", "Base eligibility never lets story-only blood enter an additive slot")
+	for materials: Array in [[], [T1, T2], [BASE, T1, T2, T4]]:
+		_check(not FormulaPricing.canonical(materials, lookup, 4).ok, "Pricing rejects a missing base, an additive-only first slot and more than three slots")
+	var dual_role := FormulaPricing.quote(["instant_coffee_concentrate", BASE, T1], lookup, rules, func(pick_low: int, _pick_high: int) -> int: return pick_low)
+	_check(dual_role.ok and FormulaPricing.validate_record(dual_role.record, lookup, rules), "An ordinary base used as an additive produces a valid persistent quote")
 	# The documented F05 + C06 + F07 example: 13-17G with two independent T2 markups.
 	var example: Array = [T2, "mint_choc_crisp", "red_mottled_wood"]
 	var example_range := FormulaPricing.range_for(example, lookup, rules)

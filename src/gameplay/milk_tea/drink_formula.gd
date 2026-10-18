@@ -58,19 +58,22 @@ static func evaluate(materials: Variant, lookup: Callable, rules: RecipeRules, e
 	var key := key_for(materials, iced)
 	if key.is_empty():
 		return _failure("invalid_formula", "请选择一个基底。")
-	if (enforce_slots and materials.size() > rules.slot_count) or materials.size() > 64:
+	if (enforce_slots and materials.size() > mini(rules.slot_count, RecipeRules.MAX_SLOTS)) or materials.size() > 64:
 		return _failure("slots", "原料超过当前槽位数量。")
 	var definitions: Array[IngredientDefinition] = []
-	for id: String in materials:
+	for index in range(materials.size()):
+		var id: String = materials[index]
 		if enforce_slots and id == ICE_ID:
 			return _failure("ice_option", "冰块请使用单独的加冰选项，不占原料槽位。")
 		var definition: IngredientDefinition = lookup.call(id)
 		if definition == null or not definition.free_recipe_allowed or definition.category in ["product", "story_item"]:
 			return _failure("restricted", "存在不可用于普通配方的原料。")
+		# Position assigns the role: only slot zero needs base eligibility.
+		# A base-capable ingredient in any later slot remains an additive.
+		if index == 0 and (not definition.can_be_base or definition.base_suffix not in IngredientDefinition.BASE_SUFFIXES):
+			return _failure("base", "第一个槽位必须选择可用基底。")
 		definitions.append(definition)
 	var base := definitions[0]
-	if not base.can_be_base or base.base_suffix not in IngredientDefinition.BASE_SUFFIXES:
-		return _failure("base", "第一个槽位必须选择可用基底。")
 	var taste := base.get_taste()
 	var tags := {"flavors": [], "textures": [], "effects": []}
 	var counts := {}

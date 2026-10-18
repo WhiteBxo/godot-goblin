@@ -22,6 +22,7 @@ func _frames(count := 4) -> void:
 		await process_frame
 
 func _run() -> void:
+	_test_slot_roles()
 	_test_formula()
 	_test_ice()
 	_test_crafting()
@@ -42,6 +43,39 @@ func _price(state: Node, materials: Array, request_id: String) -> int:
 func _stock(inventory: WarehouseInventory) -> void:
 	for id: String in [BASE, "mint_choc_crisp", "red_mottled_wood", "mint_syrup", "scorch_tongue_pepper", "cocoa_powder", "brown_sugar_boba"]:
 		inventory.add_ingredient(id, 5)
+
+func _test_slot_roles() -> void:
+	var coffee := "instant_coffee_concentrate"
+	var creamer := "creamer_milk_tea_base"
+	for path: String in ["res://src/resources/milk_tea/basic_menu.tres", "res://src/resources/milk_tea/day1_menu.tres"]:
+		var inventory := WarehouseInventory.new(load(path))
+		for id: String in [coffee, creamer, "industrial_green_tea", "mint_syrup", "day1_griffin_blood"]:
+			inventory.add_ingredient(id, 1)
+		var coffee_drink := inventory.calculate_formula([coffee, creamer])
+		var milk_drink := inventory.calculate_formula([creamer, coffee])
+		_check(coffee_drink.ok and coffee_drink.base_id == coffee and coffee_drink.name.ends_with("咖啡"), "Coffee base accepts creamer as an additive and retains the coffee suffix: " + path)
+		_check(milk_drink.ok and milk_drink.base_id == creamer and milk_drink.name.ends_with("奶茶") and milk_drink.id != coffee_drink.id, "Swapping the base changes the name suffix and identity: " + path)
+		var three_bases := inventory.calculate_formula([coffee, creamer, "industrial_green_tea"])
+		_check(three_bases.ok and three_bases.base_id == coffee and three_bases.name.ends_with("咖啡"), "Three base-capable ingredients occupy exactly one base and two additive slots: " + path)
+		var repeated := inventory.calculate_formula([coffee, coffee, coffee])
+		_check(repeated.ok and repeated.counts[coffee] == 3 and repeated.base_id == coffee, "The same ingredient can fill the base and both additive slots: " + path)
+		for id: String in [coffee, creamer]:
+			_check(inventory.get_formula_choices(true).any(func(choice: Dictionary) -> bool: return choice.id == id) and inventory.get_formula_choices().any(func(choice: Dictionary) -> bool: return choice.id == id), "An ordinary base appears in both slot choice lists: " + id)
+		_check(not inventory.calculate_formula(["mint_syrup", coffee]).ok, "An additive-only first slot cannot borrow base eligibility from a later ingredient")
+		for invalid: Array in [[], ["day1_griffin_blood"], [coffee, "day1_griffin_blood"], [coffee, creamer, "industrial_green_tea", BASE]]:
+			_check(not inventory.calculate_formula(invalid).ok, "Missing base, special ingredients and fourth slots reject: " + str(invalid))
+		# Exercise all four flag combinations without changing catalog resources.
+		for base_allowed: bool in [false, true]:
+			for ordinary_allowed: bool in [false, true]:
+				var candidate := inventory.get_definition(coffee)
+				candidate.can_be_base = base_allowed
+				candidate.free_recipe_allowed = ordinary_allowed
+				var lookup := func(id: String) -> IngredientDefinition: return candidate if id == coffee else inventory.get_definition(id)
+				_check(DrinkFormula.evaluate([coffee, BASE], lookup, RULES).ok == (base_allowed and ordinary_allowed), "First slot requires both independent permissions")
+				_check(DrinkFormula.evaluate([BASE, coffee], lookup, RULES).ok == ordinary_allowed, "Additive eligibility depends on ordinary permission alone")
+				_check(FormulaPricing.canonical([coffee, BASE], lookup).ok == (base_allowed and ordinary_allowed), "Pricing checks the same independent base permissions")
+				_check(FormulaPricing.canonical([BASE, coffee], lookup).ok == ordinary_allowed, "Pricing never excludes an additive for base eligibility")
+		inventory.free()
 
 func _test_formula() -> void:
 	var inventory := WarehouseInventory.new()
@@ -64,9 +98,12 @@ func _test_formula() -> void:
 	rules.slot_count = 4
 	var large: Array[String] = [BASE, "cocoa_powder", "cocoa_powder", "cocoa_powder"]
 	var expanded := DrinkFormula.evaluate(large, inventory.get_definition, rules)
-	_check(expanded.ok and expanded.throw.area_cells == rules.throw_tuning.max_area_cells and expanded.throw.modifiers.burst.stacks == 3, "One slot setting enables a longer recipe while area stays capped")
-	var lingering := DrinkFormula.evaluate([BASE, "brown_sugar_boba", "brown_sugar_boba", "brown_sugar_boba"], inventory.get_definition, rules)
+	_check(not expanded.ok and expanded.code == "slots", "A larger slot setting cannot bypass the three-slot limit")
+	var historical := DrinkFormula.evaluate(large, inventory.get_definition, rules, false)
+	_check(historical.ok and historical.throw.area_cells == rules.throw_tuning.max_area_cells and historical.throw.modifiers.burst.stacks == 3, "Historical longer recipes remain readable with capped throw area")
+	var lingering := DrinkFormula.evaluate([BASE, "brown_sugar_boba", "brown_sugar_boba", "brown_sugar_boba"], inventory.get_definition, rules, false)
 	_check(lingering.throw.duration == rules.throw_tuning.max_duration, "Stacked duration respects the tuning bound")
+	rules.slot_count = 3
 	rules.signatures = [{"id": "test_signature", "name": "测试专属名", "ingredients": reversed_formula}]
 	var signature := DrinkFormula.evaluate(FORMULA, inventory.get_definition, rules)
 	_check(signature.ok and signature.signature_id == "test_signature" and signature.name == "测试专属名", "Signature compares exact base and counts, independently of order")
@@ -250,23 +287,26 @@ func _test_saves() -> void:
 	_check(state.restore_state(legacy) == OK and restored.is_empty(), "Repeated legacy migration restores silently")
 	_check(state.start_new_game() == OK and inventory.get_drinks(true).is_empty(), "Explicit new game clears formula stock and encyclopedia")
 	state.free()
-	# Slot-count changes never alter the stable ID or invalidate historical drinks.
+	# An older four-slot snapshot remains readable, but cannot create new cups.
 	var wide_menu: TeaMenu = WarehouseInventory.CATALOG.duplicate(true)
 	wide_menu.recipe_rules = RULES.duplicate(true)
 	wide_menu.recipe_rules.slot_count = 4
 	var wide := WarehouseInventory.new(wide_menu)
 	_stock(wide)
 	var long_recipe: Array[String] = [BASE, "mint_syrup", "mint_syrup", "mint_syrup"]
-	var long_drink := wide.try_make_formula(long_recipe)
+	var long_id := DrinkFormula.key_for(long_recipe)
+	var historical := wide.to_dict()
+	historical.drinks[long_id] = 1
+	historical.encyclopedia[long_id] = {"ingredients": long_recipe, "discovered_day": 1, "pricing": "legacy_unpriced"}
 	var narrow := WarehouseInventory.new()
-	_check(long_drink.ok and narrow.restore_state(wide.to_dict()) == OK and narrow.get_drink_stock(long_drink.id) == 1, "Reducing slot configuration preserves historical stock and IDs")
-	_check(not narrow.preview_formula(long_recipe).ok, "Current crafting still enforces the reduced slot count")
+	_check(narrow.restore_state(historical) == OK and narrow.get_drink_stock(long_id) == 1 and narrow.get_drink_record(long_id).ingredients == long_recipe, "The three-slot limit preserves historical stock and IDs")
+	_check(not narrow.preview_formula(long_recipe).ok and not wide.try_make_formula(long_recipe).ok, "Neither default nor expanded configuration can craft a fourth ingredient")
 	var production := TeaProduction.new()
 	production.configure(wide)
 	var panel: FreeCraftingPanel = load("res://src/UI/milk_tea/free_crafting_panel.tscn").instantiate()
 	root.add_child(panel)
 	panel.configure(production)
-	_check(panel.get_slots().size() == 4 and panel.select_formula(long_recipe), "The same slot configuration creates a fourth working UI slot")
+	_check(panel.get_slots().size() == 3 and not panel.select_formula(long_recipe), "Expanded configuration still shows only three UI slots and cannot refill a fourth")
 	panel.free()
 	production.free()
 	wide.free()
@@ -411,6 +451,10 @@ func _test_ui() -> void:
 	var base_image: TextureRect = panel.get_slots()[0].get_parent().get_node("IngredientImage")
 	_check(base_image.texture == inventory.get_ingredient_view(BASE).icon, "Selected wine displays its catalog artwork in the real crafting page")
 	_check(panel.select_formula([BASE]) and panel.get_slots()[1].get_parent().get_node("IngredientImage").texture == null, "Clearing an additive removes its old artwork")
+	inventory.add_ingredient("instant_coffee_concentrate", 1)
+	inventory.add_ingredient("creamer_milk_tea_base", 1)
+	_check(panel.select_formula(["instant_coffee_concentrate", "creamer_milk_tea_base"]) and panel.get_materials() == ["instant_coffee_concentrate", "creamer_milk_tea_base"] and "咖啡\n" in panel.get_preview().text, "Real UI accepts creamer in an additive slot and previews a coffee name")
+	_check(panel.select_formula(["creamer_milk_tea_base", "instant_coffee_concentrate"]) and "奶茶\n" in panel.get_preview().text, "Real UI can exchange the base and additive without excluding either ingredient")
 	shop.select_formula(SWEET)
 	_check(not panel.get_craft_button().disabled and not "甜度" in panel.get_preview().text, "Selection preview shows flavors and price without internal taste values")
 	for option: OptionButton in panel.get_slots():

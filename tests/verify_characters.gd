@@ -14,6 +14,7 @@ func check(ok: bool, message: String) -> void:
 
 func _run() -> void:
 	var catalog: Array = JSON.parse_string(FileAccess.get_file_as_string("res://src/gameplay/characters/character_catalog.json"))
+	_test_common_goblin_appearances()
 	await _test_all_npc_bodies()
 	var world := Node2D.new()
 	root.add_child(world)
@@ -24,6 +25,9 @@ func _run() -> void:
 	var customers: Array = JSON.parse_string(FileAccess.get_file_as_string("res://src/gameplay/characters/customer_catalog.json"))
 	for item: Dictionary in catalog + customers:
 		var actor: SettlementCharacter = load("res://src/gameplay/characters/%s.tscn" % item.id).instantiate()
+		if item.id == "common_goblin":
+			# The catalog coverage below checks the original backpack source sheets.
+			actor.appearance = actor.Appearance.WITH_BACKPACK
 		world.add_child(actor)
 		check(not actor.accepts_player_input, item.id + " must ignore player input")
 		check(actor.collision_layer == 1 << (PlayerController.NPC_LAYER - 1), item.id + " occupies the solid NPC layer")
@@ -105,6 +109,37 @@ func _run() -> void:
 		await process_frame
 	print("Characters: %d checks, %d failures" % [checked, failures.size()])
 	quit(0 if failures.is_empty() else 1)
+
+func _test_common_goblin_appearances() -> void:
+	var script := preload("res://src/gameplay/characters/common_goblin.gd")
+	var source := preload("res://src/gameplay/goblin_actions/goblin_frames.tres")
+	seed(20261019)
+	for path in ["res://src/gameplay/characters/common_goblin.tscn", "res://src/gameplay/characters/rpg_common_goblin.tscn"]:
+		var backpack_count := 0
+		for sample in 256:
+			var actor = load(path).instantiate()
+			root.add_child(actor)
+			var appearance: int = actor.appearance
+			var backpack: bool = appearance == script.Appearance.WITH_BACKPACK
+			backpack_count += int(backpack)
+			check(appearance in [script.Appearance.WITH_BACKPACK, script.Appearance.WITHOUT_BACKPACK], path + " resolves random appearance on spawn")
+			var frames: SpriteFrames = actor.animated_sprite.sprite_frames
+			for direction in PlayerController.Facing.values():
+				actor.face_direction(direction)
+				var name: StringName = PlayerController.DIRECTION_NAMES[direction]
+				check(actor.animated_sprite.flip_h == (direction == PlayerController.Facing.RIGHT if backpack else direction == PlayerController.Facing.LEFT), path + " variant side mirror " + name)
+				actor.move_direction(actor.get_facing_vector(), 1.0 / 60.0)
+				check(actor.animated_sprite.animation == StringName("run_" + name), path + " variant movement " + name)
+				actor.stop_performance_motion()
+				check(actor.animated_sprite.animation == StringName("idle_" + name), path + " variant idle " + name)
+				check(actor.appearance == appearance and actor.animated_sprite.sprite_frames == frames, path + " keeps appearance through movement")
+				if not backpack:
+					var original := StringName("walk_%s" % (&"side" if name in [&"left", &"right"] else name))
+					check(frames.get_frame_count(StringName("run_" + name)) == source.get_frame_count(original), "Unpacked walk keeps every source frame")
+					check(frames.get_frame_texture(StringName("idle_" + name), 0) == source.get_frame_texture(original, 0), "Unpacked idle uses matching source direction")
+			actor.free()
+		check(backpack_count >= 96 and backpack_count <= 160, path + " seeded sample remains near 50/50")
+		print("Common goblin appearances (%s): %d backpack, %d without" % [path, backpack_count, 256 - backpack_count])
 
 func _test_all_npc_bodies() -> void:
 	var scenes: Array[String] = []

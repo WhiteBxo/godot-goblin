@@ -1,0 +1,27 @@
+{
+  "units": "native world pixels, module positions are ground anchors; no sprite scaling",
+  "world_size": [1536, 1280],
+  "spawn": [420, 530],
+  "objects": [
+    {"id": "MilkTeaShop", "asset": "shop", "position": [360, 450]},
+    {"id": "StoneDwelling", "asset": "dwelling", "position": [1000, 480]},
+    {"id": "GreenStall", "asset": "green_stall", "position": [460, 980]},
+    {"id": "RedStall", "asset": "red_stall", "position": [1100, 980]},
+    {"id": "ShopBench", "asset": "bench", "position": [230, 495]},
+    {"id": "ShopPlant", "asset": "planter", "position": [150, 452]},
+    {"id": "CupSign", "asset": "shop_sign", "position": [575, 520]},
+    {"id": "StreetLamp", "asset": "lamp_post", "position": [1370, 560]},
+    {"id": "MarketLamp", "asset": "lamp_post", "position": [200, 1040]},
+    {"id": "MarketCrate", "asset": "crate", "position": [775, 955]},
+    {"id": "DwellingBarrel", "asset": "barrel", "position": [730, 495]},
+    {"id": "MarketJar", "asset": "jar", "position": [1340, 1010]},
+    {"id": "ScatteredCoins", "asset": "coins", "position": [740, 1040]}
+  ],
+  "points": [
+    {"id": "shop_door", "name": "返回奶茶店", "position": [414, 473], "description": "身后还是熟悉的奶茶店。"},
+    {"id": "market", "name": "观察摊位", "position": [460, 1020], "description": "附近摆着一些简陋的摊位，地上散落着与手中金币相似的硬币。这地方似乎真的有人长期生活。"},
+    {"id": "coins", "name": "查看散落的金币", "position": [740, 1065], "description": "地上的硬币与手中的金币相似，颜色暗沉、沾满污渍，上面刻着一种陌生的怪物。"},
+    {"id": "empty_lane", "name": "观察空荡的街道", "position": [1250, 625], "description": "四周没有行人，只有远处传来的模糊说话声和脚步声。主角犹豫了一下，最终决定不再往远处走。"},
+    {"id": "dark_exit", "name": "观察昏暗的岔路", "position": [1390, 300], "description": "前方光线逐渐消失，深处传来不明声响。\n\n“黑灯瞎火的，谁知道里面有什么？不去。”"}
+  ]
+}

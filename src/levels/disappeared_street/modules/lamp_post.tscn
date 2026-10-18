@@ -1,0 +1,26 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/disappeared_street/lamp_post.png" id="1"]
+
+[sub_resource type="RectangleShape2D" id="Footprint"]
+size = Vector2(32, 20)
+
+[node name="LampPost" type="Node2D"]
+texture_filter = 1
+metadata/asset_id = "lamp_post"
+metadata/native_size = Vector2i(103, 280)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-24, -280)
+texture = ExtResource("1")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]
+
+[node name="Solid" type="StaticBody2D" parent="."]
+collision_layer = 1
+collision_mask = 2
+
+[node name="Footprint" type="CollisionShape2D" parent="Solid"]
+position = Vector2(0.0, -10.0)
+shape = SubResource("Footprint")

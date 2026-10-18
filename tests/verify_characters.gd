@@ -14,6 +14,7 @@ func check(ok: bool, message: String) -> void:
 
 func _run() -> void:
 	var catalog: Array = JSON.parse_string(FileAccess.get_file_as_string("res://src/gameplay/characters/character_catalog.json"))
+	await _test_all_npc_bodies()
 	var world := Node2D.new()
 	root.add_child(world)
 	var director := ActorDirector.new()
@@ -104,3 +105,61 @@ func _run() -> void:
 		await process_frame
 	print("Characters: %d checks, %d failures" % [checked, failures.size()])
 	quit(0 if failures.is_empty() else 1)
+
+func _test_all_npc_bodies() -> void:
+	var scenes: Array[String] = []
+	for directory in ["res://src/gameplay/characters", "res://src/debug/actors", "res://src/debug/cinematic"]:
+		for file in DirAccess.get_files_at(directory):
+			if file.ends_with(".tscn"):
+				var candidate: Node = load(directory.path_join(file)).instantiate()
+				if candidate is PlayerController and not candidate.accepts_player_input:
+					scenes.append(directory.path_join(file))
+				candidate.free()
+	check(scenes.size() >= 11, "Collision coverage includes catalog, human customer and performance actors")
+	var world := Node2D.new()
+	root.add_child(world)
+	var entities := Node2D.new()
+	world.add_child(entities)
+	var director := ActorDirector.new()
+	world.add_child(director)
+	director.configure(entities)
+	for path in scenes:
+		var spawn := director.actor_spawn(&"npc", load(path), Vector2(300, 300))
+		await spawn.wait()
+		var actor := director.get_actor(&"npc")
+		check(spawn.succeeded and actor != null, path + " spawns through ActorDirector")
+		if actor == null:
+			continue
+		check(actor.collision_mask == 1, path + " only detects the world")
+		for player_path in ["res://src/gameplay/player/player.tscn", "res://src/gameplay/player/shop_player.tscn"]:
+			var probe: PlayerController = load(player_path).instantiate()
+			world.add_child(probe)
+			probe.set_physics_process(false)
+			await physics_frame
+			for direction in [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]:
+				probe.teleport_to(actor.global_position - direction * 70.0)
+				check(probe.test_move(probe.global_transform, direction * 70.0), path + " blocks " + player_path + " from " + str(direction))
+			probe.teleport_to(actor.global_position + Vector2(0, 70))
+			for tick in 40:
+				await physics_frame
+				probe.move_direction(Vector2.UP, 1.0 / Engine.physics_ticks_per_second)
+			check(probe.position.y > actor.position.y + 8.0, path + " stops actual player movement")
+			await director.actor_hide(&"npc").wait()
+			await physics_frame
+			check(not probe.test_move(probe.global_transform, Vector2(0, -70)), path + " hide removes blocking")
+			await director.actor_show(&"npc").wait()
+			await physics_frame
+			check(probe.test_move(probe.global_transform, Vector2(0, -70)), path + " show restores blocking")
+			entities.hide()
+			await physics_frame
+			check(actor.collision_layer == 0 and not probe.test_move(probe.global_transform, Vector2(0, -70)), path + " hidden parent removes blocking")
+			entities.show()
+			await physics_frame
+			check(probe.test_move(probe.global_transform, Vector2(0, -70)), path + " parent show restores blocking")
+			probe.queue_free()
+			await process_frame
+		director.actor_unregister(&"npc")
+		actor.queue_free()
+		await process_frame
+	world.queue_free()
+	await process_frame

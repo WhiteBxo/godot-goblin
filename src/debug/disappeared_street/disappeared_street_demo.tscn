@@ -1,0 +1,54 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/debug/disappeared_street/disappeared_street_demo.gd" id="1"]
+[ext_resource type="PackedScene" path="res://src/gameplay/player/shop_player.tscn" id="2"]
+[ext_resource type="Script" path="res://src/gameplay/player/floor_aware_shop_player.gd" id="3"]
+
+[node name="DisappearedStreetDemo" type="Node"]
+process_mode = 3
+script = ExtResource("1")
+
+[node name="Systems" type="Node" parent="."]
+process_mode = 1
+
+[node name="World" type="Node2D" parent="."]
+process_mode = 1
+texture_filter = 1
+y_sort_enabled = true
+
+[node name="LevelRoot" type="Node2D" parent="World"]
+y_sort_enabled = true
+
+[node name="EntityRoot" type="Node2D" parent="World"]
+y_sort_enabled = true
+
+[node name="Player" parent="World/EntityRoot" instance=ExtResource("2")]
+z_index = 0
+script = ExtResource("3")
+
+[node name="EffectRoot" type="Node2D" parent="World"]
+y_sort_enabled = true
+
+[node name="OverviewCamera" type="Camera2D" parent="World"]
+enabled = false
+
+[node name="HudLayer" type="CanvasLayer" parent="."]
+process_mode = 3
+layer = 10
+
+[node name="PopupLayer" type="CanvasLayer" parent="."]
+process_mode = 3
+layer = 20
+
+[node name="PauseLayer" type="CanvasLayer" parent="."]
+process_mode = 2
+layer = 30
+visible = false
+
+[node name="TransitionLayer" type="CanvasLayer" parent="."]
+process_mode = 3
+layer = 40
+
+[node name="DebugLayer" type="CanvasLayer" parent="."]
+process_mode = 3
+layer = 50

@@ -1,0 +1,26 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/disappeared_street/rim_3_0.png" id="1"]
+
+[node name="Rim30" type="Node2D" unique_id=1456769036]
+texture_filter = 1
+metadata/asset_id = "rim_3_0"
+metadata/native_size = Vector2i(388, 260)
+
+[node name="Visual" type="Sprite2D" parent="." unique_id=1930659412]
+position = Vector2(-194, -260)
+texture = ExtResource("1")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="." unique_id=1236743742]
+
+[node name="RockCollision" type="StaticBody2D" parent="." unique_id=1038340424]
+collision_mask = 2
+
+[node name="Silhouette0" type="CollisionPolygon2D" parent="RockCollision" unique_id=1906706952]
+position = Vector2(-194, -260)
+polygon = PackedVector2Array(2, 235, 5, 237, 9, 237, 13, 246, 13, 248, 29, 250, 35, 250, 43, 258, 95, 258, 99, 243, 99, 242, 111, 236, 111, 235, 117, 240, 128, 240, 135, 233, 136, 233, 137, 214, 137, 208, 125, 179, 125, 177, 138, 169, 138, 168, 149, 172, 151, 172, 153, 162, 153, 156, 167, 156, 169, 156, 170, 149, 170, 141, 180, 134, 181, 134, 170, 75, 170, 49, 178, 16, 178, 13, 187, 4, 188, 4, 2, 2)
+
+[node name="Silhouette1" type="CollisionPolygon2D" parent="RockCollision" unique_id=1000848760]
+position = Vector2(-194, -260)
+polygon = PackedVector2Array(310, 4, 318, 14, 319, 14, 321, 27, 323, 27, 324, 52, 326, 52, 322, 90, 321, 90, 325, 98, 327, 98, 325, 129, 325, 137, 319, 155, 319, 163, 330, 167, 331, 167, 330, 171, 330, 177, 334, 179, 334, 181, 347, 177, 348, 177, 347, 185, 347, 188, 351, 191, 351, 196, 335, 226, 335, 228, 326, 223, 323, 223, 305, 230, 301, 230, 294, 240, 293, 240, 289, 258, 386, 258, 386, 2, 310, 2)

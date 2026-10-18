@@ -1,0 +1,223 @@
+[gd_scene format=4 uid="uid://d2d83pfoynuqs"]
+
+[ext_resource type="Script" uid="uid://byvxadq5xx1ot" path="res://src/levels/disappeared_street/disappeared_street_map.gd" id="1_m77mv"]
+[ext_resource type="TileSet" uid="uid://cn03kqn0pf65y" path="res://src/levels/disappeared_street/street_ground.tres" id="2_ksufn"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/shop.tscn" id="3_jjfji"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/dwelling.tscn" id="4_h868p"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/green_stall.tscn" id="5_1r2px"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/red_stall.tscn" id="6_6kmxt"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/bench.tscn" id="7_2m80d"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/planter.tscn" id="8_usbe7"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/shop_sign.tscn" id="9_dmc04"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/lamp_post.tscn" id="10_q1m5w"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/barrel.tscn" id="12_nur6s"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/jar.tscn" id="13_qdmv6"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/coins.tscn" id="14_ule4i"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/rim_0_0.tscn" id="15_qi7e0"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/rim_1_0.tscn" id="16_wiap7"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/rim_2_0.tscn" id="17_80wrp"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/rim_3_0.tscn" id="18_53mcg"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/rim_0_1.tscn" id="19_dpoqy"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/rim_3_1.tscn" id="20_rihp1"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/rim_0_2.tscn" id="21_gb1ry"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/rim_3_2.tscn" id="22_3u1ou"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/rim_0_3.tscn" id="23_joo6e"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/rim_1_3.tscn" id="24_p54pr"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/rim_2_3.tscn" id="25_llk3j"]
+[ext_resource type="PackedScene" path="res://src/levels/disappeared_street/modules/rim_3_3.tscn" id="26_aetg2"]
+[ext_resource type="PackedScene" path="res://src/gameplay/interaction/interaction_point.tscn" id="27_nv10f"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6gs40"]
+size = Vector2(1600, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5eqy2"]
+size = Vector2(1600, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tkenn"]
+size = Vector2(32, 1280)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g8sck"]
+size = Vector2(32, 1280)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jo2tl"]
+size = Vector2(210, 18)
+
+[node name="DisappearedStreet" type="Node2D" unique_id=1332221174]
+y_sort_enabled = true
+texture_filter = 1
+script = ExtResource("1_m77mv")
+
+[node name="Ground" type="TileMapLayer" parent="." unique_id=1790934905]
+z_index = -20
+tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAABAAAAAAABAAAAAAACAAAAAAACAAAAAAADAAAAAAADAAAAAAAEAAAAAAAEAAAAAAAFAAAAAAAFAAAAAAAGAAAAAAAGAAAAAAAHAAAAAAAHAAAAAAAIAAAAAAAIAAAAAAAJAAAAAAAJAAAAAAAKAAAAAAAKAAAAAAALAAAAAAALAAAAAAAAAAEAAAAAAAEAAAABAAEAAAABAAEAAAACAAEAAAACAAEAAAADAAEAAAADAAEAAAAEAAEAAAAEAAEAAAAFAAEAAAAFAAEAAAAGAAEAAAAGAAEAAAAHAAEAAAAHAAEAAAAIAAEAAAAIAAEAAAAJAAEAAAAJAAEAAAAKAAEAAAAKAAEAAAALAAEAAAALAAEAAAAAAAIAAAAAAAIAAAABAAIAAAABAAIAAAACAAIAAAACAAIAAAADAAIAAAADAAIAAAAEAAIAAAAEAAIAAAAFAAIAAAAFAAIAAAAGAAIAAAAGAAIAAAAHAAIAAAAHAAIAAAAIAAIAAAAIAAIAAAAJAAIAAAAJAAIAAAAKAAIAAAAKAAIAAAALAAIAAAALAAIAAAAAAAMAAAAAAAMAAAABAAMAAAABAAMAAAACAAMAAAACAAMAAAADAAMAAAADAAMAAAAEAAMAAAAEAAMAAAAFAAMAAAAFAAMAAAAGAAMAAAAGAAMAAAAHAAMAAAAHAAMAAAAIAAMAAAAIAAMAAAAJAAMAAAAJAAMAAAAKAAMAAAAKAAMAAAALAAMAAAALAAMAAAAAAAQAAAAAAAQAAAABAAQAAAABAAQAAAACAAQAAAACAAQAAAADAAQAAAADAAQAAAAEAAQAAAAEAAQAAAAFAAQAAAAFAAQAAAAGAAQAAAAGAAQAAAAHAAQAAAAHAAQAAAAIAAQAAAAIAAQAAAAJAAQAAAAJAAQAAAAKAAQAAAAKAAQAAAALAAQAAAALAAQAAAAAAAUAAAAAAAUAAAABAAUAAAABAAUAAAACAAUAAAACAAUAAAADAAUAAAADAAUAAAAEAAUAAAAEAAUAAAAFAAUAAAAFAAUAAAAGAAUAAAAGAAUAAAAHAAUAAAAHAAUAAAAIAAUAAAAIAAUAAAAJAAUAAAAJAAUAAAAKAAUAAAAKAAUAAAALAAUAAAALAAUAAAAAAAYAAAAAAAYAAAABAAYAAAABAAYAAAACAAYAAAACAAYAAAADAAYAAAADAAYAAAAEAAYAAAAEAAYAAAAFAAYAAAAFAAYAAAAGAAYAAAAGAAYAAAAHAAYAAAAHAAYAAAAIAAYAAAAIAAYAAAAJAAYAAAAJAAYAAAAKAAYAAAAKAAYAAAALAAYAAAALAAYAAAAAAAcAAAAAAAcAAAABAAcAAAABAAcAAAACAAcAAAACAAcAAAADAAcAAAADAAcAAAAEAAcAAAAEAAcAAAAFAAcAAAAFAAcAAAAGAAcAAAAGAAcAAAAHAAcAAAAHAAcAAAAIAAcAAAAIAAcAAAAJAAcAAAAJAAcAAAAKAAcAAAAKAAcAAAALAAcAAAALAAcAAAAAAAgAAAAAAAAAAAABAAgAAAABAAAAAAACAAgAAAACAAAAAAADAAgAAAADAAAAAAAEAAgAAAAEAAAAAAAFAAgAAAAFAAAAAAAGAAgAAAAGAAAAAAAHAAgAAAAHAAAAAAAIAAgAAAAIAAAAAAAJAAgAAAAJAAAAAAAKAAgAAAAKAAAAAAALAAgAAAALAAAAAAAAAAkAAAAAAAEAAAABAAkAAAABAAEAAAACAAkAAAACAAEAAAADAAkAAAADAAEAAAAEAAkAAAAEAAEAAAAFAAkAAAAFAAEAAAAGAAkAAAAGAAEAAAAHAAkAAAAHAAEAAAAIAAkAAAAIAAEAAAAJAAkAAAAJAAEAAAAKAAkAAAAKAAEAAAALAAkAAAALAAEAAAA=")
+tile_set = ExtResource("2_ksufn")
+
+[node name="Objects" type="Node2D" parent="." unique_id=1736587140]
+y_sort_enabled = true
+
+[node name="MilkTeaShop" parent="Objects" unique_id=1076482303 instance=ExtResource("3_jjfji")]
+position = Vector2(360, 450)
+
+[node name="StoneDwelling" parent="Objects" unique_id=1924854476 instance=ExtResource("4_h868p")]
+position = Vector2(997.00006, 452.00003)
+scale = Vector2(0.9, 0.9)
+
+[node name="GreenStall" parent="Objects" unique_id=232661694 instance=ExtResource("5_1r2px")]
+position = Vector2(460, 980)
+
+[node name="RedStall" parent="Objects" unique_id=1645049327 instance=ExtResource("6_6kmxt")]
+position = Vector2(1100, 980)
+
+[node name="ShopBench" parent="Objects" unique_id=1270256074 instance=ExtResource("7_2m80d")]
+position = Vector2(230, 495)
+
+[node name="ShopPlant" parent="Objects" unique_id=826665305 instance=ExtResource("8_usbe7")]
+position = Vector2(150, 452)
+scale = Vector2(0.625, 0.625)
+
+[node name="CupSign" parent="Objects" unique_id=1247375809 instance=ExtResource("9_dmc04")]
+position = Vector2(575, 520)
+scale = Vector2(0.765, 0.765)
+
+[node name="StreetLamp" parent="Objects" unique_id=73116143 instance=ExtResource("10_q1m5w")]
+position = Vector2(1214, 504)
+scale = Vector2(0.75, 0.75)
+
+[node name="MarketLamp" parent="Objects" unique_id=1529402529 instance=ExtResource("10_q1m5w")]
+position = Vector2(204.00002, 1018)
+scale = Vector2(0.75, 0.75)
+
+[node name="DwellingBarrel" parent="Objects" unique_id=1600389651 instance=ExtResource("12_nur6s")]
+position = Vector2(730, 495)
+scale = Vector2(0.765, 0.765)
+
+[node name="MarketJar" parent="Objects" unique_id=449627621 instance=ExtResource("13_qdmv6")]
+position = Vector2(1331, 989.00006)
+scale = Vector2(0.65, 0.65)
+
+[node name="ScatteredCoins" parent="Objects" unique_id=2058057694 instance=ExtResource("14_ule4i")]
+position = Vector2(740, 1040)
+
+[node name="CaveRim" type="Node2D" parent="." unique_id=390978840]
+y_sort_enabled = true
+
+[node name="Rim00At258" parent="CaveRim" unique_id=955037313 instance=ExtResource("15_qi7e0")]
+z_index = -5
+position = Vector2(192, 258)
+
+[node name="Rim10At258" parent="CaveRim" unique_id=2056928908 instance=ExtResource("16_wiap7")]
+z_index = -5
+position = Vector2(576, 258)
+
+[node name="Rim20At258" parent="CaveRim" unique_id=1466167918 instance=ExtResource("17_80wrp")]
+z_index = -5
+position = Vector2(960, 258)
+
+[node name="Rim30At258" parent="CaveRim" unique_id=1456769036 instance=ExtResource("18_53mcg")]
+z_index = -5
+position = Vector2(1344, 258)
+
+[node name="Rim01At514" parent="CaveRim" unique_id=748626129 instance=ExtResource("19_dpoqy")]
+z_index = -5
+position = Vector2(192, 514)
+
+[node name="Rim31At514" parent="CaveRim" unique_id=1378249198 instance=ExtResource("20_rihp1")]
+z_index = -5
+position = Vector2(1344, 514)
+
+[node name="Rim02At770" parent="CaveRim" unique_id=393069704 instance=ExtResource("21_gb1ry")]
+z_index = -5
+position = Vector2(192, 770)
+
+[node name="Rim02At1026" parent="CaveRim" unique_id=215875777 instance=ExtResource("21_gb1ry")]
+z_index = -5
+position = Vector2(192, 1026)
+
+[node name="Rim32At770" parent="CaveRim" unique_id=1695158904 instance=ExtResource("22_3u1ou")]
+z_index = -5
+position = Vector2(1344, 770)
+
+[node name="Rim32At1026" parent="CaveRim" unique_id=490614339 instance=ExtResource("22_3u1ou")]
+z_index = -5
+position = Vector2(1344, 1026)
+
+[node name="Rim03At1282" parent="CaveRim" unique_id=468632277 instance=ExtResource("23_joo6e")]
+z_index = 2
+position = Vector2(192, 1282)
+
+[node name="Rim13At1282" parent="CaveRim" unique_id=1874730172 instance=ExtResource("24_p54pr")]
+z_index = 2
+position = Vector2(576, 1282)
+
+[node name="Rim23At1282" parent="CaveRim" unique_id=2022524411 instance=ExtResource("25_llk3j")]
+z_index = 2
+position = Vector2(960, 1282)
+
+[node name="Rim33At1282" parent="CaveRim" unique_id=1341462732 instance=ExtResource("26_aetg2")]
+z_index = 2
+position = Vector2(1344, 1282)
+
+[node name="OuterBoundary" type="StaticBody2D" parent="." unique_id=144947486]
+collision_mask = 2
+
+[node name="@CollisionShape2D@2" type="CollisionShape2D" parent="OuterBoundary" unique_id=1010611848]
+position = Vector2(768, -16)
+shape = SubResource("RectangleShape2D_6gs40")
+
+[node name="@CollisionShape2D@3" type="CollisionShape2D" parent="OuterBoundary" unique_id=1456358658]
+position = Vector2(768, 1296)
+shape = SubResource("RectangleShape2D_5eqy2")
+
+[node name="@CollisionShape2D@4" type="CollisionShape2D" parent="OuterBoundary" unique_id=1978223063]
+position = Vector2(-16, 640)
+shape = SubResource("RectangleShape2D_tkenn")
+
+[node name="@CollisionShape2D@5" type="CollisionShape2D" parent="OuterBoundary" unique_id=1697799017]
+position = Vector2(1552, 640)
+shape = SubResource("RectangleShape2D_g8sck")
+
+[node name="UnexploredExit" type="CollisionShape2D" parent="OuterBoundary" unique_id=260890692]
+position = Vector2(1400, 230)
+shape = SubResource("RectangleShape2D_jo2tl")
+
+[node name="DarkExitShade" type="Polygon2D" parent="." unique_id=911953005]
+z_index = -10
+polygon = PackedVector2Array(1280, 0, 1536, 0, 1536, 440, 1280, 440)
+vertex_colors = PackedColorArray(0.025, 0.03, 0.06, 0.95, 0.025, 0.03, 0.06, 0.95, 0.025, 0.03, 0.06, 0, 0.025, 0.03, 0.06, 0)
+
+[node name="Spawn" type="Marker2D" parent="." unique_id=1380482486]
+position = Vector2(420, 530)
+
+[node name="InteractionPoints" type="Node2D" parent="." unique_id=1690288787]
+
+[node name="ShopDoor" parent="InteractionPoints" unique_id=1061542574 instance=ExtResource("27_nv10f")]
+position = Vector2(414, 473)
+interaction_id = &"shop_door"
+display_name = "返回奶茶店"
+description = "身后还是熟悉的奶茶店。"
+
+[node name="Market" parent="InteractionPoints" unique_id=1244853331 instance=ExtResource("27_nv10f")]
+position = Vector2(460, 1020)
+interaction_id = &"market"
+display_name = "观察摊位"
+description = "附近摆着一些简陋的摊位，地上散落着与手中金币相似的硬币。这地方似乎真的有人长期生活。"
+
+[node name="Coins" parent="InteractionPoints" unique_id=386984943 instance=ExtResource("27_nv10f")]
+position = Vector2(740, 1065)
+interaction_id = &"coins"
+display_name = "查看散落的金币"
+description = "地上的硬币与手中的金币相似，颜色暗沉、沾满污渍，上面刻着一种陌生的怪物。"
+
+[node name="EmptyLane" parent="InteractionPoints" unique_id=727965538 instance=ExtResource("27_nv10f")]
+position = Vector2(1250, 625)
+interaction_id = &"empty_lane"
+display_name = "观察空荡的街道"
+description = "四周没有行人，只有远处传来的模糊说话声和脚步声。主角犹豫了一下，最终决定不再往远处走。"
+
+[node name="DarkExit" parent="InteractionPoints" unique_id=139378418 instance=ExtResource("27_nv10f")]
+position = Vector2(1390, 300)
+interaction_id = &"dark_exit"
+display_name = "观察昏暗的岔路"
+description = "前方光线逐渐消失，深处传来不明声响。
+
+“黑灯瞎火的，谁知道里面有什么？不去。”"

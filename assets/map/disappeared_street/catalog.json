@@ -1,0 +1,544 @@
+{
+  "version": 1,
+  "model": "gpt-image-2.5-sunburst",
+  "processing": "native crop, 2px padding, hard alpha and magenta cleanup; no artwork scaling",
+  "concept": "res://assets/map/disappeared_street/source/concept.png",
+  "assets": [
+    {
+      "id": "shop",
+      "kind": "building",
+      "texture": "res://assets/map/disappeared_street/shop.png",
+      "scene": "res://src/levels/disappeared_street/modules/shop.tscn",
+      "native_size": [
+        589,
+        401
+      ],
+      "source": "shop",
+      "source_box": [
+        84,
+        48,
+        669,
+        445
+      ],
+      "collision_rect": [
+        -287,
+        -336,
+        573,
+        331
+      ]
+    },
+    {
+      "id": "dwelling",
+      "kind": "building",
+      "texture": "res://assets/map/disappeared_street/dwelling.png",
+      "scene": "res://src/levels/disappeared_street/modules/dwelling.tscn",
+      "native_size": [
+        620,
+        458
+      ],
+      "source": "dwelling",
+      "source_box": [
+        734,
+        39,
+        1350,
+        493
+      ],
+      "collision_rect": [
+        -302,
+        -393,
+        604,
+        388
+      ]
+    },
+    {
+      "id": "green_stall",
+      "kind": "stall",
+      "texture": "res://assets/map/disappeared_street/green_stall.png",
+      "scene": "res://src/levels/disappeared_street/modules/green_stall.tscn",
+      "native_size": [
+        478,
+        371
+      ],
+      "source": "stalls",
+      "source_box": [
+        224,
+        330,
+        698,
+        697
+      ],
+      "collision_rect": [
+        -172,
+        -92,
+        344,
+        82
+      ]
+    },
+    {
+      "id": "red_stall",
+      "kind": "stall",
+      "texture": "res://assets/map/disappeared_street/red_stall.png",
+      "scene": "res://src/levels/disappeared_street/modules/red_stall.tscn",
+      "native_size": [
+        494,
+        379
+      ],
+      "source": "stalls",
+      "source_box": [
+        870,
+        338,
+        1360,
+        713
+      ],
+      "collision_rect": [
+        -177,
+        -92,
+        355,
+        82
+      ]
+    },
+    {
+      "id": "bench",
+      "kind": "prop",
+      "texture": "res://assets/map/disappeared_street/bench.png",
+      "scene": "res://src/levels/disappeared_street/modules/bench.tscn",
+      "native_size": [
+        192,
+        84
+      ],
+      "source": "props",
+      "source_box": [
+        109,
+        307,
+        297,
+        387
+      ],
+      "collision_rect": [
+        -75,
+        -24,
+        149,
+        24
+      ]
+    },
+    {
+      "id": "planter",
+      "kind": "prop",
+      "texture": "res://assets/map/disappeared_street/planter.png",
+      "scene": "res://src/levels/disappeared_street/modules/planter.tscn",
+      "native_size": [
+        122,
+        160
+      ],
+      "source": "props",
+      "source_box": [
+        526,
+        238,
+        644,
+        394
+      ],
+      "collision_rect": [
+        -48,
+        -35,
+        95,
+        35
+      ]
+    },
+    {
+      "id": "crate",
+      "kind": "prop",
+      "texture": "res://assets/map/disappeared_street/crate.png",
+      "scene": "res://src/levels/disappeared_street/modules/crate.tscn",
+      "native_size": [
+        102,
+        108
+      ],
+      "source": "props",
+      "source_box": [
+        902,
+        288,
+        1000,
+        392
+      ],
+      "collision_rect": [
+        -40,
+        -45,
+        79,
+        45
+      ]
+    },
+    {
+      "id": "barrel",
+      "kind": "prop",
+      "texture": "res://assets/map/disappeared_street/barrel.png",
+      "scene": "res://src/levels/disappeared_street/modules/barrel.tscn",
+      "native_size": [
+        99,
+        137
+      ],
+      "source": "props",
+      "source_box": [
+        1280,
+        261,
+        1375,
+        394
+      ],
+      "collision_rect": [
+        -39,
+        -40,
+        77,
+        40
+      ]
+    },
+    {
+      "id": "jar",
+      "kind": "prop",
+      "texture": "res://assets/map/disappeared_street/jar.png",
+      "scene": "res://src/levels/disappeared_street/modules/jar.tscn",
+      "native_size": [
+        106,
+        131
+      ],
+      "source": "props",
+      "source_box": [
+        148,
+        755,
+        250,
+        882
+      ],
+      "collision_rect": [
+        -41,
+        -35,
+        82,
+        35
+      ]
+    },
+    {
+      "id": "lamp_post",
+      "kind": "prop",
+      "texture": "res://assets/map/disappeared_street/lamp_post.png",
+      "scene": "res://src/levels/disappeared_street/modules/lamp_post.tscn",
+      "native_size": [
+        103,
+        280
+      ],
+      "source": "props",
+      "source_box": [
+        544,
+        607,
+        643,
+        883
+      ],
+      "collision_rect": [
+        -16,
+        -20,
+        32,
+        20
+      ]
+    },
+    {
+      "id": "shop_sign",
+      "kind": "prop",
+      "texture": "res://assets/map/disappeared_street/shop_sign.png",
+      "scene": "res://src/levels/disappeared_street/modules/shop_sign.tscn",
+      "native_size": [
+        128,
+        147
+      ],
+      "source": "props",
+      "source_box": [
+        890,
+        742,
+        1014,
+        885
+      ],
+      "collision_rect": [
+        -50,
+        -28,
+        99,
+        28
+      ]
+    },
+    {
+      "id": "coins",
+      "kind": "prop",
+      "texture": "res://assets/map/disappeared_street/coins.png",
+      "scene": "res://src/levels/disappeared_street/modules/coins.tscn",
+      "native_size": [
+        79,
+        24
+      ],
+      "source": "stalls/red_stall counter",
+      "source_box": [
+        1,
+        3,
+        76,
+        23
+      ],
+      "collision_rect": null,
+      "derivation": "native counter crop [214,273,294,296], gold selection plus 1px outline; no scaling"
+    },
+    {
+      "id": "rim_0_0",
+      "kind": "rock",
+      "texture": "res://assets/map/disappeared_street/rim_0_0.png",
+      "scene": "res://src/levels/disappeared_street/modules/rim_0_0.tscn",
+      "native_size": [
+        388,
+        260
+      ],
+      "source": "cave_rim",
+      "source_box": [
+        0,
+        0,
+        384,
+        256
+      ],
+      "collision_rect": null,
+      "map_top_left": [
+        -2,
+        -2
+      ]
+    },
+    {
+      "id": "rim_1_0",
+      "kind": "rock",
+      "texture": "res://assets/map/disappeared_street/rim_1_0.png",
+      "scene": "res://src/levels/disappeared_street/modules/rim_1_0.tscn",
+      "native_size": [
+        388,
+        260
+      ],
+      "source": "cave_rim",
+      "source_box": [
+        384,
+        0,
+        768,
+        256
+      ],
+      "collision_rect": null,
+      "map_top_left": [
+        382,
+        -2
+      ]
+    },
+    {
+      "id": "rim_2_0",
+      "kind": "rock",
+      "texture": "res://assets/map/disappeared_street/rim_2_0.png",
+      "scene": "res://src/levels/disappeared_street/modules/rim_2_0.tscn",
+      "native_size": [
+        388,
+        260
+      ],
+      "source": "cave_rim",
+      "source_box": [
+        768,
+        0,
+        1152,
+        256
+      ],
+      "collision_rect": null,
+      "map_top_left": [
+        766,
+        -2
+      ]
+    },
+    {
+      "id": "rim_3_0",
+      "kind": "rock",
+      "texture": "res://assets/map/disappeared_street/rim_3_0.png",
+      "scene": "res://src/levels/disappeared_street/modules/rim_3_0.tscn",
+      "native_size": [
+        388,
+        260
+      ],
+      "source": "cave_rim",
+      "source_box": [
+        1152,
+        0,
+        1536,
+        256
+      ],
+      "collision_rect": null,
+      "map_top_left": [
+        1150,
+        -2
+      ]
+    },
+    {
+      "id": "rim_0_1",
+      "kind": "rock",
+      "texture": "res://assets/map/disappeared_street/rim_0_1.png",
+      "scene": "res://src/levels/disappeared_street/modules/rim_0_1.tscn",
+      "native_size": [
+        388,
+        260
+      ],
+      "source": "cave_rim",
+      "source_box": [
+        0,
+        256,
+        384,
+        512
+      ],
+      "collision_rect": null,
+      "map_top_left": [
+        -2,
+        254
+      ]
+    },
+    {
+      "id": "rim_3_1",
+      "kind": "rock",
+      "texture": "res://assets/map/disappeared_street/rim_3_1.png",
+      "scene": "res://src/levels/disappeared_street/modules/rim_3_1.tscn",
+      "native_size": [
+        388,
+        260
+      ],
+      "source": "cave_rim",
+      "source_box": [
+        1152,
+        256,
+        1536,
+        512
+      ],
+      "collision_rect": null,
+      "map_top_left": [
+        1150,
+        254
+      ]
+    },
+    {
+      "id": "rim_0_2",
+      "kind": "rock",
+      "texture": "res://assets/map/disappeared_street/rim_0_2.png",
+      "scene": "res://src/levels/disappeared_street/modules/rim_0_2.tscn",
+      "native_size": [
+        388,
+        260
+      ],
+      "source": "cave_rim",
+      "source_box": [
+        0,
+        512,
+        384,
+        768
+      ],
+      "collision_rect": null,
+      "map_top_left": [
+        -2,
+        510
+      ]
+    },
+    {
+      "id": "rim_3_2",
+      "kind": "rock",
+      "texture": "res://assets/map/disappeared_street/rim_3_2.png",
+      "scene": "res://src/levels/disappeared_street/modules/rim_3_2.tscn",
+      "native_size": [
+        388,
+        260
+      ],
+      "source": "cave_rim",
+      "source_box": [
+        1152,
+        512,
+        1536,
+        768
+      ],
+      "collision_rect": null,
+      "map_top_left": [
+        1150,
+        510
+      ]
+    },
+    {
+      "id": "rim_0_3",
+      "kind": "rock",
+      "texture": "res://assets/map/disappeared_street/rim_0_3.png",
+      "scene": "res://src/levels/disappeared_street/modules/rim_0_3.tscn",
+      "native_size": [
+        388,
+        260
+      ],
+      "source": "cave_rim",
+      "source_box": [
+        0,
+        768,
+        384,
+        1024
+      ],
+      "collision_rect": null,
+      "map_top_left": [
+        -2,
+        766
+      ]
+    },
+    {
+      "id": "rim_1_3",
+      "kind": "rock",
+      "texture": "res://assets/map/disappeared_street/rim_1_3.png",
+      "scene": "res://src/levels/disappeared_street/modules/rim_1_3.tscn",
+      "native_size": [
+        388,
+        260
+      ],
+      "source": "cave_rim",
+      "source_box": [
+        384,
+        768,
+        768,
+        1024
+      ],
+      "collision_rect": null,
+      "map_top_left": [
+        382,
+        766
+      ]
+    },
+    {
+      "id": "rim_2_3",
+      "kind": "rock",
+      "texture": "res://assets/map/disappeared_street/rim_2_3.png",
+      "scene": "res://src/levels/disappeared_street/modules/rim_2_3.tscn",
+      "native_size": [
+        388,
+        260
+      ],
+      "source": "cave_rim",
+      "source_box": [
+        768,
+        768,
+        1152,
+        1024
+      ],
+      "collision_rect": null,
+      "map_top_left": [
+        766,
+        766
+      ]
+    },
+    {
+      "id": "rim_3_3",
+      "kind": "rock",
+      "texture": "res://assets/map/disappeared_street/rim_3_3.png",
+      "scene": "res://src/levels/disappeared_street/modules/rim_3_3.tscn",
+      "native_size": [
+        388,
+        260
+      ],
+      "source": "cave_rim",
+      "source_box": [
+        1152,
+        768,
+        1536,
+        1024
+      ],
+      "collision_rect": null,
+      "map_top_left": [
+        1150,
+        766
+      ]
+    }
+  ]
+}

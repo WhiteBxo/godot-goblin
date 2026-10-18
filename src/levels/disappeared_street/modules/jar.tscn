@@ -1,0 +1,26 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/disappeared_street/jar.png" id="1"]
+
+[sub_resource type="RectangleShape2D" id="Footprint"]
+size = Vector2(82, 35)
+
+[node name="Jar" type="Node2D"]
+texture_filter = 1
+metadata/asset_id = "jar"
+metadata/native_size = Vector2i(106, 131)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-53, -131)
+texture = ExtResource("1")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]
+
+[node name="Solid" type="StaticBody2D" parent="."]
+collision_layer = 1
+collision_mask = 2
+
+[node name="Footprint" type="CollisionShape2D" parent="Solid"]
+position = Vector2(0.0, -17.5)
+shape = SubResource("Footprint")

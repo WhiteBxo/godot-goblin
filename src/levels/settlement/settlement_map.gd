@@ -4,6 +4,19 @@ extends Node2D
 
 const NIGHT_OVERLAY: PackedScene = preload("res://src/levels/settlement/night_overlay.tscn")
 
+## Explicit task location IDs map only to authored exterior entrances.
+## Interior clues and routes are deliberately absent from this allowlist.
+const MAP_LOCATIONS := {
+	"settlement.shop": "00_shop", "settlement.muster": "01_muster",
+	"settlement.vestibule": "02_vestibule", "settlement.training": "03_training",
+	"settlement.lodging": "04_lodging", "settlement.kitchen": "05_kitchen",
+	"settlement.tavern": "06_tavern", "settlement.casino": "07_casino",
+	"settlement.dining": "08_dining", "settlement.ritual": "09_ritual",
+	"settlement.elder": "10_elder", "settlement.growing": "11_growing",
+	"settlement.warehouse": "12_warehouse", "settlement.yard": "13_yard",
+	"settlement.hearth": "14_hearth", "settlement.workshop": "15_workshop",
+}
+
 @export var world_size := Vector2(8192, 9216)
 
 var _night_overlay: CanvasLayer
@@ -84,3 +97,27 @@ func get_story_positions() -> Array[Marker2D]:
 
 func get_story_anchor(id: StringName) -> Marker2D:
 	return $StoryAnchors.get_node_or_null(NodePath(id)) as Marker2D
+
+func get_stealth_setup() -> Day1StealthSetup:
+	return get_node_or_null("Day1StealthSetup") as Day1StealthSetup
+
+## Detached values only: no UI dependency on district nodes or hidden artwork.
+func get_map_data(known_locations: Array[String]) -> Dictionary:
+	var regions: Array[Dictionary] = []
+	for district: Node2D in $Districts.get_children():
+		var zone_id := str(district.get_meta("zone_id", ""))
+		var location_id := ""
+		for id: String in MAP_LOCATIONS:
+			if MAP_LOCATIONS[id] == zone_id:
+				location_id = id
+		if location_id not in known_locations:
+			continue
+		var anchor := get_story_anchor(StringName(zone_id + "_entrance"))
+		if anchor == null:
+			continue
+		var footprint: Rect2 = district.get_meta("footprint", Rect2())
+		regions.append({"location_id": location_id,
+			"name": str(district.get_meta("display_name", district.name)),
+			"bounds": district.global_transform * footprint,
+			"position": anchor.global_position})
+	return {"bounds": get_world_bounds(), "regions": regions}

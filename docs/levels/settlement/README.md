@@ -2,7 +2,7 @@
 
 默认入口为 `src/core/settlement.tscn`，F5 可试玩。15 个参考功能区加上奶茶店，共 16 个独立场景，连接在一片连续洞窟平地上。建筑采用完整背墙、侧墙和可见外墙面，前墙用剖面表现内部；种植、工坊、火塘、庭院和集结点保持开放。唯一一圈洞窟岩壁位于整图外围。
 
-WASD / 方向键移动，E 查看地点和店内设施，Esc 关闭。Debug 模式下 M 切换全图与跟随镜头，Tab 依次显示第一天动线、第二天动线和河岸补给线，F4 切换白天/夜晚以便验收夜间采集。路线显示与昼夜切换都是开发检查工具。
+WASD / 方向键移动，E 查看地点和店内设施，Esc 关闭。正式地图解锁后按 M 或点击 HUD 地图按钮查看已知区域，Esc 关闭。Debug 模式下 F7 切换全图与跟随镜头，Tab 依次显示第一天动线、第二天动线和河岸补给线，F4 切换白天/夜晚以便验收夜间采集。路线显示与昼夜切换都是开发检查工具。
 
 ![实际 Godot 整图](captures/full_map.png)
 
@@ -58,7 +58,7 @@ godot --path . --fixed-fps 60 --script res://tests/verify_settlement.gd -- --cap
 godot --headless --path . --fixed-fps 120 --script res://tests/verify_milk_tea_shop.gd
 ```
 
-新地图测试通过：48,623 个实际脚底碰撞采样点连通，16 个入口及内部通路、全部公开剧情与服务锚点、三条路线连续通行、两座桥可跨越、桥外河水阻挡、真实输入移动与墙体阻挡、E/ Esc 交互、M 镜头切换与移动锁定、关闭开发工具后的独立初始化。视觉检查覆盖整图、奶茶店、酒馆、赌场、长老房、桥和前墙遮挡，截图均来自实际 Godot 渲染。
+新地图测试通过：48,623 个实际脚底碰撞采样点连通，16 个入口及内部通路、全部公开剧情与服务锚点、三条路线连续通行、两座桥可跨越、桥外河水阻挡、真实输入移动与墙体阻挡、E/ Esc 交互、全图镜头切换与移动锁定、关闭开发工具后的独立初始化。视觉检查覆盖整图、奶茶店、酒馆、赌场、长老房、桥和前墙遮挡，截图均来自实际 Godot 渲染。
 
 旧奶茶店移动、15 处障碍、三个界面和移动锁定测试通过。既有 cinematic 集成测试通过 286 项，开场实际 24.04 秒；该旧测试写死 macOS 临时路径，本机使用 `.godot/` 中的临时适配脚本改用 `OS.get_temp_dir()`，未改动原测试。计时测试按正常时间运行，不能用 `--fixed-fps` 加速。
 
@@ -71,3 +71,9 @@ godot --headless --path . --fixed-fps 120 --script res://tests/verify_milk_tea_s
 - [TileMapLayer：保存 tile_map_data](https://github.com/godotengine/godot/blob/4.7-stable/doc/classes/TileMapLayer.xml)：地面格保存在场景，运行时不以旧布局覆盖编辑结果。
 - [Polygon2D：贴图坐标与反向遮罩](https://github.com/godotengine/godot/blob/4.7-stable/doc/classes/Polygon2D.xml)：河水按原尺寸重复，外围遮罩消除地面格越出岩壁的问题。
 - [Camera2D：zoom 与 limit](https://github.com/godotengine/godot/blob/4.7-stable/doc/classes/Camera2D.xml)：沿用有边界的跟随相机，独立全图镜头按视口比例取景。
+
+## 正式游戏地图边界
+
+正式地图复用保存区域轮廓、世界边界和外部入口，不读取 Debug 预览、制作源 JSON 或内部建筑美术；详见 [地图 UI 接口](../../systems/ui_system.md#正式聚落地图)。初始只知奶茶店，其他地点通过明确知识事实揭示。长老居所文书、血液和隐藏通道没有普通地图映射。
+
+F6 `src/core/settlement.tscn` 默认保持未解锁。S04 正式剧情尚未调用宿主 `unlock_map()`，不能仅播放解锁提示就写可用事实。开发验收可运行 `tests/verify_map_ui.gd -- --capture`，它在该真实宿主中显式调用解锁并注入隔离目标和知识，验证 M / HUD、关闭、Esc、Tab、P 暂停、移动后位置与真实入口标记。测试注入不进入正式任务或剧情目录。

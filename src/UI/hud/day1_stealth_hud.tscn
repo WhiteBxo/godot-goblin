@@ -1,0 +1,68 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/UI/hud/day1_stealth_hud.gd" id="1"]
+[ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="2"]
+
+[node name="Day1StealthHUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("2")
+script = ExtResource("1")
+
+[node name="Panel" type="PanelContainer" parent="."]
+offset_left = 20.0
+offset_top = 75.0
+offset_right = 460.0
+mouse_filter = 2
+theme_type_variation = &"InsetPanel"
+
+[node name="Content" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Status" type="Label" parent="Panel/Content"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"Hint"
+autowrap_mode = 2
+
+[node name="Guards" type="Label" parent="Panel/Content"]
+layout_mode = 2
+mouse_filter = 2
+autowrap_mode = 2
+
+[node name="Actions" type="HBoxContainer" parent="Panel/Content"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Coin" type="Button" parent="Panel/Content/Actions"]
+layout_mode = 2
+theme_type_variation = &"GhostButton"
+text = "金币"
+
+[node name="Torch" type="Button" parent="Panel/Content/Actions"]
+layout_mode = 2
+theme_type_variation = &"GhostButton"
+text = "火把"
+
+[node name="Retry" type="Button" parent="Panel/Content/Actions"]
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+text = "从检查点重试"
+
+[node name="Start" type="Button" parent="Panel/Content/Actions"]
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+text = "开始潜入"
+
+[node name="Hint" type="Label" parent="Panel/Content"]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"Muted"
+text = "鼠标指向落点 · 投掷（默认 F）"

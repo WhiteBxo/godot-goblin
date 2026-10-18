@@ -1,0 +1,39 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/UI/map/map_canvas.gd" id="1"]
+[ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="2"]
+
+[node name="MapBody" type="HBoxContainer"]
+size_flags_vertical = 3
+theme = ExtResource("2")
+
+[node name="Canvas" type="Control" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+clip_contents = true
+script = ExtResource("1")
+
+[node name="Details" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+
+[node name="Objective" type="Label" parent="Details"]
+layout_mode = 2
+autowrap_mode = 2
+text = "暂无当前主目标"
+
+[node name="Places" type="ScrollContainer" parent="Details"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Names" type="Label" parent="Details/Places"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Legend" type="Label" parent="Details"]
+layout_mode = 2
+theme_type_variation = &"Hint"
+text = "圆点 你的位置\n圆环 当前目标\n小点 地点入口    北 ↑\n已知区域轮廓示意\n空白处尚未标绘"

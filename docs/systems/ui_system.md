@@ -116,3 +116,21 @@ godot --path . --log-file .godot/ui-visual.log --script res://tests/verify_ui_ma
 `tests/verify_handbook.gd` 覆盖解锁组合、旧状态迁移、任务清空、重建与重置、别名路由、焦点恢复、暂停和未读语义。窗口运行加 `-- --capture` 时，将店铺和聚落的截图保存到 `.godot/handbook/`；覆盖 640×360 与 1280×720。
 
 使用 [Godot 4.7 TabContainer](https://docs.godotengine.org/en/4.7/classes/class_tabcontainer.html) 的 `set_tab_hidden()` 隐藏未解锁页签。结构参考 [ESO 官方任务指南](https://www.elderscrollsonline.com/en-us/newplayerguide/questing) 的任务与 Lore Library 统一 Journal，以及 [Guild Wars 2 官方 Story Journal 介绍](https://www.guildwars2.com/en/news/introducing-the-story-journal/) 的主面板集中浏览。图标 `assets/ui/handbook.svg` 为项目内原创矢量图形。
+
+## 正式聚落地图
+
+`src/UI/map/map_panel.tscn` 使用 `UIScreen + ModalShell`，由聚落 MainGame 装配。`MainGame.unlock_map()` 在地图和玩家已装配、screen 注册成功后才写入 `day1.s04.map_available`；重复调用安全。它是供后续 S04 接线的公开能力，当前正式剧情没有调用，初始化和打开地图均不补写这个事实。已有事实在宿主重建时恢复入口；reset / restore 撤销事实会注销并关闭地图。
+
+解锁后 HUD 的“地图 [M]”或 M 调用 `open_map()`；未解锁返回 `ERR_UNAVAILABLE`，暂停、演出、其他模态、潜行拦截或现有移动锁期间返回 `ERR_BUSY`。Esc / 关闭按钮退出，P 暂停覆盖，焦点和玩家锁沿用 UIManager / MainGame。Debug 全图改为 F7，Tab 路线在模态期间不响应。独立店内及洞穴宿主未装配聚落地图，不能解锁或打开它。
+
+`SettlementMap.get_map_data(known_locations)` 只返回世界边界、保存场景中的区域 footprint 和真实外部入口位置的值副本；不返回节点、内部贴图、文书、血液、书柜、隐藏石盖或路线。`SettlementMap.MAP_LOCATIONS` 是唯一的 `location_id → zone_id → *_entrance` 映射：`settlement.shop/muster/vestibule/training/lodging/kitchen/tavern/casino/dining/ritual/elder/growing/warehouse/yard/hearth/workshop`。正式展示采用克制的编号轮廓图和地点列表，不加载制作源 JSON，不生成或复制地图图片。
+
+奶茶店是当前唯一默认已知地点。其他地点须由剧情或真实探索业务写入 `ui.map.known.<location_id>`（例如 `ui.map.known.settlement.elder`）；地图不擅自推断认知，也不写探索完成事实。即使取得长老住处知识，也只显示建筑轮廓和外部入口。当前尚无正式 S04 知识发布及查看完成条件接线，不能将地图能力视为 P14 整项完成。
+
+地图只读 `TaskJournal.get_current_main_task()` 及已揭示的 `current_objective`，优先采用目标 `location_id`，为空时采用明确配置的任务级位置。未知映射、未知区域、未揭示目标都不画目标；没有坐标配置显示“位置未标注”，不会用交付对象或剧情文本猜位置。当前正式任务目录未配置地点，所以正常任务暂无位置标记；位置能力由隔离测试夹具在真实聚落宿主中验证，未修改任务 Schema 或发布虚构主线。
+
+`SettlementMapCanvas.world_to_map()` 统一处理世界原点、等比缩放和居中。打开时读取最新地图/玩家/投影；打开期间只逐帧检查玩家位置，任务与知识变化按信号刷新。隐藏时停止处理，暂停覆盖时由管理器禁用处理。
+
+本次最低模块验证：`verify_map_ui.gd`、`verify_ui_manager.gd`、`verify_ui_theme.gd`、`verify_task_panel.gd`、`verify_main_game.gd` 及 `verify_settlement.gd`。窗口专项使用 `-- --capture` 在真实 `src/core/settlement.tscn` 且关闭开发工具的宿主执行键鼠、移动、暂停与知识/目标隔离夹具，截图输出到 `.godot/map_ui/`。不代表完整 S04 剧情或真实 Release 导出验收。
+
+2026-10-18 验收结果（Godot 4.7.2，macOS / Apple M1）：地图专项 headless 初版 55 项通过，最终 Metal 窗口版 59 项通过（含重复解锁、按键无冲突与真实窗口尺寸断言）；UIManager 47、Theme 167、TaskPanel 92、MainGame 73、DebugBuild 97 项均通过。聚落检查通过 48,623 个物理采样点及 16 区域、锚点、桥、实际移动与碰撞。已人工检查 `.godot/map_ui/known_shop_640.png`、`settlement_640.png`、`settlement_1280.png`，全地点截图的知识和目标来自隔离夹具。headless 有 macOS 系统证书诊断，无脚本错误；导入阶段另有沙箱中编辑器设置写入和退出资源诊断，不计为玩法检查。未扩大到完整剧情回归或 Release 导出，因为没有修改剧情内容、任务业务或地图通行布局。

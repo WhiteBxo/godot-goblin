@@ -15,6 +15,9 @@ var _ui_manager: UIManager
 var _shop_ui: ShopUI
 var _shop_interaction: ShopInteraction
 var _task_journal: TaskJournal
+var _map_panel: SettlementMapPanel
+var _map_button: Button
+var _map_registered := false
 var _handbook: HandbookPanel
 var _handbook_hud: HandbookHUD
 var _chronicle_journal: ChronicleJournal
@@ -27,6 +30,7 @@ var _npc_points: Dictionary = {}
 var _story_points: Dictionary[StringName, StoryInteractionPoint] = {}
 var _pending_story_document: StoryInteractionPoint
 var _world_controller: Day1WorldController
+var _stealth_service: Day1StealthService
 var _dialogue_manager: DialogueManager
 var _story_director: StoryDirector
 var _actor_director: ActorDirector
@@ -192,6 +196,10 @@ func _refresh_task_delivery_names() -> void:
 	_handbook.set_delivery_names(target_names, product_names)
 
 func _unhandled_key_input(event: InputEvent) -> void:
+	if event.is_action_pressed(&"open_map") and not event.is_echo():
+		open_map()
+		get_viewport().set_input_as_handled()
+		return
 	if event.is_action_pressed(&"open_tasks") and not event.is_echo():
 		open_tasks()
 		get_viewport().set_input_as_handled()
@@ -302,6 +310,7 @@ func _can_leave_scene() -> bool:
 	var owns_lock := is_instance_valid(_scene_travel) and _scene_travel.is_busy()
 	var movement_available := _movement_before_dialogue if owns_lock else _shop_player.movement_enabled
 	return (not get_tree().paused and not _ui_manager.has_modal() and movement_available
+		and (not is_instance_valid(_stealth_service) or not _stealth_service.is_blocking())
 		and not _shop_player.is_performance_controlled()
 		and not _story_director.is_busy() and not _dialogue_manager.is_active()
 		and _gameplay_bridge.allows_story_start())
@@ -348,6 +357,8 @@ func _initialize_settlement() -> void:
 	_create_gameplay_bridge(false)
 	_create_world_controller()
 	_create_scene_travel(_settlement_level.get_scene_exits())
+	_create_stealth_system()
+	_create_map_ui()
 	if DebugRuntime.is_enabled():
 		var preview := Node.new()
 		preview.name = "SettlementPreview"
@@ -357,6 +368,34 @@ func _initialize_settlement() -> void:
 
 func get_tea_production() -> TeaProduction:
 	return _tea_production
+
+func get_stealth_service() -> Day1StealthService:
+	return _stealth_service
+
+func _create_stealth_system() -> void:
+	_stealth_service = Day1StealthService.new()
+	_stealth_service.name = "Day1StealthService"
+	$Systems.add_child(_stealth_service)
+	_stealth_service.changed.connect(_refresh_input_lock)
+	_stealth_service.guard_intercepted.connect(_on_stealth_intercepted)
+	_stealth_service.configure(get_node("/root/GameState"), _warehouse_inventory, _shop_player,
+		$World/EffectRoot, _settlement_level.get_stealth_setup(), _actor_director.get_actor, _can_operate_stealth)
+	var hud: Day1StealthHUD = preload("res://src/UI/hud/day1_stealth_hud.tscn").instantiate()
+	_ui_manager.register_screen(ScreenIds.STEALTH_HUD, hud, &"hud", false)
+	hud.configure(_stealth_service)
+	_ui_manager.open_screen(ScreenIds.STEALTH_HUD)
+
+func _can_operate_stealth() -> bool:
+	return (not get_tree().paused and not _ui_manager.has_modal()
+		and not _dialogue_manager.is_active() and not _story_director.is_busy()
+		and not _shop_player.is_performance_controlled()
+		and (not is_instance_valid(_scene_travel) or not _scene_travel.is_busy())
+		and (_shop_player.movement_enabled or (_stealth_service.is_blocking() and _movement_before_dialogue)))
+
+func _on_stealth_intercepted(event_id: String) -> void:
+	var error := _story_director.request_event(event_id)
+	if error != OK:
+		push_warning("Drunken guard event is not available (%s); no payment or clearance was recorded" % error_string(error))
 
 func get_transactions() -> WalletTransactions:
 	return get_node("/root/GameState").get_transactions()
@@ -578,6 +617,7 @@ func _refresh_order_requirements(ui: ShopUI) -> void:
 
 func _can_start_story() -> bool:
 	return (not get_tree().paused and not _ui_manager.has_modal()
+		and (not is_instance_valid(_stealth_service) or _stealth_service.status != Day1StealthService.Status.FAILED)
 		and (not is_instance_valid(_scene_travel) or not _scene_travel.is_busy())
 		and (not is_instance_valid(_gameplay_bridge) or _gameplay_bridge.allows_story_start()))
 
@@ -601,7 +641,10 @@ func _refresh_input_lock() -> void:
 		or (is_instance_valid(_dialogue_manager) and _dialogue_manager.is_active())
 		or (is_instance_valid(_story_director) and _story_director.is_busy())
 		or (is_instance_valid(_actor_director) and _actor_director.is_actor_controlled(&"player"))
+		or (is_instance_valid(_stealth_service) and _stealth_service.is_blocking())
 	)
+	if is_instance_valid(_map_button):
+		_map_button.disabled = should_lock
 	if is_instance_valid(_handbook_hud):
 		_handbook_hud.disabled = should_lock
 	if should_lock == _input_locked:
@@ -697,3 +740,70 @@ func refresh_day1_access() -> void:
 			if task.has("delivery") and task.delivery.target_object_id == String(id) and _task_journal.get_task(task.id).get("status") == "active":
 				available = not task.delivery.has("accepted_flag") or get_node("/root/GameState").get_flag(task.delivery.accepted_flag)
 		_npc_points[id].interaction_enabled = available
+
+## Capability only; the S04 story decides when to call this, not the UI.
+func unlock_map() -> Error:
+	if not is_instance_valid(_map_panel) or not is_instance_valid(_settlement_level):
+		return ERR_UNCONFIGURED
+	var error := _register_map()
+	if error != OK:
+		return error
+	if get_node("/root/GameState").get_flag("day1.s04.map_available"):
+		return OK
+	if not get_node("/root/GameState").set_flag("day1.s04.map_available"):
+		_refresh_map_access()
+		return ERR_BUSY
+	return OK
+
+func _register_map() -> Error:
+	if _map_registered:
+		return OK
+	var error := _ui_manager.register_screen(ScreenIds.MAP, _map_panel, &"popup", true)
+	_map_registered = error == OK
+	return error
+
+func _create_map_ui() -> void:
+	_map_panel = preload("res://src/UI/map/map_panel.tscn").instantiate()
+	$PopupLayer.add_child(_map_panel)
+	_map_panel.configure(_settlement_level, _shop_player, _task_journal, _get_known_map_locations)
+	_map_panel.close_requested.connect(func() -> void: _ui_manager.close_screen(ScreenIds.MAP))
+	_map_button = preload("res://src/UI/map/map_button.tscn").instantiate()
+	$HudLayer.add_child(_map_button)
+	_map_button.pressed.connect(open_map)
+	get_node("/root/GameState").state_changed.connect(_refresh_map_access)
+	_refresh_map_access()
+
+func _get_known_map_locations() -> Array[String]:
+	# Only the shop is initially established. Other areas require explicit knowledge.
+	var known: Array[String] = ["settlement.shop"]
+	var state := get_node("/root/GameState")
+	for id: String in SettlementMap.MAP_LOCATIONS:
+		if state.get_flag("ui.map.known." + id) and id not in known:
+			known.append(id)
+	return known
+
+func _refresh_map_access() -> void:
+	if not is_instance_valid(_map_panel):
+		return
+	var unlocked: bool = get_node("/root/GameState").get_flag("day1.s04.map_available")
+	if unlocked:
+		unlocked = _register_map() == OK
+	elif _map_registered:
+		_ui_manager.unregister_screen(ScreenIds.MAP)
+		_map_registered = false
+	if _ui_manager.is_open(ScreenIds.MAP):
+		_map_panel.refresh()
+	_map_button.visible = unlocked
+	_map_button.focus_mode = Control.FOCUS_ALL if unlocked else Control.FOCUS_NONE
+
+func open_map() -> Error:
+	if not is_instance_valid(_map_panel) or not get_node("/root/GameState").get_flag("day1.s04.map_available"):
+		return ERR_UNAVAILABLE
+	if (get_tree().paused or _ui_manager.has_modal()
+		or (is_instance_valid(_scene_travel) and _scene_travel.is_busy())
+		or (is_instance_valid(_story_director) and _story_director.is_busy())
+		or (is_instance_valid(_actor_director) and _actor_director.is_actor_controlled(&"player"))
+		or (is_instance_valid(_stealth_service) and _stealth_service.is_blocking())
+		or not _shop_player.movement_enabled):
+		return ERR_BUSY
+	return _ui_manager.open_screen(ScreenIds.MAP)

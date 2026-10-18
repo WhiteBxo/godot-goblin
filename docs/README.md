@@ -168,6 +168,7 @@ Beat 映射、验证清单及待定项；不供游戏运行时加载。
 | 文档 | 文件 / 说明 |
 | --- | --- |
 | [两工作树整合（2026-10-19）](development/two_day_integration_2026_10_19.md) | 单一经济账本、两天剧情、RPG Maker 地图、迁移与验证。 |
+| [前两天体验打磨（2026-10-19）](development/experience_polish_2026_10_19.md) | 制作与交付反馈、守卫警戒可读性、环境与脚步、截图及实际验证。 |
 | [通用 Developer Console（第一阶段）](development/developer_console.md) | `developer_console.md` |
 | [项目开发现状（2026-10-18）](development/development_status_2026_10_18.md) | 10-18 历史快照，基线 88684ac；当前变化见 10-19 整合记录。 |
 | [系统开发现状（2026-10-16 历史快照）](development/development_status_2026_10_16.md) | `development_status_2026_10_16.md` |

@@ -4,7 +4,15 @@
 
 根目录 `default_bus_layout.tres` 使用 Godot 默认加载位置，保存 Music、SFX、UI 三个 Bus，均发送到 Master；无需改动 `project.godot`。不添加 Bus effect、空间声或混音编辑器。淡入淡出只调整对应播放器的音量，不改变整个 Bus。
 
-正式交互、制作（含自由配方）、接单、交付、对白和 UI 声音由 InteractionAudio / UIAudioFeedback 观察真实结果播放，配置与去重见[音效库](../assets/sound_library.md#交互音效配置)。自动脚步、循环环境与门口声音尚未启用。
+正式交互、制作（含自由配方）、接单、交付、对白和 UI 声音由 InteractionAudio / UIAudioFeedback 观察真实结果播放，配置与去重见[音效库](../assets/sound_library.md#交互音效配置)。自动脚步与循环环境已接入 SceneSoundscape；自动门口声音尚未启用。
+
+## 场景环境与脚步
+
+`SceneSoundscape` 是 Systems 下的 Pausable 场景组件，复用 AudioManager 的 SFX 池和 SoundLibrary。MainGame 的 `soundscape_profile` 明确选择 `silent`（默认）、`shop`、`cave` 或 `interior`；正式奶茶店使用室内环境与木地板脚步，洞窟使用洞穴环境与石地脚步，酒馆／赌场／长老室内使用更轻的洞穴底声与石地脚步。
+
+脚步按实际位移累计，每 62 世界像素触发一次，最短间隔 0.18 秒；站立、传送、移动锁定和演出接管不触发。潜行脚步更轻，昼夜读取 DayPhase，夜间环境下降 4 dB。全部仅为声音表现，不向守卫听觉或剧情写入事实，也不接管 BGM。
+
+循环音沿用 WAV 的原生导入循环。昼夜变化只替换本组件的环境声，池满时稍后重试；暂停跟随 SFX，退出或重配时清理自己的 owner，不停止剧情和其他组件的声音。实际检查与人工听感边界见[体验打磨记录](../development/experience_polish_2026_10_19.md)。
 
 ## 资源与 API
 

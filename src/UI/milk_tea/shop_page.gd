@@ -8,6 +8,7 @@ signal accept_requested(order_id: String)
 signal track_requested(order_id: String)
 signal formula_requested(materials: Array[String], iced: bool)
 signal confirm_formula_requested(materials: Array[String])
+signal return_requested
 
 var _production: TeaProduction
 var _crafting_panel: CraftingPanel
@@ -34,6 +35,7 @@ func _ready() -> void:
 	_board.accept_requested.connect(func(id: String) -> void: accept_requested.emit(id))
 	_board.track_requested.connect(func(id: String) -> void: track_requested.emit(id))
 	_order_crafting.track_requested.connect(func(id: String) -> void: track_requested.emit(id))
+	_order_crafting.return_requested.connect(return_requested.emit)
 	_order_crafting.craft_requested.connect(func(materials: Array[String], quantity: int) -> void: craft_requested.emit(materials, quantity))
 	_craft_modes.tab_changed.connect(func(_index: int) -> void: _refresh_recipe())
 

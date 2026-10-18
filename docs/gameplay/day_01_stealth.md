@@ -1,5 +1,7 @@
 # Day 1 投掷与守卫反应
 
+> 2026-10-19：正式两天路线已接通，当前玩法与整次重试以[整合记录](../development/two_day_integration_2026_10_19.md)为准。后续体验打磨加入墙体裁切的观察区域、警戒百分比、分心倒计时、发现者名称及重试说明，见[体验打磨记录](../development/experience_polish_2026_10_19.md)。以下 10-18 的缺口与局部重试规则保留为历史记录，不覆盖现行正式关卡。
+
 2026-10-18：玩法组件已实现，**Day 1 第五阶段正式流程尚未接通**。来源为[修改稿第五阶段](../design/day_01_story_flow_revised.md#第五阶段夜间潜入)、[对接契约](../design/day_01_integration_contract.md)及 [P05/P06/P08/P09](../story_authoring/day_01_integration_pending.md)。没有发布新的 Story/Dialogue/Bridge 数据，也没有决定文书与血液的顺序。
 
 ## 2026-10-18 正式关卡核对

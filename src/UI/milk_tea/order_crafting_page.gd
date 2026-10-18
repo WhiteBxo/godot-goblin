@@ -4,6 +4,7 @@ extends HBoxContainer
 
 signal craft_requested(materials: Array[String], quantity: int)
 signal track_requested(order_id: String)
+signal return_requested
 
 @onready var _list: OrderList = %OrderList
 @onready var _ticket: OrderTicket = %Ticket
@@ -19,7 +20,7 @@ func _ready() -> void:
 			_selected = id
 			track_requested.emit(_selected)
 			refresh())
-	_ticket.primary_pressed.connect(submit)
+	_ticket.primary_pressed.connect(_on_primary_pressed)
 	refresh()
 
 func configure(model: OrderBoardModel) -> void:
@@ -58,8 +59,17 @@ func _refresh_detail() -> void:
 			"stage": "empty", "status": "empty", "product_id": "", "items": [], "missing_text": "",
 			"rewards": "—", "hint": "也可以切换到自由调配，制作已解锁的饮品。"}
 	elif entry.ready:
-		action = "成品已备齐，请前往交付"
-	_ticket.present(entry, action, bool(entry.get("can_craft", false)))
+		action = "返回店铺，去交付"
+		entry.hint = "靠近%s，按 E 交付" % entry.target_name
+	_ticket.present(entry, action, bool(entry.get("can_craft", false)) or bool(entry.get("ready", false)))
+
+func _on_primary_pressed() -> void:
+	var entry := _model.get_entry(_selected) if is_instance_valid(_model) else {}
+	if entry.get("status") == "active" and entry.get("ready", false):
+		track_requested.emit(_selected)
+		return_requested.emit()
+	else:
+		submit()
 
 func submit() -> Dictionary:
 	_last_result = {}
@@ -76,6 +86,8 @@ func submit() -> Dictionary:
 func show_result(result: Dictionary) -> void:
 	_last_result = result.duplicate(true)
 	refresh()
+	if is_visible_in_tree():
+		_ticket.show_result(result)
 
 func select_order(order_id: String) -> bool:
 	if order_id not in _ids:

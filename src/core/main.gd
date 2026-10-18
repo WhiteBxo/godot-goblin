@@ -5,6 +5,7 @@ signal session_initialized(error: Error)
 
 @export var day1_story_enabled := false
 @export var interaction_audio_scene: PackedScene = preload("res://src/core/audio/interaction_audio.tscn")
+@export_enum("silent", "shop", "cave", "interior") var soundscape_profile := "silent"
 var _interaction_audio: InteractionAudio
 var _day1_controller: Day1ShopController
 var _chapter_controller: Day1ChapterController
@@ -82,6 +83,7 @@ func _ready() -> void:
 			push_error("Cannot switch an existing business session to Day 1 (%d)" % profile_error)
 			return
 	_create_audio_feedback()
+	_create_soundscape.call_deferred()
 	_create_ui_system()
 	_create_chronicle_system()
 	_create_character_system()
@@ -120,7 +122,7 @@ func _ready() -> void:
 		if day1_story_enabled:
 			_business_hud = preload("res://src/UI/milk_tea/day1_business_hud.tscn").instantiate()
 			_ui_manager.register_screen(ScreenIds.BUSINESS_HUD, _business_hud, &"hud", false)
-			_business_hud.configure(get_transactions(), _warehouse_inventory)
+			_business_hud.configure(get_transactions(), _warehouse_inventory, get_node("/root/GameState"))
 			_ui_manager.open_screen(ScreenIds.BUSINESS_HUD)
 			_day1_controller = Day1ShopController.new()
 			_day1_controller.name = "Day1ShopController"
@@ -171,6 +173,14 @@ func _create_interaction_feedback(interaction: ShopInteraction) -> void:
 	$World/EffectRoot.add_child(feedback)
 	feedback.configure(interaction, _audio_manager, _interaction_audio.play_sound)
 	interaction.interaction_failed.connect(func(_point: InteractionPoint) -> void: _interaction_audio.play_event("interaction_failure"))
+
+func _create_soundscape() -> void:
+	if soundscape_profile == "silent" or not is_inside_tree() or not is_instance_valid(_shop_player):
+		return
+	var soundscape := SceneSoundscape.new()
+	soundscape.name = "SceneSoundscape"
+	$Systems.add_child(soundscape)
+	soundscape.configure(_audio_manager, _shop_player, get_node("/root/GameState"), _interaction_audio.library, soundscape_profile)
 
 func get_ui_manager() -> UIManager:
 	return _ui_manager if is_instance_valid(_ui_manager) else null

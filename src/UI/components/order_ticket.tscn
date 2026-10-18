@@ -69,6 +69,14 @@ layout_mode = 2
 theme_type_variation = &"TicketText"
 autowrap_mode = 3
 
+[node name="CraftFeedback" type="Label" parent="Content/Scroll/Details"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"TicketStamp"
+autowrap_mode = 3
+
 [node name="NextStep" type="Label" parent="Content"]
 unique_name_in_owner = true
 layout_mode = 2

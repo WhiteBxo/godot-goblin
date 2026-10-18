@@ -7,6 +7,7 @@
 [node name="MainGame" type="Node"]
 process_mode = 3
 script = ExtResource("main")
+soundscape_profile = "interior"
 [node name="Systems" type="Node" parent="."]
 process_mode = 1
 [node name="AudioManager" parent="Systems" instance=ExtResource("audio")]

@@ -214,7 +214,7 @@ func _physics_process(delta: float) -> void:
 				_set_status(Status.INTERCEPTED, "醉酒守卫拦住了你；完成交涉后继续，或返回检查点")
 				guard_intercepted.emit(guard.encounter_event_id)
 			else:
-				_set_status(Status.FAILED, "被守卫发现；可从检查点重试")
+				_set_status(Status.FAILED, "%s发现了你。下次留意朝向，避开观察区域再通过。" % guard.actor.display_name)
 				attempt_failed.emit(guard.actor.actor_id)
 			return
 	_try_escape()
@@ -403,6 +403,10 @@ func _reset_responses(restore_actors: bool) -> void:
 func _set_status(next: Status, text: String) -> void:
 	status = next
 	message = text
+	if is_instance_valid(_setup):
+		for guard: Day1GuardResponse in _setup.guards:
+			if is_instance_valid(guard):
+				guard.set_feedback_enabled(next == Status.RUNNING)
 	changed.emit()
 
 func _on_session_replaced() -> void:

@@ -47,7 +47,8 @@ func _process(_delta: float) -> void:
 	$Panel.visible = _service.is_mission_stage()
 	if not $Panel.visible:
 		return
-	$Panel/Content/Status.text = "夜间潜入暂不可用：火把来源、守卫和撤离规则尚未确定。" if _service.status == Day1StealthService.Status.PENDING else _service.message
+	$Panel/Content/Status.text = "暂时无法开始潜入，请返回后重试。" if _service.status == Day1StealthService.Status.PENDING else _service.message
+	$Panel/Content/Status.theme_type_variation = &"Warning" if _service.status == Day1StealthService.Status.FAILED else &"Hint"
 	$Panel/Content/Actions/Coin.disabled = not _service.can_accept_input()
 	$Panel/Content/Actions/Torch.disabled = not _service.can_accept_input()
 	$Panel/Content/Drinks.disabled = not _service.can_accept_input()
@@ -64,11 +65,15 @@ func _process(_delta: float) -> void:
 		$Panel/Content/Actions/Coin.text = "投掷金币 · 10G"
 	$Panel/Content/Actions/Torch.text = "火把 %d%s" % [inventory.get_stock(setup.torch_item_id), " · 已选" if _service.selected_kind == &"torch" else ""]
 	$Panel/Content/Actions/Retry.visible = _service.is_blocking() or (setup.wallet_coins and _service.status == Day1StealthService.Status.RUNNING)
+	$Panel/Content/Actions/Retry.text = "重新潜入" if setup.wallet_coins else "从检查点重试"
+	$Panel/Content/RetryHint.visible = _service.status == Day1StealthService.Status.FAILED
+	$Panel/Content/RetryHint.text = "重试会恢复本次潜入前的钱包和物品。" if setup.wallet_coins else "重试返回检查点，已用物品不会补回。"
 	$Panel/Content/Actions/Start.visible = _service.status == Day1StealthService.Status.IDLE
 	$Panel/Content/Hint.visible = _service.status == Day1StealthService.Status.RUNNING
 	var watches := PackedStringArray()
 	for guard: Variant in setup.guards:
 		if is_instance_valid(guard) and is_instance_valid(guard.actor):
-			var states := ["观察", "警戒", "分心", "混乱", "已放行", "眩晕"]
-			watches.append("%s：%s" % [guard.actor.display_name, states[guard.state]])
+			if guard.state not in [Day1GuardResponse.State.WATCHING, Day1GuardResponse.State.CLEARED]:
+				watches.append("%s：%s" % [guard.actor.display_name, guard.get_feedback_text()])
 	$Panel/Content/Guards.text = " · ".join(watches)
+	$Panel/Content/Guards.visible = not watches.is_empty()

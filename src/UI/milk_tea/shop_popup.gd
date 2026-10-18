@@ -21,6 +21,7 @@ func _ready() -> void:
 	_page.track_requested.connect(func(id: String) -> void: track_requested.emit(id))
 	_page.formula_requested.connect(formula_requested.emit)
 	_page.confirm_formula_requested.connect(confirm_formula_requested.emit)
+	_page.return_requested.connect(close_requested.emit)
 
 func configure_orders(model: OrderBoardModel) -> void:
 	_page.configure_orders(model)

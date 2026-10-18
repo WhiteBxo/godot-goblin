@@ -11,11 +11,14 @@ signal primary_pressed
 @onready var _requirements: Label = %Requirements
 @onready var _hint: Label = %NextStep
 @onready var _primary: Button = %Primary
+@onready var _feedback: Label = %CraftFeedback
+var _completion_tween: Tween
 
 func _ready() -> void:
 	_primary.pressed.connect(func() -> void: primary_pressed.emit())
 
 func present(entry: Dictionary, action: String = "", enabled: bool = false) -> void:
+	_clear_result()
 	_icon.texture = entry.get("icon")
 	_title.text = entry.get("title", "今天暂时没有订单")
 	_target.text = "交给：" + str(entry.target_name) if not entry.is_empty() else "新的订单会在这里出现"
@@ -33,6 +36,28 @@ func present(entry: Dictionary, action: String = "", enabled: bool = false) -> v
 	_primary.text = action
 	_primary.visible = not action.is_empty()
 	_primary.disabled = not enabled
+
+## Only a committed crafting result can trigger the cup presentation.
+func show_result(result: Dictionary) -> void:
+	_clear_result()
+	_feedback.text = result.get("message", "")
+	_feedback.visible = not _feedback.text.is_empty()
+	_feedback.theme_type_variation = &"TicketStamp" if result.get("ok", false) else &"TicketWarning"
+	if not result.get("ok", false):
+		return
+	_status.text = "制作完成 · 已入库"
+	_icon.pivot_offset = _icon.size * 0.5
+	_icon.scale = Vector2(0.8, 0.8)
+	_completion_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_STOP)
+	_completion_tween.tween_property(_icon, "scale", Vector2(1.15, 1.15), 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_completion_tween.tween_property(_icon, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+func _clear_result() -> void:
+	if _completion_tween != null:
+		_completion_tween.kill()
+		_completion_tween = null
+	_icon.scale = Vector2.ONE
+	_feedback.hide()
 
 func get_primary_button() -> Button:
 	return _primary

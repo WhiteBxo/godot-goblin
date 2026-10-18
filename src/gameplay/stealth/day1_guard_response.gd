@@ -24,6 +24,29 @@ var detection_multiplier := 1.0
 var _home_position := Vector2.ZERO
 var _home_facing: PlayerController.Facing
 var _captured := false
+var _feedback_enabled := false
+var _sight_polygon := PackedVector2Array()
+const FEEDBACK_THEME = preload("res://src/resources/ui/game_theme.tres")
+
+func set_feedback_enabled(enabled: bool) -> void:
+	_feedback_enabled = enabled
+	if not enabled:
+		_sight_polygon.clear()
+	queue_redraw()
+
+func get_feedback_text() -> String:
+	match state:
+		State.ALERT:
+			return "! 警戒 %d%%" % roundi(100.0 * exposure / discovery_seconds)
+		State.DISTRACTED:
+			return "分心 %.1f 秒" % remaining
+		State.CONFUSED:
+			return "混乱 %.1f 秒" % remaining
+		State.CLEARED:
+			return "已放行"
+		State.STUNNED:
+			return "眩晕 %.1f 秒" % remaining
+	return "观察中"
 
 func capture_checkpoint() -> void:
 	_home_position = actor.global_position
@@ -100,6 +123,7 @@ func effective_sight_range() -> float:
 
 ## Called only by the service's physics tick. Returns true on actual discovery.
 func advance(delta: float, player: PlayerController, space: PhysicsDirectSpaceState2D) -> bool:
+	_update_sight_feedback(player, space)
 	queue_redraw()
 	if not _available() or state == State.CLEARED:
 		return false
@@ -134,11 +158,39 @@ func _face_toward(target: Vector2) -> void:
 	elif not offset.is_zero_approx():
 		actor.face_direction(PlayerController.Facing.DOWN if offset.y > 0 else PlayerController.Facing.UP)
 
-func _draw() -> void:
-	if not is_instance_valid(actor) or not actor.is_visible_in_tree() or state == State.WATCHING:
+## Read-only geometry uses the same origin, range, angle and world layer as sight.
+func _update_sight_feedback(player: PlayerController, space: PhysicsDirectSpaceState2D) -> void:
+	_sight_polygon.clear()
+	if not _feedback_enabled or not _available() or actor.global_position.distance_to(player.global_position) > sight_range + 320.0:
 		return
-	var colors := [Color.WHITE, Color.YELLOW, Color.SKY_BLUE, Color.ORANGE_RED, Color.GREEN, Color.MEDIUM_PURPLE]
+	var origin := actor.global_position
+	_sight_polygon.append(to_local(origin))
+	var direction := actor.get_facing_vector().angle()
+	for index in range(25):
+		var angle := direction + deg_to_rad(lerpf(-sight_half_angle, sight_half_angle, index / 24.0))
+		var endpoint := origin + Vector2.from_angle(angle) * sight_range
+		var ray := PhysicsRayQueryParameters2D.create(origin, endpoint, 1)
+		ray.hit_from_inside = true
+		var hit := space.intersect_ray(ray)
+		_sight_polygon.append(to_local(hit.get("position", endpoint)))
+
+func _draw() -> void:
+	if not _feedback_enabled or not _available():
+		return
+	var colors := [Color("e6c67e"), Color("ffb35c"), Color("8cdbed"), Color("f3a36a"), Color("a8dd9a"), Color("c8a5e8")]
+	var color: Color = colors[state]
+	if state in [State.WATCHING, State.ALERT] and _sight_polygon.size() > 3:
+		draw_colored_polygon(_sight_polygon, Color(color, 0.10 if state == State.WATCHING else 0.20))
+		draw_polyline(_sight_polygon + PackedVector2Array([_sight_polygon[0]]), Color(color, 0.45), 1.0)
+	if state == State.WATCHING:
+		return
 	var center := to_local(actor.global_position) + actor.get_emote_offset()
-	draw_circle(center, 7.0, colors[state])
-	if state == State.ALERT:
-		draw_arc(center, 11.0, -PI * 0.5, -PI * 0.5 + TAU * exposure / discovery_seconds, 24, Color.RED, 3.0)
+	var font := FEEDBACK_THEME.default_font
+	var text := get_feedback_text()
+	var width := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20).x
+	var box := Rect2(center + Vector2(-width * 0.5 - 8, -26), Vector2(width + 16, 32))
+	draw_style_box(FEEDBACK_THEME.get_stylebox("panel", "PanelContainer"), box)
+	draw_string(font, center + Vector2(-width * 0.5, -3), text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20, color)
+	if state in [State.ALERT, State.DISTRACTED]:
+		var progress := exposure / discovery_seconds if state == State.ALERT else remaining / distraction_seconds
+		draw_line(box.position + Vector2(4, 29), box.position + Vector2(4 + (box.size.x - 8) * clampf(progress, 0, 1), 29), color, 2.0)

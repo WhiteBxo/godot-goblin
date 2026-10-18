@@ -1,5 +1,7 @@
 # 系统设计审查：当前能力、缺口与优先级
 
+> 时效说明（2026-10-18）：下文保留 2026-10-17 静态审查结论，不代表当前全部实现。新增[配方专项设计](../design/milk_tea_recipe_system_revised.md)和[22 种原料规则表](../design/recipe_ingredients_revised.md)已补充槽位、计算、命名、成本等设计；完整爆品数据仍未提供。新旧关系见[更新说明](../design/milk_tea_recipe_update_2026_10_18.md)。
+
 审查日期：2026-10-17。
 
 ## 结论与范围

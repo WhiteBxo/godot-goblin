@@ -13,6 +13,34 @@
 [ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/strange_coin.svg" id="icon_coin"]
 [ext_resource type="Resource" path="res://src/resources/milk_tea/recipe_book.tres" id="book"]
 
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/products/classic_boba_milk_tea.png" id="icon_art_classic_boba_milk_tea"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/products/strawberry_milk_green_tea.png" id="icon_art_strawberry_milk_green_tea"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/products/iced_mint_latte.png" id="icon_art_iced_mint_latte"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/products/apple_milk_green_tea.png" id="icon_art_apple_milk_green_tea"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/products/coffee_cocoa_ice_milk.png" id="icon_art_coffee_cocoa_ice_milk"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/products/mint_choc_milk_tea.png" id="icon_art_mint_choc_milk_tea"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/brute_lava_firebrew.png" id="icon_art_brute_lava_firebrew"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/goblin_firebrew.png" id="icon_art_goblin_firebrew"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/griffin_sacred_wine.png" id="icon_art_griffin_sacred_wine"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/griffin_amber_wine.png" id="icon_art_griffin_amber_wine"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/sour_moss_ale.png" id="icon_art_sour_moss_ale"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/scorch_tongue_pepper.png" id="icon_art_scorch_tongue_pepper"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/honey_amber_crystal.png" id="icon_art_honey_amber_crystal"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/phantom_gold_mushroom.png" id="icon_art_phantom_gold_mushroom"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/day1_griffin_blood.png" id="icon_art_day1_griffin_blood"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/rainbow_cube.png" id="icon_art_rainbow_cube"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/red_mottled_wood.png" id="icon_art_red_mottled_wood"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/insomnia_mushroom.png" id="icon_art_insomnia_mushroom"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/brown_sugar_boba.png" id="icon_art_brown_sugar_boba"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/creamer_milk_tea_base.png" id="icon_art_creamer_milk_tea_base"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/instant_coffee_concentrate.png" id="icon_art_instant_coffee_concentrate"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/industrial_green_tea.png" id="icon_art_industrial_green_tea"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/cocoa_powder.png" id="icon_art_cocoa_powder"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/mint_choc_crisp.png" id="icon_art_mint_choc_crisp"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/ice.png" id="icon_art_ice"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/mint_syrup.png" id="icon_art_mint_syrup"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/strawberry_jam.png" id="icon_art_strawberry_jam"]
+
 [sub_resource type="Resource" id="Ingredient_black_tea"]
 script = ExtResource("ingredient")
 id = "black_tea"
@@ -56,8 +84,8 @@ category = "syrup"
 [sub_resource type="Resource" id="Ingredient_insomnia"]
 script = ExtResource("ingredient")
 id = "insomnia_mushroom"
+icon = ExtResource("icon_art_insomnia_mushroom")
 display_name = "醒神菇"
-icon = ExtResource("icon_insomnia")
 origin = "otherworld"
 category = "material"
 rarity = "稀有"
@@ -101,8 +129,8 @@ acquisition_sources = PackedStringArray("顾客支付；金币上印着某种兽
 [sub_resource type="Resource" id="Ingredient_day1_griffin_blood"]
 script = ExtResource("ingredient")
 id = "day1_griffin_blood"
+icon = ExtResource("icon_art_day1_griffin_blood")
 display_name = "格里芬之血"
-icon = ExtResource("icon_syrup")
 origin = "otherworld"
 category = "material"
 rarity = "传奇"
@@ -123,8 +151,8 @@ category = "product"
 [sub_resource type="Resource" id="Ingredient_creamer_milk_tea_base"]
 script = ExtResource("ingredient")
 id = "creamer_milk_tea_base"
+icon = ExtResource("icon_art_creamer_milk_tea_base")
 display_name = "植脂末奶茶底"
-icon = ExtResource("icon_creamer")
 origin = "human"
 category = "milk"
 flavor_tags = PackedStringArray("奶香浓厚", "甜味明显", "入口顺滑但略显腻口")
@@ -134,8 +162,8 @@ description = "米黄色奶茶液体，质地浓稠。"
 [sub_resource type="Resource" id="Ingredient_industrial_green_tea"]
 script = ExtResource("ingredient")
 id = "industrial_green_tea"
+icon = ExtResource("icon_art_industrial_green_tea")
 display_name = "工业绿茶清汤"
-icon = ExtResource("icon_green_tea")
 origin = "human"
 category = "tea"
 flavor_tags = PackedStringArray("茶味清淡单薄", "带有轻微苦涩感")
@@ -145,8 +173,8 @@ description = "淡黄绿色茶汤，质地清透。"
 [sub_resource type="Resource" id="Ingredient_mint_syrup"]
 script = ExtResource("ingredient")
 id = "mint_syrup"
+icon = ExtResource("icon_art_mint_syrup")
 display_name = "荧绿薄荷糖浆"
-icon = ExtResource("icon_syrup")
 origin = "human"
 category = "syrup"
 flavor_tags = PackedStringArray("糖浆甜味浓重", "薄荷凉感强烈而直接")
@@ -156,8 +184,8 @@ description = "鲜绿色糖浆，质地黏稠。"
 [sub_resource type="Resource" id="Ingredient_instant_coffee_concentrate"]
 script = ExtResource("ingredient")
 id = "instant_coffee_concentrate"
+icon = ExtResource("icon_art_instant_coffee_concentrate")
 display_name = "浓缩速溶咖啡原浆"
-icon = ExtResource("icon_black_tea")
 origin = "human"
 category = "tea"
 flavor_tags = PackedStringArray("焦苦味突出", "带有速溶咖啡特有的酸涩感")
@@ -167,8 +195,8 @@ description = "深褐色咖啡液体。"
 [sub_resource type="Resource" id="Ingredient_brown_sugar_boba"]
 script = ExtResource("ingredient")
 id = "brown_sugar_boba"
+icon = ExtResource("icon_art_brown_sugar_boba")
 display_name = "黑糖波霸珍珠"
-icon = ExtResource("icon_pearl")
 origin = "human"
 category = "topping"
 flavor_tags = PackedStringArray("黑糖甜味浓郁", "珍珠软糯弹韧", "略有黏牙感")
@@ -178,8 +206,8 @@ description = "乌黑圆润的珍珠，表面裹着黑糖浆。"
 [sub_resource type="Resource" id="Ingredient_mint_choc_crisp"]
 script = ExtResource("ingredient")
 id = "mint_choc_crisp"
+icon = ExtResource("icon_art_mint_choc_crisp")
 display_name = "代可可脂薄荷巧脆碎"
-icon = ExtResource("icon_coconut")
 origin = "human"
 category = "topping"
 flavor_tags = PackedStringArray("巧克力甜味明显", "入口酥脆", "带有薄荷凉感")
@@ -189,8 +217,8 @@ description = "黑绿相间的细碎巧克力颗粒。"
 [sub_resource type="Resource" id="Ingredient_ice"]
 script = ExtResource("ingredient")
 id = "ice"
+icon = ExtResource("icon_art_ice")
 display_name = "冰块"
-icon = ExtResource("icon_syrup")
 origin = "human"
 category = "material"
 flavor_tags = PackedStringArray("没有明显味道", "主要提供冰凉感并稀释饮品")
@@ -200,8 +228,8 @@ description = "透明冰块，表面带有水珠。"
 [sub_resource type="Resource" id="Ingredient_cocoa_powder"]
 script = ExtResource("ingredient")
 id = "cocoa_powder"
+icon = ExtResource("icon_art_cocoa_powder")
 display_name = "可可粉"
-icon = ExtResource("icon_coconut")
 origin = "human"
 category = "material"
 flavor_tags = PackedStringArray("可可香气明显", "微苦带甜", "粉感略重")
@@ -222,8 +250,8 @@ description = "金黄色浓稠果酱。"
 [sub_resource type="Resource" id="Ingredient_strawberry_jam"]
 script = ExtResource("ingredient")
 id = "strawberry_jam"
+icon = ExtResource("icon_art_strawberry_jam")
 display_name = "草莓果酱"
-icon = ExtResource("icon_coconut")
 origin = "human"
 category = "topping"
 flavor_tags = PackedStringArray("草莓香甜浓郁", "略带酸味", "质地黏稠")
@@ -233,8 +261,8 @@ description = "红色或粉红色浓稠果酱。"
 [sub_resource type="Resource" id="Product_classic_boba"]
 script = ExtResource("ingredient")
 id = "classic_boba_milk_tea"
+icon = ExtResource("icon_art_classic_boba_milk_tea")
 display_name = "经典珍珠奶茶（成品）"
-icon = ExtResource("icon_pearl")
 category = "product"
 source_ids = PackedStringArray("H01")
 flavor_tags = PackedStringArray("奶精味明显", "甜度偏高", "珍珠软糯有嚼劲")
@@ -243,8 +271,8 @@ description = "奶精味明显，甜度偏高，珍珠软糯有嚼劲。"
 [sub_resource type="Resource" id="Product_mint_choc"]
 script = ExtResource("ingredient")
 id = "mint_choc_milk_tea"
+icon = ExtResource("icon_art_mint_choc_milk_tea")
 display_name = "薄荷巧脆奶茶（成品）"
-icon = ExtResource("icon_syrup")
 category = "product"
 source_ids = PackedStringArray("H02")
 flavor_tags = PackedStringArray("薄荷味突出", "甜度较高", "巧脆碎带有酥脆感")
@@ -253,8 +281,8 @@ description = "薄荷味突出，甜度较高，巧脆碎带有酥脆感。"
 [sub_resource type="Resource" id="Product_coffee_cocoa"]
 script = ExtResource("ingredient")
 id = "coffee_cocoa_ice_milk"
+icon = ExtResource("icon_art_coffee_cocoa_ice_milk")
 display_name = "咖啡可可冰奶（成品）"
-icon = ExtResource("icon_black_tea")
 category = "product"
 source_ids = PackedStringArray("H03")
 flavor_tags = PackedStringArray("咖啡焦苦与可可甜味交织", "奶味较浓")
@@ -263,8 +291,8 @@ description = "咖啡焦苦与可可甜味交织，奶味较浓。"
 [sub_resource type="Resource" id="Product_apple_green"]
 script = ExtResource("ingredient")
 id = "apple_milk_green_tea"
+icon = ExtResource("icon_art_apple_milk_green_tea")
 display_name = "苹果奶绿（成品）"
-icon = ExtResource("icon_green_tea")
 category = "product"
 source_ids = PackedStringArray("H04")
 flavor_tags = PackedStringArray("苹果果酱甜味明显", "奶味偏重", "茶味较淡")
@@ -273,8 +301,8 @@ description = "苹果果酱甜味明显，奶味偏重，茶味较淡。"
 [sub_resource type="Resource" id="Product_strawberry_green"]
 script = ExtResource("ingredient")
 id = "strawberry_milk_green_tea"
+icon = ExtResource("icon_art_strawberry_milk_green_tea")
 display_name = "草莓奶绿（成品）"
-icon = ExtResource("icon_coconut")
 category = "product"
 source_ids = PackedStringArray("H05")
 flavor_tags = PackedStringArray("草莓果酱香气突出", "甜度较高", "茶味较淡")
@@ -283,8 +311,8 @@ description = "草莓果酱香气突出，甜度较高，茶味较淡。"
 [sub_resource type="Resource" id="Product_iced_mint_latte"]
 script = ExtResource("ingredient")
 id = "iced_mint_latte"
+icon = ExtResource("icon_art_iced_mint_latte")
 display_name = "冰吸薄荷拿铁（成品）"
-icon = ExtResource("icon_black_tea")
 category = "product"
 source_ids = PackedStringArray("H06")
 flavor_tags = PackedStringArray("咖啡味略苦", "薄荷凉感明显", "带有甜奶味")
@@ -338,8 +366,8 @@ description = "菌盖会散发蓝绿色荧光的特殊蘑菇。榨汁后能形�
 [sub_resource type="Resource" id="Ingredient_goblin_firebrew"]
 script = ExtResource("ingredient")
 id = "goblin_firebrew"
+icon = ExtResource("icon_art_goblin_firebrew")
 display_name = "纯正哥布林老火烧"
-icon = ExtResource("icon_black_tea")
 origin = "otherworld"
 category = "material"
 rarity = "优秀"
@@ -354,8 +382,8 @@ description = "哥布林酒馆常见的标准烈酒，采用传统谷物发酵�
 [sub_resource type="Resource" id="Ingredient_griffin_amber_wine"]
 script = ExtResource("ingredient")
 id = "griffin_amber_wine"
+icon = ExtResource("icon_art_griffin_amber_wine")
 display_name = "格里芬琥珀酒"
-icon = ExtResource("icon_syrup")
 origin = "otherworld"
 category = "material"
 rarity = "史诗"
@@ -370,8 +398,8 @@ description = "以格里芬纹章为标志的高档酒品，常出现在富裕�
 [sub_resource type="Resource" id="Ingredient_red_mottled_wood"]
 script = ExtResource("ingredient")
 id = "red_mottled_wood"
+icon = ExtResource("icon_art_red_mottled_wood")
 display_name = "红斑咬木"
-icon = ExtResource("icon_coconut")
 origin = "otherworld"
 category = "material"
 rarity = "优秀"
@@ -385,8 +413,8 @@ description = "经过特殊腌制的刺激性木质配料，性质类似槟榔�
 [sub_resource type="Resource" id="Ingredient_honey_amber_crystal"]
 script = ExtResource("ingredient")
 id = "honey_amber_crystal"
+icon = ExtResource("icon_art_honey_amber_crystal")
 display_name = "蜜珀晶"
-icon = ExtResource("icon_pearl")
 origin = "otherworld"
 category = "material"
 rarity = "优秀"
@@ -400,8 +428,8 @@ description = "外观像琥珀的天然甜味晶体。研碎后可以加入饮�
 [sub_resource type="Resource" id="Ingredient_phantom_gold_mushroom"]
 script = ExtResource("ingredient")
 id = "phantom_gold_mushroom"
+icon = ExtResource("icon_art_phantom_gold_mushroom")
 display_name = "幻金菇"
-icon = ExtResource("icon_insomnia")
 origin = "otherworld"
 category = "material"
 rarity = "史诗"
@@ -415,8 +443,8 @@ description = "一种带有金色纹理的特殊蘑菇，在昏暗环境中也�
 [sub_resource type="Resource" id="Ingredient_rainbow_cube"]
 script = ExtResource("ingredient")
 id = "rainbow_cube"
+icon = ExtResource("icon_art_rainbow_cube")
 display_name = "幻彩小方"
-icon = ExtResource("icon_pearl")
 origin = "otherworld"
 category = "material"
 rarity = "史诗"
@@ -430,8 +458,8 @@ description = "一种具有致幻作用的奇异凝胶，切成规整的小方�
 [sub_resource type="Resource" id="Ingredient_scorch_tongue_pepper"]
 script = ExtResource("ingredient")
 id = "scorch_tongue_pepper"
+icon = ExtResource("icon_art_scorch_tongue_pepper")
 display_name = "炽舌椒"
-icon = ExtResource("icon_pearl")
 origin = "otherworld"
 category = "material"
 rarity = "稀有"
@@ -445,8 +473,8 @@ description = "一种生长在公共火塘附近的奇异果实，外皮鲜红�
 [sub_resource type="Resource" id="Ingredient_sour_moss_ale"]
 script = ExtResource("ingredient")
 id = "sour_moss_ale"
+icon = ExtResource("icon_art_sour_moss_ale")
 display_name = "劣质酸苔麦酒"
-icon = ExtResource("icon_syrup")
 origin = "otherworld"
 category = "material"
 rarity = "普通"
@@ -460,8 +488,8 @@ description = "哥布林酒馆中最廉价的酒，以低品质麦芽和洞窟�
 [sub_resource type="Resource" id="Ingredient_brute_lava_firebrew"]
 script = ExtResource("ingredient")
 id = "brute_lava_firebrew"
+icon = ExtResource("icon_art_brute_lava_firebrew")
 display_name = "暴徒熔岩老火烧"
-icon = ExtResource("icon_black_tea")
 origin = "otherworld"
 category = "material"
 rarity = "稀有"
@@ -475,8 +503,8 @@ description = "据说最初由地下帮派私自酿造，以满足偏好强烈�
 [sub_resource type="Resource" id="Ingredient_griffin_sacred_wine"]
 script = ExtResource("ingredient")
 id = "griffin_sacred_wine"
+icon = ExtResource("icon_art_griffin_sacred_wine")
 display_name = "格里芬圣血祭酒"
-icon = ExtResource("icon_syrup")
 origin = "otherworld"
 category = "material"
 rarity = "传奇"

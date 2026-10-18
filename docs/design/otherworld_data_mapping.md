@@ -1,8 +1,8 @@
 # 异世界食材与酒品：源稿到运行时映射
 
-核对日期：2026-10-17。源稿 [otherworld_ingredients_and_drinks.xlsx](source/otherworld_ingredients_and_drinks.xlsx)，运行时目录 [day1_menu.tres](../../src/resources/milk_tea/day1_menu.tres)，校验脚本 [verify_otherworld_catalog.gd](../../tests/verify_otherworld_catalog.gd)。
+运行时字段映射基线：2026-10-17；图标引用更新：2026-10-18。旧源稿 [otherworld_ingredients_and_drinks.xlsx](source/otherworld_ingredients_and_drinks.xlsx)，运行时目录 [day1_menu.tres](../../src/resources/milk_tea/day1_menu.tres)，校验脚本 [verify_otherworld_catalog.gd](../../tests/verify_otherworld_catalog.gd)。
 
-本文件只记录“源稿哪一行变成了运行时哪个物品”，不改变设计意图。源稿再次更新时，先改 Excel，再按本表同步资源与测试。
+本文件记录旧源稿到现有运行时的映射。2026-10-18 新增的[原料规则表](recipe_ingredients_revised.md)与[配方专项设计](milk_tea_recipe_system_revised.md)作为后续设计依据，其数值、价格和使用次数尚未同步到运行时；不要把本文旧字段当成新版设计。旧表保留 W/H 数据与图鉴描述等互补内容，见[更新说明](milk_tea_recipe_update_2026_10_18.md)。
 
 ## 接入范围
 
@@ -74,7 +74,7 @@ F05 与 W02、F06 与 W04 是同一件东西在两张表各登记一次。运行
 
 ## 美术资源
 
-C01–C10 目前没有专属图标，运行时不设置 `icon`（列表显示为空）。六款成品临时借用现有红茶、绿茶、奶精、糖浆、珍珠、椰果图标，等素材补齐后替换，不把借用图标当作设定。
+2026-10-18 已将 27 个明确对应的专属 PNG 同步绑定到两份菜单，覆盖六款 H 成品、九种 C 原料及十二种异世界原料/酒品。C09 苹果果酱仍沿用旧图标：来源只有「橘子果酱」，不直接替代。F01 苔痕青缺图；F02 窟窟糖芋和 F04 萤火伞仅提供多个未命名版本，暂保留原有图标。醒神菇使用包内明确命名的图片，其他版本保留。来源、尺寸与 SHA-256 见[本批素材清单](../assets/imports/user_assets_2026_10_18.md)。
 
 ## 未接入
 

@@ -93,6 +93,7 @@
 | --- | --- |
 | [游戏人物与美术接入](assets/characters.md) | `characters.md` |
 | [主角对话立绘：平静 / 说话](assets/imports/player_dialogue_portraits.md) | `imports/player_dialogue_portraits.md` |
+| [2026-10-18 奶茶与原料素材更新](assets/imports/user_assets_2026_10_18.md) | 36 张 PNG、来源映射与接入边界。 |
 | [2026-10-17 用户素材导入清单](assets/imports/user_assets_2026_10_17.md) | `imports/user_assets_2026_10_17.md` |
 | [独立家具、道具与墙体素材库](assets/modular_assets/README.md) | `modular_assets/README.md` |
 | [Sound Library v1](assets/sound_library.md) | `sound_library.md` |
@@ -117,7 +118,11 @@
 | [真实订单 Gameplay Bridge 最小示例](design/order_bridge_demo.md) | `order_bridge_demo.md` |
 | [day_02.pdf](design/source/day_02.pdf) | 第二天剧情原始 PDF。 |
 | [Day 2 五个阶段：剧情演出初稿](design/day_02_stages_01_05_draft.md) | 由 day_02.pdf 逐字整理的 Beat 化初稿。 |
-| [otherworld_ingredients_and_drinks.xlsx](design/source/otherworld_ingredients_and_drinks.xlsx) | 食材与饮品原始工作簿。 |
+| [奶茶配方系统 V0.1](design/milk_tea_recipe_system_revised.md) | 新专项设计正文，含原文 12 张表格预览。 |
+| [22 种原料配置更新](design/recipe_ingredients_revised.md) | 新表可读快照，数值未同步到运行时。 |
+| [2026-10-18 配方资料更新与旧稿处理](design/milk_tea_recipe_update_2026_10_18.md) | 新旧资料适用范围、冲突与待确认项。 |
+| [设计原始附件索引](design/source/README.md) | 新 DOCX/Excel 与保留旧稿。 |
+| [otherworld_ingredients_and_drinks.xlsx](design/source/otherworld_ingredients_and_drinks.xlsx) | 旧运行时基线及 W/H、图鉴互补资料。 |
 | [异世界食材与酒品：源稿到运行时映射](design/otherworld_data_mapping.md) | 已接入的 F/W 条目、字段映射、合并项与未接入原因。 |
 
 ## 剧情编排产物

@@ -37,7 +37,7 @@
         },
         {
           "id": "street",
-          "text": "沿摊位左上方，按 E 调查空荡的街道 ◇",
+          "text": "沿摊位左上方走，按 E 认清主街与商业岔口 ◇",
           "complete_when": {
             "type": "flag",
             "key": "day1.s03.observed_street"

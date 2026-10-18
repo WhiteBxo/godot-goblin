@@ -64,6 +64,17 @@ func get_inventory() -> WarehouseInventory:
 func get_setup() -> Day1StealthSetup:
 	return _setup
 
+func get_objective_progress() -> String:
+	var lines := PackedStringArray()
+	for flag: String in _setup.objective_names:
+		lines.append("%s %s" % ["✓" if _state.get_flag(flag) else "○", _setup.objective_names[flag]])
+	return " · ".join(lines)
+
+func has_mission_items() -> bool:
+	if not _setup.required_flags.all(func(flag: StringName) -> bool: return _state.get_flag(String(flag))):
+		return false
+	return _inventory.has_uses(_setup.required_items) if _setup.wallet_coins else _inventory.has_materials(_setup.required_items)
+
 func is_blocking() -> bool:
 	return status in [Status.FAILED, Status.INTERCEPTED]
 

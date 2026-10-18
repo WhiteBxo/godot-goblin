@@ -72,6 +72,12 @@ theme_type_variation = &"Muted"
 text = "鼠标选落点 · F 投币 · 避开观察区域"
 autowrap_mode = 3
 
+[node name="Objectives" type="Label" parent="Panel/Content"]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"Hint"
+autowrap_mode = 2
+
 [node name="RetryHint" type="Label" parent="Panel/Content"]
 visible = false
 layout_mode = 2

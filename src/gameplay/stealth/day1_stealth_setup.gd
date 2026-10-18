@@ -16,6 +16,10 @@ extends Node
 @export_multiline var escape_rules_reference := ""
 @export var required_flags: Array[StringName] = [&"day1.s05.blood_acquired"]
 @export var required_items: Dictionary = {"day1_griffin_blood": 1}
+## Optional level-authored labels; the service reads the real flags and inventory.
+@export var objective_names: Dictionary = {}
+@export_multiline var approach_hint := ""
+@export_multiline var escape_hint := ""
 @export var confusion_required := false
 @export_range(1.0, 1200.0) var throw_range := 460.0
 ## World-space scale for projectile speed/art and recipe effect distances; time is unchanged.

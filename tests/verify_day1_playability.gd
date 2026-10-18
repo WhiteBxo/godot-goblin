@@ -5,7 +5,7 @@ extends "res://tests/verify_two_day_flow.gd"
 func _run() -> void:
 	Engine.time_scale = 4.0
 	screenshots = "/tmp/goblin_playability_captures" if "--capture" in OS.get_cmdline_user_args() else ""
-	ProjectSettings.set_setting("persistence/save_directory", "/tmp/goblin_playability_%d" % OS.get_process_id())
+	ProjectSettings.set_setting("persistence/save_directory", "user://verification/playability_%d" % OS.get_process_id())
 	ProjectSettings.set_setting("debug/developer_tools/enabled", false)
 	state = root.get_node("GameState")
 	check(GameEntry.start_new_game(self) == OK, "Starts the formal new game")
@@ -70,7 +70,8 @@ func _run() -> void:
 	var task_hud := game.find_children("*", "TaskHUD", true, false)[0] as TaskHUD
 	check(task_hud.is_visible_in_tree(), "Exterior has a visible objective card")
 	await picture("exterior_objective")
-	for id: String in ["yard", "street", "path"]:
+	# Discover the far clue first: soft directions must not impose a hidden order.
+	for id: String in ["path", "yard", "street"]:
 		var point: StoryInteractionPoint = map.get_node("Interactions/day1_s03_" + id)
 		check(point.is_world_marker_visible(), "Unresolved investigation has a world marker: " + id)
 		if not await walk_to(map, point.global_position):

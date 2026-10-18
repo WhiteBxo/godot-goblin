@@ -94,6 +94,7 @@ func _verify_map(index: int) -> void:
 	var reachable := _reachable_cells(map, map.world_to_cell(map.get_spawn_position()))
 	if map.chapter_host == &"settlement":
 		await _verify_door_approaches(map)
+		await _verify_north_guidance(map)
 	for entrance: Node in map.get_node("Entrances").get_children():
 		_check(map.get_scene_entrance(entrance.entrance_id) == entrance, "Stable named entrance lookup")
 		_check(map.can_stand_at(entrance.global_position, Vector2(17, 10)), "Entrance fits native player feet: " + entrance.name)
@@ -115,7 +116,7 @@ func _verify_map(index: int) -> void:
 	if setup != null:
 		_check(setup.throw_range == 230.0 and setup.effect_scale == 0.5, "RPG throw range and effect distances are halved")
 		for guard: Day1GuardResponse in setup.guards:
-			_check(guard.sight_range == (60.0 if guard.role == Day1GuardResponse.Role.ENTRANCE else 30.0) and guard.hearing_range == 180.0, "Guard sight and hearing follow the reduced world scale")
+			_check(guard.sight_range == (96.0 if guard.role == Day1GuardResponse.Role.ENTRANCE else 30.0) and guard.hearing_range == 180.0, "Entrance watch covers the main street; other guards keep local ranges")
 			_check(guard.discovery_seconds == 0.6 and guard.distraction_seconds == 6.0 and guard.sight_half_angle == 85.0, "Scaling distance preserves guard timing and sight angle")
 	var data := map.get_map_data(["settlement.shop", "settlement.elder"])
 	_check(data.regions.size() == 2, "Map exposes only requested known exterior locations")
@@ -139,6 +140,31 @@ func _verify_door_approaches(map: RpgChapterMap) -> void:
 			for tick in range(4):
 				await physics_frame
 			_check(map.can_stand_at(player.global_position, Vector2(8.5, 5)) and door.is_available(), "Returned player can find door from left/center/right: %s %s" % [id, offset])
+	player.free()
+	await process_frame
+
+func _verify_north_guidance(map: RpgChapterMap) -> void:
+	var player: FloorAwareShopPlayer = load("res://src/gameplay/player/rpg_player.tscn").instantiate()
+	player.get_node("Camera2D").enabled = false
+	root.add_child(player)
+	player.set_physics_process(false)
+	var setup := map.get_stealth_setup()
+	var watch: Day1GuardResponse = setup.guards[0]
+	watch.actor.visible = true
+	watch.capture_checkpoint()
+	player.teleport_to(map.get_story_anchor(&"day1_observation").global_position)
+	await physics_frame
+	var space := map.get_world_2d().direct_space_state
+	_check(not watch.advance(1.0, player, space), "Northern observation position remains outside real sight")
+	var landing: Node2D = map.get_node("Wayfinding/NightGuidance/CoinLanding")
+	_check(map.can_stand_at(landing.global_position, Vector2(8.5, 5)) and player.global_position.distance_to(landing.global_position) <= setup.throw_range, "Optional coin landing is on floor and within actual throw range from observation")
+	_check(watch.distract(landing.global_position), "Coin landing lies inside this guard's actual hearing range")
+	for x: float in [1128.0, 1176.0, 1224.0]:
+		watch.reset_response()
+		player.teleport_to(Vector2(x, 504))
+		await physics_frame
+		_check(watch.advance(0.61, player, space), "South-facing watch covers native street lane: " + str(x))
+	watch.actor.visible = false
 	player.free()
 	await process_frame
 

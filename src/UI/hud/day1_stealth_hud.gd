@@ -57,6 +57,13 @@ func _process(_delta: float) -> void:
 	var setup := _service.get_setup()
 	if not is_instance_valid(setup):
 		return
+	$Panel/Content/Objectives.text = _service.get_objective_progress()
+	$Panel/Content/Objectives.visible = not $Panel/Content/Objectives.text.is_empty()
+	if setup.wallet_coins:
+		$Panel/Content/Hint.text = setup.escape_hint if _service.has_mission_items() else setup.approach_hint
+	if setup.interior_only and _service.status == Day1StealthService.Status.RUNNING:
+		$Panel/Content/Status.text = "长老居所 · 调查与取物"
+	$Panel/Content/Actions/Coin.visible = not setup.interior_only
 	$Panel/Content/Actions/Torch.visible = not setup.wallet_coins
 	$Panel/Content/Drinks.visible = not setup.wallet_coins
 	var inventory := _service.get_inventory()

@@ -12,8 +12,6 @@
 
 [ext_resource type="Script" path="res://src/gameplay/story_interaction/story_interaction_point.gd" id="story"]
 
-[ext_resource type="Script" path="res://src/levels/rpg_maker/road_barrier.gd" id="barrier"]
-
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/guard.tscn" id="guard"]
 
 [ext_resource type="Script" path="res://src/gameplay/stealth/day1_stealth_setup.gd" id="stealth"]
@@ -260,23 +258,6 @@ required_stages = Array[String](["day1.s03"])
 success_flags = Array[StringName](["day1.s03.observed_path"])
 
 [node name="GatherPoints" type="Node2D" parent="."]
-
-[node name="ClosedRoads" type="Node2D" parent="."]
-
-[node name="NorthPassage" type="StaticBody2D" parent="ClosedRoads"]
-position = Vector2(1560, 192)
-script = ExtResource("barrier")
-size = Vector2(48, 384)
-
-[node name="MilitaryPassage" type="StaticBody2D" parent="ClosedRoads"]
-position = Vector2(1968, 600)
-script = ExtResource("barrier")
-size = Vector2(864, 48)
-
-[node name="SouthPassage" type="StaticBody2D" parent="ClosedRoads"]
-position = Vector2(1560, 528)
-script = ExtResource("barrier")
-size = Vector2(48, 96)
 
 [node name="Characters" type="Node2D" parent="."]
 

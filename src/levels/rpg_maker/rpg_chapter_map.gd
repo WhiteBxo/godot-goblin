@@ -26,31 +26,6 @@ func get_chapter_characters() -> Array[SettlementCharacter]:
 func get_stealth_setup() -> Day1StealthSetup:
 	return get_node_or_null("StealthSetup") as Day1StealthSetup
 
-func get_blocked_passages() -> Array[Rect2]:
-	var result: Array[Rect2] = []
-	var container := get_node_or_null("ClosedRoads")
-	if container != null:
-		for barrier: Node in container.get_children():
-			result.append(barrier.get_blocked_bounds())
-	return result
-
-func can_stand_at(world_position: Vector2, half_size: Vector2) -> bool:
-	if not super.can_stand_at(world_position, half_size):
-		return false
-	for blocked: Rect2 in get_blocked_passages():
-		if blocked.intersects(Rect2(world_position - half_size, half_size * 2)):
-			return false
-	return true
-
-func can_cross_edge(cell: Vector2i, direction: Vector2i) -> bool:
-	if not super.can_cross_edge(cell, direction):
-		return false
-	var midpoint := (cell_to_world(cell) + cell_to_world(cell + direction)) * 0.5
-	for blocked: Rect2 in get_blocked_passages():
-		if blocked.grow(1).has_point(midpoint):
-			return false
-	return true
-
 func get_scene_entrance(id: StringName) -> SceneEntrance:
 	for entrance: Node in get_node("Entrances").get_children():
 		if entrance is SceneEntrance and entrance.entrance_id == id:

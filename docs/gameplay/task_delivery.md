@@ -32,13 +32,13 @@
 "rewards": {"text": "糖浆 × 1", "items": {"syrup": 1}}
 ```
 
-首单配置沿用 `shop.first_order`，完成事实为 `shop.order_001_delivered`。一杯珍珠奶茶交给胖哥布林后返还糖浆一份，数值仅为可验证的教学配置。没有 `items` 的任务不产生库存奖励。TaskJournal 的奖励投影仍只显示原 text/reveal_when，不暴露结算数据。
+tutorial 首单配置沿用 `shop.first_order`，完成事实为 `shop.order_001_delivered`。一杯珍珠奶茶交给胖哥布林后返还糖浆一份，数值仅为可验证的教学配置。没有 `items` 的任务不产生库存奖励。TaskJournal 的奖励投影仍只显示原 text/reveal_when，不暴露结算数据。
 
 ## 执行流程
 
 1. MainGame 装配 Systems/TaskDelivery，注入原目录、Journal、GameState 和共享库存。打开订单板只查看；每单点击“接取订单”后调用 `accept_order()`，重复接取返回 `ERR_ALREADY_EXISTS`。已有 StoryDirector 路由继续优先。
-2. TeaProduction 验证配方和原料，原子扣料并增加成品。正式 UI 使用 `craft()` 自由安排订单顺序。`get_completed_count()` 保持原 API，代表制作杯数，不代表交付次数或完成事实。
-3. MainGame 为现有 NPC 挂接通用 InteractionPoint，将 actor_id 交给原 ShopInteraction 分派。点位随 NPC 移动，NPC 场景没有交付规则。店铺入口增设一个胖哥布林，聚落复用已有角色。
+2. TeaProduction 验证配方和原料，原子扣料并增加成品。正式 UI 使用 `craft()` 自由安排订单顺序。`get_completed_count()` 保持旧队列已制作前缀长度，不代表所有自由制作杯数、交付次数或完成事实。
+3. MainGame 为现有 NPC 挂接通用 InteractionPoint，将 actor_id 交给原 ShopInteraction 分派。点位随 NPC 移动，NPC 场景没有交付规则。正式 S01–S02 使用各自的真实顾客，tutorial 首单使用胖哥布林；聚落复用已注册角色。
 4. `deliver_to(target_id, preferred_order_id = "")` 优先选择已接取且可交付的追踪订单，否则按目录顺序选择。未接单不阻挡已接单。TaskDelivery 检查需求、NPC、接取状态、回执、库存与奖励容量。
 5. 正式共享会话经 `GameState.commit_delivery()` 原子提交物品、钱包、完成 flag 和 `delivery.<order_id>.completed` 回执；独立测试库存保留交换与批量 flag 提交路径。通知期间保留提交锁，任何监听器第一次回调时都能读取完整结果。
 6. TaskDelivery 在同一提交中从成功回执更新 `shop.orders_completed` 最高值，随后统一通知库存和事实变化。计数不依赖场景回调。重复制作信号不推进任务。现有 GameplayBridge 继续等待 `shop.order_001_delivered`，遵守原来的暂停/弹窗/剧情取消规则。
@@ -78,7 +78,7 @@
 | 制作/库存 | `src/gameplay/milk_tea/tea_production.gd`、`src/gameplay/milk_tea/warehouse_inventory.gd` |
 | 数据 | `src/resources/tasks/tasks.json`、`src/resources/milk_tea/basic_menu.tres`、`src/resources/milk_tea/ingredient_definition.gd` |
 | 装配/店铺 NPC | `src/core/main.gd`（仅本功能部分）、`src/core/main.tscn` |
-| UI | `src/UI/milk_tea/shop_ui.gd`、`shop_popup.gd`、`production_panel.gd`、`warehouse_panel.gd` |
+| UI | `src/UI/milk_tea/shop_ui.gd`、`shop_popup.gd`、`crafting_panel.gd`、`order_crafting_page.gd`、`free_crafting_panel.gd`、`warehouse_panel.gd` |
 | 测试 | `tests/verify_task_delivery.gd`、对应 `.uid`；`verify_task_system.gd`、`verify_tea_production.gd`、`verify_warehouse_inventory.gd`、`verify_gameplay_bridge.gd`、`verify_milk_tea_shop.gd` |
 | 试玩说明 | `src/debug/tasks/task_demo.gd`、本文、`docs/gameplay/basic_tea_production.md`、`docs/levels/milk_tea_mvp.md`、`docs/gameplay/warehouse_inventory.md`、`docs/systems/gameplay_bridge.md`、`docs/gameplay/task_system.md` |
 

@@ -2,7 +2,7 @@
 
 `ActorDirector` 是场景内的角色表现组件，放在 `Systems`；实例化的角色放在宿主注入的 `World/EntityRoot`。它不读取剧情 JSON，不管理剧情条件、flag 或事件状态，也不是新的剧情调度器。
 
-实现：`src/core/actors/actor_director.gd`、`actor_action.gd`。`MainGame.get_actor_director()` 提供正式场景的实例，并默认注册 `player`。本次没有修改 StoryDirector 的指令或 JSON schema。
+实现：`src/core/actors/actor_director.gd`、`actor_action.gd`。`MainGame.get_actor_director()` 提供正式场景的实例，并默认注册 `player`。StoryDirector 已适配角色指令，包括 actor_animate；完整语法以[指令表](../guides/story_authoring_commands.md)为准。
 
 ## 公开 API
 
@@ -29,6 +29,7 @@
 | `actor_face(actor_id, direction: StringName)` | `up`、`down`、`left`、`right`，复用现有朝向和 idle 动画 |
 | `actor_show(actor_id)` / `actor_hide(actor_id)` | 切换整个角色的可见性；NPC 隐藏时退出实体层，显示时恢复，不注销角色 |
 | `actor_emote(actor_id, symbol = "!", duration = 0.8)` | 在角色头顶浮动并淡出 Label；支持 `!`、`?` 等文字；duration 必须有限且 > 0 |
+| `actor_animate(actor_id, animation, hold = false)` | 播放已有 SpriteFrames 动画；非循环等待结束，循环立即完成；hold 保留姿势到后续演出接管 / 传送，失败或取消清理 |
 
 `target` 支持世界坐标 `Vector2`、场景中的 `Marker2D` 或注册的 `String/StringName` 位置名。不接受 NodePath。接受请求时保存目标的世界坐标快照，因此移动 Marker 不会让角色追踪它；若 Marker 在动作完成前退出或删除则失败。重复位置名注册被拒绝，需先注销再替换。所有 Vector2 坐标必须有限。
 
@@ -97,7 +98,7 @@ NPC 使用脚底的横向 `CapsuleShape2D` 表示地面占据，动画身体可�
 
 方案参考 [Godot 4.7 CharacterBody2D](https://docs.godotengine.org/en/4.7/classes/class_characterbody2d.html) 的俯视角 `MOTION_MODE_FLOATING` 与物理移动、[官方物理介绍](https://docs.godotengine.org/en/4.7/tutorials/physics/physics_introduction.html) 的 layer / mask 分离，以及 [GDQuest 的俯视角角色实现](https://www.gdquest.com/tutorial/godot/2d/top-down-movement/) 中物理体、碰撞形状与动画分离的结构。GDQuest 文章使用旧版节点名，API 以项目 Godot 4.7 为准；脚底形状和单向阻挡策略是结合本项目地图与演出约束的选择。
 
-PlayerController 提供 `claim_performance_control` / `release_performance_control`、`set_performance_facing`、`move_performance` 和 `get_emote_offset` 给导演调用。控制权以弱引用绑定 Director；同一角色即使被两个 Director 注册，也只有一个能接管。同角色的 move/face/show/hide/emote 保守地共用一个动作槽，不排队或隐式覆盖；需要中断时先 `cancel_action` 再发新动作。不同角色可以并行。
+PlayerController 提供 `claim_performance_control` / `release_performance_control`、`set_performance_facing`、`move_performance` 和 `get_emote_offset` 给导演调用。控制权以弱引用绑定 Director；同一角色即使被两个 Director 注册，也只有一个能接管。同角色的 move/face/show/hide/emote/animate 保守地共用一个动作槽，不排队或隐式覆盖；需要中断时先 `cancel_action` 再发新动作。不同角色可以并行。
 
 演出移动在 `_physics_process` 内设置 `velocity`，速度上限为请求值，并按最后一帧剩余距离收敛。它调用原控制器的 `_move_velocity`，ShopPlayer 使用 `move_and_slide()`，CavePlayer 保留原有小步通行查询与 `move_and_collide()`；没有 Tween 角色位置或强行吸附终点。距目标 <= 0.5 世界像素认为到达；滑墙、绕不过障碍、洞穴通行查询失败等情况由停滞时间或总超时返回失败。不执行寻路或动态避障，路线应由关卡提供可直达的 Marker。
 
@@ -107,7 +108,7 @@ MainGame 统一计算“对白活跃 OR 剧情忙碌 OR player 正被 ActorDirec
 
 ## 生命周期和所有权
 
-取消、失败、成功均先停止移动、恢复朝向 idle、释放控制权；表情 Tween 显式 `kill()` 并删除临时 Label，再完成结果。重复取消无副作用。已完成的显隐和朝向不会被取消回滚。
+普通动作取消、失败、成功均先停止移动并恢复朝向 idle、释放控制权；actor_animate 的成功 hold 姿势按其契约保留。表情 Tween 显式 `kill()` 并删除临时 Label，再完成结果。重复取消无副作用。已完成的显隐和朝向不会被取消回滚。
 
 角色 `tree_exiting` 自动取消动作并注销；目标退出在物理 tick 检测。Director `_exit_tree` 取消所有动作、断开注册回调、清理位置引用，释放它生成且仍注册的角色；外部注册的玩家/NPC 保留。`actor_unregister` 可显式转移生成角色的生命周期给宿主。单个子系统退出和整个场景退出均有测试。
 
@@ -134,7 +135,7 @@ PowerShell（`$godot` 替换为本机 Godot console 可执行文件路径）：
 
 相关现有测试 `verify_player.gd`、`verify_milk_tea_shop.gd`、`verify_dialogue.gd`（69 项）、`verify_story_director.gd`（147 项）、`verify_game_state.gd`（120 项）、`verify_shop_camera.gd` 均通过。`verify_player_visuals.gd` 也在实际 D3D12 Forward+ 下通过全部 68 帧渲染检查。
 
-已知既有测试限制：`verify_main_game.gd` 假设主场景仍为洞穴，且 `base_speed`、`saved_query`、`previous_mode` 存在类型推断解析错误；`MainGame.get_player() -> CharacterBody2D` 的相关返回类型在本次改动前已存在。此次未修改旧测试或主场景选择，当前店铺 MainGame 的接入与锁生命周期由新增测试及原有对白、剧情、店铺测试覆盖。
+上述为早期 ActorDirector 批次的历史结果。当前 verify_main_game.gd 已显式构建洞穴 fixture，后续章节批次记录 MainGame 74 项通过；旧版解析限制不再作为当前结论。actor_animate 的历史覆盖另见 verify_day1_chapter_systems.gd。本轮文档同步未运行测试。
 
 ## Godot 4.7 官方依据
 

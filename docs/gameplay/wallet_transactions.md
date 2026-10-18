@@ -2,9 +2,9 @@
 
 ## 仓库检查与实现范围
 
-原有 `WarehouseInventory` 已具备食材目录、数量上限、发现信息和快照原子替换；`TeaProduction` 通过注入库存消费原料。任务目录的 `rewards` 仅展示文本，TaskJournal 是只读投影。GameState 原先只有原生 Variant 内存快照，没有文件存档层。当前商品价格、订单收入和实际任务奖金额尚无既定数值。
+WarehouseInventory 提供共享库存、发现和原子快照；TeaProduction 消费同一库存；TaskJournal 只读投影事实。当前 TaskCatalog.rewards 支持显示 text、物品 items 与普通货币 money，正式 S01 交付收入 10，哥布林交付发 strange_coin。自由饮品订单默认使用配方售价，显式 rewards.money 可覆盖。
 
-因此复用 TeaMenu、WarehouseInventory 和 GameState，不增加 autoload 或文件存档框架，不改变任务 JSON v1 格式及奖励展示，不自动为现有订单添加收入。跨场景余额、库存和领取记录由 GameState 的 WalletTransactions 子节点持有；MainGame 通过公开 getter 获取并注入同一库存。制作进度也由 GameState 持有；钱包、制作和交付复用同一份跨场景经营会话。
+经济服务复用 TeaMenu、WarehouseInventory 和 GameState；仍用任务 JSON v1，没有新增 autoload 或文件存档。普通交易接口与正式交付事务共用库存，但由各自稳定回执防重。跨场景余额、库存和领取记录由 GameState 的 WalletTransactions 子节点持有；MainGame 通过公开 getter 获取并注入同一库存。制作进度也由 GameState 持有；钱包、制作和交付复用同一份跨场景经营会话。
 
 ## 接口
 
@@ -48,7 +48,7 @@
 - `products`：商品 ID → `{ "item_id": "black_tea", "price": 整数单价, "stock": 整数余量 }`。item_id 必须存在于同一食材目录。省略 stock 表示不限量；stock 为 0 表示售罄；价格允许显式配置为 0。
 - `transaction_rewards`：奖励 ID → `{ "money": 非负整数, "items": {食材ID: 正整数}, "task_id": 可选任务ID }`。纯金币可用空 items，纯物品可将 money 设为 0。task_id 使用现有 TaskCatalog ID，由 MainGame 注入的 TaskJournal 查询状态。找不到任务或任务系统不可用时拒绝发奖。
 
-products 与 transaction_rewards 默认空，保留现有教学库存、订单和叙事奖励文本。实际经济数值尚未确定，不把测试价格写进正式配置。自动化测试 `_menu()` 提供完整的独立价格、限量商品和奖励样例。
+products 与 transaction_rewards 默认空，保留现有教学库存、订单和叙事奖励文本。普通商店 / 独立领取奖励尚无正式配置，不把测试价格当成正式商店数据。已发布订单的收入定义在所选任务目录，原料 market_price 只用于成本计算，不自动生成 products。自动化测试 `_menu()` 提供完整的独立价格、限量商品和奖励样例。
 
 配置在服务创建时复制，运行中修改 Resource 不会暗中改变已开始的经济会话。任务完成只改变进度；需要发奖的业务显式调用 claim_reward。同一 task_id 即使配置了多个奖励别名也最多领取一次；多件奖励应放入同一奖励定义。
 
@@ -71,9 +71,9 @@ products 与 transaction_rewards 默认空，保留现有教学库存、订单�
 
 ## 存档与兼容
 
-GameState 快照升级为 `schema_version = 2`，必需 economy 和 business 字段，包含余额、完整库存、有限商品余量、成功请求记录和奖励领取记录。所有部分先校验，再整体替换；损坏的经济数据也不会改变剧情字段。相同快照静默，读档不会发 transaction_finished 或重播奖励。库存单独变化（包括制作消耗）也进入 GameState 快照。
+GameState 完整快照当前为 `schema_version = 4`，库存子快照 v3；必需 economy 和 business 字段，包含余额、完整库存、有限商品余量、成功请求记录和奖励领取记录。所有部分先校验，再整体替换；损坏的经济数据也不会改变剧情字段。相同快照静默，读档不会发 transaction_finished 或重播奖励。库存单独变化（包括制作消耗）也进入 GameState 快照。
 
-完整恢复要求同时包含钱包与经营数据，且 economy.inventory 与 business.inventory 一致。旧 v1 或缺字段的局部快照拒绝恢复，避免推测并覆盖历史经济或制作进度；迁移策略待确认。start_new_game / reset_state 整体重置经济、制作和剧情数据，普通切场景保留全部进度。
+完整恢复要求同时包含钱包与经营数据，且 economy.inventory 与 business.inventory 一致。只有剧情的旧 v1 或缺字段的局部快照拒绝恢复；完整 v2/v3 支持迁移，规则见[自由配方快照](free_tea_recipes.md#快照与迁移)。start_new_game / reset_state 整体重置经济、制作和剧情数据，普通切场景保留全部进度。
 
 仍使用仓库已有的原生 Variant 快照接口，没有创建第二套生产存档机制。实际文件往返测试使用 FileAccess.store_var/get_var 验证完整 GameState；经济子快照还覆盖 JSON 数字往返。GameState 原有剧情字段仍要求保留 Variant 类型，不能将整包快照直接当普通 JSON 恢复。
 
@@ -91,7 +91,7 @@ GameState 快照升级为 `schema_version = 2`，必需 economy 和 business 字
 | 中断恢复 | 超时、放弃、读档重试时使用哪个委托实例/阶段作为幂等 ID |
 | 货币种类 | 人类与异世界货币是否区分、是否兑换、金额单位 |
 
-WalletTransactions 只提供普通货币、物品和领取事实，不加入专款、冻结、债务、押金或违约状态。未来委托组件负责资格和结算规则，若需同时收取交付物与结算资金，应新增受校验的原子结算入口，不在业务层连续调用多个交易拼接。
+WalletTransactions 只提供普通货币、物品和领取事实，不加入专款、冻结、债务、押金或违约状态。委托组件负责资格和结算规则。当前 TaskDelivery 已经通过 GameState.commit_delivery 原子收取交付物并结算钱与物品；不要在业务层连续调用多个交易拼接。尚未定义的专款、退款和期限仍不能由普通钱包推断。
 
 ## 验证与试玩
 
@@ -106,7 +106,7 @@ godot --headless --path . --script res://tests/verify_milk_tea_shop.gd
 
 交易测试覆盖商品列表与单品一致性、未知商品、报价副本隔离、Resource 后续修改隔离、实时/售罄/不限量报价、查询无通知、余额不足与同 ID 重试、重复请求不减余量、恢复后重新报价及购买，以及余额、免费商品、非法参数/配置、钱包和库存上限、多物品奖励、真实任务完成检查、重复领取与别名、同步重入、注入提交失败、JSON 及实际文件往返、损坏存档拒绝、旧/局部快照原子拒绝、跨主场景切换和制作共用库存。
 
-手动回归入口：`src/core/main.tscn` 或 `src/core/settlement.tscn`，F6。打开仓库查看库存，在制作台交付订单后再开仓库，观察对应原料减少，任务与订单板照常更新。当前没有新增购买按钮或奖励数值；交易行为通过上述测试和公开 API 验收。
+手动回归入口：`src/core/main.tscn` 或 `src/core/settlement.tscn`，F6。打开仓库查看库存，在制作台制作、到指定顾客交付后再开仓库，观察对应原料减少，任务与订单板照常更新。当前没有新增购买按钮或奖励数值；交易行为通过上述测试和公开 API 验收。
 
 ## Godot 4.7 官方依据
 

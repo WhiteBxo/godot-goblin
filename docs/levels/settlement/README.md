@@ -1,6 +1,6 @@
 # 新版洞窟聚落
 
-默认入口为 `src/core/settlement.tscn`，F5 可试玩。15 个参考功能区加上奶茶店，共 16 个独立场景，连接在一片连续洞窟平地上。建筑采用完整背墙、侧墙和可见外墙面，前墙用剖面表现内部；种植、工坊、火塘、庭院和集结点保持开放。唯一一圈洞窟岩壁位于整图外围。
+F5 默认进入标题菜单，新游戏启动正式奶茶店；聚落宿主为 src/core/settlement.tscn，打开后 F6 可独立试玩。正式流程从店门进入时延续 day1，新进程直接 F6 聚落沿用 tutorial。15 个参考功能区加上奶茶店，共 16 个独立场景，连接在一片连续洞窟平地上。建筑采用完整背墙、侧墙和可见外墙面，前墙用剖面表现内部；种植、工坊、火塘、庭院和集结点保持开放。唯一一圈洞窟岩壁位于整图外围。
 
 WASD / 方向键移动，E 查看地点和店内设施，Esc 关闭。正式地图解锁后按 M 或点击 HUD 地图按钮查看已知区域，Esc 关闭。Debug 模式下 F7 切换全图与跟随镜头，Tab 依次显示第一天动线、第二天动线和河岸补给线，F4 切换白天/夜晚以便验收夜间采集。路线显示与昼夜切换都是开发检查工具。
 
@@ -32,7 +32,7 @@ Unity 的 `GoblinCasinoDemo`、`GoblinTavernDemo`、`GoblinTrainingDemo`、`Gobl
 
 `SettlementMap.get_story_anchor()` 提供 `drunken_guard`、`tavern_bartender`、`casino_boss`、`elder_document`、`elder_blood_storage`、`shop_rest_chair`、`shop_workbench` 以及 `night_gather_0..7`。隐藏石盖和书柜仅保留线索锚点，不在普通地点提示中公开。
 
-目前实现地图、实际角色移动、环境碰撞、遮挡、地点说明、三个奶茶店信息交互和夜间采集：`GatherPoints` 在 8 个 `night_gather_*` 锚点放置采集点（`required_flag = world.phase.night`，白天不可采），醒神菇入共享库存并可交给酒馆，详见 [采集与任务物资提交](../../gameplay/gathering.md)。剧情演出、NPC 巡逻/警报、买酒、赌局、雇佣和两天完整任务流程尚未接入。预留锚点不等于已实现对应玩法。
+目前实现地图、实际角色移动、环境碰撞、遮挡、地点说明、三个奶茶店信息交互和夜间采集：`GatherPoints` 在 8 个 `night_gather_*` 锚点放置采集点（`required_flag = world.phase.night`，白天不可采），醒神菇入共享库存并可交给酒馆，详见 [采集与任务物资提交](../../gameplay/gathering.md)。正式 S03–S06 剧情、NPC 巡逻、买酒、赌局、雇佣和两天完整任务流程尚未接通。守卫感知 / 投掷组件已实现，但正式 setup 缺失，宿主保持 PENDING，见[潜入](../../gameplay/day_01_stealth.md)。预留锚点不等于已实现对应玩法。
 
 奶茶店门口现已通过 E 双向连接独立店内场景，落点及经营状态保留见[店铺与聚落进出](../../systems/scene_travel.md)。该入口不自动触发 S03，不改变现有聚落地图与碰撞。
 
@@ -46,9 +46,11 @@ Unity 的 `GoblinCasinoDemo`、`GoblinTavernDemo`、`GoblinTrainingDemo`、`Gobl
 
 正常摆放请直接编辑场景，修改图片后同时检查相应碰撞和遮挡裁片。只有明确需要用制作源覆盖场景时，才运行 `tools/map/bake_settlement.gd -- --rebuild`；不带参数时它拒绝覆盖已有地图。`prepare_settlement_sources.py` 仅用于首次创建简报，已有数据时拒绝重置；`prepare_settlement_art.py` 负责不改变尺寸的素材处理。
 
-素材原图与提示词保留在项目内供编辑使用，导出配置排除 `source/` 和 `prompts/`；JSON 已纳入项目既有导出规则。原奶茶店入口仍为 `src/core/main.tscn`，旧洞穴 demo 仍可独立运行。
+素材原图与提示词保留在项目内供编辑使用，导出配置排除 `source/` 和 `prompts/`；JSON 已纳入项目既有导出规则。原奶茶店入口仍为 `src/core/main.tscn`，旧洞穴保留地图与需注入依赖的调试组件，见[洞穴说明](../cave_demo/README.md)。
 
-## 已执行验证
+## 历史地图交付验证
+
+以下是地图交付当时的环境与结果，后续 Cinematic 及部分旧测试已记录失败，见[现状限制](../../development/development_status_2026_10_18.md#验证记录与限制)。本轮文档同步未运行引擎。
 
 在 Windows、Godot 4.7.2、D3D12 / RTX 4060 上运行并截图检查。
 

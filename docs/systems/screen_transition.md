@@ -4,7 +4,7 @@
 
 ## 挂载与 API
 
-由宿主将模块实例挂到自己的 `TransitionLayer`：`CanvasLayer.layer = 40`、`follow_viewport_enabled = false`、`process_mode = Always`，并显式 `show()`（MainGame 的层默认隐藏）。店铺与聚落 MainGame 已通过 [SceneTravel](scene_travel.md) 接入门口进出，待机及完成后隐藏层。
+由宿主将模块实例挂到自己的 `TransitionLayer`：`CanvasLayer.layer = 40`、`follow_viewport_enabled = false`、`process_mode = Always`，并显式 `show()`（MainGame 的层默认隐藏）。店铺与聚落 MainGame 已通过 [SceneTravel](scene_travel.md) 接入门口进出，宿主结合标题卡状态决定层显隐，不能在导航结束时遮掉仍有效的 TitleCard。TitleCard 是独立表现服务，接入见[StoryDirector](story_director.md#接入与公开接口)。
 
 ```gdscript
 var visual: ScreenTransition = preload("res://src/UI/screen_transition/screen_transition.tscn").instantiate()

@@ -4,7 +4,7 @@
 
 - 由 MainGame 注入 layer 映射并注册独立界面；管理器保存注册和栈，CanvasLayer 持有视图，不为方便管理改动业务节点归属。
 - 新 screen 继承 `ui_screen.gd`（`bind_ui` / `get_default_focus` / `on_ui_closed` / `uses_native_gui_input` / `handle_ui_input`），生命周期契约放基类，具体界面只覆盖需要的回调；管理器保留 duck typing 兼容旧场景。
-- screen ID 使用 `screen_ids.gd` 常量（含 `tasks` / `chronicle` 别名），不在宿主、管理器和场景里重复字符串。模态界面组合 `components/modal_shell.tscn`，壳不注册、不持有业务状态。
+- screen ID 使用 `screen_ids.gd` 常量（含 `tasks` / `chronicle` / `drinks` 别名），不在宿主、管理器和场景里重复字符串。模态界面组合 `components/modal_shell.tscn`，壳不注册、不持有业务状态。
 - 保留重复打开 / 关闭无副作用、未知或已释放视图明确失败，以及 popup 冲突的现有返回语义。
 - 被模态覆盖时保存并恢复底层可处理状态、鼠标与焦点；退出栈、隐藏视图之后再执行关闭回调，回调须可重复安全调用。对话关闭通过取消接口结束 session。
 - 暂停只释放管理器自己取得的暂停，不能解除外部已有暂停；模态信号是要求调用方重新查询的通知，不能仅按信号名字推测当前是否锁定。

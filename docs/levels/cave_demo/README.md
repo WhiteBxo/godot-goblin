@@ -1,5 +1,7 @@
 # 洞穴墙体 demo 接入说明
 
+当前入口核对（2026-10-18）：本页保留洞穴地图与历史交付记录；旧 floor / walls 测试仍有将当前店铺强转 CaveMap 的历史问题。本轮未运行这些命令，适用范围与后续限制见[项目现状](../../development/development_status_2026_10_18.md#验证记录与限制)。
+
 此模块从成员提交的 cave-tile-wall-demo 移植。沿用调整后的顶部绕道、原始地板和河流素材，以及纯色墙体轮廓。
 
 ## 当前区域间距调整
@@ -13,12 +15,12 @@
 
 ## 运行与场景
 
-- 使用 Godot 4.7 系列打开根目录的 project.godot。当前 F5 默认启动聚落，`src/core/main.tscn` 的 F6 启动奶茶店；本节操作针对 `tests/verify_main_game.gd` 组装的洞穴宿主。
+- 使用 Godot 4.7 系列打开根目录的 project.godot。当前 F5 默认进入标题菜单，新游戏进入正式奶茶店，`src/core/main.tscn` 的 F6 启动奶茶店；本节操作针对 `tests/verify_main_game.gd` 组装的洞穴宿主。
 - WASD / 方向键移动；F2 切换石砖墙体、纯色轮廓和关闭墙体；M 切换全图与跟随镜头。
 - 按 F3 打开通用 Console，在“角色”页可在运行中选择玩家移速 1×、2×、4×、8×，每次启动默认 1×。倍率基于 Player 的 speed（默认 122 px/s），不累乘、不写回场景；恢复 1× 即恢复基础速度。移动查询按小步执行，避免高倍率跳过不可走区域。
 - 洞穴宿主根节点为 MainGame；World/LevelRoot 挂载 CaveMap，World/EntityRoot 挂载 Player，World/EffectRoot 预留世界特效。
 - Debug 运行时，MainGame 在 Systems 中创建通用 DeveloperTools 和洞穴专属 CaveDemoController，在 DebugLayer 中创建 DeveloperPanel 和 DebugOverlay。Release 不创建这些节点。src/debug/cave_demo/cave_demo.tscn 是调试组件的场景，不是游戏入口。
-- 当前试玩提示属于 DebugLayer/DebugOverlay；HudLayer 预留正式游戏 HUD，PopupLayer 预留弹窗，PauseLayer 与 TransitionLayer 为空且默认隐藏。
+- 洞穴专属提示属于 DebugLayer/DebugOverlay；MainGame 仍装配通用手册 / 对白 / 暂停与标题卡，TransitionLayer 按实际视觉状态显示，不能把旧洞穴空层记录当成当前架构。
 - 主场景通过 get_active_level()、get_player()、get_debug_tools() 和 get_demo_tools() 提供引用；后两个 getter 分别返回通用和洞穴专属调试组件，工具关闭或 Release 时返回 null。初始化顺序为选择布局、绑定移动查询、设置出生点与跟随镜头、启动可选调试组件，正常启动不依赖调试组件。
 - CaveMap 负责 FloorLayer、RiverLayer、派生的 BorderLayer 和 WallOutline；Player 通过入口传入的 Callable 查询可行走位置；调试提示由 DebugOverlay 的公开方法更新。
 - 保留原来的轴向移动和身体四角格子检测。此次没有引入新的物理碰撞规则，门、箱子等动态碰撞另作功能开发。
@@ -30,7 +32,7 @@
 2. 选中 FloorLayer，在底部 TileMap 面板选择 Terrains → StoneFloor 画地板，也可以在 Tiles 中选任意石砖格绘制。右键擦除，Ctrl+Z / Ctrl+Shift+Z 撤销或重做。
 3. FloorLayer 的格子就是可走区域。CaveMap 的 @tool 会在编辑时匹配周围格子、更新 BorderLayer 和墙体；BorderLayer 属于自动生成的装饰，不要手工编辑。
 4. 选中 RiverLayer 单独绘制或擦除河流；河流不改变地板的通行规则。出生点由 CaveMap 的 spawn_cell 设置，墙高等参数在 WallOutline 的 Inspector 中设置。
-5. Ctrl+S 保存关卡，再 F5 试玩。正常启动保留手工画的地板和河流。若把出生点擦掉，应先将 spawn_cell 移到有效地板上。
+5. Ctrl+S 保存关卡，再用 verify_main_game.gd 的洞穴 fixture 或专门装配 CaveMap / CavePlayer 的宿主验证；F5 默认不会进入洞穴。正常启动保留手工画的地板和河流。若把出生点擦掉，应先将 spawn_cell 移到有效地板上。
 
 运行中由代码改格子后，显式调用 refresh_from_tiles() 更新通行规则和边界；编辑器绘制通过 changed 和格子批量更新 hook 自动刷新。不要通过 load_layout() 刷新手工地图，它是替换格子的导入操作。
 
@@ -85,7 +87,7 @@ godot --path . -- --capture-walls-river
 godot --path . -- --capture-atlas-compare
 ```
 
-截图默认写入 user://captures；可添加 --capture-dir=res://.godot/verification 指定本地验收输出。
+以上直接启动截图命令保留旧洞穴宿主用法；当前标题 / 店铺入口不会创建 CaveDemoController，不会响应这些参数。需先在 Debug 洞穴宿主中注入关卡和玩家，再传入对应参数。截图默认写入 user://captures；可添加 --capture-dir=res://.godot/verification 指定本地验收输出。
 
 截图入口会隐藏通用开发者面板；图集对比使用 MarginContainer、HBoxContainer 和 VBoxContainer，根据视口自动安排两个完整预览。截图和 --original-layout 参数仅在 Debug 构建生效。
 
@@ -93,7 +95,7 @@ godot --path . -- --capture-atlas-compare
 
 ## 通用开发者工具
 
-通用面板现覆盖聚落、奶茶店与洞穴宿主。F3 打开/关闭，默认收起；状态、角色、剧情三个页签提供实时观察、移速、回出生点、确认重启与有界日志。完整接线、缺失能力处理和测试记录见 [Developer Console](../../development/developer_console.md)。
+通用面板现覆盖聚落、奶茶店与洞穴宿主。F3 打开/关闭，默认收起；状态、角色、剧情、事件、业务和编排页提供实时观察、移速、回出生点、确认重启与有界日志。完整接线、缺失能力处理和测试记录见 [Developer Console](../../development/developer_console.md)。
 
 `DeveloperTools.configure(set_multiplier, get_multiplier, panel, context = {})` 保留两个 Callable 的原接口；重绑不重置已有倍率。角色能力缺失返回 ERR_UNCONFIGURED，仍可只读观察；工具关闭时隐藏面板。MainGame 注入公开 API 与场景服务，CaveDemoController 继续独立管理布局、墙体、全图与截图。UIManager 管理 Console 的 modal 焦点与底层输入屏蔽。
 
@@ -108,11 +110,11 @@ godot --headless --path . --script res://tests/verify_debug_build.gd
 
 此前洞穴版本的真实构建验收在临时项目副本中将 verify_debug_build.gd 的检查改为等价 Node 入口场景，然后分别导出 Debug 和 Release EXE；正式主场景和导出配置未替换为测试入口。两种构建均验证出生与移动；Debug 验证倍率和旧布局，Release 验证调试节点缺席、调试按键无效、旧布局参数无效及 MCP 轮询停止。
 
-屏幕层的 layer 分别为 10、20、30、40、50，关闭 follow_viewport_enabled。MainGame 和调试组件使用 Always，Systems 与 World 使用 Pausable，PauseLayer 使用 WhenPaused；此次没有新增暂停操作入口或转场功能。
+屏幕层的 layer 分别为 10、20、30、40、50，关闭 follow_viewport_enabled。MainGame 和调试组件使用 Always，Systems 与 World 使用 Pausable，PauseLayer 使用 WhenPaused；这些通用屏幕层的当前职责见[UI 系统](../../systems/ui_system.md)；旧地图批次未新增的功能不代表当前宿主仍缺失。
 
 手动验收：穿过河道和顶部单格绕道，靠近墙脚确认没有越界；连续按 M 返回跟随后继续移动，镜头应重新跟随；F2 切换不应改变通行规则。
 
-## 本次区域间距验证
+## 历史区域间距验证
 
 - Godot 4.7.2 墙体与行走检查：18,360 项、0 失败；6330 个地板格全部可达，14 个房间连通，河道保留 232 格，墙体冲突为 0。
 - 可编辑地图检查：29 项、0 失败，覆盖手工增删格、显式刷新、保存与重开。

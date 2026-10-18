@@ -25,7 +25,7 @@
 
 ## 状态键
 
-采集状态全部落在 `GameState` 的 flags / variables，没有新增字段，也没有升级快照 schema（仍为 v2）。
+采集状态落在 `GameState` 的 flags / variables；采集本身没有新增顶层字段。当前完整快照已由后续经营与自由配方升级为 v4，库存为 v3，见[经营会话](business_session.md#快照边界)。
 
 | 模式 | 键 | 类型 | 语义 |
 | --- | --- | --- | --- |
@@ -47,8 +47,8 @@ once 且 harvested flag 为 true → 不可用
 daily 且 day >= current_day   → 不可用（当天已采）
 ```
 
-- 昼夜条件是事实 flag，不是时间系统：夜间点声明 `required_flag = "world.phase.night"`，由剧情或调试设置，游戏内没有自动推进。
-- `daily` 的可采性只依赖 `current_day`；系统 1（日程与期限）接好推进入口后无需改动这里。
+- 夜间点声明 `required_flag = "world.phase.night"`；正式写入经 DayPhase 同时更新 world.phase 与夜晚镜像，夜转昼推进一天。没有自动流逝时间，见[日程](../systems/day_phase.md)。
+- `daily` 的可采性只依赖 `current_day`，已有 DayPhase 换天可使日刷新点重新可采；任务期限仍未实现。
 - 采集后点位在下一次查询立即不可选中，`ShopInteraction` 不再显示提示。
 
 ## 原子提交
@@ -78,7 +78,7 @@ daily 且 day >= current_day   → 不可用（当天已采）
 
 ## 任务材料提交
 
-`delivery` 现在支持两种需求，二选一、互斥：
+以下为固定成品与材料两种需求示例；当前还支持互斥的 drink 自由饮品需求，详见[自由订单](free_tea_recipes.md#通用订单)：
 
 ```json
 "delivery": {"order_id": "order_001", "product_id": "pearl_milk_tea", "target_object_id": "fat_goblin"}
@@ -90,22 +90,24 @@ daily 且 day >= current_day   → 不可用（当天已采）
 - 新入口 `try_submit(order_id, target_object_id)`；旧 `try_deliver(order_id, product_id, target_object_id)` 保留为兼容包装（材料订单传空字符串）。
 - 材料与制作共用一份库存，所有扣减都经过 `WarehouseInventory.try_exchange` 的整组校验，先扣先得、不产生负数。
 
-占位任务 `tavern.insomnia_order` 要求 3 份醒神菇交给 `tavern`，奖励糖浆 × 2；`reveal_when` 使用夜晚 flag，白天订单板不显示。数值等剧情分支合并后统一替换。
+占位任务 `tavern.insomnia_order` 要求 3 份醒神菇交给 `tavern`，奖励糖浆 × 2；`reveal_when` 使用夜晚 flag，白天订单板不显示。该条只在 tutorial 目录中加载，正式 day1 目录不包含它；数值不能作为 Day 2 代购委托的已批准规则。
 
 ## 试玩
 
-F5 `src/core/settlement.tscn`（Debug，F4 切换昼夜）：
+打开 `src/core/settlement.tscn` 后 F6（新进程默认 tutorial；Debug 下 F4 切换昼夜）。F5 是标题与正式 Day 1，不加载本示例委托：
 
 1. F4 切到夜晚，左上状态栏显示「夜晚」。
 2. 前往任意夜光菌丛按 E：提示「采集成功：醒神菇 × 1（现有 1）」。
 3. 在原地点再按 E：不再弹出采集结果；换一处点位可继续采。
-4. 打开订单板：出现「酒馆的醒神菇委托：醒神菇 × 3 → 酒馆人物」，并自动接取。
+4. 打开订单板：出现「酒馆的醒神菇委托：醒神菇 × 3 → 酒馆人物」，选择该单并点击“接取订单”。
 5. 集满 3 份后到酒馆人物按 E：醒神菇 −3、糖浆 +2、任务完成；再次按 E 只显示拒绝，库存不变。
 6. `night_gather_6`、`night_gather_7` 是一次性点位，采尽后换天也不会恢复。
 
-Release 不创建 `SettlementPreview`，F4 无效；正式昼夜仍由系统 1 与剧情提供。
+Release 不创建 `SettlementPreview`，F4 无效；正式昼夜由 DayPhase 及调用它的剧情 / 世界协调层提供。
 
 ## 验证
+
+以下是 2026-10-17 采集实现批次的历史记录，本轮文档更新未复跑。
 
 项目引擎 Godot 4.7.2。实际执行（Windows，headless）：
 

@@ -34,26 +34,22 @@ TeaMaking 增加 `has_recipe`、`has_session`、`is_completed_session` 查询。
 
 ## 真实订单接线
 
-TeaProduction 无剧情依赖、无新剧情 API。MainGame 监听原 changed，读取 get_completed_count。
-只有配方/库存校验成功并提交进度后才增长。组装层先消费本场景已观察的序号，再写：
+TeaProduction 只负责制作，成功后成品入共享库存；其 get_completed_count 是兼容制作进度，不代表已交付。TaskDelivery 在指定 NPC 的真实交付中经 GameState.commit_delivery 提交业务事实：
 
 - `shop.order_001_delivered`：任务配置的首单交付事实；后续订单需配置自己的交付任务。重复通知幂等。
 - `shop.orders_completed`：已成功交付订单的最高计数（制作不计数），取 max，避免重进场景降低快照中进度。
 
 失败配方、缺库存、关闭 UI、TeaMaking 完成不改变上述事实。
 UI 中固定配方 Demo session 与真实订单控件互斥显示，防止误认它们是一套业务。
-当前固定队列没有跨天唯一订单标识；TeaProduction 库存/中间进度也没有实现持久化。
-本次只保存既有 GameState 结果，不冒充完整经营存档。新的一天/动态订单需先有对应实际业务。
+固定队列仅作兼容。当前共享库存、制作、钱包、订单回执、动态杯和图鉴都进入 GameState 完整 v4 内存快照，普通切场景保留；尚无文件存档。阶段订单由真实目录 / 接单事实提供，Bridge 不创建订单实例或编造完成。
 
 ## 正式入口与示例
 
-正式 `src/core/settlement.tscn` 组装无 TeaMaking/TeaProduction 的 flag Bridge，
-可等待已有聚落业务事实；不会自动加载任何 Demo，也不凭空添加制作能力。
-真实奶茶教学示例在店铺场景运行；正式聚落进店、转场和 Day 1 发布尚未接入，不在本次编造。
+F5 从标题新游戏进入奶茶店，Day1ShopController 加载正式 S01–S02 的三个 flag phase，依次等待 day1.human_settled、day1.goblin_settled、day1.group_settled。聚落也绑定 GameState 的共享 TeaProduction / 库存和 flag Bridge，店门通过 SceneTravel 双向连接。Day1ChapterController 负责后章交接，但其 Story / Dialogue / phases 当前为空；不自动加载 Demo 或完成后四阶段。
 
 F6：`src/debug/gameplay_bridge/order_bridge_demo.tscn`。
-开场 → WASD 到订单板 E 调查 → 推进教学 → 奶茶制作台 E →
-选择红茶/奶精/珍珠，糖浆自动加入 → 制作并入库 → Esc 关闭 → 胖哥布林按 E 交付 → 关闭交付弹窗 → 自动续播。详见 [成品交付](../gameplay/task_delivery.md)。
+开场 → WASD 到订单板 E 调查 → 推进教学 → 再开订单板接取首单 → 奶茶制作台 E →
+按单带入配方并制作入库 → Esc 关闭 → 胖哥布林按 E 交付 → 无模态 / 暂停阻挡时自动续播。详见 [成品交付](../gameplay/task_delivery.md)。
 完成后再次调查订单板出现一次特殊对白，再次则回原订单 UI。
 旧 `gameplay_bridge_demo.tscn` 继续验证固定顺序配方，不代表真实订单。
 
@@ -67,7 +63,9 @@ F6：`src/debug/gameplay_bridge/order_bridge_demo.tscn`。
 避免在状态替换过程中写入新的剧情结果。
 
 
-## 本次验证记录（2026-10-17，Godot 4.7.2）
+## 历史验证记录（2026-10-17，Godot 4.7.2）
+
+以下数量与文件范围保留该批次历史；本轮文档同步未重新运行。当前候选检查按[验证分级](../../tests/AGENTS.md)选择。
 
 通过：Gameplay Bridge 246 项（含 v1/v2 原加载器、源稿散列/映射与实际按钮交付、
 提前/失败/重复/过期 session、UI/暂停、重入/拒绝/取消、快照、连续两阶段和聚落接线）、

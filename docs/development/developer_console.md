@@ -80,10 +80,10 @@ Console 在 UIManager 中注册为 DebugLayer 的 modal screen。打开后 MainG
 
 ## 试玩与自动验收
 
-1. F5 默认启动 `src/core/settlement.tscn`，或打开 `src/core/main.tscn` 按 F6 单独启动奶茶店宿主。
+1. F5 从标题新游戏进入正式奶茶店；也可打开 src/core/main.tscn 或 src/core/settlement.tscn 后 F6。新进程聚落沿用 tutorial，正式出店延续 day1 会话。
 2. 开始时不应出现 Console。F3 打开，观察各页签；调速后关闭，移动速度应改变，回出生点应停止残余运动且镜头重新对齐。
 3. 展开面板时按住移动、E、P、M、F2；角色和底层 UI 不响应。Esc/F3 关闭后恢复控制。在店铺弹窗、剧情 busy 或暂停中打开/关闭，原状态应保留。
-4. 在真实宿主正常触发剧情后查看事件日志；默认没有加载事件时应显示“未加载剧情事件”。展开角色页的重启确认，取消不重启，确认重启保留 GameState。
+4. 在真实宿主正常触发剧情后查看事件日志；无剧情目录的独立宿主显示“未加载剧情事件”；正式前段有已加载事件，后章接管后的当前目录为空骨架。展开角色页的重启确认，取消不重启，确认重启保留 GameState。
 5. 业务页同步：奶茶店宿主（`src/core/main.tscn`，`day1_story_enabled = true`）开场结束后 F3 → “业务”。接单前“任务”页应显示 `day1.order_human`、当前目标与“交付要求：day1_human：珍珠奶茶（成品） ×1”，“产出”页显示 `订单 #001 · 珍珠奶茶 × 1`、已完成 0 杯。做一杯后“已完成：1 杯”、仓库成品变 1 且原料减少；交付给人类顾客后钱包余额 0 → 10、任务列表清空、仓库成品回到 0，“最近交易”仍为空（交付结算不产生 `transaction_finished`，见上）。
 6. Day 1 阶段跳过：F5 从标题进入新游戏（`src/core/main.tscn`，`day1_story_enabled = true`），等开场演出结束；F3 → “写状态”页 → 阶段下拉选 `day1.first_drink_tutorial · day1.human_settled` → “写入完成条件并刷新”，结果行应显示已写入完成条件 flag；也可直接在 flag 行填同一 Key 选 true 应用。关闭面板后 `GameplayBridge` 写入 `day1.human_done` 并请求 `day1.first_goblin`，第二阶段开始；再对 `day1.goblin_settled` 做一次即进入第三阶段。剧情 busy 或对话进行中，“写状态”页应整体禁用并显示“剧情演出进行中/对话进行中”等具体原因。
 7. 事件页热重载：运行 `src/core/main.tscn`（Day 1 宿主），等开场演出结束；F3 → 剧情 → 事件，列表应列出 `day1_stages_01_02.json` 的事件及条件、步骤数。选中一个事件 → “触发…” → 确认，面板应先关闭再开始演出，日志出现“事件开始 …”。修改 `src/resources/dialogue/day1_stages_01_02.json` 的对应台词（或 `src/resources/story/day1_stages_01_02.json` 的步骤）后回到事件页点“重新加载”，结果行显示“已重新加载 …；对白 …”；再次触发即可看到新内容，不必重启宿主，也不必从第一阶段重走。重复触发已完成的一次性事件应被拒绝，结果行原样显示 “Story event already completed: …”。

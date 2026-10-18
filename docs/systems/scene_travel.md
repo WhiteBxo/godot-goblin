@@ -4,7 +4,7 @@
 
 ## 试玩
 
-无剧情教学可 F6 运行 `src/debug/story/legacy_shop.tscn`；F5 新游戏进入正式 Day 1，完成前两阶段后可出门。演出、模态界面及活动 Gameplay Bridge phase 期间仍拒绝切场景。走到店内右下门口，看到「[E] 走出奶茶店」后按 E。黑场后出现在聚落奶茶店门外，朝下；回到门前看到「[E] 进入奶茶店」后按 E，回到店内门口，朝上。按住 E 不会立即反向切换，松开后再按可以返回。
+无剧情教学可 F6 运行 `src/debug/story/legacy_shop.tscn`；F5 新游戏进入正式 Day 1，完成前两阶段后可出门。演出、模态界面及活动 Gameplay Bridge phase 期间仍拒绝切场景；正式章节还受 Day1Access 与出口 flags 门控，见[日程与准入](day_phase.md)。走到店内右下门口，看到「[E] 走出奶茶店」后按 E。黑场后出现在聚落奶茶店门外，朝下；回到门前看到「[E] 进入奶茶店」后按 E，回到店内门口，朝上。按住 E 不会立即反向切换，松开后再按可以返回。
 
 在无剧情教学中制作一杯后出店再进店，仓库中的原料/成品和制作队列保持原值；接单、交付回执、奖励、钱包和剧情事实也保留。重载仍使用原默认出生点；直接 F6 聚落仍使用原聚落出生点，进门请求不会残留到下一次重载或新游戏。
 
@@ -37,6 +37,8 @@
 源宿主在淡出期间被重载/销毁，会释放它持有的未入树目标；交给 SceneTree 前解除本地所有权，避免离树清理误删目标。入口信息只保存在这一目标实例中，不写 GameState、不新增快照字段。
 
 ## 验证
+
+以下命令及 2026-10-17 数量为导航批次记录。本轮文档更新未复跑；后续记录有旧 PromptBar.text 断言与临时适配差异，见[现状限制](../development/development_status_2026_10_18.md#验证记录与限制)。
 
 ```sh
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --script tests/verify_scene_travel.gd

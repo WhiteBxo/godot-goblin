@@ -2,12 +2,12 @@
 
 运行时字段映射基线：2026-10-17；图标引用更新：2026-10-18。旧源稿 [otherworld_ingredients_and_drinks.xlsx](source/otherworld_ingredients_and_drinks.xlsx)，运行时目录 [day1_menu.tres](../../src/resources/milk_tea/day1_menu.tres)，校验脚本 [verify_otherworld_catalog.gd](../../tests/verify_otherworld_catalog.gd)。
 
-本文件记录旧源稿到现有运行时的映射。2026-10-18 新增的[原料规则表](recipe_ingredients_revised.md)与[配方专项设计](milk_tea_recipe_system_revised.md)作为后续设计依据，其数值、价格和使用次数尚未同步到运行时；不要把本文旧字段当成新版设计。旧表保留 W/H 数据与图鉴描述等互补内容，见[更新说明](milk_tea_recipe_update_2026_10_18.md)。
+本文件记录旧源稿到现有运行时的映射。2026-10-18 新增的[原料规则表](recipe_ingredients_revised.md)与[配方专项设计](milk_tea_recipe_system_revised.md)作为后续设计依据，其数值、市场价格和使用次数已通过[原料导入工具](../gameplay/milk_tea_recipe_data.md)同步到两个菜单；下表仍专门记录旧表 price / 描述等来源字段，不要把本文旧字段当成新版设计。旧表保留 W/H 数据与图鉴描述等互补内容，见[更新说明](milk_tea_recipe_update_2026_10_18.md)。
 
 ## 接入范围
 
 - 已接入：四张表共 33 行源稿，落在 31 个运行时物品上 —— 「异世界原料配置表」F01–F12、「酒品」W01–W05、「现实食材」C01–C10、「人类奶茶配方」H01–H06。
-- 原料与酒品登记为 `otherworld` / `material`，现实食材为 `human`，六款人类饮品为 `product`。
+- 异世界原料与酒品登记为 otherworld / material，现实食材为 human，六款人类饮品为 `product`。
 - 除教学六项外，新条目初始库存 0、未发现；采集、购买或剧情交付取得后才会在仓库出现。
 - `basic_menu.tres` 与 `day1_menu.tres` 共用同一份 `recipe_book.tres`，因此新增的六款配方与成品在两个菜单里都存在；教学局的初始库存与订单未变。
 - 未接入的 P 类见文末。
@@ -52,7 +52,7 @@
 
 ## 字段映射
 
-| 源稿列 | 运行时长段（`IngredientDefinition`） | 处理方式 |
+| 源稿列 | 运行时字段（`IngredientDefinition`） | 处理方式 |
 | --- | --- | --- |
 | 原料ID / 酒品编号 | `source_ids` | 原样保留 `F01`、`W02` 这类编号，供反查与测试；一物多行时并列 |
 | 食材正式名称 / 酒品名称 | `display_name` | 原文照抄 |
@@ -89,9 +89,9 @@ F05 与 W02、F06 与 W04 是同一件东西在两张表各登记一次。运行
 
 - [WarehouseInventory](../../src/gameplay/milk_tea/warehouse_inventory.gd) 按菜单建立物品目录，负责数量与发现状态；`get_ingredient_view` 一并给出形态、加工、标价与图鉴描述。
 - [WarehousePanel](../../src/UI/milk_tea/warehouse_panel.gd) 展示上述字段；风味、战斗属性、效果、获取方式仍按发现组遮罩，未解锁显示 `???`。
-- [TeaProduction](../../src/gameplay/milk_tea/tea_production.gd) 允许把新材料当作自由组合原料；六款人类配方引用 C 系原料，异世界原料目前还没有配方引用。
+- [TeaProduction](../../src/gameplay/milk_tea/tea_production.gd) 允许把新材料当作自由组合原料；六款人类配方引用 C 系原料，异世界原料已可进入三槽自由配方（F09 等禁止项除外）；自由杯与固定 H 成品分别记录。
 - [GatheringService](../../src/gameplay/gathering/gathering_service.gd) 已支持把采集点接到任意目录内原料；现有八个夜光菌丛采集点仍是醒神菇，未改动，因为酒馆委托 `tavern.insomnia_order` 依赖它们。
-- [TeaRecipe](../../src/resources/milk_tea/tea_recipe.gd) 的 `required_flag` 决定配方是否进入会话目录：六款人类配方挂 `business.profile.day1`，[GameState](../../src/core/game_state.gd) 选到 day1 档案时发布该事实，教学会话看不到它们；血液特调挂 `day1.s05.blood_acquired`，由 Day 1 剧情解锁。
+- [TeaRecipe](../../src/resources/milk_tea/tea_recipe.gd) 的 `required_flag` 决定配方是否进入会话目录：六款人类配方挂 `business.profile.day1`，[GameState](../../src/core/game_state.gd) 选到 day1 档案时发布该事实，教学会话看不到它们；血液特调同时要求 day1.s05.blood_acquired、day1.s05.returned_shop 和 S06 阶段；材料实际消耗仍由制作服务校验。
 - 两个菜单资源必须同步：`basic_menu.tres` 是共享库存目录，`day1_menu.tres` 带正式订单队列，两者共用同一份配方簿，任何条目缺一处就会出现「菜单里有、仓库里查不到」。
 
 ## 待定

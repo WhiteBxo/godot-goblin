@@ -6,15 +6,15 @@ UI 使用 Godot 4.7 原生 Control、Container 和 Theme，不增加 autoload �
 
 | 层 | 内容 | process mode |
 | --- | --- | --- |
-| HudLayer / 10 | ShopUI：标题和交互提示 | Always |
-| PopupLayer / 20 | 独立 ShopPopup、DialogueUI、HandbookPanel | Always；被覆盖时 Disabled |
+| HudLayer / 10 | 交互提示、TaskHUD 订单追踪、手册 / 地图入口、Day 1 业务及潜入状态 | Always |
+| PopupLayer / 20 | ShopPopup、DialogueUI、HandbookPanel、聚落地图 | Always；被覆盖时 Disabled |
 | PauseLayer / 30 | PauseMenu | WhenPaused |
-| TransitionLayer / 40 | 预留转场层，原 ScreenTransition 模块独立使用 | Always |
+| TransitionLayer / 40 | SceneTravel 的 ScreenTransition 与 Story TitleCard，由宿主合并显隐 | Always |
 | DebugLayer / 50 | 调试显示和 UI demo 按钮 | Always |
 
 UIManager 在 Systems 下使用 Always；World 和其他普通 Systems 保持 Pausable。界面节点由其 CanvasLayer 持有，管理器保存注册和模态栈。店铺 HUD 和弹窗通过独立场景实例化，不再从 HUD 内部 reparent 弹窗。
 
-手册使用 `handbook_hud`（HudLayer 的右上角图标及未读圆点）与 `handbook`（PopupLayer 的统一模态窗口）。委托与异闻录通过页签切换，未解锁页签隐藏；全部未解锁时入口隐藏。`MainGame.open_handbook()` 选择上次页签，首次优先委托；`open_tasks()` / J 键和 `open_chronicle()` 选择对应页。`tasks`、`chronicle` 保留为手册别名，复用弹窗互斥、操作锁、Esc 关闭和 P 暂停；ItemList 使用原生方向键、Enter 和鼠标输入，Tab 继续由原生 Control 导航及管理器焦点约束处理。详见 [见闻录模块](../gameplay/chronicle.md)。
+手册使用 `handbook_hud`（HudLayer 的右上角图标及未读圆点）与 `handbook`（PopupLayer 的统一模态窗口）。委托、异闻录与饮品图鉴通过页签切换，未解锁页签隐藏；全部未解锁时入口隐藏。`MainGame.open_handbook()` 选择上次页签，首次优先委托；`open_tasks()` / J 键、`open_chronicle()` 与 `open_drinks()` 选择对应页。饮品图鉴首次自由制作后开放。`tasks`、`chronicle`、`drinks` 保留为手册别名，复用弹窗互斥、操作锁、Esc 关闭和 P 暂停；ItemList 使用原生方向键、Enter 和鼠标输入，Tab 继续由原生 Control 导航及管理器焦点约束处理。详见 [见闻录模块](../gameplay/chronicle.md)。
 
 ## 接入接口
 
@@ -31,7 +31,7 @@ UIManager 在 Systems 下使用 Always；World 和其他普通 Systems 保持 Pa
 | `is_open(id)` / `has_modal()` | 查询打开状态和是否存在模态 |
 | `set_paused(value)` | 暂停并覆盖现有 UI，或恢复；不解除外部已有暂停 |
 
-别名的 `open_screen` 先检查目标生命周期、暂停和 popup 冲突，再调用 prepare；prepare 失败不打开窗口。窗口已打开时，别名只切换内容，不重入模态栈或触发 modal_changed。`is_open` 和 `close_screen` 对别名均查询/关闭同一个正式窗口；两个业务别名可同时报告 true。`screen_closed` 仅发送正式 screen ID。
+别名的 `open_screen` 先检查目标生命周期、暂停和 popup 冲突，再调用 prepare；prepare 失败不打开窗口。窗口已打开时，别名只切换内容，不重入模态栈或触发 modal_changed。`is_open` 和 `close_screen` 对别名均查询/关闭同一个正式窗口；多个业务别名可同时报告 true。`screen_closed` 仅发送正式 screen ID。
 
 信号为 `modal_changed()`、`pause_changed(paused)`、`screen_closed(id)`。非模态显示改变也可能触发 modal_changed，订阅者应重新查询状态。
 
@@ -43,7 +43,7 @@ UIManager 在 Systems 下使用 Always；World 和其他普通 Systems 保持 Pa
 - `handle_ui_input(event)`：处理栈顶的确认和方向输入，当前用于对白。Tab 导航由管理器处理。
 - `on_ui_closed()`：同步结束业务生命周期；对白在此请求 DialogueManager 取消。此回调发生在界面已出栈、隐藏之后，应可重复安全调用。
 
-模态界面组合 `src/UI/components/modal_shell.tscn`：壳负责遮罩、外边距、Panel 边框、标题、关闭按钮与页脚，内容场景只提供列表、详情和输入。手册由 `ModalShell + HandbookBody`（`TabContainer` + `TaskPage` / `ChroniclePage`）组成，店铺由 `ModalShell + ShopPage`（`CraftingPanel` / `WarehousePanel` 为内容组件）组成，`TaskPopup` 仅用于测试与 F6 预览。内容页不得再复制 Dim、Panel、Header 或 Close；`ModalShell.get_panel_rect()` 与 `get_close_button()` 供测试和宿主使用。底部交互提示使用 `PromptBar`（Keycap + 卡片面板），不再在各 HUD 里手写颜色。
+模态界面组合 `src/UI/components/modal_shell.tscn`：壳负责遮罩、外边距、Panel 边框、标题、关闭按钮与页脚，内容场景只提供列表、详情和输入。手册由 `ModalShell + HandbookBody`（`TabContainer` + `TaskPage` / `ChroniclePage` / `Drinks`）组成，店铺由 `ModalShell + ShopPage`（订单板 / 按单制作、CraftingPanel / FreeCraftingPanel / WarehousePanel 为内容组件）组成，`TaskPopup` 仅用于测试与 F6 预览。内容页不得再复制 Dim、Panel、Header 或 Close；`ModalShell.get_panel_rect()` 与 `get_close_button()` 供测试和宿主使用。底部交互提示使用 `PromptBar`（Keycap + 卡片面板），不再在各 HUD 里手写颜色。
 
 当前 `popup` 层模态互斥，`pause` 可覆盖 popup；通用 HUD 使用非模态注册。`pause` 是管理器保留 ID；通过 open_screen("pause") 或 set_paused(true) 均会取得暂停。不要在 pause 层注册其他业务界面。
 
@@ -97,7 +97,7 @@ godot --path . --log-file .godot/ui-visual.log --script res://tests/verify_ui_ma
 
 统一手册与任务面板的截图分别写入 `.godot/handbook/` 与 `.godot/task_panel/`；主题画廊写入 `.godot/ui_kit/`。窗口截图来自游戏 viewport，不包含宽窗口的比例留白。验收同时断言实际 Window 尺寸，避免只修改截图文件名。
 
-本次主题化、壳重构与店铺界面批次通过：ui_theme 152 项、ui_kit 6 项、ui_manager 47 项（窗口版含尺寸断言 50 项）、handbook 44 项、task_panel 92 项、chronicle 64 项、dialogue 154 项、main_game 73 项、day1_stages_01_02 255 项，以及 milk_tea_shop、warehouse_inventory、business_session、tea_production、tea_recipes、gameplay_bridge、task_delivery、task_system、gathering、interaction_feedback 的对应检查。F6 与 640×360、1280×720 截图已人工检查。
+历史主题化、壳重构与店铺界面批次通过（非本轮文档实测）：ui_theme 152 项、ui_kit 6 项、ui_manager 47 项（窗口版含尺寸断言 50 项）、handbook 44 项、task_panel 92 项、chronicle 64 项、dialogue 154 项、main_game 73 项、day1_stages_01_02 255 项，以及 milk_tea_shop、warehouse_inventory、business_session、tea_production、tea_recipes、gameplay_bridge、task_delivery、task_system、gathering、interaction_feedback 的对应检查。F6 与 640×360、1280×720 截图已人工检查。
 
 历史 UI 验收（统一手册接入前）：ui_manager 47 项（窗口版含尺寸断言共 50 项）、main_game 72 项、dialogue 75 项、story_director 147 项、cinematic_integration 286 项、interaction_feedback 46 项、screen_transition 54 项，以及 milk_tea_shop 的移动/碰撞/交互检查。窗口版在项目默认 Metal Forward+ 下完成三种尺寸截图检查；Compatibility 渲染器也通过同一 UI 回归。
 

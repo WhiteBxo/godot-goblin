@@ -26,7 +26,7 @@ F5 进入 `src/UI/title/title_menu.tscn`。标题显示 Godot Goblin、新游戏
 
 暂停菜单通过 `title_requested` signal 请求 MainGame 导航，不自行访问业务状态。UIManager 离树释放其暂停与模态，其他服务按现有离树规则取消。标题入口也调用 `DebugRuntime.apply_release_policy()`，Release 从停留标题时便停止 MCPRuntimeProbe 轮询；不修改插件源码。
 
-本功能不修改剧情原稿/JSON、地图、订单或任务配置，不产生 Day 1 阶段或完成事实。标题没有继续游戏、存档、设置、确认弹窗或结尾界面。
+GameEntry 只管理导航与整局生命周期；Day 1 的阶段、订单和完成事实由进入店铺后的既有服务产生。标题没有继续游戏、存档、设置或确认弹窗。章节标题卡属于 MainGame 的演出服务，当前后四阶段数据为空，尚无正式章末。
 
 ## 标题音乐
 
@@ -41,6 +41,8 @@ F5 进入 `src/UI/title/title_menu.tscn`。标题显示 Godot Goblin、新游戏
 API 依据：[AudioStreamPlayer](https://docs.godotengine.org/en/4.7/classes/class_audiostreamplayer.html) 的自然结束 `finished` 信号与线性音量；[Ogg 导入器](https://docs.godotengine.org/en/4.7/classes/class_resourceimporteroggvorbis.html) 的 `loop=false`；[Timer](https://docs.godotengine.org/en/4.7/classes/class_timer.html) 单次计时；[Tween](https://docs.godotengine.org/en/4.7/classes/class_tween.html) 的节点生命周期绑定。
 
 ## 验证与试玩
+
+以下命令是入口功能的候选验证；其后 2026-10-17 及合并记录为历史结果。本轮文档核对未运行引擎，当前正式流程与缺口见[项目现状](../development/development_status_2026_10_18.md)。
 
 ```sh
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --script res://tests/verify_game_entry.gd

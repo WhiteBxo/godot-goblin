@@ -1,48 +1,55 @@
-# 奶茶店 MVP
+# 奶茶店宿主与试玩
 
-Godot 4.7.2，F5 进入标题菜单后选择“新游戏”，或打开 `src/core/main.tscn` 后 F6 单独运行。背景 `assets/map/milkTea/milkTea.png` 为用户于 2026-10-16 提供的 1672 × 941 PNG；角色以用户原图为参考，使用内置 imagegen 修整四向八帧步态并补充独立中立站姿。
+核对日期：2026-10-18。F5 进入标题菜单并选择“新游戏”，或打开 src/core/main.tscn 后 F6，启动正式 Day 1 前两阶段。原三单教学使用 src/debug/story/legacy_shop.tscn。当前店内地图为 assets/map/milkTea/shop_interior_rooms.png，1376×768，MilkTeaShop 等比 1.25，世界范围 1720×960；旧 milkTea.png 保留为历史素材。
 
-- WASD / 方向键：八方向移动，斜向不加速。
-- 左上仓库、上方制作台、下方订单板：靠近金色标记显示「按 E 交互」，E 打开对应信息界面。
-- Esc / 返回按钮：关闭界面并恢复移动。弹窗期间角色停止移动。
-- 制作台已接入初级制作：左侧原料与已有成品、右侧选料合成；点选原料后按配方产出成品入库并展示下一笔制作订单。首单携带到指定 NPC 交付后才完成任务并发奖。仓库、订单板与制作台共享本次营业数据。详见 [基础制作说明](../gameplay/basic_tea_production.md)。
+## 玩家流程
+
+- WASD / 方向键移动，Shift 奔跑、Ctrl 潜行 / 蹲伏；靠近设施显示角框和底部 E 提示，不再常驻金色菱形与标签。
+- 订单板逐笔接取；制作台默认按单制作，配方自动填入。切“自由调配 → 教学配方”可手动选料、配方重做与批量；内层“自由调配”提供三槽动态杯与独立加冰。
+- 制作只入共享库存，关闭界面后到指定顾客按 E 交付；成功为非模态短反馈，钱 / 物品 / 回执同次提交。
+- Esc 关闭顶层弹窗或在空闲时暂停，P 暂停；返回标题再新游戏重置整局，普通重载和店门进出保留经营配置与进度。
+- 五单后停在金币调查边界并开放出店；正式 S03–S06 尚未发布。流程见[前两阶段](../gameplay/day_01_stages_01_02.md)，业务见[订单](../gameplay/order_system.md)、[制作](../gameplay/basic_tea_production.md)和[自由配方](../gameplay/free_tea_recipes.md)。
 
 ## 结构与坐标
 
-- `src/levels/milkTea/milk_tea_shop.tscn`：背景、出生点、15 个实体碰撞形状、三个交互组件实例，可直接在编辑器中修改。`get_world_bounds()` 提供背景世界范围；四面外墙在初始化时按图片尺寸与 `boundary_insets`（左、上、右、下）同步，并封闭底部侧墙缺口。
-- `src/gameplay/player/shop_player.*`：独立角色，`CharacterBody2D` 的 Floating 模式和 `move_and_slide()`。脚部横向胶囊碰撞体为 34 × 20 世界像素；新素材显示缩放为 0.52，角色约 110 像素高。动画按速度调整节奏并保留转向时的步态进度；nearest 与 alpha cutout 保持轮廓清晰。四向动画说明见 [玩家素材说明](../../assets/characters/player/README.md)。
-- `src/gameplay/player/bounded_follow_camera.gd`：角色子节点上的跟随相机，位置平滑速度为 8，默认缩放 0.5。相机保留为玩家子节点，但启用 top_level 隔离父节点碰撞位移；在玩家移动后的物理帧先将目标限制到合法取景中心范围，再交给 Camera2D 平滑，并在误差小于 0.01 世界像素时结束平滑尾差，避免底边持续按 S 时出现像素抖动。主场景注入 `get_camera_bounds()`；`camera_insets` 按左、上、右、下排除图片外圈装饰黑框，不修改背景像素和家具坐标。窗口变宽或变高时自动提高最小缩放，避免视野越界。
-- `src/gameplay/interaction/interaction_point.*`：复用 `Area2D`，导出地点 ID、名称、说明；通过 `availability_changed` 和 `interacted` 信号通知协调组件。
-- `src/gameplay/interaction/shop_interaction.gd`：选择最近可交互地点，处理 E，并协调角色与 UI。新增地点可实例化组件，通过 `MilkTeaShop.get_interaction_points()` 自动接入。
-- `src/UI/milk_tea/shop_ui.*`：显示提示与信息弹窗，通过 `closed` 信号恢复角色。提示挂到 HudLayer，弹窗挂到 PopupLayer。
-- `MainGame` 装配依赖；保留原洞穴初始化分支，正式关卡不依赖调试组件。
+| 组件 | 当前职责 |
+| --- | --- |
+| src/levels/milkTea/milk_tea_shop.tscn | 背景、Spawn、墙体 / 家具碰撞、开放房间与前景、三个设施点、StoryPositions 和命名出入口 |
+| MilkTeaShop | 提供世界 / 相机边界、出生点、交互 / 剧情位置和导航接口；configure_depth_sort 统一角色与家具排序 |
+| src/gameplay/player/shop_player.tscn | CharacterBody2D，Floating 模式；脚底横向胶囊 34×20；速度 240 世界像素 / 秒 |
+| 玩家画面 | player_actions_pixel_frames.tres，24 组四向动作、274 帧；原始像素直接 2 倍生成，Visual 无额外缩放，可见站立约 118 世界像素 |
+| BoundedFollowCamera | 唯一跟随相机，默认 zoom=0.5，位置平滑速度 8，top_level；按地图边界限制中心并处理尾差与宽高变化 |
+| ShopInteraction / InteractionFeedback | 最近目标分发、实际高亮 / 提示；Story 路由、导航、调查、采集或交付按宿主协调 |
+| ShopUI / UIManager | HUD、弹窗、焦点和覆盖；移动 / 交互锁最终由 MainGame 合并，不在关窗时无条件恢复 |
+| MainGame / GameState | 宿主组装本地服务；唯一会话保存库存、制作、钱包与剧情，普通场景重建不重置 |
 
-场景坐标以背景左上角为原点，1 世界单位 = 1 背景像素，图片 1672 × 941。640 × 360 逻辑视口默认显示 1280 × 720 的世界范围，比旧缩放多显示 50% 的宽度；安全取景区域为 Rect2(100, 80, 1480, 861)，保留少量跟随空间且不会显示外圈黑框。碰撞覆盖墙体、柜台、货架、箱子和设备可见区域；外墙余量同步调整，避免角色在安全取景边缘被裁切。背景仍为单张图片，不涉及 TileMap 格子或布局导入。物理层 1 = 环境、2 = 玩家，交互 Area 仅检测玩家层。
+地图本地原点为背景左上角，1 本地单位为原始图片 1 像素，再经过关卡 1.25 等比变换。camera_insets 为本地左 / 上 / 右 / 下 (112, 54, 112, 10)，默认地图变换下相机范围为 Rect2(140, 67.5, 1440, 880)。出生点、门洞与屋顶详细配置见[开放房间与遮挡](milk_tea_map.md)。
 
-中文使用 SystemFont，优先 Microsoft YaHei / Noto Sans CJK SC；移植到没有中文系统字体的平台时需要随包提供中文字体。
+世界 / 家具为物理层 1、玩家为层 2、NPC 为层 3；玩家 mask=5，NPC 只检测世界。隐藏 NPC 退出实体层；可见 NPC 脚底阻挡玩家。角色与家具按保存基线分配 Z 区间，同区间角色用 Y 排序；屋顶在其上。中文使用随包 Fusion Pixel 主题字体，不依赖系统 CJK 字体。
 
-## 验证
+店门 shop_exit 连接聚落 shop_door，返店落 street_door；具体坐标、准入和状态交接见[店铺与聚落进出](../systems/scene_travel.md)。地图组件本身不承担订单、库存或剧情顺序。
 
-```powershell
+## 检查与试玩
+
+按改动范围选候选入口，本轮文档静态更新没有运行引擎：
+
+```sh
 godot --headless --path . --script res://tests/verify_milk_tea_shop.gd
-godot --headless --path . --script res://tests/verify_player.gd
 godot --headless --path . --script res://tests/verify_shop_camera.gd
+godot --headless --path . --script res://tests/verify_shop_equipment.gd
+godot --headless --path . --script res://tests/verify_room_reveal.gd
 godot --path . --script res://tests/verify_player_visuals.gd
 ```
 
-验证实际输入移动、斜向速度、15 处物理碰撞、持续顶住柜台、基于实际物理空间的三个地点可达性、E 打开三个 UI、标题匹配、Esc 关闭、弹窗锁定移动和离开范围。渲染环境可追加 `-- --capture`，将场景和订单弹窗截图保存到 `.godot/milk_tea_verification/`。
+手动检查用 F5 新游戏，推进开场后到订单板、制作台和仓库观察 E 提示、按单制作及 Esc 锁恢复。向四周墙体与家具持续移动应被阻挡并可沿边滑动；镜头到边缘停止，改变窗口比例仍不露出背景外。穿卧室 / 卫生间门洞观察屋顶 0.25 秒渐隐、退出恢复，以及角色与柜台、设备、门框的前后关系。F6 裸地图只能检查场景资源，完整玩家交互使用宿主。
 
-相机测试覆盖较宽取景、外圈黑框隔离、平滑过程中四角限制、角色全图不越界、底部绕墙缺口、宽屏/竖屏尺寸变化，以及关卡平移后的世界坐标。底边回归覆盖中部和两角持续按 S，逐渲染帧确认相机中心与画布变换完全固定，并验证离开底边后恢复跟随。渲染环境追加 `-- --capture` 可保存 `follow_camera.png`。玩家测试还验证加速时的动画节奏、转向进度；渲染测试逐帧检查 68 个新素材姿势的硬透明度、跑步起伏和切帧隔离。
+玩家渲染检查需要图形环境，当前覆盖 274 帧；旧记录中的 68 帧属于前代素材。测试脚本存在不代表当前工作区通过，历史失败与适用限制见[现状记录](../development/development_status_2026_10_18.md#验证记录与限制)。
 
-手动验收：F5 选择“新游戏”后，从地毯走向三个金色标记，检查提示、E 打开内容、Esc / 按钮关闭；持续朝货架、制作设备、柜台和四侧外墙移动，应被阻挡且可沿边滑动。走动时镜头平滑跟随，接近四边后停止，不出现图片外的空白；改变窗口比例也应保持视野在背景内。
+## 官方接口参考
 
-## 关键官方文档（4.7）
+- [CharacterBody2D](https://docs.godotengine.org/en/4.7/classes/class_characterbody2d.html)：俯视角 Floating 与物理移动。
+- [Camera2D](https://docs.godotengine.org/en/4.7/classes/class_camera2d.html)：限制、平滑和缩放。
+- [Area2D](https://docs.godotengine.org/en/4.7/classes/class_area2d.html)：交互与房间重叠检测。
+- [CanvasItem](https://docs.godotengine.org/en/4.7/classes/class_canvasitem.html)：Z / Y 排序与局部调制。
 
-- [CharacterBody2D](https://docs.godotengine.org/en/4.7/classes/class_characterbody2d.html)：俯视角使用 `MOTION_MODE_FLOATING`；在物理帧设置 velocity，再调用 `move_and_slide()`，无需再次乘 delta。
-- [Camera2D](https://docs.godotengine.org/en/4.7/classes/class_camera2d.html)：通过 `limit_*` 限制屏幕边缘；使用节点位置调整构图，保持 `offset` 为零以免越过限制；设置限制与出生点后重置平滑。
-- [AtlasTexture](https://docs.godotengine.org/en/4.7/classes/class_atlastexture.html)：用 region 与 margin 把不同裁切区域放在同一逻辑画布，固定躯干和脚底锚点。
-- [2D sprite animation](https://docs.godotengine.org/en/4.7/tutorials/2d/2d_sprite_animation.html)：SpriteFrames 顺序组织不同姿势；[CanvasItem shader](https://docs.godotengine.org/en/4.7/tutorials/shaders/shader_reference/canvas_item_shader.html) 提供 fragment 的 COLOR alpha，供轮廓阈值处理。
-- [Sprite2D.get_rect](https://docs.godotengine.org/en/4.7/classes/class_sprite2d.html#class-sprite2d-method-get-rect)：读取背景局部矩形并转换至世界坐标，供相机与边界初始化使用。
-- [Input.get_vector](https://docs.godotengine.org/en/4.7/classes/class_input.html#class-input-method-get-vector)：四个 InputMap action 产生长度不超过 1 的移动向量。
-- [Area2D](https://docs.godotengine.org/en/4.7/classes/class_area2d.html)：使用 body_entered / body_exited 信号，检测遵循 collision_mask；更新发生在物理步。
-- [Signals](https://docs.godotengine.org/en/4.7/getting_started/step_by_step/signals.html)：组件发出信号，由共同父场景装配的协调器连接，避免交互点引用 UI 内部层级。
+本轮仅修订说明，接口行为以项目实现为准，未新增 API 或引擎配置变更。

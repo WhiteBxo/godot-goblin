@@ -4754,8 +4754,7 @@ success_flags = Array[StringName](["day1.s05.document_read"])
 required_flags = Array[StringName](["world.phase.night", "day1.s04.commission_accepted"])
 required_stages = Array[String](["day1.s05"])
 display_name = "古文书"
-description = "古文书 · 残页
-字迹被反复涂抹，只剩两个词还能辨认：黄金乡、变量。"
+description = "古文书 · 残页\n\n……黄金乡并非传说中虚构之地。\n\n关于其存在的记载，最早见于……\n\n若要实现原定计划，必须确认「变量」是否出现。\n\n在此之前，不得擅自采取行动。\n\n……其余事项，待进一步确认后再议。\n\n主角·内心：黄金乡……变量……原定计划？\n\n主角·内心：这老头到底在研究什么啊？"
 
 [node name="day1_blood_storage" type="Area2D" parent="InteractionPoints" instance=ExtResource("22_trnvy")]
 position = Vector2(6800, 1400)

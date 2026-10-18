@@ -82,7 +82,7 @@ tools/            # 地图与角色素材处理等离线工具
 tests/            # 自动化验证脚本与测试数据
 ```
 
-`MainGame` 负责装配 `Systems` 与 `World`：关卡、动态实体和世界特效分别放入 `LevelRoot`、`EntityRoot`、`EffectRoot`。屏幕 UI 使用 HUD、弹窗、暂停、转场、调试五个独立层；暂停菜单由启动流程接入，屏幕转场组件可独立验证。跨场景状态由 `GameState` autoload 管理，目前提供内存快照与恢复，尚无文件存档界面。
+`MainGame` 负责装配 `Systems` 与 `World`：关卡、动态实体和世界特效分别放入 `LevelRoot`、`EntityRoot`、`EffectRoot`。屏幕 UI 使用 HUD、弹窗、暂停、转场、调试五个独立层；暂停菜单由启动流程接入，屏幕转场组件可独立验证。跨场景状态由 `GameState` autoload 管理，[存档系统](docs/systems/save_system.md)提供单槽自动检查点、有效备份与标题继续游戏；当前支持 Day 1 已发布操作阶段，后续章节需配套恢复现场。
 
 ## 验证
 

@@ -53,6 +53,8 @@ _refresh_from_state()
 
 GameState 提供完整 v5 内存快照接口，文件读写由独立[存档系统](save_system.md)负责。适配层需保留 Variant 类型；普通 JSON 会将数字解析为浮点数，不能直接保证原生快照类型往返，应在适配层编码/恢复类型后再调用 `restore_state`。
 
+`validate_snapshot(data: Dictionary) -> Error` 复用完整校验与已支持迁移，不替换状态或发通知；`can_take_snapshot() -> bool` 在事务、重置 / 恢复及同步通知期间返回 false。存档协调器需先检查后取完整快照；场景内的对白、演出和潜入等安全条件由宿主额外判断。
+
 ## 验证
 
 ```sh

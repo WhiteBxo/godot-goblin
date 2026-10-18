@@ -1,0 +1,77 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://src/levels/rpg_maker/map_005.tscn" id="base"]
+
+[ext_resource type="Script" path="res://src/levels/rpg_maker/rpg_chapter_map.gd" id="map"]
+
+[ext_resource type="Script" path="res://src/core/navigation/scene_entrance.gd" id="entrance"]
+
+[ext_resource type="PackedScene" path="res://src/gameplay/interaction/interaction_point.tscn" id="point"]
+
+[ext_resource type="Script" path="res://src/core/navigation/scene_exit.gd" id="exit"]
+
+[ext_resource type="Script" path="res://src/gameplay/story_interaction/story_interaction_point.gd" id="story"]
+
+[node name="RpgMakerMap005" instance=ExtResource("base")]
+
+script = ExtResource("map")
+
+chapter_host = &"casino"
+
+exterior_location = "settlement.casino"
+
+[node name="Entrances" type="Node2D" parent="."]
+
+[node name="FromOutside" type="Marker2D" parent="Entrances"]
+
+position = Vector2(648, 840)
+
+script = ExtResource("entrance")
+
+facing = 3
+
+entrance_id = &"exterior_door"
+
+[node name="Exits" type="Node2D" parent="."]
+
+[node name="Outside" parent="Exits" instance=ExtResource("point")]
+
+position = Vector2(600, 840)
+
+script = ExtResource("exit")
+
+interaction_id = &"casino_exit"
+
+display_name = "返回洞窟"
+
+description = "按交互键通过门口。"
+
+destination_scene = "res://src/core/settlement.tscn"
+
+destination_entrance = &"casino_door"
+
+[node name="StoryPositions" type="Node2D" parent="."]
+
+[node name="casino_boss" type="Marker2D" parent="StoryPositions"]
+
+position = Vector2(600, 360)
+
+[node name="casino_customer" type="Marker2D" parent="StoryPositions"]
+
+position = Vector2(600, 408)
+
+[node name="day1_player" type="Marker2D" parent="StoryPositions"]
+
+position = Vector2(600, 840)
+
+[node name="casino_guard_a" type="Marker2D" parent="StoryPositions"]
+
+position = Vector2(120, 552)
+
+[node name="casino_guard_b" type="Marker2D" parent="StoryPositions"]
+
+position = Vector2(1080, 552)
+
+[node name="Interactions" type="Node2D" parent="."]
+
+[node name="GatherPoints" type="Node2D" parent="."]

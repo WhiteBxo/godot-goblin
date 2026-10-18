@@ -1,95 +1,39 @@
-[gd_scene load_steps=13 format=3]
-
-[ext_resource type="Script" path="res://src/core/main.gd" id="1_main"]
-[ext_resource type="PackedScene" path="res://src/levels/settlement/settlement_map.tscn" id="2_map"]
-[ext_resource type="PackedScene" path="res://src/gameplay/player/shop_player.tscn" id="3_player"]
-[ext_resource type="PackedScene" path="res://src/core/audio/audio_manager.tscn" id="4_audio"]
-
-[ext_resource type="PackedScene" path="res://src/gameplay/characters/fat_goblin.tscn" id="npc_fat_goblin"]
-[ext_resource type="PackedScene" path="res://src/gameplay/characters/common_goblin.tscn" id="npc_common_goblin"]
-[ext_resource type="PackedScene" path="res://src/gameplay/characters/guard.tscn" id="npc_guard"]
-[ext_resource type="PackedScene" path="res://src/gameplay/characters/guard_captain.tscn" id="npc_guard_captain"]
-[ext_resource type="PackedScene" path="res://src/gameplay/characters/elder.tscn" id="npc_elder"]
-[ext_resource type="PackedScene" path="res://src/gameplay/characters/chef.tscn" id="npc_chef"]
-[ext_resource type="PackedScene" path="res://src/gameplay/characters/tavern.tscn" id="npc_tavern"]
-[ext_resource type="PackedScene" path="res://src/gameplay/characters/casino.tscn" id="npc_casino"]
-
+[gd_scene format=3]
+[ext_resource type="Script" path="res://src/core/main.gd" id="main"]
+[ext_resource type="PackedScene" path="res://src/levels/rpg_maker/chapter_cave.tscn" id="map"]
+[ext_resource type="PackedScene" path="res://src/gameplay/player/shop_player.tscn" id="player"]
+[ext_resource type="Script" path="res://src/gameplay/player/floor_aware_shop_player.gd" id="floor"]
+[ext_resource type="PackedScene" path="res://src/core/audio/audio_manager.tscn" id="audio"]
 [node name="MainGame" type="Node"]
 process_mode = 3
-script = ExtResource("1_main")
-
+script = ExtResource("main")
 [node name="Systems" type="Node" parent="."]
 process_mode = 1
-
-[node name="AudioManager" parent="Systems" instance=ExtResource("4_audio")]
-
+[node name="AudioManager" parent="Systems" instance=ExtResource("audio")]
 [node name="World" type="Node2D" parent="."]
 process_mode = 1
 texture_filter = 1
-y_sort_enabled = true
-
 [node name="LevelRoot" type="Node2D" parent="World"]
-y_sort_enabled = true
-
-[node name="SettlementMap" parent="World/LevelRoot" instance=ExtResource("2_map")]
-
+[node name="Map" parent="World/LevelRoot" instance=ExtResource("map")]
 [node name="EntityRoot" type="Node2D" parent="World"]
-y_sort_enabled = true
-
-[node name="Player" parent="World/EntityRoot" instance=ExtResource("3_player")]
+[node name="Player" parent="World/EntityRoot" instance=ExtResource("player")]
+script = ExtResource("floor")
 z_index = 0
-
-[node name="FatGoblin" parent="World/EntityRoot" instance=ExtResource("npc_fat_goblin")]
-position = Vector2(5400, 8620)
-
-[node name="CommonGoblin" parent="World/EntityRoot" instance=ExtResource("npc_common_goblin")]
-position = Vector2(5500, 8910)
-active_phase = "day"
-
-[node name="Guard" parent="World/EntityRoot" instance=ExtResource("npc_guard")]
-position = Vector2(4410, 6250)
-
-[node name="GuardCaptain" parent="World/EntityRoot" instance=ExtResource("npc_guard_captain")]
-position = Vector2(7130, 3120)
-active_phase = "day"
-
-[node name="Elder" parent="World/EntityRoot" instance=ExtResource("npc_elder")]
-position = Vector2(6410, 1730)
-active_phase = "day"
-
-[node name="Chef" parent="World/EntityRoot" instance=ExtResource("npc_chef")]
-position = Vector2(7290, 6650)
-active_phase = "day"
-
-[node name="Tavern" parent="World/EntityRoot" instance=ExtResource("npc_tavern")]
-position = Vector2(3680, 4910)
-active_phase = "night"
-
-[node name="Casino" parent="World/EntityRoot" instance=ExtResource("npc_casino")]
-position = Vector2(6690, 4920)
-active_phase = "night"
-
 [node name="EffectRoot" type="Node2D" parent="World"]
-y_sort_enabled = true
-
 [node name="HudLayer" type="CanvasLayer" parent="."]
 process_mode = 3
 layer = 10
-
 [node name="PopupLayer" type="CanvasLayer" parent="."]
 process_mode = 3
 layer = 20
-
 [node name="PauseLayer" type="CanvasLayer" parent="."]
 process_mode = 2
 layer = 30
 visible = false
-
 [node name="TransitionLayer" type="CanvasLayer" parent="."]
 process_mode = 3
 layer = 40
 visible = false
-
 [node name="DebugLayer" type="CanvasLayer" parent="."]
 process_mode = 3
 layer = 50

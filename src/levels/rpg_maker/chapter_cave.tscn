@@ -1,0 +1,241 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://src/levels/rpg_maker/map_001.tscn" id="base"]
+
+[ext_resource type="Script" path="res://src/levels/rpg_maker/rpg_chapter_map.gd" id="map"]
+
+[ext_resource type="Script" path="res://src/core/navigation/scene_entrance.gd" id="entrance"]
+
+[ext_resource type="PackedScene" path="res://src/gameplay/interaction/interaction_point.tscn" id="point"]
+
+[ext_resource type="Script" path="res://src/core/navigation/scene_exit.gd" id="exit"]
+
+[ext_resource type="Script" path="res://src/gameplay/story_interaction/story_interaction_point.gd" id="story"]
+
+[node name="RpgMakerMap001" instance=ExtResource("base")]
+
+script = ExtResource("map")
+
+chapter_host = &"settlement"
+
+exterior_location = "settlement.shop"
+
+[node name="Entrances" type="Node2D" parent="."]
+
+[node name="shop_exit_door" type="Marker2D" parent="Entrances"]
+
+position = Vector2(1608, 2568)
+
+script = ExtResource("entrance")
+
+facing = 3
+
+entrance_id = &"shop_door"
+
+[node name="tavern_return" type="Marker2D" parent="Entrances"]
+
+position = Vector2(1512, 1896)
+
+script = ExtResource("entrance")
+
+facing = 3
+
+entrance_id = &"tavern_door"
+
+[node name="casino_return" type="Marker2D" parent="Entrances"]
+
+position = Vector2(600, 2136)
+
+script = ExtResource("entrance")
+
+facing = 3
+
+entrance_id = &"casino_door"
+
+[node name="elder_return" type="Marker2D" parent="Entrances"]
+
+position = Vector2(2040, 552)
+
+script = ExtResource("entrance")
+
+facing = 3
+
+entrance_id = &"elder_door"
+
+[node name="Exits" type="Node2D" parent="."]
+
+[node name="ShopDoor" parent="Exits" instance=ExtResource("point")]
+
+position = Vector2(1608, 2520)
+
+script = ExtResource("exit")
+
+interaction_id = &"shop_enter"
+
+display_name = "奶茶店"
+
+description = "按交互键通过门口。"
+
+destination_scene = "res://src/core/main.tscn"
+
+destination_entrance = &"street_door"
+
+[node name="TavernDoor" parent="Exits" instance=ExtResource("point")]
+
+position = Vector2(1512, 1848)
+
+script = ExtResource("exit")
+
+interaction_id = &"tavern_enter"
+
+display_name = "酒馆 · 裂牙"
+
+description = "按交互键通过门口。"
+
+destination_scene = "res://src/core/tavern.tscn"
+
+destination_entrance = &"exterior_door"
+
+allowed_stages = Array[String](["day2", "day3"])
+
+[node name="CasinoDoor" parent="Exits" instance=ExtResource("point")]
+
+position = Vector2(600, 2088)
+
+script = ExtResource("exit")
+
+interaction_id = &"casino_enter"
+
+display_name = "赌场 · 黑齿"
+
+description = "按交互键通过门口。"
+
+destination_scene = "res://src/core/casino.tscn"
+
+destination_entrance = &"exterior_door"
+
+allowed_stages = Array[String](["day2.s04", "day2.s05"])
+
+[node name="ElderDoor" parent="Exits" instance=ExtResource("point")]
+
+position = Vector2(2040, 504)
+
+script = ExtResource("exit")
+
+interaction_id = &"elder_enter"
+
+display_name = "长老居所"
+
+description = "按交互键通过门口。"
+
+destination_scene = "res://src/core/elder_house.tscn"
+
+destination_entrance = &"exterior_door"
+
+allowed_stages = Array[String](["day1.s05"])
+
+[node name="StoryPositions" type="Node2D" parent="."]
+
+[node name="00_shop_entrance" type="Marker2D" parent="StoryPositions"]
+
+position = Vector2(1608, 2568)
+
+[node name="day1_player" type="Marker2D" parent="StoryPositions"]
+
+position = Vector2(1608, 2568)
+
+[node name="drunken_guard" type="Marker2D" parent="StoryPositions"]
+
+position = Vector2(1416, 456)
+
+[node name="entrance_guard" type="Marker2D" parent="StoryPositions"]
+
+position = Vector2(1272, 456)
+
+[node name="mansion_lure" type="Marker2D" parent="StoryPositions"]
+
+position = Vector2(1704, 456)
+
+[node name="mansion_gate" type="Marker2D" parent="StoryPositions"]
+
+position = Vector2(1800, 456)
+
+[node name="day1_checkpoint" type="Marker2D" parent="StoryPositions"]
+
+position = Vector2(1176, 648)
+
+[node name="tavern_entrance" type="Marker2D" parent="StoryPositions"]
+
+position = Vector2(1512, 1896)
+
+[node name="casino_entrance" type="Marker2D" parent="StoryPositions"]
+
+position = Vector2(600, 2136)
+
+[node name="elder_entrance" type="Marker2D" parent="StoryPositions"]
+
+position = Vector2(2040, 552)
+
+[node name="Interactions" type="Node2D" parent="."]
+
+[node name="day1_s03_yard" parent="Interactions" instance=ExtResource("point")]
+
+position = Vector2(1320, 2376)
+
+script = ExtResource("story")
+
+kind = 1
+
+interaction_id = &"day1_s03_yard"
+
+entry_id = &"day1_s03_yard"
+
+display_name = "明亮的摊位区"
+
+description = "附近摆着一些简陋的摊位，地上散落着与手中金币相似的硬币。\n\n主角小心翼翼地靠近查看，发现这里似乎真的有人长期生活。"
+
+required_stages = Array[String](["day1.s03"])
+
+success_flags = Array[StringName](["day1.s03.observed_yard"])
+
+[node name="day1_s03_street" parent="Interactions" instance=ExtResource("point")]
+
+position = Vector2(1176, 2280)
+
+script = ExtResource("story")
+
+kind = 1
+
+interaction_id = &"day1_s03_street"
+
+entry_id = &"day1_s03_street"
+
+display_name = "空荡荡的街道"
+
+description = "四周没有行人，只有远处传来的模糊说话声和脚步声。\n\n主角犹豫了一下，最终决定不再往远处走。"
+
+required_stages = Array[String](["day1.s03"])
+
+success_flags = Array[StringName](["day1.s03.observed_street"])
+
+[node name="day1_s03_path" parent="Interactions" instance=ExtResource("point")]
+
+position = Vector2(1272, 2184)
+
+script = ExtResource("story")
+
+kind = 1
+
+interaction_id = &"day1_s03_path"
+
+entry_id = &"day1_s03_path"
+
+display_name = "昏暗的洞窟岔路"
+
+description = "前方光线逐渐消失，深处传来不明声响。\n\n主角·内心：黑灯瞎火的，谁知道里面有什么？不去。"
+
+required_stages = Array[String](["day1.s03"])
+
+success_flags = Array[StringName](["day1.s03.observed_path"])
+
+[node name="GatherPoints" type="Node2D" parent="."]

@@ -2,7 +2,8 @@ class_name SettlementMapPanel
 extends UIScreen
 
 @onready var _shell: ModalShell = $ModalShell
-var _level: SettlementMap
+## A scene map or an exterior provider for indoor hosts; both expose get_map_data.
+var _level: Object
 var _player: Node2D
 var _journal: TaskJournal
 var _known_locations: Callable
@@ -17,7 +18,7 @@ func _ready() -> void:
 	visibility_changed.connect(_visibility_changed)
 	set_process(false)
 
-func configure(level: SettlementMap, player: Node2D, journal: TaskJournal, known: Callable) -> void:
+func configure(level: Object, player: Node2D, journal: TaskJournal, known: Callable) -> void:
 	_level = level
 	_player = player
 	if is_instance_valid(_journal) and _journal.projection_changed.is_connected(refresh):
@@ -33,14 +34,19 @@ func _visibility_changed() -> void:
 		refresh()
 
 func _process(_delta: float) -> void:
-	if is_instance_valid(_player) and _canvas.player_position != _player.global_position:
-		_canvas.player_position = _player.global_position
+	if is_instance_valid(_player) and _canvas.player_position != _map_player_position():
+		_canvas.player_position = _map_player_position()
 		_canvas.queue_redraw()
+
+func _map_player_position() -> Vector2:
+	if is_instance_valid(_level) and _level.has_method("get_map_player_position"):
+		return _level.get_map_player_position(_player)
+	return _player.global_position if is_instance_valid(_player) else Vector2.ZERO
 
 func refresh() -> void:
 	if not is_visible_in_tree() or not is_instance_valid(_level) or not is_instance_valid(_player) or not _known_locations.is_valid():
 		return
-	var data := _level.get_map_data(_known_locations.call())
+	var data: Dictionary = _level.get_map_data(_known_locations.call())
 	var target := {}
 	var text := "暂无当前主目标"
 	var task := _journal.get_current_main_task() if is_instance_valid(_journal) else {}
@@ -59,9 +65,9 @@ func refresh() -> void:
 			text = "当前目标尚未揭示"
 		else:
 			text = "等待后续目标"
-	if _canvas.map_data != data or _canvas.player_position != _player.global_position or _canvas.target != target:
+	if _canvas.map_data != data or _canvas.player_position != _map_player_position() or _canvas.target != target:
 		_canvas.map_data = data
-		_canvas.player_position = _player.global_position
+		_canvas.player_position = _map_player_position()
 		_canvas.target = target
 		_canvas.queue_redraw()
 	_objective.text = text

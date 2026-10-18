@@ -122,6 +122,7 @@
 | [Cinematic 开场（工作流基准稿）](design/cinematic_opening.md) | `cinematic_opening.md` |
 | [Day 1 精简版剧情冒险：开发执行规格（Godot 2D）](design/day_01_development_spec.md) | 历史精简执行规格；仅用于范围差异对照。 |
 | [Day 1 正式剧情与业务配置约定](design/day_01_integration_contract.md) | 已发布 ID、前段工程来源、后段预留及事务 / 宿主边界。 |
+| [新地图与两天流程对接约定](design/two_day_flow_integration_plan.md) | 2026-10-19 用户逐项确认的地图、经济和玩法规则；实现状态另见模块记录。 |
 | [第一天与第二天的场景连接约定](design/scene_connections.md) | 空间拓扑约定，不代表全部导航 / 剧情已发布。 |
 | [day1_scene01](design/day_01_scene_01.md) | 独立试编排源稿；资源文件名 day1_scene01，事件 ID 为 day1.scene01。 |
 | [Day 1 前两个阶段：剧情演出初稿](design/day_01_stages_01_02_draft.md) | 保留来源；现行演出 / 对白以结构化工程为准。 |

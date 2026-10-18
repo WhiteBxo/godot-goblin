@@ -27,6 +27,7 @@ var _task_journal: TaskJournal
 var _map_panel: SettlementMapPanel
 var _map_button: Button
 var _map_registered := false
+var _map_provider: Object
 var _handbook: HandbookPanel
 var _handbook_hud: HandbookHUD
 var _inventory_panel: InventoryPanel
@@ -130,6 +131,8 @@ func _ready() -> void:
 		_create_chapter_controller("shop")
 		_create_trigger_zones(_shop_level)
 		_create_scene_travel(_shop_level.get_scene_exits())
+		if day1_story_enabled:
+			_create_map_ui()
 		_create_debug_components()
 		_create_save_system()
 		return
@@ -405,6 +408,8 @@ func prepare_scene_arrival(id: StringName, record_travel: bool = true) -> Error:
 	return OK
 
 func _place_player(level: Node2D) -> void:
+	if _shop_player is FloorAwareShopPlayer:
+		_shop_player.set_floor_query(level.can_stand_at if level.has_method("can_stand_at") else Callable())
 	if _arrival_entrance != &"":
 		var entrance: SceneEntrance = level.get_scene_entrance(_arrival_entrance)
 		entrance.place_player(_shop_player)
@@ -580,6 +585,7 @@ func _initialize_settlement() -> void:
 ## already guards those with is_instance_valid.
 func _initialize_room_map(map: Node2D) -> void:
 	_room_level = map
+	var chapter_map := map.has_method("get_chapter_host")
 	_shop_player = $World/EntityRoot/Player as ShopPlayer
 	if _shop_player == null:
 		push_error("Room scene needs a ShopPlayer under World/EntityRoot.")
@@ -595,11 +601,21 @@ func _initialize_room_map(map: Node2D) -> void:
 	_shop_ui.close_text = "继续探索  [Esc]"
 	$HudLayer.add_child(_shop_ui)
 	_shop_ui.set_popup_layer($PopupLayer)
+	if chapter_map:
+		_create_shop_business(_shop_ui)
 	_shop_ui.bind_manager(_ui_manager)
 	var points: Array[InteractionPoint] = []
 	if map.has_method(&"get_interaction_points"):
 		for point: InteractionPoint in map.call(&"get_interaction_points"):
 			points.append(point)
+	if chapter_map:
+		points = _with_npc_points(points)
+		for point: InteractionPoint in points:
+			if point is StoryInteractionPoint:
+				_story_points[point.interaction_id] = point
+		var gathering: Array[GatherPoint] = map.get_gather_points()
+		_create_gathering(gathering)
+		points.append_array(gathering)
 	var exits: Array[SceneExit] = []
 	for exit: SceneExit in map.get_scene_exits():
 		exits.append(exit)
@@ -610,7 +626,15 @@ func _initialize_room_map(map: Node2D) -> void:
 	_shop_interaction.configure(_shop_player, _shop_ui, points, _route_story_interaction)
 	_create_interaction_feedback(_shop_interaction)
 	_create_dialogue_system()
+	if chapter_map:
+		for marker: Marker2D in map.get_story_positions():
+			_actor_director.register_position(StringName(marker.name), marker)
 	_create_gameplay_bridge(false)
+	if chapter_map:
+		_create_world_controller()
+		_create_chapter_controller(map.get_chapter_host())
+		_create_trigger_zones(map)
+		_create_map_ui()
 	_create_scene_travel(exits)
 	_create_debug_components()
 	_create_save_system()
@@ -1094,7 +1118,7 @@ func refresh_day1_access() -> void:
 
 ## Capability only; the S04 story decides when to call this, not the UI.
 func unlock_map() -> Error:
-	if not is_instance_valid(_map_panel) or not is_instance_valid(_settlement_level):
+	if not is_instance_valid(_map_panel) or not is_instance_valid(_map_provider):
 		return ERR_UNCONFIGURED
 	var error := _register_map()
 	if error != OK:
@@ -1114,9 +1138,11 @@ func _register_map() -> Error:
 	return error
 
 func _create_map_ui() -> void:
+	var level := get_active_level()
+	_map_provider = level if level.has_method("get_map_data") else RpgWorldMapData.new()
 	_map_panel = preload("res://src/UI/map/map_panel.tscn").instantiate()
 	$PopupLayer.add_child(_map_panel)
-	_map_panel.configure(_settlement_level, _shop_player, _task_journal, _get_known_map_locations)
+	_map_panel.configure(_map_provider, _shop_player, _task_journal, _get_known_map_locations)
 	_map_panel.close_requested.connect(func() -> void: _ui_manager.close_screen(ScreenIds.MAP))
 	_map_button = preload("res://src/UI/map/map_button.tscn").instantiate()
 	$HudLayer.add_child(_map_button)
@@ -1128,7 +1154,8 @@ func _get_known_map_locations() -> Array[String]:
 	# Only the shop is initially established. Other areas require explicit knowledge.
 	var known: Array[String] = ["settlement.shop"]
 	var state := get_node("/root/GameState")
-	for id: String in SettlementMap.MAP_LOCATIONS:
+	var locations: Array = _map_provider.get_map_location_ids() if is_instance_valid(_map_provider) and _map_provider.has_method("get_map_location_ids") else SettlementMap.MAP_LOCATIONS.keys()
+	for id: String in locations:
 		if state.get_flag("ui.map.known." + id) and id not in known:
 			known.append(id)
 	return known

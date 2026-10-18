@@ -6,4 +6,5 @@
 - `rebuild_passability()` 只从已保存格子派生世界层碰撞，不改格子；部分方向阻挡使用边界碰撞，不能简单替换成整格实心。坐标转换和通行查询集中在地图公开方法。
 - `Spawn` 是可编辑试玩出生点；源项目没有有效起点或地图事件，当前出生点由最大可达区域确定，不代表剧情锚点或传送连接。
 - 试玩和截图使用 [独立宿主](../../debug/rpg_maker/rpg_maker_preview.tscn)。玩家保持原始尺寸，宿主把其 z_index 设为 0，使 Upper 图层覆盖人物。
+- 正式接线在 `chapter_*.tscn` 继承场景内维护，原始 `map_*.tscn` 不承载剧情。`RpgChapterMap` 只查询门、锚点、交互和外景数据；`RpgWorldMapData` 的命名入口与场景位置同步。地图与业务规则见[两天对接约定](../../../docs/design/two_day_flow_integration_plan.md)。
 - 重导入必须明确输出路径；覆盖已手工编辑场景需要工具的显式 `--replace`。完整流程、校验与许可限制见 [移植说明](../../../docs/levels/rpg_maker/README.md)。

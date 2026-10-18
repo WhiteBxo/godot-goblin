@@ -1,5 +1,15 @@
 # RPG Maker 地图移植与编辑
 
+## 正式地图接线（2026-10-19）
+
+正式外景宿主沿用 `src/core/settlement.tscn`，三个新室内为 `src/core/tavern.tscn`、`casino.tscn`、`elder_house.tscn`。它们加载 `chapter_*.tscn` 继承场景，以用户确认的[拓扑和规则](../../design/two_day_flow_integration_plan.md)添加出入口与剧情点；原始四张地图格子保持不变。
+
+F6 打开外景宿主可行走，正式章节门控决定哪些室内开放。S03 三观察点已迁入集市附近。室内也装配真实交互、交付、章节和地图能力；地图在室内显示对应建筑的外景入口，仍须剧情解锁。经济和后续章节未发布前，不把地图接线当作两天正式通关。
+
+`verify_rpg_chapter_maps.gd` 覆盖原格保持、方向通行、命名出生点、真实目标预检、已知地图区域、室内宿主和章节门控；本次 Godot 4.7.2 headless 检查 99 项通过，原有最小房间宿主 14 项通过。图形与完整两天验收尚未执行。运行时证书读取诊断来自本机沙箱；编辑器退出另报告设置目录不可写及已有资源保留诊断。
+
+## 原始移植记录
+
 2026-10-18 从 `D:/taptapgamejam/map/Project1` 当前保存的 MZ 数据移植。地图使用 Godot 4.7 原生 TileMapLayer，可在编辑器逐格修改；运行时不依赖 RPG Maker 或外部源工程。
 
 ## 地图与试玩

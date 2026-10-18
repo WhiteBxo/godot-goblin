@@ -28,15 +28,6 @@
           }
         },
         {
-          "id": "make",
-          "text": "制作珍珠奶茶",
-          "complete_when": {
-            "type": "variable_at_least",
-            "key": "shop.drinks_made",
-            "value": 1
-          }
-        },
-        {
           "id": "deliver",
           "text": "交付并收款",
           "complete_when": {
@@ -80,15 +71,6 @@
           "complete_when": {
             "type": "flag",
             "key": "task.day1.goblin.active"
-          }
-        },
-        {
-          "id": "make",
-          "text": "制作椰果茉莉奶茶",
-          "complete_when": {
-            "type": "variable_at_least",
-            "key": "shop.drinks_made",
-            "value": 2
           }
         },
         {
@@ -140,15 +122,6 @@
           }
         },
         {
-          "id": "make",
-          "text": "制作原味奶茶",
-          "complete_when": {
-            "type": "variable_at_least",
-            "key": "shop.drinks_made",
-            "value": 3
-          }
-        },
-        {
           "id": "deliver",
           "text": "交付并收款",
           "complete_when": {
@@ -197,15 +170,6 @@
           }
         },
         {
-          "id": "make",
-          "text": "制作珍珠奶茶",
-          "complete_when": {
-            "type": "variable_at_least",
-            "key": "shop.drinks_made",
-            "value": 4
-          }
-        },
-        {
           "id": "deliver",
           "text": "交付并收款",
           "complete_when": {
@@ -251,15 +215,6 @@
           "complete_when": {
             "type": "flag",
             "key": "task.day1.group_c.active"
-          }
-        },
-        {
-          "id": "make",
-          "text": "制作椰果茉莉奶茶",
-          "complete_when": {
-            "type": "variable_at_least",
-            "key": "shop.drinks_made",
-            "value": 5
           }
         },
         {

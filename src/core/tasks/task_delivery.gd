@@ -71,11 +71,31 @@ func accept_order(order_id: String) -> Error:
 	var task: Dictionary = _orders[order_id]
 	if _state.get_flag(_receipt_key(order_id)) or _state.get_flag(task.complete_when.key):
 		return ERR_ALREADY_EXISTS
-	# Existing story-driven conditions remain under StoryDirector's control.
-	if task.activate_when.type != "flag" or not _journal.get_task(task.id).get("revealed", false):
+	if is_order_accepted(order_id):
+		return ERR_ALREADY_EXISTS
+	if not can_accept_order(order_id):
 		return ERR_UNAVAILABLE
-	_state.set_flag(task.delivery.get("accepted_flag", task.activate_when.key))
-	return OK
+	return OK if _state.set_flag(task.delivery.get("accepted_flag", task.activate_when.key)) else ERR_BUSY
+
+func is_order_accepted(order_id: String) -> bool:
+	if not _orders.has(order_id) or not is_instance_valid(_state):
+		return false
+	var task: Dictionary = _orders[order_id]
+	if task.delivery.has("accepted_flag"):
+		return _state.get_flag(task.delivery.accepted_flag) and _journal.get_task(task.id).get("status") == "active"
+	return _journal.get_task(task.id).get("status") == "active"
+
+func can_accept_order(order_id: String) -> bool:
+	if not _orders.has(order_id) or not is_instance_valid(_state):
+		return false
+	var task: Dictionary = _orders[order_id]
+	var view := _journal.get_task(task.id)
+	if task.activate_when.type != "flag" or not view.get("revealed", false) or view.status == "completed" or _state.get_flag(_receipt_key(order_id)):
+		return false
+	# A separate chapter activation flag cannot be set by accepting an order.
+	if task.delivery.has("accepted_flag") and task.delivery.accepted_flag != task.activate_when.key and view.status != "active":
+		return false
+	return not is_order_accepted(order_id)
 
 func get_completed_count() -> int:
 	var count := 0
@@ -101,9 +121,13 @@ func get_requirements_text(target_names: Dictionary = {}) -> String:
 			target_names.get(task.delivery.target_object_id, task.delivery.target_object_id)])
 	return "\n".join(lines)
 
-func deliver_to(target_object_id: String) -> Dictionary:
+func deliver_to(target_object_id: String, preferred_order_id: String = "") -> Dictionary:
 	if not _ready_for_delivery():
 		return _failure("交付系统尚未就绪。")
+	if _orders.has(preferred_order_id) and is_order_accepted(preferred_order_id):
+		var preferred: Dictionary = _orders[preferred_order_id]
+		if preferred.delivery.target_object_id == target_object_id and _inventory.has_materials(get_requirement(preferred_order_id)):
+			return try_submit(preferred_order_id, target_object_id)
 	# Prefer a deliverable order; another missing requirement must not block this NPC.
 	# Report against an active order before an inactive one, so a later chapter's
 	# order for the same NPC does not hide the current one's missing materials.
@@ -114,7 +138,7 @@ func deliver_to(target_object_id: String) -> Dictionary:
 		if task.delivery.target_object_id != target_object_id:
 			continue
 		fallback = order_id
-		if _state.get_flag(_receipt_key(order_id)) or _journal.get_task(task.id).get("status") != "active":
+		if _state.get_flag(_receipt_key(order_id)) or not is_order_accepted(order_id):
 			continue
 		active_fallback = order_id
 		if _inventory.has_materials(get_requirement(order_id)):

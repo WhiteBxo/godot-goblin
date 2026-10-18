@@ -28,6 +28,7 @@ var _tea_production: TeaProduction
 var _warehouse_inventory: WarehouseInventory
 var _task_catalog: TaskCatalog
 var _task_delivery: TaskDelivery
+var _order_board: OrderBoardModel
 var _gathering_service: GatheringService
 var _npc_points: Dictionary = {}
 var _story_points: Dictionary[StringName, StoryInteractionPoint] = {}
@@ -199,6 +200,8 @@ func _refresh_task_delivery_names() -> void:
 				if product != null:
 					product_names[id] = product.display_name
 	_handbook.set_delivery_names(target_names, product_names)
+	if is_instance_valid(_order_board):
+		_order_board.set_target_names(target_names)
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event.is_action_pressed(&"open_map") and not event.is_echo():
@@ -422,6 +425,13 @@ func _create_shop_business(ui: ShopUI) -> void:
 	var error := _task_delivery.configure(_task_catalog, _task_journal, get_node("/root/GameState"), _warehouse_inventory)
 	if error != OK:
 		push_error("Could not configure task delivery (%d)" % error)
+	_order_board = OrderBoardModel.new()
+	_order_board.name = "OrderBoardModel"
+	$Systems.add_child(_order_board)
+	_order_board.configure(_task_catalog, _task_journal, state, _warehouse_inventory, _tea_production, _task_delivery)
+	_order_board.changed.connect(_sync_tracked_order, CONNECT_DEFERRED)
+	_handbook.get_tasks_page().bind_orders(_order_board)
+	_sync_tracked_order()
 	_task_journal.projection_changed.connect(_refresh_order_requirements.bind(ui))
 	ui.point_opened.connect(_on_shop_point_opened)
 	ui.configure_inventory(_warehouse_inventory)
@@ -461,6 +471,21 @@ func get_actor_director() -> ActorDirector:
 
 func get_task_delivery() -> TaskDelivery:
 	return _task_delivery
+
+func get_order_board() -> OrderBoardModel:
+	return _order_board
+
+func _sync_tracked_order() -> void:
+	if not is_instance_valid(_order_board) or not is_inside_tree():
+		return
+	var entry := _order_board.get_tracked_entry()
+	var state := get_node("/root/GameState")
+	if not entry.is_empty() or state.has_variable(OrderBoardModel.TRACKED_KEY):
+		state.set_variable(OrderBoardModel.TRACKED_KEY, entry.get("order_id", ""))
+
+func _track_order(order_id: String) -> void:
+	if _order_board.get_entry(order_id).get("status") == "active":
+		get_node("/root/GameState").set_variable(OrderBoardModel.TRACKED_KEY, order_id)
 
 func get_gathering_service() -> GatheringService:
 	return _gathering_service if is_instance_valid(_gathering_service) else null
@@ -636,6 +661,8 @@ func _refresh_order_requirements(ui: ShopUI) -> void:
 	for point: InteractionPoint in _npc_points.values():
 		names[String(point.interaction_id)] = point.display_name
 	var requirements := _task_delivery.get_requirements_text(names)
+	if is_instance_valid(_order_board):
+		_order_board.set_target_names(names)
 	ui.show_order_requirements("已接取订单：\n" + requirements + "\n准备所需成品或物资，携带到指定 NPC 按 E 交付。" if not requirements.is_empty() else "当前没有待交付订单。")
 
 func _can_start_story() -> bool:

@@ -10,6 +10,7 @@ extends VBoxContainer
 @onready var _summary: Label = %Summary
 
 var _journal: TaskJournal
+var _orders: OrderBoardModel
 var _ids: Array[String] = []
 var _selected_id := ""
 var _displayed_id := ""
@@ -18,6 +19,8 @@ var _product_names: Dictionary = {}
 
 func _enter_tree() -> void:
 	_connect_journal()
+	if is_instance_valid(_orders) and not _orders.changed.is_connected(_refresh):
+		_orders.changed.connect(_refresh)
 	if not get_viewport().size_changed.is_connected(_resize_panel):
 		get_viewport().size_changed.connect(_resize_panel)
 	if is_node_ready():
@@ -33,6 +36,8 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	_disconnect_journal()
+	if is_instance_valid(_orders) and _orders.changed.is_connected(_refresh):
+		_orders.changed.disconnect(_refresh)
 	if get_viewport().size_changed.is_connected(_resize_panel):
 		get_viewport().size_changed.disconnect(_resize_panel)
 
@@ -43,6 +48,14 @@ func bind_journal(journal: TaskJournal) -> void:
 	_displayed_id = ""
 	if is_inside_tree():
 		_connect_journal()
+	_refresh()
+
+func bind_orders(orders: OrderBoardModel) -> void:
+	if is_instance_valid(_orders) and _orders.changed.is_connected(_refresh):
+		_orders.changed.disconnect(_refresh)
+	_orders = orders
+	if is_instance_valid(_orders):
+		_orders.changed.connect(_refresh)
 	_refresh()
 
 func set_delivery_names(target_names: Dictionary, product_names: Dictionary) -> void:
@@ -128,6 +141,20 @@ func _number(value: float) -> String:
 func _show_task(task: Dictionary) -> void:
 	_title.text = task.title
 	_title.tooltip_text = task.title
+	var order := _orders.get_task_entry(task.id) if is_instance_valid(_orders) else {}
+	if not order.is_empty():
+		var ready: bool = order.ready or order.status == "completed"
+		var lines := PackedStringArray([task.description, "", "订单进度",
+			("[已完成] " if order.accepted or order.status == "completed" else "[未完成] ") + "接取订单",
+			("[已完成] " if ready else "[未完成] ") + "备齐所需物品",
+			("[已完成] " if order.status == "completed" else "[未完成] ") + "交付并结算", ""])
+		for item: Dictionary in order.items:
+			lines.append("%s%s  %d / %d" % ["交付成品：" if not order.product_id.is_empty() else "交付物资：", item.name, item.owned, item.needed])
+		lines.append("\n交付对象：" + order.target_name)
+		lines.append("下一步：" + order.hint)
+		lines.append("\n奖励：" + order.rewards)
+		_set_detail("\n".join(lines))
+		return
 	var lines := PackedStringArray([task.description, "", "目标"])
 	for objective: Dictionary in task.objectives:
 		var line := ("[已完成] " if objective.completed else "[未完成] ") + String(objective.text)

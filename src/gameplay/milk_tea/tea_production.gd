@@ -122,7 +122,7 @@ func get_order_text() -> String:
 	var order := get_order()
 	if order.is_empty():
 		return "今日制作已全部完成 · 共 %d 杯" % _completed if _completed >= _menu.orders.size() else "当前没有已接取订单，请查看订单板。"
-	return "订单 #%03d · %s × 1\n%s · 常温 · 少糖" % [_completed + 1, order.name, " + ".join(get_recipe_names(order.recipe))]
+	return "订单 #%03d · %s × 1\n%s" % [_completed + 1, order.name, " + ".join(get_recipe_names(order.recipe))]
 
 func get_recipe_names(recipe: Array) -> PackedStringArray:
 	var names := PackedStringArray()

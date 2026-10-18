@@ -1,8 +1,8 @@
 # Godot Goblin
 
-Godot 4.7 / GDScript 的奶茶店剧情冒险项目。F5 进入标题菜单，“新游戏”进入奶茶店并自动播放 **Day 1 前两阶段**：人类顾客、首位哥布林和三人群客共五单，制作入库后向指定顾客交付。完成后停在金币调查边界，可出店探索聚落；S03–S06 的正式剧情数据仍为空骨架，尚不能完整通关 Day 1。
+Godot 4.7 / GDScript 的奶茶店剧情冒险项目。正式内容已接通 Day 1 六阶段与 Day 2 五阶段：H01 订单、调查、取血、酒馆购买、两局赌场与守卫招待，之后进入第三天任务交接。外景和室内沿用 RPG Maker 地图，奶茶店保留现有场景。
 
-当前功能与缺口见 [2026-10-18 项目现状](docs/development/development_status_2026_10_18.md)，完整资料见 [文档中心](docs/README.md)。本页依据源码静态核对，历史测试记录不代表本次重新运行通过。
+本次范围、验证与限制见 [2026-10-19 两工作树整合记录](docs/development/two_day_integration_2026_10_19.md)，完整资料见 [文档中心](docs/README.md)。
 
 ## 快速开始
 
@@ -29,14 +29,14 @@ godot --path .
 | 对白与选择 | E / Enter / 空格；方向键或鼠标 | 补全文字、推进、确认分支 |
 | 关闭 / 暂停 | Esc；P 暂停 | 关闭顶层弹窗；无弹窗时 Esc 暂停；可返回标题 |
 | 任务与手册 | J / 右上角手册图标 | 解锁后查看委托、异闻录；首次自由制作后开放饮品图鉴 |
-| 正式聚落地图 | M / 地图按钮 | 仅在聚落且显式解锁后可用；当前 S04 剧情尚未调用解锁 |
-| 投掷 | F，鼠标指定落点 | 需要可用潜入服务；正式聚落配置仍缺失，独立饮品投掷 Demo 可试玩 |
+| 正式聚落地图 | M / 地图按钮 | S04 解锁后可用，首次需实际打开并关闭地图 |
+| 投掷 | F，鼠标指定落点 | 首夜潜入可投币，每次 10G；被发现后可恢复整次尝试 |
 | 开发工具 | F3 | Debug Console，含状态、事件、业务和剧情编排 |
 | 聚落开发预览 | F7 / Tab / F4 | Debug 全图、路线、昼夜；M 留给正式地图 |
 
-标题“新游戏”清空整局，暂停返回标题只退出场景；普通进出店铺、重载和 F3 重启保留经营会话。当前没有文件存档、自动读档或“继续游戏”。详见 [启动与新游戏](docs/guides/game_entry.md) 和 [统一经营会话](docs/gameplay/business_session.md)。
+标题“新游戏”清空整局，暂停返回标题只退出场景；普通进出店铺、重载和 F3 重启保留经营会话。安全操作阶段自动保存；标题“继续游戏”恢复最近检查点，潜入中途退出恢复尝试前状态。详见 [启动与新游戏](docs/guides/game_entry.md) 和 [统一经营会话](docs/gameplay/business_session.md)。
 
-制作台默认“按订单制作”；切到外层“自由调配”后，内层有“教学配方”和“自由调配”：前者是固定配方手动选料与批量制作，后者是三槽自由配方及独立加冰选项。新表原料默认未发现、库存为零，不会为了试玩自动补给。见 [制作](docs/gameplay/basic_tea_production.md)、[订单](docs/gameplay/order_system.md)、[自由配方](docs/gameplay/free_tea_recipes.md)。
+制作台默认“按订单制作”；切到外层“自由调配”后，内层有“教学配方”和“自由调配”：前者是固定配方手动选料与批量制作，后者是三槽自由配方及独立加冰选项。C01–C10 初始各五份并可免费整份补给；异世界原料按实际剧情或采集取得。见 [制作](docs/gameplay/basic_tea_production.md)、[订单](docs/gameplay/order_system.md)、[自由配方](docs/gameplay/free_tea_recipes.md)。
 
 ## 独立入口
 
@@ -44,10 +44,10 @@ godot --path .
 
 | 场景 | 用途 |
 | --- | --- |
-| [main.tscn](src/core/main.tscn) | 正式奶茶店与 S01–S02；有进度的 tutorial 会话继续原配置 |
-| [settlement.tscn](src/core/settlement.tscn) | 16 区域的连续聚落；新进程直接运行沿用 tutorial 配置，正式流程出店则延续 day1 |
+| [main.tscn](src/core/main.tscn) | 正式奶茶店与两天剧情；有进度的 tutorial 会话继续原配置 |
+| [settlement.tscn](src/core/settlement.tscn) | RPG Maker 洞窟外景（map_001）；正式流程出店延续同一会话 |
 | [legacy_shop.tscn](src/debug/story/legacy_shop.tscn) | 旧三单队列与首单交付教学，关闭正式剧情 |
-| [day1_world_flow_demo.tscn](src/debug/story/day1_world_flow_demo.tscn) | 准备夜间 S05，验证文书、取血、返店、S06 特调；潜入显示缺口提示 |
+| [day1_world_flow_demo.tscn](src/debug/story/day1_world_flow_demo.tscn) | 旧 16 区地图调试夹具；当前 RPG 地图流程从 F5 新游戏进入 |
 | [drink_throw_demo.tscn](src/debug/stealth/drink_throw_demo.tscn) | 隔离夹具中的配方杯投掷、守卫效果、腐蚀及重试 |
 | [dialogue_demo.tscn](src/debug/dialogue/dialogue_demo.tscn) / [story_demo.tscn](src/debug/story/story_demo.tscn) | 独立对白与短事件演示 |
 | [actor_demo.tscn](src/debug/actors/actor_demo.tscn) | 角色生成、移动、表情和取消 |
@@ -77,7 +77,7 @@ tools/            # 离线生成、导入、素材处理和编排工具
 tests/            # 模块验证与隔离夹具
 ```
 
-`MainGame` 负责装配 `Systems` 与 `World`：关卡、动态实体和世界特效分别放入 `LevelRoot`、`EntityRoot`、`EffectRoot`。屏幕 UI 使用 HUD、弹窗、暂停、转场、调试五个独立层；暂停菜单由启动流程接入，屏幕转场组件可独立验证。地图不执行剧情或业务。`GameState` autoload 是唯一跨场景事实源，持有共享库存、制作与钱包；完整内存快照为 **v5**，库存子快照为 **v3**，完整 v2/v3/v4 可迁移，只有剧情的 v1 拒绝恢复。[存档系统](docs/systems/save_system.md)提供单槽自动检查点、有效备份与标题继续游戏；当前支持 Day 1 已发布操作阶段，后续章节需配套恢复现场。详见 [GameState](docs/systems/game_state.md)。
+`MainGame` 负责装配 `Systems` 与 `World`：关卡、动态实体和世界特效分别放入 `LevelRoot`、`EntityRoot`、`EffectRoot`。屏幕 UI 使用 HUD、弹窗、暂停、转场、调试五个独立层；暂停菜单由启动流程接入，屏幕转场组件可独立验证。地图不执行剧情或业务。`GameState` autoload 是唯一跨场景事实源，持有共享库存、制作与钱包；完整内存快照为 **v8**，库存／经济子快照为 **v6／v3**，完整 v2–v7 可迁移，只有剧情的 v1 拒绝恢复。[存档系统](docs/systems/save_system.md)提供单槽自动检查点、有效备份与标题继续游戏；当前覆盖两天操作阶段、第三天任务交接与第四天超时。详见 [GameState](docs/systems/game_state.md)。
 
 ## 验证与协作
 

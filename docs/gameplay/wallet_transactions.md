@@ -1,22 +1,20 @@
 # 钱包与原子交易
 
-> 2026-10-19 规则更新：以下 10G 教学/正式五单和 20G 自由配方是当前代码行为，不再是后续经济目标。[新经济设计](../design/milk_tea_economy_revised.md)规定人类固定菜单 3G、哥布林保存槽位报价、爆品首次奖励 150G、独立战斗采购；任务奖励与实体金币表现的适配仍需核对。[实现方案](../design/milk_tea_economy_implementation_plan.md)列出事务与存档变更；本次未改余额、定价或任务配置。当前整局快照为 v5，本文后段 v4 属配方阶段接口记录，完整保存现状以[存档系统](../systems/save_system.md)和源码为准。
+> 2026-10-19：使用单一钱包及永久配方报价；正式人类菜单每杯 3G，首发奖励机制 150G，正式爆品表为空。整局／库存／经济 schema 为 8／6／3，实际集成与检查见[整合记录](../development/two_day_integration_2026_10_19.md)。
 
 ## 货币规则（2026-10-18 确认）
 
 全游戏只有一种货币，写作 **G**，它就是世界观里的**古怪金币**；所有标价、任务奖励、债务与余额都以 G 为单位，界面通过 `WalletTransactions.CURRENCY_SYMBOL` / `format_money()` 统一显示。
 
-区别只在叙事呈现，不是两套钱：主角第一次拿到它时还不知道那是钱，所以 `strange_coin` 以**剧情物品**入库，详情写「价值未知」；此后卖奶茶收款、投掷消耗、酒馆买酒一律是这同一种钱。面值 **1 枚 = 10G**（`WalletTransactions.COIN_FACE_VALUE`，换算走 `coin_worth()`），没有汇率、不打折。它被认作货币之前只记在库存里；主角弄清价值之后（Day 2 起）按面额并入钱包余额，不需要玩家操作，也不产生额外费用。Day 2 宿主开放前这一并入没有落点，暂按库存保留。
+正式销售全部进入钱包。`strange_coin` 仅保留历史定义；旧存档中的实体金币按 **1 枚＝10G** 一次折算，迁移后库存清零。首夜每次投币扣钱包 10G，不能捡回。H01–H06 固定售价 3G；正式两天普通订单使用 H01。自由配方预览只显示区间，显式确认后从唯一 `recipe_prices` 读取固定逐槽报价，换序与加冰共价。
 
-定价基准：普通成品奶茶（珍珠／椰果／原味）**10G 一杯**，Day 1 的五笔订单全部按此结算——人类首单现场付 10G，4 个哥布林单各付 1 枚（4 × 10G）。异世界食材的自由配方沿用 `RecipeRules.ordinary_price` 的 20G，因为它的单杯原料成本已接近这个量级，两者不是同一档商品。
-
-后续独立组件与边界见 [Day 2 酒馆购买与固定赌局](day_02_trade.md)：复用本事务，提供静态折后价购买、真实奖励入库及 A 的债务结果接入；运行时折扣接口仍需集成协调。
+酒馆 `day2_amber_wine` 标价 60G，剧情折扣后实付 48G，限一份五次。市场成本仍按标准 100G，折扣不改配方售价。35G 代购专款保存在 `day2.procurement`，从不计入普通钱包。
 
 ## 仓库检查与实现范围
 
-WarehouseInventory 提供共享库存、发现和原子快照；TeaProduction 消费同一库存；TaskJournal 只读投影事实。当前 TaskCatalog.rewards 支持显示 text、物品 items 与普通货币 money；正式 S01 交付收入 10G（1 杯 × 10G），4 个哥布林单各发 strange_coin ×1（4 × 10G = 40G），Day 1 合计 50G。自由饮品订单默认使用配方售价，显式 rewards.money 可覆盖。
+WarehouseInventory 提供共享库存、发现和原子快照；TeaProduction 消费同一库存；TaskJournal 只读投影事实。当前 TaskCatalog.rewards 支持显示 text、物品 items 与普通货币 money；S01–S02 五单合计 15G；S04 第六单 3G，委托赠款另一次性 50G。自由饮品订单默认使用配方售价，显式 rewards.money 可覆盖。
 
-经济服务复用 TeaMenu、WarehouseInventory 和 GameState；仍用任务 JSON v1，没有新增 autoload 或文件存档。普通交易接口与正式交付事务共用库存，但由各自稳定回执防重。跨场景余额、库存和领取记录由 GameState 的 WalletTransactions 子节点持有；MainGame 通过公开 getter 获取并注入同一库存。制作进度也由 GameState 持有；钱包、制作和交付复用同一份跨场景经营会话。
+经济服务复用 TeaMenu、WarehouseInventory 和 GameState；仍用任务 JSON v1，没有新增 autoload；安全文件保存复用 SaveCoordinator。普通交易接口与正式交付事务共用库存，但由各自稳定回执防重。跨场景余额、库存和领取记录由 GameState 的 WalletTransactions 子节点持有；MainGame 通过公开 getter 获取并注入同一库存。制作进度也由 GameState 持有；钱包、制作和交付复用同一份跨场景经营会话。
 
 ## 接口
 
@@ -50,7 +48,7 @@ WarehouseInventory 提供共享库存、发现和原子快照；TeaProduction �
 
 购买协调器和弹窗应注入 GameState 的同一钱包，只保存商品 ID，通过报价显示价格与余量；物品展示信息可用报价的 `item_id` 向同一库存查询定义。打开界面及钱包 `changed` 后重新取报价，不能从 TeaMenu 或图鉴价格维护第二份交易配置。确认时仍只提交 `purchase(product_id, quantity, request_id)`，不传金额或把报价当授权；钱包在锁内重新计算价格并校验余额、商人余量和入库上限。一次确认及其失败重试保持同一个 request_id，成功后的下一笔有意购买才换 ID。
 
-当前仓库未发现额外维护商品报价的交易适配组件。本次仅提供钱包查询接口与后续界面接入契约，不新增购买 UI。正式商品价格、动态折扣资格及舍入规则仍待确认，本接口只投影已有静态 `products`，不从设计稿或物品标价推导交易价格。
+TavernPurchase 校验静态 offers 与钱包商品定义逐字段一致，UI 与提交都读取钱包实时折扣报价。`discount_flag` 资格经 GameState 查询，实际价使用配置的整数 `discounted_price`，不做浮点比例舍入。
 
 ## 配置
 
@@ -60,7 +58,7 @@ WarehouseInventory 提供共享库存、发现和原子快照；TeaProduction �
 - `products`：商品 ID → `{ "item_id": "black_tea", "price": 整数单价, "stock": 整数余量 }`。item_id 必须存在于同一食材目录。省略 stock 表示不限量；stock 为 0 表示售罄；价格允许显式配置为 0。
 - `transaction_rewards`：奖励 ID → `{ "money": 非负整数, "items": {食材ID: 正整数}, "task_id": 可选任务ID }`。纯金币可用空 items，纯物品可将 money 设为 0。task_id 使用现有 TaskCatalog ID，由 MainGame 注入的 TaskJournal 查询状态。找不到任务或任务系统不可用时拒绝发奖。
 
-products 与 transaction_rewards 默认空，保留现有教学库存、订单和叙事奖励文本。普通商店 / 独立领取奖励尚无正式配置，不把测试价格当成正式商店数据。已发布订单的收入定义在所选任务目录，原料 market_price 只用于成本计算，不自动生成 products。自动化测试 `_menu()` 提供完整的独立价格、限量商品和奖励样例。
+正式 products 包含 C01–C10 的 0G 整份补给和 Day 2 琥珀酒；transaction_rewards 不承载两天主线的重复奖励。已发布订单的收入定义在所选任务目录，原料 market_price 只用于成本计算，不自动生成 products。自动化测试 `_menu()` 提供完整的独立价格、限量商品和奖励样例。
 
 配置在服务创建时复制，运行中修改 Resource 不会暗中改变已开始的经济会话。任务完成只改变进度；需要发奖的业务显式调用 claim_reward。同一 task_id 即使配置了多个奖励别名也最多领取一次；多件奖励应放入同一奖励定义。
 
@@ -83,27 +81,15 @@ products 与 transaction_rewards 默认空，保留现有教学库存、订单�
 
 ## 存档与兼容
 
-GameState 完整快照当前为 `schema_version = 4`，库存子快照 v3；必需 economy 和 business 字段，包含余额、完整库存、有限商品余量、成功请求记录和奖励领取记录。所有部分先校验，再整体替换；损坏的经济数据也不会改变剧情字段。相同快照静默，读档不会发 transaction_finished 或重播奖励。库存单独变化（包括制作消耗）也进入 GameState 快照。
+GameState 完整快照当前为 `schema_version = 8`，库存子快照 v6、钱包子快照 v3；必需 economy 和 business 字段，包含余额、完整库存、有限商品余量、成功请求记录和奖励领取记录。所有部分先校验，再整体替换；损坏的经济数据也不会改变剧情字段。相同快照静默，读档不会发 transaction_finished 或重播奖励。库存单独变化（包括制作消耗）也进入 GameState 快照。
 
 完整恢复要求同时包含钱包与经营数据，且 economy.inventory 与 business.inventory 一致。只有剧情的旧 v1 或缺字段的局部快照拒绝恢复；完整 v2/v3 支持迁移，规则见[自由配方快照](free_tea_recipes.md#快照与迁移)。start_new_game / reset_state 整体重置经济、制作和剧情数据，普通切场景保留全部进度。
 
 仍使用仓库已有的原生 Variant 快照接口，没有创建第二套生产存档机制。实际文件往返测试使用 FileAccess.store_var/get_var 验证完整 GameState；经济子快照还覆盖 JSON 数字往返。GameState 原有剧情字段仍要求保留 Variant 类型，不能将整包快照直接当普通 JSON 恢复。
 
-## 委托业务待确认
+## 代购专款
 
-查阅 `docs/design/day_01_story_flow.md` 与 `docs/design/milk_tea_system_and_otherworld_chronicle.md`，目前只确认取得格里芬之血等接取剧情，没有资金结算规则。下列事项需业务设计确认：
-
-| 问题 | 待确认规则 |
-| --- | --- |
-| 专款归属 | 与个人钱包是否隔离、能否用于普通购买、剩余款如何退回 |
-| 预付款 | 发放时机与比例、是否计入报酬、失败或取消时如何退还 |
-| 押金 | 冻结还是实际扣款、交付/拒收/取消时何时释放 |
-| 违约扣款 | 触发条件与金额来源，余额不足时拒绝、欠款还是从押金扣除 |
-| 交付结算 | 扣哪些物品、验收条件、阶段结算还是一次结清、可否重复接取 |
-| 中断恢复 | 超时、放弃、读档重试时使用哪个委托实例/阶段作为幂等 ID |
-| 货币种类 | 人类与异世界货币是否区分、是否兑换、金额单位 |
-
-WalletTransactions 只提供普通货币、物品和领取事实，不加入专款、冻结、债务、押金或违约状态。委托组件负责资格和结算规则。当前 TaskDelivery 已经通过 GameState.commit_delivery 原子收取交付物并结算钱与物品；不要在业务层连续调用多个交易拼接。尚未定义的专款、退款和期限仍不能由普通钱包推断。
+`Day2Procurement` 是场景内业务组件，规则与余额均由既有 GameState 原子事务保存。35G 单独托管，采购 30G、跑腿费 5G；只能雇三名普通散客中的一人。第二天雇人第三天早晨返店，第三天雇人当晚返店。向胖哥布林交货完成，未交货进入第四天超时；未用专款退给委托方。固定赌场债务复用持久任务终态，免除保存为 cancelled。
 
 ## 验证与试玩
 
@@ -118,7 +104,7 @@ godot --headless --path . --script res://tests/verify_milk_tea_shop.gd
 
 交易测试覆盖商品列表与单品一致性、未知商品、报价副本隔离、Resource 后续修改隔离、实时/售罄/不限量报价、查询无通知、余额不足与同 ID 重试、重复请求不减余量、恢复后重新报价及购买，以及余额、免费商品、非法参数/配置、钱包和库存上限、多物品奖励、真实任务完成检查、重复领取与别名、同步重入、注入提交失败、JSON 及实际文件往返、损坏存档拒绝、旧/局部快照原子拒绝、跨主场景切换和制作共用库存。
 
-手动回归入口：`src/core/main.tscn` 或 `src/core/settlement.tscn`，F6。打开仓库查看库存，在制作台制作、到指定顾客交付后再开仓库，观察对应原料减少，任务与订单板照常更新。当前没有新增购买按钮或奖励数值；交易行为通过上述测试和公开 API 验收。
+手动回归入口：`src/core/main.tscn` 或 `src/core/settlement.tscn`，F6。打开仓库查看库存，在制作台制作、到指定顾客交付后再开仓库，观察对应原料减少，任务与订单板照常更新。第二天酒馆购买经正式剧情入口打开；章节 HUD 提供雇佣、关店和两局开始操作。
 
 ## Godot 4.7 官方依据
 

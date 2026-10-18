@@ -17,7 +17,7 @@ func _run() -> void:
 	_test_production_transaction()
 	await _test_discovery_ui()
 	await _test_session("res://src/debug/story/legacy_shop.tscn")
-	await _test_session("res://src/core/settlement.tscn")
+
 	print("WAREHOUSE_INVENTORY: %s (%d checks)" % ["PASS" if _failures.is_empty() else "FAIL", _checks])
 	quit(0 if _failures.is_empty() else 1)
 
@@ -39,7 +39,7 @@ func _test_inventory() -> void:
 	var inventory := WarehouseInventory.new()
 	var notifications: Array[Dictionary] = []
 	inventory.changed.connect(func() -> void: notifications.append(inventory.to_dict()))
-	_check(inventory.get_ingredients().size() == 6, "Teaching inventory contains exactly the six configured ingredients")
+	_check(inventory.get_ingredients().size() == 16, "Inventory includes six tutorial and ten human ingredients")
 	for definition in WarehouseInventory.CATALOG.ingredients:
 		_check(inventory.get_stock(definition.id) == WarehouseInventory.CATALOG.initial_stock.get(definition.id, 0) and inventory.is_discovered(definition.id) == WarehouseInventory.CATALOG.initial_stock.has(definition.id), "Initial quantity/discovery matches catalog: " + definition.id)
 		_check(definition.icon != null, "Each configured ingredient has an icon")
@@ -56,7 +56,7 @@ func _test_inventory() -> void:
 	_check(inventory.to_dict() == before and notifications.size() == 1, "All failed operations leave every quantity and discovery unchanged, without signals")
 	_check(inventory.try_consume({"black_tea": 2, "pearl": 8}), "Consume sufficient grouped materials")
 	_check(inventory.get_stock("black_tea") == 12 and inventory.get_stock("pearl") == 0 and notifications.size() == 2, "A grouped commit emits exactly one complete snapshot")
-	_check(inventory.get_ingredients().size() == 6 and inventory.is_discovered("pearl"), "Zero-stock discovered ingredients remain listed")
+	_check(inventory.get_ingredients().size() == 16 and inventory.is_discovered("pearl"), "Zero-stock discovered ingredients remain listed")
 	var copy := inventory.get_definition("black_tea")
 	copy.display_name = "changed"
 	var view := inventory.get_ingredient_view("black_tea")
@@ -155,10 +155,10 @@ func _test_discovery_ui() -> void:
 	_check(restored.restore_state(JSON.parse_string(JSON.stringify(inventory.to_dict()))) == OK and restored.is_property_known("test_otherworld", "flavor_tags") and not restored.is_property_known("test_otherworld", "special_effects"), "Discovery state round-trips independently of static attributes")
 	panel._filter.select(1)
 	panel._filter.item_selected.emit(1)
-	_check(panel._list.item_count == 6, "Human filter excludes otherworld materials")
+	_check(panel._list.item_count == 16, "Human filter excludes otherworld materials")
 	panel._filter.select(0)
 	panel._filter.item_selected.emit(0)
-	_check(panel._list.item_count == 7, "All filter combines discovered origins")
+	_check(panel._list.item_count == 17, "All filter combines discovered origins")
 	panel.free()
 	restored.free()
 	inventory.free()

@@ -1,4 +1,71 @@
 {
   "version": 2,
-  "phases": []
+  "phases": [
+    {
+      "id": "day2.bridge.festival",
+      "after_event": "day2.s02.festival_order",
+      "stage": "day2.s02.wait_festival",
+      "completion": {
+        "flag": "day2.business.festival.served",
+        "allow_existing": true
+      },
+      "completion_flag": "day2.bridge.festival.completed",
+      "next_event": "day2.s02.festival_after"
+    },
+    {
+      "id": "day2.bridge.elder",
+      "after_event": "day2.s02.elder_order",
+      "stage": "day2.s02.wait_elder",
+      "completion": {
+        "flag": "day2.business.elder.served",
+        "allow_existing": true
+      },
+      "completion_flag": "day2.bridge.elder.completed",
+      "next_event": "day2.s02.elder_after"
+    },
+    {
+      "id": "day2.bridge.emissary",
+      "after_event": "day2.s02.emissary_order",
+      "stage": "day2.s02.wait_emissary",
+      "completion": {
+        "flag": "day2.business.emissary.served",
+        "allow_existing": true
+      },
+      "completion_flag": "day2.bridge.emissary.completed",
+      "next_event": "day2.s02.emissary_after"
+    },
+    {
+      "id": "day2.bridge.rumor",
+      "after_event": "day2.s02.rumor_order",
+      "stage": "day2.s02.wait_rumor",
+      "completion": {
+        "flag": "day2.business.rumor.served",
+        "allow_existing": true
+      },
+      "completion_flag": "day2.bridge.rumor.completed",
+      "next_event": "day2.s02.rumor_after"
+    },
+    {
+      "id": "day2.bridge.special_drink",
+      "after_event": "day2.s05.special_before",
+      "stage": "day2.s05.wait_special_drink",
+      "completion": {
+        "flag": "day2.s05.special_drink_made",
+        "allow_existing": true
+      },
+      "completion_flag": "day2.bridge.special_drink.completed",
+      "next_event": "day2.s05.special_after"
+    },
+    {
+      "id": "day2.bridge.guard_delivery",
+      "after_event": "day2.s05.guard_greet",
+      "stage": "day2.s05.wait_guard_delivery",
+      "completion": {
+        "flag": "day2.s05.special_drink_delivered",
+        "allow_existing": true
+      },
+      "completion_flag": "day2.bridge.guard_delivery.completed",
+      "next_event": "day2.s05.guard_after"
+    }
+  ]
 }

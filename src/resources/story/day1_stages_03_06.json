@@ -14,6 +14,10 @@
         {
           "command": "dialogue",
           "id": "day1.s03.coin_inspect"
+        },
+        {
+          "command": "set_stage",
+          "value": "day1.s03"
         }
       ]
     },
@@ -22,9 +26,6 @@
       "conditions": {
         "day": 1.0,
         "stage": "day1.s03",
-        "completed_events": [
-          "day1.s03.coin_inspect"
-        ],
         "flags": {
           "day1.s03.exited_shop": true
         }
@@ -33,6 +34,14 @@
         {
           "command": "dialogue",
           "id": "day1.s03.street_gone"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.s03.limited_exploration"
+        },
+        {
+          "command": "set_stage",
+          "value": "day1.s03.explore"
         }
       ]
     },
@@ -41,9 +50,6 @@
       "conditions": {
         "day": 1.0,
         "stage": "day1.s03.explore",
-        "completed_events": [
-          "day1.s03.street_gone"
-        ],
         "flags": {
           "day1.s03.exploration_completed": true
         }
@@ -56,6 +62,295 @@
         {
           "command": "set_stage",
           "value": "day1.s04"
+        }
+      ]
+    },
+    "day1.s04.commission": {
+      "once": true,
+      "conditions": {
+        "day": 1.0,
+        "stage": "day1.s04",
+        "flags": {
+          "day1.s03.returned_shop": true
+        }
+      },
+      "steps": [
+        {
+          "command": "actor_show",
+          "actor": "fat_goblin"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.s04.fat_goblin_arrives"
+        },
+        {
+          "command": "set_flag",
+          "key": "day1.s04.order_open",
+          "value": true
+        },
+        {
+          "command": "set_stage",
+          "value": "day1.s04.wait_order"
+        }
+      ]
+    },
+    "day1.s04.after_order": {
+      "once": true,
+      "conditions": {
+        "day": 1.0,
+        "stage": "day1.s04.wait_order",
+        "flags": {
+          "day1.s04.order_delivered": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day1.s04.first_taste"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.s04.griffin_faith"
+        },
+        {
+          "command": "chronicle_unlock",
+          "entry_id": "chronicle.griffin",
+          "title": "伟大的格里芬"
+        },
+        {
+          "command": "chronicle_append",
+          "entry_id": "chronicle.griffin",
+          "record_id": "chronicle.griffin.s04_first",
+          "content": "哥布林普遍敬畏的存在。胖哥布林称，格里芬会惩罚不守规矩的哥布林，也会庇护他们。其真实存在与具体情况尚未确认。"
+        },
+        {
+          "command": "chronicle_append",
+          "entry_id": "chronicle.elder",
+          "record_id": "chronicle.elder.s04_first",
+          "content": "被哥布林视为最了解格里芬的人，负责主持仪式、传达格里芬的意志，并解释格里芬的规矩。"
+        },
+        {
+          "command": "chronicle_unlock",
+          "entry_id": "chronicle.emissary",
+          "title": "格里芬使者"
+        },
+        {
+          "command": "chronicle_append",
+          "entry_id": "chronicle.emissary",
+          "record_id": "chronicle.emissary.s04_first",
+          "content": "据胖哥布林所说，长老将偶尔到来的行脚商称为格里芬派来的使者。使者带来的稀奇商品，被视为格里芬对勤劳、守规矩的哥布林的赏赐。"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.s04.griffin_blood"
+        },
+        {
+          "command": "chapter_action",
+          "id": "day1.s04.gift"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.s04.map_handover"
+        },
+        {
+          "command": "unlock_map",
+          "locations": [
+            "settlement.shop",
+            "settlement.tavern",
+            "settlement.casino",
+            "settlement.elder",
+            "settlement.ritual",
+            "settlement.training",
+            "settlement.workshop",
+            "settlement.warehouse"
+          ]
+        },
+        {
+          "command": "set_stage",
+          "value": "day1.s04.wait_map"
+        }
+      ]
+    },
+    "day1.s04.commission_choice": {
+      "once": true,
+      "conditions": {
+        "day": 1.0,
+        "stage": "day1.s04.wait_map",
+        "flags": {
+          "day1.s04.map_closed": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day1.s04.commission_choice"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.s04.commission_choice_accept",
+          "when": {
+            "choice": {
+              "dialogue": "day1.s04.commission_choice",
+              "line": "choice",
+              "id": "accept"
+            }
+          }
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.s04.commission_choice_refuse",
+          "when": {
+            "choice": {
+              "dialogue": "day1.s04.commission_choice",
+              "line": "choice",
+              "id": "refuse"
+            }
+          }
+        },
+        {
+          "command": "chapter_action",
+          "id": "day1.s04.funding"
+        },
+        {
+          "command": "actor_hide",
+          "actor": "fat_goblin"
+        },
+        {
+          "command": "set_stage",
+          "value": "day1.s05.ready"
+        }
+      ]
+    },
+    "day1.s05.drunken_guard": {
+      "once": true,
+      "conditions": {
+        "day": 1.0,
+        "stage": "day1.s05.ready",
+        "flags": {
+          "day1.s05.drunken_paid": false
+        }
+      },
+      "trigger": "day1_drunken_encounter",
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day1.s05.drunken_guard"
+        },
+        {
+          "command": "chapter_action",
+          "id": "day1.s05.pay_drunken"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.s05.drunken_guard_after_payment"
+        },
+        {
+          "command": "actor_hide",
+          "actor": "drunken_guard"
+        }
+      ]
+    },
+    "day1.s05.mansion_payment": {
+      "once": true,
+      "conditions": {
+        "day": 1.0,
+        "stage": "day1.s05.ready",
+        "flags": {
+          "day1.s05.drunken_paid": true,
+          "day1.s05.guard_payment_completed": false
+        }
+      },
+      "trigger": "mansion_payment",
+      "steps": [
+        {
+          "command": "chapter_action",
+          "id": "day1.s05.pay_pair"
+        }
+      ]
+    },
+    "day1.s05.return_shop": {
+      "once": true,
+      "conditions": {
+        "day": 1.0,
+        "stage": "day1.s05.ready",
+        "flags": {
+          "day1.s05.returned_shop": true
+        }
+      },
+      "steps": [
+        {
+          "command": "set_stage",
+          "value": "day1.s06.craft"
+        }
+      ]
+    },
+    "day1.s06.pondering": {
+      "once": true,
+      "conditions": {
+        "day": 1.0,
+        "stage": "day1.s06.craft"
+      },
+      "steps": [
+        {
+          "command": "set_stage",
+          "value": "day1.s06.wait_craft"
+        }
+      ]
+    },
+    "day1.s06.customer": {
+      "once": true,
+      "conditions": {
+        "day": 1.0,
+        "stage": "day1.s06.wait_craft",
+        "flags": {
+          "day1.s06.blood_drink_made": true
+        }
+      },
+      "steps": [
+        {
+          "command": "actor_show",
+          "actor": "fat_goblin"
+        },
+        {
+          "command": "set_stage",
+          "value": "day1.s06.wait_delivery"
+        }
+      ]
+    },
+    "day1.s06.reaction": {
+      "once": true,
+      "conditions": {
+        "day": 1.0,
+        "stage": "day1.s06.wait_delivery",
+        "flags": {
+          "day1.s06.blood_drink_delivered": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day1.s06.reaction"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.s06.help_and_rest"
+        },
+        {
+          "command": "chapter_action",
+          "id": "day1.s06.rest"
+        },
+        {
+          "command": "set_flag",
+          "key": "day1.s06.completed",
+          "value": true
+        },
+        {
+          "command": "set_phase",
+          "phase": "day"
+        },
+        {
+          "command": "set_stage",
+          "value": "day2.s01"
         }
       ]
     }

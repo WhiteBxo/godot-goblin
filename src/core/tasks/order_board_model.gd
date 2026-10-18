@@ -112,16 +112,18 @@ func refresh() -> void:
 
 func _project(task: Dictionary, view: Dictionary, accepted: bool, done: bool) -> Dictionary:
 	var order_id: String = task.delivery.order_id
-	var requirement := _delivery.get_requirement(order_id)
+	var use_requirement := _delivery.get_use_requirement(order_id)
+	var by_use := not use_requirement.is_empty()
+	var requirement := use_requirement if by_use else _delivery.get_requirement(order_id)
 	var items: Array[Dictionary] = []
 	var names := PackedStringArray()
-	var ready := _inventory.has_materials(requirement)
+	var ready := _inventory.has_uses(requirement) if by_use else _inventory.has_materials(requirement)
 	var icon: Texture2D
 	for id: String in requirement:
 		var definition := _inventory.get_definition(id)
 		var item_name: String = definition.display_name if definition != null else "未知物品"
-		items.append({"id": id, "name": item_name, "needed": int(requirement[id]), "owned": _inventory.get_stock(id)})
-		names.append("%s ×%d" % [item_name.trim_suffix("（成品）"), requirement[id]])
+		items.append({"id": id, "name": item_name, "needed": int(requirement[id]), "owned": _inventory.get_uses(id) if by_use else _inventory.get_stock(id)})
+		names.append("%s ×%d%s" % [item_name.trim_suffix("（成品）"), requirement[id], " 次" if by_use else ""])
 		if definition != null and icon == null:
 			icon = definition.icon
 	var product_id: String = task.delivery.get("product_id", "")

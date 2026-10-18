@@ -1,0 +1,482 @@
+{
+  "version": 1,
+  "tasks": [
+    {
+      "id": "day2.orders.festival_0",
+      "type": "commission",
+      "title": "H01经典珍珠奶茶 → 七日祭顾客甲",
+      "description": "H01经典珍珠奶茶 → 七日祭顾客甲",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day2.s02.festival.open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day2.s02.festival.open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day2.s02.festival_0.delivered"
+      },
+      "objectives": [
+        {
+          "id": "deliver",
+          "text": "H01经典珍珠奶茶 → 七日祭顾客甲",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s02.festival_0.delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day2_s02_festival_0",
+        "product_id": "classic_boba_milk_tea",
+        "target_object_id": "day2_festival_0",
+        "accepted_flag": "task.day2_s02_festival_0.accepted"
+      },
+      "rewards": {
+        "money": 3,
+        "text": "3G"
+      }
+    },
+    {
+      "id": "day2.orders.elder_0",
+      "type": "commission",
+      "title": "H01经典珍珠奶茶 → 议论长老的顾客甲",
+      "description": "H01经典珍珠奶茶 → 议论长老的顾客甲",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day2.s02.elder.open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day2.s02.elder.open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day2.s02.elder_0.delivered"
+      },
+      "objectives": [
+        {
+          "id": "deliver",
+          "text": "H01经典珍珠奶茶 → 议论长老的顾客甲",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s02.elder_0.delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day2_s02_elder_0",
+        "product_id": "classic_boba_milk_tea",
+        "target_object_id": "day2_elder_0",
+        "accepted_flag": "task.day2_s02_elder_0.accepted"
+      },
+      "rewards": {
+        "money": 3,
+        "text": "3G"
+      }
+    },
+    {
+      "id": "day2.orders.emissary_0",
+      "type": "commission",
+      "title": "H01经典珍珠奶茶 → 谈论使者的顾客",
+      "description": "H01经典珍珠奶茶 → 谈论使者的顾客",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day2.s02.emissary.open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day2.s02.emissary.open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day2.s02.emissary_0.delivered"
+      },
+      "objectives": [
+        {
+          "id": "deliver",
+          "text": "H01经典珍珠奶茶 → 谈论使者的顾客",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s02.emissary_0.delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day2_s02_emissary_0",
+        "product_id": "classic_boba_milk_tea",
+        "target_object_id": "day2_emissary_0",
+        "accepted_flag": "task.day2_s02_emissary_0.accepted"
+      },
+      "rewards": {
+        "money": 3,
+        "text": "3G"
+      }
+    },
+    {
+      "id": "day2.orders.rumor_0",
+      "type": "commission",
+      "title": "H01经典珍珠奶茶 → 打听酒馆与赌场的顾客甲",
+      "description": "H01经典珍珠奶茶 → 打听酒馆与赌场的顾客甲",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day2.s02.rumor.open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day2.s02.rumor.open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day2.s02.rumor_0.delivered"
+      },
+      "objectives": [
+        {
+          "id": "deliver",
+          "text": "H01经典珍珠奶茶 → 打听酒馆与赌场的顾客甲",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s02.rumor_0.delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day2_s02_rumor_0",
+        "product_id": "classic_boba_milk_tea",
+        "target_object_id": "day2_rumor_0",
+        "accepted_flag": "task.day2_s02_rumor_0.accepted"
+      },
+      "rewards": {
+        "money": 3,
+        "text": "3G"
+      }
+    },
+    {
+      "id": "day2.orders.rumor_1",
+      "type": "commission",
+      "title": "H01经典珍珠奶茶 → 打听酒馆与赌场的顾客乙",
+      "description": "H01经典珍珠奶茶 → 打听酒馆与赌场的顾客乙",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day2.s02.rumor.open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day2.s02.rumor.open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day2.s02.rumor_1.delivered"
+      },
+      "objectives": [
+        {
+          "id": "deliver",
+          "text": "H01经典珍珠奶茶 → 打听酒馆与赌场的顾客乙",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s02.rumor_1.delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day2_s02_rumor_1",
+        "product_id": "classic_boba_milk_tea",
+        "target_object_id": "day2_rumor_1",
+        "accepted_flag": "task.day2_s02_rumor_1.accepted"
+      },
+      "rewards": {
+        "money": 3,
+        "text": "3G"
+      }
+    },
+    {
+      "id": "day2.orders.ordinary_a",
+      "type": "commission",
+      "title": "散客 A · H01",
+      "description": "散客 A · H01",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day2.s02.ordinary_a.delivered"
+      },
+      "objectives": [
+        {
+          "id": "deliver",
+          "text": "散客 A · H01",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s02.ordinary_a.delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day2_ordinary_a",
+        "product_id": "classic_boba_milk_tea",
+        "target_object_id": "day2_ordinary_a",
+        "accepted_flag": "task.day2_ordinary_a.accepted"
+      },
+      "rewards": {
+        "money": 3,
+        "text": "3G"
+      }
+    },
+    {
+      "id": "day2.orders.ordinary_b",
+      "type": "commission",
+      "title": "散客 B · H01",
+      "description": "散客 B · H01",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day2.s02.ordinary_b.delivered"
+      },
+      "objectives": [
+        {
+          "id": "deliver",
+          "text": "散客 B · H01",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s02.ordinary_b.delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day2_ordinary_b",
+        "product_id": "classic_boba_milk_tea",
+        "target_object_id": "day2_ordinary_b",
+        "accepted_flag": "task.day2_ordinary_b.accepted"
+      },
+      "rewards": {
+        "money": 3,
+        "text": "3G"
+      }
+    },
+    {
+      "id": "day2.orders.ordinary_c",
+      "type": "commission",
+      "title": "散客 C · H01",
+      "description": "散客 C · H01",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day2.s02.ordinary_c.delivered"
+      },
+      "objectives": [
+        {
+          "id": "deliver",
+          "text": "散客 C · H01",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s02.ordinary_c.delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day2_ordinary_c",
+        "product_id": "classic_boba_milk_tea",
+        "target_object_id": "day2_ordinary_c",
+        "accepted_flag": "task.day2_ordinary_c.accepted"
+      },
+      "rewards": {
+        "money": 3,
+        "text": "3G"
+      }
+    },
+    {
+      "id": "day3.procurement",
+      "type": "commission",
+      "title": "把醒神菇交给胖哥布林",
+      "description": "把醒神菇交给胖哥布林",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day3.procurement.returned"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day3.procurement.returned"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day3.procurement.delivered"
+      },
+      "objectives": [
+        {
+          "id": "deliver",
+          "text": "把醒神菇交给胖哥布林",
+          "complete_when": {
+            "type": "flag",
+            "key": "day3.procurement.delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day3_procurement",
+        "items": {
+          "insomnia_mushroom": 1
+        },
+        "target_object_id": "fat_goblin"
+      },
+      "rewards": {
+        "money": 0,
+        "text": "0G"
+      },
+      "deadline": {
+        "day": 3,
+        "phase": "night",
+        "boundary": "after"
+      }
+    },
+    {
+      "id": "day3.festival",
+      "type": "commission",
+      "title": "七日祭：苔痕青、窟窟糖芋、萤火伞各两份",
+      "description": "七日祭：苔痕青、窟窟糖芋、萤火伞各两份",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day2.s03.festival_accepted"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day3.festival.available"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day3.festival.delivered"
+      },
+      "objectives": [
+        {
+          "id": "deliver",
+          "text": "七日祭：苔痕青、窟窟糖芋、萤火伞各两份",
+          "complete_when": {
+            "type": "flag",
+            "key": "day3.festival.delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day3_festival",
+        "items": {
+          "moss_green": 2,
+          "sugar_yam": 2,
+          "firefly_cap": 2
+        },
+        "target_object_id": "tavern",
+        "accepted_flag": "day3.festival.accepted"
+      },
+      "rewards": {
+        "money": 60,
+        "text": "60G"
+      },
+      "deadline": {
+        "day": 3,
+        "phase": "night",
+        "boundary": "after"
+      }
+    },
+    {
+      "id": "day2.casino.debt",
+      "type": "commission",
+      "title": "赌场债务：第三天十杯H01",
+      "description": "赌场债务：第三天十杯H01",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day2.casino.debt.active"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day2.casino.debt.active"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day2.casino.debt.paid"
+      },
+      "objectives": [
+        {
+          "id": "deliver",
+          "text": "赌场债务：第三天十杯H01",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.casino.debt.paid"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day3_casino_debt",
+        "items": {
+          "classic_boba_milk_tea": 10
+        },
+        "target_object_id": "casino"
+      },
+      "rewards": {
+        "money": 0,
+        "text": "0G"
+      },
+      "deadline": {
+        "day": 3,
+        "phase": "night",
+        "boundary": "after"
+      },
+      "allow_cancel": true
+    },
+    {
+      "id": "day2.guard.special",
+      "type": "commission",
+      "title": "招待醉酒守卫 · 0G",
+      "description": "招待醉酒守卫 · 0G",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day1.s05.drunken_paid"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day2.s05.guard_delivery_open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day2.s05.special_drink_delivered"
+      },
+      "objectives": [
+        {
+          "id": "deliver",
+          "text": "招待醉酒守卫 · 0G",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s05.special_drink_delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day2_guard_special",
+        "product_id": "day2_guard_milk_tea",
+        "target_object_id": "drunken_guard"
+      },
+      "rewards": {
+        "money": 0,
+        "text": "0G"
+      }
+    }
+  ]
+}

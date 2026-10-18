@@ -4,7 +4,7 @@ extends RefCounted
 
 const DEFAULT_PATH := "res://src/resources/persistence/checkpoints.json"
 const KEYS := ["id", "scene", "entrance", "stage", "day", "phase", "after_event", "before_event", "required_flags", "recovery"]
-const SCENES := ["res://src/core/main.tscn", "res://src/core/settlement.tscn"]
+const SCENES := ["res://src/core/main.tscn", "res://src/core/settlement.tscn", "res://src/core/tavern.tscn", "res://src/core/casino.tscn"]
 var last_error := ""
 var _entries: Array[Dictionary] = []
 

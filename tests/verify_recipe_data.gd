@@ -64,6 +64,8 @@ func _test_catalog() -> void:
 func _test_uses() -> void:
 	var inventory := WarehouseInventory.new()
 	var notifications: Array[Dictionary] = []
+	inventory.try_consume({"ice": inventory.get_stock("ice")})
+	inventory.try_consume({ITEM: inventory.get_stock(ITEM)})
 	inventory.add_ingredient(ITEM, 2)
 	inventory.changed.connect(func() -> void: notifications.append(inventory.to_dict()))
 	_check(inventory.try_spend_uses({ITEM: 2}), "Repeated additive consumes two individual uses")
@@ -82,6 +84,7 @@ func _test_uses() -> void:
 	_check(inventory.try_spend_uses({ITEM: 5}, {"pearl_milk_tea": 1}) and inventory.get_stock(ITEM) == 1 and inventory.get_uses(ITEM) == 3 and inventory.get_stock("pearl_milk_tea") == 1, "Cross-portion spending and output are visible in one commit")
 	_check(inventory.try_spend_uses({ITEM: 3}) and inventory.get_stock(ITEM) == 0 and inventory.to_dict().ingredients[ITEM].used == 0, "Exact exhaustion removes the portion and clears opened state")
 	_check(inventory.is_discovered(ITEM), "Exhausted ingredients remain discovered")
+	inventory.try_consume({ITEM: inventory.get_stock(ITEM)})
 	inventory.add_ingredient(ITEM, 2)
 	inventory.try_spend_uses({ITEM: 2})
 	inventory.add_ingredient(ITEM, 1)
@@ -109,6 +112,7 @@ func _old_inventory(snapshot: Dictionary) -> Dictionary:
 
 func _test_inventory_restore() -> void:
 	var inventory := WarehouseInventory.new()
+	inventory.try_consume({ITEM: inventory.get_stock(ITEM)})
 	inventory.add_ingredient(ITEM, 2)
 	var legacy := _old_inventory(inventory.to_dict())
 	var original := legacy.duplicate(true)
@@ -139,6 +143,7 @@ func _test_wallet() -> void:
 	menu.products = {"mint": {"item_id": ITEM, "price": 0}}
 	var wallet := WalletTransactions.new(menu)
 	var inventory := wallet.get_inventory()
+	inventory.try_consume({ITEM: inventory.get_stock(ITEM)})
 	_check(wallet.purchase("mint", 2, "uses.purchase").ok, "Wallet can purchase new five-use portions")
 	inventory.try_spend_uses({ITEM: 2})
 	_check(wallet.purchase("mint", 1, "uses.restock").ok and inventory.get_uses(ITEM) == 13, "Wallet restocking preserves partial uses")
@@ -156,6 +161,7 @@ func _test_session_restore() -> void:
 	var state: Node = load("res://src/core/game_state.gd").new()
 	state.select_business_profile("day1")
 	var inventory: WarehouseInventory = state.get_warehouse_inventory()
+	inventory.try_consume({ITEM: inventory.get_stock(ITEM)})
 	inventory.add_ingredient(ITEM, 2)
 	inventory.try_spend_uses({ITEM: 2})
 	state.set_flag("test.uses", true)
@@ -184,11 +190,12 @@ func _test_session_restore() -> void:
 	legacy.business.inventory.ingredients.erase("strange_coin")
 	legacy.economy.inventory.ingredients.erase("strange_coin")
 	_check(state.restore_state(legacy) == OK and state.get_business_profile() == "tutorial" and inventory.get_uses(ITEM) == 10 and inventory.get_stock("strange_coin") == 0, "Older v2 sessions migrate missing coins and portion uses together")
-	_check(state.start_new_game() == OK and inventory.get_uses(ITEM) == 0 and inventory.get_uses("black_tea") == 12, "New game resets partial uses and legacy stock")
+	_check(state.start_new_game() == OK and inventory.get_uses(ITEM) == 25 and inventory.get_uses("black_tea") == 12, "New game resets partial uses and legacy stock")
 	state.free()
 
 func _test_ui() -> void:
 	var inventory := WarehouseInventory.new()
+	inventory.try_consume({ITEM: inventory.get_stock(ITEM)})
 	inventory.add_ingredient(ITEM, 2)
 	inventory.try_spend_uses({ITEM: 2})
 	var panel := WarehousePanel.new()

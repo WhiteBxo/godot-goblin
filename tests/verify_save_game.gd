@@ -84,7 +84,7 @@ func _run() -> void:
 	check(game.get_story_director().is_busy(), "Opening starts after initial checkpoint is committed")
 	await _human_checkpoint(game)
 	check(game.get_task_delivery().accept_order("day1_human") == OK, "Accept formal customer order")
-	check(game.get_tea_production().make_drink(["black_tea", "creamer", "pearl", "syrup"], "day1_human").ok, "Produce a real inventory item")
+	check(game.get_tea_production().make_drink(["creamer_milk_tea_base", "brown_sugar_boba", "ice"], "day1_human").ok, "Produce a real inventory item")
 	var crafted := await _wait_saved()
 	check(not crafted.is_empty() and crafted.checkpoint_id == "day1.wait_human.shop", "Bridge gameplay wait is an autosave boundary")
 	var before := FileAccess.get_file_as_bytes(_directory.path_join("autosave.dat"))
@@ -116,7 +116,7 @@ func _run() -> void:
 	game = await _wait_ready()
 	check(_state.to_dict() == expected, "Continue replaces the unsafe live session with the disk checkpoint")
 	check(game.get_player().movement_enabled and not game.get_story_director().is_busy(), "Recovery releases input at the gameplay boundary")
-	check(game.get_tea_production().get_completed_count() == 1 and game.get_warehouse_inventory().get_stock("pearl_milk_tea") == 1, "Crafted progress and product both survive")
+	check(game.get_tea_production().get_completed_count() == 1 and game.get_warehouse_inventory().get_stock("classic_boba_milk_tea") == 1, "Crafted progress and product both survive")
 	await _test_travel()
 	await _test_bad_continue()
 	# Distinct processes must recreate all state, not reuse Autoload memory.
@@ -136,23 +136,32 @@ func _ui_pause(game: MainGame, enabled: bool) -> void:
 
 func _test_travel() -> void:
 	var snapshot: Dictionary = _state.to_dict()
-	snapshot.story_stage = "day1.investigate_coins"
-	snapshot.completed_events = ["day1.opening", "day1.first_goblin", "day1.group_arrival", "day1.ending"]
+	snapshot.story_stage = "day1.s03"
+	snapshot.completed_events = ["day1.opening", "day1.first_goblin", "day1.group_arrival", "day1.ending", "day1.s03.coin_inspect"]
 	snapshot.flags["day1.stages_01_02_completed"] = true
 	check(_state.restore_state(snapshot) == OK, "Restore the published exploration handoff")
 	await frames(16)
 	await _wait_saved()
 	var game := current_scene as MainGame
 	var exit: SceneExit = game.get_active_level().get_scene_exits()[0]
-	check(game.get_scene_travel().request_exit(exit) == OK, "Use actual shop-to-settlement navigation")
+	var error := game.get_scene_travel().request_exit(exit)
+	check(error == OK, "Use actual shop-to-settlement navigation")
+	if error != OK:
+		return
 	await scene_changed
 	game = current_scene as MainGame
 	for index in range(100):
 		await process_frame
 		if not game.get_scene_travel().is_busy():
 			break
-	var saved := await _wait_saved("day1.investigate.settlement")
-	check(saved.checkpoint_id == "day1.investigate.settlement", "Arrival saves the destination checkpoint")
+	for index in range(1200):
+		if _state.is_event_completed("day1.s03.street_gone"):
+			break
+		if game.get_dialogue_manager().is_active():
+			game.get_dialogue_manager().advance()
+		await process_frame
+	var saved := await _wait_saved("day1.s03.explore.settlement")
+	check(saved.get("checkpoint_id") == "day1.s03.explore.settlement", "Arrival saves the destination checkpoint")
 	check(GameEntry.return_to_title(self) == OK, "Leave settlement for title")
 	await scene_changed
 	await frames()
@@ -207,7 +216,7 @@ func _worker(mode: String) -> void:
 		var game := await _wait_ready()
 		await _human_checkpoint(game)
 		check(game.get_task_delivery().accept_order("day1_human") == OK, "Worker accepts order")
-		check(game.get_tea_production().make_drink(["black_tea", "creamer", "pearl", "syrup"], "day1_human").ok, "Worker crafts product")
+		check(game.get_tea_production().make_drink(["creamer_milk_tea_base", "brown_sugar_boba", "ice"], "day1_human").ok, "Worker crafts product")
 		_state.set_variable("save_test.numeric", [12, 12.0])
 		var saved := await _wait_saved()
 		_write_expected(saved.game_state)

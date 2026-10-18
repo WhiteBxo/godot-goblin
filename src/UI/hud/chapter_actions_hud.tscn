@@ -1,0 +1,23 @@
+[gd_scene format=3]
+[ext_resource type="Script" path="res://src/UI/hud/chapter_actions_hud.gd" id="script"]
+[ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="theme"]
+[node name="ChapterActionsHUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("theme")
+script = ExtResource("script")
+[node name="Content" type="VBoxContainer" parent="."]
+offset_left = 20.0
+offset_top = 150.0
+mouse_filter = 2
+[node name="Notice" type="Label" parent="Content"]
+layout_mode = 2
+mouse_filter = 2
+[node name="Buttons" type="VBoxContainer" parent="Content"]
+layout_mode = 2
+mouse_filter = 2

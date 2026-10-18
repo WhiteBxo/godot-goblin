@@ -121,7 +121,9 @@ func _project(task: Dictionary) -> Dictionary:
 	var delivery: Dictionary = {}
 	if revealed and task.has("delivery"):
 		delivery = {"target_object_id": task.delivery.target_object_id}
-		if task.delivery.has("items"):
+		if task.delivery.has("uses"):
+			delivery.uses = task.delivery.uses.duplicate(true)
+		elif task.delivery.has("items"):
 			delivery.items = task.delivery.items.duplicate(true)
 		elif task.delivery.has("drink"):
 			delivery.drink = task.delivery.drink.duplicate(true)

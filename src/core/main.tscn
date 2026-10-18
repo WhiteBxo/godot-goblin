@@ -66,6 +66,67 @@ collision_layer = 0
 actor_id = &"goblin_c"
 display_name = "哥布林丙"
 
+
+[node name="Day2Festival0" parent="World/EntityRoot" instance=ExtResource("npc_common")]
+visible = false
+collision_layer = 0
+actor_id = &"day2_festival_0"
+display_name = "哥布林顾客甲"
+
+[node name="Day2Festival1" parent="World/EntityRoot" instance=ExtResource("npc_common")]
+visible = false
+collision_layer = 0
+actor_id = &"day2_festival_1"
+display_name = "哥布林顾客乙"
+
+[node name="Day2Elder0" parent="World/EntityRoot" instance=ExtResource("npc_common")]
+visible = false
+collision_layer = 0
+actor_id = &"day2_elder_0"
+display_name = "哥布林顾客甲"
+
+[node name="Day2Elder1" parent="World/EntityRoot" instance=ExtResource("npc_common")]
+visible = false
+collision_layer = 0
+actor_id = &"day2_elder_1"
+display_name = "哥布林顾客乙"
+
+[node name="Day2Emissary0" parent="World/EntityRoot" instance=ExtResource("npc_common")]
+visible = false
+collision_layer = 0
+actor_id = &"day2_emissary_0"
+display_name = "哥布林顾客"
+
+[node name="Day2Rumor0" parent="World/EntityRoot" instance=ExtResource("npc_common")]
+visible = false
+collision_layer = 0
+actor_id = &"day2_rumor_0"
+display_name = "哥布林顾客甲"
+
+[node name="Day2Rumor1" parent="World/EntityRoot" instance=ExtResource("npc_common")]
+visible = false
+collision_layer = 0
+actor_id = &"day2_rumor_1"
+display_name = "哥布林顾客乙"
+
+[node name="Day2OrdinaryA" parent="World/EntityRoot" instance=ExtResource("npc_common")]
+visible = false
+collision_layer = 0
+actor_id = &"day2_ordinary_a"
+display_name = "普通散客 A"
+
+[node name="Day2OrdinaryB" parent="World/EntityRoot" instance=ExtResource("npc_common")]
+visible = false
+collision_layer = 0
+actor_id = &"day2_ordinary_b"
+display_name = "普通散客 B"
+
+[node name="Day2OrdinaryC" parent="World/EntityRoot" instance=ExtResource("npc_common")]
+visible = false
+collision_layer = 0
+actor_id = &"day2_ordinary_c"
+display_name = "普通散客 C"
+
 [node name="EffectRoot" type="Node2D" parent="World" unique_id=466167947]
 
 [node name="HudLayer" type="CanvasLayer" parent="." unique_id=1632522303]

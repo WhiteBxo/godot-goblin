@@ -315,8 +315,9 @@ func _run() -> void:
 
 func _check_real_host() -> void:
 	_state.start_new_game()
+	_state.select_business_profile("day1")
 	_state.set_flag("day1.s04.commission_accepted")
-	_state.set_story_stage("day1.s05")
+	_state.set_story_stage("day1.s05.ready")
 	DayPhase.enter_night(_state)
 	var host: MainGame = load("res://src/core/settlement.tscn").instantiate()
 	root.add_child(host)
@@ -324,22 +325,21 @@ func _check_real_host() -> void:
 	await _frames()
 	var service := host.get_stealth_service()
 	_check(service.get_inventory() == _state.get_warehouse_inventory(), "Formal host injects the sole shared inventory")
-	_check(service.status == Day1StealthService.Status.PENDING and service.begin_attempt() == ERR_UNCONFIGURED, "Formal host rejects missing torch, roles and unconfirmed escape design")
-	_check(host.get_actor_director().get_actor(&"guard") != null and host.get_actor_director().get_actor(&"drunken_guard") == null, "Formal guard actor and drunken marker are not conflated")
-	var issues := service.get_configuration_issues()
-	for role: String in Day1GuardResponse.Role.keys():
-		_check("缺少独立守卫职责：%s（P09）" % role in issues, "Formal host reports the missing role: " + role)
-	_check("未绑定真实投掷物品：火把（P09）" in issues and "没有已确认的可燃目标（P09）" in issues, "Formal host rejects decorative torches and scenery as gameplay bindings")
-	_check("检查点尚未确认（P09）" in issues and "正式撤离区域尚未绑定（P08/P09）" in issues and "撤离任务条件及混乱要求尚未确认（P08）" in issues, "Formal host reports checkpoint, escape volume and rule confirmation gaps")
+	_check(service.get_configuration_issues().is_empty(), "Published route has actual guards, checkpoint and escape area")
+	var setup := service.get_setup()
+	_check(setup.wallet_coins and setup.flammable_targets.is_empty(), "Published route spends wallet coins and requires no arson")
+	var actors := {}
+	var roles := {}
+	for guard: Day1GuardResponse in setup.guards:
+		actors[guard.actor.actor_id] = true
+		roles[guard.role] = true
+	_check(actors.size() == 4 and roles.size() == 4, "Four independently registered guards cover four roles")
+	_check(service.status == Day1StealthService.Status.RUNNING, "Formal host starts the whole-attempt checkpoint")
 	var before: Dictionary = _state.to_dict()
-	var event := InputEventAction.new()
-	event.action = &"player_throw"
-	event.pressed = true
-	Input.parse_input_event(event)
+	service.select_throwable(&"coin")
+	_check(service.request_throw(host.get_player().global_position + Vector2(80, 0)) == OK, "Coin input reaches the actual animation release")
 	await _frames(30)
-	_check(_state.to_dict() == before and not _state.get_flag("day1.s05.escape_completed"), "Real InputMap throw in a pending host cannot consume or fake progress")
-	event.pressed = false
-	Input.parse_input_event(event)
+	_check(_state.to_dict() == before and not _state.get_flag("day1.s05.escape_completed"), "Rejected throw cannot spend or fabricate escape")
 	host.get_ui_manager().set_paused(true)
 	_check(not (host.get_player() as PlayerController).movement_enabled, "Real host still coordinates pause lock")
 	host.get_ui_manager().set_paused(false)
@@ -349,7 +349,7 @@ func _check_real_host() -> void:
 		await RenderingServer.frame_post_draw
 		var hud := host.get_node("HudLayer/Day1StealthHUD") as Control
 		_check(hud.get_global_rect().encloses(hud.get_node("Panel").get_global_rect()), "Stealth HUD fits the formal host viewport")
-		_check(root.get_texture().get_image().save_png("/tmp/day1_stealth_pending.png") == OK, "Graphical formal-host capture saved")
+		_check(root.get_texture().get_image().save_png("/tmp/day1_stealth_published.png") == OK, "Graphical formal-host capture saved")
 	current_scene = null
 	host.queue_free()
 	await _frames()

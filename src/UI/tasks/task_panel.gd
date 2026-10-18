@@ -178,7 +178,12 @@ func _show_task(task: Dictionary) -> void:
 		lines.append("目标已达成，等待后续剧情。")
 	if not task.delivery.is_empty():
 		lines.append("\n交付对象：" + String(_target_names.get(task.delivery.target_object_id, "交付对象待确认")))
-		if task.delivery.has("items"):
+		if task.delivery.has("uses"):
+			var uses := PackedStringArray()
+			for id: String in task.delivery.uses:
+				uses.append("%s × %s 次" % [_product_names.get(id, "物资待确认"), _number(task.delivery.uses[id])])
+			lines.append("使用物资：" + "、".join(uses))
+		elif task.delivery.has("items"):
 			var materials := PackedStringArray()
 			for id: String in task.delivery.items:
 				materials.append("%s × %s" % [_product_names.get(id, "物资待确认"), _number(task.delivery.items[id])])

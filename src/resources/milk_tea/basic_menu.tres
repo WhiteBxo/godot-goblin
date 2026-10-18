@@ -914,6 +914,7 @@ throw_kind = ""
 [sub_resource type="Resource" id="Product_day1_blood_milk_tea"]
 script = ExtResource("ingredient")
 id = "day1_blood_milk_tea"
+economy_scope = "quest"
 display_name = "格里芬之血特调"
 icon = ExtResource("icon_custom_drink")
 origin = "human"
@@ -922,21 +923,41 @@ category = "product"
 [sub_resource type="Resource" id="Item_elder_document"]
 script = ExtResource("ingredient")
 id = "day1_elder_document"
+icon = ExtResource("icon_custom_drink")
 display_name = "关于黄金乡的记录"
 category = "story_item"
 economy_scope = "quest"
 description = "从长老居所带走的残破文书。"
 
+[sub_resource type="Resource" id="Product_day2_guard"]
+script = ExtResource("ingredient")
+id = "day2_guard_milk_tea"
+display_name = "守卫招待特调"
+icon = ExtResource("icon_custom_drink")
+origin = "otherworld"
+category = "product"
+economy_scope = "quest"
+
 [resource]
 script = ExtResource("1")
-ingredients = Array[ExtResource("ingredient")]([SubResource("Ingredient_black_tea"), SubResource("Ingredient_green_tea"), SubResource("Ingredient_creamer"), SubResource("Ingredient_pearl"), SubResource("Ingredient_coconut"), SubResource("Ingredient_syrup"), SubResource("Ingredient_insomnia"), SubResource("Product_pearl"), SubResource("Product_coconut"), SubResource("Product_plain"), SubResource("Item_coin"), SubResource("Ingredient_creamer_milk_tea_base"), SubResource("Ingredient_industrial_green_tea"), SubResource("Ingredient_mint_syrup"), SubResource("Ingredient_instant_coffee_concentrate"), SubResource("Ingredient_brown_sugar_boba"), SubResource("Ingredient_mint_choc_crisp"), SubResource("Ingredient_ice"), SubResource("Ingredient_cocoa_powder"), SubResource("Ingredient_apple_jam"), SubResource("Ingredient_strawberry_jam"), SubResource("Product_classic_boba"), SubResource("Product_mint_choc"), SubResource("Product_coffee_cocoa"), SubResource("Product_apple_green"), SubResource("Product_strawberry_green"), SubResource("Product_iced_mint_latte"), SubResource("Ingredient_moss_green"), SubResource("Ingredient_sugar_yam"), SubResource("Ingredient_firefly_cap"), SubResource("Ingredient_goblin_firebrew"), SubResource("Ingredient_griffin_amber_wine"), SubResource("Ingredient_red_mottled_wood"), SubResource("Ingredient_honey_amber_crystal"), SubResource("Ingredient_phantom_gold_mushroom"), SubResource("Ingredient_rainbow_cube"), SubResource("Ingredient_scorch_tongue_pepper"), SubResource("Ingredient_sour_moss_ale"), SubResource("Ingredient_brute_lava_firebrew"), SubResource("Ingredient_griffin_sacred_wine"), SubResource("Ingredient_day1_griffin_blood"), SubResource("Product_day1_blood_milk_tea")])
+ingredients = Array[ExtResource("ingredient")]([SubResource("Ingredient_black_tea"), SubResource("Ingredient_green_tea"), SubResource("Ingredient_creamer"), SubResource("Ingredient_pearl"), SubResource("Ingredient_coconut"), SubResource("Ingredient_syrup"), SubResource("Ingredient_insomnia"), SubResource("Product_pearl"), SubResource("Product_coconut"), SubResource("Product_plain"), SubResource("Item_coin"), SubResource("Ingredient_creamer_milk_tea_base"), SubResource("Ingredient_industrial_green_tea"), SubResource("Ingredient_mint_syrup"), SubResource("Ingredient_instant_coffee_concentrate"), SubResource("Ingredient_brown_sugar_boba"), SubResource("Ingredient_mint_choc_crisp"), SubResource("Ingredient_ice"), SubResource("Ingredient_cocoa_powder"), SubResource("Ingredient_apple_jam"), SubResource("Ingredient_strawberry_jam"), SubResource("Product_classic_boba"), SubResource("Product_mint_choc"), SubResource("Product_coffee_cocoa"), SubResource("Product_apple_green"), SubResource("Product_strawberry_green"), SubResource("Product_iced_mint_latte"), SubResource("Ingredient_moss_green"), SubResource("Ingredient_sugar_yam"), SubResource("Ingredient_firefly_cap"), SubResource("Ingredient_goblin_firebrew"), SubResource("Ingredient_griffin_amber_wine"), SubResource("Ingredient_red_mottled_wood"), SubResource("Ingredient_honey_amber_crystal"), SubResource("Ingredient_phantom_gold_mushroom"), SubResource("Ingredient_rainbow_cube"), SubResource("Ingredient_scorch_tongue_pepper"), SubResource("Ingredient_sour_moss_ale"), SubResource("Ingredient_brute_lava_firebrew"), SubResource("Ingredient_griffin_sacred_wine"), SubResource("Ingredient_day1_griffin_blood"), SubResource("Product_day1_blood_milk_tea"), SubResource("Item_elder_document"), SubResource("Product_day2_guard")])
 initial_stock = {
 "black_tea": 12,
 "coconut": 8,
 "creamer": 12,
 "green_tea": 12,
 "pearl": 8,
-"syrup": 10
+"syrup": 10,
+"creamer_milk_tea_base": 5,
+"industrial_green_tea": 5,
+"mint_syrup": 5,
+"instant_coffee_concentrate": 5,
+"brown_sugar_boba": 5,
+"mint_choc_crisp": 5,
+"ice": 5,
+"cocoa_powder": 5,
+"apple_jam": 5,
+"strawberry_jam": 5
 }
 initial_discovery = {
 "black_tea": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"],
@@ -945,6 +966,99 @@ initial_discovery = {
 "green_tea": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"],
 "pearl": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"],
 "syrup": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"]
+}
+products = {
+"supply_creamer_milk_tea_base": {
+"item_id": "creamer_milk_tea_base",
+"price": 0
+},
+"supply_industrial_green_tea": {
+"item_id": "industrial_green_tea",
+"price": 0
+},
+"supply_mint_syrup": {
+"item_id": "mint_syrup",
+"price": 0
+},
+"supply_instant_coffee_concentrate": {
+"item_id": "instant_coffee_concentrate",
+"price": 0
+},
+"supply_brown_sugar_boba": {
+"item_id": "brown_sugar_boba",
+"price": 0
+},
+"supply_mint_choc_crisp": {
+"item_id": "mint_choc_crisp",
+"price": 0
+},
+"supply_ice": {
+"item_id": "ice",
+"price": 0
+},
+"supply_cocoa_powder": {
+"item_id": "cocoa_powder",
+"price": 0
+},
+"supply_apple_jam": {
+"item_id": "apple_jam",
+"price": 0
+},
+"supply_strawberry_jam": {
+"item_id": "strawberry_jam",
+"price": 0
+},
+"market_insomnia_mushroom": {
+"item_id": "insomnia_mushroom",
+"price": 50
+},
+"market_moss_green": {
+"item_id": "moss_green",
+"price": 10
+},
+"market_sugar_yam": {
+"item_id": "sugar_yam",
+"price": 10
+},
+"market_firefly_cap": {
+"item_id": "firefly_cap",
+"price": 50
+},
+"market_goblin_firebrew": {
+"item_id": "goblin_firebrew",
+"price": 20
+},
+"market_griffin_amber_wine": {
+"item_id": "griffin_amber_wine",
+"price": 100
+},
+"market_red_mottled_wood": {
+"item_id": "red_mottled_wood",
+"price": 20
+},
+"market_honey_amber_crystal": {
+"item_id": "honey_amber_crystal",
+"price": 20
+},
+"market_phantom_gold_mushroom": {
+"item_id": "phantom_gold_mushroom",
+"price": 100
+},
+"market_rainbow_cube": {
+"item_id": "rainbow_cube",
+"price": 100
+},
+"market_scorch_tongue_pepper": {
+"item_id": "scorch_tongue_pepper",
+"price": 50
+},
+"day2_amber_wine": {
+"item_id": "griffin_amber_wine",
+"price": 60,
+"discounted_price": 48,
+"discount_flag": "day2.s03.discount",
+"stock": 1
+}
 }
 orders = Array[Dictionary]([{
 "id": "order_001",

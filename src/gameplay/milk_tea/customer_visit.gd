@@ -100,7 +100,7 @@ func _sync() -> void:
 	var group := _scheduler.get_group(_group_id)
 	if group.is_empty():
 		return
-	var status: String = group.status
+	var status: String = "dormant" if _scheduler.get_progress().closed and group.kind == "ordinary" else group.status
 	if status == _status:
 		return
 	_cancel()
@@ -147,6 +147,9 @@ func _run(status: String, live: bool, token: int) -> void:
 		if status == "leaving" and not await _perform(_director.actor_hide(id), token):
 			return
 	if token != _generation:
+		return
+	if _scheduler.get_progress().closed and _scheduler.get_group(_group_id).kind == "ordinary":
+		_schedule_sync()
 		return
 	_route_pending = false
 	var error := OK

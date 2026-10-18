@@ -424,7 +424,7 @@ func _test_formal_five() -> void:
 		var recipe := state.get_tea_production().get_recipe_by_product(order.product_id)
 		check(state.get_tea_production().craft(recipe.materials).ok, "Legacy recipe still crafts: " + id)
 		check(delivery.try_submit(id, order.target_object_id).ok, "Legacy five-order settlement preserved: " + id)
-	check(delivery.get_completed_count() == 5 and state.get_transactions().get_balance() == 10 and inventory.get_stock("strange_coin") == 4 and state.get_flag("day1.group_settled"), "Five formal orders retain original money, coins and batch fact")
+	check(delivery.get_completed_count() == 5 and state.get_transactions().get_balance() == 15 and inventory.get_stock("strange_coin") == 0 and state.get_flag("day1.group_settled"), "Five formal H01 orders settle 15G and preserve the batch fact without duplicate coins")
 	delivery.free()
 	journal.free()
 	state.free()

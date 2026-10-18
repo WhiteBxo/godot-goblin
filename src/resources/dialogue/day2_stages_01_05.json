@@ -1,4 +1,2230 @@
 {
   "version": 1,
-  "dialogues": {}
+  "dialogues": {
+    "day2.s01.fat_goblin_wakes": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角",
+          "text": "喂，你醒醒。你还记得昨天发生什么了吗？",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "胖哥布林",
+          "text": "昨天……奶茶……头……晕……",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角",
+          "text": "对，你昨天喝完就倒下了，差点把我吓死。你现在感觉怎么样？",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "胖哥布林",
+          "text": "可是……格里芬之血……",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "胖哥布林",
+          "text": "能洗清罪孽……得到庇护……不能浪费……",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "主角",
+          "text": "你还惦记着这个呢？！昨天你喝完都快没命了！",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "胖哥布林",
+          "text": "可是……不喝的话……万一……",
+          "next": "line_8"
+        },
+        "line_8": {
+          "speaker": "胖哥布林",
+          "text": "……昨天，真的……好难受……",
+          "next": "line_9"
+        },
+        "line_9": {
+          "speaker": "胖哥布林",
+          "text": "可是……长老说……",
+          "next": "line_10"
+        },
+        "line_10": {
+          "speaker": "主角·内心",
+          "text": "都这样了，还在拿长老的话说服自己吗……",
+          "next": ""
+        }
+      }
+    },
+    "day2.s01.wants_more": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "胖哥布林",
+          "text": "还要……",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角",
+          "text": "什么还要？",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "胖哥布林",
+          "text": "那个……红红的……再来一杯……",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角",
+          "text": "你疯了？昨天你喝完都快没命了，还想喝？！",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "胖哥布林",
+          "text": "可是……格里芬的恩赐……不能浪费……",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "主角",
+          "text": "恩赐？你都吐成那样了！你自己没感觉吗？！",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "胖哥布林",
+          "text": "长老说……喝了……就能得到庇护……",
+          "next": "line_8"
+        },
+        "line_8": {
+          "speaker": "胖哥布林",
+          "text": "……可是，昨天……好难受……",
+          "next": "line_9"
+        },
+        "line_9": {
+          "speaker": "胖哥布林",
+          "text": "愿……格里芬垂顾我……",
+          "next": "line_10"
+        },
+        "line_10": {
+          "speaker": "主角",
+          "text": "垂顾个鬼！你先把自己顾好吧！",
+          "next": "line_11"
+        },
+        "line_11": {
+          "speaker": "主角·内心",
+          "text": "这家伙明明已经被喝得这么惨了，居然还惦记着再来一杯。",
+          "next": "line_12"
+        },
+        "line_12": {
+          "speaker": "主角·内心",
+          "text": "而且，他好像真的觉得，不喝这个就会出事……",
+          "next": ""
+        }
+      }
+    },
+    "day2.s01.stop_selling_blood": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角·内心",
+          "text": "不管这东西到底是什么，在弄清楚它的效果之前，我绝对不能再拿它做奶茶了。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "什么洗清罪孽、免于审判……喝完都快把命搭进去了，还能叫保命神器？",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角·内心",
+          "text": "不过，这些哥布林好像真的相信这一套。那个长老，到底都跟他们说了些什么？",
+          "next": ""
+        }
+      }
+    },
+    "day2.s01.remember_guard": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角·内心",
+          "text": "对了，还有那个守卫……",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "他昨晚看见我了。万一他酒醒以后想起来，跑去跟别人告状怎么办？",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角",
+          "text": "喂，你知道昨晚那个守卫让我找的材料去哪儿弄吗？格里芬琥珀酒和幻金菇。",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "胖哥布林",
+          "text": "你……慢……点……说……",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "主角",
+          "text": "……行，我慢点说。",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "主角",
+          "text": "格里芬琥珀酒。还有，幻金菇。这两样东西，去哪儿找？",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "胖哥布林",
+          "text": "琥珀酒……酒馆……幻金菇……赌场……",
+          "next": "line_8"
+        },
+        "line_8": {
+          "speaker": "主角",
+          "text": "……酒馆和赌场？",
+          "next": "line_9"
+        },
+        "line_9": {
+          "speaker": "系统",
+          "text": "《异世界见闻录》已更新",
+          "next": ""
+        }
+      }
+    },
+    "day2.s01.mushroom_commission": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角",
+          "text": "喂，你要不要吃点什么？你现在虚得跟快散架了一样。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "胖哥布林",
+          "text": "有一种……能让人清醒一点的食材……",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角",
+          "text": "哦？那你要不要来点？",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "胖哥布林",
+          "text": "你这里……有吗？",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "主角",
+          "text": "没有啊！我这儿哪来的你们洞里的特产？",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "胖哥布林",
+          "text": "那个叫……醒神菇……不太好买……而且很贵……",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "主角",
+          "text": "贵？那就更没办法了。我昨天好不容易挣了点钱，还差点全搭在那个醉酒守卫身上了！",
+          "next": ""
+        }
+      }
+    },
+    "day2.s01.mushroom_commission_after_funds": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "胖哥布林",
+          "text": "我给你钱……你帮我买……",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角",
+          "text": "这几个？真的够吗？",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "胖哥布林",
+          "text": "不想……为了这点眩晕……花太多钱……买不到就算了……",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角",
+          "text": "不是！那还是身体更重要吧？！你都晕成这样了，还在乎这几个钱？！",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "胖哥布林",
+          "text": "不……你不知道……对我们哥布林来说……金币才是最重要的……",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "主角",
+          "text": "对我来说金币也很重要啊！但你都快倒下了，还有能力赚钱？！",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "胖哥布林",
+          "text": "不……你不懂……格里芬……",
+          "next": "line_8"
+        },
+        "line_8": {
+          "speaker": "主角·内心",
+          "text": "……不是，你刚才不是说不想花太多钱吗？！",
+          "next": "line_9"
+        },
+        "line_9": {
+          "speaker": "胖哥布林",
+          "text": "也许……你说得对……身体……还是重要一点……",
+          "next": "line_10"
+        },
+        "line_10": {
+          "speaker": "胖哥布林",
+          "text": "醒神菇……30G以上的……不要买……",
+          "next": "line_11"
+        },
+        "line_11": {
+          "speaker": "主角",
+          "text": "啊？",
+          "next": "line_12"
+        },
+        "line_12": {
+          "speaker": "胖哥布林",
+          "text": "雇一个哥布林……5G……应该够了……",
+          "next": "line_13"
+        },
+        "line_13": {
+          "speaker": "系统",
+          "text": "【任务更新】帮胖哥布林购买醒神菇",
+          "next": "line_14"
+        },
+        "line_14": {
+          "speaker": "主角·内心",
+          "text": "啊不是，你晕成这样还能算钱啊？！",
+          "next": "line_15"
+        },
+        "line_15": {
+          "speaker": "主角",
+          "text": "行行行，我知道了。我要开业了，一会儿我从顾客里面找找，看能不能找个人帮你带回来。",
+          "next": "line_16"
+        },
+        "line_16": {
+          "speaker": "胖哥布林",
+          "text": "我的金币……没了……",
+          "next": "line_17"
+        },
+        "line_17": {
+          "speaker": "胖哥布林",
+          "text": "愿格里芬……垂顾我的金币……",
+          "next": "line_18"
+        },
+        "line_18": {
+          "speaker": "主角·内心",
+          "text": "……这家伙到底是信格里芬，还是信金币啊？",
+          "next": "line_19"
+        },
+        "line_19": {
+          "speaker": "主角·内心",
+          "text": "算了，先开店。待会儿看看有没有哥布林愿意接这个活吧。",
+          "next": ""
+        }
+      }
+    },
+    "day2.s02.business_open": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "系统",
+          "text": "【系统提示：白天营业开始。】",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "系统",
+          "text": "【玩法提示：玩家可接待顾客、制作奶茶、收取金币。营业期间将触发固定剧情对话及特殊委托。】",
+          "next": ""
+        }
+      }
+    },
+    "day2.s02.festival_talk": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "哥布林顾客甲",
+          "text": "再过几天就是格里芬七日祭了，最近可得省着点花金币。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "哥布林顾客乙",
+          "text": "是啊，祭典都已经开始准备了。今年听说还是长老亲自主持仪式。",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "哥布林顾客甲",
+          "text": "那可是大事。祭典上要用的东西可不少，最近大家都忙着准备呢。",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "哥布林顾客乙",
+          "text": "准备得再多也没用，最后能不能得到格里芬的恩赐，还不是得看长老怎么安排。",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "哥布林顾客甲",
+          "text": "嘘！这种话可不能乱说。长老可是最了解格里芬意志的人。",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "哥布林顾客乙",
+          "text": "我又没说什么。不过，要是能在祭典上得到格里芬之血，今年就算没白忙活了。",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "哥布林顾客甲",
+          "text": "尤其是格里芬之血。平时哪有那么容易喝到？只有祭典这种时候，才有机会得到赏赐。",
+          "next": "line_9"
+        },
+        "line_9": {
+          "speaker": "系统",
+          "text": "【《异世界见闻录》更新】",
+          "next": ""
+        }
+      }
+    },
+    "day2.s02.festival_talk_after": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "哥布林顾客甲",
+          "text": "谢了！愿格里芬垂顾你！",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角",
+          "text": "……谢谢惠顾。",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角·内心",
+          "text": "等等，这可是长老亲自分配的东西。要是他发现东西被偷了……",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角·内心",
+          "text": "要不找机会放回去？可万一他已经发现了，我这不是自投罗网吗？",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "主角·内心",
+          "text": "不过，这么稀有的东西，说不定能卖个大价钱……我还欠着一屁股债呢。",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "主角·内心",
+          "text": "……先留着吧。等弄清楚它值多少钱、长老有没有发现，再决定怎么办。",
+          "next": ""
+        }
+      }
+    },
+    "day2.s02.elder_authority": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "哥布林顾客甲",
+          "text": "这次祭典可不能迟到。长老会亲自主持仪式。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "哥布林顾客乙",
+          "text": "那当然了。整个洞窟里，还有谁比长老更了解格里芬的意志？",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "哥布林顾客甲",
+          "text": "听说只要好好参加仪式，就能得到格里芬的庇护。长老一直在替我们争取恩赐呢。",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "哥布林顾客乙",
+          "text": "所以平时还是小心点，别惹得格里芬不悦。",
+          "next": ""
+        }
+      }
+    },
+    "day2.s02.elder_authority_after": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "哥布林顾客甲",
+          "text": "愿格里芬垂顾你！",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角",
+          "text": "……也祝你顺利。",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角·内心",
+          "text": "看来那个长老在这里的地位还真不一般。",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角·内心",
+          "text": "他们好像都觉得，长老说的话就代表格里芬的意思。要是有人不认同他，恐怕也不太好过吧……",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "系统",
+          "text": "【《异世界见闻录》更新】",
+          "next": ""
+        }
+      }
+    },
+    "day2.s02.emissary_rumor": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "哥布林顾客",
+          "text": "老板，你这里的东西可真稀奇啊。难道你也是格里芬新派来的使者？",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "……又来了。",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角·内心",
+          "text": "昨天那个守卫喝得醉醺醺的，把我当成格里芬使者也就算了。怎么连普通顾客也这么想？",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "哥布林顾客",
+          "text": "果然！之前那些带来稀奇货物的商人，不也是格里芬派来的使者吗？",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "主角·内心",
+          "text": "原来不只是那个守卫……他们好像真的都这么认为。",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "主角·内心",
+          "text": "等等，胖哥布林昨天也说过，旅行商人带来的稀奇货物是格里芬的赏赐。",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "主角·内心",
+          "text": "这地方的人，到底为什么会把这些事情全归到格里芬头上？",
+          "next": ""
+        }
+      }
+    },
+    "day2.s02.emissary_rumor_after": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "哥布林顾客",
+          "text": "愿格里芬垂顾你！",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角",
+          "text": "……谢谢惠顾！",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角·内心",
+          "text": "算了，反正他也没打算追问。",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角·内心",
+          "text": "既然他们认定我是格里芬的使者，至少暂时别急着否认。万一解释起来反而惹出什么麻烦呢？",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "系统",
+          "text": "【《异世界见闻录》更新】",
+          "next": ""
+        }
+      }
+    },
+    "day2.s02.tavern_casino_talk": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "哥布林顾客甲",
+          "text": "听说酒馆老板最近又弄来了一批稀罕货？那家伙的门路是真广，什么消息都能打听到。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "哥布林顾客乙",
+          "text": "他做生意倒是圆滑。赌场老板可就不一样了，那家伙眼里除了金币，根本没有别的东西。",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "哥布林顾客甲",
+          "text": "可不是嘛！听说上个月有个家伙欠了他钱，想偷偷溜走，结果被赌场卫队拖进后巷，硬生生打断了一条腿。",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "哥布林顾客乙",
+          "text": "啧，真是个亡命徒。长老到底什么时候才肯收拾他？",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "哥布林顾客甲",
+          "text": "嘘！你小声点！",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "哥布林顾客乙",
+          "text": "哼！愿伟大的格里芬惩戒这家伙！",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "哥布林顾客乙",
+          "text": "可格里芬好像只会惩戒那些没钱上贡的家伙……",
+          "next": "line_8"
+        },
+        "line_8": {
+          "speaker": "哥布林顾客甲",
+          "text": "你忘了格里芬使者还在这儿吗？别乱说有的没的！",
+          "next": "line_9"
+        },
+        "line_9": {
+          "speaker": "哥布林顾客甲",
+          "text": "……总之，出去再说！",
+          "next": ""
+        }
+      }
+    },
+    "day2.s02.tavern_casino_talk_after": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角·内心",
+          "text": "酒馆老板消息灵通，赌场老板嗜钱如命，还养着一帮敢打断别人腿的赌场卫队……",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "连抱怨赌场老板，都得顾忌格里芬使者在不在场。",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角·内心",
+          "text": "说起来，他们好像真觉得我能替那只什么格里芬传话似的……",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角·内心",
+          "text": "算了，还是先想办法弄到守卫要的材料吧。希望这次只是买东西，别把我也卷进什么麻烦里。",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "系统",
+          "text": "【《异世界见闻录》更新】",
+          "next": ""
+        }
+      }
+    },
+    "day2.s02.find_errand_runner": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角·内心",
+          "text": "好了，胖哥布林那边交代的事情还没办完。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "醒神菇最多30G，跑腿费5G……接下来得找个愿意帮忙跑腿的哥布林了。",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角·内心",
+          "text": "总之，先问问看吧。",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "系统",
+          "text": "【系统提示：委托进行中——购买醒神菇】",
+          "next": ""
+        }
+      }
+    },
+    "day2.s03.amber_wine": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "酒馆老板",
+          "text": "哎呀，这位客人看着面生啊。您就是格里芬派来的使者吧？",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "……又来了。",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角·内心",
+          "text": "算了，之前已经有好几个哥布林这么认为了。现在否认，反而可能惹出麻烦。",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角",
+          "text": "咳……没错，我就是格里芬的使者。",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "酒馆老板",
+          "text": "哎呀！失敬失敬！不知道使者大驾光临，是想要些什么？",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "主角",
+          "text": "我听说你们这里有一种特别的酒……叫格里芬琥珀酒？",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "酒馆老板",
+          "text": "您来得可真是时候！我们这儿就剩最后一瓶了！",
+          "next": "line_8"
+        },
+        "line_8": {
+          "speaker": "主角·内心",
+          "text": "……我操？！",
+          "next": "line_9"
+        },
+        "line_9": {
+          "speaker": "主角·内心",
+          "text": "这么贵？！这瓶酒是金币做的吗？！",
+          "next": "line_10"
+        },
+        "line_10": {
+          "speaker": "主角·内心",
+          "text": "买倒是买得起……但这一下去，我今天赚的金币基本就没了啊！",
+          "next": "line_11"
+        },
+        "line_11": {
+          "speaker": "主角",
+          "text": "那个……我再看看别的酒吧。",
+          "next": "line_12"
+        },
+        "line_12": {
+          "speaker": "酒馆老板",
+          "text": "哎呀，您别急嘛。眼看着就要到格里芬七日祭了。您可是格里芬派来的使者，是我们的贵客啊。",
+          "next": "line_13"
+        },
+        "line_13": {
+          "speaker": "酒馆老板",
+          "text": "这样吧，这瓶格里芬琥珀酒，我给您打八折！",
+          "next": "line_14"
+        },
+        "line_14": {
+          "speaker": "主角",
+          "text": "……啊？打八折？！",
+          "next": "line_15"
+        },
+        "line_15": {
+          "speaker": "主角·内心",
+          "text": "这地方的哥布林不是一个比一个爱钱吗？怎么还有主动给人打折的？",
+          "next": "line_16"
+        },
+        "line_16": {
+          "speaker": "主角·内心",
+          "text": "这家伙……到底是单纯会做生意，还是另有所图？",
+          "next": ""
+        }
+      }
+    },
+    "day2.s03.amber_wine_after_purchase": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "系统",
+          "text": "【系统提示：获得格里芬琥珀酒。】",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "系统",
+          "text": "【任务更新：收集守卫指定奶茶的材料】",
+          "next": ""
+        }
+      }
+    },
+    "day2.s03.tavern_commission": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "酒馆老板",
+          "text": "对了，使者先生，我还有件事想请您帮忙。",
+          "next": ""
+        }
+      }
+    },
+    "day2.s03.tavern_commission_gathered": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "酒馆老板",
+          "text": "哎呀，您还自己采集过食材？让我看看……成色不错嘛！看来您对这些东西还挺在行。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "只是路上顺手捡的而已……",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "酒馆老板",
+          "text": "既然如此，这件事交给您，我也就放心了。",
+          "next": ""
+        }
+      }
+    },
+    "day2.s03.tavern_commission_not_gathered": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "酒馆老板",
+          "text": "伟大的格里芬使者啊，我们有件小事，想请您帮帮忙。",
+          "next": ""
+        }
+      }
+    },
+    "day2.s03.tavern_commission_common": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "酒馆老板",
+          "text": "明天就是七日祭的准备日了。我们酒馆也得提前准备一批食材。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "酒馆老板",
+          "text": "您看，能不能帮我们采集一些？",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角",
+          "text": "这些食材……都得我自己去找？",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "酒馆老板",
+          "text": "是啊。这些东西比较特别，白天可不好找，得趁夜间才能采集到。",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "主角",
+          "text": "夜间才能采集？",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "酒馆老板",
+          "text": "没错。它们白天基本不会露面，所以得麻烦您晚上跑一趟了。",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "主角·内心",
+          "text": "还好，只是采集食材……应该不是什么特别麻烦的事情。",
+          "next": "line_8"
+        },
+        "line_8": {
+          "speaker": "酒馆老板",
+          "text": "不过您放心，这件事不会耽误您白天开店的。",
+          "next": "line_9"
+        },
+        "line_9": {
+          "speaker": "主角",
+          "text": "当然不会！",
+          "next": "line_10"
+        },
+        "line_10": {
+          "speaker": "主角·内心",
+          "text": "……这老板倒是挺周到的，连我白天还要开店都替我考虑到了。",
+          "next": "line_11"
+        },
+        "line_11": {
+          "speaker": "酒馆老板",
+          "text": "当然啦，只要您帮我办好这件事，报酬绝对不会让您失望。",
+          "next": "line_12"
+        },
+        "line_12": {
+          "speaker": "主角",
+          "text": "报酬？",
+          "next": "line_13"
+        },
+        "line_13": {
+          "speaker": "酒馆老板",
+          "text": "嘿嘿……到时候，我会给您一大笔金币。",
+          "next": "line_14"
+        },
+        "line_14": {
+          "speaker": "主角·内心",
+          "text": "一大笔金币？！",
+          "next": "line_15"
+        },
+        "line_15": {
+          "speaker": "主角·内心",
+          "text": "……等等，先别高兴得太早。这家伙看着就不像会做亏本买卖的人。",
+          "next": "line_16"
+        },
+        "line_16": {
+          "speaker": "酒馆老板",
+          "text": "而且啊……我还会告诉您一个秘密。",
+          "next": "line_17"
+        },
+        "line_17": {
+          "speaker": "主角",
+          "text": "秘密？",
+          "next": "line_18"
+        },
+        "line_18": {
+          "speaker": "酒馆老板",
+          "text": "是关于怎么赚到更多金币的秘密哦……",
+          "next": "line_19"
+        },
+        "line_19": {
+          "speaker": "酒馆老板",
+          "text": "桀桀……",
+          "next": "line_20"
+        },
+        "line_20": {
+          "speaker": "系统",
+          "text": "【系统提示：新委托已接受】",
+          "next": "line_21"
+        },
+        "line_21": {
+          "speaker": "主角·内心",
+          "text": "……这家伙怎么笑得这么奇怪？",
+          "next": "line_22"
+        },
+        "line_22": {
+          "speaker": "主角·内心",
+          "text": "说话油腻腻的，听着就让人觉得不太靠谱。",
+          "next": "line_23"
+        },
+        "line_23": {
+          "speaker": "主角·内心",
+          "text": "不过……能赚到更多金币的秘密？",
+          "next": "line_24"
+        },
+        "line_24": {
+          "speaker": "主角·内心",
+          "text": "……可恶，居然有点让人在意。",
+          "next": ""
+        }
+      }
+    },
+    "day2.s03.griffin_token": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "酒馆老板",
+          "text": "对了，使者先生。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角",
+          "text": "嗯？还有什么事？",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "酒馆老板",
+          "text": "下次出门，可别忘了带上格里芬令牌哦〜",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角·内心",
+          "text": "……？！",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "主角·内心",
+          "text": "我操？什么东西？！",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "主角·内心",
+          "text": "格里芬令牌？啥令牌啊？！根本没人跟我说过啊？！",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "主角·内心",
+          "text": "等等……他不会已经发现我是假冒的了吧？！",
+          "next": "line_8"
+        },
+        "line_8": {
+          "speaker": "主角",
+          "text": "咳……这次出门的时候，我把令牌忘在奶茶店里了，一时没找到。",
+          "next": "line_9"
+        },
+        "line_9": {
+          "speaker": "酒馆老板",
+          "text": "哎呀，使者先生，这可不能丢哦。",
+          "next": "line_10"
+        },
+        "line_10": {
+          "speaker": "酒馆老板",
+          "text": "要是不尽快找到的话……以后怎么证明您是格里芬的使者呢？",
+          "next": "line_11"
+        },
+        "line_11": {
+          "speaker": "系统",
+          "text": "【系统提示】《异世界见闻录》新增条目。",
+          "next": ""
+        }
+      }
+    },
+    "day2.s03.to_casino": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角·内心",
+          "text": "……格里芬令牌。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "酒馆老板为什么会突然提起这个？他到底只是随口提醒，还是在试探我？",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角·内心",
+          "text": "如果格里芬的使者真的都有令牌，那其他哥布林迟早也会问起这件事。",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角·内心",
+          "text": "到时候我拿不出来，不就彻底穿帮了吗？！",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "主角·内心",
+          "text": "可恶……我明明只是来买个酒、找点食材的，怎么又惹上这种麻烦了？！",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "主角·内心",
+          "text": "……算了。现在想这些也没用。",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "主角·内心",
+          "text": "先把守卫要的东西弄到手，再想办法打听一下这个令牌到底是什么吧。",
+          "next": ""
+        }
+      }
+    },
+    "day2.s04.afraid_to_enter": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角·内心",
+          "text": "……这就是赌场？",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "门口这些家伙，怎么看都不像普通客人啊！",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角·内心",
+          "text": "等等，那些该不会是赌场老板的私兵吧？！",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角·内心",
+          "text": "我操……这不就是黑道吗？！",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "主角·内心",
+          "text": "我只是一个二十一世纪的普通屌丝啊！",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "主角·内心",
+          "text": "没钱、没背景、没本事，还莫名其妙跑到异世界来了……",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "主角·内心",
+          "text": "能不能放过我啊！我真的不想跟这种人打交道！",
+          "next": "line_8"
+        },
+        "line_8": {
+          "speaker": "主角·内心",
+          "text": "……不行。都已经花了那么多钱买酒了，现在要是拿不到另一种食材，今天不就白忙活了吗？",
+          "next": "line_9"
+        },
+        "line_9": {
+          "speaker": "主角·内心",
+          "text": "可恶……死就死吧！",
+          "next": ""
+        }
+      }
+    },
+    "day2.s04.casino_boss": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角·内心",
+          "text": "……救命。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "我现在跑还来得及吗？",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "赌场老板",
+          "text": "喂，外乡人。",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "赌场老板",
+          "text": "听说你是格里芬的使者？",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "主角·内心",
+          "text": "……啊？",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "主角·内心",
+          "text": "这个表情是什么意思？！他不会是发现我是假冒的了吧？！",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "主角",
+          "text": "是、是啊……",
+          "next": "line_8"
+        },
+        "line_8": {
+          "speaker": "主角·内心",
+          "text": "千万别发现我是冒牌货！！！！！！",
+          "next": "line_9"
+        },
+        "line_9": {
+          "speaker": "赌场老板",
+          "text": "那你来这里干什么？",
+          "next": "line_10"
+        },
+        "line_10": {
+          "speaker": "主角",
+          "text": "这、这个……",
+          "next": "line_11"
+        },
+        "line_11": {
+          "speaker": "主角",
+          "text": "我是开奶茶店的。听说您这里收藏了不少珍贵的食材……",
+          "next": "line_12"
+        },
+        "line_12": {
+          "speaker": "主角",
+          "text": "我就想着，如果能用这些食材做奶茶，说不定能做出什么绝世珍品来！",
+          "next": "line_13"
+        },
+        "line_13": {
+          "speaker": "主角·内心",
+          "text": "对对对！我就是来做生意的！我可是正经奶茶店老板！",
+          "next": "line_14"
+        },
+        "line_14": {
+          "speaker": "赌场老板",
+          "text": "哈。",
+          "next": "line_15"
+        },
+        "line_15": {
+          "speaker": "赌场老板",
+          "text": "想要我的收藏？",
+          "next": "line_16"
+        },
+        "line_16": {
+          "speaker": "赌场老板",
+          "text": "我这里的东西，可不是拿金币就能买走的。",
+          "next": "line_17"
+        },
+        "line_17": {
+          "speaker": "赌场老板",
+          "text": "想拿东西？只靠赌。",
+          "next": "line_18"
+        },
+        "line_18": {
+          "speaker": "赌场老板",
+          "text": "你有什么可抵押的？",
+          "next": ""
+        }
+      }
+    },
+    "day2.s04.stake": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角·内心",
+          "text": "……抵押？",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "我有什么？",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角·内心",
+          "text": "买完那瓶破酒以后，我已经没剩几个金币了啊！",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角·内心",
+          "text": "这要我拿什么赌？拿奶茶杯吗？！",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "主角",
+          "text": "那、那个……只能赌钱吗？",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "赌场老板",
+          "text": "哈哈哈哈哈哈哈！",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "赌场老板",
+          "text": "外乡人，你还真有意思。",
+          "next": "line_8"
+        },
+        "line_8": {
+          "speaker": "赌场老板",
+          "text": "我还没吃过人腿呢。",
+          "next": "line_9"
+        },
+        "line_9": {
+          "speaker": "赌场老板",
+          "text": "要不，把你这条腿抵押给我？",
+          "next": "line_10"
+        },
+        "line_10": {
+          "speaker": "赌场老板",
+          "text": "哈哈哈哈哈哈哈！",
+          "next": "line_11"
+        },
+        "line_11": {
+          "speaker": "主角·内心",
+          "text": "……？？？",
+          "next": "line_12"
+        },
+        "line_12": {
+          "speaker": "主角·内心",
+          "text": "我操！！！！！！",
+          "next": "line_13"
+        },
+        "line_13": {
+          "speaker": "主角·内心",
+          "text": "他刚刚说什么？！人腿？！",
+          "next": "line_14"
+        },
+        "line_14": {
+          "speaker": "主角·内心",
+          "text": "这家伙是认真的吗？！这根本不是开玩笑的语气吧？！",
+          "next": "line_15"
+        },
+        "line_15": {
+          "speaker": "赌场老板",
+          "text": "呵呵。",
+          "next": "line_16"
+        },
+        "line_16": {
+          "speaker": "赌场老板",
+          "text": "格里芬的使者，也会吓得尿裤子吗？",
+          "next": "line_17"
+        },
+        "line_17": {
+          "speaker": "赌场老板",
+          "text": "真是个没用的东西。哈哈哈哈哈哈！",
+          "next": "line_18"
+        },
+        "line_18": {
+          "speaker": "主角·内心",
+          "text": "……什么？",
+          "next": "line_19"
+        },
+        "line_19": {
+          "speaker": "主角·内心",
+          "text": "他刚刚是在嘲笑格里芬的使者？",
+          "next": "line_20"
+        },
+        "line_20": {
+          "speaker": "主角·内心",
+          "text": "之前那些哥布林，一听见这个名字就恨不得跪下来……",
+          "next": "line_21"
+        },
+        "line_21": {
+          "speaker": "主角·内心",
+          "text": "怎么到了这家伙嘴里，就跟什么不值钱的东西一样？",
+          "next": "line_22"
+        },
+        "line_22": {
+          "speaker": "赌场老板",
+          "text": "行了，别摆出那副要死的表情。",
+          "next": "line_23"
+        },
+        "line_23": {
+          "speaker": "赌场老板",
+          "text": "我知道你一个子儿都拿不出来，外乡人。",
+          "next": "line_24"
+        },
+        "line_24": {
+          "speaker": "赌场老板",
+          "text": "不过，你说的那个奶茶……",
+          "next": "line_25"
+        },
+        "line_25": {
+          "speaker": "赌场老板",
+          "text": "我倒是很少喝。",
+          "next": "line_26"
+        },
+        "line_26": {
+          "speaker": "赌场老板",
+          "text": "这样吧。咱们赌一把。",
+          "next": "line_27"
+        },
+        "line_27": {
+          "speaker": "赌场老板",
+          "text": "你输了，明天给我送十杯奶茶过来。我会派人去取。",
+          "next": "line_28"
+        },
+        "line_28": {
+          "speaker": "主角",
+          "text": "十、十杯？！",
+          "next": "line_29"
+        },
+        "line_29": {
+          "speaker": "赌场老板",
+          "text": "怎么，不敢？",
+          "next": "line_30"
+        },
+        "line_30": {
+          "speaker": "赌场老板",
+          "text": "赢了，我收藏的那些奇异食材，你想拿多少就拿多少。",
+          "next": "line_31"
+        },
+        "line_31": {
+          "speaker": "赌场老板",
+          "text": "怎么样？这买卖不亏吧？",
+          "next": "line_32"
+        },
+        "line_32": {
+          "speaker": "主角·内心",
+          "text": "……等等。",
+          "next": "line_33"
+        },
+        "line_33": {
+          "speaker": "主角·内心",
+          "text": "不用拿金币，只要赌奶茶？",
+          "next": "line_34"
+        },
+        "line_34": {
+          "speaker": "主角·内心",
+          "text": "要是赢了，就能拿到那些稀有食材……",
+          "next": "line_35"
+        },
+        "line_35": {
+          "speaker": "主角·内心",
+          "text": "可是输了的话，明天就得给这家伙送十杯奶茶……",
+          "next": "line_36"
+        },
+        "line_36": {
+          "speaker": "主角·内心",
+          "text": "……不对！这家伙可是连人腿都敢拿来开玩笑的狠角色！",
+          "next": "line_37"
+        },
+        "line_37": {
+          "speaker": "主角·内心",
+          "text": "我要是拒绝，他不会真的把我腿打断吧？！",
+          "next": "line_38"
+        },
+        "line_38": {
+          "speaker": "主角",
+          "text": "……好。我跟你赌。",
+          "next": "line_39"
+        },
+        "line_39": {
+          "speaker": "赌场老板",
+          "text": "哈哈哈！这才像话！",
+          "next": "line_40"
+        },
+        "line_40": {
+          "speaker": "系统",
+          "text": "【系统提示：新任务已触发】",
+          "next": ""
+        }
+      }
+    },
+    "day2.s04.first_round": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "赌场老板",
+          "text": "规矩很简单。赢了拿东西，输了送奶茶。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "赌场老板",
+          "text": "开始吧。",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角·内心",
+          "text": "冷静，冷静……",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角·内心",
+          "text": "不就是赌一把吗？说不定我运气好呢？",
+          "next": ""
+        }
+      }
+    },
+    "day2.s04.first_round_after_loss": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角",
+          "text": "……啊？",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "等等。",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角·内心",
+          "text": "我输了？！",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角·内心",
+          "text": "不是吧？！",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "系统",
+          "text": "【任务更新：赌场赌局】",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "系统",
+          "text": "【系统提示：任务已更新——交付十杯奶茶】",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "赌场老板",
+          "text": "哈哈哈哈哈！就这点本事？",
+          "next": "line_8"
+        },
+        "line_8": {
+          "speaker": "赌场老板",
+          "text": "明天，十杯奶茶。别忘了。",
+          "next": "line_9"
+        },
+        "line_9": {
+          "speaker": "主角·内心",
+          "text": "……完了。",
+          "next": "line_10"
+        },
+        "line_10": {
+          "speaker": "主角·内心",
+          "text": "我就知道！我就不该进来！",
+          "next": "line_11"
+        },
+        "line_11": {
+          "speaker": "主角·内心",
+          "text": "这下不但没拿到食材，还倒欠这家伙十杯奶茶……",
+          "next": ""
+        }
+      }
+    },
+    "day2.s04.second_round": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "赌场老板",
+          "text": "喂，外乡人。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角",
+          "text": "……是？",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "赌场老板",
+          "text": "怎么？这就不敢赌了？",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角",
+          "text": "可、可是刚刚不是已经……",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "赌场老板",
+          "text": "谁说只能赌一局了？",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "赌场老板",
+          "text": "再来一把。",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "主角·内心",
+          "text": "……还来？！",
+          "next": "line_8"
+        },
+        "line_8": {
+          "speaker": "主角·内心",
+          "text": "这家伙到底想干什么啊？！",
+          "next": "line_9"
+        },
+        "line_9": {
+          "speaker": "主角·内心",
+          "text": "算了……都到这一步了。",
+          "next": "line_10"
+        },
+        "line_10": {
+          "speaker": "主角·内心",
+          "text": "要是再输，我明天就得累死累活做十杯奶茶。",
+          "next": "line_11"
+        },
+        "line_11": {
+          "speaker": "主角·内心",
+          "text": "……拜托了！这次一定要赢啊！",
+          "next": ""
+        }
+      }
+    },
+    "day2.s04.second_round_after_win": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角",
+          "text": "……赢、赢了？！",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "我赢了？！",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角·内心",
+          "text": "我真的赢了？！",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "赌场老板",
+          "text": "哈哈哈哈哈哈哈！",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "赌场老板",
+          "text": "有意思！真有意思！",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "赌场老板",
+          "text": "拿去。",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "主角",
+          "text": "这、这些全都给我？",
+          "next": "line_8"
+        },
+        "line_8": {
+          "speaker": "赌场老板",
+          "text": "不是说好了？你赢了，这些东西就归你。",
+          "next": ""
+        }
+      }
+    },
+    "day2.s04.second_round_after_reward": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角",
+          "text": "谢、谢谢……",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "赌场老板",
+          "text": "对了。",
+          "next": ""
+        }
+      }
+    },
+    "day2.s04.second_round_waiver": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "赌场老板",
+          "text": "那十杯奶茶，不用送了。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角",
+          "text": "……啊？",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "赌场老板",
+          "text": "哈哈哈哈哈！怎么，听不懂吗？我说，不用送了！",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角·内心",
+          "text": "……这家伙又想干什么？",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "赌场老板",
+          "text": "怎么说呢，我今天心情不错。就当是赏你的了。",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "主角·内心",
+          "text": "……明明是赌输了才要送的奶茶，怎么还成赏赐了？",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "赌场老板",
+          "text": "哎，对了。你不是开奶茶店的吗？",
+          "next": "line_8"
+        },
+        "line_8": {
+          "speaker": "主角",
+          "text": "……是。",
+          "next": "line_9"
+        },
+        "line_9": {
+          "speaker": "赌场老板",
+          "text": "那我这两天，说不定会去你店里逛逛。",
+          "next": "line_10"
+        },
+        "line_10": {
+          "speaker": "赌场老板",
+          "text": "到时候，可得好好招待我啊。",
+          "next": "line_11"
+        },
+        "line_11": {
+          "speaker": "主角",
+          "text": "好、好的……",
+          "next": "line_12"
+        },
+        "line_12": {
+          "speaker": "赌场老板",
+          "text": "哈哈哈哈哈！别这么紧张嘛！我又不会现在就吃了你！",
+          "next": "line_13"
+        },
+        "line_13": {
+          "speaker": "主角·内心",
+          "text": "……这话听起来根本一点都不让人放心啊！",
+          "next": "line_14"
+        },
+        "line_14": {
+          "speaker": "赌场老板",
+          "text": "行了，拿着东西滚吧。别在这儿碍眼！",
+          "next": "line_15"
+        },
+        "line_15": {
+          "speaker": "主角·内心",
+          "text": "……总算拿到幻金菇了。",
+          "next": "line_16"
+        },
+        "line_16": {
+          "speaker": "主角·内心",
+          "text": "可这家伙到底是什么意思？突然说不用送奶茶，又说要来店里……",
+          "next": "line_17"
+        },
+        "line_17": {
+          "speaker": "主角·内心",
+          "text": "……算了。先把眼前的事情处理完再说。",
+          "next": "line_18"
+        },
+        "line_18": {
+          "speaker": "系统",
+          "text": "【系统提示：获得新食材——幻金菇。】",
+          "next": "line_19"
+        },
+        "line_19": {
+          "speaker": "系统",
+          "text": "【任务更新：收集守卫指定奶茶的材料】",
+          "next": "line_20"
+        },
+        "line_20": {
+          "speaker": "系统",
+          "text": "【任务更新：赌场赌局】",
+          "next": ""
+        }
+      }
+    },
+    "day2.s04.leave_casino": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角·内心",
+          "text": "……好可怕。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "老板也可怕，这些私兵也可怕。",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角·内心",
+          "text": "我以后绝对不想再来第二次了……",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角·内心",
+          "text": "……不过，食材总算拿到了。",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "主角·内心",
+          "text": "先把守卫的奶茶做出来再说吧。",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "系统",
+          "text": "【系统提示：地点已解锁——赌场】",
+          "next": ""
+        }
+      }
+    },
+    "day2.s05.street_check": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角·内心",
+          "text": "……总算出来了。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "那家伙到底在想什么？上一秒还说要我的腿，下一秒又说不用送奶茶了。",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角·内心",
+          "text": "算了。反正东西拿到了，十杯奶茶也不用送。只要以后别再碰上他就行。",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角·内心",
+          "text": "这就是赌场老板收藏的稀有食材……还真让我拿到了。",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "主角·内心",
+          "text": "不过，现在没时间研究这些。醉鬼守卫要的东西还没做出来。",
+          "next": ""
+        }
+      }
+    },
+    "day2.s05.back_in_shop": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角",
+          "text": "喂，你没事吧？",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "胖哥布林",
+          "text": "唔……好多了……大概……",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "胖哥布林",
+          "text": "就是还有点晕……腿也没什么力气……",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角·内心",
+          "text": "看起来是比刚才好多了，至少能正常说话了。不过，连站都站不起来……这东西到底在他身上造成了什么影响？",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "主角",
+          "text": "你先在这里坐着，别乱动。今晚我还有事情要办，等我回来再说。",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "胖哥布林",
+          "text": "回来……？你还要去哪儿？",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "主角",
+          "text": "给那个守卫送奶茶。之前答应他的，材料总算弄齐了。",
+          "next": "line_8"
+        },
+        "line_8": {
+          "speaker": "主角·内心",
+          "text": "……等今晚回来，一定得好好问问这家伙。",
+          "next": "line_9"
+        },
+        "line_9": {
+          "speaker": "主角·内心",
+          "text": "他整天把长老和格里芬挂在嘴边，应该知道不少事情。特别是格里芬使者，到底是怎么回事？",
+          "next": "line_10"
+        },
+        "line_10": {
+          "speaker": "主角·内心",
+          "text": "不过，得等他能站起来再说。",
+          "next": "line_11"
+        },
+        "line_11": {
+          "speaker": "主角·内心",
+          "text": "先把眼前的事情处理完。等回来以后，再从胖哥布林嘴里问出点有用的东西。",
+          "next": ""
+        }
+      }
+    },
+    "day2.s05.make_special": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角·内心",
+          "text": "酒能放进奶茶里吗？还有这个蘑菇……算了，反正是那个守卫自己指定的。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "只要按照要求做出来，能交差就行。至于好不好喝……希望他别太挑剔。",
+          "next": ""
+        }
+      }
+    },
+    "day2.s05.make_special_after": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角",
+          "text": "……这玩意儿真的能喝吗？",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "不对，那次是格里芬之血让胖哥布林出了问题。应该……不至于每种奇怪的食材都有问题吧？",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角·内心",
+          "text": "而且这次是守卫自己点名要的。真出了问题，也不能全算我的吧？",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角·内心",
+          "text": "不行不行，别乱想。先把答应招待他的奶茶送过去再说。",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "系统",
+          "text": "【系统提示：特殊奶茶制作完成。】",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "系统",
+          "text": "【任务更新：制作并交付守卫指定的奶茶】",
+          "next": ""
+        }
+      }
+    },
+    "day2.s05.deliver_guard": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "守卫",
+          "text": "哦？你还真把东西弄来了？",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角",
+          "text": "你要的奶茶。我可是费了不少工夫才凑齐材料。",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "守卫",
+          "text": "哈哈！不错嘛。拿过来，让我看看。",
+          "next": ""
+        }
+      }
+    },
+    "day2.s05.deliver_guard_after_delivery": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "守卫",
+          "text": "格里芬琥珀酒，还有幻金菇……没错，就是这些。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "你倒是认得挺清楚。早知道材料这么难找，当初就该先问清楚再答应。",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "守卫",
+          "text": "唔……味道还挺特别。",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角",
+          "text": "所以，你满意了？",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "守卫",
+          "text": "还行，还行！没想到你这家伙真有点本事。",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "主角·内心",
+          "text": "太好了。至少没像胖哥布林那样当场倒下。",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "守卫",
+          "text": "行了，这次算你办得不错。",
+          "next": ""
+        }
+      }
+    },
+    "day2.s05.deliver_guard_after_reward": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角",
+          "text": "谢了。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "总算把答应的招待办妥了。虽然为了买酒、跑赌场折腾了半天，至少他对这杯奶茶还算满意。",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "守卫",
+          "text": "没别的事就走吧。下次要是还有这种稀奇玩意儿，记得再给我弄一杯！",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角",
+          "text": "……再说吧。",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "系统",
+          "text": "【任务完成：制作并交付守卫指定的奶茶】",
+          "next": ""
+        }
+      }
+    },
+    "day2.s05.useful_guard": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角·内心",
+          "text": "这家伙虽然整天醉醺醺的，倒也不是完全没用。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "上次我进长老的房间，就是靠他把我当成格里芬的使者，才糊弄过去的。而且，他似乎也不怎么认真盘查来往的人……",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角·内心",
+          "text": "要是能让他以后也帮我一点忙，说不定能省下不少麻烦。",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角·内心",
+          "text": "不行，现在还太早了。我们才见过两次面，我连他到底是什么来头都不知道。",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "主角·内心",
+          "text": "不过……可以先记着。以后要是有机会，倒是能试着拉拢一下。",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "主角·内心",
+          "text": "至少得先弄清楚，他到底是单纯的酒鬼，还是有别的本事。",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "系统",
+          "text": "【人物记录更新：醉酒守卫】",
+          "next": "line_8"
+        },
+        "line_8": {
+          "speaker": "系统",
+          "text": "【提示：部分人物关系与招募机会将在后续剧情中开放。】",
+          "next": ""
+        }
+      }
+    },
+    "day2.s05.unsolved": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角·内心",
+          "text": "本来只是想赚点钱，结果莫名其妙跑到这种地方，还要跟一群哥布林打交道。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "白天经营奶茶店，晚上还得跑出来找食材。照这样下去，我到底什么时候才能还清债务？",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角·内心",
+          "text": "……那东西还是先放着吧。",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角·内心",
+          "text": "胖哥布林喝下去之后的样子，我可不想再看一次。",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "主角·内心",
+          "text": "黄金乡……变量……",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "主角·内心",
+          "text": "到底是什么意思？还有，格里芬之血究竟是什么东西？",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "系统",
+          "text": "【第二天夜间行动结束】",
+          "next": "line_8"
+        },
+        "line_8": {
+          "speaker": "系统",
+          "text": "【新的一天即将开始】",
+          "next": ""
+        }
+      }
+    },
+    "day2.s01.remember_guard.chronicle_1": {
+      "start": "line_10",
+      "lines": {
+        "line_10": {
+          "speaker": "胖哥布林",
+          "text": "愿……格里芬……赐福……",
+          "next": "line_11"
+        },
+        "line_11": {
+          "speaker": "主角·内心",
+          "text": "……至少知道去哪儿找了。",
+          "next": "line_12"
+        },
+        "line_12": {
+          "speaker": "主角·内心",
+          "text": "酒馆和赌场啊……听起来就不是什么好打交道的地方。",
+          "next": "line_13"
+        },
+        "line_13": {
+          "speaker": "主角",
+          "text": "喂，那我问你啊，这两样东西要是买不到，能不能偷偷弄到手？",
+          "next": "line_14"
+        },
+        "line_14": {
+          "speaker": "胖哥布林",
+          "text": "偷……？",
+          "next": "line_15"
+        },
+        "line_15": {
+          "speaker": "主角",
+          "text": "对啊。比如趁老板不注意，拿了就跑……",
+          "next": "line_16"
+        },
+        "line_16": {
+          "speaker": "胖哥布林",
+          "text": "没……偷过……不知道……",
+          "next": "line_17"
+        },
+        "line_17": {
+          "speaker": "主角",
+          "text": "你这家伙，关键时候怎么什么都不知道啊！",
+          "next": "line_18"
+        },
+        "line_18": {
+          "speaker": "胖哥布林",
+          "text": "不过……赌场老板……有私兵……小心……",
+          "next": "line_19"
+        },
+        "line_19": {
+          "speaker": "系统",
+          "text": "《异世界见闻录》已更新。",
+          "next": ""
+        }
+      }
+    },
+    "day2.s01.remember_guard.chronicle_2": {
+      "start": "line_20",
+      "lines": {
+        "line_20": {
+          "speaker": "主角",
+          "text": "……啊？",
+          "next": "line_21"
+        },
+        "line_21": {
+          "speaker": "主角·内心",
+          "text": "私兵？！",
+          "next": "line_22"
+        },
+        "line_22": {
+          "speaker": "主角·内心",
+          "text": "不是，怎么还有私兵啊？！",
+          "next": "line_23"
+        },
+        "line_23": {
+          "speaker": "主角·内心",
+          "text": "这里不是有个长老管着吗？怎么连开赌场的都有自己的武装力量啊！",
+          "next": "line_24"
+        },
+        "line_24": {
+          "speaker": "主角·内心",
+          "text": "这到底是个什么地方……",
+          "next": "line_25"
+        },
+        "line_25": {
+          "speaker": "主角·内心",
+          "text": "昨天晚上我潜进长老的房间，差点被守卫抓住。今天要是再跑去赌场偷东西，万一被那些私兵逮到了……",
+          "next": "line_26"
+        },
+        "line_26": {
+          "speaker": "主角·内心",
+          "text": "妈呀，不会真的被打死吧？！",
+          "next": "line_27"
+        },
+        "line_27": {
+          "speaker": "主角·内心",
+          "text": "不行不行，还是先老老实实赚钱吧。能买到最好，实在买不到……到时候再说！",
+          "next": "line_28"
+        },
+        "line_28": {
+          "speaker": "主角·内心",
+          "text": "我可不想刚把奶茶店经营起来，就因为偷东西把自己搭进去。",
+          "next": "line_29"
+        },
+        "line_29": {
+          "speaker": "主角·内心",
+          "text": "说到底，都怪那个该死的醉酒守卫！自己想喝什么奇怪的奶茶，干嘛非得让我去找材料啊？他怎么不自己去找？！",
+          "next": "line_30"
+        },
+        "line_30": {
+          "speaker": "主角·内心",
+          "text": "还有那个胖哥布林也是……昨天把我忽悠得去长老房间偷东西，害得我差点被抓。现在倒好，问他点事情，他又什么都说不清楚！",
+          "next": "line_31"
+        },
+        "line_31": {
+          "speaker": "主角·内心",
+          "text": "一个个的，净知道给别人添麻烦……",
+          "next": "line_32"
+        },
+        "line_32": {
+          "speaker": "主角·内心",
+          "text": "啧，这帮哥布林看着不怎么样，心眼倒是不少。以后跟他们打交道，可得多留个心眼。",
+          "next": "line_33"
+        },
+        "line_33": {
+          "speaker": "主角·内心",
+          "text": "算了，白天先开店。晚上再去看看吧。",
+          "next": ""
+        }
+      }
+    },
+    "day2.s02.festival_talk.chronicle_1": {
+      "start": "line_10",
+      "lines": {
+        "line_10": {
+          "speaker": "主角·内心",
+          "text": "格里芬之血……胖哥布林昨天喝完，差点连命都没了。这东西到底是喝得太多才出问题，还是本身就有问题？",
+          "next": ""
+        }
+      }
+    },
+    "day2.s03.griffin_token.chronicle_1": {
+      "start": "line_12",
+      "lines": {
+        "line_12": {
+          "speaker": "主角",
+          "text": "那、那是自然！肯定还在奶茶店里！",
+          "next": "line_13"
+        },
+        "line_13": {
+          "speaker": "主角·内心",
+          "text": "完了完了完了！",
+          "next": "line_14"
+        },
+        "line_14": {
+          "speaker": "主角·内心",
+          "text": "这什么格里芬令牌，难道真是使者的身份证明？",
+          "next": "line_15"
+        },
+        "line_15": {
+          "speaker": "主角·内心",
+          "text": "可这玩意儿我上哪儿弄去啊？！",
+          "next": "line_16"
+        },
+        "line_16": {
+          "speaker": "主角·内心",
+          "text": "万一以后有人要检查，我不就当场露馅了吗？！",
+          "next": "line_17"
+        },
+        "line_17": {
+          "speaker": "主角·内心",
+          "text": "不行，先别慌。至少现在还没被拆穿……先把眼前的事情应付过去再说！",
+          "next": "line_18"
+        },
+        "line_18": {
+          "speaker": "酒馆老板",
+          "text": "那我就等着您的好消息了，使者先生。",
+          "next": "line_19"
+        },
+        "line_19": {
+          "speaker": "系统",
+          "text": "【系统提示：地点已解锁——酒馆】",
+          "next": "line_20"
+        },
+        "line_20": {
+          "speaker": "系统",
+          "text": "【任务更新：收集守卫指定奶茶的材料】",
+          "next": ""
+        }
+      }
+    }
+  }
 }

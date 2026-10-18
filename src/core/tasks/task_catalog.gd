@@ -151,7 +151,7 @@ func _validate(data: Variant, references: Dictionary) -> bool:
 			return _invalid(context + "/allow_cancel", "Expected bool; refunds belong to the business coordinator")
 		if task.has("delivery"):
 			var delivery: Variant = task.delivery
-			if not delivery is Dictionary or not _keys(delivery, ["order_id", "product_id", "items", "drink", "target_object_id", "accepted_flag"], context + "/delivery"):
+			if not delivery is Dictionary or not _keys(delivery, ["order_id", "product_id", "items", "uses", "drink", "target_object_id", "accepted_flag"], context + "/delivery"):
 				return _invalid(context + "/delivery", "Expected order_id, target_object_id and one requirement")
 			for field: String in ["order_id", "target_object_id"]:
 				if not _text(delivery.get(field)) or not delivery[field].is_valid_identifier():
@@ -159,16 +159,16 @@ func _validate(data: Variant, references: Dictionary) -> bool:
 			if delivery.has("accepted_flag") and not StoryLibrary.is_namespaced(delivery.accepted_flag):
 				return _invalid(context + "/delivery/accepted_flag", "Expected a namespaced flag")
 			# A delivery carries either one finished product or a material list.
-			var requirement_count := int(delivery.has("product_id")) + int(delivery.has("items")) + int(delivery.has("drink"))
+			var requirement_count := int(delivery.has("product_id")) + int(delivery.has("items")) + int(delivery.has("drink")) + int(delivery.has("uses"))
 			if requirement_count != 1:
-				return _invalid(context + "/delivery", "Expected exactly one of product_id, items or drink")
+				return _invalid(context + "/delivery", "Expected exactly one of product_id, items, uses or drink")
 			if delivery.has("product_id"):
 				if not _text(delivery.product_id) or not delivery.product_id.is_valid_identifier():
 					return _invalid(context + "/delivery/product_id", "Expected a stable object/item identifier")
 			elif delivery.has("drink"):
 				if not DrinkFormula.requirement_valid(delivery.drink):
 					return _invalid(context + "/delivery/drink", "Invalid formula, base, tags or minimum taste")
-			elif not _item_quantities(delivery.items, context + "/delivery/items"):
+			elif not _item_quantities(delivery.get("uses", delivery.get("items")), context + "/delivery/materials"):
 				return false
 			if orders.has(delivery.order_id):
 				return _invalid(context + "/delivery/order_id", "Duplicate order ID")

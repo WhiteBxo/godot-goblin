@@ -1,7 +1,7 @@
 {
 	"version": 1.0,
 	"format": "goblin_story_project",
-	"next_step_id": 77,
+	"next_step_id": 77.0,
 	"manifest": {
 		"version": 1.0,
 		"source": "res://docs/design/day_01_stages_01_02_draft.md",

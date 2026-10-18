@@ -4,7 +4,7 @@
     {
       "id": "day1.order_human",
       "type": "main",
-      "title": "珍珠奶茶 → 人类顾客",
+      "title": "H01经典珍珠奶茶 → 人类顾客",
       "description": "查看订单板接单，在制作台制作后交给指定顾客。",
       "reveal_when": {
         "type": "flag",
@@ -38,19 +38,19 @@
       ],
       "delivery": {
         "order_id": "day1_human",
-        "product_id": "pearl_milk_tea",
+        "product_id": "classic_boba_milk_tea",
         "target_object_id": "human_customer",
         "accepted_flag": "task.day1.human.active"
       },
       "rewards": {
-        "text": "营业收入 10",
-        "money": 10
+        "money": 3,
+        "text": "营业收入 3G"
       }
     },
     {
       "id": "day1.order_goblin",
       "type": "main",
-      "title": "椰果茉莉奶茶 → 哥布林顾客",
+      "title": "H01经典珍珠奶茶 → 哥布林顾客",
       "description": "查看订单板接单，在制作台制作后交给指定顾客。",
       "reveal_when": {
         "type": "flag",
@@ -84,21 +84,19 @@
       ],
       "delivery": {
         "order_id": "day1_goblin",
-        "product_id": "coconut_milk_tea",
+        "product_id": "classic_boba_milk_tea",
         "target_object_id": "goblin_customer",
         "accepted_flag": "task.day1.goblin.active"
       },
       "rewards": {
-        "text": "古怪金币 × 1",
-        "items": {
-          "strange_coin": 1
-        }
+        "money": 3,
+        "text": "营业收入 3G"
       }
     },
     {
       "id": "day1.order_group_a",
       "type": "main",
-      "title": "原味奶茶 → 哥布林甲",
+      "title": "H01经典珍珠奶茶 → 哥布林甲",
       "description": "查看订单板接单，在制作台制作后交给指定顾客。",
       "reveal_when": {
         "type": "flag",
@@ -132,21 +130,19 @@
       ],
       "delivery": {
         "order_id": "day1_group_a",
-        "product_id": "plain_milk_tea",
+        "product_id": "classic_boba_milk_tea",
         "target_object_id": "goblin_a",
         "accepted_flag": "task.day1.group_a.active"
       },
       "rewards": {
-        "text": "古怪金币 × 1",
-        "items": {
-          "strange_coin": 1
-        }
+        "money": 3,
+        "text": "营业收入 3G"
       }
     },
     {
       "id": "day1.order_group_b",
       "type": "main",
-      "title": "珍珠奶茶 → 哥布林乙",
+      "title": "H01经典珍珠奶茶 → 哥布林乙",
       "description": "查看订单板接单，在制作台制作后交给指定顾客。",
       "reveal_when": {
         "type": "flag",
@@ -180,21 +176,19 @@
       ],
       "delivery": {
         "order_id": "day1_group_b",
-        "product_id": "pearl_milk_tea",
+        "product_id": "classic_boba_milk_tea",
         "target_object_id": "goblin_b",
         "accepted_flag": "task.day1.group_b.active"
       },
       "rewards": {
-        "text": "古怪金币 × 1",
-        "items": {
-          "strange_coin": 1
-        }
+        "money": 3,
+        "text": "营业收入 3G"
       }
     },
     {
       "id": "day1.order_group_c",
       "type": "main",
-      "title": "椰果茉莉奶茶 → 哥布林丙",
+      "title": "H01经典珍珠奶茶 → 哥布林丙",
       "description": "查看订单板接单，在制作台制作后交给指定顾客。",
       "reveal_when": {
         "type": "flag",
@@ -228,15 +222,13 @@
       ],
       "delivery": {
         "order_id": "day1_group_c",
-        "product_id": "coconut_milk_tea",
+        "product_id": "classic_boba_milk_tea",
         "target_object_id": "goblin_c",
         "accepted_flag": "task.day1.group_c.active"
       },
       "rewards": {
-        "text": "古怪金币 × 1",
-        "items": {
-          "strange_coin": 1
-        }
+        "money": 3,
+        "text": "营业收入 3G"
       }
     },
     {
@@ -269,8 +261,11 @@
       "delivery": {
         "order_id": "day1_s06_blood_drink",
         "product_id": "day1_blood_milk_tea",
-        "target_object_id": "fat_goblin",
-        "accepted_flag": "day1.task.blood_drink.active"
+        "target_object_id": "fat_goblin"
+      },
+      "rewards": {
+        "money": 40,
+        "text": "委托报酬 40G"
       }
     }
   ]

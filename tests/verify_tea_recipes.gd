@@ -2,6 +2,7 @@ extends SceneTree
 ## Recipe catalog, free crafting service and the two-column crafting panel.
 
 var _failures: Array[String] = []
+const StateData := preload("res://src/core/game_state.gd")
 
 const BASIC_MENU := "res://src/resources/milk_tea/basic_menu.tres"
 const DAY1_MENU := "res://src/resources/milk_tea/day1_menu.tres"
@@ -9,7 +10,7 @@ const SHOP := "res://src/debug/story/legacy_shop.tscn"
 const PEARL: Array[String] = ["black_tea", "creamer", "pearl", "syrup"]
 const COCONUT: Array[String] = ["green_tea", "creamer", "coconut", "syrup"]
 const PLAIN: Array[String] = ["black_tea", "creamer", "syrup"]
-const BLOOD: Array[String] = ["day1_griffin_blood", "black_tea", "creamer", "syrup"]
+const BLOOD: Array[String] = ["creamer_milk_tea_base", "day1_griffin_blood"]
 const BLOOD_FLAG := "day1.s05.blood_acquired"
 
 ## Stands in for GameState: recipe availability only reads session flags.
@@ -68,12 +69,12 @@ func _check_menus() -> void:
 
 func _check_blood_unlock() -> void:
 	var menu: TeaMenu = load(DAY1_MENU)
-	var state := FlagState.new()
-	var inventory := WarehouseInventory.new(menu)
-	var production := TeaProduction.new()
-	production.configure(inventory, state)
+	var state := StateData.new(menu)
+	state.set_story_stage("day1.s05")
+	var inventory := state.get_warehouse_inventory()
+	var production := state.get_tea_production()
 	_check(production.get_recipe_errors().is_empty(), "Formal menu validates with the gated recipe")
-	_check(inventory.add_ingredient("day1_griffin_blood", 3), "Acquired blood enters the shared inventory")
+	_check(inventory.add_ingredient("day1_griffin_blood", 1) and inventory.try_spend_uses({"day1_griffin_blood": 2}), "Fixture carries the acquired three blood uses")
 	var book: TeaRecipeBook = menu.recipe_book
 	_check(book.get_recipes_for(state).size() == 3, "Locked recipe is filtered out in catalog order")
 	var preview := production.preview_craft(BLOOD)
@@ -84,11 +85,11 @@ func _check_blood_unlock() -> void:
 	_check(not result.ok and result.code == "locked", "Locked recipe refuses to craft")
 	_check(inventory.to_dict() == before, "Locked recipe keeps every stock entry unchanged")
 	_check(inventory.get_stock("day1_blood_milk_tea") == 0, "Locked recipe produces no cup")
-	state.flags[BLOOD_FLAG] = true
+	state.set_flag(BLOOD_FLAG)
 	_check(production.preview_craft(BLOOD).code == "locked", "Blood acquisition alone does not unlock S06 crafting")
-	state.flags["day1.s05.returned_shop"] = true
+	state.set_flag("day1.s05.returned_shop")
 	_check(production.preview_craft(BLOOD).code == "locked", "S05 remains locked even with blood and a return receipt")
-	state.story_stage = "day1.s06.wait_blood_drink"
+	state.set_story_stage("day1.s06.wait_craft")
 	var unlocked := book.get_recipes_for(state)
 	_check(unlocked.size() == 4, "Unlocked recipe joins the catalog")
 	_check(unlocked.size() == 4 and unlocked[3].id == "day1_blood_recipe", "Unlocked recipe keeps its catalog position")
@@ -98,16 +99,14 @@ func _check_blood_unlock() -> void:
 	result = production.craft(BLOOD)
 	_check(result.ok and result.code == "ok", "Unlocked recipe crafts")
 	_check(inventory.get_stock("day1_blood_milk_tea") == 1, "Blood drink enters the shared inventory")
-	_check(inventory.get_stock("day1_griffin_blood") == 2, "Blood is consumed once per cup")
-	_check(inventory.get_stock("black_tea") == 11 and inventory.get_stock("creamer") == 11 and inventory.get_stock("syrup") == 9, "Each supporting material is consumed once")
-	for _index in range(2):
-		_check(production.craft(BLOOD).ok, "Unlocked recipe crafts repeatedly")
-	_check(inventory.get_stock("day1_blood_milk_tea") == 3 and inventory.get_stock("day1_griffin_blood") == 0, "Repeated crafting keeps producing while blood lasts")
-	result = production.craft(BLOOD)
-	_check(result.code == "missing_materials" and int(result.missing.get("day1_griffin_blood", 0)) == 1, "Running out of blood reports the shortfall")
+	_check(inventory.get_uses("day1_griffin_blood") == 2, "Blood is consumed once per cup")
+	_check(inventory.get_uses("creamer_milk_tea_base") == 24, "Blood recipe spends one use of C01")
+	var carried := inventory.to_dict()
+	_check(not production.craft(BLOOD).ok and inventory.to_dict() == carried, "Quest recipe cannot produce another carried cup")
+	inventory.try_consume({"day1_blood_milk_tea": 1})
+	state.set_story_stage("day2.s01")
+	_check(production.preview_craft(BLOOD).code == "locked", "Leftover blood is unavailable after its one quest stage")
 	_check(production.get_completed_count() == 0, "Blood crafting never advances the order queue")
-	production.free()
-	inventory.free()
 	state.free()
 
 func _check_preview() -> void:
@@ -255,10 +254,10 @@ func _check_order_entry() -> void:
 
 func _check_locked_panel() -> void:
 	var menu: TeaMenu = load(DAY1_MENU)
-	var state := FlagState.new()
-	var inventory := WarehouseInventory.new(menu)
-	var production := TeaProduction.new()
-	production.configure(inventory, state)
+	var state := StateData.new(menu)
+	state.set_story_stage("day1.s05")
+	var inventory := state.get_warehouse_inventory()
+	var production := state.get_tea_production()
 	inventory.add_ingredient("day1_griffin_blood", 2)
 	var panel: CraftingPanel = load("res://src/UI/milk_tea/crafting_panel.tscn").instantiate()
 	root.add_child(panel)
@@ -266,18 +265,16 @@ func _check_locked_panel() -> void:
 	_check(not panel.select_recipe("day1_blood_milk_tea"), "Locked recipe cannot fill the tray")
 	_check(not _panel_has_row(panel, "day1_griffin_blood"), "Locked material never reaches the selectable list")
 	_check(not _panel_has_row(panel, "day1_blood_milk_tea"), "Locked product never reaches the owned list")
-	state.flags[BLOOD_FLAG] = true
+	state.set_flag(BLOOD_FLAG)
 	_check(production.preview_craft(BLOOD).code == "locked", "Blood acquisition alone does not unlock S06 crafting")
-	state.flags["day1.s05.returned_shop"] = true
+	state.set_flag("day1.s05.returned_shop")
 	_check(production.preview_craft(BLOOD).code == "locked", "S05 remains locked even with blood and a return receipt")
-	state.story_stage = "day1.s06.wait_blood_drink"
+	state.set_story_stage("day1.s06.wait_craft")
 	production.changed.emit()
 	_check(_panel_has_row(panel, "day1_griffin_blood"), "Unlocked material joins the selectable list")
 	_check(production.craft(BLOOD).ok, "Unlocked recipe crafts through the session service")
 	_check(_panel_has_row(panel, "day1_blood_milk_tea"), "Freshly crafted blood drink appears as an owned product")
 	panel.free()
-	production.free()
-	inventory.free()
 	state.free()
 	await process_frame
 

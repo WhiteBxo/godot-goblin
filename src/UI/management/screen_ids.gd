@@ -18,3 +18,5 @@ const TASK_HUD := &"task_hud"
 const STEALTH_HUD := &"stealth_hud"
 const MAP := &"map"
 const TAVERN_PURCHASE := &"tavern_purchase"
+
+const CHAPTER_ACTIONS := &"chapter_actions"

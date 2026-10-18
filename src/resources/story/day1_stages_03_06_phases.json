@@ -2,26 +2,48 @@
   "version": 2,
   "phases": [
     {
-      "id": "day1.s03.explore_ready",
-      "after_event": "day1.s03.coin_inspect",
-      "stage": "day1.s03",
+      "id": "day1.bridge.fat_goblin_order",
+      "after_event": "day1.s04.commission",
+      "stage": "day1.s04.wait_order",
       "completion": {
-        "flag": "day1.s03.exited_shop",
+        "flag": "day1.s04.order_delivered",
         "allow_existing": true
       },
-      "completion_flag": "day1.s03.explored_shop",
-      "next_event": "day1.s03.street_gone"
+      "completion_flag": "day1.bridge.fat_goblin_order.completed",
+      "next_event": "day1.s04.after_order"
     },
     {
-      "id": "day1.s03.limited_exploration",
-      "after_event": "day1.s03.street_gone",
-      "stage": "day1.s03.explore",
+      "id": "day1.bridge.map",
+      "after_event": "day1.s04.after_order",
+      "stage": "day1.s04.wait_map",
       "completion": {
-        "flag": "day1.s03.exploration_completed",
+        "flag": "day1.s04.map_closed",
         "allow_existing": true
       },
-      "completion_flag": "day1.bridge.s03_exploration.completed",
-      "next_event": "day1.s03.back_to_door"
+      "completion_flag": "day1.bridge.map.completed",
+      "next_event": "day1.s04.commission_choice"
+    },
+    {
+      "id": "day1.bridge.blood_craft",
+      "after_event": "day1.s06.pondering",
+      "stage": "day1.s06.wait_craft",
+      "completion": {
+        "flag": "day1.s06.blood_drink_made",
+        "allow_existing": true
+      },
+      "completion_flag": "day1.bridge.blood_craft.completed",
+      "next_event": "day1.s06.customer"
+    },
+    {
+      "id": "day1.bridge.blood_drink",
+      "after_event": "day1.s06.customer",
+      "stage": "day1.s06.wait_delivery",
+      "completion": {
+        "flag": "day1.s06.blood_drink_delivered",
+        "allow_existing": true
+      },
+      "completion_flag": "day1.bridge.blood_drink.completed",
+      "next_event": "day1.s06.reaction"
     }
   ]
 }

@@ -610,3 +610,21 @@ facing = 3
 [editable path="InteractionPoints/OrderBoard"]
 [editable path="InteractionPoints/Storage"]
 [editable path="InteractionPoints/TeaStation"]
+
+[node name="day1_rest" type="Marker2D" parent="StoryPositions"]
+position = Vector2(842, 600)
+
+[node name="HumanSupply" parent="InteractionPoints" instance=ExtResource("3_xdoh7")]
+position = Vector2(590, 440)
+interaction_id = &"human_supply"
+display_name = "人类原料补给 · 0G"
+description = "C01–C10各补充一整份，每份五次。"
+
+[node name="day2_ordinary_a" type="Marker2D" parent="StoryPositions"]
+position = Vector2(1000, 590)
+
+[node name="day2_ordinary_b" type="Marker2D" parent="StoryPositions"]
+position = Vector2(1080, 590)
+
+[node name="day2_ordinary_c" type="Marker2D" parent="StoryPositions"]
+position = Vector2(1160, 590)

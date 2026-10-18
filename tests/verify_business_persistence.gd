@@ -111,7 +111,7 @@ func _run() -> void:
 	await _frames()
 	check(_scheduler.get_group("goblin").status == "waiting", "Real receipt keeps story customer available for dialogue")
 	check(_scheduler.request_departure("goblin") == OK and _scheduler.confirm_departure("goblin") == OK, "Story explicitly confirms departure")
-	check(_state.get_transactions().get_balance() == 10 and _state.get_warehouse_inventory().get_stock("strange_coin") == 1, "Orders preserve real wallet and inventory rewards")
+	check(_state.get_transactions().get_balance() == 6 and _state.get_warehouse_inventory().get_stock("strange_coin") == 0, "Two H01 orders pay 6G into the single wallet")
 	check(_scheduler.request_close() == ERR_UNAVAILABLE and not DayPhase.is_night(_state), "All orders alone do not override explicit story gate")
 	_state.set_flag("business_test.close_allowed")
 	_test_restore_validation()
@@ -307,7 +307,7 @@ func _read_saved(expect: String) -> void:
 	check(_served.is_empty() and _completed.is_empty(), "Cold restore never replays business events")
 	if expect == "closed":
 		check(_scheduler.get_progress().closed and DayPhase.is_night(_state) and _state.get_task_result("business_test.deadline").get("status") == "expired", "Closed session and terminal result survive process restart")
-		check(_state.get_transactions().get_balance() == 10 and _state.get_warehouse_inventory().get_stock("strange_coin") == 1, "Cold restore retains rewards exactly once")
+		check(_state.get_transactions().get_balance() == 6 and _state.get_warehouse_inventory().get_stock("strange_coin") == 0, "Cold restore retains rewards exactly once")
 		check(_scheduler.request_close() == OK and not _delivery.try_submit("day1_human", "human_customer").ok, "Cold restore cannot pay or close twice")
 	else:
 		check(_scheduler.get_group("human").status == "waiting" and not _scheduler.get_progress().closed and not DayPhase.is_night(_state), "Waiting guest and daylight survive process restart")

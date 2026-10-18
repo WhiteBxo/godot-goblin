@@ -1,6 +1,6 @@
 # 奶茶配方数据层（第一期）
 
-> 2026-10-19 设计更新：[2.0 原料](../design/recipe_ingredients_revised.md)修正七个等级编号，[新经济规则](../design/milk_tea_economy_revised.md)引入 T1–T5 定价及独立战斗价格。下文仍描述当前实现：导入器读 10-18 表，未导入经营等级，本次没有执行导入。现状与扩展顺序见[实现方案](../design/milk_tea_economy_implementation_plan.md)。
+> 2026-10-19：已导入 2.0 原料经营等级与用途；经营定价使用 EconomyRules，F09 为 quest。正式固定配方按次消耗，C01–C10 初始各五份并可免费补给。实际集成与迁移见[整合记录](../development/two_day_integration_2026_10_19.md)。
 
 本期提供原料定义、离线导入、投掷参数与按次使用的库存接口。自由调配、配方成品库存和饮品图鉴已由[第二期](free_tea_recipes.md)接入；投掷效果现由[第三期](drink_throw_effects.md)执行。现有教学制作、交付与潜行流程保留。
 
@@ -68,7 +68,7 @@ F09 格里芬之血可以作为剧情基底，但禁止普通配方使用、市�
 | `try_spend_uses(costs, acquired = {})` | 原子扣次并可同时入库整份成品，成功只发一次 `changed` |
 | view 的 `uses` / `uses_per_portion` / `current_portion_uses` | 仓库显示总次数、每份次数和当前份余量 |
 
-`get_stock`、`has_materials`、`try_consume`、`try_exchange` 与交易购买继续以份计数。整份扣除优先取未开封份；扣到最后一份时清空 `used`。补货保留当前份已用次数。教学制作仍按旧规则扣整份，避免改动 Day 1 已有订单与剧情。
+`get_stock`、`has_materials`、`try_consume`、`try_exchange` 与交易购买继续以份计数。整份扣除优先取未开封份；扣到最后一份时清空 `used`。补货保留当前份已用次数。正式固定配方经 GameState 按次扣料；隔离教学服务保留整份兼容路径。
 
 第一期库存子快照 v2 引入 `used`；第二期库存 v3 增加 `drinks` / `encyclopedia`，整局升级为 v4。旧库存 v1 补 `used = 0`；旧库存 v2 保留开封次数，均补空配方成品和图鉴。完整 v2/v3 快照可迁移，v2 缺金币条目的迁移仍有效。迁移先核对经营与经济库存完全一致，再复制并规范化；不改调用方数据，损坏数据整包拒绝。详见[第二期快照边界](free_tea_recipes.md#快照与迁移)。
 

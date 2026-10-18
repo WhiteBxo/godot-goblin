@@ -19,7 +19,7 @@
 
 `src/resources/persistence/checkpoints.json` 是独立于剧情编排产物的配置。每项包含稳定 `id`、宿主 `scene`、出生入口 `entrance`、精确 `stage` / `day` / `phase`、前后事件边界 `after_event` / `before_event`、`required_flags` 和 `recovery`（opening / shop / chapter）。不存节点路径或逐帧位置。
 
-当前六个检查点全部限定 Day 1 白天：
+最初六个 Day 1 白天检查点仍保留：
 
 | ID | 恢复阶段与现场 |
 | --- | --- |
@@ -30,7 +30,7 @@
 | `day1.investigate.shop` | `day1.investigate_coins`，店内街门入口 |
 | `day1.investigate.settlement` | `day1.investigate_coins`，聚落店门入口 |
 
-未知阶段不保存，保留上一检查点。完整快照中的日期、昼夜和镜像 flag 必须一致。S03–S06 后续阶段和 Day 2 尚未发布恢复检查点；跨天测试使用独立夹具，不表示这些剧情已经可继续。
+未知阶段不保存，保留上一检查点。完整快照中的日期、昼夜和镜像 flag 必须一致。现已增加 S03 调查、S04 订单／地图、S05 尝试前、S06 特调，以及 Day 2 营业、酒馆、赌场、守卫和 Day 3 交接／Day 4 超时检查点。完整 schema 为 8／6／3。`verify_two_day_persistence.py` 从真实流程复制 20 个自动存档，各由独立新进程恢复。
 
 新增阶段必须同时声明检查点、章节 `scene_setups`、目标宿主 / 出生入口，并补跨进程验收。`Day1ChapterController.preflight_recovery()` 拒绝没有现场配置的新阶段；已发布的金币调查交接允许空角色现场。检查点恢复复用前两阶段的角色、音乐与 Bridge 投影。
 
@@ -38,7 +38,7 @@
 
 `SaveCoordinator` 是 MainGame 创建的场景内节点。`state_changed` 只标记待保存；连续两个安全帧后生成完整快照，合并重复变化，同一快照不反复写入。只在经 GameEntry 新游戏 / 继续游戏开启的存档会话中运行；新进程直接 F6 不写正式档。
 
-允许 Bridge 等待玩家制作 / 交付，不复用“允许出门”的守卫。事务、暂停、模态、对白、演出、标题卡、角色受演出控制、场景切换及潜入运行 / 失败 / 拦截期间不保存。事件取消或失败会阻止保存，直至完成恢复投影或后续有效事件。未完成的整次潜入保留尝试前完整检查点，包含尝试前的库存。退出不强行刷新中间态。
+允许 Bridge 等待玩家制作 / 交付，不复用“允许出门”的守卫。事务、暂停、模态、对白、演出、标题卡、角色受演出控制、场景切换及潜入运行 / 失败 / 拦截期间不保存。顾客进店／离店尚在移动时也等待稳定边界。事件取消或失败会阻止保存，直至完成恢复投影或后续有效事件。未完成的整次潜入保留尝试前完整检查点，包含尝试前的库存。退出不强行刷新中间态。
 
 `GameEntry.continue_game(tree)` 先校验文件、完整快照、检查点与离树目标，再调用唯一 GameState 的 `restore_state()`。MainGame 暂停自动事件和 Bridge 推进，重建角色、交互与阶段；`session_initialized(error)` 成功后才释放导航和输入锁。恢复放置使用 `prepare_scene_arrival(id, false)`，不会发布真实返店事实。启动失败回滚内存并返回标题，磁盘文件保留。
 

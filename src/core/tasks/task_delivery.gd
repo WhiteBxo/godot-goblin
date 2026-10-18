@@ -53,8 +53,10 @@ func configure(catalog: TaskCatalog, journal: TaskJournal, state: StateData, inv
 		if not task.has("delivery"):
 			continue
 		var delivery: Dictionary = task.delivery
-		if delivery.has("items"):
-			for id: String in delivery.items:
+		if delivery.has("items") or delivery.has("uses"):
+			if delivery.has("uses") and inventory != state.get_warehouse_inventory():
+				return ERR_INVALID_DATA
+			for id: String in delivery.get("uses", delivery.get("items")):
 				if inventory.get_definition(id) == null:
 					return ERR_INVALID_DATA
 		elif delivery.has("drink"):
@@ -95,7 +97,7 @@ func get_requirement(order_id: String) -> Dictionary:
 	if not _orders.has(order_id):
 		return {}
 	var delivery: Dictionary = _orders[order_id].delivery
-	if delivery.has("drink"):
+	if delivery.has("drink") or delivery.has("uses"):
 		return {}
 	if delivery.has("items"):
 		# JSON numbers arrive as floats; the inventory only accepts ints.
@@ -104,6 +106,18 @@ func get_requirement(order_id: String) -> Dictionary:
 			requirement[id] = int(delivery.items[id])
 		return requirement
 	return {String(delivery.product_id): 1}
+
+func get_use_requirement(order_id: String) -> Dictionary:
+	var result := {}
+	if _orders.has(order_id):
+		for id: String in _orders[order_id].delivery.get("uses", {}):
+			result[id] = int(_orders[order_id].delivery.uses[id])
+	return result
+
+func _has_requirement(order_id: String) -> bool:
+	if not get_use_requirement(order_id).is_empty():
+		return _inventory.has_uses(get_use_requirement(order_id))
+	return _inventory.has_materials(get_requirement(order_id))
 
 func accept_order(order_id: String) -> Error:
 	if _committing or not _ready_for_delivery() or not _orders.has(order_id):
@@ -155,6 +169,9 @@ func get_requirements_text(target_names: Dictionary = {}) -> String:
 		var parts := PackedStringArray()
 		if task.delivery.has("drink"):
 			parts.append("自由饮品：" + DrinkFormula.requirement_text(task.delivery.drink, _ingredient_names()))
+		var use_requirement := get_use_requirement(order_id)
+		for id: String in use_requirement:
+			parts.append("%s × %d 次" % [_inventory.get_definition(id).display_name, use_requirement[id]])
 		var requirement := get_requirement(order_id)
 		for id: String in requirement:
 			var definition := _inventory.get_definition(id)
@@ -168,7 +185,7 @@ func deliver_to(target_object_id: String, preferred_order_id: String = "") -> Di
 		return _failure("交付系统尚未就绪。")
 	if _orders.has(preferred_order_id) and is_order_accepted(preferred_order_id):
 		var preferred: Dictionary = _orders[preferred_order_id]
-		if preferred.delivery.target_object_id == target_object_id and _inventory.has_materials(get_requirement(preferred_order_id)):
+		if preferred.delivery.target_object_id == target_object_id and _has_requirement(preferred_order_id):
 			return try_submit(preferred_order_id, target_object_id)
 	# Prefer a deliverable order; another missing requirement must not block this NPC.
 	# Report against an active order before an inactive one, so a later chapter's
@@ -183,7 +200,7 @@ func deliver_to(target_object_id: String, preferred_order_id: String = "") -> Di
 		if _state.get_flag(_receipt_key(order_id)) or not is_order_accepted(order_id):
 			continue
 		active_fallback = order_id
-		if (task.delivery.has("drink") and not _matching_drink(task.delivery.drink).is_empty()) or (not task.delivery.has("drink") and _inventory.has_materials(get_requirement(order_id))):
+		if (task.delivery.has("drink") and not _matching_drink(task.delivery.drink).is_empty()) or (not task.delivery.has("drink") and _has_requirement(order_id)):
 			return try_submit(order_id, target_object_id)
 	if not active_fallback.is_empty():
 		return try_submit(active_fallback, target_object_id)
@@ -209,11 +226,16 @@ func try_submit(order_id: String, target_object_id: String, drink_id: String = "
 	if task.delivery.has("accepted_flag") and not _state.get_flag(task.delivery.accepted_flag):
 		return _failure("请先在订单板接取这张订单。", order_id)
 	var requirement := get_requirement(order_id)
+	var use_costs := get_use_requirement(order_id)
 	var missing := PackedStringArray()
 	for id: String in requirement:
 		var shortfall: int = int(requirement[id]) - _inventory.get_stock(id)
 		if shortfall > 0:
 			missing.append("%s ×%d" % [_inventory.get_definition(id).display_name, shortfall])
+	for id: String in use_costs:
+		var shortfall: int = use_costs[id] - _inventory.get_uses(id)
+		if shortfall > 0:
+			missing.append("%s ×%d 次" % [_inventory.get_definition(id).display_name, shortfall])
 	if not missing.is_empty():
 		return _failure("还缺：" + "、".join(missing) + "。", order_id)
 	var drink_costs := {}
@@ -231,12 +253,17 @@ func try_submit(order_id: String, target_object_id: String, drink_id: String = "
 		sale_price = int(record.selling_price)
 	elif task.delivery.has("product_id"):
 		sale_price = _product_sale_price(str(task.delivery.product_id))
-		if sale_price < 0:
+		if sale_price < 0 and not task.get("rewards", {}).has("money"):
 			return _failure("该成品没有可用的固定售价，不能作为普通订单出售。", order_id)
 	var rewards := {}
 	for id: String in task.get("rewards", {}).get("items", {}):
 		rewards[id] = int(task.rewards.items[id])
-		if _inventory.get_stock(id) - int(requirement.get(id, 0)) > WarehouseInventory.MAX_QUANTITY - rewards[id]:
+		var remaining: int = _inventory.get_stock(id) - int(requirement.get(id, 0))
+		if use_costs.has(id):
+			var uses: int = _inventory.get_uses(id) - int(use_costs[id])
+			var per := _inventory.get_uses_per_portion(id)
+			remaining = int(uses / per) + (1 if uses % per != 0 else 0)
+		if remaining > WarehouseInventory.MAX_QUANTITY - rewards[id]:
 			return _failure("奖励库存已满：" + _inventory.get_definition(id).display_name + "。请腾出空间后重试。", order_id)
 	if _inventory == _state.get_warehouse_inventory() and _state.get_transactions().get_balance() > WalletTransactions.LIMIT - int(task.get("rewards", {}).get("money", 0)):
 		return _failure("钱包已满，请腾出余额后重试。", order_id)
@@ -255,7 +282,7 @@ func try_submit(order_id: String, target_object_id: String, drink_id: String = "
 				facts[batch.completion_flag] = true
 		# Explicitly configured money (including zero) overrides the formula price.
 		var money := int(task.get("rewards", {}).get("money", sale_price))
-		var error := _state.commit_delivery(requirement, rewards, money, facts, get_completed_count() + 1, "delivery:" + order_id, delivered.emit.bind(order_id), drink_costs, task.id)
+		var error := _state.commit_delivery(requirement, rewards, money, facts, get_completed_count() + 1, "delivery:" + order_id, delivered.emit.bind(order_id), drink_costs, task.id, use_costs)
 		_committing = false
 		if error != OK:
 			return _failure("交付结算失败：请检查成品、奖励容量或钱包上限。未消耗库存。", order_id)
@@ -263,7 +290,7 @@ func try_submit(order_id: String, target_object_id: String, drink_id: String = "
 		var committed_items := {}
 		var gains := PackedStringArray()
 		if money_delta > 0:
-			gains.append("营业收入 %d" % money_delta)
+			gains.append("营业收入 " + WalletTransactions.format_money(money_delta))
 		for id: String in rewards:
 			var quantity: int = _inventory.get_stock(id) - reward_stock[id] + int(requirement.get(id, 0))
 			committed_items[id] = quantity

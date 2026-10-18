@@ -117,6 +117,13 @@ func preview_formula_price(materials: Array) -> Dictionary:
 	return _state.get_transactions().preview_formula_price(materials)
 
 ## Explicit first confirmation; the ledger keeps the record across saves.
+func record_formula_request(request_id: String) -> void:
+	if not request_id.is_empty():
+		_formula_requests[request_id] = true
+
+func can_confirm_formula(materials: Array) -> bool:
+	return not is_instance_valid(_state) or not _state.has_method("can_confirm_formula") or not _state.get_transactions().get_formula_price(materials).is_empty() or _state.can_confirm_formula()
+
 func confirm_formula(materials: Array, request_id: String) -> Dictionary:
 	if _submitting or not is_instance_valid(_inventory) or _inventory.is_session_locked():
 		return {"ok": false, "code": "busy", "message": "制作系统尚未就绪。"}
@@ -242,6 +249,10 @@ func preview_craft(materials: Array, quantity: int = 1) -> Dictionary:
 	if not recipe.is_available(_state):
 		result.code = "locked"
 		result.message = "该配方尚未解锁。未消耗库存。"
+		return result
+	if _inventory.get_definition(recipe.product_id).economy_scope == "quest" and (quantity != 1 or _inventory.get_stock(recipe.product_id) > 0):
+		result.code = "quest_limit"
+		result.message = "任务特调每次委托仅制作一杯。"
 		return result
 	var costs := _counts(normalized)
 	var missing: Dictionary = {}

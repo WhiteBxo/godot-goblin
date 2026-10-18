@@ -1,0 +1,309 @@
+{
+  "story": "res://src/resources/story/day2_stages_01_05.json",
+  "dialogue": "res://src/resources/dialogue/day2_stages_01_05.json",
+  "phases": "res://src/resources/story/day2_stages_01_05_phases.json",
+  "auto_events": [
+    {
+      "id": "day2.s01.morning",
+      "host": "shop"
+    },
+    {
+      "id": "day2.s02.business_open",
+      "host": "shop"
+    },
+    {
+      "id": "day2.s02.festival_order",
+      "host": "shop"
+    },
+    {
+      "id": "day2.s02.festival_after",
+      "host": "shop"
+    },
+    {
+      "id": "day2.s02.elder_order",
+      "host": "shop"
+    },
+    {
+      "id": "day2.s02.elder_after",
+      "host": "shop"
+    },
+    {
+      "id": "day2.s02.emissary_order",
+      "host": "shop"
+    },
+    {
+      "id": "day2.s02.emissary_after",
+      "host": "shop"
+    },
+    {
+      "id": "day2.s02.rumor_order",
+      "host": "shop"
+    },
+    {
+      "id": "day2.s02.rumor_after",
+      "host": "shop"
+    },
+    {
+      "id": "day2.s02.stage_end",
+      "host": "shop"
+    },
+    {
+      "id": "day2.s03.amber_wine",
+      "host": "tavern"
+    },
+    {
+      "id": "day2.s03.commission_token",
+      "host": "tavern"
+    },
+    {
+      "id": "day2.s04.casino",
+      "host": "casino"
+    },
+    {
+      "id": "day2.s05.street",
+      "host": "settlement"
+    },
+    {
+      "id": "day2.s05.special_before",
+      "host": "shop"
+    },
+    {
+      "id": "day2.s05.special_after",
+      "host": "shop"
+    },
+    {
+      "id": "day2.s05.guard_after",
+      "host": "settlement"
+    },
+    {
+      "id": "day2.s05.unsolved",
+      "host": "shop"
+    }
+  ],
+  "derived_facts": [],
+  "scene_setups": [
+    {
+      "host": "shop",
+      "stage": "day2.s01",
+      "actors": {
+        "fat_goblin": "day1_rest",
+        "human_customer": null,
+        "goblin_customer": null,
+        "goblin_a": null,
+        "goblin_b": null,
+        "goblin_c": null,
+        "day2_festival_0": null,
+        "day2_festival_1": null,
+        "day2_elder_0": null,
+        "day2_elder_1": null,
+        "day2_emissary_0": null,
+        "day2_rumor_0": null,
+        "day2_rumor_1": null,
+        "day2_ordinary_a": null,
+        "day2_ordinary_b": null,
+        "day2_ordinary_c": null
+      }
+    },
+    {
+      "host": "shop",
+      "stage": "day2.s02.open",
+      "actors": {
+        "fat_goblin": "day1_rest"
+      }
+    },
+    {
+      "host": "shop",
+      "stage": "day2.s02.festival.arriving",
+      "actors": {
+        "fat_goblin": "day1_rest"
+      }
+    },
+    {
+      "host": "shop",
+      "stage": "day2.s02.wait_festival",
+      "actors": {
+        "fat_goblin": "day1_rest"
+      }
+    },
+    {
+      "host": "shop",
+      "stage": "day2.s02.elder.arriving",
+      "actors": {
+        "fat_goblin": "day1_rest"
+      }
+    },
+    {
+      "host": "shop",
+      "stage": "day2.s02.wait_elder",
+      "actors": {
+        "fat_goblin": "day1_rest"
+      }
+    },
+    {
+      "host": "shop",
+      "stage": "day2.s02.emissary.arriving",
+      "actors": {
+        "fat_goblin": "day1_rest"
+      }
+    },
+    {
+      "host": "shop",
+      "stage": "day2.s02.wait_emissary",
+      "actors": {
+        "fat_goblin": "day1_rest"
+      }
+    },
+    {
+      "host": "shop",
+      "stage": "day2.s02.rumor.arriving",
+      "actors": {
+        "fat_goblin": "day1_rest"
+      }
+    },
+    {
+      "host": "shop",
+      "stage": "day2.s02.wait_rumor",
+      "actors": {
+        "fat_goblin": "day1_rest"
+      }
+    },
+    {
+      "host": "shop",
+      "stage": "day2.s02.wait_close",
+      "actors": {
+        "fat_goblin": "day1_rest"
+      }
+    },
+    {
+      "host": "tavern",
+      "stage": "day2.s03.travel_tavern",
+      "actors": {}
+    },
+    {
+      "host": "tavern",
+      "stage": "day2.s03.wait_purchase",
+      "actors": {}
+    },
+    {
+      "host": "tavern",
+      "stage": "day2.s03.commission",
+      "actors": {}
+    },
+    {
+      "host": "casino",
+      "stage": "day2.s04.travel_casino",
+      "actors": {}
+    },
+    {
+      "host": "casino",
+      "stage": "day2.s04.wait_first",
+      "actors": {}
+    },
+    {
+      "host": "casino",
+      "stage": "day2.s04.wait_second",
+      "actors": {}
+    },
+    {
+      "host": "settlement",
+      "stage": "day2.s05.street",
+      "actors": {}
+    },
+    {
+      "host": "shop",
+      "stage": "day2.s05.return_shop",
+      "actors": {
+        "fat_goblin": "day1_rest"
+      }
+    },
+    {
+      "host": "shop",
+      "stage": "day2.s05.wait_special_drink",
+      "actors": {
+        "fat_goblin": "day1_rest"
+      }
+    },
+    {
+      "host": "settlement",
+      "stage": "day2.s05.deliver_guard",
+      "actors": {}
+    },
+    {
+      "host": "settlement",
+      "stage": "day2.s05.wait_guard_delivery",
+      "actors": {}
+    },
+    {
+      "host": "shop",
+      "stage": "day2.s05.return_final",
+      "actors": {
+        "fat_goblin": "day1_rest"
+      }
+    },
+    {
+      "host": "shop",
+      "stage": "day2.s03.travel_tavern",
+      "actors": {
+        "fat_goblin": "day1_rest"
+      }
+    },
+    {
+      "host": "shop",
+      "stage": "day2.s05.deliver_guard",
+      "actors": {
+        "fat_goblin": "day1_rest"
+      }
+    },
+    {
+      "host": "shop",
+      "stage": "day3.handoff",
+      "actors": {
+        "fat_goblin": "day1_rest"
+      }
+    },
+    {
+      "host": "settlement",
+      "stage": "day2.s03.travel_tavern",
+      "actors": {}
+    },
+    {
+      "host": "settlement",
+      "stage": "day2.s04.travel_casino",
+      "actors": {}
+    },
+    {
+      "host": "settlement",
+      "stage": "day2.s05.return_shop",
+      "actors": {
+        "drunken_guard": "drunken_guard"
+      }
+    },
+    {
+      "host": "settlement",
+      "stage": "day2.s05.return_final",
+      "actors": {
+        "drunken_guard": "drunken_guard"
+      }
+    },
+    {
+      "host": "settlement",
+      "stage": "day3.handoff",
+      "actors": {}
+    },
+    {
+      "host": "tavern",
+      "stage": "day2.s04.travel_casino",
+      "actors": {}
+    },
+    {
+      "host": "tavern",
+      "stage": "day3.handoff",
+      "actors": {}
+    },
+    {
+      "host": "casino",
+      "stage": "day2.s05.street",
+      "actors": {}
+    }
+  ]
+}

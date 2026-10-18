@@ -18,16 +18,12 @@ func configure(wallet: WalletTransactions, inventory: WarehouseInventory) -> voi
 	refresh()
 
 func refresh() -> void:
-	$BusinessBalance.text = "营业收入 %s    古怪金币 %d（%s）" % [
-		WalletTransactions.format_money(_wallet.get_balance()),
-		_inventory.get_stock("strange_coin"),
-		WalletTransactions.format_money(WalletTransactions.coin_worth(_inventory.get_stock("strange_coin"))),
-	]
+	$BusinessBalance.text = "钱包 %s · 金币面额 10G" % WalletTransactions.format_money(_wallet.get_balance())
 
 func show_resume(available: bool) -> void:
 	$ResumeStory.visible = available
 
-## Day 2 has no content yet; the placeholder stage only states that plainly.
+## Scene controllers supply temporary notices.
 func show_notice(text: String) -> void:
 	$Notice.text = text
 	$Notice.visible = not text.is_empty()

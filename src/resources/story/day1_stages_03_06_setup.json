@@ -3,9 +3,46 @@
   "dialogue": "res://src/resources/dialogue/day1_stages_03_06.json",
   "phases": "res://src/resources/story/day1_stages_03_06_phases.json",
   "auto_events": [
-    "day1.s03.coin_inspect",
-    "day1.s03.street_gone",
-    "day1.s03.back_to_door"
+    {
+      "id": "day1.s03.coin_inspect",
+      "host": "shop"
+    },
+    {
+      "id": "day1.s03.street_gone",
+      "host": "settlement"
+    },
+    {
+      "id": "day1.s03.back_to_door",
+      "host": "settlement"
+    },
+    {
+      "id": "day1.s04.commission",
+      "host": "shop"
+    },
+    {
+      "id": "day1.s04.after_order",
+      "host": "shop"
+    },
+    {
+      "id": "day1.s04.commission_choice",
+      "host": "shop"
+    },
+    {
+      "id": "day1.s05.return_shop",
+      "host": "shop"
+    },
+    {
+      "id": "day1.s06.pondering",
+      "host": "shop"
+    },
+    {
+      "id": "day1.s06.customer",
+      "host": "shop"
+    },
+    {
+      "id": "day1.s06.reaction",
+      "host": "shop"
+    }
   ],
   "derived_facts": [
     {
@@ -22,31 +59,164 @@
     {
       "host": "shop",
       "stage": "day1.investigate_coins",
-      "actors": {}
+      "actors": {
+        "human_customer": null,
+        "goblin_customer": null,
+        "goblin_a": null,
+        "goblin_b": null,
+        "goblin_c": null,
+        "fat_goblin": null
+      }
     },
     {
       "host": "shop",
       "stage": "day1.s03",
-      "actors": {}
+      "actors": {
+        "human_customer": null,
+        "goblin_customer": null,
+        "goblin_a": null,
+        "goblin_b": null,
+        "goblin_c": null,
+        "fat_goblin": null
+      }
+    },
+    {
+      "host": "shop",
+      "stage": "day1.s04",
+      "actors": {
+        "human_customer": null,
+        "goblin_customer": null,
+        "goblin_a": null,
+        "goblin_b": null,
+        "goblin_c": null,
+        "fat_goblin": "day1_counter"
+      }
+    },
+    {
+      "host": "shop",
+      "stage": "day1.s04.wait_order",
+      "actors": {
+        "human_customer": null,
+        "goblin_customer": null,
+        "goblin_a": null,
+        "goblin_b": null,
+        "goblin_c": null,
+        "fat_goblin": "day1_counter"
+      }
+    },
+    {
+      "host": "shop",
+      "stage": "day1.s04.wait_map",
+      "actors": {
+        "human_customer": null,
+        "goblin_customer": null,
+        "goblin_a": null,
+        "goblin_b": null,
+        "goblin_c": null,
+        "fat_goblin": "day1_counter"
+      }
+    },
+    {
+      "host": "shop",
+      "stage": "day1.s05.ready",
+      "actors": {
+        "human_customer": null,
+        "goblin_customer": null,
+        "goblin_a": null,
+        "goblin_b": null,
+        "goblin_c": null,
+        "fat_goblin": null
+      }
+    },
+    {
+      "host": "shop",
+      "stage": "day1.s06.craft",
+      "actors": {
+        "human_customer": null,
+        "goblin_customer": null,
+        "goblin_a": null,
+        "goblin_b": null,
+        "goblin_c": null,
+        "fat_goblin": null
+      }
+    },
+    {
+      "host": "shop",
+      "stage": "day1.s06.wait_craft",
+      "actors": {
+        "human_customer": null,
+        "goblin_customer": null,
+        "goblin_a": null,
+        "goblin_b": null,
+        "goblin_c": null,
+        "fat_goblin": null
+      }
+    },
+    {
+      "host": "shop",
+      "stage": "day1.s06.wait_delivery",
+      "actors": {
+        "human_customer": null,
+        "goblin_customer": null,
+        "goblin_a": null,
+        "goblin_b": null,
+        "goblin_c": null,
+        "fat_goblin": "day1_counter"
+      }
+    },
+    {
+      "host": "settlement",
+      "stage": "day1.investigate_coins",
+      "actors": {
+        "entrance_guard": null,
+        "drunken_guard": null,
+        "mansion_lure": null,
+        "mansion_gate": null
+      }
     },
     {
       "host": "settlement",
       "stage": "day1.s03",
-      "actors": {}
+      "actors": {
+        "entrance_guard": null,
+        "drunken_guard": null,
+        "mansion_lure": null,
+        "mansion_gate": null
+      }
     },
     {
       "host": "settlement",
       "stage": "day1.s03.explore",
-      "actors": {}
-    },
-    {
-      "host": "shop",
-      "stage": "day1.s04",
-      "actors": {}
+      "actors": {
+        "entrance_guard": null,
+        "drunken_guard": null,
+        "mansion_lure": null,
+        "mansion_gate": null
+      }
     },
     {
       "host": "settlement",
       "stage": "day1.s04",
+      "actors": {
+        "entrance_guard": null,
+        "drunken_guard": null,
+        "mansion_lure": null,
+        "mansion_gate": null
+      }
+    },
+    {
+      "host": "settlement",
+      "stage": "day1.s05.ready",
+      "actors": {
+        "entrance_guard": "entrance_guard",
+        "drunken_guard": "drunken_guard",
+        "mansion_lure": "mansion_lure",
+        "mansion_gate": "mansion_gate"
+      }
+    },
+    {
+      "host": "elder_house",
+      "stage": "day1.s05.ready",
       "actors": {}
     }
   ]

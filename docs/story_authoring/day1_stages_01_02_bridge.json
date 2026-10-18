@@ -182,5 +182,5 @@
     "fallback": "Unprovided expressions retain speaker default; unconfirmed fat-goblin portraits are not bound."
   },
   "authoring_project": "res://docs/story_authoring/day1_stages_01_02_project.json",
-  "authoring_sha256": "4b477e30be828cbbbda3c09338edade0473f621e659d5391bdff19a90ab4d4cc"
+  "authoring_sha256": "a59733b05fb5738139397bcd8238a51e01c775da9a07b7fbab8e707c25a637ec"
 }

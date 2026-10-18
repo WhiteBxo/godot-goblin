@@ -6,6 +6,11 @@ extends RpgMakerMap
 @export var chapter_host: StringName = &"settlement"
 @export var exterior_location: String = "settlement.shop"
 
+func _ready() -> void:
+	super._ready()
+	for point: InteractionPoint in get_interaction_points() + get_scene_exits() + get_gather_points():
+		point.hide_development_markers()
+
 func get_chapter_host() -> String:
 	return String(chapter_host)
 

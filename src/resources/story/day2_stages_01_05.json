@@ -1,4 +1,793 @@
 {
   "version": 1,
-  "events": {}
+  "events": {
+    "day2.s01.morning": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s01"
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.s01.fat_goblin_wakes"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s01.wants_more"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s01.stop_selling_blood"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s01.remember_guard"
+        },
+        {
+          "command": "chronicle_unlock",
+          "entry_id": "chronicle.tavern",
+          "title": "酒馆"
+        },
+        {
+          "command": "chronicle_append",
+          "entry_id": "chronicle.tavern",
+          "record_id": "chronicle.tavern.d2_amber_clue",
+          "content": "胖哥布林提到，格里芬琥珀酒可以在酒馆找到。看来，想要获得这种酒，得去酒馆问问老板。"
+        },
+        {
+          "command": "chronicle_append",
+          "entry_id": "chronicle.casino",
+          "record_id": "chronicle.casino.d2_mushroom_clue",
+          "content": "胖哥布林提到，幻金菇可以在赌场找到。至于赌场老板是否愿意交出这种稀有的蘑菇，还得亲自去问问才知道。"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s01.remember_guard.chronicle_1"
+        },
+        {
+          "command": "chronicle_append",
+          "entry_id": "chronicle.casino",
+          "record_id": "chronicle.casino.d2_private_army",
+          "content": "胖哥布林提醒，赌场老板手下有一批私兵。看来，赌场不仅不是个好打交道的地方，想在里面偷偷拿走东西恐怕也没那么容易。"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s01.remember_guard.chronicle_2"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s01.mushroom_commission"
+        },
+        {
+          "command": "chapter_action",
+          "id": "day2.procurement.fund"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s01.mushroom_commission_after_funds"
+        },
+        {
+          "command": "set_stage",
+          "value": "day2.s02.open"
+        }
+      ]
+    },
+    "day2.s02.business_open": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s02.open"
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.s02.business_open"
+        },
+        {
+          "command": "set_flag",
+          "key": "day2.s02.open",
+          "value": true
+        },
+        {
+          "command": "business",
+          "action": "publish",
+          "stage_id": "festival"
+        },
+        {
+          "command": "business",
+          "action": "request_arrival",
+          "group_id": "festival"
+        },
+        {
+          "command": "set_stage",
+          "value": "day2.s02.festival.arriving"
+        }
+      ]
+    },
+    "day2.s02.festival_order": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s02.festival.arriving",
+        "flags": {
+          "day2.business.festival.arrived": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.s02.festival_talk"
+        },
+        {
+          "command": "chronicle_unlock",
+          "entry_id": "chronicle.griffin_festival",
+          "title": "格里芬七日祭"
+        },
+        {
+          "command": "chronicle_append",
+          "entry_id": "chronicle.griffin_festival",
+          "record_id": "chronicle.griffin_festival.d2_first",
+          "content": "格里芬七日祭是哥布林社会的重要年度活动，为期七天，第七天举行核心仪式，由长老主持。祭典期间，哥布林会提前准备物资，并期待获得格里芬的恩赐。格里芬之血被视为珍贵的神圣赏赐，通常只有在祭典期间才有机会获得，其分配也与长老主持的仪式有关。"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s02.festival_talk.chronicle_1"
+        },
+        {
+          "command": "set_flag",
+          "key": "day2.s02.festival.open",
+          "value": true
+        },
+        {
+          "command": "set_stage",
+          "value": "day2.s02.wait_festival"
+        }
+      ]
+    },
+    "day2.s02.festival_after": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s02.wait_festival",
+        "flags": {
+          "day2.bridge.festival.completed": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.s02.festival_talk_after"
+        },
+        {
+          "command": "business",
+          "action": "request_departure",
+          "group_id": "festival"
+        },
+        {
+          "command": "business",
+          "action": "publish",
+          "stage_id": "elder"
+        },
+        {
+          "command": "business",
+          "action": "request_arrival",
+          "group_id": "elder"
+        },
+        {
+          "command": "set_stage",
+          "value": "day2.s02.elder.arriving"
+        }
+      ]
+    },
+    "day2.s02.elder_order": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s02.elder.arriving",
+        "flags": {
+          "day2.business.elder.arrived": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.s02.elder_authority"
+        },
+        {
+          "command": "set_flag",
+          "key": "day2.s02.elder.open",
+          "value": true
+        },
+        {
+          "command": "set_stage",
+          "value": "day2.s02.wait_elder"
+        }
+      ]
+    },
+    "day2.s02.elder_after": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s02.wait_elder",
+        "flags": {
+          "day2.bridge.elder.completed": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.s02.elder_authority_after"
+        },
+        {
+          "command": "chronicle_append",
+          "entry_id": "chronicle.griffin",
+          "record_id": "chronicle.griffin.d2_daily_blessing",
+          "content": "哥布林似乎经常把「愿格里芬垂顾你」挂在嘴边，将其作为日常交谈中的祈愿语。看来，对格里芬的信仰不仅体现在祭典和仪式中，也已经融入了他们的日常生活。"
+        },
+        {
+          "command": "business",
+          "action": "request_departure",
+          "group_id": "elder"
+        },
+        {
+          "command": "business",
+          "action": "publish",
+          "stage_id": "emissary"
+        },
+        {
+          "command": "business",
+          "action": "request_arrival",
+          "group_id": "emissary"
+        },
+        {
+          "command": "set_stage",
+          "value": "day2.s02.emissary.arriving"
+        }
+      ]
+    },
+    "day2.s02.emissary_order": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s02.emissary.arriving",
+        "flags": {
+          "day2.business.emissary.arrived": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.s02.emissary_rumor"
+        },
+        {
+          "command": "set_flag",
+          "key": "day2.s02.emissary.open",
+          "value": true
+        },
+        {
+          "command": "set_stage",
+          "value": "day2.s02.wait_emissary"
+        }
+      ]
+    },
+    "day2.s02.emissary_after": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s02.wait_emissary",
+        "flags": {
+          "day2.bridge.emissary.completed": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.s02.emissary_rumor_after"
+        },
+        {
+          "command": "chronicle_append",
+          "entry_id": "chronicle.emissary",
+          "record_id": "chronicle.emissary.d2_common_belief",
+          "content": "看来，哥布林普遍认为，外表与他们不同、来自异乡的非哥布林是格里芬派来的使者。带来稀奇货物的旅行商人尤其容易被赋予这样的身份。"
+        },
+        {
+          "command": "business",
+          "action": "request_departure",
+          "group_id": "emissary"
+        },
+        {
+          "command": "business",
+          "action": "publish",
+          "stage_id": "rumor"
+        },
+        {
+          "command": "business",
+          "action": "request_arrival",
+          "group_id": "rumor"
+        },
+        {
+          "command": "set_stage",
+          "value": "day2.s02.rumor.arriving"
+        }
+      ]
+    },
+    "day2.s02.rumor_order": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s02.rumor.arriving",
+        "flags": {
+          "day2.business.rumor.arrived": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.s02.tavern_casino_talk"
+        },
+        {
+          "command": "set_flag",
+          "key": "day2.s02.rumor.open",
+          "value": true
+        },
+        {
+          "command": "set_stage",
+          "value": "day2.s02.wait_rumor"
+        }
+      ]
+    },
+    "day2.s02.rumor_after": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s02.wait_rumor",
+        "flags": {
+          "day2.bridge.rumor.completed": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.s02.tavern_casino_talk_after"
+        },
+        {
+          "command": "chronicle_append",
+          "entry_id": "chronicle.tavern",
+          "record_id": "chronicle.tavern.d2_owner",
+          "content": "据说酒馆老板为人圆滑，消息灵通，经常能弄到稀罕货。或许除了购买特殊食材，还能从他那里打听到一些有用的消息。"
+        },
+        {
+          "command": "chronicle_append",
+          "entry_id": "chronicle.casino",
+          "record_id": "chronicle.casino.d2_casino_guard",
+          "content": "赌场老板嗜钱如命。胖哥布林曾提到他手下有一支私兵，如今看来，这支队伍被称为「赌场卫队」，据说会对欠债不还的人施以暴力。当地哥布林对赌场老板颇有怨言，却又畏惧他的势力，不敢公开议论。"
+        },
+        {
+          "command": "business",
+          "action": "request_departure",
+          "group_id": "rumor"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s02.find_errand_runner"
+        },
+        {
+          "command": "set_flag",
+          "key": "day2.s02.business_finished",
+          "value": true
+        },
+        {
+          "command": "set_stage",
+          "value": "day2.s02.wait_close"
+        }
+      ]
+    },
+    "day2.s02.stage_end": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s02.wait_close",
+        "flags": {
+          "day2.s02.closed": true
+        }
+      },
+      "steps": [
+        {
+          "command": "set_stage",
+          "value": "day2.s03.travel_tavern"
+        }
+      ]
+    },
+    "day2.s03.amber_wine": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s03.travel_tavern",
+        "flags": {
+          "day2.travel.tavern_arrived": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.s03.amber_wine"
+        },
+        {
+          "command": "set_flag",
+          "key": "day2.s03.discount",
+          "value": true
+        },
+        {
+          "command": "set_stage",
+          "value": "day2.s03.wait_purchase"
+        }
+      ]
+    },
+    "day2.s03.purchase": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s03.wait_purchase"
+      },
+      "trigger": "tavern_buy",
+      "steps": [
+        {
+          "command": "tavern_purchase",
+          "product_id": "day2_amber_wine",
+          "quantity": 1.0,
+          "receipt": "day2.s03.amber_wine_bought"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s03.amber_wine_after_purchase"
+        },
+        {
+          "command": "set_stage",
+          "value": "day2.s03.commission"
+        }
+      ]
+    },
+    "day2.s03.commission_token": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s03.commission"
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.s03.tavern_commission"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s03.tavern_commission_gathered",
+          "when": {
+            "flags": {
+              "day2.s03.has_gathered": true
+            }
+          }
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s03.tavern_commission_not_gathered",
+          "when": {
+            "flags": {
+              "day2.s03.has_gathered": false
+            }
+          }
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s03.tavern_commission_common"
+        },
+        {
+          "command": "set_flag",
+          "key": "day2.s03.festival_accepted",
+          "value": true
+        },
+        {
+          "command": "set_flag",
+          "key": "day3.festival.accepted",
+          "value": true
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s03.griffin_token"
+        },
+        {
+          "command": "chronicle_unlock",
+          "entry_id": "chronicle.griffin_token",
+          "title": "格里芬令牌"
+        },
+        {
+          "command": "chronicle_append",
+          "entry_id": "chronicle.griffin_token",
+          "record_id": "chronicle.griffin_token.d2_first",
+          "content": "酒馆老板提到，格里芬令牌似乎与使者的身份认证有关，称使者需要凭借令牌证明自己的身份。然而，令牌的具体用途、获取方式，以及是否为所有格里芬使者必备的凭证，目前尚不清楚。"
+        },
+        {
+          "command": "chronicle_append",
+          "entry_id": "chronicle.griffin_token",
+          "record_id": "chronicle.griffin_token.d2_suspicion",
+          "content": "此外，酒馆老板提起令牌时的反应令人在意。他究竟只是在提醒主角保管好令牌，还是已经察觉到什么、借此试探主角，暂时不得而知。主角也开始担心自己是否已经引起了对方的怀疑。"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s03.griffin_token.chronicle_1"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s03.to_casino"
+        },
+        {
+          "command": "set_stage",
+          "value": "day2.s04.travel_casino"
+        }
+      ]
+    },
+    "day2.s04.casino": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s04.travel_casino",
+        "flags": {
+          "day2.travel.casino_arrived": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.s04.afraid_to_enter"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s04.casino_boss"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s04.stake"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s04.first_round"
+        },
+        {
+          "command": "set_stage",
+          "value": "day2.s04.wait_first"
+        }
+      ]
+    },
+    "day2.s04.first_round": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s04.wait_first"
+      },
+      "trigger": "casino_round1",
+      "steps": [
+        {
+          "command": "casino_settle",
+          "step": "first_loss"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s04.first_round_after_loss"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s04.second_round"
+        },
+        {
+          "command": "set_stage",
+          "value": "day2.s04.wait_second"
+        }
+      ]
+    },
+    "day2.s04.second_round": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s04.wait_second"
+      },
+      "trigger": "casino_round2",
+      "steps": [
+        {
+          "command": "casino_settle",
+          "step": "second_win"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s04.second_round_after_win"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s04.second_round_after_reward"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s04.second_round_waiver"
+        },
+        {
+          "command": "casino_settle",
+          "step": "waive",
+          "reason": "赌场老板在第二局获胜后免除十杯奶茶债务。"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s04.leave_casino"
+        },
+        {
+          "command": "set_stage",
+          "value": "day2.s05.street"
+        }
+      ]
+    },
+    "day2.s05.street": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s05.street",
+        "flags": {
+          "day2.travel.casino_exited": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.s05.street_check"
+        },
+        {
+          "command": "set_stage",
+          "value": "day2.s05.return_shop"
+        }
+      ]
+    },
+    "day2.s05.special_before": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s05.return_shop",
+        "flags": {
+          "day2.travel.shop_returned": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.s05.back_in_shop"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s05.make_special"
+        },
+        {
+          "command": "set_flag",
+          "key": "day2.s05.special_recipe_available",
+          "value": true
+        },
+        {
+          "command": "set_stage",
+          "value": "day2.s05.wait_special_drink"
+        }
+      ]
+    },
+    "day2.s05.special_after": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s05.wait_special_drink",
+        "flags": {
+          "day2.bridge.special_drink.completed": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.s05.make_special_after"
+        },
+        {
+          "command": "set_stage",
+          "value": "day2.s05.deliver_guard"
+        }
+      ]
+    },
+    "day2.s05.guard_greet": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s05.deliver_guard"
+      },
+      "trigger": "drunken_guard",
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.s05.deliver_guard"
+        },
+        {
+          "command": "set_flag",
+          "key": "day2.s05.guard_delivery_open",
+          "value": true
+        },
+        {
+          "command": "set_stage",
+          "value": "day2.s05.wait_guard_delivery"
+        }
+      ]
+    },
+    "day2.s05.guard_after": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s05.wait_guard_delivery",
+        "flags": {
+          "day2.bridge.guard_delivery.completed": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.s05.deliver_guard_after_delivery"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s05.deliver_guard_after_reward"
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.s05.useful_guard"
+        },
+        {
+          "command": "character_unlock",
+          "character_id": "characters.drunken_guard",
+          "name": "醉酒守卫"
+        },
+        {
+          "command": "character_append",
+          "character_id": "characters.drunken_guard",
+          "record_id": "day2.guard.hospitality",
+          "content": "这家伙虽然整天醉醺醺的，倒也不是完全没用。至少得先弄清楚，他到底是单纯的酒鬼，还是有别的本事。"
+        },
+        {
+          "command": "set_stage",
+          "value": "day2.s05.return_final"
+        }
+      ]
+    },
+    "day2.s05.unsolved": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s05.return_final",
+        "flags": {
+          "day2.travel.final_shop_returned": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.s05.unsolved"
+        },
+        {
+          "command": "set_flag",
+          "key": "day2.completed",
+          "value": true
+        },
+        {
+          "command": "title_card",
+          "text": "第三天",
+          "subtitle": "早晨 · 委托交接",
+          "seconds": 1.2
+        },
+        {
+          "command": "set_phase",
+          "phase": "day"
+        },
+        {
+          "command": "set_stage",
+          "value": "day3.handoff"
+        }
+      ]
+    }
+  }
 }

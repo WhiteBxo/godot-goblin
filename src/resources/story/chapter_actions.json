@@ -1,0 +1,411 @@
+{
+  "version": 1,
+  "actions": {
+    "day1.s04.gift": {
+      "kind": "transaction",
+      "use_gains": {
+        "firefly_cap": 2,
+        "goblin_firebrew": 2
+      }
+    },
+    "day1.s04.funding": {
+      "kind": "transaction",
+      "money": 50,
+      "flags": {
+        "day1.s04.commission_accepted": true
+      }
+    },
+    "day1.s05.pay_drunken": {
+      "kind": "transaction",
+      "money": -10,
+      "flags": {
+        "day1.s05.drunken_paid": true
+      }
+    },
+    "day1.s05.pay_pair": {
+      "kind": "transaction",
+      "money": -10,
+      "flags": {
+        "day1.s05.guard_payment_completed": true
+      }
+    },
+    "day1.s06.rest": {
+      "kind": "rest",
+      "actor": "fat_goblin",
+      "actor_marker": "day1_rest",
+      "player_marker": "day1_player"
+    },
+    "day2.procurement.fund": {
+      "kind": "procurement_fund"
+    }
+  },
+  "inventory_facts": [
+    {
+      "stage": "day1.s06.wait_craft",
+      "item": "day1_blood_milk_tea",
+      "flag": "day1.s06.blood_drink_made"
+    },
+    {
+      "stage": "day2.s05.wait_special_drink",
+      "item": "day2_guard_milk_tea",
+      "flag": "day2.s05.special_drink_made"
+    }
+  ],
+  "day2": {
+    "business": {
+      "session_id": "day2.shop",
+      "stages": [
+        {
+          "id": "festival",
+          "ordinary_customers": [
+            {
+              "id": "ordinary_a",
+              "actor_ids": [
+                "day2_ordinary_a"
+              ],
+              "order_ids": [
+                "day2_ordinary_a"
+              ]
+            },
+            {
+              "id": "ordinary_b",
+              "actor_ids": [
+                "day2_ordinary_b"
+              ],
+              "order_ids": [
+                "day2_ordinary_b"
+              ]
+            },
+            {
+              "id": "ordinary_c",
+              "actor_ids": [
+                "day2_ordinary_c"
+              ],
+              "order_ids": [
+                "day2_ordinary_c"
+              ]
+            }
+          ],
+          "story_customers": [
+            {
+              "id": "festival",
+              "actor_ids": [
+                "day2_festival_0",
+                "day2_festival_1"
+              ],
+              "order_ids": [
+                "day2_s02_festival_0"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "elder",
+          "ordinary_customers": [],
+          "story_customers": [
+            {
+              "id": "elder",
+              "actor_ids": [
+                "day2_elder_0",
+                "day2_elder_1"
+              ],
+              "order_ids": [
+                "day2_s02_elder_0"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "emissary",
+          "ordinary_customers": [],
+          "story_customers": [
+            {
+              "id": "emissary",
+              "actor_ids": [
+                "day2_emissary_0"
+              ],
+              "order_ids": [
+                "day2_s02_emissary_0"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rumor",
+          "ordinary_customers": [],
+          "story_customers": [
+            {
+              "id": "rumor",
+              "actor_ids": [
+                "day2_rumor_0",
+                "day2_rumor_1"
+              ],
+              "order_ids": [
+                "day2_s02_rumor_0",
+                "day2_s02_rumor_1"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "close_rule": {
+      "from": {
+        "day": 2,
+        "phase": "day"
+      },
+      "to": {
+        "day": 2,
+        "phase": "night"
+      },
+      "required_stages": [
+        "festival",
+        "elder",
+        "emissary",
+        "rumor"
+      ],
+      "served_groups": [
+        "festival",
+        "elder",
+        "emissary",
+        "rumor"
+      ],
+      "departed_groups": [
+        "festival",
+        "elder",
+        "emissary",
+        "rumor"
+      ],
+      "required_flags": [
+        "day2.s02.business_finished"
+      ],
+      "completed_flag": "day2.s02.closed"
+    },
+    "visits": {
+      "festival": [
+        {
+          "actor_id": "day2_festival_0",
+          "entry": "day1_door",
+          "waiting": "day1_group_a",
+          "exit": "day1_door",
+          "arrival_route": [
+            "day1_aisle"
+          ],
+          "departure_route": [
+            "day1_aisle"
+          ]
+        },
+        {
+          "actor_id": "day2_festival_1",
+          "entry": "day1_door",
+          "waiting": "day1_group_b",
+          "exit": "day1_door",
+          "arrival_route": [
+            "day1_aisle"
+          ],
+          "departure_route": [
+            "day1_aisle"
+          ]
+        }
+      ],
+      "elder": [
+        {
+          "actor_id": "day2_elder_0",
+          "entry": "day1_door",
+          "waiting": "day1_group_a",
+          "exit": "day1_door",
+          "arrival_route": [
+            "day1_aisle"
+          ],
+          "departure_route": [
+            "day1_aisle"
+          ]
+        },
+        {
+          "actor_id": "day2_elder_1",
+          "entry": "day1_door",
+          "waiting": "day1_group_b",
+          "exit": "day1_door",
+          "arrival_route": [
+            "day1_aisle"
+          ],
+          "departure_route": [
+            "day1_aisle"
+          ]
+        }
+      ],
+      "emissary": [
+        {
+          "actor_id": "day2_emissary_0",
+          "entry": "day1_door",
+          "waiting": "day1_group_a",
+          "exit": "day1_door",
+          "arrival_route": [
+            "day1_aisle"
+          ],
+          "departure_route": [
+            "day1_aisle"
+          ]
+        }
+      ],
+      "rumor": [
+        {
+          "actor_id": "day2_rumor_0",
+          "entry": "day1_door",
+          "waiting": "day1_group_a",
+          "exit": "day1_door",
+          "arrival_route": [
+            "day1_aisle"
+          ],
+          "departure_route": [
+            "day1_aisle"
+          ]
+        },
+        {
+          "actor_id": "day2_rumor_1",
+          "entry": "day1_door",
+          "waiting": "day1_group_b",
+          "exit": "day1_door",
+          "arrival_route": [
+            "day1_aisle"
+          ],
+          "departure_route": [
+            "day1_aisle"
+          ]
+        }
+      ],
+      "ordinary_a": [
+        {
+          "actor_id": "day2_ordinary_a",
+          "entry": "day1_door",
+          "waiting": "day2_ordinary_a",
+          "exit": "day1_door",
+          "arrival_route": [
+            "day1_aisle"
+          ],
+          "departure_route": [
+            "day1_aisle"
+          ]
+        }
+      ],
+      "ordinary_b": [
+        {
+          "actor_id": "day2_ordinary_b",
+          "entry": "day1_door",
+          "waiting": "day2_ordinary_b",
+          "exit": "day1_door",
+          "arrival_route": [
+            "day1_aisle"
+          ],
+          "departure_route": [
+            "day1_aisle"
+          ]
+        }
+      ],
+      "ordinary_c": [
+        {
+          "actor_id": "day2_ordinary_c",
+          "entry": "day1_door",
+          "waiting": "day2_ordinary_c",
+          "exit": "day1_door",
+          "arrival_route": [
+            "day1_aisle"
+          ],
+          "departure_route": [
+            "day1_aisle"
+          ]
+        }
+      ]
+    },
+    "tavern_offers": {
+      "day2_amber_wine": {
+        "item_id": "griffin_amber_wine",
+        "price": 60,
+        "discounted_price": 48,
+        "discount_flag": "day2.s03.discount",
+        "stock": 1
+      }
+    },
+    "casino": {
+      "debt_task_id": "day2.casino.debt",
+      "loss_receipt": "day2.s04.first_loss",
+      "win_receipt": "day2.s04.casino_reward_received",
+      "reward_items": {
+        "phantom_gold_mushroom": 1,
+        "rainbow_cube": 1,
+        "honey_amber_crystal": 1
+      }
+    }
+  },
+  "travel_facts": [
+    {
+      "host": "tavern",
+      "stage": "day2.s03",
+      "flag": "day2.travel.tavern_arrived"
+    },
+    {
+      "host": "casino",
+      "stage": "day2.s04",
+      "flag": "day2.travel.casino_arrived"
+    },
+    {
+      "host": "settlement",
+      "stage": "day2.s05.street",
+      "flag": "day2.travel.casino_exited"
+    },
+    {
+      "host": "shop",
+      "stage": "day2.s05.return_shop",
+      "flag": "day2.travel.shop_returned"
+    },
+    {
+      "host": "shop",
+      "stage": "day2.s05.return_final",
+      "flag": "day2.travel.final_shop_returned"
+    }
+  ],
+  "user_actions": [
+    {
+      "id": "day2.close",
+      "text": "关店 · 前往酒馆",
+      "host": "shop",
+      "stage": "day2.s02.wait_close",
+      "kind": "close"
+    },
+    {
+      "id": "day2.buy",
+      "text": "购买琥珀酒 · 60G × 80% = 48G（一份）",
+      "host": "tavern",
+      "stage": "day2.s03.wait_purchase",
+      "trigger": "tavern_buy"
+    },
+    {
+      "id": "day2.round1",
+      "text": "开始第一局",
+      "host": "casino",
+      "stage": "day2.s04.wait_first",
+      "trigger": "casino_round1"
+    },
+    {
+      "id": "day2.round2",
+      "text": "开始第二局",
+      "host": "casino",
+      "stage": "day2.s04.wait_second",
+      "trigger": "casino_round2"
+    },
+    {
+      "id": "day3.wait",
+      "text": "等待至第三天傍晚",
+      "host": "shop",
+      "stage": "day3.handoff",
+      "kind": "evening"
+    },
+    {
+      "id": "day3.finish",
+      "text": "结束第三天 · 结算未交付委托",
+      "host": "shop",
+      "stage": "day3.handoff",
+      "kind": "next_day"
+    }
+  ]
+}

@@ -6,40 +6,358 @@
   "story": "res://src/resources/story/day2_stages_01_05.json",
   "dialogue": "res://src/resources/dialogue/day2_stages_01_05.json",
   "phases": "res://src/resources/story/day2_stages_01_05_phases.json",
-  "publication_status": "pending",
-  "pending_beat_ids": [
-    "s01_fat_goblin_wakes",
-    "s01_wants_more",
-    "s01_stop_selling_blood",
-    "s01_remember_guard",
-    "s01_mushroom_commission",
-    "s01_stage_end",
-    "s02_business_open",
-    "s02_festival_talk",
-    "s02_elder_authority",
-    "s02_emissary_rumor",
-    "s02_tavern_casino_talk",
-    "s02_find_errand_runner",
-    "s02_stage_end",
-    "s03_amber_wine",
-    "s03_tavern_commission",
-    "s03_griffin_token",
-    "s03_to_casino",
-    "s04_afraid_to_enter",
-    "s04_casino_boss",
-    "s04_stake",
-    "s04_first_round",
-    "s04_second_round",
-    "s04_leave_casino",
-    "s05_street_check",
-    "s05_back_in_shop",
-    "s05_make_special",
-    "s05_deliver_guard",
-    "s05_useful_guard",
-    "s05_unsolved"
-  ],
+  "publication_status": "published",
+  "pending_beat_ids": [],
   "handoff": "res://docs/story_authoring/day_01_02_authoring_handoff.md",
-  "beats": [],
+  "beats": [
+    {
+      "id": "day2_s01_morning",
+      "mode": "自动演出",
+      "event": "day2.s01.morning",
+      "start": 0,
+      "count": 14,
+      "dialogues": [
+        "day2.s01.fat_goblin_wakes",
+        "day2.s01.wants_more",
+        "day2.s01.stop_selling_blood",
+        "day2.s01.remember_guard",
+        "day2.s01.remember_guard.chronicle_1",
+        "day2.s01.remember_guard.chronicle_2",
+        "day2.s01.mushroom_commission",
+        "day2.s01.mushroom_commission_after_funds"
+      ]
+    },
+    {
+      "id": "day2_s02_business_open",
+      "mode": "自动演出",
+      "event": "day2.s02.business_open",
+      "start": 0,
+      "count": 5,
+      "dialogues": [
+        "day2.s02.business_open"
+      ]
+    },
+    {
+      "id": "day2_s02_festival_order",
+      "mode": "自动演出",
+      "event": "day2.s02.festival_order",
+      "start": 0,
+      "count": 6,
+      "dialogues": [
+        "day2.s02.festival_talk",
+        "day2.s02.festival_talk.chronicle_1"
+      ]
+    },
+    {
+      "id": "day2_bridge_festival",
+      "mode": "玩家操作",
+      "phase": {
+        "id": "day2.bridge.festival",
+        "after_event": "day2.s02.festival_order",
+        "stage": "day2.s02.wait_festival",
+        "completion": {
+          "flag": "day2.business.festival.served",
+          "allow_existing": true
+        },
+        "completion_flag": "day2.bridge.festival.completed",
+        "next_event": "day2.s02.festival_after"
+      }
+    },
+    {
+      "id": "day2_s02_festival_after",
+      "mode": "自动演出",
+      "event": "day2.s02.festival_after",
+      "start": 0,
+      "count": 5,
+      "dialogues": [
+        "day2.s02.festival_talk_after"
+      ]
+    },
+    {
+      "id": "day2_s02_elder_order",
+      "mode": "自动演出",
+      "event": "day2.s02.elder_order",
+      "start": 0,
+      "count": 3,
+      "dialogues": [
+        "day2.s02.elder_authority"
+      ]
+    },
+    {
+      "id": "day2_bridge_elder",
+      "mode": "玩家操作",
+      "phase": {
+        "id": "day2.bridge.elder",
+        "after_event": "day2.s02.elder_order",
+        "stage": "day2.s02.wait_elder",
+        "completion": {
+          "flag": "day2.business.elder.served",
+          "allow_existing": true
+        },
+        "completion_flag": "day2.bridge.elder.completed",
+        "next_event": "day2.s02.elder_after"
+      }
+    },
+    {
+      "id": "day2_s02_elder_after",
+      "mode": "自动演出",
+      "event": "day2.s02.elder_after",
+      "start": 0,
+      "count": 6,
+      "dialogues": [
+        "day2.s02.elder_authority_after"
+      ]
+    },
+    {
+      "id": "day2_s02_emissary_order",
+      "mode": "自动演出",
+      "event": "day2.s02.emissary_order",
+      "start": 0,
+      "count": 3,
+      "dialogues": [
+        "day2.s02.emissary_rumor"
+      ]
+    },
+    {
+      "id": "day2_bridge_emissary",
+      "mode": "玩家操作",
+      "phase": {
+        "id": "day2.bridge.emissary",
+        "after_event": "day2.s02.emissary_order",
+        "stage": "day2.s02.wait_emissary",
+        "completion": {
+          "flag": "day2.business.emissary.served",
+          "allow_existing": true
+        },
+        "completion_flag": "day2.bridge.emissary.completed",
+        "next_event": "day2.s02.emissary_after"
+      }
+    },
+    {
+      "id": "day2_s02_emissary_after",
+      "mode": "自动演出",
+      "event": "day2.s02.emissary_after",
+      "start": 0,
+      "count": 6,
+      "dialogues": [
+        "day2.s02.emissary_rumor_after"
+      ]
+    },
+    {
+      "id": "day2_s02_rumor_order",
+      "mode": "自动演出",
+      "event": "day2.s02.rumor_order",
+      "start": 0,
+      "count": 3,
+      "dialogues": [
+        "day2.s02.tavern_casino_talk"
+      ]
+    },
+    {
+      "id": "day2_bridge_rumor",
+      "mode": "玩家操作",
+      "phase": {
+        "id": "day2.bridge.rumor",
+        "after_event": "day2.s02.rumor_order",
+        "stage": "day2.s02.wait_rumor",
+        "completion": {
+          "flag": "day2.business.rumor.served",
+          "allow_existing": true
+        },
+        "completion_flag": "day2.bridge.rumor.completed",
+        "next_event": "day2.s02.rumor_after"
+      }
+    },
+    {
+      "id": "day2_s02_rumor_after",
+      "mode": "自动演出",
+      "event": "day2.s02.rumor_after",
+      "start": 0,
+      "count": 7,
+      "dialogues": [
+        "day2.s02.tavern_casino_talk_after",
+        "day2.s02.find_errand_runner"
+      ]
+    },
+    {
+      "id": "day2_s02_stage_end",
+      "mode": "自动演出",
+      "event": "day2.s02.stage_end",
+      "start": 0,
+      "count": 1,
+      "dialogues": []
+    },
+    {
+      "id": "day2_s03_amber_wine",
+      "mode": "自动演出",
+      "event": "day2.s03.amber_wine",
+      "start": 0,
+      "count": 3,
+      "dialogues": [
+        "day2.s03.amber_wine"
+      ]
+    },
+    {
+      "id": "day2_s03_purchase",
+      "mode": "自动演出",
+      "event": "day2.s03.purchase",
+      "start": 0,
+      "count": 3,
+      "dialogues": [
+        "day2.s03.amber_wine_after_purchase"
+      ]
+    },
+    {
+      "id": "day2_s03_commission_token",
+      "mode": "自动演出",
+      "event": "day2.s03.commission_token",
+      "start": 0,
+      "count": 13,
+      "dialogues": [
+        "day2.s03.tavern_commission",
+        "day2.s03.tavern_commission_gathered",
+        "day2.s03.tavern_commission_not_gathered",
+        "day2.s03.tavern_commission_common",
+        "day2.s03.griffin_token",
+        "day2.s03.griffin_token.chronicle_1",
+        "day2.s03.to_casino"
+      ]
+    },
+    {
+      "id": "day2_s04_casino",
+      "mode": "自动演出",
+      "event": "day2.s04.casino",
+      "start": 0,
+      "count": 5,
+      "dialogues": [
+        "day2.s04.afraid_to_enter",
+        "day2.s04.casino_boss",
+        "day2.s04.stake",
+        "day2.s04.first_round"
+      ]
+    },
+    {
+      "id": "day2_s04_first_round",
+      "mode": "自动演出",
+      "event": "day2.s04.first_round",
+      "start": 0,
+      "count": 4,
+      "dialogues": [
+        "day2.s04.first_round_after_loss",
+        "day2.s04.second_round"
+      ]
+    },
+    {
+      "id": "day2_s04_second_round",
+      "mode": "自动演出",
+      "event": "day2.s04.second_round",
+      "start": 0,
+      "count": 7,
+      "dialogues": [
+        "day2.s04.second_round_after_win",
+        "day2.s04.second_round_after_reward",
+        "day2.s04.second_round_waiver",
+        "day2.s04.leave_casino"
+      ]
+    },
+    {
+      "id": "day2_s05_street",
+      "mode": "自动演出",
+      "event": "day2.s05.street",
+      "start": 0,
+      "count": 2,
+      "dialogues": [
+        "day2.s05.street_check"
+      ]
+    },
+    {
+      "id": "day2_s05_special_before",
+      "mode": "自动演出",
+      "event": "day2.s05.special_before",
+      "start": 0,
+      "count": 4,
+      "dialogues": [
+        "day2.s05.back_in_shop",
+        "day2.s05.make_special"
+      ]
+    },
+    {
+      "id": "day2_bridge_special_drink",
+      "mode": "玩家操作",
+      "phase": {
+        "id": "day2.bridge.special_drink",
+        "after_event": "day2.s05.special_before",
+        "stage": "day2.s05.wait_special_drink",
+        "completion": {
+          "flag": "day2.s05.special_drink_made",
+          "allow_existing": true
+        },
+        "completion_flag": "day2.bridge.special_drink.completed",
+        "next_event": "day2.s05.special_after"
+      }
+    },
+    {
+      "id": "day2_s05_special_after",
+      "mode": "自动演出",
+      "event": "day2.s05.special_after",
+      "start": 0,
+      "count": 2,
+      "dialogues": [
+        "day2.s05.make_special_after"
+      ]
+    },
+    {
+      "id": "day2_s05_guard_greet",
+      "mode": "自动演出",
+      "event": "day2.s05.guard_greet",
+      "start": 0,
+      "count": 3,
+      "dialogues": [
+        "day2.s05.deliver_guard"
+      ]
+    },
+    {
+      "id": "day2_bridge_guard_delivery",
+      "mode": "玩家操作",
+      "phase": {
+        "id": "day2.bridge.guard_delivery",
+        "after_event": "day2.s05.guard_greet",
+        "stage": "day2.s05.wait_guard_delivery",
+        "completion": {
+          "flag": "day2.s05.special_drink_delivered",
+          "allow_existing": true
+        },
+        "completion_flag": "day2.bridge.guard_delivery.completed",
+        "next_event": "day2.s05.guard_after"
+      }
+    },
+    {
+      "id": "day2_s05_guard_after",
+      "mode": "自动演出",
+      "event": "day2.s05.guard_after",
+      "start": 0,
+      "count": 6,
+      "dialogues": [
+        "day2.s05.deliver_guard_after_delivery",
+        "day2.s05.deliver_guard_after_reward",
+        "day2.s05.useful_guard"
+      ]
+    },
+    {
+      "id": "day2_s05_unsolved",
+      "mode": "自动演出",
+      "event": "day2.s05.unsolved",
+      "start": 0,
+      "count": 5,
+      "dialogues": [
+        "day2.s05.unsolved"
+      ]
+    }
+  ],
   "authoring_project": "res://docs/story_authoring/day2_stages_01_05_project.json",
-  "authoring_sha256": "c371d51e6ca10d3d94b80fdbc460db9670418963c99de30ae31ff2ecfd7a4856"
+  "authoring_sha256": "87e7d769414b1cd18a41091c9143e448b9637cc00146c27466d147e0df8e5414",
+  "verification": {
+    "entry": "res://tests/verify_two_day_flow.gd",
+    "scope": "标题开始、真实旅行和交付；代购及存档另测"
+  }
 }

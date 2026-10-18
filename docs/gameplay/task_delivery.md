@@ -6,7 +6,7 @@
 
 ## 数据与复用
 
-任务继续使用 TaskCatalog / TaskJournal，状态仍来自 GameState 的激活与完成条件。交付任务支持三种互斥的需求，`product_id`、`items` 与 `drink` 必须恰好出现一个。下面列静态成品与物资示例；自由饮品的要求、价格及原子结算见[第二期自由调配](free_tea_recipes.md#通用订单)：
+任务继续使用 TaskCatalog / TaskJournal，状态仍来自 GameState 的激活与完成条件。交付任务支持四种互斥需求，`product_id`、`items`、`uses` 与 `drink` 必须恰好出现一个。`uses` 明确按次扣料，仅接受共享会话库存，由 `get_use_requirement()` 查询；份数仍用 `items`。下面列静态成品与物资示例；自由饮品的要求、价格及原子结算见[第二期自由调配](free_tea_recipes.md#通用订单)：
 
 ```json
 "delivery": {
@@ -26,7 +26,7 @@
 
 `order_id` 在任务目录中唯一；`product_id` 必须是菜单中 `category = "product"` 的物品；`items` 是 `{物品 ID: 正整数}`，物品只需存在于目录中，可一次提交多种材料多份；NPC ID 直接复用 SettlementCharacter.actor_id。交付完成条件使用既有 `complete_when` 的 flag，不通过伪造剧情完成事件结算。
 
-材料需求与成品需求共用同一套结算：`get_requirement()` 把两种配置统一成 `{item_id: 数量}`（JSON 数字在此转成 int，库存 API 只接受 int），`try_submit(order_id, target_object_id, drink_id = "")` 是规范入口，扣减仍由一次 `WarehouseInventory.try_exchange(需求, 奖励)` 完成。旧的 `try_deliver(order_id, product_id, target_object_id)` 保留为兼容包装：成品订单校验 `product_id` 一致，材料订单要求传入空字符串。
+整份材料与成品共用 `get_requirement()`，统一返回 `{item_id: 数量}`（JSON 数字在此转成 int，库存 API 只接受 int），`try_submit(order_id, target_object_id, drink_id = "")` 是规范入口，共享会话由 `GameState.commit_delivery()` 提交；`uses` 从 `get_use_requirement()` 单独查询并按次扣除，不能按整份解释。独立教学库存仍使用一次 `WarehouseInventory.try_exchange(需求, 奖励)`。旧的 `try_deliver(order_id, product_id, target_object_id)` 保留为兼容包装：成品订单校验 `product_id` 一致，材料订单要求传入空字符串。
 
 `rewards.items` 通过共享库存结算物品，`rewards.money` 经已有钱包事务结算收入；自由饮品订单未显式配置金额时使用配方售价。物品示例：
 
@@ -38,12 +38,11 @@ tutorial 首单配置沿用 `shop.first_order`，完成事实为 `shop.order_001
 
 ### 散客订单（营业玩法）
 
-`src/resources/tasks/day1_daily_orders.json` 是第一批不挂在任何剧情 beat 上的普通订单，已并入 `Day1ChapterController.TASK_FILES`。三条 `commission` 各要一款固定成品，交付给柜台的哥布林散客，`rewards.money = 10`（与普通成品奶茶 10G／杯的基准一致），`reveal_when` 与 `activate_when` 都是 `day1.group_settled`——剧情五单结算完，营业继续，玩家自己接、自己做、自己收钱。
+`src/resources/tasks/day1_daily_orders.json` 保留旧三款教学订单（10G／单），仅在显式 `debug.teaching_orders` 为真时开放。正式五单结束不会解锁该池。`tests/verify_daily_orders.gd` 覆盖这项隔离、接单、空库存拒绝、10G 教学结算、重复交付和订单板报酬。
 
-它们复用上面同一条交付路径：`accept_order` 写各自的 `accepted_flag`，`try_submit` 走一次原子结算，回执 `delivery.<order_id>.completed` 防二次交付，订单板由 `OrderBoardModel` 直接投影，没有新增代码分支。`tests/verify_daily_orders.gd` 覆盖解锁前不可接、解锁后可接、空货架拒绝、结算 +10G、重复交付被拒、订单板显示真实报酬。
+正式散客在 `src/resources/tasks/day2_stages_01_05.json`：第二天三名普通客各可点一杯 H01，3G／杯，经 `BusinessScheduler` 和 `CustomerVisit` 入店、等待与离店。它们复用 `accept_order`、`try_submit` 和稳定交付回执；四组剧情客完成后可直接关店，已接普通单必须先交付。普通客也可雇一人执行专款代购，与饮品交付分别结算。`verify_two_day_flow.gd -- --ordinary-order` 覆盖接普通单后无法关店、交付后可以关店的真实分支。
 
-现状是**一次性订单池**：每条只能结算一次，扩容只需往同一个文件加条目。每天刷新或无限接单需要任务结果（`get_task_result`）支持重置，尚未实现；营业计划层面的顾客组调度见 `BusinessScheduler` 的 `ordinary_customers`，等 Day 2 宿主接入时再启用。
-
+两套数据都是一次性任务，当前未提供每日无限刷新。
 ## 执行流程
 
 1. MainGame 装配 Systems/TaskDelivery，注入原目录、Journal、GameState 和共享库存。打开订单板只查看；每单点击“接取订单”后调用 `accept_order()`，重复接取返回 `ERR_ALREADY_EXISTS`。已有 StoryDirector 路由继续优先。

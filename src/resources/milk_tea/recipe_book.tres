@@ -25,10 +25,10 @@ materials = Array[String](["black_tea", "creamer", "syrup"])
 script = ExtResource("recipe")
 id = "day1_blood_recipe"
 product_id = "day1_blood_milk_tea"
-materials = Array[String](["day1_griffin_blood", "black_tea", "creamer", "syrup"])
+materials = Array[String](["creamer_milk_tea_base", "day1_griffin_blood"])
 required_flag = "day1.s05.blood_acquired"
 required_flags = Array[String](["day1.s05.returned_shop"])
-required_stages = Array[String](["day1.s06"])
+required_stages = Array[String](["day1.s06.craft", "day1.s06.wait_craft"])
 
 [sub_resource type="Resource" id="Recipe_h01"]
 script = ExtResource("recipe")
@@ -78,6 +78,14 @@ materials = Array[String](["instant_coffee_concentrate", "creamer_milk_tea_base"
 sell_price = 3
 required_flag = "business.profile.day1"
 
+[sub_resource type="Resource" id="Recipe_day2_guard"]
+script = ExtResource("recipe")
+id = "day2_guard_recipe"
+product_id = "day2_guard_milk_tea"
+materials = Array[String](["creamer_milk_tea_base", "griffin_amber_wine", "phantom_gold_mushroom"])
+required_flag = "day2.s05.special_recipe_available"
+required_stages = Array[String](["day2.s05.wait_special_drink"])
+
 [resource]
 script = ExtResource("book")
-recipes = Array[ExtResource("recipe")]([SubResource("Recipe_pearl"), SubResource("Recipe_coconut"), SubResource("Recipe_plain"), SubResource("Recipe_blood"), SubResource("Recipe_h01"), SubResource("Recipe_h02"), SubResource("Recipe_h03"), SubResource("Recipe_h04"), SubResource("Recipe_h05"), SubResource("Recipe_h06")])
+recipes = Array[ExtResource("recipe")]([SubResource("Recipe_pearl"), SubResource("Recipe_coconut"), SubResource("Recipe_plain"), SubResource("Recipe_blood"), SubResource("Recipe_h01"), SubResource("Recipe_h02"), SubResource("Recipe_h03"), SubResource("Recipe_h04"), SubResource("Recipe_h05"), SubResource("Recipe_h06"), SubResource("Recipe_day2_guard")])

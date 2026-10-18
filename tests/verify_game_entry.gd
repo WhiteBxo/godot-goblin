@@ -1,7 +1,7 @@
 extends SceneTree
 
 const StateData = preload("res://src/core/game_state.gd")
-const RECIPE: Array[String] = ["black_tea", "creamer", "pearl", "syrup"]
+const RECIPE: Array[String] = ["creamer_milk_tea_base", "brown_sugar_boba", "ice"]
 var _checks := 0
 var _failures: Array[String] = []
 var _state: StateData

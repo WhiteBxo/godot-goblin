@@ -13,7 +13,7 @@
 | 任务展示、交付协调器、弹窗、焦点、角色与演出动作 | 场景本地节点 | 重建后由会话投影 |
 | 食材目录、默认库存、订单配置 | basic_menu.tres / day1_menu.tres | 静态资源 |
 
-F5 进入标题菜单，“新游戏”进入 src/core/main.tscn 并启用 Day 1 五单经营配置；F6 可直接运行该店铺，原三单教学使用 src/debug/story/legacy_shop.tscn。完整流程见 [Day 1 前两阶段](day_01_stages_01_02.md)。钱包沿用已有事务接口；人类首单收普通货币、哥布林四单发库存币。自由饮品交付也支持按售价结算，但正式自由订单和购买 UI 尚未发布。
+F5 进入标题菜单，“新游戏”进入 src/core/main.tscn 并启用 Day 1 五单经营配置；F6 可直接运行该店铺，原三单教学使用 src/debug/story/legacy_shop.tscn。完整流程见 [Day 1 前两阶段](day_01_stages_01_02.md)。钱包沿用已有事务接口；正式五单均为 H01，每杯收入 3G，实体投币按 10G 面额直接扣钱包。自由饮品交付也支持按售价结算，但正式自由订单和购买 UI 尚未发布。
 
 ## 生命周期与接口
 
@@ -23,7 +23,7 @@ F5 进入标题菜单，“新游戏”进入 src/core/main.tscn 并启用 Day 1
 | 配置选择 | select_business_profile(profile) | 相同配置幂等；存在经营或剧情进度时禁止隐式切换 |
 | 新游戏 | start_new_game() -> Error | 重置当前所选配置的整局数据；保留服务对象与 UI 订阅，发 state_reset |
 | 场景切换 / 重载 / 开发面板重启 | SceneTree 原接口 | 保留当前配置与全部经营事实，只重新绑定显示 |
-| 关闭应用再启动 | 当前没有自动读档 | 新进程初始化默认状态，不承诺跨进程保存 |
+| 关闭应用再启动 | 标题选择“继续游戏” | 从最近安全自动检查点恢复完整会话；不恢复逐帧位置 |
 | 显式完整恢复 | restore_state(snapshot) -> Error | 整体校验替换，包括配置；发 state_restored，不重播已完成事件或发奖 |
 | 兼容清理调用 | reset_state() -> bool | 重置整个会话；已经默认则静默返回 false，禁止用于普通场景切换 |
 
@@ -33,9 +33,9 @@ make_drink 原子扣料并入库成品，不写交付事实。TaskDelivery 保�
 
 ## 快照边界
 
-GameState 原生 Variant 完整快照为 schema_version = 5，包含剧情字段、business.profile_id、business.inventory、business.production.completed_order_ids / formula_requests 及 economy。库存子快照为 v3，含原料开封次数、配方杯数 drinks 和首次发现 encyclopedia；规则见[自由调配](free_tea_recipes.md#快照与迁移)。economy 包含余额、库存、商人余量与交易/领奖回执。business.inventory 和 economy.inventory 是同一库存的独立副本，恢复时必须完全一致；制作 ID 必须为所选配置的连续前缀。
+GameState 原生 Variant 完整快照为 schema_version = 8，包含剧情字段、business.profile_id、business.inventory、business.production.completed_order_ids / formula_requests 及 economy。库存子快照为 v6，含原料开封次数、配方杯数 drinks 和首次发现 encyclopedia；规则见[自由调配](free_tea_recipes.md#快照与迁移)。economy v3 包含余额、库存、商人余量、交易/领奖回执、配方固定报价和首次爆品奖励。business.inventory 和 economy.inventory 是同一库存的独立副本，恢复时必须完全一致；制作 ID 必须为所选配置的连续前缀。
 
-v5 另含 task_results 持久终态，完整 v2/v3/v4 补空并静默归一化，见[日程与任务结果](../systems/schedule_and_task_results.md)。完整 v2/v3 快照补空自由饮品、图鉴及制作请求回执，保留已有原料开封次数。v2 另外迁移为 tutorial 配置，为旧库存补入未发现、数量为零的古怪金币。v1 只有剧情数据，无法判断对应经营进度，继续拒绝恢复；缺字段、乱序、重复、未知 ID 和损坏快照同样整体拒绝。校验失败不改变状态或发通知，相同快照静默恢复。正式入口在已声明的安全检查点自动保存完整会话，并通过标题继续游戏恢复。
+完整快照包含 `task_results` 持久终态。旧完整 v2–v7 按版本和字段迁移，兼容两个分支的旧布局；历史实体币折算一次，已有报价与领奖回执保留。旧未定价自由杯作为历史资料保留，读档不抽价、不补发奖。只有剧情的 v1、缺失必要字段、非法金额、未知物品及损坏快照整体拒绝，原会话不变。具体迁移边界见 [GameState](../systems/game_state.md) 与[自由配方](free_tea_recipes.md#快照与迁移)。正式入口在声明的安全检查点自动保存，通过标题继续游戏恢复；已验证 20 个两天及交接边界的独立进程恢复。
 
 子服务快照只用于组件验证与内部事务，完整经营恢复必须调用 GameState。原生 var_to_bytes / bytes_to_var 保留数值类型，普通 JSON 不能直接保证 GameState 的原生类型约定。
 

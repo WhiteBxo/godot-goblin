@@ -38,6 +38,7 @@ func _run() -> void:
 	_test_unsafe_pricing()
 	_test_snapshot()
 	_test_atomic_rewards_and_uses()
+	_test_branch_migrations()
 	print("ECONOMY_PRICING: %s (%d checks)" % ["PASS" if _failures.is_empty() else "FAIL", _checks])
 	quit(0 if _failures.is_empty() else 1)
 
@@ -52,7 +53,7 @@ func _test_catalog() -> void:
 		var traded: Array[IngredientDefinition] = []
 		var by_source := {}
 		for ingredient: IngredientDefinition in menu.ingredients:
-			if ingredient.economy_scope == "none":
+			if ingredient.economy_scope == "none" or ingredient.source_ids.is_empty():
 				continue
 			traded.append(ingredient)
 			for source: String in ingredient.source_ids:
@@ -176,15 +177,17 @@ func _test_confirm_and_craft() -> void:
 	_check(not no_stock.ok and no_stock.code == "missing_uses", "Missing uses reject the whole craft")
 	_check(wallet.get_formula_price(materials).selling_price == confirmed_price, "A failed craft keeps the saved price")
 	var snapshot: Dictionary = _state.to_dict()
-	_check(snapshot.schema_version == 6, "Whole-session schema advances to v6")
-	_check(snapshot.economy.schema_version == 2, "Economy snapshot advances to v2")
-	_check(snapshot.business.inventory.schema_version == 4, "Inventory snapshot advances to v4")
+	_check(snapshot.schema_version == 8, "Whole-session schema advances to v8")
+	_check(snapshot.economy.schema_version == 3, "Economy snapshot advances to v3")
+	_check(snapshot.business.inventory.schema_version == 6, "Inventory snapshot advances to v6")
 	_check(snapshot.economy.recipe_prices.size() == 1 and snapshot.economy.formula_crafts.size() == 1, "Ledger and craft receipts persist")
 	_state.free()
 	# The same seed reproduces the same first price; another seed stays in range.
 	var other := StateData.new(_menu())
 	other.select_business_profile("day1")
 	other.get_warehouse_inventory().add_ingredient(T2, 1)
+	other.get_warehouse_inventory().add_ingredient(T1, 1)
+	other.get_warehouse_inventory().add_ingredient(T4, 1)
 	other.set_pricing_rng(_seeded_rng(20261019))
 	var repeated: Dictionary = other.confirm_formula(materials, "price-1")
 	_check(repeated.ok and int(repeated.record.selling_price) == confirmed_price, "A fixed RNG reproduces the quoted price")
@@ -210,9 +213,22 @@ func _test_snapshot() -> void:
 	_check(state.get_transactions().get_balance() == 30, "Coins fold into the wallet at face value once")
 	_check(state.get_warehouse_inventory().get_stock("strange_coin") == 0, "Folded coins leave the inventory")
 	var migrated: Dictionary = state.to_dict()
-	_check(migrated.schema_version == 6 and migrated.economy.schema_version == 2 and migrated.business.inventory.schema_version == 4, "Every schema migrates forward")
+	_check(migrated.schema_version == 8 and migrated.economy.schema_version == 3 and migrated.business.inventory.schema_version == 6, "Every schema migrates forward")
 	_check(migrated.economy.recipe_prices.is_empty() and migrated.economy.signature_rewards.is_empty(), "Migration invents no price or reward")
 	_check(state.restore_state(old) == OK and state.get_transactions().get_balance() == 30, "Repeating the migration cannot credit coins twice")
+	for quantity: Variant in [1.5, -1, WalletTransactions.LIMIT]:
+		var broken := old.duplicate(true)
+		broken.economy.inventory.ingredients.strange_coin.quantity = quantity
+		broken.business.inventory = broken.economy.inventory.duplicate(true)
+		_check(state.restore_state(broken) != OK and state.to_dict() == migrated, "Invalid or overflowing old coin quantities reject the whole restore")
+	for field: String in ["ingredients", "merchant_stock"]:
+		var broken := old.duplicate(true)
+		if field == "ingredients":
+			broken.economy.inventory.ingredients = []
+			broken.business.inventory = broken.economy.inventory.duplicate(true)
+		else:
+			broken.economy.merchant_stock = []
+		_check(state.restore_state(broken) != OK and state.to_dict() == migrated, "Malformed old containers reject atomically: " + field)
 	state.free()
 
 
@@ -225,7 +241,7 @@ func _test_supply() -> void:
 	for id: String in ["creamer_milk_tea_base", "industrial_green_tea", "mint_syrup", "instant_coffee_concentrate", "brown_sugar_boba", "mint_choc_crisp", "ice", "cocoa_powder", "apple_jam", "strawberry_jam"]:
 		_check(inventory.get_stock(id) == 5 and inventory.get_uses(id) == 25, "Human ingredients start at five portions: " + id)
 	var wallet: WalletTransactions = state.get_transactions()
-	_check(wallet.get_product_quotes().size() == 10, "The warehouse offers ten 0G resupply entries")
+	_check(wallet.get_product_quotes().filter(func(q: Dictionary) -> bool: return q.unit_price == 0).size() == 10, "The warehouse offers ten 0G resupply entries")
 	var purchase: Dictionary = wallet.purchase("supply_creamer_milk_tea_base", 1, "supply.test")
 	_check(purchase.ok and wallet.get_balance() == 0, "A 0G resupply pays nothing")
 	_check(inventory.get_uses("creamer_milk_tea_base") == 30, "A whole portion adds five uses")
@@ -248,7 +264,8 @@ func _test_unsafe_pricing() -> void:
 	_check(not denied.ok and denied.code == "unsafe_phase", "Pricing is disabled during infiltration")
 	var preview: Dictionary = state.get_transactions().preview_formula_price(materials)
 	_check(preview.ok and not preview.priced, "Previews stay available while pricing is blocked")
-	_check(DayPhase.enter_day(state) and state.set_story_stage(""), "Leaving the unsafe phase succeeds")
+	_check(DayPhase.enter_day(state) and state.set_story_stage("day2.s01"), "Leaving the unsafe phase succeeds")
+	state.complete_event("day1.opening")
 	var allowed: Dictionary = state.confirm_formula(materials, "price-day")
 	_check(allowed.ok and int(allowed.record.selling_price) == 4, "Pricing resumes after the unsafe phase ends")
 	state.free()
@@ -288,4 +305,64 @@ func _test_atomic_rewards_and_uses() -> void:
 	price.slot_prices[0] += 1
 	price.selling_price += 1
 	_check(state.restore_state(broken) != OK, "Consistent but forged slot cost is rejected")
+	state.free()
+
+func _test_branch_migrations() -> void:
+	var menu := _menu().duplicate(true) as TeaMenu
+	menu.recipe_rules.signatures = [{"id": "test_signature", "name": "测试爆品", "ingredients": [BASE, T2], "first_reward": 150}]
+	var state := StateData.new(menu)
+	state.select_business_profile("day1")
+	state.get_warehouse_inventory().add_ingredient(T2, 1)
+	state.set_pricing_rng(_seeded_rng(19))
+	_check(state.confirm_formula([BASE, T2], "migration-price").ok, "Create one permanent random quote for migration")
+	var crafted: Dictionary = state.commit_formula_craft([BASE, T2], 1, "migration-craft")
+	_check(crafted.ok and crafted.first_signature, "Create a real paid signature discovery")
+	var original: Dictionary = state.to_dict()
+	var recipe: String = DrinkFormula.key_for([BASE, T2], false)
+	var main_branch := original.duplicate(true)
+	main_branch.schema_version = 6
+	main_branch.economy.schema_version = 2
+	main_branch.economy.inventory.schema_version = 4
+	main_branch.business.inventory = main_branch.economy.inventory.duplicate(true)
+	_check(state.restore_state(main_branch) == OK, "Main branch v6/v2/v4 save migrates")
+	_check(state.to_dict().economy.recipe_prices == original.economy.recipe_prices and state.to_dict().economy.signature_rewards == original.economy.signature_rewards, "Main branch retains exact quote and reward receipt")
+	for version in [1, 2]:
+		var economy_branch := original.duplicate(true)
+		economy_branch.schema_version = 7
+		economy_branch.economy.schema_version = version
+		economy_branch.economy.erase("formula_crafts")
+		economy_branch.economy.erase("recipe_prices")
+		economy_branch.economy.claimed["signature:test_signature"] = true
+		if version == 1:
+			economy_branch.economy.erase("signature_rewards")
+		else:
+			economy_branch.economy.signature_rewards = {"test_signature": {"amount": 150, "request_id": "craft:migration-craft", "recipe_id": recipe}}
+		var inventory: Dictionary = economy_branch.economy.inventory
+		inventory.schema_version = 5
+		inventory["recipe_prices"] = {}
+		for id: String in original.economy.recipe_prices:
+			var price: Dictionary = original.economy.recipe_prices[id].duplicate(true)
+			price["ingredients"] = []
+			for slot: Dictionary in price.slots:
+				price.ingredients.append(slot.ingredient_id)
+			price.erase("slots")
+			inventory.recipe_prices[id] = price
+		for entry: Dictionary in inventory.encyclopedia.values():
+			entry.erase("pricing")
+		economy_branch.business.inventory = inventory.duplicate(true)
+		_check(state.restore_state(economy_branch) == OK, "Economy branch v%d wallet migrates" % version)
+		_check(state.to_dict().economy.recipe_prices == original.economy.recipe_prices, "Migration preserves every original slot price without RNG")
+		_check(state.get_transactions().get_balance() == 150 and state.get_warehouse_inventory().get_drink_stock(crafted.id) == 1, "Migration preserves balance and actual crafted cup")
+		var restored: Dictionary = state.to_dict()
+		_check(state.restore_state(restored) == OK, "Migrated signature receipt survives a second restore")
+		_check(state.commit_formula_craft([BASE, T2], 1, "after-migration-%d" % version, true).ok and state.get_transactions().get_balance() == 150, "Migrated reward cannot be paid again by an iced remake")
+		var forged := economy_branch.duplicate(true)
+		forged.economy.inventory.encyclopedia.clear()
+		forged.economy.inventory.drinks.clear()
+		forged.business.inventory = forged.economy.inventory.duplicate(true)
+		_check(state.restore_state(forged) != OK, "An old claimed flag without discovery evidence is rejected")
+		if version == 2:
+			forged = economy_branch.duplicate(true)
+			forged.economy.signature_rewards.test_signature.recipe_id = "forged"
+			_check(state.restore_state(forged) != OK, "An old reward for the wrong priced recipe is rejected")
 	state.free()

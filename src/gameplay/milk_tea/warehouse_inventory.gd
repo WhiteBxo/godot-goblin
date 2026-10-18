@@ -9,7 +9,7 @@ extends Node
 signal changed
 
 const CATALOG: TeaMenu = preload("res://src/resources/milk_tea/basic_menu.tres")
-const SCHEMA_VERSION: int = 4
+const SCHEMA_VERSION: int = 6
 const MAX_QUANTITY: int = 2147483647
 const PRICING_STATES: PackedStringArray = ["priced", "legacy_unpriced", "legacy_readonly"]
 const PROPERTY_GROUPS: PackedStringArray = ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"]
@@ -324,8 +324,12 @@ func to_dict() -> Dictionary:
 static func migrate_snapshot(data: Variant) -> Variant:
 	if not data is Dictionary or (not data.get("schema_version") is int and not data.get("schema_version") is float):
 		return data
+	if not is_finite(data.schema_version) or data.schema_version != floor(data.schema_version):
+		return data
 	var version := int(data.schema_version)
-	if version not in [1, 2, 3] or not data.get("ingredients") is Dictionary:
+	if version not in [1, 2, 3, 4, 5] or not data.get("ingredients") is Dictionary:
+		return data
+	if not data.get("recipe_prices", {}) is Dictionary:
 		return data
 	var migrated: Dictionary = data.duplicate(true)
 	if version == 1:
@@ -348,7 +352,10 @@ static func migrate_snapshot(data: Variant) -> Variant:
 	for id: Variant in migrated.encyclopedia:
 		var entry: Variant = migrated.encyclopedia[id]
 		if entry is Dictionary and not entry.has("pricing"):
-			entry["pricing"] = "legacy_unpriced"
+			entry["pricing"] = "priced" if data.get("recipe_prices", {}).has(DrinkFormula.key_for(entry.get("ingredients", []), false)) and not entry.get("legacy_unpriced", false) else "legacy_unpriced"
+		if entry is Dictionary:
+			entry.erase("legacy_unpriced")
+	migrated.erase("recipe_prices")
 	migrated.schema_version = SCHEMA_VERSION
 	return migrated
 
@@ -409,8 +416,10 @@ func validate_state(data: Variant) -> Error:
 			if not entry.ingredients is Array or entry.ingredients.is_empty():
 				return ERR_INVALID_DATA
 			for material: Variant in entry.ingredients:
-				if not material is String or material.is_empty():
+				if not material is String or not _definitions.has(material):
 					return ERR_INVALID_DATA
+			if DrinkFormula.key_for(entry.ingredients, entry.get("iced", false)) != id:
+				return ERR_INVALID_DATA
 	for id: Variant in data.drinks:
 		if not data.encyclopedia.has(id) or not _is_snapshot_integer(data.drinks[id]) or data.drinks[id] < 0 or data.drinks[id] > MAX_QUANTITY:
 			return ERR_INVALID_DATA

@@ -6,7 +6,7 @@ signal changed
 signal transaction_finished(result: Dictionary)
 
 const LIMIT: int = WarehouseInventory.MAX_QUANTITY
-const SCHEMA_VERSION: int = 2
+const SCHEMA_VERSION: int = 3
 ## Every price, reward and balance in the game uses this single currency.
 const CURRENCY_SYMBOL: String = "G"
 ## One 古怪金币 carries this face value. The coin is the Day 1 form of G, not a second currency.
@@ -32,6 +32,7 @@ var _signature_rewards: Dictionary = {}
 ## craft request_id -> {recipe_id, quantity, drink_id}. Durable craft receipts.
 var _formula_crafts: Dictionary = {}
 var _rules: EconomyRules
+var _flag_lookup: Callable
 var _busy: bool = false
 var _task_lookup: Callable
 var _defaults: Dictionary
@@ -73,14 +74,43 @@ func get_product_quotes() -> Array[Dictionary]:
 ## Read-only projection of this session's static product and live merchant stock.
 ## Only scalar values escape; callers may edit the copy without changing the wallet.
 ## A quote does not reserve stock or authorize a later purchase.
+func get_product_definition(product_id: Variant) -> Dictionary:
+	if not _id(product_id) or not _products.has(product_id) or not _valid_product(_products[product_id]):
+		return {}
+	return _products[product_id].duplicate(true)
+
+func _valid_product(product: Variant) -> bool:
+	if not product is Dictionary or not _amount(product.get("price"), true) or _inventory.get_definition(product.get("item_id")) == null:
+		return false
+	for field: Variant in product:
+		if field not in ["item_id", "price", "stock", "discounted_price", "discount_flag"]:
+			return false
+	if product.has("stock") and not _amount(product.stock, true):
+		return false
+	if _inventory.get_definition(product.item_id).economy_scope == "quest":
+		return false
+	if product.has("discounted_price") and (not _amount(product.discounted_price, true) or product.discounted_price > product.price):
+		return false
+	if product.has("discount_flag") and (not product.has("discounted_price") or not product.discount_flag is String or not StoryLibrary.is_namespaced(product.discount_flag)):
+		return false
+	return true
+
+## Query and purchase resolve the same explicit integer price and session fact.
+## Quote queries are read-only; a quote does not reserve stock or lock eligibility.
+
 func get_product_quote(product_id: Variant) -> Dictionary:
 	if not _id(product_id) or not _products.has(product_id):
 		return {"ok": false, "code": "unknown_product", "message": "商品不存在。"}
-	var product: Variant = _products[product_id]
-	if not product is Dictionary or not _amount(product.get("price"), true) or _inventory.get_definition(product.get("item_id")) == null or (product.has("stock") and not _amount(product.stock, true)):
+	var product := get_product_definition(product_id)
+	if product.is_empty():
 		return {"ok": false, "code": "invalid_configuration", "message": "商品配置无效。"}
+	if product.has("discount_flag") and not _flag_lookup.is_valid():
+		return {"ok": false, "code": "eligibility_unavailable", "message": "折扣资格尚未绑定共享会话。"}
+	var discounted: bool = product.has("discounted_price") and (not product.has("discount_flag") or _flag_lookup.call(product.discount_flag))
 	return {"ok": true, "code": "ok", "message": "",
-		"product_id": product_id, "item_id": product.item_id, "unit_price": product.price,
+		"product_id": product_id, "item_id": product.item_id,
+		"base_price": product.price, "discounted": discounted,
+		"unit_price": product.discounted_price if discounted else product.price,
 		"stock": _merchant_stock[product_id] if product.has("stock") else null}
 
 func is_busy() -> bool:
@@ -91,6 +121,9 @@ func set_session_guard(guard: Callable) -> void:
 
 func set_task_lookup(lookup: Callable) -> void:
 	_task_lookup = lookup
+
+func set_flag_lookup(lookup: Callable) -> void:
+	_flag_lookup = lookup
 
 func get_default_state() -> Dictionary:
 	return _defaults.duplicate(true)
@@ -151,6 +184,9 @@ func _confirm_formula(materials: Array, request_id: String, picker: Callable) ->
 		replay["record"] = existing.duplicate(true)
 		replay["replayed"] = true
 		return replay
+	for id: Variant in materials:
+		if not _inventory.is_discovered(id):
+			return _result(false, "undiscovered_ingredient", "存在尚未发现的原料。", request_id)
 	var quote := FormulaPricing.quote(materials, _inventory.get_definition, _rules, picker, _inventory.get_recipe_slots())
 	if not quote.ok:
 		return _result(false, quote.code, quote.message, request_id)
@@ -365,7 +401,7 @@ func _prepare_and_commit(kind: String, request_id: Variant, subject: Variant, qu
 	return result
 
 ## Pure preparation. GameState commits this draft with the delivery facts under its lock.
-func prepare_delivery(costs: Dictionary, rewards: Dictionary, money: int, request_id: String, drink_costs: Dictionary = {}) -> Dictionary:
+func prepare_delivery(costs: Dictionary, rewards: Dictionary, money: int, request_id: String, drink_costs: Dictionary = {}, use_costs: Dictionary = {}) -> Dictionary:
 	if is_busy() or not _id(request_id) or not _amount(money, true) or _requests.has(request_id):
 		return {}
 	if (not costs.is_empty() and not _inventory.has_materials(costs)) or _balance > LIMIT - money:
@@ -375,6 +411,9 @@ func prepare_delivery(costs: Dictionary, rewards: Dictionary, money: int, reques
 		if not id is String or not _amount(drink_costs[id]) or _inventory.get_drink_stock(id) < drink_costs[id]:
 			return {}
 		next.inventory.drinks[id] -= drink_costs[id]
+	for id: Variant in use_costs:
+		if not id is String or not _amount(use_costs[id]) or not _spend_uses(next.inventory, id, use_costs[id]):
+			return {}
 	for id: String in costs:
 		var entry: Dictionary = next.inventory.ingredients[id]
 		entry.quantity -= costs[id]
@@ -449,23 +488,85 @@ func to_dict() -> Dictionary:
 
 ## v1 had no permanent price ledger. Old cups stay historical; no reward is
 ## re-issued and no price is invented while migrating.
-static func migrate_snapshot(data: Variant) -> Variant:
-	if not data is Dictionary or (not data.get("schema_version") is int and not data.get("schema_version") is float):
+func migrate_snapshot(data: Variant) -> Variant:
+	if not data is Dictionary or not data.get("inventory") is Dictionary or not data.get("requests") is Dictionary:
 		return data
-	var version := int(data.schema_version)
-	if version not in [1, SCHEMA_VERSION]:
+	if data.get("schema_version") == SCHEMA_VERSION:
+		var current: Dictionary = data.duplicate(true)
+		current.inventory = WarehouseInventory.migrate_snapshot(data.inventory)
+		return current
+	if data.get("schema_version") not in [1, 2]:
 		return data
 	var migrated: Dictionary = data.duplicate(true)
-	if version == 1:
-		if not migrated.has_all(["schema_version", "balance", "inventory", "merchant_stock", "requests", "claimed"]):
-			return data
+	var old_prices: Variant = data.inventory.get("recipe_prices", {})
+	if not old_prices is Dictionary:
+		return data
+	if not migrated.has("recipe_prices"):
 		migrated["recipe_prices"] = {}
-		migrated["signature_rewards"] = {}
+		for id: Variant in old_prices:
+			var price: Variant = old_prices[id]
+			if not price is Dictionary or not price.get("ingredients") is Array:
+				return data
+			var converted: Dictionary = price.duplicate(true)
+			converted.erase("ingredients")
+			converted["slots"] = []
+			var seen := {}
+			for index in range(price.ingredients.size()):
+				var ingredient: Variant = price.ingredients[index]
+				for field: String in ["slot_costs", "slot_markups", "slot_prices"]:
+					if not price.get(field) is Array or price[field].size() != price.ingredients.size():
+						return data
+				converted.slots.append({"ingredient_id": ingredient, "occurrence": seen.get(ingredient, 0),
+					"cost": price.slot_costs[index], "markup": price.slot_markups[index], "price": price.slot_prices[index]})
+				seen[ingredient] = int(seen.get(ingredient, 0)) + 1
+			migrated.recipe_prices[id] = converted
+	if not migrated.has("formula_crafts"):
 		migrated["formula_crafts"] = {}
-		migrated.schema_version = SCHEMA_VERSION
-	if migrated.get("inventory") is Dictionary:
-		migrated["inventory"] = WarehouseInventory.migrate_snapshot(migrated.inventory)
+		var rewards := {}
+		if not data.get("signature_rewards", {}) is Dictionary or not data.get("claimed") is Dictionary:
+			return data
+		for id: Variant in data.get("signature_rewards", {}):
+			var reward: Variant = data.signature_rewards[id]
+			if not reward is Dictionary or not reward.has_all(["amount", "request_id", "recipe_id"]):
+				return data
+			if not id is String or not reward.request_id is String or not reward.recipe_id is String or not data.claimed.get("signature:" + id, false):
+				return data
+			var receipt: String = str(reward.request_id)
+			if receipt.is_empty() and data.get("claimed", {}).has("signature:" + str(id)):
+				receipt = "legacy.signature:" + str(id)
+				migrated.requests[receipt] = true
+			rewards[id] = {"reward": reward.amount, "claimed": true, "receipt": receipt, "legacy": true, "recipe_id": reward.recipe_id}
+		# The first economy branch stored paid signatures only in `claimed`.
+		# Retain that receipt only when an actual priced discovery witnesses it.
+		for key: Variant in data.claimed:
+			if not key is String or not key.begins_with("signature:"):
+				continue
+			var id: String = key.trim_prefix("signature:")
+			if rewards.has(id):
+				continue
+			var recipe := _signature_recipe(id, migrated.inventory)
+			if recipe.is_empty() or not migrated.recipe_prices.has(recipe):
+				return data
+			var receipt := "legacy.signature:" + id
+			migrated.requests[receipt] = true
+			rewards[id] = {"reward": signature_reward_for(id), "claimed": true, "receipt": receipt, "legacy": true, "recipe_id": recipe}
+		migrated["signature_rewards"] = rewards
+	if not migrated.has("signature_rewards"):
+		migrated["signature_rewards"] = {}
+	migrated.inventory = WarehouseInventory.migrate_snapshot(data.inventory)
+	migrated.schema_version = SCHEMA_VERSION
 	return migrated
+
+func _signature_recipe(signature: String, inventory: Dictionary) -> String:
+	if not inventory.get("encyclopedia", {}) is Dictionary:
+		return ""
+	for entry: Variant in inventory.get("encyclopedia", {}).values():
+		if not entry is Dictionary or not entry.get("ingredients") is Array:
+			continue
+		var formula := _inventory.calculate_formula(entry.ingredients, false, entry.get("iced", false))
+		if formula.ok and formula.signature_id == signature:
+			return DrinkFormula.key_for(entry.ingredients, false)
+	return ""
 
 func validate_state(data: Variant) -> Error:
 	if not data is Dictionary or not data.has_all(["schema_version", "balance", "inventory", "merchant_stock", "requests", "claimed",
@@ -493,15 +594,30 @@ func validate_state(data: Variant) -> Error:
 			return ERR_INVALID_DATA
 	for id: Variant in data.signature_rewards:
 		var claim: Variant = data.signature_rewards[id]
-		if not _id(id) or not claim is Dictionary or claim.size() != 3 or not claim.has_all(["reward", "claimed", "receipt"]):
+		if not _id(id) or not claim is Dictionary or claim.size() != (5 if claim.has("legacy") else 3) or not claim.has_all(["reward", "claimed", "receipt"]):
 			return ERR_INVALID_DATA
-		if not _snapshot_amount(claim.reward) or claim.claimed != true or not _id(claim.receipt) or not data.requests.has(claim.receipt) or not data.formula_crafts.has(String(claim.receipt).trim_prefix("craft:")):
+		if not _snapshot_amount(claim.reward) or claim.claimed != true or not _id(claim.receipt) or not data.requests.has(claim.receipt) or (not claim.get("legacy", false) and not data.formula_crafts.has(String(claim.receipt).trim_prefix("craft:"))):
 			return ERR_INVALID_DATA
+		if claim.has("legacy") and claim.legacy != true:
+			return ERR_INVALID_DATA
+		var recipe := _signature_recipe(id, data.inventory)
+		if recipe.is_empty() or not data.recipe_prices.has(recipe):
+			return ERR_INVALID_DATA
+		if claim.has("legacy"):
+			if not claim.has("recipe_id") or claim.recipe_id != recipe or not data.claimed.get("signature:" + id, false):
+				return ERR_INVALID_DATA
+		else:
+			var craft: Variant = data.formula_crafts[String(claim.receipt).trim_prefix("craft:")]
+			if not craft is Dictionary or craft.get("recipe_id") != recipe:
+				return ERR_INVALID_DATA
 		var signature_found := false
 		for signature: Dictionary in _inventory.get_recipe_rules().signatures:
 			if signature.get("id") == id:
 				signature_found = int(claim.reward) == signature_reward_for(id)
 		if not signature_found:
+			return ERR_INVALID_DATA
+	for key: String in data.claimed:
+		if key.begins_with("signature:") and not data.signature_rewards.has(key.trim_prefix("signature:")):
 			return ERR_INVALID_DATA
 	for request_id: Variant in data.formula_crafts:
 		var craft: Variant = data.formula_crafts[request_id]

@@ -8,11 +8,11 @@
       "description": "柜台前的散客点了一杯珍珠奶茶。接单、做好、当场交付收款。",
       "reveal_when": {
         "type": "flag",
-        "key": "day1.group_settled"
+        "key": "debug.teaching_orders"
       },
       "activate_when": {
         "type": "flag",
-        "key": "day1.group_settled"
+        "key": "debug.teaching_orders"
       },
       "complete_when": {
         "type": "flag",
@@ -54,11 +54,11 @@
       "description": "柜台前的散客点了一杯椰果茉莉奶茶。接单、做好、当场交付收款。",
       "reveal_when": {
         "type": "flag",
-        "key": "day1.group_settled"
+        "key": "debug.teaching_orders"
       },
       "activate_when": {
         "type": "flag",
-        "key": "day1.group_settled"
+        "key": "debug.teaching_orders"
       },
       "complete_when": {
         "type": "flag",
@@ -100,11 +100,11 @@
       "description": "柜台前的散客点了一杯原味奶茶。接单、做好、当场交付收款。",
       "reveal_when": {
         "type": "flag",
-        "key": "day1.group_settled"
+        "key": "debug.teaching_orders"
       },
       "activate_when": {
         "type": "flag",
-        "key": "day1.group_settled"
+        "key": "debug.teaching_orders"
       },
       "complete_when": {
         "type": "flag",

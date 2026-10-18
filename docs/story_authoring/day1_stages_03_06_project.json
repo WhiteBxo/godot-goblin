@@ -1,7 +1,7 @@
 {
 	"version": 1.0,
 	"format": "goblin_story_project",
-	"next_step_id": 1.0,
+	"next_step_id": 10045.0,
 	"manifest": {
 		"version": 1.0,
 		"source": "res://docs/design/day_01_stages_03_06_draft.md",
@@ -11,40 +11,1359 @@
 		"dialogue": "res://src/resources/dialogue/day1_stages_03_06.json",
 		"phases": "res://src/resources/story/day1_stages_03_06_phases.json",
 		"manifest_path": "res://docs/story_authoring/day1_stages_03_06_bridge.json",
-		"publication_status": "pending",
-		"pending_beat_ids": [
-			"s03_coin_inspect",
-			"s03_street_gone",
-			"s03_limited_exploration",
-			"s03_back_to_door",
-			"s04_fat_goblin_arrives",
-			"s04_fat_goblin_order",
-			"s04_first_taste",
-			"s04_griffin_faith",
-			"s04_griffin_blood",
-			"s04_map_handover",
-			"s04_commission_choice",
-			"s05_step1_outside",
-			"s05_step2_throw",
-			"s05_step3_bribe",
-			"s05_drunken_guard",
-			"s05_final_patrol",
-			"s05_document",
-			"s05_blood_acquired",
-			"s05_escape",
-			"s05_shop_system_update",
-			"s06_pondering",
-			"s06_blood_drink",
-			"s06_reaction",
-			"s06_help_and_rest"
-		],
-		"handoff": "res://docs/story_authoring/day_01_02_authoring_handoff.md"
+		"publication_status": "published",
+		"pending_beat_ids": [],
+		"handoff": "res://docs/story_authoring/day_01_02_authoring_handoff.md",
+		"verification": "res://tests/verify_two_day_flow.gd"
 	},
-	"events": {},
-	"beats": [],
-	"dialogues": {},
+	"events": {
+		"day1.s03.coin_inspect": {
+			"once": true,
+			"conditions": {
+				"day": 1.0,
+				"stage": "day1.investigate_coins",
+				"completed_events": [
+					"day1.ending"
+				]
+			}
+		},
+		"day1.s03.street_gone": {
+			"once": true,
+			"conditions": {
+				"day": 1.0,
+				"stage": "day1.s03",
+				"flags": {
+					"day1.s03.exited_shop": true
+				}
+			}
+		},
+		"day1.s03.back_to_door": {
+			"once": true,
+			"conditions": {
+				"day": 1.0,
+				"stage": "day1.s03.explore",
+				"flags": {
+					"day1.s03.exploration_completed": true
+				}
+			}
+		},
+		"day1.s04.commission": {
+			"once": true,
+			"conditions": {
+				"day": 1.0,
+				"stage": "day1.s04",
+				"flags": {
+					"day1.s03.returned_shop": true
+				}
+			}
+		},
+		"day1.s04.after_order": {
+			"once": true,
+			"conditions": {
+				"day": 1.0,
+				"stage": "day1.s04.wait_order",
+				"flags": {
+					"day1.s04.order_delivered": true
+				}
+			}
+		},
+		"day1.s04.commission_choice": {
+			"once": true,
+			"conditions": {
+				"day": 1.0,
+				"stage": "day1.s04.wait_map",
+				"flags": {
+					"day1.s04.map_closed": true
+				}
+			}
+		},
+		"day1.s05.drunken_guard": {
+			"once": true,
+			"conditions": {
+				"day": 1.0,
+				"stage": "day1.s05.ready",
+				"flags": {
+					"day1.s05.drunken_paid": false
+				}
+			},
+			"trigger": "day1_drunken_encounter"
+		},
+		"day1.s05.mansion_payment": {
+			"once": true,
+			"conditions": {
+				"day": 1.0,
+				"stage": "day1.s05.ready",
+				"flags": {
+					"day1.s05.drunken_paid": true,
+					"day1.s05.guard_payment_completed": false
+				}
+			},
+			"trigger": "mansion_payment"
+		},
+		"day1.s05.return_shop": {
+			"once": true,
+			"conditions": {
+				"day": 1.0,
+				"stage": "day1.s05.ready",
+				"flags": {
+					"day1.s05.returned_shop": true
+				}
+			}
+		},
+		"day1.s06.pondering": {
+			"once": true,
+			"conditions": {
+				"day": 1.0,
+				"stage": "day1.s06.craft"
+			}
+		},
+		"day1.s06.customer": {
+			"once": true,
+			"conditions": {
+				"day": 1.0,
+				"stage": "day1.s06.wait_craft",
+				"flags": {
+					"day1.s06.blood_drink_made": true
+				}
+			}
+		},
+		"day1.s06.reaction": {
+			"once": true,
+			"conditions": {
+				"day": 1.0,
+				"stage": "day1.s06.wait_delivery",
+				"flags": {
+					"day1.s06.blood_drink_delivered": true
+				}
+			}
+		}
+	},
+	"beats": [
+		{
+			"id": "s03_coin_inspect",
+			"mode": "自动演出",
+			"event": "day1.s03.coin_inspect",
+			"steps": [
+				{
+					"id": "step_10001",
+					"data": {
+						"command": "dialogue",
+						"id": "day1.s03.coin_inspect"
+					}
+				},
+				{
+					"id": "step_10002",
+					"data": {
+						"command": "set_stage",
+						"value": "day1.s03"
+					}
+				}
+			]
+		},
+		{
+			"id": "s03_street_gone",
+			"mode": "自动演出",
+			"event": "day1.s03.street_gone",
+			"steps": [
+				{
+					"id": "step_10003",
+					"data": {
+						"command": "dialogue",
+						"id": "day1.s03.street_gone"
+					}
+				},
+				{
+					"id": "step_10004",
+					"data": {
+						"command": "dialogue",
+						"id": "day1.s03.limited_exploration"
+					}
+				},
+				{
+					"id": "step_10005",
+					"data": {
+						"command": "set_stage",
+						"value": "day1.s03.explore"
+					}
+				}
+			]
+		},
+		{
+			"id": "s03_back_to_door",
+			"mode": "自动演出",
+			"event": "day1.s03.back_to_door",
+			"steps": [
+				{
+					"id": "step_10006",
+					"data": {
+						"command": "dialogue",
+						"id": "day1.s03.back_to_door"
+					}
+				},
+				{
+					"id": "step_10007",
+					"data": {
+						"command": "set_stage",
+						"value": "day1.s04"
+					}
+				}
+			]
+		},
+		{
+			"id": "s04_fat_goblin_arrives",
+			"mode": "自动演出",
+			"event": "day1.s04.commission",
+			"steps": [
+				{
+					"id": "step_10008",
+					"data": {
+						"command": "actor_show",
+						"actor": "fat_goblin"
+					}
+				},
+				{
+					"id": "step_10009",
+					"data": {
+						"command": "dialogue",
+						"id": "day1.s04.fat_goblin_arrives"
+					}
+				},
+				{
+					"id": "step_10010",
+					"data": {
+						"command": "set_flag",
+						"key": "day1.s04.order_open",
+						"value": true
+					}
+				},
+				{
+					"id": "step_10011",
+					"data": {
+						"command": "set_stage",
+						"value": "day1.s04.wait_order"
+					}
+				}
+			]
+		},
+		{
+			"id": "day1_bridge_fat_goblin_order",
+			"mode": "玩家操作",
+			"phase": {
+				"id": "day1.bridge.fat_goblin_order",
+				"after_event": "day1.s04.commission",
+				"stage": "day1.s04.wait_order",
+				"completion": {
+					"flag": "day1.s04.order_delivered",
+					"allow_existing": true
+				},
+				"completion_flag": "day1.bridge.fat_goblin_order.completed",
+				"next_event": "day1.s04.after_order"
+			}
+		},
+		{
+			"id": "s04_first_taste",
+			"mode": "自动演出",
+			"event": "day1.s04.after_order",
+			"steps": [
+				{
+					"id": "step_10012",
+					"data": {
+						"command": "dialogue",
+						"id": "day1.s04.first_taste"
+					}
+				},
+				{
+					"id": "step_10013",
+					"data": {
+						"command": "dialogue",
+						"id": "day1.s04.griffin_faith"
+					}
+				},
+				{
+					"id": "step_10014",
+					"data": {
+						"command": "chronicle_unlock",
+						"entry_id": "chronicle.griffin",
+						"title": "伟大的格里芬"
+					}
+				},
+				{
+					"id": "step_10015",
+					"data": {
+						"command": "chronicle_append",
+						"entry_id": "chronicle.griffin",
+						"record_id": "chronicle.griffin.s04_first",
+						"content": "哥布林普遍敬畏的存在。胖哥布林称，格里芬会惩罚不守规矩的哥布林，也会庇护他们。其真实存在与具体情况尚未确认。"
+					}
+				},
+				{
+					"id": "step_10016",
+					"data": {
+						"command": "chronicle_append",
+						"entry_id": "chronicle.elder",
+						"record_id": "chronicle.elder.s04_first",
+						"content": "被哥布林视为最了解格里芬的人，负责主持仪式、传达格里芬的意志，并解释格里芬的规矩。"
+					}
+				},
+				{
+					"id": "step_10017",
+					"data": {
+						"command": "chronicle_unlock",
+						"entry_id": "chronicle.emissary",
+						"title": "格里芬使者"
+					}
+				},
+				{
+					"id": "step_10018",
+					"data": {
+						"command": "chronicle_append",
+						"entry_id": "chronicle.emissary",
+						"record_id": "chronicle.emissary.s04_first",
+						"content": "据胖哥布林所说，长老将偶尔到来的行脚商称为格里芬派来的使者。使者带来的稀奇商品，被视为格里芬对勤劳、守规矩的哥布林的赏赐。"
+					}
+				},
+				{
+					"id": "step_10019",
+					"data": {
+						"command": "dialogue",
+						"id": "day1.s04.griffin_blood"
+					}
+				},
+				{
+					"id": "step_10020",
+					"data": {
+						"command": "chapter_action",
+						"id": "day1.s04.gift"
+					}
+				},
+				{
+					"id": "step_10021",
+					"data": {
+						"command": "dialogue",
+						"id": "day1.s04.map_handover"
+					}
+				},
+				{
+					"id": "step_10022",
+					"data": {
+						"command": "unlock_map",
+						"locations": [
+							"settlement.shop",
+							"settlement.tavern",
+							"settlement.casino",
+							"settlement.elder",
+							"settlement.ritual",
+							"settlement.training",
+							"settlement.workshop",
+							"settlement.warehouse"
+						]
+					}
+				},
+				{
+					"id": "step_10023",
+					"data": {
+						"command": "set_stage",
+						"value": "day1.s04.wait_map"
+					}
+				}
+			]
+		},
+		{
+			"id": "day1_bridge_map",
+			"mode": "玩家操作",
+			"phase": {
+				"id": "day1.bridge.map",
+				"after_event": "day1.s04.after_order",
+				"stage": "day1.s04.wait_map",
+				"completion": {
+					"flag": "day1.s04.map_closed",
+					"allow_existing": true
+				},
+				"completion_flag": "day1.bridge.map.completed",
+				"next_event": "day1.s04.commission_choice"
+			}
+		},
+		{
+			"id": "s04_commission_choice",
+			"mode": "自动演出",
+			"event": "day1.s04.commission_choice",
+			"steps": [
+				{
+					"id": "step_10024",
+					"data": {
+						"command": "dialogue",
+						"id": "day1.s04.commission_choice"
+					}
+				},
+				{
+					"id": "step_10025",
+					"data": {
+						"command": "dialogue",
+						"id": "day1.s04.commission_choice_accept",
+						"when": {
+							"choice": {
+								"dialogue": "day1.s04.commission_choice",
+								"line": "choice",
+								"id": "accept"
+							}
+						}
+					}
+				},
+				{
+					"id": "step_10026",
+					"data": {
+						"command": "dialogue",
+						"id": "day1.s04.commission_choice_refuse",
+						"when": {
+							"choice": {
+								"dialogue": "day1.s04.commission_choice",
+								"line": "choice",
+								"id": "refuse"
+							}
+						}
+					}
+				},
+				{
+					"id": "step_10027",
+					"data": {
+						"command": "chapter_action",
+						"id": "day1.s04.funding"
+					}
+				},
+				{
+					"id": "step_10028",
+					"data": {
+						"command": "actor_hide",
+						"actor": "fat_goblin"
+					}
+				},
+				{
+					"id": "step_10029",
+					"data": {
+						"command": "set_stage",
+						"value": "day1.s05.ready"
+					}
+				}
+			]
+		},
+		{
+			"id": "s05_drunken_guard",
+			"mode": "自动演出",
+			"event": "day1.s05.drunken_guard",
+			"steps": [
+				{
+					"id": "step_10030",
+					"data": {
+						"command": "dialogue",
+						"id": "day1.s05.drunken_guard"
+					}
+				},
+				{
+					"id": "step_10031",
+					"data": {
+						"command": "chapter_action",
+						"id": "day1.s05.pay_drunken"
+					}
+				},
+				{
+					"id": "step_10032",
+					"data": {
+						"command": "dialogue",
+						"id": "day1.s05.drunken_guard_after_payment"
+					}
+				},
+				{
+					"id": "step_10033",
+					"data": {
+						"command": "actor_hide",
+						"actor": "drunken_guard"
+					}
+				}
+			]
+		},
+		{
+			"id": "s05_pay_pair",
+			"mode": "自动演出",
+			"event": "day1.s05.mansion_payment",
+			"steps": [
+				{
+					"id": "step_10034",
+					"data": {
+						"command": "chapter_action",
+						"id": "day1.s05.pay_pair"
+					}
+				}
+			]
+		},
+		{
+			"id": "s05_shop_system_update",
+			"mode": "自动演出",
+			"event": "day1.s05.return_shop",
+			"steps": [
+				{
+					"id": "step_10035",
+					"data": {
+						"command": "set_stage",
+						"value": "day1.s06.craft"
+					}
+				}
+			]
+		},
+		{
+			"id": "s06_pondering",
+			"mode": "自动演出",
+			"event": "day1.s06.pondering",
+			"steps": [
+				{
+					"id": "step_10036",
+					"data": {
+						"command": "set_stage",
+						"value": "day1.s06.wait_craft"
+					}
+				}
+			]
+		},
+		{
+			"id": "day1_bridge_blood_craft",
+			"mode": "玩家操作",
+			"phase": {
+				"id": "day1.bridge.blood_craft",
+				"after_event": "day1.s06.pondering",
+				"stage": "day1.s06.wait_craft",
+				"completion": {
+					"flag": "day1.s06.blood_drink_made",
+					"allow_existing": true
+				},
+				"completion_flag": "day1.bridge.blood_craft.completed",
+				"next_event": "day1.s06.customer"
+			}
+		},
+		{
+			"id": "s06_customer_arrives",
+			"mode": "自动演出",
+			"event": "day1.s06.customer",
+			"steps": [
+				{
+					"id": "step_10037",
+					"data": {
+						"command": "actor_show",
+						"actor": "fat_goblin"
+					}
+				},
+				{
+					"id": "step_10038",
+					"data": {
+						"command": "set_stage",
+						"value": "day1.s06.wait_delivery"
+					}
+				}
+			]
+		},
+		{
+			"id": "day1_bridge_blood_drink",
+			"mode": "玩家操作",
+			"phase": {
+				"id": "day1.bridge.blood_drink",
+				"after_event": "day1.s06.customer",
+				"stage": "day1.s06.wait_delivery",
+				"completion": {
+					"flag": "day1.s06.blood_drink_delivered",
+					"allow_existing": true
+				},
+				"completion_flag": "day1.bridge.blood_drink.completed",
+				"next_event": "day1.s06.reaction"
+			}
+		},
+		{
+			"id": "s06_reaction",
+			"mode": "自动演出",
+			"event": "day1.s06.reaction",
+			"steps": [
+				{
+					"id": "step_10039",
+					"data": {
+						"command": "dialogue",
+						"id": "day1.s06.reaction"
+					}
+				},
+				{
+					"id": "step_10040",
+					"data": {
+						"command": "dialogue",
+						"id": "day1.s06.help_and_rest"
+					}
+				},
+				{
+					"id": "step_10041",
+					"data": {
+						"command": "chapter_action",
+						"id": "day1.s06.rest"
+					}
+				},
+				{
+					"id": "step_10042",
+					"data": {
+						"command": "set_flag",
+						"key": "day1.s06.completed",
+						"value": true
+					}
+				},
+				{
+					"id": "step_10043",
+					"data": {
+						"command": "set_phase",
+						"phase": "day"
+					}
+				},
+				{
+					"id": "step_10044",
+					"data": {
+						"command": "set_stage",
+						"value": "day2.s01"
+					}
+				}
+			]
+		}
+	],
+	"dialogues": {
+		"day1.s03.coin_inspect": {
+			"start": "line_1",
+			"lines": {
+				"line_1": {
+					"speaker": "主角·内心",
+					"text": "这什么破玩意儿……该不会真有人拿假币买奶茶吧？",
+					"next": ""
+				}
+			}
+		},
+		"day1.s03.street_gone": {
+			"start": "line_1",
+			"lines": {
+				"line_1": {
+					"speaker": "主角·内心",
+					"text": "……我店门口什么时候变成这样了？",
+					"next": ""
+				}
+			}
+		},
+		"day1.s03.limited_exploration": {
+			"start": "line_1",
+			"lines": {
+				"line_1": {
+					"speaker": "主角·内心",
+					"text": "黑灯瞎火的，谁知道里面有什么？不去。",
+					"next": ""
+				}
+			}
+		},
+		"day1.s03.back_to_door": {
+			"start": "line_1",
+			"lines": {
+				"line_1": {
+					"speaker": "主角·内心",
+					"text": "……完了，我这店不会真穿越了吧？",
+					"next": ""
+				}
+			}
+		},
+		"day1.s04.fat_goblin_arrives": {
+			"start": "line_1",
+			"lines": {
+				"line_1": {
+					"speaker": "胖哥布林",
+					"text": "日安！愿格里芬垂顾你！你就是新的格里芬使者吧？你们家卖什么的？",
+					"next": "line_2"
+				},
+				"line_2": {
+					"speaker": "胖哥布林",
+					"text": "哎呀，我可算等到了！我们哥布林洞窟的食物，我都快吃腻了！每次就盼着你们格里芬使者来，能吃到点新鲜玩意儿！",
+					"next": "line_3"
+				},
+				"line_3": {
+					"speaker": "胖哥布林",
+					"text": "哈哈哈，虽然我不挑食，但是也不能啥都吃呀！大家都叫我胖哥布林，就是因为我太爱吃了。不过嘛，胖一点又怎么了？能吃是福啊！",
+					"next": "line_4"
+				},
+				"line_4": {
+					"speaker": "主角·内心",
+					"text": "……这家伙话也太多了。",
+					"next": "line_5"
+				},
+				"line_5": {
+					"speaker": "主角·内心",
+					"text": "不过，他好像知道不少东西。或许可以趁机问问这里的情况。",
+					"next": "line_6"
+				},
+				"line_6": {
+					"speaker": "主角",
+					"text": "格里芬使者……是什么？",
+					"next": "line_7"
+				},
+				"line_7": {
+					"speaker": "胖哥布林",
+					"text": "啊？你不知道？",
+					"next": "line_8"
+				},
+				"line_8": {
+					"speaker": "胖哥布林",
+					"text": "你难道不是被伟大的格里芬派来，为我们哥布林洞窟播撒来自黄金乡的食粮吗？",
+					"next": "line_9"
+				},
+				"line_9": {
+					"speaker": "主角·内心",
+					"text": "这家伙在说什么？为什么突然用词这么装？格里芬我倒是有印象，刚刚那几个哥布林也这么说，还提到什么长老……",
+					"next": "line_10"
+				},
+				"line_10": {
+					"speaker": "主角·内心",
+					"text": "不行，刚到这个地方，还不知道周围是什么情况，不能随便暴露自己的底细。先顺着他的话说吧。",
+					"next": "line_11"
+				},
+				"line_11": {
+					"speaker": "主角",
+					"text": "我这不是刚来嘛，还人生地不熟的。先做点生意，慢慢熟悉这里。",
+					"next": "line_12"
+				},
+				"line_12": {
+					"speaker": "主角",
+					"text": "我们店里卖的是奶茶，可是好东西。你要不要尝尝？先看看菜单。",
+					"next": "line_13"
+				},
+				"line_13": {
+					"speaker": "胖哥布林",
+					"text": "哟！还真有不少花样啊！你们格里芬使者带来的东西就是新鲜！",
+					"next": "line_14"
+				},
+				"line_14": {
+					"speaker": "胖哥布林",
+					"text": "我们这边也有那什么奶茶……是叫这个名儿吧？不过可没有你们这么多花样！",
+					"next": "line_15"
+				},
+				"line_15": {
+					"speaker": "胖哥布林",
+					"text": "让我看看啊……经典珍珠奶茶，3G一杯。",
+					"next": "line_16"
+				},
+				"line_16": {
+					"speaker": "胖哥布林",
+					"text": "嘶……是不便宜啊。不过，难得有新东西嘛！",
+					"next": "line_17"
+				},
+				"line_17": {
+					"speaker": "主角·内心",
+					"text": "这些哥布林居然这么自然地接受了我的长相和这家店，甚至连价目表都能直接看懂。",
+					"next": "line_18"
+				},
+				"line_18": {
+					"speaker": "主角·内心",
+					"text": "看来，这个世界的文字至少和我原来认识的文字有相通之处，物价好像也没有太大的变动……至于他们为什么把我当成什么格里芬使者，恐怕得再打听打听。",
+					"next": "line_19"
+				},
+				"line_19": {
+					"speaker": "主角·内心",
+					"text": "不过现在还不能急着问，先别引起他的怀疑。",
+					"next": "line_20"
+				},
+				"line_20": {
+					"speaker": "主角",
+					"text": "都是你没尝过的口味。既然难得来一趟，不如挑一杯试试？",
+					"next": "line_21"
+				},
+				"line_21": {
+					"speaker": "胖哥布林",
+					"text": "哈哈哈！你说得对！那我可得好好尝尝！",
+					"next": "line_22"
+				},
+				"line_22": {
+					"speaker": "胖哥布林",
+					"text": "就这杯H01经典珍珠奶茶吧！看着就不错！",
+					"next": "line_23"
+				},
+				"line_23": {
+					"speaker": "胖哥布林",
+					"text": "哎，这个是什么？那个又是什么？都放进去就行了吗？",
+					"next": "line_24"
+				},
+				"line_24": {
+					"speaker": "主角",
+					"text": "……你先等着，做好了就给你。",
+					"next": "line_25"
+				},
+				"line_25": {
+					"speaker": "胖哥布林",
+					"text": "好好好！我不催，我不催！",
+					"next": ""
+				}
+			}
+		},
+		"day1.s04.first_taste": {
+			"start": "line_1",
+			"lines": {
+				"line_1": {
+					"speaker": "胖哥布林",
+					"text": "嚯——！虽然贵了点，不过好吃啊！下次我还来！",
+					"next": "line_2"
+				},
+				"line_2": {
+					"speaker": "主角·内心",
+					"text": "嘴上嫌贵，喝起来倒是一点也不含糊。",
+					"next": "line_3"
+				},
+				"line_3": {
+					"speaker": "胖哥布林",
+					"text": "对了对了！你们格里芬使者是不是经常去别的地方？还有没有什么新鲜吃食？最好是能吃的、稀奇的、以前没见过的！",
+					"next": "line_4"
+				},
+				"line_4": {
+					"speaker": "主角·内心",
+					"text": "……这家伙果然满脑子都是吃的。",
+					"next": "line_5"
+				},
+				"line_5": {
+					"speaker": "主角",
+					"text": "你这么喜欢新鲜东西，平时应该很关注这些吧？",
+					"next": "line_6"
+				},
+				"line_6": {
+					"speaker": "胖哥布林",
+					"text": "那当然！吃可是头等大事啊！",
+					"next": "line_7"
+				},
+				"line_7": {
+					"speaker": "主角",
+					"text": "那我倒有些事情想问问你。比如，你刚才说的格里芬，还有你们这里的长老……",
+					"next": ""
+				}
+			}
+		},
+		"day1.s04.griffin_faith": {
+			"start": "line_1",
+			"lines": {
+				"line_1": {
+					"speaker": "胖哥布林",
+					"text": "说起来，你怎么一直问我格里芬啊？你真不知道？",
+					"next": "line_2"
+				},
+				"line_2": {
+					"speaker": "主角",
+					"text": "我都说了我刚来，还有很多事情不清楚。你就给我讲讲呗。",
+					"next": "line_3"
+				},
+				"line_3": {
+					"speaker": "胖哥布林",
+					"text": "啊？你真不知道啊？那你看看金币！一枚值10G，这上面不就有伟大的格里芬吗？",
+					"next": "line_4"
+				},
+				"line_4": {
+					"speaker": "主角·内心",
+					"text": "啊？这玩意真的是金币？？难道我要赚翻了？！",
+					"next": "line_5"
+				},
+				"line_5": {
+					"speaker": "主角",
+					"text": "啊，我知道，我知道！确实很伟大啊。",
+					"next": "line_6"
+				},
+				"line_6": {
+					"speaker": "主角·内心",
+					"text": "呼……差点露馅。幸好穿越之前看过几本异世界轻小说。格里芬……听起来和地球上的狮鹫差不多嘛，鹰头、狮身，还长着翅膀。别说，还有点帅。",
+					"next": "line_7"
+				},
+				"line_7": {
+					"speaker": "胖哥布林",
+					"text": "嘿嘿！那当然！伟大的格里芬啊！我们都敬畏它！",
+					"next": "line_8"
+				},
+				"line_8": {
+					"speaker": "胖哥布林",
+					"text": "长老是最懂格里芬的人，负责主持仪式、传达它的意志。长老说，偶尔来的行脚商都是格里芬派来的使者，他们带来的稀奇商品，就是对勤劳守规矩的哥布林的赏赐！",
+					"next": "line_9"
+				},
+				"line_9": {
+					"speaker": "主角·内心",
+					"text": "格里芬到底是真实存在的，还是只是传说？不过，确实有个长老一直在传达所谓的格里芬的意志。",
+					"next": "line_10"
+				},
+				"line_10": {
+					"speaker": "主角·内心",
+					"text": "而且这些哥布林似乎既害怕它，又尊敬它……倒是有意思。",
+					"next": "line_11"
+				},
+				"line_11": {
+					"speaker": "主角",
+					"text": "你刚才说，格里芬会惩罚不守规矩的哥布林？怎么个惩罚法？",
+					"next": "line_12"
+				},
+				"line_12": {
+					"speaker": "胖哥布林",
+					"text": "嘘！这种事可不能随便乱说！",
+					"next": "line_13"
+				},
+				"line_13": {
+					"speaker": "主角",
+					"text": "……不是你自己说的吗？",
+					"next": "line_14"
+				},
+				"line_14": {
+					"speaker": "胖哥布林",
+					"text": "我、我只是提醒你！不勤劳、不守规矩的哥布林，要是背负了不敬畏格里芬的罪孽，可是会消失的！",
+					"next": "line_15"
+				},
+				"line_15": {
+					"speaker": "主角",
+					"text": "消失？",
+					"next": "line_16"
+				},
+				"line_16": {
+					"speaker": "胖哥布林",
+					"text": "对！就是消失！你知道吗？前几天我听说，军营里有个老混子哥布林失踪了！据说地上还留下了几片大羽毛……",
+					"next": "line_17"
+				},
+				"line_17": {
+					"speaker": "主角",
+					"text": "……真的假的？",
+					"next": "line_18"
+				},
+				"line_18": {
+					"speaker": "主角·内心",
+					"text": "怎么还有随机伤人事件？！那哥布林是被吃了吗？",
+					"next": "line_19"
+				},
+				"line_19": {
+					"speaker": "胖哥布林",
+					"text": "不过你也不用太担心！伟大的格里芬虽然令人恐惧，但它只会惩戒不守规矩的家伙！",
+					"next": "line_20"
+				},
+				"line_20": {
+					"speaker": "胖哥布林",
+					"text": "像我就不一样了！我可是很守规矩的！就是……就是能吃了点。格里芬肯定不会惩罚我的！",
+					"next": "line_21"
+				},
+				"line_21": {
+					"speaker": "主角",
+					"text": "……嗯嗯，它肯定不会惩罚你的。",
+					"next": "line_22"
+				},
+				"line_22": {
+					"speaker": "主角·内心",
+					"text": "明明怕得要死，还非得嘴硬。",
+					"next": "line_23"
+				},
+				"line_23": {
+					"speaker": "胖哥布林",
+					"text": "不过话说回来，你自己都是格里芬派来的，怎么能什么都不知道呢？",
+					"next": "line_24"
+				},
+				"line_24": {
+					"speaker": "主角",
+					"text": "……",
+					"next": "line_25"
+				},
+				"line_25": {
+					"speaker": "胖哥布林",
+					"text": "嘿嘿，难道你有什么事情瞒着我？",
+					"next": "line_26"
+				},
+				"line_26": {
+					"speaker": "主角",
+					"text": "我不是说了嘛，刚来，对这里还不熟悉。",
+					"next": "line_27"
+				},
+				"line_27": {
+					"speaker": "胖哥布林",
+					"text": "哈哈哈！别紧张，我开玩笑的！",
+					"next": "line_28"
+				},
+				"line_28": {
+					"speaker": "胖哥布林",
+					"text": "不过啊，伟大的格里芬之所以伟大，可不只是因为它会惩罚坏家伙！",
+					"next": "line_29"
+				},
+				"line_29": {
+					"speaker": "主角",
+					"text": "哦？那还有什么？",
+					"next": ""
+				}
+			}
+		},
+		"day1.s04.griffin_blood": {
+			"start": "line_1",
+			"lines": {
+				"line_1": {
+					"speaker": "胖哥布林",
+					"text": "嘿嘿！你终于问到重点了！伟大的格里芬之所以伟大，就是因为它会用自己的血哺育我们！",
+					"next": "line_2"
+				},
+				"line_2": {
+					"speaker": "主角",
+					"text": "血还能哺育你们？",
+					"next": "line_3"
+				},
+				"line_3": {
+					"speaker": "胖哥布林",
+					"text": "那当然！格里芬之血可是珍贵的圣物！据说里面蕴含着格里芬的力量，能赐予我们智慧，让我们挣好多好多金币！",
+					"next": "line_4"
+				},
+				"line_4": {
+					"speaker": "胖哥布林",
+					"text": "不仅如此！有了格里芬的庇护，赌博就能赢个盆满钵满，晚上睡觉也能安安稳稳，绝对不会被抓走！",
+					"next": "line_5"
+				},
+				"line_5": {
+					"speaker": "主角·内心",
+					"text": "……这都快把格里芬说成万能许愿机了。",
+					"next": "line_6"
+				},
+				"line_6": {
+					"speaker": "主角",
+					"text": "这么厉害？那你喝过？",
+					"next": "line_7"
+				},
+				"line_7": {
+					"speaker": "胖哥布林",
+					"text": "呃……这个嘛，格里芬之血可不是随随便便就能喝到的！那是圣物，平时由长老亲自保管，只有特殊的时候才能得到！",
+					"next": "line_8"
+				},
+				"line_8": {
+					"speaker": "主角",
+					"text": "既然这么珍贵，你就不想尝尝？",
+					"next": "line_9"
+				},
+				"line_9": {
+					"speaker": "胖哥布林",
+					"text": "想啊！我做梦都想！你想想，要是喝上一口，说不定以后每次赌博都能赢！到时候金币还不是哗啦啦地往口袋里流？把你奶茶店里每种奶茶都喝一遍，也不在话下！",
+					"next": "line_10"
+				},
+				"line_10": {
+					"speaker": "主角·内心",
+					"text": "好家伙，前面还说格里芬会赐予智慧，结果这家伙满脑子还是金币、赌博和吃东西。",
+					"next": "line_11"
+				},
+				"line_11": {
+					"speaker": "主角",
+					"text": "既然你这么想要，为什么不自己去找长老要？",
+					"next": "line_12"
+				},
+				"line_12": {
+					"speaker": "胖哥布林",
+					"text": "你以为我不想吗？格里芬之血可是长老亲自保管的！不过，嘿嘿，今天倒是有个好机会。长老要亲自去祭拜伟大的格里芬，整晚都不会回来，宅邸今天是空的！",
+					"next": "line_13"
+				},
+				"line_13": {
+					"speaker": "主角",
+					"text": "所以呢？",
+					"next": "line_14"
+				},
+				"line_14": {
+					"speaker": "胖哥布林",
+					"text": "趁这个时候进去，说不定就能弄到一点格里芬之血！",
+					"next": "line_15"
+				},
+				"line_15": {
+					"speaker": "主角",
+					"text": "……你让我去偷长老的东西？",
+					"next": "line_16"
+				},
+				"line_16": {
+					"speaker": "胖哥布林",
+					"text": "哎呀，别说得那么难听嘛！而且你是格里芬使者，跟我们不一样！这两天比较特殊，我们这些普通哥布林要是靠近宅邸，说不定就会被伟大的格里芬察觉。可你说不定能悄悄进去！",
+					"next": "line_17"
+				},
+				"line_17": {
+					"speaker": "主角",
+					"text": "你他妈不是很敬畏格里芬吗？怎么还要偷东西？",
+					"next": "line_18"
+				},
+				"line_18": {
+					"speaker": "胖哥布林",
+					"text": "我当然敬畏啊！我就是想尝尝嘛！再说了，这么稀罕的东西，要是能拿来做成奶茶，肯定能卖得很好！只要你帮我弄到手，以后我每天都来买你的奶茶！",
+					"next": "line_19"
+				},
+				"line_19": {
+					"speaker": "主角·内心",
+					"text": "每天都来买奶茶……格里芬之血听起来又确实是个稀罕玩意，要是能做成特调，说不定真能赚一笔。",
+					"next": "line_20"
+				},
+				"line_20": {
+					"speaker": "主角·内心",
+					"text": "可是，偷了长老的东西，被发现了怎么办？……但我现在都快穷疯了！要钱没钱，要命……命倒是还有一条。",
+					"next": "line_21"
+				},
+				"line_21": {
+					"speaker": "主角·内心",
+					"text": "不行！还是不敢啊！！",
+					"next": ""
+				}
+			}
+		},
+		"day1.s04.map_handover": {
+			"start": "line_1",
+			"lines": {
+				"line_1": {
+					"speaker": "胖哥布林",
+					"text": "对了，给你这个！你刚来这里，肯定还不熟悉路。",
+					"next": "line_2"
+				},
+				"line_2": {
+					"speaker": "主角",
+					"text": "你连地图都准备好了？",
+					"next": "line_3"
+				},
+				"line_3": {
+					"speaker": "胖哥布林",
+					"text": "那当然！上面标了主要的地方。长老的房间在洞穴深处，具体怎么进去，你得自己找找了。",
+					"next": "line_4"
+				},
+				"line_4": {
+					"speaker": "主角",
+					"text": "……你还真是把麻烦都安排给我了。",
+					"next": "line_5"
+				},
+				"line_5": {
+					"speaker": "胖哥布林",
+					"text": "哈哈哈！能者多劳嘛！",
+					"next": "line_6"
+				},
+				"line_6": {
+					"speaker": "系统",
+					"text": "获得哥布林洞穴地图，地图功能已解锁。",
+					"next": "line_7"
+				},
+				"line_7": {
+					"speaker": "主角·内心",
+					"text": "长老今晚不在，地图也有了。风险肯定有，但要是能弄到这种稀有材料，说不定真能赚上一笔。",
+					"next": "line_8"
+				},
+				"line_8": {
+					"speaker": "主角·内心",
+					"text": "我现在可没资格嫌钱来得麻烦。只要不是毫无胜算，倒是值得试试。",
+					"next": ""
+				}
+			}
+		},
+		"day1.s04.commission_choice_accept": {
+			"start": "line_1",
+			"lines": {
+				"line_1": {
+					"speaker": "主角",
+					"text": "行，我去看看。但能不能拿到，我可不保证。",
+					"next": "line_2"
+				},
+				"line_2": {
+					"speaker": "胖哥布林",
+					"text": "好！我就知道你是个爽快人！",
+					"next": "line_3"
+				},
+				"line_3": {
+					"speaker": "主角",
+					"text": "先说好，真出了什么事，我可不会替你背锅。",
+					"next": "line_4"
+				},
+				"line_4": {
+					"speaker": "胖哥布林",
+					"text": "放心放心！愿格里芬垂顾你！",
+					"next": "line_5"
+				},
+				"line_5": {
+					"speaker": "主角·内心",
+					"text": "但愿这趟真能值回票价。",
+					"next": ""
+				}
+			}
+		},
+		"day1.s04.commission_choice_refuse": {
+			"start": "line_1",
+			"lines": {
+				"line_1": {
+					"speaker": "主角",
+					"text": "不行，风险太大，我不干。",
+					"next": "line_2"
+				},
+				"line_2": {
+					"speaker": "胖哥布林",
+					"text": "哎呀，别急着拒绝嘛！你不是正缺钱吗？这么稀罕的东西，可不是天天都有机会碰上的！",
+					"next": "line_3"
+				},
+				"line_3": {
+					"speaker": "主角",
+					"text": "你倒是挺会挑时候说话。",
+					"next": "line_4"
+				},
+				"line_4": {
+					"speaker": "胖哥布林",
+					"text": "长老今晚又不在，你有地图，至少知道该往哪儿找。进去看看而已，说不定很快就能回来呢？",
+					"next": "line_5"
+				},
+				"line_5": {
+					"speaker": "主角·内心",
+					"text": "长老不在，地图也有了。风险不小，但也不是完全没机会。",
+					"next": "line_6"
+				},
+				"line_6": {
+					"speaker": "主角·内心",
+					"text": "我现在最缺的就是钱。要是能弄到这种稀有材料，或许就能赚上一笔……",
+					"next": "line_7"
+				},
+				"line_7": {
+					"speaker": "主角",
+					"text": "……好吧，我去看看。但要是出了什么事，你也别想装作什么都不知道。",
+					"next": "line_8"
+				},
+				"line_8": {
+					"speaker": "胖哥布林",
+					"text": "哈哈哈！我等你的好消息！愿格里芬垂顾你！",
+					"next": "line_9"
+				},
+				"line_9": {
+					"speaker": "主角",
+					"text": "……最好真有好消息。",
+					"next": ""
+				}
+			}
+		},
+		"day1.s04.commission_choice": {
+			"start": "choice",
+			"lines": {
+				"choice": {
+					"speaker": "",
+					"text": "",
+					"choices": [
+						{
+							"id": "accept",
+							"text": "接受委托",
+							"next": ""
+						},
+						{
+							"id": "refuse",
+							"text": "拒绝委托",
+							"next": ""
+						}
+					]
+				}
+			}
+		},
+		"day1.s05.drunken_guard": {
+			"start": "line_1",
+			"lines": {
+				"line_1": {
+					"speaker": "醉酒守卫",
+					"text": "喂！你，站住！",
+					"next": "line_2"
+				},
+				"line_2": {
+					"speaker": "醉酒守卫",
+					"text": "既然是格里芬派来的使者，就别到处乱跑！使者就该待在指定的地方做生意，懂不懂？",
+					"next": "line_3"
+				},
+				"line_3": {
+					"speaker": "主角·内心",
+					"text": "……啊？还有这种好事？",
+					"next": ""
+				}
+			}
+		},
+		"day1.s05.drunken_guard_after_payment": {
+			"start": "line_1",
+			"lines": {
+				"line_1": {
+					"speaker": "醉酒守卫",
+					"text": "光给钱有什么意思？我还不如直接买点喝的。",
+					"next": "line_2"
+				},
+				"line_2": {
+					"speaker": "醉酒守卫",
+					"text": "明天傍晚，给我弄一杯来。要是没有……嘿嘿，那咱们可得重新聊聊了。",
+					"next": "line_3"
+				},
+				"line_3": {
+					"speaker": "主角·内心",
+					"text": "……我这是开奶茶店，还是接黑帮订单呢？",
+					"next": ""
+				}
+			}
+		},
+		"day1.s06.reaction": {
+			"start": "line_1",
+			"lines": {
+				"line_1": {
+					"speaker": "胖哥布林",
+					"text": "这就是格里芬之血做的？看起来就不一般！我早就想尝尝了！",
+					"next": "narration_line_1"
+				},
+				"line_2": {
+					"speaker": "主角",
+					"text": "卧槽？！你怎么了？！",
+					"next": "line_3"
+				},
+				"line_3": {
+					"speaker": "主角·内心",
+					"text": "等等！不就是加了点格里芬之血吗？！这玩意儿不是哥布林的圣物吗？！",
+					"next": "narration_line_3"
+				},
+				"line_4": {
+					"speaker": "主角",
+					"text": "喂！胖哥布林！你醒醒！你不是说这东西能带来庇护吗？！",
+					"next": "line_5"
+				},
+				"line_5": {
+					"speaker": "主角·内心",
+					"text": "是格里芬之血本身有问题？还是我加得太多了？可这东西不是他们一直供奉着的吗？！",
+					"next": "narration_line_5"
+				},
+				"narration_line_1": {
+					"speaker": "旁白",
+					"text": "他没有丝毫怀疑，咕嘟咕嘟地喝了起来。胖哥布林突然捂住喉咙，身体剧烈抽搐起来。他的眼睛向上翻去，嘴角不断冒出白沫，刚喝下去的特调也被吐了出来。",
+					"next": "line_2"
+				},
+				"narration_line_3": {
+					"speaker": "旁白",
+					"text": "胖哥布林倒在地上，四肢仍在抽搐。主角赶紧放下手里的东西，想把他扶起来，却又不知道该从哪里下手。",
+					"next": "line_4"
+				},
+				"narration_line_5": {
+					"speaker": "旁白",
+					"text": "过了好一阵，胖哥布林的抽搐才逐渐缓和。他仍然虚弱得说不出话，主角也不敢再让他碰那杯饮料。",
+					"next": ""
+				}
+			}
+		},
+		"day1.s06.help_and_rest": {
+			"start": "line_1",
+			"lines": {
+				"line_1": {
+					"speaker": "主角·内心",
+					"text": "……这下麻烦大了。",
+					"next": "line_2"
+				},
+				"line_2": {
+					"speaker": "主角·内心",
+					"text": "这玩意儿根本不是什么普通的食品原料。",
+					"next": "line_3"
+				},
+				"line_3": {
+					"speaker": "主角·内心",
+					"text": "可问题是——为什么他们会把这种东西当成圣物？",
+					"next": "narration_line_3"
+				},
+				"narration_line_3": {
+					"speaker": "旁白",
+					"text": "胖哥布林望着剩下的格里芬之血，眼中第一次出现了恐惧。他一直相信，只要得到格里芬的庇护，自己就能过上好日子。可刚才发生的一切，让他连这份信仰都开始动摇了。",
+					"next": ""
+				}
+			}
+		}
+	},
 	"previews": {},
 	"pending": {
+		"purpose": "原始审阅稿见 source_archive；当前两天对接范围已迁入正式 beats/dialogues，未制作的扩展不参与运行。",
+		"beats": [],
+		"dialogues": {},
+		"phases": [],
+		"release_gate": [],
+		"cases": [],
+		"event_drafts": {}
+	},
+	"source_archive": {
 		"purpose": "开发期编排内容，不参与 StoryProject.compile；确认来源、空间与业务后，按稳定 ID 逐段迁入正式 events/beats/dialogues。F3 表单仅显示已发布集合；完整工程 JSON 保留本对象。",
 		"source_context": "# Day 1 第三至第六阶段：剧情演出初稿\n\n整理日期：2026-10-18。本稿把 [Day 1 修改版](day_01_story_flow_revised.md)第三至第六阶段按 `Beat` 拆分，供后续按[编排工作流](../guides/story_authoring_workflow.md)生成 Story / Dialogue / Phase JSON。对白、系统提示、见闻录正文、选项均逐字取自修改版；本稿只补 Beat 标题、执行模式、完成条件和绑定候选，不新增台词、反应或数值。\n\n编排交接（2026-10-18）：内容已逐字存入 [S03–S06 工程](../story_authoring/day1_stages_03_06_project.json)的开发期 `pending` 集合，后续修改以工程及稳定 ID 为正式来源，本 MD 保留初稿。由于各段仍有来源／接线阻塞，编译集合为空，旧运行时产物保留；`pending` 不参与 StoryProject 编译。实际接口、逐 Beat 映射和发布条件见[交接清单](../story_authoring/day_01_02_authoring_handoff.md)。下文“未注册／未实现”是整理时记录，最新核对见交接清单，不据此反向覆盖当前代码。\n\n- **前置剧情**：S01–S02 已迁移为结构化工程 [day1_stages_01_02_project.json](../story_authoring/day1_stages_01_02_project.json)，结束于 `day1.investigate_coins`，本稿不重复。\n- **宿主场景**：S03–S05 为聚落 `src/core/settlement.tscn`（同一张地图含奶茶店外街道、长老宅等区域）；S04 店内段与 S06 为奶茶店 `src/core/main.tscn`。店内 / 店外切换与准确出入口见 [P13](../story_authoring/day_01_integration_pending.md#p13)。\n- **启动方式**：各阶段由前一阶段成功结束及对应真实业务事实触发；玩家操作段以 Gameplay Bridge v2 等待事实。所有触发点在发布前须接入宿主实际调用，只写 `conditions` 不会自动开播。\n- **播放次数**：均为一次（`once: true`）；取消后可人工重试，不重复发物、扣钱或写成功事实。\n- **剧情范围**：从主角拿着古怪金币准备出店，到胖哥布林喝下特调后被安排在店里休息。Day 2 从次日清晨开始，见 [Day 2 初稿](day_02_stages_01_05_draft.md)。\n- **说话人约定**（沿用 S01–S02）：内心独白为「主角·内心」，出声为「主角」，系统提示为「系统」；说话人名称不等于 Actor ID。\n- **立绘约定**：沿用 S01–S02；主角默认 `res://assets/characters/apron_man/player_neutral_portrait.png`。原稿未标注表情，本稿不逐句添加。胖哥布林首次登场「显示角色立绘与角色名称」，候选 `res://assets/characters/goblin/goblin_smiling_portrait.png` / `goblin_laughing_portrait.png`，正式指定待确认。\n- **音频约定**：修改版 S03–S06 没有指定任何音乐或音效。S04 店内段若仍在奶茶店营业场景，沿用 S01–S02 的 `music.daily_milk_tea`，不重新播放；其余段落不添加音频。\n- **开发者秘密（不得展示为玩家可见内容）**：衣柜连接两个世界、长老对「变量」的怀疑与搜查、格里芬之血的毒性与长老的隐瞒。它们只作为叙事约束保留在修改版「开发者须知」，不写进对白或见闻录。\n\n## 现有能力与 ID 基线\n\n以 2026-10-18 源码与文档为准；「规划」表示须由业务实现发布，不能在 Story JSON 中用 `set_flag` 冒充。\n\n| 类别 | ID | 状态 |\n| --- | --- | --- |\n| 阶段 | `day1.investigate_coins`、`day1.s03`、`day1.s05`、`day1.s06`、`day1.s06.wait_blood_drink` | 已被 Day1Access / Day1WorldController 消费；`day1.s04` 当前不开放出店 |\n| 见闻录 | `chronicle.casino`、`chronicle.griffin_blood`、`chronicle.elder` | S02 已解锁（空白）；本稿新增条目候选 `chronicle.griffin`、`chronicle.emissary`，沿用已实现的 `chronicle.*` 前缀，而非约定中规划的 `day1.chronicle.*` |\n| 委托 | `day1.s04.commission_accepted` | 已被世界门控消费；由 S04 选择汇合后的 Story 写入 |\n| 地图 | `day1.s04.map_available` | 宿主 `unlock_map()` 验证装配后写入；Story 无对应 command，需宿主接线 |\n| 潜入 | `day1.s05.guard_payment_completed`、`day1.s05.escape_completed` | 组件只消费，当前没有正式写入者（P06 / P08） |\n| 调查 / 拾取 | `day1_elder_document` → `day1.s05.document_read`；`day1_blood_storage` → `day1_griffin_blood` × 1 与 `day1.s05.blood_acquired`；`drunken_guard` 仅调查回执 | 已实现；三点均要求 S05、夜晚与委托已接受 |\n| 返店 | `day1.s05.returned_shop` | 实际走奶茶店 street_door 入口且已取血时写入 |\n| 特调 | 配方产物 `day1_blood_milk_tea`；订单 `day1_s06_blood_drink`；`day1.s06.blood_drink_delivered` | 已实现；用量选择未实现（P07） |\n| 聚落锚点 | `00_shop_entrance`、`shop_rest_chair`、`shop_workbench`、`drunken_guard`、`elder_document`、`elder_blood_storage`、`10_elder_entrance` | 地图中存在；MainGame 未自动 register_position，不能直接作 Story target |\n| 角色 | `player`、`fat_goblin`、`guard`、`common_goblin` | 已注册；`guard` 不等于醉酒守卫或宅邸双卫（P09） |\n\n## 第三阶段：消失的街道\n\n- 时间 / 场景：白天 · 店铺外（修改版标题下写「店铺外」，但首段检查金币发生在出门前）。\n\n",
 		"source_alternatives": "（待 P14 决定替代或合并）\n\n以下内容只出现在修改版第四阶段正文，原样保留供决策，不在上方 Beat 中重复播放：\n\n- 登场叙述：主角还在店外观察周围的环境，一个体型圆滚滚的哥布林主动凑了过来……以为这是格里芬又派来的新商铺。\n- 见闻录（正文写法，与补充版措辞不同）：\n  - 伟大的格里芬：「哥布林普遍崇拜并畏惧的存在。传说它会惩罚懒惰、不守规矩的哥布林。」\n  - 长老：「被视为格里芬在人间的权威代表，主持仪式，并宣称能够将格里芬的力量转化为对哥布林的庇护。」\n  - 格里芬使者：「长老宣称，偶尔到来的行脚商是格里芬派来的使者，他们带来的商品是对勤劳者的奖励。」\n  - 格里芬之血：「已知信息：据胖哥布林所说，格里芬之血是长老掌管的珍贵圣物，饮用后可以获得格里芬的庇护。」「真实功效：暂未确认。」（若采用，记录 ID 候选 `chronicle.griffin_blood.s04_first`）\n- 主角·内心：「珍贵材料？听起来就能卖上价钱。」\n- 长老外出缘由：「长老今晚要外出寻欢作乐」（补充版为祭拜格里芬）。\n- 系统提示与地图说明：「获得哥布林洞穴地图，地图功能已解锁。」——与补充版同句，只播放一次。\n- 拒绝后的内心：「我都欠这么多钱了，再不想办法赚钱，真要活不下去了。好不容易有个机会，我还管什么危险不危险？赌一把！」（补充版拒绝分支使用不同内心台词）\n\n",
@@ -2826,7 +4145,10 @@
 				}
 			}
 		],
-		"release_gate": "全部依赖有来源与真实业务写入者，路由/恢复/F6 通过后才发布；不可直接把待发布对白指令串当作完整演出。",
+		"release_gate": {
+			"status": "published",
+			"decision": "2026-10-19 用户确认：手动H01、50G、两笔10G、血液3次、特调40G、原文叙述休息"
+		},
 		"cases": [
 			{
 				"id": "day1.s03_coin_inspect.source",

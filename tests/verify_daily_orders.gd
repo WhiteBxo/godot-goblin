@@ -1,6 +1,5 @@
 extends SceneTree
-## Daily orders are ordinary play, not story beats: they unlock once the Day 1
-## story batch settles and each one settles 10G through the real delivery path.
+## Daily orders are ordinary play, not story beats: they unlock in the isolated teaching pool and each one settles 10G through the real delivery path.
 
 const StateData = preload("res://src/core/game_state.gd")
 
@@ -38,6 +37,9 @@ func _run() -> void:
 		_check(not delivery.can_accept_order(id), "Daily order " + id + " stays closed before the story batch settles")
 
 	state.set_flag("day1.group_settled")
+	for id: String in ids:
+		_check(not delivery.can_accept_order(id), "Teaching pool stays absent from the formal chapter")
+	state.set_flag("debug.teaching_orders")
 	for id: String in ids:
 		_check(delivery.can_accept_order(id), "Daily order " + id + " opens after the story batch settles")
 

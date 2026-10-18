@@ -166,7 +166,8 @@ func _refresh_preview() -> void:
 	var quote := _production.preview_formula_price(materials) if not materials.is_empty() else {}
 	var priced: bool = bool(quote.get("priced", false))
 	_craft.disabled = not result.ok or not priced
-	_confirm.disabled = result.get("code", "") != "ok" or priced
+	_confirm.disabled = not quote.get("ok", false) or priced or not _production.can_confirm_formula(materials)
+	_confirm.tooltip_text = "请返回可恢复的经营阶段后确认新价格。" if not _production.can_confirm_formula(materials) else ""
 	if result.has("name"):
 		_preview.text = DrinkFormula.describe(result, false)
 		if priced:
@@ -208,3 +209,6 @@ func get_preview() -> Label:
 
 func get_craft_button() -> Button:
 	return _craft
+
+func get_confirm_button() -> Button:
+	return _confirm

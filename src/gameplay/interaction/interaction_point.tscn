@@ -2,11 +2,10 @@
 
 [ext_resource type="Script" path="res://src/gameplay/interaction/interaction_point.gd" id="1"]
 
+[ext_resource type="FontFile" path="res://assets/fonts/fusion_pixel/fusion-pixel-12px-monospaced-zh_hans.otf.woff2" id="font"]
+
 [sub_resource type="CircleShape2D" id="Reach"]
 radius = 85.0
-
-[sub_resource type="SystemFont" id="Font"]
-font_names = PackedStringArray("Microsoft YaHei", "Noto Sans CJK SC", "sans-serif")
 
 [node name="InteractionPoint" type="Area2D"]
 collision_layer = 0
@@ -30,6 +29,6 @@ theme_override_colors/font_color = Color(1, 0.93, 0.77, 1)
 theme_override_colors/font_shadow_color = Color(0.12, 0.06, 0.03, 1)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
-theme_override_fonts/font = SubResource("Font")
+theme_override_fonts/font = ExtResource("font")
 theme_override_font_sizes/font_size = 28
 horizontal_alignment = 1

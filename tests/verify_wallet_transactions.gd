@@ -106,7 +106,9 @@ func _test_quotes() -> void:
 	_unchanged(service, func(): return service.purchase("free", 1, "quote.busy"), "busy")
 	service.set_session_guard(Callable())
 	service.free()
-	var empty := WalletTransactions.new()
+	var empty_menu: TeaMenu = WarehouseInventory.CATALOG.duplicate(true)
+	empty_menu.products = {}
+	var empty := WalletTransactions.new(empty_menu)
 	_check(empty.get_product_quotes().is_empty(), "Default unconfigured catalog exposes an empty product list")
 	empty.free()
 
@@ -224,7 +226,7 @@ func _test_snapshots() -> void:
 	state.set_flag("test.saved")
 	var full := state.to_dict()
 	# Use the existing native Variant snapshot contract with real file I/O.
-	var path := "user://verify_wallet_transactions.tmp"
+	var path := "/tmp/goblin_verify_wallet_transactions.tmp"
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	file.store_var(full)
 	file.close()

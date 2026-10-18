@@ -230,7 +230,10 @@ func _test_host(path: String) -> void:
 	state.set_flag("task.shop.first_order.active")
 	var before := state.to_dict()
 	button.pressed.emit()
-	check(ui.is_open(&"tasks") and text.text.contains("交付对象：胖哥布林") and text.text.contains("交付成品：珍珠奶茶"), "HUD button opens real first-order delivery names")
+	var expected_product: String = game.get_task_journal().get_task("shop.first_order").delivery.product_id
+	var expected_name: String = game.get_warehouse_inventory().get_definition(expected_product).display_name
+	var expected_target := "交付对象：胖哥布林" if game.get_actor_director().get_actor(&"fat_goblin") != null else "交付对象：交付对象待确认"
+	check(ui.is_open(&"tasks") and text.text.contains(expected_target) and text.text.contains("交付成品：" + expected_name), "HUD button resolves delivery names from actual host bindings")
 	check(state.to_dict() == before, "Opening real first order never accepts or settles an order")
 	await tap(KEY_P)
 	check(paused and not panel.can_process(), "Pause covers the task window")

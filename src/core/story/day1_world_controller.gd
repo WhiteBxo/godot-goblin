@@ -45,7 +45,7 @@ func _refresh() -> void:
 			actor.refresh_phase(_state)
 			if _level is MilkTeaShop and actor.actor_id == &"fat_goblin" and Day1Access.is_later_stage(_state):
 				actor.visible = Day1Access.at_stage(_state, "day1.s06")
-		if _level is SettlementMap and _points.has(actor.actor_id):
+		if _points.has(actor.actor_id):
 			_points[actor.actor_id].interaction_enabled = actor.visible
 	if _level is SettlementMap:
 		_level.set_elder_access(_state.get_business_profile() != "day1" or Day1Access.can_enter_elder(_state))
@@ -56,5 +56,7 @@ func _refresh() -> void:
 func record_shop_arrival() -> void:
 	if _state.get_business_profile() != "day1":
 		return
+	if Day1Access.at_stage(_state, "day1.s04"):
+		_state.set_flag("day1.s03.returned_shop")
 	if (Day1Access.at_stage(_state, "day1.s05") or Day1Access.at_stage(_state, "day1.s06")) and _state.get_flag("day1.s05.escape_completed"):
 		_state.set_flag("day1.s05.returned_shop")

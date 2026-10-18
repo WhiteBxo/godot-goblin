@@ -8,6 +8,7 @@ signal session_initialized(error: Error)
 var _interaction_audio: InteractionAudio
 var _day1_controller: Day1ShopController
 var _chapter_controller: Day1ChapterController
+var _chapter_gameplay: ChapterGameplay
 var _trigger_zones: Array[StoryTriggerZone] = []
 var _title_card: TitleCard
 var _business_hud: Day1BusinessHUD
@@ -267,7 +268,9 @@ func _refresh_task_delivery_names() -> void:
 		if not task.delivery.is_empty():
 			if task.delivery.has("drink"):
 				continue
-			var required: Dictionary = task.delivery.items if task.delivery.has("items") else {String(task.delivery.product_id): 1}
+			var required: Dictionary = task.delivery.get("uses", task.delivery.get("items", {}))
+			if task.delivery.has("product_id"):
+				required = {String(task.delivery.product_id): 1}
 			for id: String in required:
 				var product := inventory.get_definition(id)
 				if product != null:
@@ -417,7 +420,7 @@ func _place_player(level: Node2D) -> void:
 		_shop_player.teleport_to(level.get_spawn_position())
 
 func has_scene_arrival() -> bool:
-	return _arrival_entrance != &""
+	return _arrival_entrance != &"" and _arrival_records_travel
 
 func get_scene_travel() -> SceneTravel:
 	return _scene_travel
@@ -440,7 +443,7 @@ func prepare_saved_checkpoint(checkpoint: Dictionary, snapshot: Dictionary) -> E
 		return error
 	if checkpoint.recovery == "chapter":
 		var chapter := Day1ChapterController.new()
-		error = chapter.preflight_recovery(snapshot.story_stage, "shop" if scene_file_path == GameEntry.GAME_SCENE else "settlement")
+		error = chapter.preflight_recovery(snapshot.story_stage, "shop" if scene_file_path == GameEntry.GAME_SCENE else _checkpoint_host(scene_file_path))
 		chapter.free()
 	else:
 		error = Day1ShopController.preflight_recovery(snapshot)
@@ -482,6 +485,8 @@ func _can_save_checkpoint() -> bool:
 	if (is_instance_valid(_scene_travel) and _scene_travel.is_busy()) or _shop_player.is_performance_controlled():
 		return false
 	if is_instance_valid(_title_card) and _title_card.is_showing():
+		return false
+	if is_instance_valid(_chapter_gameplay) and not _chapter_gameplay.is_save_boundary():
 		return false
 	# An entire stealth attempt is a single checkpoint interval, including failure.
 	if is_instance_valid(_stealth_service) and _stealth_service.status in [Day1StealthService.Status.RUNNING, Day1StealthService.Status.FAILED, Day1StealthService.Status.INTERCEPTED]:
@@ -665,7 +670,7 @@ func _create_stealth_system() -> void:
 	_ui_manager.open_screen(ScreenIds.STEALTH_HUD)
 
 func _retry_infiltration_travel() -> void:
-	var destination: MainGame = preload("res://src/core/settlement.tscn").instantiate()
+	var destination: MainGame = load("res://src/core/settlement.tscn").instantiate()
 	var error := destination.prepare_scene_arrival(&"infiltration_start", false)
 	if error == OK:
 		error = GameEntry.travel_to_scene(get_tree(), destination)
@@ -768,6 +773,9 @@ func get_story_director() -> StoryDirector:
 func get_actor_director() -> ActorDirector:
 	return _actor_director if is_instance_valid(_actor_director) else null
 
+func get_task_catalog() -> TaskCatalog:
+	return _task_catalog
+
 func get_task_delivery() -> TaskDelivery:
 	return _task_delivery
 
@@ -811,10 +819,10 @@ func _with_npc_points(points: Array[InteractionPoint]) -> Array[InteractionPoint
 		point.display_name = entity.display_name
 		point.description = entity.story_role
 		entity.add_child(point)
+		if day1_story_enabled:
+			point.hide_development_markers()
 		if day1_story_enabled and _shop_level != null and entity.actor_id != &"fat_goblin":
 			point.position = Vector2(0, -150)
-			point.get_node("Marker").hide()
-			point.get_node("Label").hide()
 		points.append(point)
 		_npc_points[point.interaction_id] = point
 	return points
@@ -836,6 +844,10 @@ func _route_story_interaction(id: StringName) -> Error:
 		var result := point.resolve()
 		_shop_ui.show_interaction_result(result.message)
 		return OK if result.ok else ERR_UNAVAILABLE
+	if id == &"human_supply" and is_instance_valid(_chapter_gameplay):
+		var supplied := _chapter_gameplay.supply_human_ingredients()
+		_shop_ui.show_feedback(supplied.message, supplied.ok)
+		return OK if supplied.ok else ERR_UNAVAILABLE
 	if _scene_exits.has(id):
 		return _scene_travel.request_exit(_scene_exits[id])
 	if is_instance_valid(_gathering_service) and _gathering_service.has_point(id):
@@ -915,6 +927,11 @@ func _create_story_business() -> void:
 	_story_business.configure(get_node("/root/GameState"), unlock_map,
 		func(location: String) -> bool: return SettlementMap.MAP_LOCATIONS.has(location))
 	_story_director.set_business_adapter(_story_business)
+	if day1_story_enabled:
+		_chapter_gameplay = ChapterGameplay.new()
+		$Systems.add_child(_chapter_gameplay)
+		if _chapter_gameplay.configure(self) == OK:
+			_story_business.set_chapter_actions(_chapter_gameplay.execute)
 
 ## The existing transition layer owns full-screen presentation. SceneTravel adds
 ## its transition after this card, so scene changes can still cover it.
@@ -1093,6 +1110,9 @@ func get_business_hud() -> Day1BusinessHUD:
 func get_day1_controller() -> Day1ShopController:
 	return _day1_controller
 
+func get_chapter_gameplay() -> ChapterGameplay:
+	return _chapter_gameplay
+
 func get_chapter_controller() -> Day1ChapterController:
 	return _chapter_controller if is_instance_valid(_chapter_controller) else null
 
@@ -1164,6 +1184,13 @@ func _create_map_ui() -> void:
 	$PopupLayer.add_child(_map_panel)
 	_map_panel.configure(_map_provider, _shop_player, _task_journal, _get_known_map_locations)
 	_map_panel.close_requested.connect(func() -> void: _ui_manager.close_screen(ScreenIds.MAP))
+	_ui_manager.screen_closed.connect(func(id: StringName) -> void:
+		if id != ScreenIds.MAP:
+			return
+		var state := get_node("/root/GameState")
+		if state.story_stage == "day1.s04.wait_map" and state.get_flag("day1.s04.map_opened"):
+			state.set_flag("day1.s04.map_closed")
+	)
 	_map_button = preload("res://src/UI/map/map_button.tscn").instantiate()
 	$HudLayer.add_child(_map_button)
 	_map_button.pressed.connect(open_map)
@@ -1204,4 +1231,11 @@ func open_map() -> Error:
 		or (is_instance_valid(_stealth_service) and _stealth_service.is_blocking())
 		or not _shop_player.movement_enabled):
 		return ERR_BUSY
-	return _ui_manager.open_screen(ScreenIds.MAP)
+	var error := _ui_manager.open_screen(ScreenIds.MAP)
+	if error == OK and get_node("/root/GameState").story_stage == "day1.s04.wait_map":
+		get_node("/root/GameState").set_flag("day1.s04.map_opened")
+	return error
+
+func _checkpoint_host(path: String) -> String:
+	var hosts := {"res://src/core/settlement.tscn": "settlement", "res://src/core/tavern.tscn": "tavern", "res://src/core/casino.tscn": "casino", "res://src/core/elder_house.tscn": "elder_house"}
+	return hosts.get(path, "shop")

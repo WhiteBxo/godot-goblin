@@ -1,6 +1,6 @@
 # 文档中心
 
-本页索引项目维护的全部文档，核对日期 2026-10-18。当前能力先读[项目现状](development/development_status_2026_10_18.md)：正式可玩到 S01–S02，后四阶段数据为空骨架，Day 2 尚未接入。首次试玩先读[项目 README](../README.md)和[启动与新游戏](guides/game_entry.md)；开发前读[通用协作规范](../AGENTS.md)，再按其中索引读取相关模块的 `AGENTS.md`；编排剧情先读[简版写作指南](guides/story_authoring_fields_quick_guide.md)与[编排工作流](guides/story_authoring_workflow.md)。
+本页索引项目维护的全部文档，核对日期 2026-10-19。当前能力先读[两工作树整合记录](development/two_day_integration_2026_10_19.md)：已接通两天剧情和第三天交接，验证及剩余限制单独记录。首次试玩先读[项目 README](../README.md)和[启动与新游戏](guides/game_entry.md)；开发前读[通用协作规范](../AGENTS.md)，再按其中索引读取相关模块的 `AGENTS.md`；编排剧情先读[简版写作指南](guides/story_authoring_fields_quick_guide.md)与[编排工作流](guides/story_authoring_workflow.md)。
 
 ## 分类与命名规范
 
@@ -65,11 +65,11 @@
 | --- | --- |
 | [Day 1 前两阶段正式流程](gameplay/day_01_stages_01_02.md) | `day_01_stages_01_02.md` |
 | [Day 1 世界门控、调查与血液特调](gameplay/day_01_world_flow.md) | `day_01_world_flow.md` |
-| [Day 1 投掷与守卫反应](gameplay/day_01_stealth.md) | 组件及局部重试已实现；正式绑定仍缺失 |
+| [Day 1 投掷与守卫反应](gameplay/day_01_stealth.md) | 正式 RPG 首夜潜入、独立守卫与跨室内整次重试 |
 | [饮品投掷与区域效果（第三期）](gameplay/drink_throw_effects.md) | 扣杯、六种效果、区域修饰、可腐蚀物及独立试玩 |
 | [初级奶茶制作](gameplay/basic_tea_production.md) | `basic_tea_production.md` |
 | [订单板、按单制作与交付追踪](gameplay/order_system.md) | 逐单接取、暖纸订单笺、共享库存与 HUD |
-| [营业与顾客调度](gameplay/business_scheduler.md) | 阶段发布、普通／固定顾客、出入场组件与 A 的持久接线需求 |
+| [营业与顾客调度](gameplay/business_scheduler.md) | 阶段发布、普通／剧情顾客、真实出入场与持久关店 |
 | [统一经营会话](gameplay/business_session.md) | `business_session.md` |
 | [见闻录基础模块](gameplay/chronicle.md) | `chronicle.md` |
 | [人物记录](gameplay/character_records.md) | 人物解锁、情报追加、手册查看与剧情接口 |
@@ -135,9 +135,9 @@
 | [day_02.pdf](design/source/day_02.pdf) | 第二天剧情原始 PDF。 |
 | [Day 2 五个阶段：剧情演出初稿](design/day_02_stages_01_05_draft.md) | 由 day_02.pdf 逐字整理的 Beat 化初稿。 |
 | [经营与战斗经济规则（10-19）](design/milk_tea_economy_revised.md) | 现行设计：人类 3G、哥布林持久槽位定价、爆品 150G、战斗独立采购及来源冲突。 |
-| [新经济实现方案](design/milk_tea_economy_implementation_plan.md) | 基于当前代码的差距、价格账本、原子奖励、存档迁移和四期验收；尚未实施。 |
+| [新经济实现方案](design/milk_tea_economy_implementation_plan.md) | 经营阶段 1–3 已接通；保留原始差距分析，独立战斗采购待实施。 |
 | [奶茶配方系统 V0.1](design/milk_tea_recipe_system_revised.md) | 保留原文与 12 张表格；售价等冲突规则由 10-19 经济方案替代。 |
-| [22 种原料 2.0 配置](design/recipe_ingredients_revised.md) | 10-19 可读快照，修正七项等级编号；运行时仍读 10-18 来源。 |
+| [22 种原料 2.0 配置](design/recipe_ingredients_revised.md) | 10-19 原料来源，经营等级、价格及用量已导入运行时。 |
 | [2026-10-18 配方资料更新与旧稿处理](design/milk_tea_recipe_update_2026_10_18.md) | 导入当时记录及后续运行时实现入口。 |
 | [设计原始附件索引](design/source/README.md) | 10-19 Excel/PDF、新旧来源关系与内容哈希，保留旧稿。 |
 | [otherworld_ingredients_and_drinks.xlsx](design/source/otherworld_ingredients_and_drinks.xlsx) | 旧运行时基线及 W/H、图鉴互补资料。 |
@@ -155,7 +155,7 @@ Beat 映射、验证清单及待定项；不供游戏运行时加载。
 | [前两阶段结构化工程](story_authoring/day1_stages_01_02_project.json) | 当前演出、对白与 Bridge 的可编辑正式来源。 |
 | [前两阶段生成清单](story_authoring/day1_stages_01_02_bridge.json) | 工程散列、Beat 映射、产物路径与验证入口。 |
 | [Day 2 对接待定与能力缺口](story_authoring/day_02_integration_pending.md) | Day 2 初稿的待定项（D 编号）。 |
-| [Day 1 后四阶段与 Day 2 五阶段编排交接](story_authoring/day_01_02_authoring_handoff.md) | 待发布工程、A/B/C/D 实码接口、任务／订单／角色绑定与发布条件。 |
+| [Day 1 后四阶段与 Day 2 五阶段编排交接](story_authoring/day_01_02_authoring_handoff.md) | 原交接历史与接口说明；正式工程现已发布，当前状态见整合记录。 |
 | [Day 1 S03–S06 Beat 映射](story_authoring/day1_stages_03_06_beat_map.md) | 24 Beat 的来源、事件／Phase 草案、阻塞与实际验证。 |
 | [Day 2 S01–S05 Beat 映射](story_authoring/day2_stages_01_05_beat_map.md) | 29 Beat 的来源、事件／Phase 草案、阻塞与实际验证。 |
 | [gameplay_bridge_demo_bridge.json](story_authoring/gameplay_bridge_demo_bridge.json) | 生成的 Beat 映射 / 验证清单，保留原资源名。 |
@@ -167,8 +167,9 @@ Beat 映射、验证清单及待定项；不供游戏运行时加载。
 
 | 文档 | 文件 / 说明 |
 | --- | --- |
+| [两工作树整合（2026-10-19）](development/two_day_integration_2026_10_19.md) | 单一经济账本、两天剧情、RPG Maker 地图、迁移与验证。 |
 | [通用 Developer Console（第一阶段）](development/developer_console.md) | `developer_console.md` |
-| [项目开发现状（2026-10-18）](development/development_status_2026_10_18.md) | 当前入口、能力、缺口、试玩与验证限制；基线 88684ac。 |
+| [项目开发现状（2026-10-18）](development/development_status_2026_10_18.md) | 10-18 历史快照，基线 88684ac；当前变化见 10-19 整合记录。 |
 | [系统开发现状（2026-10-16 历史快照）](development/development_status_2026_10_16.md) | `development_status_2026_10_16.md` |
 | [系统设计审查（2026-10-17 历史记录）](development/system_design_review.md) | `system_design_review.md` |
 | [系统优先级：当前缺口与后续顺序](development/system_priority.md) | `system_priority.md` |

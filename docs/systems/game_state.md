@@ -1,6 +1,6 @@
 # GameState
 
-`src/core/game_state.gd` 作为 `GameState` Autoload 加载，先于游戏场景创建，跨场景保留数据。它不处理 UI、输入、剧情演出或文件存档，也不在场景切换时自动 reset。当前完整快照为 **v5**，文件读写由独立[存档系统](save_system.md)负责；全局实现与发布范围见[项目现状](../development/development_status_2026_10_18.md)。
+`src/core/game_state.gd` 作为 `GameState` Autoload 加载，先于游戏场景创建，跨场景保留数据。它不处理 UI、输入、剧情演出或文件存档，也不在场景切换时自动 reset。当前完整快照为 **v8**（库存 v6、经济 v3），文件读写由独立[存档系统](save_system.md)负责；全局实现与发布范围见[两工作树整合记录](../development/two_day_integration_2026_10_19.md)。
 
 ## 数据与公开 API
 
@@ -49,15 +49,15 @@ GameState.state_changed.connect(_refresh_from_state)
 _refresh_from_state()
 ```
 
-`to_dict() -> Dictionary` 返回 `schema_version = 5` 的独立原生 Variant 快照，包含 `current_day`、`story_stage`、`flags`、`variables`、`completed_events`（排序后的字符串数组）、`business`（profile_id、v3 库存子快照、制作订单 ID 前缀及自由制作请求回执）及 `economy`（钱包、同一库存、商人余量、交易与领奖回执）。`restore_state(data: Dictionary) -> Error` 先检查全部字段、版本、命名空间、值类型及经营数据，再整体替换；无效数据返回 `ERR_INVALID_DATA`，保留原状态且无通知；相同状态返回 `OK` 且无通知，事件数组顺序不影响比较。新增必填 `task_results` 保存任务终态（见[日程与任务结果](schedule_and_task_results.md)）；所有九个字段必需；`business.inventory` 与 `economy.inventory` 必须完全一致，顶层额外字段忽略。旧 v1 缺少经营状态，拒绝恢复以免覆盖或猜测剧情对应的物品状态。旧完整 v2/v3/v4 可迁移，补空任务结果并在已绑定目录时静默归一化；v2/v3 另补空配方成品、图鉴和自由制作请求回执，保留已有开封次数；v2 另补 tutorial 配置与古怪金币空条目。详见[配方快照边界](../gameplay/free_tea_recipes.md#快照与迁移)。
+`to_dict() -> Dictionary` 返回 `schema_version = 8` 的独立原生 Variant 快照，包含 `current_day`、`story_stage`、`flags`、`variables`、`completed_events`（排序后的字符串数组）、`business`（profile_id、v6 库存子快照、制作订单 ID 前缀及自由制作请求回执）及 `economy`（钱包、同一库存、商人余量、交易与领奖回执、配方固定报价和首次爆品奖励）。`restore_state(data: Dictionary) -> Error` 先检查全部字段、版本、命名空间、值类型及经营数据，再整体替换；无效数据返回 `ERR_INVALID_DATA`，保留原状态且无通知；相同状态返回 `OK` 且无通知，事件数组顺序不影响比较。新增必填 `task_results` 保存任务终态（见[日程与任务结果](schedule_and_task_results.md)）；所有九个字段必需；`business.inventory` 与 `economy.inventory` 必须完全一致，顶层额外字段忽略。旧 v1 缺少经营状态，拒绝恢复以免覆盖或猜测剧情对应的物品状态。旧完整 v2–v7 可迁移：按字段识别两分支的旧布局，补齐新增账本及任务字段、迁移商品配置，并将有效历史实体币按 10G 折入钱包后清零。历史未定价自由杯标为 `legacy_unpriced`，读取不随机、不发奖；已有报价和奖励回执校验后保留。无效币数、非法账本或双方库存不一致均整包拒绝。详见[配方快照边界](../gameplay/free_tea_recipes.md#快照与迁移)。
 
-GameState 提供完整 v5 内存快照接口，文件读写由独立[存档系统](save_system.md)负责。适配层需保留 Variant 类型；普通 JSON 会将数字解析为浮点数，不能直接保证原生快照类型往返，应在适配层编码/恢复类型后再调用 `restore_state`。
+GameState 提供完整 v8 内存快照接口，文件读写由独立[存档系统](save_system.md)负责。适配层需保留 Variant 类型；普通 JSON 会将数字解析为浮点数，不能直接保证原生快照类型往返，应在适配层编码/恢复类型后再调用 `restore_state`。
 
 `validate_snapshot(data: Dictionary) -> Error` 复用完整校验与已支持迁移，不替换状态或发通知；`can_take_snapshot() -> bool` 在事务、重置 / 恢复及同步通知期间返回 false。存档协调器需先检查后取完整快照；场景内的对白、演出和潜入等安全条件由宿主额外判断。
 
 ## 营业会话
 
-营业调度的持久数据存于保留前缀 `variables["business.session.<session_id>"]`，仅经 `bind_business_session`、`load_business_session`、`commit_business_session` 与 `close_business_session` 接入，普通 `set_variable` 拒绝写入。关闭营业时将会话、完成事实、合法相邻日程迁移和到期任务结果同次提交，再通知；恢复／新游戏沿用整体替换，不重发营业完成或奖励。规则、错误码和正式接线边界见[营业与顾客调度](../gameplay/business_scheduler.md#gamestate-持久与关店契约)，相关验证为 `tests/verify_business_persistence.gd`。这是 v5 变量内的可选业务结构，不新增顶层 schema 字段。
+营业调度的持久数据存于保留前缀 `variables["business.session.<session_id>"]`，仅经 `bind_business_session`、`load_business_session`、`commit_business_session` 与 `close_business_session` 接入，普通 `set_variable` 拒绝写入。关闭营业时将会话、完成事实、合法相邻日程迁移和到期任务结果同次提交，再通知；恢复／新游戏沿用整体替换，不重发营业完成或奖励。规则、错误码和正式接线边界见[营业与顾客调度](../gameplay/business_scheduler.md#gamestate-持久与关店契约)，相关验证为 `tests/verify_business_persistence.gd`。这是完整快照变量内的可选业务结构，不新增顶层 schema 字段。
 
 ## 验证
 

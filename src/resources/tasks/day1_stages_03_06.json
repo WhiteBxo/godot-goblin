@@ -1,4 +1,43 @@
 {
   "version": 1,
-  "tasks": []
+  "tasks": [
+    {
+      "id": "day1.s04.order",
+      "type": "main",
+      "title": "H01经典珍珠奶茶 → 胖哥布林",
+      "description": "手动接单、制作并交付一杯H01，收取3G。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day1.s04.order_open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day1.s04.order_open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day1.s04.order_delivered"
+      },
+      "delivery": {
+        "order_id": "day1_s04_fat",
+        "product_id": "classic_boba_milk_tea",
+        "target_object_id": "fat_goblin",
+        "accepted_flag": "day1.s04.order_accepted"
+      },
+      "rewards": {
+        "money": 3,
+        "text": "营业收入 3G"
+      },
+      "objectives": [
+        {
+          "id": "deliver",
+          "text": "交付并收款",
+          "complete_when": {
+            "type": "flag",
+            "key": "day1.s04.order_delivered"
+          }
+        }
+      ]
+    }
+  ]
 }

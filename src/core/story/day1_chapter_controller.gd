@@ -10,10 +10,11 @@ const TASK_FILES: Array[String] = [
 	"res://src/resources/tasks/day1_stages_01_02.json",
 	"res://src/resources/tasks/day1_stages_03_06.json",
 	"res://src/resources/tasks/day1_daily_orders.json",
+	"res://src/resources/tasks/day2_stages_01_05.json",
 ]
 const SOUND_LIBRARY := "res://src/resources/audio/sound_library.tres"
 const SETUP_KEYS := ["story", "dialogue", "phases", "auto_events", "derived_facts", "scene_setups"]
-const DAY2_NOTICE := "第二天的内容尚未开放"
+const DAY2_SETUP := "res://src/resources/story/day2_stages_01_05_setup.json"
 
 var last_error := ""
 var _game: MainGame
@@ -30,7 +31,7 @@ var _recovery_blocked := false
 ## The settlement has no other story host, so it owns every Day 1 stage there
 ## (including the S02 -> S03 hand-off). In the shop it owns only S03 onward.
 static func owns_stage(state: Node, host: String) -> bool:
-	return host == "settlement" or state.story_stage == "day1.investigate_coins" or Day1Access.is_later_stage(state) or Day1Access.is_day2_placeholder(state)
+	return host != "shop" or state.story_stage == "day1.investigate_coins" or Day1Access.is_later_stage(state) or Day1Access.is_day2_placeholder(state) or Day1Access.at_stage(state, "day3")
 
 func configure(game: MainGame, host: String) -> Error:
 	_game = game
@@ -70,7 +71,8 @@ func _load_setup(path: String) -> Error:
 		if not data[key] is Array:
 			last_error = "Chapter setup %s must be an array" % key
 			return ERR_INVALID_DATA
-	for id: Variant in data.auto_events:
+	for entry: Variant in data.auto_events:
+		var id: Variant = entry.get("id") if entry is Dictionary else entry
 		if not StoryLibrary.is_namespaced(id):
 			last_error = "auto_events requires namespaced event IDs"
 			return ERR_INVALID_DATA
@@ -89,7 +91,7 @@ func _load_setup(path: String) -> Error:
 		if not scene_setup is Dictionary or not scene_setup.has_all(["host", "stage", "actors"]) or scene_setup.size() != 3:
 			last_error = "scene_setups entries require host, stage and actors"
 			return ERR_INVALID_DATA
-		if scene_setup.host not in ["shop", "settlement"] or not scene_setup.stage is String or not scene_setup.actors is Dictionary:
+		if scene_setup.host not in ["shop", "settlement", "tavern", "casino", "elder_house"] or not scene_setup.stage is String or not scene_setup.actors is Dictionary:
 			last_error = "scene_setups host must be shop or settlement; actors an object"
 			return ERR_INVALID_DATA
 		for actor: Variant in scene_setup.actors:
@@ -110,7 +112,7 @@ func _on_session_replaced() -> void:
 
 func _on_event_finished(id: String, ok: bool, _reason: String) -> void:
 	_recovery_blocked = not ok
-	if id in _setup.auto_events:
+	if id in _automatic_ids():
 		if ok:
 			_failed_auto_events.erase(id)
 		else:
@@ -121,6 +123,13 @@ func _on_event_finished(id: String, ok: bool, _reason: String) -> void:
 func _activate() -> void:
 	if not is_instance_valid(_game) or not is_inside_tree() or not owns_stage(_state, _host):
 		return
+	var selected := DAY2_SETUP if _state.story_stage.begins_with("day2") or _state.story_stage.begins_with("day3") else SETUP
+	if _setup.get("story", "") != ("res://src/resources/story/day2_stages_01_05.json" if selected == DAY2_SETUP else "res://src/resources/story/day1_stages_03_06.json"):
+		if _game.get_story_director().is_busy():
+			return
+		_loaded = false
+		if _load_setup(selected) != OK:
+			return
 	if not _loaded:
 		var director := _game.get_story_director()
 		if director.is_busy():
@@ -156,7 +165,7 @@ func is_loaded() -> bool:
 ## Unpublished stages need an authored actor setup as well as a save declaration.
 ## The published S02 ending has no actors and deliberately uses an empty setup.
 func preflight_recovery(stage: String, host: String) -> Error:
-	var error := _load_setup(SETUP)
+	var error := _load_setup(DAY2_SETUP if stage.begins_with("day2") or stage.begins_with("day3") else SETUP)
 	if error != OK:
 		return error
 	if stage != "day1.investigate_coins":
@@ -183,6 +192,8 @@ func get_scene_setup() -> Dictionary:
 func get_staged_visibility(actor_id: StringName) -> Variant:
 	if not _loaded:
 		return null
+	if actor_id == &"drunken_guard" and Day1Access.at_stage(_state, "day1.s05") and _state.get_flag("day1.s05.drunken_paid"):
+		return false
 	var actors: Dictionary = get_scene_setup().get("actors", {})
 	if not actors.has(String(actor_id)):
 		return null
@@ -209,7 +220,16 @@ func apply_scene_setup() -> void:
 			push_warning("Chapter scene setup: unknown Marker " + str(marker_id))
 			continue
 		actor.teleport_to(marker.global_position)
-		actor.visible = true
+		actor.visible = not (id == "drunken_guard" and Day1Access.at_stage(_state, "day1.s05") and _state.get_flag("day1.s05.drunken_paid"))
+
+func _automatic_ids() -> Array[String]:
+	var ids: Array[String] = []
+	for entry: Variant in _setup.get("auto_events", []):
+		if entry is String:
+			ids.append(entry)
+		elif entry.get("host") == _host:
+			ids.append(entry.id)
+	return ids
 
 func _schedule_refresh() -> void:
 	if not _refresh_pending:
@@ -222,10 +242,13 @@ func _refresh() -> void:
 		return
 	var hud := _game.get_business_hud()
 	if is_instance_valid(hud):
-		hud.show_notice(DAY2_NOTICE if Day1Access.is_day2_placeholder(_state) else "")
+		hud.show_notice("")
 	if not owns_stage(_state, _host):
 		_loaded = false
 		_auto_pending = false
+		return
+	if _state.story_stage.begins_with("day2") and not _setup.get("story", "").contains("day2"):
+		_activate()
 		return
 	if not _loaded:
 		if owns_stage(_state, _host):
@@ -255,7 +278,7 @@ func _process(_delta: float) -> void:
 	if director.is_busy() or _game.get_dialogue_manager().is_active():
 		return
 	_auto_pending = false
-	for id: String in _setup.auto_events:
+	for id: String in _automatic_ids():
 		if _failed_auto_events.has(id):
 			continue
 		if not director.get_event_summary(id).get("conditions_met", false) or _state.is_event_completed(id):

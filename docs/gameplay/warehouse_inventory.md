@@ -6,9 +6,9 @@
 
 origin 为 human / otherworld；category 为 tea / milk / syrup / topping / product / material / story_item。固定成品使用 product，金币使用 story_item，新表原料与酒品按目录定义；动态配方杯单独存 drinks，不伪造为静态 IngredientDefinition。描述性战斗属性不会自动执行效果，饮品投掷只消费明确生成的 throw 参数。
 
-六种教学食材初始为 12 / 12 / 12 / 8 / 8 / 10 份，已发现并知晓原属性；新表食材、酒品及剧情材料通常初始 0 份且未发现。醒神菇已不是唯一异世界条目；采集示例仍使用它，见[采集](gathering.md)。入库会发现材料，但不会自动揭示四个属性组。
+六种教学食材初始为 12 / 12 / 12 / 8 / 8 / 10 份，已发现并知晓原属性；C01–C10 初始各五份，且提供 0G 整份补给；异世界食材、酒品及剧情材料按实际取得入库。醒神菇已不是唯一异世界条目；采集示例仍使用它，见[采集](gathering.md)。入库会发现材料，但不会自动揭示四个属性组。
 
-原料表内的 22 种原料现支持每份 5 次，旧教学原料、成品与剧情物品仍为每份 1 次。库存新增 `get_uses`、`has_uses`、`try_spend_uses`，仓库显示当前份与总剩余次数；现有教学制作和交付继续按整份扣除。字段、换份规则和迁移详见[奶茶配方数据层](milk_tea_recipe_data.md)。
+原料表内的 22 种原料现支持每份 5 次，旧教学原料、成品与剧情物品仍为每份 1 次。库存新增 `get_uses`、`has_uses`、`try_spend_uses`，仓库显示当前份与总剩余次数；正式固定配方和自由配方经 GameState 按次扣原料，成品交付按杯；教学隔离服务保留整份兼容路径。字段、换份规则和迁移详见[奶茶配方数据层](milk_tea_recipe_data.md)。
 
 GameState Autoload 持有 WalletTransactions（其内部拥有唯一的 WarehouseInventory）和一个 TeaProduction。钱包交易、制作与交付复用同一库存。MainGame 在正式聚落 `settlement.tscn` 与独立店铺 `main.tscn` 中绑定同一份库存和制作服务：
 
@@ -65,7 +65,7 @@ WarehousePanel 位于现有 ShopPopup 内，使用现有 theme、返回按钮、
 
 ```json
 {
-  "schema_version": 3,
+  "schema_version": 6,
   "ingredients": {
     "black_tea": {
       "quantity": 12,
@@ -81,7 +81,7 @@ WarehousePanel 位于现有 ShopPopup 内，使用现有 theme、返回按钮、
 
 示例仅展示一个条目；真实快照必须完整包含目录中的全部 ID。恢复前验证版本、ID 集、计数、当前份已用次数、发现与属性组，任何条目失败则全部不变；相同快照不重复通知。旧库存 v1 迁移为 `used = 0`，旧 v1/v2 均补空 `drinks` 与 `encyclopedia`；动态配方字段见[自由调配](free_tea_recipes.md#快照与迁移)。支持 `JSON.stringify` / `JSON.parse_string` 往返后的整数表示，拒绝小数、无穷值及非法发现状态。
 
-库存子快照不包含静态定义、订单进度或剧情数据，不能单独作为完整营业存档。GameState v4 快照统一包含库存、配方成品与图鉴、制作订单 ID / 自由制作请求回执和剧情/交付事实，并支持旧库存子快照迁移；完整营业恢复使用 GameState.restore_state。没有数据库、存档界面或自动存档。
+库存子快照不包含静态定义、订单进度或剧情数据，不能单独作为完整营业存档。GameState v8 快照统一包含库存、配方成品与图鉴、制作订单 ID / 自由制作请求回执和剧情/交付事实，并支持旧库存子快照迁移；完整营业恢复使用 GameState.restore_state。安全文件保存与标题继续游戏见[存档系统](../systems/save_system.md)。
 
 ## 验证与试玩
 
@@ -117,4 +117,4 @@ Gameplay Bridge 测试会在 user:// 写临时 JSON，需要允许写入该目�
 - [ItemList](https://docs.godotengine.org/en/4.7/classes/class_itemlist.html)：使用 item metadata 保存稳定 ID，固定图标尺寸；程序 select 后显式更新详情，不依赖用户选择信号。
 - [Object / ConnectFlags](https://docs.godotengine.org/en/4.7/classes/class_object.html#enum-object-connectflags)：默认连接立即调用监听器，因此制作提交在通知前更新完整状态，并在通知期间保留重入锁。
 
-钱包、购买、奖励与库存一起纳入 GameState v4 快照，详见 [钱包与原子交易](wallet_transactions.md)。原有库存增减与发现 API 保持兼容；购买和奖励应使用交易服务。
+钱包、购买、奖励与库存一起纳入 GameState v8 快照，详见 [钱包与原子交易](wallet_transactions.md)。原有库存增减与发现 API 保持兼容；购买和奖励应使用交易服务。

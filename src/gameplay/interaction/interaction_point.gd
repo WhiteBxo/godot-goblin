@@ -23,6 +23,10 @@ func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 
+func hide_development_markers() -> void:
+	$Marker.hide()
+	$Label.hide()
+
 func is_available() -> bool:
 	_bodies = _bodies.filter(func(body: Node2D) -> bool:
 		return is_instance_valid(body) and body.is_inside_tree() and not body.is_queued_for_deletion())

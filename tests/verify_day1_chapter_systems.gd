@@ -1,6 +1,6 @@
 extends SceneTree
 ## Day 1 closing systems: payment, item condition, phase, title card, animation,
-## walk-in triggers, the S03-S06 chapter host, Day 2 placeholder and delivery fallback.
+## walk-in triggers, the S03-S06 chapter host, chapter stage isolation and delivery fallback.
 
 var _failures: Array[String] = []
 var _state: Node
@@ -181,7 +181,7 @@ func _check_shop_host() -> void:
 			{"command": "set_flag", "key": "day1.s06.completed"},
 			{"command": "title_card", "text": "第一天结束", "seconds": 0.05},
 			{"command": "set_phase", "phase": "day"},
-			{"command": "set_stage", "value": "day2.placeholder"},
+			{"command": "set_stage", "value": "day2.unpublished"},
 			{"command": "title_card", "text": "第二天", "subtitle": "白天 · 奶茶店", "seconds": 0.05},
 		]},
 	})
@@ -213,14 +213,14 @@ func _check_shop_host() -> void:
 	_check(goblin.animated_sprite.animation == &"emote_laugh", "Held pose stays after the event")
 	goblin.teleport_to(goblin.global_position)
 	_check(goblin.animated_sprite.animation != &"emote_laugh", "Teleport clears a held pose")
-	# Ending recipe: chapter end card, morning, Day 2 placeholder.
+	# Ending recipe: chapter end card, morning, chapter stage isolation.
 	_state.set_story_stage("day1.s06")
 	_state.commit_day_phase("night")
 	result = await _run_event(game, "t.ending")
-	_check(result.ok and _state.story_stage == "day2.placeholder", "Ending moves to the Day 2 placeholder: " + result.reason)
+	_check(result.ok and _state.story_stage == "day2.unpublished", "Ending moves to the chapter stage isolation: " + result.reason)
 	await _frames()
-	_check(not Day1Access.can_leave_shop(_state), "Day 2 placeholder keeps the player in the shop")
-	_check(game.get_business_hud().get_node("Notice").visible, "Day 2 placeholder states that content is not open")
+	_check(game.get_chapter_gameplay() != null, "Rebuilt chapter retains its scene-local gameplay service")
+	_check(not game.get_business_hud().get_node("Notice").visible, "Published chapter removes the obsolete Day2 unavailable notice")
 	current_scene = null
 	game.queue_free()
 	await _frames()
@@ -229,7 +229,7 @@ func _check_shop_host() -> void:
 	root.add_child(game)
 	current_scene = game
 	await _frames()
-	_check(_state.story_stage == "day2.placeholder", "Rebuilt shop keeps the Day 2 placeholder")
+	_check(_state.story_stage == "day2.unpublished", "Rebuilt shop keeps the chapter stage isolation")
 	current_scene = null
 	game.queue_free()
 	await _frames()
@@ -249,7 +249,7 @@ func _check_settlement_host() -> void:
 		"phases": "res://src/resources/story/day1_stages_03_06_phases.json",
 		"auto_events": ["t.auto"],
 		"derived_facts": [{"flag": "t.explored", "stage": "day1.s03", "all_flags": ["t.look_a", "t.look_b"]}],
-		"scene_setups": [{"host": "settlement", "stage": "day1.s04", "actors": {"fat_goblin": "elder_document", "guard": null}}],
+		"scene_setups": [{"host": "settlement", "stage": "day1.s04", "actors": {"entrance_guard": "drunken_guard", "mansion_gate": null}}],
 	}
 	var path := "user://day1_chapter_systems_setup.json"
 	var file := FileAccess.open(path, FileAccess.WRITE)
@@ -277,9 +277,9 @@ func _check_settlement_host() -> void:
 	_check(_state.get_flag("t.explored"), "Derived fact is written once all flags hold")
 	_check(_state.story_stage == "day1.s04" and _state.is_event_completed("t.auto"), "Auto event starts once its conditions hold")
 	await _frames()
-	var marker := game.get_actor_director().get_position(&"elder_document")
-	var goblin := game.get_actor_director().get_actor(&"fat_goblin")
-	var guard := game.get_actor_director().get_actor(&"guard")
+	var marker := game.get_actor_director().get_position(&"drunken_guard")
+	var goblin := game.get_actor_director().get_actor(&"entrance_guard")
+	var guard := game.get_actor_director().get_actor(&"mansion_gate")
 	_check(goblin.visible and goblin.global_position.distance_to(marker.global_position) < 1.0, "Stage setup places the actor at its Marker")
 	_check(guard == null or not guard.visible, "Stage setup hides actors mapped to null")
 	await _frames()

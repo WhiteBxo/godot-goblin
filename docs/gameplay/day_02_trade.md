@@ -1,12 +1,14 @@
 # Day 2 酒馆购买与固定赌局结算
 
+> 2026-10-19 已接入正式 Day 2：酒 60／48G、限一份；两局发三种材料各一份，真实生成并取消十杯债务。商品报价、动态折扣资格和静态配置一致性已由共享钱包提供。以下独立组件批次记录保留为历史；当前接线与验收见[整合记录](../development/two_day_integration_2026_10_19.md)。
+
 核对日期：2026-10-18，Godot 4.7.2。本轮提供独立组件、购买弹窗和隔离验证；正式入口尚未接线。未修改 GameState、钱包底层、任务 Schema / 实例、正式剧情、地图或 MainGame。自由赌博机器独立待定。
 
 ## 现有事务支持与边界
 
 [WalletTransactions](wallet_transactions.md) 已支持整数单价、免费商品、限量 / 不限量库存、整笔扣款入库、失败无修改、成功请求跨类型去重、奖励领取以及完整会话快照恢复。成功请求 ID 保存在钱包；失败请求可在条件修正后用原 ID 重试。
 
-当前没有报价 / 商品配置查询、运行时改价、折扣资格或多个商品共用商人余量接口。不会用“先全价购买再退款”、拆开扣款和发物，或建立另一套余额 / 库存来模拟折扣。
+当前通过钱包 `get_product_quote` 查询实际报价，`get_product_definition` 校验配置；`discount_flag` 控制显式折后价，同一商品共享余量。不会用“先全价购买再退款”、拆开扣款和发物，或建立另一套余额 / 库存来模拟折扣。
 
 `TavernPurchase.compile_products(offers)` 将显式原价、显式折后整数价编译为现有 `TeaMenu.products`。这支持会话开始前已经确定的折扣，未定义浮点比例和舍入规则。正式菜单仍为空，组件不会自行采用原稿的标价或推导折后价。
 
@@ -25,11 +27,11 @@
 | `purchase(product_id, quantity, request_id) -> Dictionary` | 直接调用钱包原子购买，保留钱包回执与错误码 |
 | `changed` | 余额 / 库存 / 恢复变化通知，用于重新投影 |
 
-`offers` 结构为 `product_id -> {item_id: String, price: int, discounted_price?: int, stock?: int}`。price 必填；discounted_price 必须显式给出最终整数价且不大于原价；省略表示原价。stock 省略表示不限量，0 表示售罄。数量、价格与库存上限沿用钱包。所有物品必须存在于共享库存目录。
+`offers` 结构为 `product_id -> {item_id: String, price: int, discounted_price?: int, discount_flag?: String, stock?: int}`。price 必填；discounted_price 必须显式给出最终整数价且不大于原价；省略表示原价。stock 省略表示不限量，0 表示售罄。数量、价格与库存上限沿用钱包。所有物品必须存在于共享库存目录。
 
 装配顺序：从确认后的同一份 offers 调用 compile_products，将 products 合入会话创建所用的 TeaMenu，再由已有 GameState 创建唯一钱包；场景组件和 UI 注入该钱包及同一份 offers。不得运行中修改 Resource 并期待现有钱包自动变价，也不得在正式场景新建 WalletTransactions 替代共享会话。
 
-configure 检查物品与钱包默认有限余量是否匹配；**钱包没有公开商品配置查询，因此无法核验注入报价中的价格 / item_id 是否与钱包内部配置完全相同**。集成必须提供钱包构造时的同源配置；只读报价接口协调前，不接入会动态变化的正式价格。静态配置不存入第二份存档，恢复时仍以同一目录创建服务。
+configure 使用 `get_product_definition` 逐字段检查 offers 编译结果，拒绝显示价、物品或限量与钱包不一致的配置。静态配置不存入第二份存档，恢复时仍以同一目录创建服务。
 
 UI 为 `src/UI/trade/tavern_purchase_popup.tscn`，继承 UIScreen，组合 ModalShell，使用现有主题。宿主调用 `popup.configure(purchase)`，在 PopupLayer 注册 `ScreenIds.TAVERN_PURCHASE` 模态，再调用 UIManager.open_screen。玩家移动锁仍由宿主根据已有模态状态协调。
 

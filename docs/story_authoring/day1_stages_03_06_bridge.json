@@ -6,35 +6,192 @@
   "story": "res://src/resources/story/day1_stages_03_06.json",
   "dialogue": "res://src/resources/dialogue/day1_stages_03_06.json",
   "phases": "res://src/resources/story/day1_stages_03_06_phases.json",
-  "publication_status": "pending",
-  "pending_beat_ids": [
-    "s03_coin_inspect",
-    "s03_street_gone",
-    "s03_limited_exploration",
-    "s03_back_to_door",
-    "s04_fat_goblin_arrives",
-    "s04_fat_goblin_order",
-    "s04_first_taste",
-    "s04_griffin_faith",
-    "s04_griffin_blood",
-    "s04_map_handover",
-    "s04_commission_choice",
-    "s05_step1_outside",
-    "s05_step2_throw",
-    "s05_step3_bribe",
-    "s05_drunken_guard",
-    "s05_final_patrol",
-    "s05_document",
-    "s05_blood_acquired",
-    "s05_escape",
-    "s05_shop_system_update",
-    "s06_pondering",
-    "s06_blood_drink",
-    "s06_reaction",
-    "s06_help_and_rest"
-  ],
+  "publication_status": "published",
+  "pending_beat_ids": [],
   "handoff": "res://docs/story_authoring/day_01_02_authoring_handoff.md",
-  "beats": [],
+  "beats": [
+    {
+      "id": "s03_coin_inspect",
+      "mode": "自动演出",
+      "event": "day1.s03.coin_inspect",
+      "start": 0,
+      "count": 2,
+      "dialogues": [
+        "day1.s03.coin_inspect"
+      ]
+    },
+    {
+      "id": "s03_street_gone",
+      "mode": "自动演出",
+      "event": "day1.s03.street_gone",
+      "start": 0,
+      "count": 3,
+      "dialogues": [
+        "day1.s03.street_gone",
+        "day1.s03.limited_exploration"
+      ]
+    },
+    {
+      "id": "s03_back_to_door",
+      "mode": "自动演出",
+      "event": "day1.s03.back_to_door",
+      "start": 0,
+      "count": 2,
+      "dialogues": [
+        "day1.s03.back_to_door"
+      ]
+    },
+    {
+      "id": "s04_fat_goblin_arrives",
+      "mode": "自动演出",
+      "event": "day1.s04.commission",
+      "start": 0,
+      "count": 4,
+      "dialogues": [
+        "day1.s04.fat_goblin_arrives"
+      ]
+    },
+    {
+      "id": "day1_bridge_fat_goblin_order",
+      "mode": "玩家操作",
+      "phase": {
+        "id": "day1.bridge.fat_goblin_order",
+        "after_event": "day1.s04.commission",
+        "stage": "day1.s04.wait_order",
+        "completion": {
+          "flag": "day1.s04.order_delivered",
+          "allow_existing": true
+        },
+        "completion_flag": "day1.bridge.fat_goblin_order.completed",
+        "next_event": "day1.s04.after_order"
+      }
+    },
+    {
+      "id": "s04_first_taste",
+      "mode": "自动演出",
+      "event": "day1.s04.after_order",
+      "start": 0,
+      "count": 12,
+      "dialogues": [
+        "day1.s04.first_taste",
+        "day1.s04.griffin_faith",
+        "day1.s04.griffin_blood",
+        "day1.s04.map_handover"
+      ]
+    },
+    {
+      "id": "day1_bridge_map",
+      "mode": "玩家操作",
+      "phase": {
+        "id": "day1.bridge.map",
+        "after_event": "day1.s04.after_order",
+        "stage": "day1.s04.wait_map",
+        "completion": {
+          "flag": "day1.s04.map_closed",
+          "allow_existing": true
+        },
+        "completion_flag": "day1.bridge.map.completed",
+        "next_event": "day1.s04.commission_choice"
+      }
+    },
+    {
+      "id": "s04_commission_choice",
+      "mode": "自动演出",
+      "event": "day1.s04.commission_choice",
+      "start": 0,
+      "count": 6,
+      "dialogues": [
+        "day1.s04.commission_choice",
+        "day1.s04.commission_choice_accept",
+        "day1.s04.commission_choice_refuse"
+      ]
+    },
+    {
+      "id": "s05_drunken_guard",
+      "mode": "自动演出",
+      "event": "day1.s05.drunken_guard",
+      "start": 0,
+      "count": 4,
+      "dialogues": [
+        "day1.s05.drunken_guard",
+        "day1.s05.drunken_guard_after_payment"
+      ]
+    },
+    {
+      "id": "s05_pay_pair",
+      "mode": "自动演出",
+      "event": "day1.s05.mansion_payment",
+      "start": 0,
+      "count": 1,
+      "dialogues": []
+    },
+    {
+      "id": "s05_shop_system_update",
+      "mode": "自动演出",
+      "event": "day1.s05.return_shop",
+      "start": 0,
+      "count": 1,
+      "dialogues": []
+    },
+    {
+      "id": "s06_pondering",
+      "mode": "自动演出",
+      "event": "day1.s06.pondering",
+      "start": 0,
+      "count": 1,
+      "dialogues": []
+    },
+    {
+      "id": "day1_bridge_blood_craft",
+      "mode": "玩家操作",
+      "phase": {
+        "id": "day1.bridge.blood_craft",
+        "after_event": "day1.s06.pondering",
+        "stage": "day1.s06.wait_craft",
+        "completion": {
+          "flag": "day1.s06.blood_drink_made",
+          "allow_existing": true
+        },
+        "completion_flag": "day1.bridge.blood_craft.completed",
+        "next_event": "day1.s06.customer"
+      }
+    },
+    {
+      "id": "s06_customer_arrives",
+      "mode": "自动演出",
+      "event": "day1.s06.customer",
+      "start": 0,
+      "count": 2,
+      "dialogues": []
+    },
+    {
+      "id": "day1_bridge_blood_drink",
+      "mode": "玩家操作",
+      "phase": {
+        "id": "day1.bridge.blood_drink",
+        "after_event": "day1.s06.customer",
+        "stage": "day1.s06.wait_delivery",
+        "completion": {
+          "flag": "day1.s06.blood_drink_delivered",
+          "allow_existing": true
+        },
+        "completion_flag": "day1.bridge.blood_drink.completed",
+        "next_event": "day1.s06.reaction"
+      }
+    },
+    {
+      "id": "s06_reaction",
+      "mode": "自动演出",
+      "event": "day1.s06.reaction",
+      "start": 0,
+      "count": 6,
+      "dialogues": [
+        "day1.s06.reaction",
+        "day1.s06.help_and_rest"
+      ]
+    }
+  ],
   "authoring_project": "res://docs/story_authoring/day1_stages_03_06_project.json",
-  "authoring_sha256": "f0b2b574d6d6336cd9442f3c5de93314790e2377a1e463ae365cc7b7622b4df2"
+  "authoring_sha256": "082c103b996ebfea508470574aebeb1a664d55a341b5080986c47cab399013c4",
+  "verification": "res://tests/verify_two_day_flow.gd"
 }

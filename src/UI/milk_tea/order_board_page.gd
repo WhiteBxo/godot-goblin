@@ -5,7 +5,7 @@ signal accept_requested(order_id: String)
 signal track_requested(order_id: String)
 
 const FILTERS: Array[String] = ["active", "available", "completed"]
-const TITLES: Array[String] = ["进行中", "可接取", "已完成"]
+const TITLES: Array[String] = ["进行中", "可接取", "已结束"]
 
 @onready var _tabs: TabBar = %OrderTabs
 @onready var _list: OrderList = %OrderList
@@ -55,8 +55,9 @@ func refresh() -> void:
 	_ids.clear()
 	var filtered: Array[Dictionary] = []
 	for entry: Dictionary in entries:
-		counts[entry.status] += 1
-		if entry.status == _filter:
+		var bucket: String = entry.status if counts.has(entry.status) else "completed"
+		counts[bucket] += 1
+		if bucket == _filter:
 			_ids.append(entry.order_id)
 			filtered.append(entry)
 	for index: int in range(FILTERS.size()):

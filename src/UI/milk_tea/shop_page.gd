@@ -7,6 +7,7 @@ signal craft_requested(materials: Array[String], quantity: int)
 signal accept_requested(order_id: String)
 signal track_requested(order_id: String)
 signal formula_requested(materials: Array[String], iced: bool)
+signal confirm_formula_requested(materials: Array[String])
 
 var _production: TeaProduction
 var _crafting_panel: CraftingPanel
@@ -165,6 +166,7 @@ func configure_production(production: TeaProduction) -> void:
 		_making_tabs.add_child(_formula_panel)
 		_making_tabs.set_tab_title(1, "自由调配")
 		_formula_panel.formula_requested.connect(formula_requested.emit)
+		_formula_panel.confirm_requested.connect(confirm_formula_requested.emit)
 	_crafting_panel.configure(production)
 	_formula_panel.configure(production)
 	_refresh_recipe()

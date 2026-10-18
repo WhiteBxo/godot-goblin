@@ -11,6 +11,8 @@ extends Resource
 ## Recipes are the single source of truth for material combinations; orders only name a product.
 @export var recipe_book: TeaRecipeBook
 @export var recipe_rules: RecipeRules = preload("res://src/resources/milk_tea/recipe_rules.tres")
+## Static 2026-10-19 price table: tiers, markups, human cup price, first reward.
+@export var economy_rules: EconomyRules = preload("res://src/resources/milk_tea/economy_rules.tres")
 
 ## Economy configuration. Amounts are integer currency units, stock in portions.
 @export_range(0, 2147483647) var initial_balance: int = 0

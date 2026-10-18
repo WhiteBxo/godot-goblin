@@ -52,6 +52,13 @@ const BASE_SUFFIXES: PackedStringArray = ["奶茶", "茶", "咖啡", "特调"]
 @export var market_price: int = -1
 ## 可使用次数: recipe steps each consume one use; deliveries and throws take whole portions.
 @export_range(1, 99) var uses_per_portion := 1
+## 稀有度档位 T1-T5 from the 2026-10-19 sheet; 0 means "not a traded ingredient".
+## Never inferred from the display-only `rarity` string.
+@export_range(0, 5) var economy_tier: int = 0
+## trade: ordinary purchase, free formula and sale.
+## quest: story-only (F09); no ordinary purchase, free formula or later sale.
+## none: products, coins and teaching-only entries.
+@export_enum("none", "trade", "quest") var economy_scope: String = "none"
 
 @export_group("Throw")
 ## Key into ThrowTuning effects or modifiers; empty means no throw behaviour.

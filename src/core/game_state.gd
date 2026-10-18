@@ -8,7 +8,7 @@ signal state_reset
 signal task_settled(task_id: String, result: Dictionary)
 signal state_restored
 
-const SCHEMA_VERSION: int = 5
+const SCHEMA_VERSION: int = 6
 const DAY1_MENU: TeaMenu = preload("res://src/resources/milk_tea/day1_menu.tres")
 const MAX_VALUE_DEPTH: int = 32
 const BUSINESS_SESSIONS = preload("res://src/gameplay/milk_tea/business_session_rules.gd")
@@ -43,6 +43,7 @@ var _warehouse_inventory: WarehouseInventory
 var _tea_production: TeaProduction
 var _replacing := false
 var _business_transaction := false
+var _pricing_rng := RandomNumberGenerator.new()
 
 
 ## Optional configuration for isolated sessions; the autoload keeps its defaults.
@@ -55,6 +56,7 @@ func _init(menu: TeaMenu = null) -> void:
 		return _replacing or _business_transaction or (_tea_production != null and _tea_production.is_submitting())
 	)
 	_economy.changed.connect(_on_economy_changed)
+	_pricing_rng.randomize()
 
 
 func get_transactions() -> WalletTransactions:
@@ -74,6 +76,66 @@ func get_warehouse_inventory() -> WarehouseInventory:
 func get_tea_production() -> TeaProduction:
 	_ensure_business()
 	return _tea_production
+
+
+## Tests inject a fixed seed/picker; production randomizes once per session and
+## then stores the actual price, never the seed.
+func set_pricing_rng(rng: RandomNumberGenerator) -> void:
+	if rng != null:
+		_pricing_rng = rng
+
+func get_pricing_rng() -> RandomNumberGenerator:
+	return _pricing_rng
+
+
+## Explicit first confirmation. Preview never registers a price; this call does,
+## and only when the formula has no permanent record yet.
+func confirm_formula(materials: Array, request_id: String) -> Dictionary:
+	if _session_busy():
+		return {"ok": false, "code": "busy", "message": "交易正在处理中。"}
+	if Day1Access.pricing_blocked(self):
+		return {"ok": false, "code": "unsafe_phase", "message": "潜入行动期间不能确认售价。", "request_id": request_id}
+	var picker := func(low: int, high: int) -> int: return _pricing_rng.randi_range(low, high)
+	var result := _economy.confirm_formula(materials, request_id, picker)
+	if result.get("ok", false) and not result.get("replayed", false):
+		_notify_state_changed()
+	return result
+
+
+## One atomic craft: uses, cup, encyclopedia, durable receipt and first-signature
+## reward. Any rejected check leaves stock, wallet and ledger untouched.
+func commit_formula_craft(materials: Array, quantity: int, request_id: String, iced: bool = false) -> Dictionary:
+	if _session_busy():
+		return {"ok": false, "code": "busy", "message": "制作系统正在提交或会话正在更新。"}
+	var prepared := _economy.prepare_formula_craft(materials, quantity, iced, _current_day, request_id)
+	if not prepared.get("ok", false):
+		return prepared
+	var before := _economy.to_dict()
+	_business_transaction = true
+	_replacing = true
+	var error := _economy._replace(prepared.draft)
+	if error == OK:
+		_warehouse_inventory.set_session_locked(true)
+		_notify_state_changed()
+		_economy.publish_restored(before)
+		_warehouse_inventory.set_session_locked(false)
+	_replacing = false
+	_business_transaction = false
+	if error != OK:
+		return {"ok": false, "code": "commit_failed", "message": "制作提交失败，状态未改变。"}
+	var result: Dictionary = prepared.formula.duplicate(true)
+	result["ok"] = true
+	result["code"] = "ok"
+	result["money_delta"] = int(prepared.money_delta)
+	result["first_signature"] = bool(prepared.first_signature)
+	result["first_discovery"] = bool(prepared.get("first_discovery", false))
+	result["selling_price"] = int(prepared.record.selling_price)
+	result["price"] = int(prepared.record.selling_price)
+	result["priced"] = true
+	result["message"] = "%s ×%d 已入库。" % [result.name, quantity]
+	if int(prepared.money_delta) > 0:
+		result["message"] = "%s ×%d 已入库，首次发现爆品奖励 %dG。" % [result.name, quantity, int(prepared.money_delta)]
+	return result
 
 
 func _ensure_business() -> void:
@@ -173,6 +235,71 @@ func commit_story_interaction(receipt: String, items: Dictionary, facts: Diction
 		_warehouse_inventory.set_session_locked(true)
 		_notify_state_changed()
 		_economy.publish_restored(before)
+		_warehouse_inventory.set_session_locked(false)
+	_replacing = false
+	_business_transaction = false
+	return error
+
+## Partial-use acquisition, currency payment/grant and story facts share one
+## durable receipt. Variables support dedicated funds without a second wallet.
+func commit_story_transaction(receipt: String, use_costs: Dictionary = {}, use_gains: Dictionary = {}, money_delta: int = 0, items: Dictionary = {}, facts: Dictionary = {}, variables: Dictionary = {}, item_costs: Dictionary = {}) -> Error:
+	if _session_busy():
+		return ERR_BUSY
+	if not _is_namespaced_key(receipt):
+		return ERR_INVALID_DATA
+	if get_flag(receipt):
+		return ERR_ALREADY_EXISTS
+	for key: Variant in facts:
+		if not key is String or not _is_namespaced_key(key) or not facts[key] is bool:
+			return ERR_INVALID_DATA
+	for key: Variant in variables:
+		if not key is String or not _is_namespaced_key(key) or not _is_story_value(variables[key]):
+			return ERR_INVALID_DATA
+	_ensure_business()
+	var draft := _economy.prepare_exchange("story:" + receipt, use_costs, use_gains, money_delta, items, item_costs)
+	if draft.is_empty():
+		return ERR_INVALID_DATA
+	var before := _economy.to_dict()
+	_business_transaction = true
+	_replacing = true
+	var error := _economy._replace(draft)
+	if error == OK:
+		for key: String in facts:
+			_flags[key] = facts[key]
+		for key: String in variables:
+			_variables[key] = _copy_value(variables[key])
+		_flags[receipt] = true
+		_warehouse_inventory.set_session_locked(true)
+		_notify_state_changed()
+		_economy.publish_restored(before)
+		_warehouse_inventory.set_session_locked(false)
+	_replacing = false
+	_business_transaction = false
+	return error
+
+## Fixed recipes keep their authored ingredients (including four-slot H menus).
+## Each ingredient costs one use; queue progress and finished cups publish once.
+func commit_fixed_craft(costs: Dictionary, product_id: String, quantity: int, production: Dictionary) -> Error:
+	if _session_busy():
+		return ERR_BUSY
+	_ensure_business()
+	if not _tea_production.is_valid_snapshot(production):
+		return ERR_INVALID_DATA
+	var draft := _economy.prepare_exchange("fixed:%d" % Time.get_ticks_usec(), costs, {}, 0, {product_id: quantity})
+	if draft.is_empty():
+		return ERR_INVALID_DATA
+	var before := _economy.to_dict()
+	_business_transaction = true
+	_replacing = true
+	var error := _economy._replace(draft)
+	if error == OK:
+		_tea_production.set_block_signals(true)
+		_tea_production.restore_state(production)
+		_warehouse_inventory.set_session_locked(true)
+		_notify_state_changed()
+		_economy.publish_restored(before)
+		_tea_production.set_block_signals(false)
+		_tea_production.changed.emit()
 		_warehouse_inventory.set_session_locked(false)
 	_replacing = false
 	_business_transaction = false
@@ -577,7 +704,7 @@ func _replace_session(data: Dictionary, new_game: bool) -> void:
 
 
 func _migrate_snapshot(data: Dictionary) -> Dictionary:
-	if not data.get("schema_version") is int or data.schema_version not in [2, 3, 4, SCHEMA_VERSION]:
+	if not data.get("schema_version") is int or data.schema_version not in [2, 3, 4, 5, SCHEMA_VERSION]:
 		return data
 	var migrated := data.duplicate(true)
 	if data.schema_version in [2, 3, 4]:
@@ -592,18 +719,40 @@ func _migrate_snapshot(data: Dictionary) -> Dictionary:
 				return data
 			if not inventory.ingredients.has("strange_coin"):
 				inventory.ingredients["strange_coin"] = {"quantity": 0, "discovered": false, "known_properties": []}
-				if inventory.get("schema_version") in [2, WarehouseInventory.SCHEMA_VERSION]:
-					inventory.ingredients.strange_coin["used"] = 0
-		migrated.schema_version = SCHEMA_VERSION
 		migrated.business["profile_id"] = "tutorial"
 	# v4 adds formula products and the encyclopedia to the shared inventory. Old
 	# sessions keep their fixed products; no recipe/discovery is invented for them.
+	# v6 adds the permanent price ledger: old free cups stay unpriced history.
+	if data.schema_version in [3, 4, 5]:
+		_fold_legacy_coins(migrated)
 	migrated.schema_version = SCHEMA_VERSION
-	migrated.business.inventory = WarehouseInventory.migrate_snapshot(migrated.business.inventory)
-	migrated.economy.inventory = WarehouseInventory.migrate_snapshot(migrated.economy.inventory)
+	migrated.economy = WalletTransactions.migrate_snapshot(migrated.economy)
+	if not migrated.economy.get("inventory") is Dictionary:
+		return data
+	migrated.business.inventory = migrated.economy.inventory
 	if data.schema_version in [2, 3] and migrated.business.get("production") is Dictionary and not migrated.business.production.has("formula_requests"):
 		migrated.business.production["formula_requests"] = {}
 	return migrated
+
+## Physical coins become wallet money exactly once, at face value. The coin entry
+## is emptied so repeating the migration cannot credit it twice.
+func _fold_legacy_coins(snapshot: Dictionary) -> void:
+	var inventory: Variant = snapshot.economy.get("inventory")
+	if not inventory is Dictionary or not inventory.get("ingredients") is Dictionary:
+		return
+	var coin: Variant = inventory.ingredients.get("strange_coin")
+	if not coin is Dictionary:
+		return
+	var count := int(coin.get("quantity", 0))
+	if count <= 0:
+		return
+	var worth := WalletTransactions.coin_worth(count)
+	if int(snapshot.economy.balance) > WalletTransactions.LIMIT - worth:
+		return
+	snapshot.economy.balance = int(snapshot.economy.balance) + worth
+	coin.quantity = 0
+	coin.used = 0
+
 
 func _is_valid_snapshot(data: Dictionary) -> bool:
 	if not data.has_all(["schema_version", "current_day", "story_stage", "flags", "variables", "completed_events", "task_results", "business", "economy"]):

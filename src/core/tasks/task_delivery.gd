@@ -222,8 +222,17 @@ func try_submit(order_id: String, target_object_id: String, drink_id: String = "
 		var drink := _matching_drink(task.delivery.drink, drink_id)
 		if drink.is_empty():
 			return _failure("没有符合订单要求的饮品。未消耗库存。", order_id)
+		if not drink.get("priced", false):
+			return _failure("该饮品尚未确认售价，不能作为普通订单出售。", order_id)
+		var record: Dictionary = _state.get_transactions().get_formula_price(drink.ingredients)
+		if record.is_empty():
+			return _failure("该饮品尚未确认售价，不能作为普通订单出售。", order_id)
 		drink_costs[drink.id] = 1
-		sale_price = int(drink.price)
+		sale_price = int(record.selling_price)
+	elif task.delivery.has("product_id"):
+		sale_price = _product_sale_price(str(task.delivery.product_id))
+		if sale_price < 0:
+			return _failure("该成品没有可用的固定售价，不能作为普通订单出售。", order_id)
 	var rewards := {}
 	for id: String in task.get("rewards", {}).get("items", {}):
 		rewards[id] = int(task.rewards.items[id])
@@ -311,6 +320,21 @@ func _matching_drink(requirement: Dictionary, preferred_id: String = "") -> Dict
 		if (preferred_id.is_empty() or drink.id == preferred_id) and DrinkFormula.matches(drink, requirement):
 			return drink
 	return {}
+
+## Fixed human menu price from the recipe. Teaching and story recipes carry no
+## fixed price: their orders must spell the money out in rewards, and a missing
+## amount pays nothing instead of inventing a dynamic price. Quest-only
+## products may only be sold through their task.
+func _product_sale_price(product_id: String) -> int:
+	var definition := _inventory.get_definition(product_id)
+	if definition == null or definition.economy_scope == "quest":
+		return -1
+	var production: TeaProduction = _state.get_tea_production() if _state.has_method("get_tea_production") else null
+	if production != null:
+		var recipe := production.get_recipe_by_product(product_id)
+		if recipe != null:
+			return recipe.sell_price if recipe.sell_price >= 0 else 0
+	return 0
 
 func _ingredient_names() -> Dictionary:
 	var names := {}

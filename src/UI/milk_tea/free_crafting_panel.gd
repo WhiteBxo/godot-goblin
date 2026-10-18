@@ -3,6 +3,8 @@ extends VBoxContainer
 ## Selection and presentation only. The host submits the requested formula.
 
 signal formula_requested(materials: Array[String], iced: bool)
+## Explicit first-confirmation: fixing the permanent price of the displayed formula.
+signal confirm_requested(materials: Array[String])
 
 const Artwork = preload("res://src/UI/milk_tea/item_artwork.gd")
 
@@ -15,6 +17,7 @@ var _ice_option: OptionButton
 var _preview: Label
 var _result: Label
 var _craft: Button
+var _confirm: Button
 var _refreshing := false
 
 func _ready() -> void:
@@ -56,6 +59,13 @@ func _ready() -> void:
 	clear.theme_type_variation = &"GhostButton"
 	clear.pressed.connect(func() -> void: select_formula([]))
 	actions.add_child(clear)
+	_confirm = Button.new()
+	_confirm.text = "确认报价"
+	_confirm.disabled = true
+	_confirm.pressed.connect(func() -> void:
+		if not _confirm.disabled:
+			confirm_requested.emit(get_materials()))
+	actions.add_child(_confirm)
 	_craft = Button.new()
 	_craft.text = "制作一杯并入库"
 	_craft.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -151,15 +161,30 @@ func select_formula(materials: Array, iced := false) -> bool:
 	return get_materials() == materials
 
 func _refresh_preview() -> void:
-	var result := _production.preview_formula(get_materials(), 1, is_iced())
-	_craft.disabled = not result.ok
-	_preview.text = DrinkFormula.describe(result, false) if result.has("name") else str(result.message)
+	var materials := get_materials()
+	var result := _production.preview_formula(materials, 1, is_iced())
+	var quote := _production.preview_formula_price(materials) if not materials.is_empty() else {}
+	var priced: bool = bool(quote.get("priced", false))
+	_craft.disabled = not result.ok or not priced
+	_confirm.disabled = result.get("code", "") != "ok" or priced
+	if result.has("name"):
+		_preview.text = DrinkFormula.describe(result, false)
+		if priced:
+			_preview.text += "\n售价：%dG（已固定）" % int(quote.get("selling_price", 0))
+		elif quote.get("ok", false):
+			_preview.text += "\n价格范围：%d–%dG，确认后固定" % [int(quote.get("minimum", 0)), int(quote.get("maximum", 0))]
+	else:
+		_preview.text = str(result.get("message", ""))
 	if not result.ok and result.has("name"):
-		_preview.text += "\n" + str(result.message)
+		_preview.text += "\n" + str(result.get("message", ""))
+	elif result.ok and not priced:
+		_preview.text += "\n请先确认报价，之后才能制作。"
 
 func submit() -> void:
-	if not _craft.disabled:
-		formula_requested.emit(get_materials(), is_iced())
+	if _craft.disabled:
+		_result.text = "请先确认报价，之后才能制作。"
+		return
+	formula_requested.emit(get_materials(), is_iced())
 
 func show_result(result: Dictionary) -> void:
 	_result.text = str(result.get("message", ""))

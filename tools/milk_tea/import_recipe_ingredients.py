@@ -1,6 +1,6 @@
-"""Sync the 2026-10-18 ingredient sheet into both runtime menus.
+"""Sync the 2026-10-19 ingredient sheet into both runtime menus.
 
-Input : docs/design/source/recipe_ingredients_revised_2026_10_18.xlsx (sheet 1)
+Input : docs/design/source/recipe_ingredients_revised_2026_10_19.xlsx (sheet 1)
         tools/milk_tea/throw_roles.json (row ID -> ThrowTuning kind)
 Output: src/resources/milk_tea/basic_menu.tres and day1_menu.tres, in place.
 
@@ -23,13 +23,14 @@ from pathlib import Path
 import openpyxl
 
 ROOT = Path(__file__).resolve().parents[2]
-SHEET = ROOT / "docs/design/source/recipe_ingredients_revised_2026_10_18.xlsx"
+SHEET = ROOT / "docs/design/source/recipe_ingredients_revised_2026_10_19.xlsx"
 ROLES = ROOT / "tools/milk_tea/throw_roles.json"
 MENUS = [ROOT / "src/resources/milk_tea/basic_menu.tres", ROOT / "src/resources/milk_tea/day1_menu.tres"]
 
 TASTE = ["sweetness", "sourness", "bitterness", "spiciness", "milkiness", "booziness"]
 GENERATED = ["can_be_base", "base_suffix", "free_recipe_allowed", *TASTE, "recipe_flavors",
-             "recipe_textures", "recipe_effects", "market_price", "uses_per_portion", "throw_kind"]
+             "recipe_textures", "recipe_effects", "market_price", "uses_per_portion",
+             "economy_tier", "economy_scope", "throw_kind"]
 BEGIN = "; generated:recipe_ingredients"
 SUFFIXES = {"奶茶", "茶", "咖啡", "特调"}
 
@@ -58,6 +59,19 @@ def gd_string(text: str) -> str:
     return json.dumps(text, ensure_ascii=False)
 
 
+## Tier labels differ between the sheet and the PDF; the T number is the identity.
+def tier(value: object, row_id: str) -> int:
+    text = "" if value is None else str(value).strip()
+    match = re.search(r"\(T([1-5])\)", text, re.IGNORECASE) or re.fullmatch(r"T([1-5])", text, re.IGNORECASE)
+    if not match:
+        raise ValueError(f"{row_id} 稀有度档位: expected ...(T1)-...(T5), got {value!r}")
+    return int(match.group(1))
+
+
+## Standard market price per portion, by tier. Human slots are free (0G).
+TIER_PRICE = {1: 10, 2: 20, 3: 50, 4: 100, 5: 200}
+
+
 def packed(values: list[str]) -> str:
     return "PackedStringArray(" + ", ".join(gd_string(v) for v in values) + ")"
 
@@ -78,7 +92,7 @@ def read_rows() -> dict[str, dict[str, str]]:
     header = [str(cell).strip() if cell is not None else "" for cell in rows[0]]
     col = {name: index for index, name in enumerate(header)}
     names = {"甜度": 0, "酸度": 1, "苦度": 2, "辣度": 3, "奶香度": 4, "酒香度": 5}
-    required = {"原料ID", "可作为基底", "基底命名", "普通配方可用", "市场价格", "可使用次数",
+    required = {"原料ID", "原料来源", "稀有度档位", "可作为基底", "基底命名", "普通配方可用", "市场价格", "可使用次数",
                 "风味标签", "质地标签", "特殊效果标签", *names}
     if required - col.keys():
         raise ValueError(f"ingredient sheet is missing columns: {sorted(required - col.keys())}")
@@ -90,21 +104,39 @@ def read_rows() -> dict[str, dict[str, str]]:
         row_id = str(row_id).strip()
         if row_id in result:
             raise ValueError(f"duplicate ingredient row: {row_id}")
+        origin = "" if raw[col["原料来源"]] is None else str(raw[col["原料来源"]]).strip()
+        if origin not in {"人类", "哥布林"}:
+            raise ValueError(f"{row_id} 原料来源: expected 人类/哥布林, got {raw[col['原料来源']]!r}")
         can_base = flag(raw[col["可作为基底"]], row_id, "可作为基底")
         suffix = "" if raw[col["基底命名"]] is None else str(raw[col["基底命名"]]).strip()
         if can_base != (suffix in SUFFIXES):
             raise ValueError(f"{row_id}: base flag and suffix {suffix!r} disagree")
+        free = flag(raw[col["普通配方可用"]], row_id, "普通配方可用")
+        # F09 is the authored quest-only row: it is a base but stays out of
+        # ordinary recipes, purchase and later sale.
+        scope = "trade" if free else "quest"
+        economy_tier = tier(raw[col["稀有度档位"]], row_id)
         price = raw[col["市场价格"]]
+        price_value = -1 if price is None or str(price).strip() == "" else number(price, row_id, "市场价格")
+        if origin == "人类":
+            if scope != "trade" or economy_tier != 1 or price_value != 0:
+                raise ValueError(f"{row_id}: human ingredients must be T1, free and tradable")
+        elif scope == "quest":
+            if price_value != -1:
+                raise ValueError(f"{row_id}: quest-only ingredients must keep a blank market price")
+        elif price_value != TIER_PRICE[economy_tier]:
+            raise ValueError(f"{row_id}: market price {price_value} does not match T{economy_tier} ({TIER_PRICE[economy_tier]})")
         fields = {
             "can_be_base": "true" if can_base else "false",
             "base_suffix": gd_string(suffix if can_base else ""),
-            "free_recipe_allowed": "true" if flag(raw[col["普通配方可用"]], row_id, "普通配方可用") else "false",
+            "free_recipe_allowed": "true" if free else "false",
             "recipe_flavors": packed(tags(raw[col["风味标签"]])),
             "recipe_textures": packed(tags(raw[col["质地标签"]])),
             "recipe_effects": packed(tags(raw[col["特殊效果标签"]])),
-            # A blank market price stays "unknown" (-1), never free.
-            "market_price": str(-1 if price is None or str(price).strip() == "" else number(price, row_id, "市场价格")),
+            "market_price": str(price_value),
             "uses_per_portion": str(number(raw[col["可使用次数"]], row_id, "可使用次数")),
+            "economy_tier": str(economy_tier),
+            "economy_scope": gd_string(scope),
             "throw_kind": gd_string(roles.get(row_id, "")),
         }
         for column, index in names.items():

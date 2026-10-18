@@ -112,6 +112,8 @@ recipe_textures = PackedStringArray("多汁")
 recipe_effects = PackedStringArray("提神")
 market_price = 50
 uses_per_portion = 5
+economy_tier = 3
+economy_scope = "trade"
 throw_kind = ""
 
 [sub_resource type="Resource" id="Product_pearl"]
@@ -169,6 +171,8 @@ recipe_textures = PackedStringArray("浓稠", "丝滑")
 recipe_effects = PackedStringArray()
 market_price = 0
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_industrial_green_tea"]
@@ -196,6 +200,8 @@ recipe_textures = PackedStringArray("清透")
 recipe_effects = PackedStringArray()
 market_price = 0
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_mint_syrup"]
@@ -223,6 +229,8 @@ recipe_textures = PackedStringArray("黏稠")
 recipe_effects = PackedStringArray("强烈清凉感")
 market_price = 0
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = "paralyze"
 
 [sub_resource type="Resource" id="Ingredient_instant_coffee_concentrate"]
@@ -250,6 +258,8 @@ recipe_textures = PackedStringArray()
 recipe_effects = PackedStringArray("提神")
 market_price = 0
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_brown_sugar_boba"]
@@ -277,6 +287,8 @@ recipe_textures = PackedStringArray("软糯", "弹韧", "黏稠")
 recipe_effects = PackedStringArray()
 market_price = 0
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = "sticky"
 
 [sub_resource type="Resource" id="Ingredient_mint_choc_crisp"]
@@ -304,6 +316,8 @@ recipe_textures = PackedStringArray("颗粒感", "酥脆")
 recipe_effects = PackedStringArray("强烈清凉感")
 market_price = 0
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_ice"]
@@ -331,6 +345,8 @@ recipe_textures = PackedStringArray("清透")
 recipe_effects = PackedStringArray("强烈清凉感")
 market_price = 0
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = "mine"
 
 [sub_resource type="Resource" id="Ingredient_cocoa_powder"]
@@ -358,6 +374,8 @@ recipe_textures = PackedStringArray("粉感")
 recipe_effects = PackedStringArray()
 market_price = 0
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = "burst"
 
 [sub_resource type="Resource" id="Ingredient_apple_jam"]
@@ -385,6 +403,8 @@ recipe_textures = PackedStringArray("浓稠", "黏稠")
 recipe_effects = PackedStringArray()
 market_price = 0
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = "contagion"
 
 [sub_resource type="Resource" id="Ingredient_strawberry_jam"]
@@ -412,6 +432,8 @@ recipe_textures = PackedStringArray("浓稠", "黏稠")
 recipe_effects = PackedStringArray()
 market_price = 0
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = "corrode"
 
 [sub_resource type="Resource" id="Product_classic_boba"]
@@ -509,6 +531,8 @@ recipe_textures = PackedStringArray("黏稠")
 recipe_effects = PackedStringArray()
 market_price = 10
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_sugar_yam"]
@@ -540,6 +564,8 @@ recipe_textures = PackedStringArray("软糯", "丝滑")
 recipe_effects = PackedStringArray()
 market_price = 10
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_firefly_cap"]
@@ -571,6 +597,8 @@ recipe_textures = PackedStringArray("丝滑")
 recipe_effects = PackedStringArray("发光", "眩晕")
 market_price = 50
 uses_per_portion = 5
+economy_tier = 3
+economy_scope = "trade"
 throw_kind = "lure"
 
 [sub_resource type="Resource" id="Ingredient_goblin_firebrew"]
@@ -603,6 +631,8 @@ recipe_textures = PackedStringArray("液态")
 recipe_effects = PackedStringArray("醉酒", "灼热感")
 market_price = 20
 uses_per_portion = 5
+economy_tier = 2
+economy_scope = "trade"
 throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_griffin_amber_wine"]
@@ -635,6 +665,8 @@ recipe_textures = PackedStringArray("液态")
 recipe_effects = PackedStringArray("醉酒")
 market_price = 100
 uses_per_portion = 5
+economy_tier = 4
+economy_scope = "trade"
 throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_red_mottled_wood"]
@@ -666,6 +698,8 @@ recipe_textures = PackedStringArray("坚韧耐嚼")
 recipe_effects = PackedStringArray()
 market_price = 20
 uses_per_portion = 5
+economy_tier = 2
+economy_scope = "trade"
 throw_kind = "toxic"
 
 [sub_resource type="Resource" id="Ingredient_honey_amber_crystal"]
@@ -697,6 +731,8 @@ recipe_textures = PackedStringArray("颗粒感")
 recipe_effects = PackedStringArray()
 market_price = 20
 uses_per_portion = 5
+economy_tier = 2
+economy_scope = "trade"
 throw_kind = "vortex"
 
 [sub_resource type="Resource" id="Ingredient_phantom_gold_mushroom"]
@@ -728,6 +764,8 @@ recipe_textures = PackedStringArray("坚韧耐嚼")
 recipe_effects = PackedStringArray()
 market_price = 100
 uses_per_portion = 5
+economy_tier = 4
+economy_scope = "trade"
 throw_kind = "phantom"
 
 [sub_resource type="Resource" id="Ingredient_rainbow_cube"]
@@ -759,6 +797,8 @@ recipe_textures = PackedStringArray("胶状", "酥脆", "丝滑")
 recipe_effects = PackedStringArray("致幻", "强烈清凉感")
 market_price = 100
 uses_per_portion = 5
+economy_tier = 4
+economy_scope = "trade"
 throw_kind = "hallucinate"
 
 [sub_resource type="Resource" id="Ingredient_scorch_tongue_pepper"]
@@ -790,6 +830,8 @@ recipe_textures = PackedStringArray("坚韧耐嚼")
 recipe_effects = PackedStringArray("灼热感")
 market_price = 50
 uses_per_portion = 5
+economy_tier = 3
+economy_scope = "trade"
 throw_kind = "burn"
 
 [sub_resource type="Resource" id="Ingredient_sour_moss_ale"]
@@ -865,6 +907,8 @@ recipe_textures = PackedStringArray("浓稠", "黏稠")
 recipe_effects = PackedStringArray()
 market_price = -1
 uses_per_portion = 5
+economy_tier = 5
+economy_scope = "quest"
 throw_kind = ""
 
 [sub_resource type="Resource" id="Product_day1_blood_milk_tea"]

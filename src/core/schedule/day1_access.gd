@@ -32,3 +32,8 @@ static func can_enter_elder(state: Node) -> bool:
 static func can_make_blood_drink(state: Node) -> bool:
 	return (at_stage(state, "day1.s06") and state.get_flag("day1.s05.blood_acquired")
 		and state.get_flag("day1.s05.returned_shop"))
+
+## The S05 night infiltration is an unsafe phase: confirming a new formula price
+## there would let the player re-roll money mid-mission. Previews stay read-only.
+static func pricing_blocked(state: Node) -> bool:
+	return state.get_business_profile() == "day1" and at_stage(state, "day1.s05") and DayPhase.is_night(state)

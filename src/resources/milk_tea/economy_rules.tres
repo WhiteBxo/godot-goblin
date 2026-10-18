@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="EconomyRules" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/resources/milk_tea/economy_rules.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+human_cup_price = 3
+signature_first_reward = 150
+uses_per_portion = 5
+tier_market_prices = {
+1: 10,
+2: 20,
+3: 50,
+4: 100,
+5: 200
+}
+tier_markup_min = {
+1: 1,
+2: 2,
+3: 5,
+4: 10,
+5: 20
+}
+tier_markup_max = {
+1: 1,
+2: 4,
+3: 8,
+4: 15,
+5: 30
+}
+pricing_version = 1
+coin_face_value = 10

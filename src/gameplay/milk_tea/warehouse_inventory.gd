@@ -9,8 +9,9 @@ extends Node
 signal changed
 
 const CATALOG: TeaMenu = preload("res://src/resources/milk_tea/basic_menu.tres")
-const SCHEMA_VERSION: int = 3
+const SCHEMA_VERSION: int = 4
 const MAX_QUANTITY: int = 2147483647
+const PRICING_STATES: PackedStringArray = ["priced", "legacy_unpriced", "legacy_readonly"]
 const PROPERTY_GROUPS: PackedStringArray = ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"]
 
 var _definitions: Dictionary = {}
@@ -18,6 +19,7 @@ var _state: Dictionary = {}
 var _drinks: Dictionary = {}
 var _encyclopedia: Dictionary = {}
 var _rules: RecipeRules
+var _economy_rules: EconomyRules
 var _session_locked := false
 
 ## Used by the owning GameState while publishing a complete replacement.
@@ -46,6 +48,7 @@ func _init(menu: TeaMenu = CATALOG) -> void:
 			return
 	_definitions = definitions
 	_rules = menu.recipe_rules.duplicate(true) if menu.recipe_rules != null else null
+	_economy_rules = menu.economy_rules.duplicate(true) if menu.economy_rules != null else null
 	for id: String in _definitions:
 		var amount: int = menu.initial_stock.get(id, 0)
 		_state[id] = {"quantity": amount, "used": 0, "discovered": amount > 0 or menu.initial_discovery.has(id),
@@ -61,6 +64,19 @@ func get_stock(id: Variant) -> int:
 
 func get_recipe_slots() -> int:
 	return _rules.slot_count if _rules != null else 0
+
+func get_economy_rules() -> EconomyRules:
+	return _economy_rules
+
+func get_recipe_rules() -> RecipeRules:
+	return _rules
+
+## Whether an ingredient may enter ordinary trade, a free recipe or a sale.
+func is_tradable(id: Variant) -> bool:
+	return _has_id(id) and _definitions[id].economy_scope == "trade"
+
+func is_quest_only(id: Variant) -> bool:
+	return _has_id(id) and _definitions[id].economy_scope == "quest"
 
 func calculate_formula(materials: Variant, enforce_slots := true, iced := false) -> Dictionary:
 	return DrinkFormula.evaluate(materials, get_definition, _rules, enforce_slots, iced)
@@ -89,12 +105,22 @@ func get_drink_record(id: Variant) -> Dictionary:
 	if not id is String or not _encyclopedia.has(id):
 		return {}
 	var entry: Dictionary = _encyclopedia[id]
+	var pricing := str(entry.get("pricing", "legacy_unpriced"))
 	# Historical drinks remain valid when the configured slot count is reduced.
 	var result := calculate_formula(entry.ingredients, false, entry.get("iced", false))
 	if not result.ok:
-		return {}
+		# Illegal history (pure human formula, old ice slot, blood formula) is kept
+		# read-only for display; it is never repriced or sold.
+		if pricing == "priced":
+			return {}
+		result = {"ok": true, "id": id, "name": "历史饮品", "ingredients": entry.ingredients.duplicate(),
+			"iced": entry.get("iced", false), "counts": {}, "ingredient_names": {}, "taste": {},
+			"flavors": [], "textures": [], "effects": [], "base_id": "", "signature_id": "",
+			"price": 0, "cost": null, "throw": {}, "read_only": true}
 	result["quantity"] = get_drink_stock(id)
 	result["discovered_day"] = int(entry.discovered_day)
+	result["pricing"] = pricing
+	result["priced"] = pricing == "priced"
 	return result
 
 func get_drinks(include_empty := false) -> Array[Dictionary]:
@@ -141,7 +167,10 @@ func try_make_formula(materials: Variant, quantity: int = 1, day: int = 1, iced 
 		_set_uses(id, get_uses(id) - int(result.counts[id]) * quantity)
 	_drinks[result.id] = get_drink_stock(result.id) + quantity
 	if first:
-		_encyclopedia[result.id] = {"ingredients": materials.duplicate(), "discovered_day": day}
+		# Debug/legacy path: GameState plus the wallet ledger owns formal crafting.
+		# A cup made here has no permanent price and cannot be sold.
+		_encyclopedia[result.id] = {"ingredients": materials.duplicate(), "discovered_day": day,
+			"pricing": "legacy_unpriced"}
 		if iced:
 			_encyclopedia[result.id]["iced"] = true
 	result["first_discovery"] = first
@@ -290,25 +319,49 @@ func to_dict() -> Dictionary:
 	return {"schema_version": SCHEMA_VERSION, "ingredients": _state.duplicate(true),
 		"drinks": _drinks.duplicate(), "encyclopedia": _encyclopedia.duplicate(true)}
 
-## Version 1 predates opened portions: every entry was whole.
+## Version 1 predates opened portions: every entry was whole. Version 3 predates
+## permanent prices: every existing cup becomes an unpriced legacy record.
 static func migrate_snapshot(data: Variant) -> Variant:
-	if not data is Dictionary or not data.get("schema_version") is int and not data.get("schema_version") is float:
+	if not data is Dictionary or (not data.get("schema_version") is int and not data.get("schema_version") is float):
 		return data
-	if data.schema_version not in [1, 2] or not data.get("ingredients") is Dictionary:
-		return data
-	if data.has("drinks") or data.has("encyclopedia"):
+	var version := int(data.schema_version)
+	if version not in [1, 2, 3] or not data.get("ingredients") is Dictionary:
 		return data
 	var migrated: Dictionary = data.duplicate(true)
-	if data.schema_version == 1:
+	if version == 1:
 		for id: Variant in migrated.ingredients:
 			var entry: Variant = migrated.ingredients[id]
+			# A mixed snapshot that already carries `used` is not a real v1 file:
+			# reject it instead of silently erasing recorded spending.
 			if not entry is Dictionary or entry.size() != 3 or not entry.has_all(["quantity", "discovered", "known_properties"]):
 				return data
 			entry["used"] = 0
+	elif version == 2:
+		for id: Variant in migrated.ingredients:
+			var entry: Variant = migrated.ingredients[id]
+			if not entry is Dictionary or entry.size() != 4 or not entry.has_all(["quantity", "used", "discovered", "known_properties"]):
+				return data
+	if not migrated.get("drinks") is Dictionary:
+		migrated["drinks"] = {}
+	if not migrated.get("encyclopedia") is Dictionary:
+		migrated["encyclopedia"] = {}
+	for id: Variant in migrated.encyclopedia:
+		var entry: Variant = migrated.encyclopedia[id]
+		if entry is Dictionary and not entry.has("pricing"):
+			entry["pricing"] = "legacy_unpriced"
 	migrated.schema_version = SCHEMA_VERSION
-	migrated["drinks"] = {}
-	migrated["encyclopedia"] = {}
 	return migrated
+
+## Flips every historical record with this formula identity to the confirmed price.
+## Validation still recomputes the price and re-checks the formula.
+static func mark_priced_snapshot(inventory: Dictionary, recipe_id: String) -> void:
+	if recipe_id.is_empty() or not inventory.get("encyclopedia") is Dictionary:
+		return
+	for id: Variant in inventory.encyclopedia:
+		var entry: Variant = inventory.encyclopedia[id]
+		if entry is Dictionary and str(entry.get("pricing", "")) in ["legacy_unpriced", "legacy_readonly"]:
+			if DrinkFormula.key_for(entry.get("ingredients", []), false) == recipe_id:
+				entry["pricing"] = "priced"
 
 ## Validate a complete snapshot without mutation; accepts a JSON numeric round trip.
 func validate_state(data: Variant) -> Error:
@@ -337,15 +390,27 @@ func validate_state(data: Variant) -> Error:
 		return ERR_INVALID_DATA
 	for id: Variant in data.encyclopedia:
 		var entry: Variant = data.encyclopedia[id]
-		if not id is String or not entry is Dictionary or not entry.has_all(["ingredients", "discovered_day"]):
+		if not id is String or not entry is Dictionary or not entry.has_all(["ingredients", "discovered_day", "pricing"]):
 			return ERR_INVALID_DATA
-		if entry.size() != (3 if entry.has("iced") else 2) or (entry.has("iced") and not entry.iced is bool):
+		if entry.size() != (4 if entry.has("iced") else 3) or (entry.has("iced") and not entry.iced is bool):
 			return ERR_INVALID_DATA
 		if not _is_snapshot_integer(entry.discovered_day) or entry.discovered_day < 1:
 			return ERR_INVALID_DATA
-		var formula := calculate_formula(entry.ingredients, false, entry.get("iced", false))
-		if not formula.ok or formula.id != id:
+		if not entry.pricing is String or entry.pricing not in PRICING_STATES:
 			return ERR_INVALID_DATA
+		var formula := calculate_formula(entry.ingredients, false, entry.get("iced", false))
+		if formula.ok:
+			if formula.id != id:
+				return ERR_INVALID_DATA
+		elif entry.pricing == "priced":
+			return ERR_INVALID_DATA
+		else:
+			# Legacy records may no longer form a legal formula; they stay visible.
+			if not entry.ingredients is Array or entry.ingredients.is_empty():
+				return ERR_INVALID_DATA
+			for material: Variant in entry.ingredients:
+				if not material is String or material.is_empty():
+					return ERR_INVALID_DATA
 	for id: Variant in data.drinks:
 		if not data.encyclopedia.has(id) or not _is_snapshot_integer(data.drinks[id]) or data.drinks[id] < 0 or data.drinks[id] > MAX_QUANTITY:
 			return ERR_INVALID_DATA

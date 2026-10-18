@@ -17,6 +17,7 @@ var _by_key: Dictionary = {}
 var _by_product: Dictionary = {}
 var _recipe_errors := PackedStringArray()
 var _formula_requests: Dictionary = {}
+var _request_serial := 0
 
 func _init() -> void:
 	_rebuild_recipes()
@@ -95,24 +96,63 @@ func get_formula_choices(base_only := false) -> Array[Dictionary]:
 func preview_formula(materials: Array, quantity: int = 1, iced := false) -> Dictionary:
 	if not is_instance_valid(_inventory):
 		return {"ok": false, "code": "busy", "message": "制作系统尚未就绪。"}
-	return _inventory.preview_formula(materials, quantity, iced)
+	var result := _inventory.preview_formula(materials, quantity, iced)
+	if not result.ok:
+		return result
+	var quote := preview_formula_price(materials)
+	if quote.get("ok", false):
+		result["priced"] = bool(quote.get("priced", false))
+		result["price_min"] = int(quote.get("minimum", quote.get("selling_price", 0)))
+		result["price_max"] = int(quote.get("maximum", quote.get("selling_price", 0)))
+		result["price"] = int(quote.get("selling_price", 0)) if result.priced else 0
+	else:
+		result["priced"] = false
+		result["price"] = 0
+	return result
 
-## Independent of the teaching queue. Its progress and story facts never advance.
+## Read-only price projection from the wallet ledger. Never registers a price.
+func preview_formula_price(materials: Array) -> Dictionary:
+	if not is_instance_valid(_state) or not _state.has_method("get_transactions"):
+		return {"ok": false, "code": "busy", "message": "经济系统尚未就绪。"}
+	return _state.get_transactions().preview_formula_price(materials)
+
+## Explicit first confirmation; the ledger keeps the record across saves.
+func confirm_formula(materials: Array, request_id: String) -> Dictionary:
+	if _submitting or not is_instance_valid(_inventory) or _inventory.is_session_locked():
+		return {"ok": false, "code": "busy", "message": "制作系统尚未就绪。"}
+	if not is_instance_valid(_state) or not _state.has_method("confirm_formula"):
+		return {"ok": false, "code": "unconfigured", "message": "经济系统尚未就绪。"}
+	# GameState owns the busy lock; setting is_submitting here would make its own
+	# session guard reject the transaction.
+	var result: Dictionary = _state.confirm_formula(materials, request_id)
+	if result.get("ok", false):
+		changed.emit()
+	return result
+
+## Independent of the teaching queue. Uses, cup, encyclopedia, receipt and the
+## first-signature reward are committed by GameState in one transaction.
 func craft_formula(materials: Array, quantity: int = 1, request_id: String = "", iced := false) -> Dictionary:
 	if _submitting or not is_instance_valid(_inventory) or _inventory.is_session_locked() or (is_instance_valid(_state) and _state.get_transactions().is_busy()):
 		return {"ok": false, "code": "busy", "message": "制作系统正在提交或会话正在更新。"}
-	if not request_id.is_empty() and (request_id.strip_edges().is_empty() or _formula_requests.has(request_id)):
+	var id := request_id
+	if id.is_empty():
+		_request_serial += 1
+		id = "formula-%d-%d" % [Time.get_ticks_usec(), _request_serial]
+	if id.strip_edges().is_empty() or _formula_requests.has(id):
 		return {"ok": false, "code": "duplicate_request", "message": "该制作请求已处理或编号无效。"}
-	_submitting = true
-	var day := int(_state.current_day) if is_instance_valid(_state) else 1
-	if not request_id.is_empty():
-		_formula_requests[request_id] = true
-	var result := _inventory.try_make_formula(materials, quantity, day, iced)
-	if result.ok:
+	# GameState owns the busy lock and commits uses, cup, encyclopedia, receipt
+	# and reward together; this service must not pre-lock itself.
+	var result: Dictionary
+	if is_instance_valid(_state) and _state.has_method("commit_formula_craft"):
+		result = _state.commit_formula_craft(materials, quantity, id, iced)
+	else:
+		# Isolated debug host without a session owner: no ledger, so no sale.
+		_submitting = true
+		result = _inventory.try_make_formula(materials, quantity, 1, iced)
+		_submitting = false
+	if result.get("ok", false):
+		_formula_requests[id] = true
 		changed.emit()
-	elif not request_id.is_empty():
-		_formula_requests.erase(request_id)
-	_submitting = false
 	return result
 
 func get_completed_count() -> int:
@@ -206,7 +246,7 @@ func preview_craft(materials: Array, quantity: int = 1) -> Dictionary:
 	var costs := _counts(normalized)
 	var missing: Dictionary = {}
 	for id: String in costs:
-		var lack: int = int(costs[id]) * quantity - _inventory.get_stock(id)
+		var lack: int = int(costs[id]) * quantity - _inventory.get_uses(id)
 		if lack > 0:
 			missing[id] = lack
 	result.code = "ok"
@@ -238,7 +278,7 @@ func get_max_craftable(materials: Array) -> int:
 	var maximum: int = WarehouseInventory.MAX_QUANTITY - get_stock(preview.product_id)
 	var costs := _counts(materials)
 	for id: String in costs:
-		maximum = mini(maximum, int(get_stock(id) / int(costs[id])))
+		maximum = mini(maximum, int(_inventory.get_uses(id) / int(costs[id])))
 	return maximum
 
 ## Free crafting: the only commit path for both the crafting panel and make_drink().
@@ -255,7 +295,6 @@ func craft(materials: Array, quantity: int = 1) -> Dictionary:
 	var costs := _counts(preview.materials)
 	for id: String in costs:
 		costs[id] *= quantity
-	_submitting = true
 	var completed_before := _completed
 	# Count only the contiguous, accepted orders fulfilled by this batch.
 	for _cup in range(mini(quantity, _menu.orders.size() - _completed)):
@@ -263,13 +302,26 @@ func craft(materials: Array, quantity: int = 1) -> Dictionary:
 		if order.is_empty() or str(order.get("product_id", "")) != preview.product_id:
 			break
 		_completed += 1
-	# Publish complete progress together with the single inventory exchange.
-	if not _inventory.try_exchange(costs, {preview.product_id: quantity}):
-		_completed = completed_before
+	var next := to_dict()
+	_completed = completed_before
+	var succeeded := false
+	if is_instance_valid(_state) and _state.has_method("commit_fixed_craft"):
+		succeeded = _state.commit_fixed_craft(costs, preview.product_id, quantity, next) == OK
+	else:
+		_submitting = true
+		var draft := _inventory.to_dict()
+		# Isolated teaching fixtures retain their existing whole-portion semantics.
+		_completed = next.completed_order_ids.size()
+		succeeded = _inventory.try_exchange(costs, {preview.product_id: quantity})
+		if not succeeded:
+			_completed = completed_before
+			_inventory.restore_state(draft)
+		else:
+			changed.emit()
 		_submitting = false
+	if not succeeded:
+		_completed = completed_before
 		return {"ok": false, "code": "capacity", "message": "原料不足或成品库存已满。未消耗库存。"}
-	changed.emit()
-	_submitting = false
 	var result: Dictionary = preview.duplicate(true)
 	result.ok = true
 	return result

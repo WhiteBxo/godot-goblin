@@ -524,7 +524,7 @@ func _can_leave_scene() -> bool:
 		and (not is_instance_valid(_stealth_service) or not _stealth_service.is_blocking())
 		and not _shop_player.is_performance_controlled()
 		and not _story_director.is_busy() and not _dialogue_manager.is_active()
-		and _gameplay_bridge.allows_story_start())
+		and _gameplay_bridge.allows_scene_travel())
 
 func _on_scene_travel_failed(point: SceneExit, _error: Error) -> void:
 	if get_tree().paused or _ui_manager.has_modal():
@@ -719,6 +719,10 @@ func _create_shop_business(ui: ShopUI) -> void:
 		ui.show_production_result(result))
 	ui.formula_requested.connect(func(materials: Array[String], iced: bool) -> void:
 		var result := _tea_production.craft_formula(materials, 1, "", iced)
+		_interaction_audio.play_event("craft_success" if result.ok else "craft_failure")
+		ui.show_formula_result(result))
+	ui.confirm_formula_requested.connect(func(materials: Array[String]) -> void:
+		var result := _tea_production.confirm_formula(materials, "confirm-%d" % Time.get_ticks_usec())
 		_interaction_audio.play_event("craft_success" if result.ok else "craft_failure")
 		ui.show_formula_result(result))
 

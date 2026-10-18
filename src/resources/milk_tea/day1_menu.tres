@@ -112,6 +112,8 @@ recipe_textures = PackedStringArray("多汁")
 recipe_effects = PackedStringArray("提神")
 market_price = 50
 uses_per_portion = 5
+economy_tier = 3
+economy_scope = "trade"
 throw_kind = ""
 
 [sub_resource type="Resource" id="Product_pearl"]
@@ -173,6 +175,8 @@ recipe_textures = PackedStringArray("浓稠", "黏稠")
 recipe_effects = PackedStringArray()
 market_price = -1
 uses_per_portion = 5
+economy_tier = 5
+economy_scope = "quest"
 throw_kind = ""
 
 [sub_resource type="Resource" id="Product_day1_blood_milk_tea"]
@@ -207,6 +211,8 @@ recipe_textures = PackedStringArray("浓稠", "丝滑")
 recipe_effects = PackedStringArray()
 market_price = 0
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_industrial_green_tea"]
@@ -234,6 +240,8 @@ recipe_textures = PackedStringArray("清透")
 recipe_effects = PackedStringArray()
 market_price = 0
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_mint_syrup"]
@@ -261,6 +269,8 @@ recipe_textures = PackedStringArray("黏稠")
 recipe_effects = PackedStringArray("强烈清凉感")
 market_price = 0
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = "paralyze"
 
 [sub_resource type="Resource" id="Ingredient_instant_coffee_concentrate"]
@@ -288,6 +298,8 @@ recipe_textures = PackedStringArray()
 recipe_effects = PackedStringArray("提神")
 market_price = 0
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_brown_sugar_boba"]
@@ -315,6 +327,8 @@ recipe_textures = PackedStringArray("软糯", "弹韧", "黏稠")
 recipe_effects = PackedStringArray()
 market_price = 0
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = "sticky"
 
 [sub_resource type="Resource" id="Ingredient_mint_choc_crisp"]
@@ -342,6 +356,8 @@ recipe_textures = PackedStringArray("颗粒感", "酥脆")
 recipe_effects = PackedStringArray("强烈清凉感")
 market_price = 0
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_ice"]
@@ -369,6 +385,8 @@ recipe_textures = PackedStringArray("清透")
 recipe_effects = PackedStringArray("强烈清凉感")
 market_price = 0
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = "mine"
 
 [sub_resource type="Resource" id="Ingredient_cocoa_powder"]
@@ -396,6 +414,8 @@ recipe_textures = PackedStringArray("粉感")
 recipe_effects = PackedStringArray()
 market_price = 0
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = "burst"
 
 [sub_resource type="Resource" id="Ingredient_apple_jam"]
@@ -423,6 +443,8 @@ recipe_textures = PackedStringArray("浓稠", "黏稠")
 recipe_effects = PackedStringArray()
 market_price = 0
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = "contagion"
 
 [sub_resource type="Resource" id="Ingredient_strawberry_jam"]
@@ -450,6 +472,8 @@ recipe_textures = PackedStringArray("浓稠", "黏稠")
 recipe_effects = PackedStringArray()
 market_price = 0
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = "corrode"
 
 [sub_resource type="Resource" id="Product_classic_boba"]
@@ -541,6 +565,8 @@ recipe_textures = PackedStringArray("黏稠")
 recipe_effects = PackedStringArray()
 market_price = 10
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_sugar_yam"]
@@ -572,6 +598,8 @@ recipe_textures = PackedStringArray("软糯", "丝滑")
 recipe_effects = PackedStringArray()
 market_price = 10
 uses_per_portion = 5
+economy_tier = 1
+economy_scope = "trade"
 throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_firefly_cap"]
@@ -603,6 +631,8 @@ recipe_textures = PackedStringArray("丝滑")
 recipe_effects = PackedStringArray("发光", "眩晕")
 market_price = 50
 uses_per_portion = 5
+economy_tier = 3
+economy_scope = "trade"
 throw_kind = "lure"
 
 [sub_resource type="Resource" id="Ingredient_goblin_firebrew"]
@@ -635,6 +665,8 @@ recipe_textures = PackedStringArray("液态")
 recipe_effects = PackedStringArray("醉酒", "灼热感")
 market_price = 20
 uses_per_portion = 5
+economy_tier = 2
+economy_scope = "trade"
 throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_griffin_amber_wine"]
@@ -667,6 +699,8 @@ recipe_textures = PackedStringArray("液态")
 recipe_effects = PackedStringArray("醉酒")
 market_price = 100
 uses_per_portion = 5
+economy_tier = 4
+economy_scope = "trade"
 throw_kind = ""
 
 [sub_resource type="Resource" id="Ingredient_red_mottled_wood"]
@@ -698,6 +732,8 @@ recipe_textures = PackedStringArray("坚韧耐嚼")
 recipe_effects = PackedStringArray()
 market_price = 20
 uses_per_portion = 5
+economy_tier = 2
+economy_scope = "trade"
 throw_kind = "toxic"
 
 [sub_resource type="Resource" id="Ingredient_honey_amber_crystal"]
@@ -729,6 +765,8 @@ recipe_textures = PackedStringArray("颗粒感")
 recipe_effects = PackedStringArray()
 market_price = 20
 uses_per_portion = 5
+economy_tier = 2
+economy_scope = "trade"
 throw_kind = "vortex"
 
 [sub_resource type="Resource" id="Ingredient_phantom_gold_mushroom"]
@@ -760,6 +798,8 @@ recipe_textures = PackedStringArray("坚韧耐嚼")
 recipe_effects = PackedStringArray()
 market_price = 100
 uses_per_portion = 5
+economy_tier = 4
+economy_scope = "trade"
 throw_kind = "phantom"
 
 [sub_resource type="Resource" id="Ingredient_rainbow_cube"]
@@ -791,6 +831,8 @@ recipe_textures = PackedStringArray("胶状", "酥脆", "丝滑")
 recipe_effects = PackedStringArray("致幻", "强烈清凉感")
 market_price = 100
 uses_per_portion = 5
+economy_tier = 4
+economy_scope = "trade"
 throw_kind = "hallucinate"
 
 [sub_resource type="Resource" id="Ingredient_scorch_tongue_pepper"]
@@ -822,6 +864,8 @@ recipe_textures = PackedStringArray("坚韧耐嚼")
 recipe_effects = PackedStringArray("灼热感")
 market_price = 50
 uses_per_portion = 5
+economy_tier = 3
+economy_scope = "trade"
 throw_kind = "burn"
 
 [sub_resource type="Resource" id="Ingredient_sour_moss_ale"]
@@ -871,11 +915,21 @@ description = "只在格里芬七日祭祀期间供应的传说级祭酒。据�
 script = ExtResource("1")
 ingredients = Array[ExtResource("ingredient")]([SubResource("Ingredient_black_tea"), SubResource("Ingredient_green_tea"), SubResource("Ingredient_creamer"), SubResource("Ingredient_pearl"), SubResource("Ingredient_coconut"), SubResource("Ingredient_syrup"), SubResource("Ingredient_insomnia"), SubResource("Product_pearl"), SubResource("Product_coconut"), SubResource("Product_plain"), SubResource("Item_coin"), SubResource("Ingredient_day1_griffin_blood"), SubResource("Product_day1_blood_milk_tea"), SubResource("Ingredient_creamer_milk_tea_base"), SubResource("Ingredient_industrial_green_tea"), SubResource("Ingredient_mint_syrup"), SubResource("Ingredient_instant_coffee_concentrate"), SubResource("Ingredient_brown_sugar_boba"), SubResource("Ingredient_mint_choc_crisp"), SubResource("Ingredient_ice"), SubResource("Ingredient_cocoa_powder"), SubResource("Ingredient_apple_jam"), SubResource("Ingredient_strawberry_jam"), SubResource("Product_classic_boba"), SubResource("Product_mint_choc"), SubResource("Product_coffee_cocoa"), SubResource("Product_apple_green"), SubResource("Product_strawberry_green"), SubResource("Product_iced_mint_latte"), SubResource("Ingredient_moss_green"), SubResource("Ingredient_sugar_yam"), SubResource("Ingredient_firefly_cap"), SubResource("Ingredient_goblin_firebrew"), SubResource("Ingredient_griffin_amber_wine"), SubResource("Ingredient_red_mottled_wood"), SubResource("Ingredient_honey_amber_crystal"), SubResource("Ingredient_phantom_gold_mushroom"), SubResource("Ingredient_rainbow_cube"), SubResource("Ingredient_scorch_tongue_pepper"), SubResource("Ingredient_sour_moss_ale"), SubResource("Ingredient_brute_lava_firebrew"), SubResource("Ingredient_griffin_sacred_wine")])
 initial_stock = {
+"apple_jam": 5,
 "black_tea": 12,
+"brown_sugar_boba": 5,
+"cocoa_powder": 5,
 "coconut": 8,
 "creamer": 12,
+"creamer_milk_tea_base": 5,
 "green_tea": 12,
+"ice": 5,
+"industrial_green_tea": 5,
+"instant_coffee_concentrate": 5,
+"mint_choc_crisp": 5,
+"mint_syrup": 5,
 "pearl": 8,
+"strawberry_jam": 5,
 "syrup": 10
 }
 initial_discovery = {
@@ -885,6 +939,48 @@ initial_discovery = {
 "green_tea": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"],
 "pearl": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"],
 "syrup": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"]
+}
+products = {
+"supply_apple_jam": {
+"item_id": "apple_jam",
+"price": 0
+},
+"supply_brown_sugar_boba": {
+"item_id": "brown_sugar_boba",
+"price": 0
+},
+"supply_cocoa_powder": {
+"item_id": "cocoa_powder",
+"price": 0
+},
+"supply_creamer_milk_tea_base": {
+"item_id": "creamer_milk_tea_base",
+"price": 0
+},
+"supply_ice": {
+"item_id": "ice",
+"price": 0
+},
+"supply_industrial_green_tea": {
+"item_id": "industrial_green_tea",
+"price": 0
+},
+"supply_instant_coffee_concentrate": {
+"item_id": "instant_coffee_concentrate",
+"price": 0
+},
+"supply_mint_choc_crisp": {
+"item_id": "mint_choc_crisp",
+"price": 0
+},
+"supply_mint_syrup": {
+"item_id": "mint_syrup",
+"price": 0
+},
+"supply_strawberry_jam": {
+"item_id": "strawberry_jam",
+"price": 0
+}
 }
 orders = Array[Dictionary]([{"id":"day1_human","product_id":"pearl_milk_tea","name":"珍珠奶茶","accepted_flag":"task.day1.human.active"},{"id":"day1_goblin","product_id":"coconut_milk_tea","name":"椰果茉莉奶茶","accepted_flag":"task.day1.goblin.active"},{"id":"day1_group_a","product_id":"plain_milk_tea","name":"原味奶茶","accepted_flag":"task.day1.group_a.active"},{"id":"day1_group_b","product_id":"pearl_milk_tea","name":"珍珠奶茶","accepted_flag":"task.day1.group_b.active"},{"id":"day1_group_c","product_id":"coconut_milk_tea","name":"椰果茉莉奶茶","accepted_flag":"task.day1.group_c.active"}])
 recipe_book = ExtResource("book")

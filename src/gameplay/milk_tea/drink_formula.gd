@@ -10,6 +10,14 @@ const TASTE_NAMES: Dictionary = {"sweetness": "甜度", "sourness": "酸度", "b
 static func describe(drink: Dictionary, show_taste := true) -> String:
 	if not drink.has("name"):
 		return str(drink.get("message", "暂无饮品。"))
+	var names := {}
+	for id: String in drink.get("ingredient_names", {}):
+		names[id] = drink.ingredient_names[id]
+	if drink.get("read_only", false):
+		var legacy := PackedStringArray([str(drink.name)])
+		legacy.append("历史记录 · 不可出售")
+		legacy.append("配方：" + "、".join(PackedStringArray(drink.get("ingredients", []))))
+		return "\n".join(legacy)
 	var lines := PackedStringArray([str(drink.name), "预设爆品" if not str(drink.signature_id).is_empty() else "普通饮品"])
 	var ingredients := PackedStringArray()
 	for id: String in drink.counts:
@@ -23,7 +31,7 @@ static func describe(drink: Dictionary, show_taste := true) -> String:
 		lines.append(" · ".join(taste))
 	for index in range(TAG_KEYS.size()):
 		lines.append("%s：%s" % [["风味", "口感", "特殊效果"][index], "、".join(drink[TAG_KEYS[index]]) if not drink[TAG_KEYS[index]].is_empty() else "无"])
-	lines.append("售价：%dG · 单杯成本：%s" % [drink.price, "未知" if drink.cost == null else "%.2fG" % drink.cost])
+	lines.append("售价：%s · 单杯成本：%s" % ["未定价" if drink.price <= 0 else "%dG" % drink.price, "未知" if drink.cost == null else "%.2fG" % drink.cost])
 	return "\n".join(lines)
 
 ## Additive order changes the generated name, but never the identity or signature.
@@ -103,12 +111,14 @@ static func evaluate(materials: Variant, lookup: Callable, rules: RecipeRules, e
 		var count: int = additive_counts[id]
 		generated_name += ("双重" if count == 2 else "%d重" % count if count > 2 else "") + str(names[id])
 	generated_name += base.base_suffix
-	var price := rules.ordinary_price
+	var price := 0
 	var signature_id := ""
 	var signature_keys := {}
 	var signature_ids := {}
 	for signature: Dictionary in rules.signatures:
-		if not signature.has_all(["id", "name", "ingredients", "price"]) or not signature.id is String or not signature.id.is_valid_identifier() or not signature.name is String or signature.name.strip_edges().is_empty() or not signature.price is int or signature.price < 0 or signature.price > LIMIT:
+		# A signature only names a stable discovery; the selling price comes from
+		# the permanent ledger and is never overridden by the signature entry.
+		if not signature.has_all(["id", "name", "ingredients"]) or signature.has("price") or not signature.id is String or not signature.id.is_valid_identifier() or not signature.name is String or signature.name.strip_edges().is_empty() or not signature.ingredients is Array:
 			return _failure("invalid_signature", "爆品配置无效。")
 		var signature_key := key_for(signature.ingredients)
 		if signature_key.is_empty() or signature_keys.has(signature_key) or signature_ids.has(signature.id):
@@ -118,7 +128,6 @@ static func evaluate(materials: Variant, lookup: Callable, rules: RecipeRules, e
 		if key_for(materials) == signature_key:
 			signature_id = signature.id
 			generated_name = signature.name
-			price = signature.price
 	if iced:
 		generated_name = generated_name.trim_suffix(base.base_suffix) + "冰" + base.base_suffix
 	return {"ok": true, "code": "ok", "id": key, "ingredients": materials.duplicate(), "base_id": base.id,

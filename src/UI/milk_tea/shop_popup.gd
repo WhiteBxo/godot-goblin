@@ -6,6 +6,7 @@ signal craft_requested(materials: Array[String], quantity: int)
 signal accept_requested(order_id: String)
 signal track_requested(order_id: String)
 signal formula_requested(materials: Array[String], iced: bool)
+signal confirm_formula_requested(materials: Array[String])
 
 @onready var _shell: ModalShell = $ModalShell
 
@@ -19,6 +20,7 @@ func _ready() -> void:
 	_page.accept_requested.connect(func(id: String) -> void: accept_requested.emit(id))
 	_page.track_requested.connect(func(id: String) -> void: track_requested.emit(id))
 	_page.formula_requested.connect(formula_requested.emit)
+	_page.confirm_formula_requested.connect(confirm_formula_requested.emit)
 
 func configure_orders(model: OrderBoardModel) -> void:
 	_page.configure_orders(model)

@@ -35,6 +35,7 @@ script = ExtResource("recipe")
 id = "classic_boba_milk_tea"
 product_id = "classic_boba_milk_tea"
 materials = Array[String](["creamer_milk_tea_base", "brown_sugar_boba", "ice"])
+sell_price = 3
 required_flag = "business.profile.day1"
 
 [sub_resource type="Resource" id="Recipe_h02"]
@@ -42,6 +43,7 @@ script = ExtResource("recipe")
 id = "mint_choc_milk_tea"
 product_id = "mint_choc_milk_tea"
 materials = Array[String](["creamer_milk_tea_base", "mint_syrup", "mint_choc_crisp", "ice"])
+sell_price = 3
 required_flag = "business.profile.day1"
 
 [sub_resource type="Resource" id="Recipe_h03"]
@@ -49,6 +51,7 @@ script = ExtResource("recipe")
 id = "coffee_cocoa_ice_milk"
 product_id = "coffee_cocoa_ice_milk"
 materials = Array[String](["creamer_milk_tea_base", "instant_coffee_concentrate", "cocoa_powder", "ice"])
+sell_price = 3
 required_flag = "business.profile.day1"
 
 [sub_resource type="Resource" id="Recipe_h04"]
@@ -56,6 +59,7 @@ script = ExtResource("recipe")
 id = "apple_milk_green_tea"
 product_id = "apple_milk_green_tea"
 materials = Array[String](["industrial_green_tea", "apple_jam", "creamer_milk_tea_base", "ice"])
+sell_price = 3
 required_flag = "business.profile.day1"
 
 [sub_resource type="Resource" id="Recipe_h05"]
@@ -63,6 +67,7 @@ script = ExtResource("recipe")
 id = "strawberry_milk_green_tea"
 product_id = "strawberry_milk_green_tea"
 materials = Array[String](["industrial_green_tea", "strawberry_jam", "creamer_milk_tea_base", "ice"])
+sell_price = 3
 required_flag = "business.profile.day1"
 
 [sub_resource type="Resource" id="Recipe_h06"]
@@ -70,6 +75,7 @@ script = ExtResource("recipe")
 id = "iced_mint_latte"
 product_id = "iced_mint_latte"
 materials = Array[String](["instant_coffee_concentrate", "creamer_milk_tea_base", "mint_syrup", "ice"])
+sell_price = 3
 required_flag = "business.profile.day1"
 
 [resource]

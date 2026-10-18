@@ -32,6 +32,13 @@ func _run() -> void:
 	print("FREE_RECIPES: %s (%d checks, %d failures)" % ["PASS" if _failures.is_empty() else "FAIL", _checks, _failures.size()])
 	quit(0 if _failures.is_empty() else 1)
 
+## Free cups are only craftable and sellable once the ledger holds a permanent
+## price. Tests confirm the price up front and read it back instead of guessing.
+func _price(state: Node, materials: Array, request_id: String) -> int:
+	var result: Dictionary = state.confirm_formula(materials, request_id)
+	_check(result.get("ok", false), "Confirming a free-formula price succeeds: " + request_id)
+	return int(result.get("record", {}).get("selling_price", -1))
+
 func _stock(inventory: WarehouseInventory) -> void:
 	for id: String in [BASE, "mint_choc_crisp", "red_mottled_wood", "mint_syrup", "scorch_tongue_pepper", "cocoa_powder", "brown_sugar_boba"]:
 		inventory.add_ingredient(id, 5)
@@ -41,7 +48,7 @@ func _test_formula() -> void:
 	var before := inventory.to_dict()
 	var result := inventory.calculate_formula(FORMULA)
 	_check(result.ok and result.taste == inventory.get_definition(BASE).get_taste(), "Additive tastes below three do not contribute")
-	_check(result.price == 20 and is_equal_approx(result.cost, 8.0) and result.signature_id.is_empty(), "Ordinary price and per-use cost follow the source example")
+	_check(result.price == 0 and is_equal_approx(result.cost, 8.0) and result.signature_id.is_empty(), "Evaluation stays unpriced and keeps the source example's 8G cost")
 	_check(result.name == "纯正哥布林老火烧代可可脂薄荷巧脆碎红斑咬木特调", "Name follows source order and base suffix")
 	_check(result.effects.count("强烈清凉感") == 1 and "辛辣" in result.flavors and "木香" in result.flavors, "Tag groups merge independently and deduplicate")
 	_check(inventory.to_dict() == before, "Pure evaluation neither discovers nor consumes ingredients")
@@ -60,9 +67,13 @@ func _test_formula() -> void:
 	_check(expanded.ok and expanded.throw.area_cells == rules.throw_tuning.max_area_cells and expanded.throw.modifiers.burst.stacks == 3, "One slot setting enables a longer recipe while area stays capped")
 	var lingering := DrinkFormula.evaluate([BASE, "brown_sugar_boba", "brown_sugar_boba", "brown_sugar_boba"], inventory.get_definition, rules)
 	_check(lingering.throw.duration == rules.throw_tuning.max_duration, "Stacked duration respects the tuning bound")
-	rules.signatures = [{"id": "test_signature", "name": "测试专属名", "ingredients": reversed_formula, "price": 57}]
+	rules.signatures = [{"id": "test_signature", "name": "测试专属名", "ingredients": reversed_formula}]
 	var signature := DrinkFormula.evaluate(FORMULA, inventory.get_definition, rules)
-	_check(signature.ok and signature.signature_id == "test_signature" and signature.price == 57 and signature.name == "测试专属名", "Signature compares exact base and counts, independently of order")
+	_check(signature.ok and signature.signature_id == "test_signature" and signature.name == "测试专属名", "Signature compares exact base and counts, independently of order")
+	_check(signature.price == 0, "A signature names a discovery without pricing it")
+	var priced_signature: RecipeRules = RULES.duplicate(true)
+	priced_signature.signatures = [{"id": "test_signature", "name": "测试专属名", "ingredients": reversed_formula, "price": 57}]
+	_check(not DrinkFormula.evaluate(FORMULA, inventory.get_definition, priced_signature).ok, "Signature entries carrying a price are rejected")
 	_check(DrinkFormula.evaluate(SWEET, inventory.get_definition, rules).signature_id.is_empty(), "Nearby ingredients never partially match a signature")
 	_check(RULES.signatures.is_empty(), "Production signature data remains empty")
 	var unknown_cost := DrinkFormula.evaluate(FORMULA, func(id: String) -> IngredientDefinition:
@@ -102,6 +113,7 @@ func _test_ice() -> void:
 	for choice: Dictionary in inventory.get_formula_choices():
 		_check(choice.id != "ice", "Discovered ice never appears among the three ingredient choices")
 	var ice_before := inventory.get_uses("ice")
+	_price(state, SWEET, "ice.price")
 	var production := state.get_tea_production()
 	var cup := production.craft_formula(SWEET, 1, "ice.craft", true)
 	var other := production.craft_formula(SWEET)
@@ -119,7 +131,8 @@ func _test_ice() -> void:
 	var historical: Array[String] = [BASE, "ice"]
 	var historical_id := DrinkFormula.key_for(historical)
 	legacy.business.inventory.drinks[historical_id] = 1
-	legacy.business.inventory.encyclopedia[historical_id] = {"ingredients": historical, "discovered_day": 1}
+	# A pre-2026-10-19 cup: the ice slot is illegal now, so it stays read-only history.
+	legacy.business.inventory.encyclopedia[historical_id] = {"ingredients": historical, "discovered_day": 1, "pricing": "legacy_unpriced"}
 	legacy.economy.inventory = legacy.business.inventory.duplicate(true)
 	_check(state.restore_state(legacy) == OK and inventory.get_drink_stock(historical_id) == 1, "Historical ice-as-ingredient records remain readable without allowing new crafts")
 	var encyclopedia: DrinkEncyclopediaPanel = load("res://src/UI/milk_tea/drink_encyclopedia_panel.tscn").instantiate()
@@ -131,9 +144,9 @@ func _test_ice() -> void:
 	_check(encyclopedia.get_remake_button().disabled, "Historical ice ingredient recipes explain unavailable remake instead of dropping an ingredient")
 	encyclopedia.free()
 	var rules: RecipeRules = RULES.duplicate(true)
-	rules.signatures = [{"id": "ice_signature", "name": "专属特调", "ingredients": SWEET, "price": 57}]
+	rules.signatures = [{"id": "ice_signature", "name": "专属特调", "ingredients": SWEET}]
 	var signature := DrinkFormula.evaluate(SWEET, inventory.get_definition, rules, true, true)
-	_check(signature.name == "专属冰特调" and signature.signature_id == "ice_signature" and signature.price == 57, "Ice preserves signature matching and price while applying the name suffix")
+	_check(signature.name == "专属冰特调" and signature.signature_id == "ice_signature" and signature.price == 0, "Ice preserves signature matching while applying the name suffix")
 	state.free()
 
 func _test_crafting() -> void:
@@ -141,6 +154,8 @@ func _test_crafting() -> void:
 	var inventory := state.get_warehouse_inventory()
 	_stock(inventory)
 	var production := state.get_tea_production()
+	_price(state, FORMULA, "craft.price")
+	_price(state, SWEET, "craft.sweet.price")
 	var observations: Array[bool] = []
 	var attempts: Array[bool] = []
 	var key := DrinkFormula.key_for(FORMULA)
@@ -177,9 +192,10 @@ func _test_saves() -> void:
 	var state := StateData.new()
 	var inventory := state.get_warehouse_inventory()
 	_stock(inventory)
+	_price(state, SWEET, "save.price")
 	var result := state.get_tea_production().craft_formula(SWEET, 1, "save.receipt")
 	var saved := state.to_dict()
-	_check(saved.schema_version == StateData.SCHEMA_VERSION and saved.business.inventory.schema_version == 3, "Current session schema contains formula inventory v3")
+	_check(saved.schema_version == StateData.SCHEMA_VERSION and saved.business.inventory.schema_version == 4, "Current session schema contains formula inventory v4")
 	var file := FileAccess.open("user://verify_free_recipes.save", FileAccess.WRITE)
 	file.store_var(saved)
 	file.close()
@@ -215,6 +231,11 @@ func _test_saves() -> void:
 	var legacy := baseline.duplicate(true)
 	legacy.schema_version = 3
 	legacy.business.production.erase("formula_requests")
+	# A real v3 session predates the pricing ledger, so the receipts leave with it.
+	legacy.economy.schema_version = 1
+	legacy.economy.erase("recipe_prices")
+	legacy.economy.erase("signature_rewards")
+	legacy.economy.erase("formula_crafts")
 	for old: Dictionary in [legacy.business.inventory, legacy.economy.inventory]:
 		old.schema_version = 2
 		old.erase("drinks")
@@ -276,6 +297,8 @@ func _test_delivery() -> void:
 		var inventory := state.get_warehouse_inventory()
 		_stock(inventory)
 		var production := state.get_tea_production()
+		var unit := _price(state, SWEET, "delivery.price%d" % price)
+		_price(state, FORMULA, "delivery.formula%d" % price)
 		var cup := production.craft_formula(SWEET, 1, "", price == 0)
 		var other := production.craft_formula(FORMULA)
 		var requirement := {"formula": [BASE, "mint_syrup", "mint_syrup"], "base_id": BASE, "flavors": ["薄荷"], "minimum_taste": {"sweetness": 8}}
@@ -293,7 +316,8 @@ func _test_delivery() -> void:
 		_check(journal.get_task("test.free_order").delivery.drink.formula == SWEET, "Journal formula requirements are independent snapshots")
 		before = state.to_dict()
 		_check(not delivery.try_submit("free_order", "wrong_npc", cup.id).ok and not delivery.try_submit("free_order", "fat_goblin", other.id).ok and state.to_dict() == before, "Wrong NPC or chosen recipe never consumes another matching cup")
-		var expected := 20 if price < 0 else price
+		# An explicit task amount (including 0) overrides the ledger price.
+		var expected := unit if price < 0 else price
 		var observations: Array[bool] = []
 		var reentrant: Array[bool] = []
 		state.state_changed.connect(func() -> void:
@@ -311,6 +335,7 @@ func _test_delivery() -> void:
 	var state := StateData.new()
 	var inventory := state.get_warehouse_inventory()
 	_stock(inventory)
+	_price(state, SWEET, "overflow.price")
 	var cup := state.get_tea_production().craft_formula(SWEET)
 	var catalog := TaskCatalog.new()
 	catalog.load_json(JSON.stringify(_task({"base_id": BASE, "flavors": ["薄荷"]})))
@@ -328,6 +353,7 @@ func _test_delivery() -> void:
 	state = StateData.new()
 	inventory = state.get_warehouse_inventory()
 	_stock(inventory)
+	var unit := _price(state, SWEET, "reward.price")
 	cup = state.get_tea_production().craft_formula(SWEET)
 	var reward_order := _task({"base_id": BASE})
 	reward_order.tasks[0]["rewards"] = {"text": "糖浆", "items": {"syrup": 1}}
@@ -342,7 +368,7 @@ func _test_delivery() -> void:
 	before = state.to_dict()
 	_check(not delivery.deliver_to("fat_goblin").ok and state.to_dict() == before, "Full reward stock rejects cup consumption and formula income together")
 	inventory.try_consume({"syrup": 1})
-	_check(delivery.deliver_to("fat_goblin").ok and inventory.get_drink_stock(cup.id) == 0 and state.get_transactions().get_balance() == 20, "A capacity failure leaves the order available for a successful retry")
+	_check(delivery.deliver_to("fat_goblin").ok and inventory.get_drink_stock(cup.id) == 0 and state.get_transactions().get_balance() == unit, "A capacity failure leaves the order available for a successful retry")
 	var completed := state.to_dict()
 	state.start_new_game()
 	_check(state.restore_state(completed) == OK and not delivery.deliver_to("fat_goblin").ok and state.to_dict() == completed, "Restoring a sale preserves the delivery and wallet receipts")
@@ -368,6 +394,7 @@ func _test_ui() -> void:
 	await _frames()
 	var inventory := state.get_warehouse_inventory()
 	_stock(inventory)
+	_price(state, SWEET, "ui.price")
 	inventory.add_ingredient("ice", 2)
 	var shop := game.get_shop_ui()
 	var station: InteractionPoint

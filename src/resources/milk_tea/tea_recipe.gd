@@ -7,6 +7,9 @@ extends Resource
 @export var product_id: String = ""
 ## Ingredient IDs; duplicates allowed and selection order never matters.
 @export var materials: Array[String] = []
+## Fixed cup price in G. -1 keeps the legacy dynamic price for teaching recipes.
+## The human menu H01-H06 uses the 2026-10-19 flat 3G price.
+@export var sell_price: int = -1
 @export var hint: String = ""
 ## GameState flag that must be true before this recipe may be previewed or crafted.
 ## Empty means the recipe is always available.

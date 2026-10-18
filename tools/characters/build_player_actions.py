@@ -24,6 +24,9 @@ SPECS = {
     "throw": ("投掷", "合并图片 2.png", "合并图片.png", "合并图片 3.png", 12),
 }
 DIRECTIONS = ("down", "right", "up")
+# Source side views normally face right. The supplied throw sheet faces left,
+# so its right column is rebuilt by mirroring instead of being used as-is.
+SIDE_FACES_LEFT = {"throw"}
 CELL = (224, 300)
 
 
@@ -74,6 +77,9 @@ def build(pixel_perfect: bool = False) -> None:
     texture_id = 0
     for action, spec in SPECS.items():
         poses_by_direction = {d: read_poses(action, d) for d in DIRECTIONS}
+        if action in SIDE_FACES_LEFT:
+            # The stored side sheet already faces left: keep it as left and mirror it for right.
+            poses_by_direction["right"] = [ImageOps.mirror(p) for p in poses_by_direction["right"]]
         poses_by_direction["left"] = [ImageOps.mirror(p) for p in poses_by_direction["right"]]
         for direction in ("down", "left", "right", "up"):
             row = len(animations)

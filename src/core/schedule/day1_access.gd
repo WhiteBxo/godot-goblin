@@ -12,9 +12,15 @@ static func is_later_stage(state: Node) -> bool:
 			return true
 	return false
 
+## After the Day 1 chapter ends. Day 2 content is not implemented, so it stays in the shop.
+static func is_day2_placeholder(state: Node) -> bool:
+	return at_stage(state, "day2")
+
 static func can_leave_shop(state: Node) -> bool:
 	if state.get_business_profile() != "day1":
 		return true
+	if is_day2_placeholder(state):
+		return false
 	if at_stage(state, "day1.s05"):
 		return DayPhase.is_night(state) and state.get_flag("day1.s04.commission_accepted")
 	return at_stage(state, "day1.s03") or state.story_stage == "day1.investigate_coins"

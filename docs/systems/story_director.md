@@ -21,6 +21,7 @@ if director.load_events("res://src/resources/story/day1_demo_events.json") == OK
 | `configure(manager: DialogueManager, can_start: Callable = Callable())` | 注入场景内 Manager 和可选宿主准入检查；重新配置先取消旧演出 |
 | `configure_cinematic(actors: ActorDirector, cameras: CameraDirector = null)` | 注入现有演出服务；重新配置先取消旧演出；MainGame 默认接入自己的 Director |
 | `set_audio_adapter(adapter: StoryAudioAdapter)` | 注入音频适配层；替换前取消旧演出；MainGame 默认接入 AudioManager |
+| `set_title_card(card: TitleCard)` | 注入全屏标题卡；替换前取消旧演出；MainGame 在现有 TransitionLayer（40）中创建，位于场景切换遮罩下方；宿主通过 `get_title_card()` 提供引用 |
 | `load_events(path: String = "") -> Error` | 空参数使用 `event_file`；完整验证后替换目录，失败保留旧数据；busy 或收尾中拒绝并把原因写入 `last_error` |
 | `request_event(id: String) -> Error` | 同步检查并占用演出；`OK` 表示已接受，最终结果看 signal |
 | `request_interaction(interaction_id: String) -> Error` | JSON 顺序选择第一个符合条件且未完成的路由；无路由为 `ERR_DOES_NOT_EXIST` |
@@ -95,6 +96,9 @@ Signal 同步调用。收尾期间拒绝递归启动新事件，串联事件请�
 | `set_stage` | `value`：字符串 | 调用 `set_story_stage`；相同阶段视为成功 |
 | `chronicle_unlock` | `entry_id`：命名空间 ID；`title`：非空字符串 | 调用注入的 ChronicleJournal；重复解锁无副作用 |
 | `chronicle_append` | `entry_id`、`record_id`：命名空间 ID；`content`：非空字符串 | 向已解锁条目追加并标为未读；重复记录无副作用。见 [见闻录](../gameplay/chronicle.md) |
+| `pay_items` | `items`：物品 ID→正整数；`receipt`：命名空间 flag；可选 `set_flags` | `GameState.commit_item_payment` 一个事务内扣物品、写 flags 与 receipt；receipt 已存在视为已付；不足/忙时整段失败且不扣 |
+| `set_phase` | `phase`：`day` / `night` | 经 DayPhase 切换；已在目标阶段视为成功；夜→昼推进 `current_day` |
+| `title_card` | `text` 非空；`subtitle`、`seconds`（默认 2.5）、`wait` | 注入的 TitleCard 淡入、停留、淡出；默认阻塞；事件结束时取消仍在显示的卡；服务缺失则整段失败 |
 | `play_sfx` | 非空 `id` 或 `res:// path`，二选一 | 经适配层调用 AudioManager；默认非阻塞，`wait: true` 等自然结束；旧 path 保持兼容；资源/服务缺失或池满发 skipped 并继续 |
 
 目录必须包含 `version: 1` 和 `events` 对象；事件必须有非空 `steps`。未知字段、未知指令、非法类型、负等待值及非法命名空间均拒绝，并报告事件/步骤位置。对白 ID 在 runtime 由 DialogueManager 验证，音效允许留空素材路径对应的占位文件名（路径本身必须是 `res://`）。现有导出 preset 的 `*.json` 已覆盖新数据；以后改用选择场景导出时，必须显式包含 JSON 及其动态引用的音效资源。
@@ -141,6 +145,7 @@ MainGame 在现有 `Systems` 中创建各 Director，通过 `configure_cinematic
 | `actor_face` | `actor`、`direction: up/down/left/right` |
 | `actor_emote` | `actor`；`symbol` 默认 `!`、`duration` 默认 0.8（须 > 0） |
 | `actor_show` / `actor_hide` | `actor` |
+| `actor_animate` | `actor`、`animation`（须存在于角色 SpriteFrames）；`hold` 默认 false。非循环动画播完完成，循环动画立即完成；hold 保持姿势到下次演出接管或传送；中断时恢复默认动画 |
 | `camera_focus` | `actor` 或 `target`，二选一；`duration` 默认 0.8；到位后继续跟踪存活目标 |
 | `camera_move` | `target`；`duration` 默认 0.8；保存位置快照，到位后保持构图 |
 | `camera_shake` | `intensity` 默认 2（逻辑视口像素）、`duration` 默认 0.3、`decay` 默认 1.5；三者均 ≥ 0，强度仍受 CameraDirector 上限限制 |

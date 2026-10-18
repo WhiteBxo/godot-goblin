@@ -1,0 +1,8 @@
+{
+  "story": "res://src/resources/story/day1_stages_03_06.json",
+  "dialogue": "res://src/resources/dialogue/day1_stages_03_06.json",
+  "phases": "res://src/resources/story/day1_stages_03_06_phases.json",
+  "auto_events": [],
+  "derived_facts": [],
+  "scene_setups": []
+}

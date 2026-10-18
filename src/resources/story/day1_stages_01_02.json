@@ -4,7 +4,7 @@
     "day1.opening": {
       "once": true,
       "conditions": {
-        "day": 1
+        "day": 1.0
       },
       "steps": [
         {
@@ -15,12 +15,16 @@
         {
           "command": "play_bgm",
           "id": "music.daily_milk_tea",
-          "fade": 1,
-          "volume_db": -12
+          "fade": 1.0,
+          "volume_db": -12.0
         },
         {
           "command": "dialogue",
           "id": "day1.shop_opening"
+        },
+        {
+          "command": "wait",
+          "seconds": 2.0
         },
         {
           "command": "play_sfx",
@@ -71,7 +75,7 @@
     "day1.first_goblin": {
       "once": true,
       "conditions": {
-        "day": 1,
+        "day": 1.0,
         "stage": "day1.wait_human",
         "completed_events": [
           "day1.opening"
@@ -81,6 +85,10 @@
         }
       },
       "steps": [
+        {
+          "command": "wait",
+          "seconds": 1.5
+        },
         {
           "command": "actor_move",
           "actor": "human_customer",
@@ -153,7 +161,7 @@
     "day1.group_arrival": {
       "once": true,
       "conditions": {
-        "day": 1,
+        "day": 1.0,
         "stage": "day1.wait_goblin",
         "completed_events": [
           "day1.first_goblin"
@@ -306,7 +314,7 @@
     "day1.ending": {
       "once": true,
       "conditions": {
-        "day": 1,
+        "day": 1.0,
         "stage": "day1.wait_group",
         "completed_events": [
           "day1.group_arrival"

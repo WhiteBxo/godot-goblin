@@ -36,11 +36,17 @@ var _cameras: CameraDirector
 var _actions: Dictionary = {}
 var _used_camera := false
 var _chronicle: ChronicleJournal
+var _title_card: TitleCard
 
 
 func set_chronicle_journal(journal: ChronicleJournal) -> void:
 	cancel_event("Chronicle service replaced")
 	_chronicle = journal
+
+
+func set_title_card(card: TitleCard) -> void:
+	cancel_event("Title card replaced")
+	_title_card = card
 
 
 func _ready() -> void:
@@ -248,6 +254,11 @@ func _matches(conditions: Dictionary) -> bool:
 		var choice: Dictionary = conditions["choice"]
 		if get_choice(choice["dialogue"], choice["line"]) != choice["id"]:
 			return false
+	if conditions.has("items"):
+		var inventory: WarehouseInventory = _state.get_warehouse_inventory()
+		for id: String in conditions["items"]:
+			if inventory.get_stock(id) < int(conditions["items"][id]):
+				return false
 	return true
 
 
@@ -303,10 +314,33 @@ func _process(_delta: float) -> void:
 			if _is_current(generation) and error != OK:
 				_finish(false, "Chronicle command failed (%d): %s" % [error, step.entry_id])
 				return
+		"pay_items":
+			var costs := {}
+			for id: String in step.items:
+				costs[id] = int(step.items[id])
+			var error := _state.commit_item_payment(step.receipt, costs, step.get("set_flags", {}))
+			# A settled receipt means this payment already happened; retries never recharge.
+			if _is_current(generation) and error != OK and error != ERR_ALREADY_EXISTS:
+				_finish(false, "Payment '%s' failed: %s" % [step.receipt, error_string(error)])
+				return
+		"set_phase":
+			if DayPhase.get_phase(_state) != step.phase:
+				var changed := DayPhase.enter_night(_state) if step.phase == "night" else DayPhase.enter_day(_state)
+				if _is_current(generation) and not changed:
+					_finish(false, "Cannot enter phase: " + step.phase)
+					return
+		"title_card":
+			if not is_instance_valid(_title_card):
+				_finish(false, "TitleCard unavailable")
+				return
+			var card := _title_card.show_card(step.text, step.get("subtitle", ""), step.get("seconds", 2.5))
+			if _is_current(generation):
+				_track(card, "title_card", step.get("wait", true), generation)
+			return
 		"play_sfx", "play_bgm", "stop_bgm", "fade_bgm":
 			_dispatch_audio(step, generation)
 			return
-		"actor_spawn", "actor_move", "actor_face", "actor_emote", "actor_show", "actor_hide":
+		"actor_spawn", "actor_move", "actor_face", "actor_emote", "actor_show", "actor_hide", "actor_animate":
 			_dispatch_actor(step, generation)
 			return
 		"camera_focus", "camera_move", "camera_shake", "camera_zoom", "camera_reset":
@@ -350,6 +384,7 @@ func _dispatch_actor(step: Dictionary, generation: int) -> void:
 		"actor_emote": action = _actors.actor_emote(actor, step.get("symbol", "!"), step.get("duration", 0.8))
 		"actor_show": action = _actors.actor_show(actor)
 		"actor_hide": action = _actors.actor_hide(actor)
+		"actor_animate": action = _actors.actor_animate(actor, StringName(step.animation), step.get("hold", false))
 	if not _is_current(generation):
 		if is_instance_valid(_actors):
 			_actors.cancel_action(action)
@@ -449,6 +484,8 @@ func _cancel_actions() -> void:
 		_untrack(action)
 		if action is ActorAction and is_instance_valid(_actors):
 			_actors.cancel_action(action, "Story finished")
+		elif action is TitleCardAction and is_instance_valid(_title_card):
+			_title_card.cancel("Story finished")
 	if _used_camera and is_instance_valid(_cameras):
 		_cameras.cancel_all("Story finished")
 	_used_camera = false

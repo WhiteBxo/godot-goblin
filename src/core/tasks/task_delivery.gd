@@ -105,7 +105,10 @@ func deliver_to(target_object_id: String) -> Dictionary:
 	if not _ready_for_delivery():
 		return _failure("交付系统尚未就绪。")
 	# Prefer a deliverable order; another missing requirement must not block this NPC.
+	# Report against an active order before an inactive one, so a later chapter's
+	# order for the same NPC does not hide the current one's missing materials.
 	var fallback := ""
+	var active_fallback := ""
 	for order_id: String in _orders:
 		var task: Dictionary = _orders[order_id]
 		if task.delivery.target_object_id != target_object_id:
@@ -113,8 +116,11 @@ func deliver_to(target_object_id: String) -> Dictionary:
 		fallback = order_id
 		if _state.get_flag(_receipt_key(order_id)) or _journal.get_task(task.id).get("status") != "active":
 			continue
+		active_fallback = order_id
 		if _inventory.has_materials(get_requirement(order_id)):
 			return try_submit(order_id, target_object_id)
+	if not active_fallback.is_empty():
+		return try_submit(active_fallback, target_object_id)
 	if not fallback.is_empty():
 		return try_submit(fallback, target_object_id)
 	return _failure("该 NPC 不是当前订单的交付对象。")

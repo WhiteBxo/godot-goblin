@@ -10,6 +10,8 @@ signal action_started(action: StringName, direction: Vector2)
 signal action_triggered(action: StringName, direction: Vector2)
 ## cancelled is true when a modal lock, teleport or performance interrupts the action.
 signal action_finished(action: StringName, cancelled: bool)
+## A story pose reached its last frame. Looping poses never emit this.
+signal performance_animation_finished(animation: StringName)
 
 const DIRECTION_NAMES: Array[StringName] = [&"down", &"left", &"right", &"up"]
 ## Physics layers: 1 = world and furniture, 2 = player body, 3 = solid NPC bodies.
@@ -36,6 +38,9 @@ var locomotion_mode: Locomotion = Locomotion.WALK
 var _active_action: StringName = &""
 var _action_direction := Vector2.ZERO
 var _action_triggered := false
+## Story pose owned by a performance; a held pose survives the release of control.
+var _pose_animation: StringName = &""
+var _pose_hold := false
 
 @onready var animated_sprite: AnimatedSprite2D = $Visual/AnimatedSprite2D
 
@@ -120,7 +125,37 @@ func _on_action_frame_changed() -> void:
 	action_triggered.emit(_active_action, _action_direction)
 
 func _on_action_animation_finished() -> void:
+	if not _pose_animation.is_empty() and animated_sprite.animation == _pose_animation:
+		var pose := _pose_animation
+		if not _pose_hold:
+			clear_performance_pose()
+		performance_animation_finished.emit(pose)
+		return
 	_finish_action(false)
+
+## Plays a named SpriteFrames animation for the performance owner. Returns false
+## when the owner does not control this body or the animation does not exist.
+func play_performance_animation(owner: Object, animation: StringName, hold: bool = false) -> bool:
+	if _performance_owner == null or _performance_owner.get_ref() != owner:
+		return false
+	if not animated_sprite.sprite_frames.has_animation(animation):
+		return false
+	_pose_animation = animation
+	_pose_hold = hold
+	animated_sprite.speed_scale = animation_speed
+	animated_sprite.play(animation)
+	_update_animation(false)
+	return true
+
+func is_animation_looping(animation: StringName) -> bool:
+	return animated_sprite.sprite_frames.has_animation(animation) and animated_sprite.sprite_frames.get_animation_loop(animation)
+
+func clear_performance_pose() -> void:
+	if _pose_animation.is_empty():
+		return
+	_pose_animation = &""
+	_pose_hold = false
+	_update_animation(false)
 
 func _reset_locomotion() -> void:
 	if locomotion_mode != Locomotion.WALK:
@@ -134,11 +169,14 @@ func claim_performance_control(owner: Object) -> bool:
 	if owner == null or is_performance_controlled():
 		return false
 	_performance_owner = weakref(owner)
+	clear_performance_pose()
 	stop_performance_motion()
 	return true
 
 func release_performance_control(owner: Object) -> void:
 	if _performance_owner != null and _performance_owner.get_ref() == owner:
+		if not _pose_hold:
+			clear_performance_pose()
 		stop_performance_motion()
 		_performance_owner = null
 
@@ -187,6 +225,7 @@ func get_speed_multiplier() -> float:
 	return speed_multiplier
 
 func teleport_to(world_position: Vector2) -> void:
+	clear_performance_pose()
 	stop_performance_motion()
 	global_position = world_position
 
@@ -237,7 +276,7 @@ func _update_facing(direction: Vector2) -> void:
 		facing = Facing.UP if direction.y < 0.0 else Facing.DOWN
 
 func _update_animation(moving: bool, movement_ratio: float = 1.0) -> void:
-	if not _active_action.is_empty():
+	if not _active_action.is_empty() or not _pose_animation.is_empty():
 		return
 	var state := "idle"
 	if moving:

@@ -4,6 +4,33 @@
 
 2026-10-18 补充：[投掷与守卫反应组件](day_01_stealth.md)已实现，聚落宿主已装配服务及缺口提示；火把、四名守卫绑定、支付与正式撤离配置未齐，S05 潜入仍未启用。原有调查/返店能力不代表潜入通关。
 
+## S03–S06 剧情宿主与收尾能力（2026-10-18）
+
+本节只提供接入能力，没有编写任何 S03–S06 对白或 Beat。地图完成后，地图侧摆放 Marker、触发区、调查点并配置守卫，剧情侧填写下列数据文件，两边都不需要再改代码。
+
+**数据入口**：`src/resources/story/day1_stages_03_06_setup.json`，当前是空骨架。
+
+| 字段 | 内容 |
+| --- | --- |
+| `story` / `dialogue` / `phases` | S03–S06 的 Story v1、Dialogue v1、Bridge v2 文件，当前均为空骨架 |
+| `auto_events` | 按顺序列出的事件 ID。宿主空闲时（无切场景、暂停、弹窗、演出或对白），请求第一个条件满足且未完成的事件；准入被拒绝时等下一次状态变化再试；执行失败或取消后停止自动重试，须显式请求该事件或重建会话 |
+| `derived_facts` | `{flag, stage, all_flags}`：处于 `stage`（含子阶段）且 `all_flags` 全部为真时写一次 `flag`。用于 S03 观察点看完后写 `day1.s03.exploration_completed`，再由 Bridge v2 续播 |
+| `scene_setups` | `{host: shop/settlement, stage, actors: {actor_id: Marker 名或 null}}`：进入该 stage 或重建场景时，把角色传送到 Marker 并显示，`null` 表示隐藏。列出的角色不再受昼夜和 S06 默认可见规则影响 |
+
+**任务**：Day 1 任务目录由 `day1_stages_01_02.json` 与 `day1_stages_03_06.json` 合并加载（`TaskCatalog.load_files`），两份文件中的任务与订单 ID 必须全局唯一。S04 胖哥布林订单沿用 S06 的写法：任务带 `delivery`，用 flag 揭示和激活。同一 NPC 同时有多个订单时，交付优先针对当前 active 订单。
+
+**宿主分工**：
+- `Day1ChapterController` 在聚落中总是接管；在奶茶店中从 `day1.investigate_coins`（S02 结尾）起接管，或阶段以 `day2.` 开头时接管。S01–S02 仍由 `Day1ShopController` 负责，交接后不再按检查点回拉阶段。前段演出仍 busy 时等待 `event_finished` 后加载，不在同一帧反复延迟调用。
+- 聚落宿主额外注册完整的 `sound_library.tres`。
+
+**走进即触发**：在关卡任意位置放置 `src/gameplay/story_interaction/story_trigger_zone.tscn`，填 `trigger_id`，可选填 `required_stages`（任一满足）和 `required_flags`（全部满足）。玩家进入区域后，按与 E 交互相同的路由请求 `"trigger": "<trigger_id>"` 的事件。被拒绝时，只要玩家仍在区域内就会重试；离开后重新进入可再次触发。是否只播一次由事件的 `once` 决定。
+
+**新增剧情指令**：`pay_items`、条件 `items`、`set_phase`、`title_card`、`actor_animate`，详见 [指令表](../guides/story_authoring_commands.md)。守卫贿赂可写成 `pay_items` 加 `receipt: "day1.s05.guard_payment_completed"`，同时用 `set_flags` 写守卫的 `clearance_flag`；`Day1StealthService` 读取这两个事实后放行。金额在剧情 JSON 中填写，系统没有写死任何数值。
+
+**章节结束**：在 S06 结尾按顺序写 `set_flag day1.s06.completed` → `title_card "第一天结束"` → `set_phase day`（`current_day` 变为 2）→ `set_stage day2.placeholder` → `title_card "第二天"`。阶段以 `day2.` 开头时，玩家不能出店，HUD 显示"第二天的内容尚未开放"，重建奶茶店也不会把阶段拉回 Day 1 的检查点。
+
+**验证**：`tests/verify_day1_chapter_systems.gd`。
+
 ## 阶段与场景
 
 - Day1Access 读取 GameState.story_stage，章节阶段允许点号分隔的操作子阶段。正式 Day 1 的 S01/S02 不能出店；已发布前两阶段末尾的 day1.investigate_coins 和 day1.s03 允许探索；day1.s05 还要求委托接受和夜间。S04、S06 以及未知阶段不开放出店。教学配置沿用原通行规则。
@@ -58,3 +85,21 @@ Godot 4.7.2 的 tests/verify_day1_world_flow.gd 使用真实聚落与店铺宿�
 - 导入无脚本解析错误；编辑器退出仍报告 10 个资源在用，基线也有相同诊断。未执行人工画面验收，提供上述 F6 入口供观察。
 
 本次核对 [Godot 4.7 Object 信号连接](https://docs.godotengine.org/en/4.7/classes/class_object.html) 的同步/延迟通知约定，以及 [CollisionObject2D](https://docs.godotengine.org/en/4.7/classes/class_collisionobject2d.html) 的物理层开关接口。库存与回执在同步通知前整体提交；门洞及隐藏角色通过物理层控制实际碰撞。
+
+## 工作区收尾核验（2026-10-18）
+
+使用 Windows 上的 Godot 4.7.2。S03–S06 的四份剧情 / 对话 / Phase / Setup 数据与后续任务文件仍为空骨架；本次完成接入能力，不发布受 P06–P10、P13–P16 阻塞的剧情，也不自动进入 Day 2。Day 2 初稿与 D 编号清单只作为策划来源保留。
+
+- 修复 `day1.investigate_coins` 的章节接管，等待前段事件结束后才加载；避免同一 idle 帧反复 `call_deferred`。自动事件执行失败或取消后不再自行重播，后续阶段也不显示前两阶段的继续按钮。
+- 标题卡复用 TransitionLayer，并由宿主协调标题卡与切场景的显示状态；取消后隐藏，不遗留黑屏。店铺玩家恢复世界 / NPC 碰撞，重存丢失的店门隐藏 Marker / Label 设置恢复。
+- 九份角色动作资源逐动画比较名称、循环、速度、帧顺序和贴图引用，内容一致；配方重存去除了重复的 `Recipe_h01`–`Recipe_h06` 定义，配方数组保持原有十条。
+- `verify_day1_chapter_systems.gd`：95 项通过，覆盖支付、同步通知重入、恢复后幂等、交接、失败不重播、区域实际触发、角色摆位、标题卡显隐与 Day 2 占位恢复。
+- 执行 55 个适用的 `verify_*.gd`（含新增章节检查），最终 49 个通过。直接检查包括 MainGame 74 项、正式五单流程 225 项、Bridge 248 项、GameState 124 项、ActorDirector 165 项、角色 1923 项、DeveloperTools 152 项、Debug 边界 97 项及 UI 主题 172 项；世界流程、任务、交付、制作、库存、钱包与地图检查通过。
+- 六个历史失败均在未改动的 `0c31c75` 隔离 checkout 复现：`verify_cinematic_integration.gd` 的 6 项演出 / 移动断言；`verify_disappeared_street.gd` 的 7 项街景比例；`verify_scene_travel.gd`、`verify_shop_equipment.gd` 仍按 Label 读取现有 PromptBar 的 `.text`；`verify_floor_atlas.gd`、`verify_walls.gd` 把奶茶店强转为 CaveMap。后三个会挂起的脚本按超时终止，未记为通过。
+- 场景切换另以临时副本改用 PromptBar 公开 `get_text()` 核对当前提示，真实 E 键往返、落点、输入恢复和会话保留共 163 项通过；仓库中的旧测试保留原状。
+- 结构化前两阶段工程及产物一致性通过，保留用户新增的 2 秒 / 1.5 秒停顿。`verify_story_authoring.py` 新增的 4 项物品与动画引用负例通过；随后仍被既有 `cinematic.opening/steps[9]` 移动失败阻塞。临时内存跳过该已确认历史用例后，其余 14 项通过，不把原始完整脚本报告为通过。Python 工具补齐 Windows UTF-8 与正斜杠资源路径处理。
+- OpenGL 图形窗口实际渲染并检查了标题卡及取消后的店铺画面。未做完整剧情人工试玩、听音或真实 Release 导出；`verify_cave_editor.gd` 需要编辑器，`verify_player_visuals.gd` 依赖实际渲染，未列入 headless 批次。引擎退出仍有少量资源 / ObjectDB 在用诊断。
+
+复现时在仓库根目录用本机 Godot 执行 `--headless --path . --script res://tests/verify_day1_chapter_systems.gd`；普通试玩 F5 从标题菜单新游戏，S01–S02 完成后停在金币调查边界。独立世界业务可 F6 运行 `src/debug/story/day1_world_flow_demo.tscn`，按上节路线调查、取血、返店、制作并交付；不代表空骨架中的后四阶段剧情已发布。
+
+本轮尝试访问 [Object.call_deferred](https://docs.godotengine.org/en/4.7/classes/class_object.html#class-object-method-call-deferred)、[AnimatedSprite2D.animation_finished](https://docs.godotengine.org/en/4.7/classes/class_animatedsprite2d.html#class-animatedsprite2d-signal-animation-finished) 和 [Area2D.body_entered](https://docs.godotengine.org/en/4.7/classes/class_area2d.html#class-area2d-signal-body-entered) 的 4.7 官方在线文档均返回 HTTP 403；改用本机引擎导出的 API 元数据核对方法 / 信号，并用上述实际运行检查其生命周期行为，未声称在线正文核验通过。

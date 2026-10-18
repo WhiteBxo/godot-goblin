@@ -22,7 +22,7 @@
       "mode": "自动演出",
       "event": "day1.opening",
       "start": 3,
-      "count": 10,
+      "count": 11,
       "dialogues": [
         "day1.first_human_customer"
       ]
@@ -47,14 +47,14 @@
       "mode": "自动演出",
       "event": "day1.first_goblin",
       "start": 0,
-      "count": 3,
+      "count": 4,
       "dialogues": []
     },
     {
       "id": "shop_quiet_again",
       "mode": "自动演出",
       "event": "day1.first_goblin",
-      "start": 3,
+      "start": 4,
       "count": 2,
       "dialogues": [
         "day1.shop_quiet_again"
@@ -64,7 +64,7 @@
       "id": "goblin_first_customer",
       "mode": "自动演出",
       "event": "day1.first_goblin",
-      "start": 5,
+      "start": 6,
       "count": 10,
       "dialogues": [
         "day1.goblin_first_customer"
@@ -182,5 +182,5 @@
     "fallback": "Unprovided expressions retain speaker default; unconfirmed fat-goblin portraits are not bound."
   },
   "authoring_project": "res://docs/story_authoring/day1_stages_01_02_project.json",
-  "authoring_sha256": "5d23e21926a299f831c7e83695a4cd7671c74ad6807ba9d1effc83d7979d857e"
+  "authoring_sha256": "4b477e30be828cbbbda3c09338edade0473f621e659d5391bdff19a90ab4d4cc"
 }

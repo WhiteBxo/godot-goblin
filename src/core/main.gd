@@ -3,6 +3,9 @@ extends Node
 
 @export var day1_story_enabled := false
 var _day1_controller: Day1ShopController
+var _chapter_controller: Day1ChapterController
+var _trigger_zones: Array[StoryTriggerZone] = []
+var _title_card: TitleCard
 var _business_hud: Day1BusinessHUD
 
 @onready var _audio_manager: AudioManager = $Systems/AudioManager
@@ -107,6 +110,8 @@ func _ready() -> void:
 			if setup_error != OK:
 				push_error("Day 1 initialization failed (%d)" % setup_error)
 		_create_world_controller()
+		_create_chapter_controller("shop")
+		_create_trigger_zones(_shop_level)
 		_create_scene_travel(_shop_level.get_scene_exits())
 		_create_debug_components()
 		return
@@ -213,7 +218,7 @@ func _create_chronicle_system() -> void:
 func _create_task_system() -> void:
 	_task_catalog = TaskCatalog.new()
 	var catalog := _task_catalog
-	var error := catalog.load_file("res://src/resources/tasks/day1_stages_01_02.json" if day1_story_enabled else "res://src/resources/tasks/tasks.json")
+	var error := catalog.load_files(Day1ChapterController.TASK_FILES) if day1_story_enabled else catalog.load_file("res://src/resources/tasks/tasks.json")
 	if error != OK:
 		push_error("Could not load tasks: " + catalog.last_error)
 		return
@@ -300,6 +305,7 @@ func _create_scene_travel(exits: Array[SceneExit]) -> void:
 	$Systems.add_child(_scene_travel)
 	_scene_travel.configure(visual, _can_leave_scene)
 	_scene_travel.busy_changed.connect(_refresh_input_lock)
+	_scene_travel.busy_changed.connect(_refresh_transition_layer)
 	_scene_travel.travel_failed.connect(_on_scene_travel_failed)
 	if _arrival_entrance != &"":
 		_scene_travel.begin_arrival()
@@ -356,6 +362,8 @@ func _initialize_settlement() -> void:
 		_actor_director.register_position(StringName(marker.name), marker)
 	_create_gameplay_bridge(false)
 	_create_world_controller()
+	_create_chapter_controller("settlement")
+	_create_trigger_zones(_settlement_level)
 	_create_scene_travel(_settlement_level.get_scene_exits())
 	_create_stealth_system()
 	_create_map_ui()
@@ -564,8 +572,23 @@ func _create_dialogue_system() -> void:
 	_story_director.configure_cinematic(_actor_director, _camera_director)
 	_story_director.tree_exiting.connect(_on_story_exiting)
 	_story_director.set_audio_adapter(StoryAudioAdapter.new(_audio_manager))
+	_story_director.set_title_card(_create_title_card())
 	_story_director.event_started.connect(func(_id: String) -> void: _refresh_input_lock())
 	_story_director.event_finished.connect(_on_story_finished)
+
+## The existing transition layer owns full-screen presentation. SceneTravel adds
+## its transition after this card, so scene changes can still cover it.
+func _create_title_card() -> TitleCard:
+	_title_card = preload("res://src/UI/title_card/title_card.tscn").instantiate()
+	$TransitionLayer.add_child(_title_card)
+	_title_card.showing_changed.connect(_refresh_transition_layer)
+	return _title_card
+
+func get_title_card() -> TitleCard:
+	return _title_card
+
+func _refresh_transition_layer() -> void:
+	$TransitionLayer.visible = (is_instance_valid(_title_card) and _title_card.is_showing()) or (is_instance_valid(_scene_travel) and _scene_travel.is_busy())
 
 func _on_story_finished(_id: String, _ok: bool, _reason: String) -> void:
 	if is_instance_valid(_camera_director):
@@ -729,6 +752,37 @@ func get_business_hud() -> Day1BusinessHUD:
 
 func get_day1_controller() -> Day1ShopController:
 	return _day1_controller
+
+func get_chapter_controller() -> Day1ChapterController:
+	return _chapter_controller if is_instance_valid(_chapter_controller) else null
+
+func get_trigger_zones() -> Array[StoryTriggerZone]:
+	return _trigger_zones.duplicate()
+
+## Day 1 sessions only; the tutorial shop and debug hosts keep their own story data.
+func _create_chapter_controller(host: String) -> void:
+	if not day1_story_enabled:
+		return
+	_chapter_controller = Day1ChapterController.new()
+	_chapter_controller.name = "Day1ChapterController"
+	$Systems.add_child(_chapter_controller)
+	if _chapter_controller.configure(self, host) == OK:
+		_world_controller.set_staging_lookup(_chapter_controller.get_staged_visibility)
+
+## Walk-in triggers route exactly like interaction IDs, so story data stays the only gate.
+func _create_trigger_zones(level: Node) -> void:
+	var pending: Array[Node] = [level]
+	while not pending.is_empty():
+		var node: Node = pending.pop_back()
+		pending.append_array(node.get_children())
+		if node is StoryTriggerZone:
+			node.configure(get_node("/root/GameState"), _shop_player, _route_trigger)
+			_trigger_zones.append(node)
+
+func _route_trigger(id: String) -> Error:
+	if not _can_start_story() or _dialogue_manager.is_active() or _story_director.is_busy():
+		return ERR_BUSY
+	return _story_director.request_interaction(id)
 
 func refresh_day1_access() -> void:
 	if not day1_story_enabled:

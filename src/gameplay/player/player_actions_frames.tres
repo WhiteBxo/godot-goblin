@@ -1,6 +1,311 @@
-[gd_resource type="SpriteFrames" load_steps=276 format=3]
+[gd_resource type="SpriteFrames" format=3 uid="uid://cu7ypglmmb4xd"]
 
-[ext_resource type="Texture2D" path="res://assets/characters/player/player_actions_atlas.png" id="1_atlas"]
+[ext_resource type="Texture2D" uid="uid://br4jiqwxxejdi" path="res://assets/characters/player/player_actions_atlas.png" id="1_atlas"]
+
+[sub_resource type="AtlasTexture" id="Pose_185"]
+atlas = ExtResource("1_atlas")
+region = Rect2(0, 4800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_186"]
+atlas = ExtResource("1_atlas")
+region = Rect2(224, 4800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_187"]
+atlas = ExtResource("1_atlas")
+region = Rect2(448, 4800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_188"]
+atlas = ExtResource("1_atlas")
+region = Rect2(672, 4800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_189"]
+atlas = ExtResource("1_atlas")
+region = Rect2(896, 4800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_190"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1120, 4800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_191"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1344, 4800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_192"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1568, 4800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_193"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1792, 4800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_194"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2016, 4800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_195"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2240, 4800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_196"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2464, 4800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_197"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2688, 4800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_198"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2912, 4800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_199"]
+atlas = ExtResource("1_atlas")
+region = Rect2(3136, 4800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_200"]
+atlas = ExtResource("1_atlas")
+region = Rect2(0, 5100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_201"]
+atlas = ExtResource("1_atlas")
+region = Rect2(224, 5100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_202"]
+atlas = ExtResource("1_atlas")
+region = Rect2(448, 5100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_203"]
+atlas = ExtResource("1_atlas")
+region = Rect2(672, 5100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_204"]
+atlas = ExtResource("1_atlas")
+region = Rect2(896, 5100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_205"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1120, 5100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_206"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1344, 5100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_207"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1568, 5100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_208"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1792, 5100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_209"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2016, 5100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_210"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2240, 5100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_211"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2464, 5100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_212"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2688, 5100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_213"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2912, 5100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_214"]
+atlas = ExtResource("1_atlas")
+region = Rect2(3136, 5100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_215"]
+atlas = ExtResource("1_atlas")
+region = Rect2(3360, 5100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_216"]
+atlas = ExtResource("1_atlas")
+region = Rect2(0, 5400, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_217"]
+atlas = ExtResource("1_atlas")
+region = Rect2(224, 5400, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_218"]
+atlas = ExtResource("1_atlas")
+region = Rect2(448, 5400, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_219"]
+atlas = ExtResource("1_atlas")
+region = Rect2(672, 5400, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_220"]
+atlas = ExtResource("1_atlas")
+region = Rect2(896, 5400, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_221"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1120, 5400, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_222"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1344, 5400, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_223"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1568, 5400, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_224"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1792, 5400, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_225"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2016, 5400, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_226"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2240, 5400, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_227"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2464, 5400, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_228"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2688, 5400, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_229"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2912, 5400, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_230"]
+atlas = ExtResource("1_atlas")
+region = Rect2(3136, 5400, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_231"]
+atlas = ExtResource("1_atlas")
+region = Rect2(3360, 5400, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_232"]
+atlas = ExtResource("1_atlas")
+region = Rect2(0, 5700, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_233"]
+atlas = ExtResource("1_atlas")
+region = Rect2(224, 5700, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_234"]
+atlas = ExtResource("1_atlas")
+region = Rect2(448, 5700, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_235"]
+atlas = ExtResource("1_atlas")
+region = Rect2(672, 5700, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_236"]
+atlas = ExtResource("1_atlas")
+region = Rect2(896, 5700, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_237"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1120, 5700, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_238"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1344, 5700, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_239"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1568, 5700, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_240"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1792, 5700, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_241"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2016, 5700, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_242"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2240, 5700, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_243"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2464, 5700, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_244"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2688, 5700, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_245"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2912, 5700, 224, 300)
+filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Pose_1"]
 atlas = ExtResource("1_atlas")
@@ -190,236 +495,6 @@ filter_clip = true
 [sub_resource type="AtlasTexture" id="Pose_38"]
 atlas = ExtResource("1_atlas")
 region = Rect2(1568, 900, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_39"]
-atlas = ExtResource("1_atlas")
-region = Rect2(0, 1200, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_40"]
-atlas = ExtResource("1_atlas")
-region = Rect2(224, 1200, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_41"]
-atlas = ExtResource("1_atlas")
-region = Rect2(448, 1200, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_42"]
-atlas = ExtResource("1_atlas")
-region = Rect2(672, 1200, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_43"]
-atlas = ExtResource("1_atlas")
-region = Rect2(896, 1200, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_44"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1120, 1200, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_45"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1344, 1200, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_46"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1568, 1200, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_47"]
-atlas = ExtResource("1_atlas")
-region = Rect2(0, 1500, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_48"]
-atlas = ExtResource("1_atlas")
-region = Rect2(224, 1500, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_49"]
-atlas = ExtResource("1_atlas")
-region = Rect2(448, 1500, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_50"]
-atlas = ExtResource("1_atlas")
-region = Rect2(672, 1500, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_51"]
-atlas = ExtResource("1_atlas")
-region = Rect2(896, 1500, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_52"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1120, 1500, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_53"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1344, 1500, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_54"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1568, 1500, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_55"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1792, 1500, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_56"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2016, 1500, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_57"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2240, 1500, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_58"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2464, 1500, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_59"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2688, 1500, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_60"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2912, 1500, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_61"]
-atlas = ExtResource("1_atlas")
-region = Rect2(0, 1800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_62"]
-atlas = ExtResource("1_atlas")
-region = Rect2(224, 1800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_63"]
-atlas = ExtResource("1_atlas")
-region = Rect2(448, 1800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_64"]
-atlas = ExtResource("1_atlas")
-region = Rect2(672, 1800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_65"]
-atlas = ExtResource("1_atlas")
-region = Rect2(896, 1800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_66"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1120, 1800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_67"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1344, 1800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_68"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1568, 1800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_69"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1792, 1800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_70"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2016, 1800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_71"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2240, 1800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_72"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2464, 1800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_73"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2688, 1800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_74"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2912, 1800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_75"]
-atlas = ExtResource("1_atlas")
-region = Rect2(0, 2100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_76"]
-atlas = ExtResource("1_atlas")
-region = Rect2(224, 2100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_77"]
-atlas = ExtResource("1_atlas")
-region = Rect2(448, 2100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_78"]
-atlas = ExtResource("1_atlas")
-region = Rect2(672, 2100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_79"]
-atlas = ExtResource("1_atlas")
-region = Rect2(896, 2100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_80"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1120, 2100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_81"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1344, 2100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_82"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1568, 2100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_83"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1792, 2100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_84"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2016, 2100, 224, 300)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Pose_85"]
@@ -922,311 +997,6 @@ atlas = ExtResource("1_atlas")
 region = Rect2(1792, 4500, 224, 300)
 filter_clip = true
 
-[sub_resource type="AtlasTexture" id="Pose_185"]
-atlas = ExtResource("1_atlas")
-region = Rect2(0, 4800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_186"]
-atlas = ExtResource("1_atlas")
-region = Rect2(224, 4800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_187"]
-atlas = ExtResource("1_atlas")
-region = Rect2(448, 4800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_188"]
-atlas = ExtResource("1_atlas")
-region = Rect2(672, 4800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_189"]
-atlas = ExtResource("1_atlas")
-region = Rect2(896, 4800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_190"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1120, 4800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_191"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1344, 4800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_192"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1568, 4800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_193"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1792, 4800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_194"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2016, 4800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_195"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2240, 4800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_196"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2464, 4800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_197"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2688, 4800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_198"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2912, 4800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_199"]
-atlas = ExtResource("1_atlas")
-region = Rect2(3136, 4800, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_200"]
-atlas = ExtResource("1_atlas")
-region = Rect2(0, 5100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_201"]
-atlas = ExtResource("1_atlas")
-region = Rect2(224, 5100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_202"]
-atlas = ExtResource("1_atlas")
-region = Rect2(448, 5100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_203"]
-atlas = ExtResource("1_atlas")
-region = Rect2(672, 5100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_204"]
-atlas = ExtResource("1_atlas")
-region = Rect2(896, 5100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_205"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1120, 5100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_206"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1344, 5100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_207"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1568, 5100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_208"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1792, 5100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_209"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2016, 5100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_210"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2240, 5100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_211"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2464, 5100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_212"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2688, 5100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_213"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2912, 5100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_214"]
-atlas = ExtResource("1_atlas")
-region = Rect2(3136, 5100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_215"]
-atlas = ExtResource("1_atlas")
-region = Rect2(3360, 5100, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_216"]
-atlas = ExtResource("1_atlas")
-region = Rect2(0, 5400, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_217"]
-atlas = ExtResource("1_atlas")
-region = Rect2(224, 5400, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_218"]
-atlas = ExtResource("1_atlas")
-region = Rect2(448, 5400, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_219"]
-atlas = ExtResource("1_atlas")
-region = Rect2(672, 5400, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_220"]
-atlas = ExtResource("1_atlas")
-region = Rect2(896, 5400, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_221"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1120, 5400, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_222"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1344, 5400, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_223"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1568, 5400, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_224"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1792, 5400, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_225"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2016, 5400, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_226"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2240, 5400, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_227"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2464, 5400, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_228"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2688, 5400, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_229"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2912, 5400, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_230"]
-atlas = ExtResource("1_atlas")
-region = Rect2(3136, 5400, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_231"]
-atlas = ExtResource("1_atlas")
-region = Rect2(3360, 5400, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_232"]
-atlas = ExtResource("1_atlas")
-region = Rect2(0, 5700, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_233"]
-atlas = ExtResource("1_atlas")
-region = Rect2(224, 5700, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_234"]
-atlas = ExtResource("1_atlas")
-region = Rect2(448, 5700, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_235"]
-atlas = ExtResource("1_atlas")
-region = Rect2(672, 5700, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_236"]
-atlas = ExtResource("1_atlas")
-region = Rect2(896, 5700, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_237"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1120, 5700, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_238"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1344, 5700, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_239"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1568, 5700, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_240"]
-atlas = ExtResource("1_atlas")
-region = Rect2(1792, 5700, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_241"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2016, 5700, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_242"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2240, 5700, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_243"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2464, 5700, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_244"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2688, 5700, 224, 300)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Pose_245"]
-atlas = ExtResource("1_atlas")
-region = Rect2(2912, 5700, 224, 300)
-filter_clip = true
-
 [sub_resource type="AtlasTexture" id="Pose_246"]
 atlas = ExtResource("1_atlas")
 region = Rect2(0, 6000, 224, 300)
@@ -1372,30 +1142,1177 @@ atlas = ExtResource("1_atlas")
 region = Rect2(1120, 6900, 224, 300)
 filter_clip = true
 
+[sub_resource type="AtlasTexture" id="Pose_39"]
+atlas = ExtResource("1_atlas")
+region = Rect2(0, 1200, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_40"]
+atlas = ExtResource("1_atlas")
+region = Rect2(224, 1200, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_41"]
+atlas = ExtResource("1_atlas")
+region = Rect2(448, 1200, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_42"]
+atlas = ExtResource("1_atlas")
+region = Rect2(672, 1200, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_43"]
+atlas = ExtResource("1_atlas")
+region = Rect2(896, 1200, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_44"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1120, 1200, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_45"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1344, 1200, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_46"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1568, 1200, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_47"]
+atlas = ExtResource("1_atlas")
+region = Rect2(0, 1500, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_48"]
+atlas = ExtResource("1_atlas")
+region = Rect2(224, 1500, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_49"]
+atlas = ExtResource("1_atlas")
+region = Rect2(448, 1500, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_50"]
+atlas = ExtResource("1_atlas")
+region = Rect2(672, 1500, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_51"]
+atlas = ExtResource("1_atlas")
+region = Rect2(896, 1500, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_52"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1120, 1500, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_53"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1344, 1500, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_54"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1568, 1500, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_55"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1792, 1500, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_56"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2016, 1500, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_57"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2240, 1500, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_58"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2464, 1500, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_59"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2688, 1500, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_60"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2912, 1500, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_61"]
+atlas = ExtResource("1_atlas")
+region = Rect2(0, 1800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_62"]
+atlas = ExtResource("1_atlas")
+region = Rect2(224, 1800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_63"]
+atlas = ExtResource("1_atlas")
+region = Rect2(448, 1800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_64"]
+atlas = ExtResource("1_atlas")
+region = Rect2(672, 1800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_65"]
+atlas = ExtResource("1_atlas")
+region = Rect2(896, 1800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_66"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1120, 1800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_67"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1344, 1800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_68"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1568, 1800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_69"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1792, 1800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_70"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2016, 1800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_71"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2240, 1800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_72"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2464, 1800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_73"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2688, 1800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_74"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2912, 1800, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_75"]
+atlas = ExtResource("1_atlas")
+region = Rect2(0, 2100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_76"]
+atlas = ExtResource("1_atlas")
+region = Rect2(224, 2100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_77"]
+atlas = ExtResource("1_atlas")
+region = Rect2(448, 2100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_78"]
+atlas = ExtResource("1_atlas")
+region = Rect2(672, 2100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_79"]
+atlas = ExtResource("1_atlas")
+region = Rect2(896, 2100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_80"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1120, 2100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_81"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1344, 2100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_82"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1568, 2100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_83"]
+atlas = ExtResource("1_atlas")
+region = Rect2(1792, 2100, 224, 300)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Pose_84"]
+atlas = ExtResource("1_atlas")
+region = Rect2(2016, 2100, 224, 300)
+filter_clip = true
+
 [resource]
-animations = [
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_1")}, {"duration": 1.0, "texture": SubResource("Pose_2")}, {"duration": 1.0, "texture": SubResource("Pose_3")}, {"duration": 1.0, "texture": SubResource("Pose_4")}, {"duration": 1.0, "texture": SubResource("Pose_5")}, {"duration": 1.0, "texture": SubResource("Pose_6")}, {"duration": 1.0, "texture": SubResource("Pose_7")}, {"duration": 1.0, "texture": SubResource("Pose_8")}, {"duration": 1.0, "texture": SubResource("Pose_9")}, {"duration": 1.0, "texture": SubResource("Pose_10")}], "loop": true, "name": &"idle_down", "speed": 8.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_11")}, {"duration": 1.0, "texture": SubResource("Pose_12")}, {"duration": 1.0, "texture": SubResource("Pose_13")}, {"duration": 1.0, "texture": SubResource("Pose_14")}, {"duration": 1.0, "texture": SubResource("Pose_15")}, {"duration": 1.0, "texture": SubResource("Pose_16")}, {"duration": 1.0, "texture": SubResource("Pose_17")}, {"duration": 1.0, "texture": SubResource("Pose_18")}, {"duration": 1.0, "texture": SubResource("Pose_19")}, {"duration": 1.0, "texture": SubResource("Pose_20")}], "loop": true, "name": &"idle_left", "speed": 8.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_21")}, {"duration": 1.0, "texture": SubResource("Pose_22")}, {"duration": 1.0, "texture": SubResource("Pose_23")}, {"duration": 1.0, "texture": SubResource("Pose_24")}, {"duration": 1.0, "texture": SubResource("Pose_25")}, {"duration": 1.0, "texture": SubResource("Pose_26")}, {"duration": 1.0, "texture": SubResource("Pose_27")}, {"duration": 1.0, "texture": SubResource("Pose_28")}, {"duration": 1.0, "texture": SubResource("Pose_29")}, {"duration": 1.0, "texture": SubResource("Pose_30")}], "loop": true, "name": &"idle_right", "speed": 8.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_31")}, {"duration": 1.0, "texture": SubResource("Pose_32")}, {"duration": 1.0, "texture": SubResource("Pose_33")}, {"duration": 1.0, "texture": SubResource("Pose_34")}, {"duration": 1.0, "texture": SubResource("Pose_35")}, {"duration": 1.0, "texture": SubResource("Pose_36")}, {"duration": 1.0, "texture": SubResource("Pose_37")}, {"duration": 1.0, "texture": SubResource("Pose_38")}], "loop": true, "name": &"idle_up", "speed": 8.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_39")}, {"duration": 1.0, "texture": SubResource("Pose_40")}, {"duration": 1.0, "texture": SubResource("Pose_41")}, {"duration": 1.0, "texture": SubResource("Pose_42")}, {"duration": 1.0, "texture": SubResource("Pose_43")}, {"duration": 1.0, "texture": SubResource("Pose_44")}, {"duration": 1.0, "texture": SubResource("Pose_45")}, {"duration": 1.0, "texture": SubResource("Pose_46")}], "loop": true, "name": &"walk_down", "speed": 12.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_47")}, {"duration": 1.0, "texture": SubResource("Pose_48")}, {"duration": 1.0, "texture": SubResource("Pose_49")}, {"duration": 1.0, "texture": SubResource("Pose_50")}, {"duration": 1.0, "texture": SubResource("Pose_51")}, {"duration": 1.0, "texture": SubResource("Pose_52")}, {"duration": 1.0, "texture": SubResource("Pose_53")}, {"duration": 1.0, "texture": SubResource("Pose_54")}, {"duration": 1.0, "texture": SubResource("Pose_55")}, {"duration": 1.0, "texture": SubResource("Pose_56")}, {"duration": 1.0, "texture": SubResource("Pose_57")}, {"duration": 1.0, "texture": SubResource("Pose_58")}, {"duration": 1.0, "texture": SubResource("Pose_59")}, {"duration": 1.0, "texture": SubResource("Pose_60")}], "loop": true, "name": &"walk_left", "speed": 12.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_61")}, {"duration": 1.0, "texture": SubResource("Pose_62")}, {"duration": 1.0, "texture": SubResource("Pose_63")}, {"duration": 1.0, "texture": SubResource("Pose_64")}, {"duration": 1.0, "texture": SubResource("Pose_65")}, {"duration": 1.0, "texture": SubResource("Pose_66")}, {"duration": 1.0, "texture": SubResource("Pose_67")}, {"duration": 1.0, "texture": SubResource("Pose_68")}, {"duration": 1.0, "texture": SubResource("Pose_69")}, {"duration": 1.0, "texture": SubResource("Pose_70")}, {"duration": 1.0, "texture": SubResource("Pose_71")}, {"duration": 1.0, "texture": SubResource("Pose_72")}, {"duration": 1.0, "texture": SubResource("Pose_73")}, {"duration": 1.0, "texture": SubResource("Pose_74")}], "loop": true, "name": &"walk_right", "speed": 12.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_75")}, {"duration": 1.0, "texture": SubResource("Pose_76")}, {"duration": 1.0, "texture": SubResource("Pose_77")}, {"duration": 1.0, "texture": SubResource("Pose_78")}, {"duration": 1.0, "texture": SubResource("Pose_79")}, {"duration": 1.0, "texture": SubResource("Pose_80")}, {"duration": 1.0, "texture": SubResource("Pose_81")}, {"duration": 1.0, "texture": SubResource("Pose_82")}, {"duration": 1.0, "texture": SubResource("Pose_83")}, {"duration": 1.0, "texture": SubResource("Pose_84")}], "loop": true, "name": &"walk_up", "speed": 12.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_85")}, {"duration": 1.0, "texture": SubResource("Pose_86")}, {"duration": 1.0, "texture": SubResource("Pose_87")}, {"duration": 1.0, "texture": SubResource("Pose_88")}, {"duration": 1.0, "texture": SubResource("Pose_89")}, {"duration": 1.0, "texture": SubResource("Pose_90")}, {"duration": 1.0, "texture": SubResource("Pose_91")}, {"duration": 1.0, "texture": SubResource("Pose_92")}, {"duration": 1.0, "texture": SubResource("Pose_93")}], "loop": true, "name": &"run_down", "speed": 18.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_94")}, {"duration": 1.0, "texture": SubResource("Pose_95")}, {"duration": 1.0, "texture": SubResource("Pose_96")}, {"duration": 1.0, "texture": SubResource("Pose_97")}, {"duration": 1.0, "texture": SubResource("Pose_98")}, {"duration": 1.0, "texture": SubResource("Pose_99")}, {"duration": 1.0, "texture": SubResource("Pose_100")}, {"duration": 1.0, "texture": SubResource("Pose_101")}, {"duration": 1.0, "texture": SubResource("Pose_102")}, {"duration": 1.0, "texture": SubResource("Pose_103")}, {"duration": 1.0, "texture": SubResource("Pose_104")}, {"duration": 1.0, "texture": SubResource("Pose_105")}, {"duration": 1.0, "texture": SubResource("Pose_106")}, {"duration": 1.0, "texture": SubResource("Pose_107")}], "loop": true, "name": &"run_left", "speed": 18.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_108")}, {"duration": 1.0, "texture": SubResource("Pose_109")}, {"duration": 1.0, "texture": SubResource("Pose_110")}, {"duration": 1.0, "texture": SubResource("Pose_111")}, {"duration": 1.0, "texture": SubResource("Pose_112")}, {"duration": 1.0, "texture": SubResource("Pose_113")}, {"duration": 1.0, "texture": SubResource("Pose_114")}, {"duration": 1.0, "texture": SubResource("Pose_115")}, {"duration": 1.0, "texture": SubResource("Pose_116")}, {"duration": 1.0, "texture": SubResource("Pose_117")}, {"duration": 1.0, "texture": SubResource("Pose_118")}, {"duration": 1.0, "texture": SubResource("Pose_119")}, {"duration": 1.0, "texture": SubResource("Pose_120")}, {"duration": 1.0, "texture": SubResource("Pose_121")}], "loop": true, "name": &"run_right", "speed": 18.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_122")}, {"duration": 1.0, "texture": SubResource("Pose_123")}, {"duration": 1.0, "texture": SubResource("Pose_124")}, {"duration": 1.0, "texture": SubResource("Pose_125")}, {"duration": 1.0, "texture": SubResource("Pose_126")}, {"duration": 1.0, "texture": SubResource("Pose_127")}, {"duration": 1.0, "texture": SubResource("Pose_128")}, {"duration": 1.0, "texture": SubResource("Pose_129")}, {"duration": 1.0, "texture": SubResource("Pose_130")}, {"duration": 1.0, "texture": SubResource("Pose_131")}, {"duration": 1.0, "texture": SubResource("Pose_132")}, {"duration": 1.0, "texture": SubResource("Pose_133")}, {"duration": 1.0, "texture": SubResource("Pose_134")}], "loop": true, "name": &"run_up", "speed": 18.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_135")}, {"duration": 1.0, "texture": SubResource("Pose_136")}, {"duration": 1.0, "texture": SubResource("Pose_137")}, {"duration": 1.0, "texture": SubResource("Pose_138")}, {"duration": 1.0, "texture": SubResource("Pose_139")}, {"duration": 1.0, "texture": SubResource("Pose_140")}, {"duration": 1.0, "texture": SubResource("Pose_141")}, {"duration": 1.0, "texture": SubResource("Pose_142")}, {"duration": 1.0, "texture": SubResource("Pose_143")}, {"duration": 1.0, "texture": SubResource("Pose_144")}, {"duration": 1.0, "texture": SubResource("Pose_145")}], "loop": true, "name": &"sneak_down", "speed": 12.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_146")}, {"duration": 1.0, "texture": SubResource("Pose_147")}, {"duration": 1.0, "texture": SubResource("Pose_148")}, {"duration": 1.0, "texture": SubResource("Pose_149")}, {"duration": 1.0, "texture": SubResource("Pose_150")}, {"duration": 1.0, "texture": SubResource("Pose_151")}, {"duration": 1.0, "texture": SubResource("Pose_152")}, {"duration": 1.0, "texture": SubResource("Pose_153")}, {"duration": 1.0, "texture": SubResource("Pose_154")}, {"duration": 1.0, "texture": SubResource("Pose_155")}, {"duration": 1.0, "texture": SubResource("Pose_156")}, {"duration": 1.0, "texture": SubResource("Pose_157")}, {"duration": 1.0, "texture": SubResource("Pose_158")}, {"duration": 1.0, "texture": SubResource("Pose_159")}, {"duration": 1.0, "texture": SubResource("Pose_160")}], "loop": true, "name": &"sneak_left", "speed": 12.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_161")}, {"duration": 1.0, "texture": SubResource("Pose_162")}, {"duration": 1.0, "texture": SubResource("Pose_163")}, {"duration": 1.0, "texture": SubResource("Pose_164")}, {"duration": 1.0, "texture": SubResource("Pose_165")}, {"duration": 1.0, "texture": SubResource("Pose_166")}, {"duration": 1.0, "texture": SubResource("Pose_167")}, {"duration": 1.0, "texture": SubResource("Pose_168")}, {"duration": 1.0, "texture": SubResource("Pose_169")}, {"duration": 1.0, "texture": SubResource("Pose_170")}, {"duration": 1.0, "texture": SubResource("Pose_171")}, {"duration": 1.0, "texture": SubResource("Pose_172")}, {"duration": 1.0, "texture": SubResource("Pose_173")}, {"duration": 1.0, "texture": SubResource("Pose_174")}, {"duration": 1.0, "texture": SubResource("Pose_175")}], "loop": true, "name": &"sneak_right", "speed": 12.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_176")}, {"duration": 1.0, "texture": SubResource("Pose_177")}, {"duration": 1.0, "texture": SubResource("Pose_178")}, {"duration": 1.0, "texture": SubResource("Pose_179")}, {"duration": 1.0, "texture": SubResource("Pose_180")}, {"duration": 1.0, "texture": SubResource("Pose_181")}, {"duration": 1.0, "texture": SubResource("Pose_182")}, {"duration": 1.0, "texture": SubResource("Pose_183")}, {"duration": 1.0, "texture": SubResource("Pose_184")}], "loop": true, "name": &"sneak_up", "speed": 12.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_185")}, {"duration": 1.0, "texture": SubResource("Pose_186")}, {"duration": 1.0, "texture": SubResource("Pose_187")}, {"duration": 1.0, "texture": SubResource("Pose_188")}, {"duration": 1.0, "texture": SubResource("Pose_189")}, {"duration": 1.0, "texture": SubResource("Pose_190")}, {"duration": 1.0, "texture": SubResource("Pose_191")}, {"duration": 1.0, "texture": SubResource("Pose_192")}, {"duration": 1.0, "texture": SubResource("Pose_193")}, {"duration": 1.0, "texture": SubResource("Pose_194")}, {"duration": 1.0, "texture": SubResource("Pose_195")}, {"duration": 1.0, "texture": SubResource("Pose_196")}, {"duration": 1.0, "texture": SubResource("Pose_197")}, {"duration": 1.0, "texture": SubResource("Pose_198")}, {"duration": 1.0, "texture": SubResource("Pose_199")}], "loop": true, "name": &"crouch_idle_down", "speed": 10.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_200")}, {"duration": 1.0, "texture": SubResource("Pose_201")}, {"duration": 1.0, "texture": SubResource("Pose_202")}, {"duration": 1.0, "texture": SubResource("Pose_203")}, {"duration": 1.0, "texture": SubResource("Pose_204")}, {"duration": 1.0, "texture": SubResource("Pose_205")}, {"duration": 1.0, "texture": SubResource("Pose_206")}, {"duration": 1.0, "texture": SubResource("Pose_207")}, {"duration": 1.0, "texture": SubResource("Pose_208")}, {"duration": 1.0, "texture": SubResource("Pose_209")}, {"duration": 1.0, "texture": SubResource("Pose_210")}, {"duration": 1.0, "texture": SubResource("Pose_211")}, {"duration": 1.0, "texture": SubResource("Pose_212")}, {"duration": 1.0, "texture": SubResource("Pose_213")}, {"duration": 1.0, "texture": SubResource("Pose_214")}, {"duration": 1.0, "texture": SubResource("Pose_215")}], "loop": true, "name": &"crouch_idle_left", "speed": 10.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_216")}, {"duration": 1.0, "texture": SubResource("Pose_217")}, {"duration": 1.0, "texture": SubResource("Pose_218")}, {"duration": 1.0, "texture": SubResource("Pose_219")}, {"duration": 1.0, "texture": SubResource("Pose_220")}, {"duration": 1.0, "texture": SubResource("Pose_221")}, {"duration": 1.0, "texture": SubResource("Pose_222")}, {"duration": 1.0, "texture": SubResource("Pose_223")}, {"duration": 1.0, "texture": SubResource("Pose_224")}, {"duration": 1.0, "texture": SubResource("Pose_225")}, {"duration": 1.0, "texture": SubResource("Pose_226")}, {"duration": 1.0, "texture": SubResource("Pose_227")}, {"duration": 1.0, "texture": SubResource("Pose_228")}, {"duration": 1.0, "texture": SubResource("Pose_229")}, {"duration": 1.0, "texture": SubResource("Pose_230")}, {"duration": 1.0, "texture": SubResource("Pose_231")}], "loop": true, "name": &"crouch_idle_right", "speed": 10.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_232")}, {"duration": 1.0, "texture": SubResource("Pose_233")}, {"duration": 1.0, "texture": SubResource("Pose_234")}, {"duration": 1.0, "texture": SubResource("Pose_235")}, {"duration": 1.0, "texture": SubResource("Pose_236")}, {"duration": 1.0, "texture": SubResource("Pose_237")}, {"duration": 1.0, "texture": SubResource("Pose_238")}, {"duration": 1.0, "texture": SubResource("Pose_239")}, {"duration": 1.0, "texture": SubResource("Pose_240")}, {"duration": 1.0, "texture": SubResource("Pose_241")}, {"duration": 1.0, "texture": SubResource("Pose_242")}, {"duration": 1.0, "texture": SubResource("Pose_243")}, {"duration": 1.0, "texture": SubResource("Pose_244")}, {"duration": 1.0, "texture": SubResource("Pose_245")}], "loop": true, "name": &"crouch_idle_up", "speed": 10.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_246")}, {"duration": 1.0, "texture": SubResource("Pose_247")}, {"duration": 1.0, "texture": SubResource("Pose_248")}, {"duration": 1.0, "texture": SubResource("Pose_249")}, {"duration": 1.0, "texture": SubResource("Pose_250")}, {"duration": 1.0, "texture": SubResource("Pose_251")}, {"duration": 1.0, "texture": SubResource("Pose_252")}, {"duration": 1.0, "texture": SubResource("Pose_253")}, {"duration": 1.0, "texture": SubResource("Pose_254")}], "loop": false, "name": &"throw_down", "speed": 12.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_255")}, {"duration": 1.0, "texture": SubResource("Pose_256")}, {"duration": 1.0, "texture": SubResource("Pose_257")}, {"duration": 1.0, "texture": SubResource("Pose_258")}, {"duration": 1.0, "texture": SubResource("Pose_259")}, {"duration": 1.0, "texture": SubResource("Pose_260")}, {"duration": 1.0, "texture": SubResource("Pose_261")}], "loop": false, "name": &"throw_left", "speed": 12.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_262")}, {"duration": 1.0, "texture": SubResource("Pose_263")}, {"duration": 1.0, "texture": SubResource("Pose_264")}, {"duration": 1.0, "texture": SubResource("Pose_265")}, {"duration": 1.0, "texture": SubResource("Pose_266")}, {"duration": 1.0, "texture": SubResource("Pose_267")}, {"duration": 1.0, "texture": SubResource("Pose_268")}], "loop": false, "name": &"throw_right", "speed": 12.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("Pose_269")}, {"duration": 1.0, "texture": SubResource("Pose_270")}, {"duration": 1.0, "texture": SubResource("Pose_271")}, {"duration": 1.0, "texture": SubResource("Pose_272")}, {"duration": 1.0, "texture": SubResource("Pose_273")}, {"duration": 1.0, "texture": SubResource("Pose_274")}], "loop": false, "name": &"throw_up", "speed": 12.0}
-]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_185")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_186")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_187")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_188")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_189")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_190")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_191")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_192")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_193")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_194")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_195")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_196")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_197")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_198")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_199")
+}],
+"loop": 1,
+"name": &"crouch_idle_down",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_200")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_201")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_202")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_203")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_204")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_205")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_206")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_207")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_208")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_209")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_210")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_211")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_212")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_213")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_214")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_215")
+}],
+"loop": 1,
+"name": &"crouch_idle_left",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_216")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_217")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_218")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_219")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_220")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_221")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_222")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_223")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_224")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_225")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_226")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_227")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_228")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_229")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_230")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_231")
+}],
+"loop": 1,
+"name": &"crouch_idle_right",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_232")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_233")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_234")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_235")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_236")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_237")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_238")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_239")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_240")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_241")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_242")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_243")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_244")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_245")
+}],
+"loop": 1,
+"name": &"crouch_idle_up",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_7")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_8")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_9")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_10")
+}],
+"loop": 1,
+"name": &"idle_down",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_11")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_12")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_13")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_14")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_15")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_16")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_17")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_18")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_19")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_20")
+}],
+"loop": 1,
+"name": &"idle_left",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_21")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_22")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_23")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_24")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_25")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_26")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_27")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_28")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_29")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_30")
+}],
+"loop": 1,
+"name": &"idle_right",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_31")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_32")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_33")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_34")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_35")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_36")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_37")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_38")
+}],
+"loop": 1,
+"name": &"idle_up",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_85")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_86")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_87")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_88")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_89")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_90")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_91")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_92")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_93")
+}],
+"loop": 1,
+"name": &"run_down",
+"speed": 18.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_94")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_95")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_96")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_97")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_98")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_99")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_100")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_101")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_102")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_103")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_104")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_105")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_106")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_107")
+}],
+"loop": 1,
+"name": &"run_left",
+"speed": 18.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_108")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_109")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_110")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_111")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_112")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_113")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_114")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_115")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_116")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_117")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_118")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_119")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_120")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_121")
+}],
+"loop": 1,
+"name": &"run_right",
+"speed": 18.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_122")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_123")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_124")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_125")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_126")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_127")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_128")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_129")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_130")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_131")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_132")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_133")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_134")
+}],
+"loop": 1,
+"name": &"run_up",
+"speed": 18.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_135")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_136")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_137")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_138")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_139")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_140")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_141")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_142")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_143")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_144")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_145")
+}],
+"loop": 1,
+"name": &"sneak_down",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_146")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_147")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_148")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_149")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_150")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_151")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_152")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_153")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_154")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_155")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_156")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_157")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_158")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_159")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_160")
+}],
+"loop": 1,
+"name": &"sneak_left",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_161")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_162")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_163")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_164")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_165")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_166")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_167")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_168")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_169")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_170")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_171")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_172")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_173")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_174")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_175")
+}],
+"loop": 1,
+"name": &"sneak_right",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_176")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_177")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_178")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_179")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_180")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_181")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_182")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_183")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_184")
+}],
+"loop": 1,
+"name": &"sneak_up",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_246")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_247")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_248")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_249")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_250")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_251")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_252")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_253")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_254")
+}],
+"loop": 0,
+"name": &"throw_down",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_255")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_256")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_257")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_258")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_259")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_260")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_261")
+}],
+"loop": 0,
+"name": &"throw_left",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_262")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_263")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_264")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_265")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_266")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_267")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_268")
+}],
+"loop": 0,
+"name": &"throw_right",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_269")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_270")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_271")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_272")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_273")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_274")
+}],
+"loop": 0,
+"name": &"throw_up",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_39")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_40")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_41")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_42")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_43")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_44")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_45")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_46")
+}],
+"loop": 1,
+"name": &"walk_down",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_47")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_48")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_49")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_50")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_51")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_52")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_53")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_54")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_55")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_56")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_57")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_58")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_59")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_60")
+}],
+"loop": 1,
+"name": &"walk_left",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_61")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_62")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_63")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_64")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_65")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_66")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_67")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_68")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_69")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_70")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_71")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_72")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_73")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_74")
+}],
+"loop": 1,
+"name": &"walk_right",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Pose_75")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_76")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_77")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_78")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_79")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_80")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_81")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_82")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_83")
+}, {
+"duration": 1.0,
+"texture": SubResource("Pose_84")
+}],
+"loop": 1,
+"name": &"walk_up",
+"speed": 12.0
+}]

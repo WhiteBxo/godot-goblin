@@ -1,13 +1,11 @@
 [gd_scene format=3 uid="uid://dfsafggxeousv"]
 
 [ext_resource type="Script" uid="uid://b38vrnrlviw78" path="res://src/core/main.gd" id="1_main"]
-[ext_resource type="PackedScene" path="res://src/levels/milkTea/milk_tea_shop.tscn" id="2_map"]
+[ext_resource type="PackedScene" uid="uid://db43al0ecqpdg" path="res://src/levels/milkTea/milk_tea_shop.tscn" id="2_map"]
 [ext_resource type="PackedScene" path="res://src/gameplay/player/shop_player.tscn" id="3_player"]
 [ext_resource type="PackedScene" path="res://src/core/audio/audio_manager.tscn" id="4_audio"]
-
-[ext_resource type="PackedScene" path="res://src/gameplay/characters/fat_goblin.tscn" id="npc_customer"]
-
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/common_goblin.tscn" id="npc_common"]
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/fat_goblin.tscn" id="npc_customer"]
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/human_customer.tscn" id="npc_human"]
 
 [node name="MainGame" type="Node" unique_id=1512212887]
@@ -18,7 +16,7 @@ day1_story_enabled = true
 [node name="Systems" type="Node" parent="." unique_id=601625153]
 process_mode = 1
 
-[node name="AudioManager" parent="Systems" instance=ExtResource("4_audio")]
+[node name="AudioManager" parent="Systems" unique_id=2118493427 instance=ExtResource("4_audio")]
 
 [node name="World" type="Node2D" parent="." unique_id=1438876914]
 process_mode = 1
@@ -32,38 +30,41 @@ texture_filter = 1
 
 [node name="Player" parent="World/EntityRoot" unique_id=5727926 instance=ExtResource("3_player")]
 
-[node name="FatGoblin" parent="World/EntityRoot" instance=ExtResource("npc_customer")]
+[node name="FatGoblin" parent="World/EntityRoot" unique_id=1680277468 instance=ExtResource("npc_customer")]
 position = Vector2(1325, 730)
+collision_layer = 0
 
-[node name="HumanCustomer" parent="World/EntityRoot" instance=ExtResource("npc_human")]
+[node name="HumanCustomer" parent="World/EntityRoot" unique_id=1507747702 instance=ExtResource("npc_human")]
 visible = false
-actor_id = &"human_customer"
-display_name = "人类顾客"
 position = Vector2(1403.75, 887.5)
 
-[node name="GoblinCustomer" parent="World/EntityRoot" instance=ExtResource("npc_common")]
+[node name="GoblinCustomer" parent="World/EntityRoot" unique_id=2070619920 instance=ExtResource("npc_common")]
 visible = false
+position = Vector2(1403.75, 887.5)
+collision_layer = 0
 actor_id = &"goblin_customer"
 display_name = "哥布林顾客"
-position = Vector2(1403.75, 887.5)
 
-[node name="GoblinA" parent="World/EntityRoot" instance=ExtResource("npc_common")]
+[node name="GoblinA" parent="World/EntityRoot" unique_id=602519118 instance=ExtResource("npc_common")]
 visible = false
+position = Vector2(1403.75, 887.5)
+collision_layer = 0
 actor_id = &"goblin_a"
 display_name = "哥布林甲"
-position = Vector2(1403.75, 887.5)
 
-[node name="GoblinB" parent="World/EntityRoot" instance=ExtResource("npc_common")]
+[node name="GoblinB" parent="World/EntityRoot" unique_id=483573736 instance=ExtResource("npc_common")]
 visible = false
+position = Vector2(1403.75, 887.5)
+collision_layer = 0
 actor_id = &"goblin_b"
 display_name = "哥布林乙"
-position = Vector2(1403.75, 887.5)
 
-[node name="GoblinC" parent="World/EntityRoot" instance=ExtResource("npc_common")]
+[node name="GoblinC" parent="World/EntityRoot" unique_id=1071084715 instance=ExtResource("npc_common")]
 visible = false
+position = Vector2(1403.75, 887.5)
+collision_layer = 0
 actor_id = &"goblin_c"
 display_name = "哥布林丙"
-position = Vector2(1403.75, 887.5)
 
 [node name="EffectRoot" type="Node2D" parent="World" unique_id=466167947]
 

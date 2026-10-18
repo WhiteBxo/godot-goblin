@@ -19,24 +19,24 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--godot", default="/Applications/Godot.app/Contents/MacOS/Godot")
     args = parser.parse_args()
-    baseline = json.loads((ROOT / "docs/story_authoring/cinematic_opening.json").read_text())
+    baseline = json.loads((ROOT / "docs/story_authoring/cinematic_opening.json").read_text(encoding="utf-8"))
     checks = 0
 
     with tempfile.TemporaryDirectory(prefix=".story_authoring_", dir=ROOT / "tests") as temp:
         folder = Path(temp)
 
         def resource(path):
-            return "res://" + str(path.relative_to(ROOT))
+            return "res://" + path.relative_to(ROOT).as_posix()
 
         def verify(name, manifest, expected_error="", story=None, dialogue=None):
             nonlocal checks
             manifest = copy.deepcopy(manifest)
             if story is not None or dialogue is not None:
-                story = story or json.loads((ROOT / "src/resources/story/cinematic_opening.json").read_text())
-                dialogue = dialogue or json.loads((ROOT / "src/resources/dialogue/cinematic_opening.json").read_text())
+                story = story or json.loads((ROOT / "src/resources/story/cinematic_opening.json").read_text(encoding="utf-8"))
+                dialogue = dialogue or json.loads((ROOT / "src/resources/dialogue/cinematic_opening.json").read_text(encoding="utf-8"))
                 for key, data in [("story", story), ("dialogue", dialogue)]:
                     output = folder / (key + ".json")
-                    output.write_text(json.dumps(data, ensure_ascii=False) + "\n")
+                    output.write_text(json.dumps(data, ensure_ascii=False) + "\n", encoding="utf-8")
                     manifest[key] = resource(output)
                 host = folder / "host.tscn"
                 host.write_text(
@@ -44,16 +44,17 @@ def main():
                     '[ext_resource type="PackedScene" path="res://src/debug/cinematic/cinematic_demo.tscn" id="1"]\n'
                     '[node name="CinematicDemo" instance=ExtResource("1")]\n'
                     f'story_file = "{manifest["story"]}"\n'
-                    f'dialogue_file = "{manifest["dialogue"]}"\n'
+                    f'dialogue_file = "{manifest["dialogue"]}"\n',
+                    encoding="utf-8",
                 )
                 manifest["scene"] = resource(host)
             path = folder / "manifest.json"
-            path.write_text(json.dumps(manifest, ensure_ascii=False) + "\n")
+            path.write_text(json.dumps(manifest, ensure_ascii=False) + "\n", encoding="utf-8")
             result = subprocess.run(
                 [args.godot, "--headless", "--path", str(ROOT), "--log-file",
                  str(folder / "godot.log"), "--script", "res://tools/story/validate_story.gd",
                  "--", resource(path)],
-                capture_output=True, text=True, timeout=65,
+                capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=65,
             )
             output = result.stdout + result.stderr
             expected_code = 1 if expected_error else 0
@@ -63,6 +64,31 @@ def main():
             checks += 1
             print("PASS:", name, flush=True)
 
+        # Reference validation must cover both event and per-step inventory gates,
+        # including a payment that also has an independent conditional item set.
+        reference_story = json.loads((ROOT / "src/resources/story/cinematic_opening.json").read_text(encoding="utf-8"))
+        for name, command in [
+            ("unknown event inventory item", "event"),
+            ("unknown step inventory item", "step"),
+            ("payment validates its separate condition items", "payment"),
+            ("unknown actor animation", "animation"),
+        ]:
+            story = copy.deepcopy(reference_story)
+            event = story["events"]["cinematic.opening"]
+            diagnostic = "unknown item absent" if command != "animation" else "missing animation absent"
+            if command == "event":
+                event["conditions"] = {"items": {"absent": 1}}
+            elif command == "step":
+                event["steps"][0]["when"] = {"items": {"absent": 1}}
+            elif command == "payment":
+                event["steps"][0] = {
+                    "command": "pay_items", "receipt": "test.payment",
+                    "items": {"black_tea": 1}, "when": {"items": {"absent": 1}},
+                }
+            else:
+                event["steps"][0] = {"command": "actor_animate", "actor": "player", "animation": "absent"}
+            verify(name, baseline, diagnostic, story=story)
+
         verify("unchanged cinematic source and real movement", baseline)
         changed = copy.deepcopy(baseline)
         changed["source_sha256"] = "stale"
@@ -71,7 +97,7 @@ def main():
         changed["beats"][1]["start"] = 3
         verify("overlapping Beat rejected", changed, "Gap/overlap")
 
-        original = json.loads((ROOT / "src/resources/story/cinematic_opening.json").read_text())
+        original = json.loads((ROOT / "src/resources/story/cinematic_opening.json").read_text(encoding="utf-8"))
         for name, index, field, value, diagnostic in [
             ("unknown command", 0, "command", "invented", "Unknown command"),
             ("missing actor", 0, "actor", "absent", "missing actor absent"),

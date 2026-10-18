@@ -124,9 +124,11 @@ func _references(game: MainGame) -> void:
 	var actors := game.get_actor_director()
 	var audio := game.get_audio_manager()
 	for event_id: String in _story.get_event_ids():
+		var event := _story.get_event(event_id)
+		_check_items(game, event.get("conditions", {}).get("items", {}), event_id + "/conditions")
 		# Include declared spawns for static existence; runtime checks their order/conditions.
 		var spawned: Array[String] = []
-		var steps: Array = _story.get_event(event_id).steps
+		var steps: Array = event.steps
 		for step: Dictionary in steps:
 			if step.command == "actor_spawn":
 				spawned.append(step.actor)
@@ -145,6 +147,14 @@ func _references(game: MainGame) -> void:
 					instance.free()
 			if step.command == "dialogue":
 				_check(_dialogue.has_dialogue(step.id), context + ": missing dialogue " + step.id)
+			_check_items(game, step.get("when", {}).get("items", {}), context + "/when")
+			if step.command == "pay_items":
+				_check_items(game, step.items, context)
+			if step.command == "actor_animate":
+				var animated := actors.get_actor(StringName(step.actor))
+				_check(animated == null or animated.animated_sprite.sprite_frames.has_animation(StringName(step.animation)), context + ": missing animation " + step.animation)
+			if step.command == "title_card":
+				_check(game.get_title_card() != null, context + ": host has no TitleCard")
 			if step.command in ["play_sfx", "play_bgm"]:
 				var stream: AudioStream = audio.sounds.get(step.id) if step.has("id") else load(step.path) as AudioStream
 				_check(stream != null, context + ": missing audio " + str(step.get("id", step.get("path", ""))))
@@ -156,6 +166,10 @@ func _references(game: MainGame) -> void:
 				_check(line.get("choices", []).any(func(item: Dictionary) -> bool: return item.id == choice.id), context + ": missing when.choice reference")
 	if steps_need_camera() and game.get_camera_director() == null:
 		_check(false, "Host has no CameraDirector")
+
+func _check_items(game: MainGame, items: Dictionary, context: String) -> void:
+	for item: String in items:
+		_check(game.get_warehouse_inventory().get_definition(item) != null, context + ": unknown item " + item)
 
 func steps_need_camera() -> bool:
 	for id: String in _story.get_event_ids():

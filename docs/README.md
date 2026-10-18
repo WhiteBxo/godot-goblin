@@ -109,12 +109,14 @@
 | [Day 1 正式剧情与业务配置约定](design/day_01_integration_contract.md) | 正式剧情内容依据、宿主绑定和发布边界。 |
 | [day1_scene01](design/day_01_scene_01.md) | 独立试编排源稿，运行时 ID 仍为 day1_scene01。 |
 | [Day 1 前两个阶段：剧情演出初稿](design/day_01_stages_01_02_draft.md) | S01–S02 演出初稿，保留待确认项。 |
+| [Day 1 第三至第六阶段：剧情演出初稿](design/day_01_stages_03_06_draft.md) | S03–S06 Beat 化初稿，对白逐字取自修改版；冲突仍按 pending。 |
 | [第一天:一杯奶茶引发的异世界生](design/day_01_story_flow.md) | 原 PDF 转录稿，保留原文和开发备注。 |
 | [第一天](design/day_01_story_flow_revised.md) | 修改稿；对接约定采用其 S03–S06。 |
 | [Gameplay Bridge 独立验收剧情](design/gameplay_bridge_demo.md) | `gameplay_bridge_demo.md` |
 | [系统设计文档:奶茶店系统与异世界见闻录](design/milk_tea_system_and_otherworld_chronicle.md) | `milk_tea_system_and_otherworld_chronicle.md` |
 | [真实订单 Gameplay Bridge 最小示例](design/order_bridge_demo.md) | `order_bridge_demo.md` |
 | [day_02.pdf](design/source/day_02.pdf) | 第二天剧情原始 PDF。 |
+| [Day 2 五个阶段：剧情演出初稿](design/day_02_stages_01_05_draft.md) | 由 day_02.pdf 逐字整理的 Beat 化初稿。 |
 | [otherworld_ingredients_and_drinks.xlsx](design/source/otherworld_ingredients_and_drinks.xlsx) | 食材与饮品原始工作簿。 |
 | [异世界食材与酒品：源稿到运行时映射](design/otherworld_data_mapping.md) | 已接入的 F/W 条目、字段映射、合并项与未接入原因。 |
 
@@ -127,6 +129,7 @@ Beat 映射、验证清单及待定项；不供游戏运行时加载。
 | [cinematic_opening.json](story_authoring/cinematic_opening.json) | 生成的 Beat 映射 / 验证清单，保留原资源名。 |
 | [day1_scene01.json](story_authoring/day1_scene01.json) | 生成的 Beat 映射 / 验证清单，保留原资源名。 |
 | [Day 1 对接待定与能力缺口](story_authoring/day_01_integration_pending.md) | 正式剧情对接待定项及能力缺口。 |
+| [Day 2 对接待定与能力缺口](story_authoring/day_02_integration_pending.md) | Day 2 初稿的待定项（D 编号）。 |
 | [gameplay_bridge_demo_bridge.json](story_authoring/gameplay_bridge_demo_bridge.json) | 生成的 Beat 映射 / 验证清单，保留原资源名。 |
 | [order_bridge_demo_bridge.json](story_authoring/order_bridge_demo_bridge.json) | 生成的 Beat 映射 / 验证清单，保留原资源名。 |
 

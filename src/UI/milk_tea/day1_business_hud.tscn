@@ -24,3 +24,9 @@ visible = false
 offset_left = 20.0
 offset_top = 56.0
 text = "演出已中断 · 继续剧情"
+
+[node name="Notice" type="Label" parent="."]
+visible = false
+offset_left = 20.0
+offset_top = 56.0
+mouse_filter = 2

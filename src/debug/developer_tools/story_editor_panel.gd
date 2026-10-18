@@ -12,6 +12,7 @@ const TEMPLATES := {
 	"actor_emote": {"command": "actor_emote", "actor": "player", "symbol": "!", "duration": 0.8, "wait": true},
 	"actor_show": {"command": "actor_show", "actor": "player", "wait": true},
 	"actor_hide": {"command": "actor_hide", "actor": "player", "wait": true},
+	"actor_animate": {"command": "actor_animate", "actor": "player", "animation": "idle_down", "hold": false, "wait": true},
 	"camera_focus": {"command": "camera_focus", "actor": "player", "duration": 0.8, "wait": true},
 	"camera_move": {"command": "camera_move", "target": "day1_counter", "duration": 0.8, "wait": true},
 	"camera_zoom": {"command": "camera_zoom", "value": 1.0, "duration": 0.5, "wait": true},
@@ -24,6 +25,9 @@ const TEMPLATES := {
 	"dialogue": {"command": "dialogue", "id": "day1.shop_opening"},
 	"set_flag": {"command": "set_flag", "key": "day1.example", "value": true},
 	"set_stage": {"command": "set_stage", "value": "day1.example"},
+	"set_phase": {"command": "set_phase", "phase": "night"},
+	"title_card": {"command": "title_card", "text": "第二天", "subtitle": "白天 · 奶茶店", "seconds": 2.5, "wait": true},
+	"pay_items": {"command": "pay_items", "items": {"strange_coin": 1}, "receipt": "day1.example_payment"},
 }
 
 var project := StoryProject.new()

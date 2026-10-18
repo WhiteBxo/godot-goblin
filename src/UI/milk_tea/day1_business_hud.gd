@@ -22,3 +22,8 @@ func refresh() -> void:
 
 func show_resume(available: bool) -> void:
 	$ResumeStory.visible = available
+
+## Day 2 has no content yet; the placeholder stage only states that plainly.
+func show_notice(text: String) -> void:
+	$Notice.text = text
+	$Notice.visible = not text.is_empty()

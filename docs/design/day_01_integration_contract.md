@@ -11,7 +11,7 @@
 | 范围 | 内容依据 | 使用约定 |
 | --- | --- | --- |
 | S01–S02 | [前两个阶段初稿](day_01_stages_01_02_draft.md) | 保留 Beat、对白、表情意图、玩家操作及原有待确认项；不反向采用旧 Demo 内容 |
-| S03–S06 | [Day 1 修改版](day_01_story_flow_revised.md)的对应阶段 | 保留角色动机、选择及剧情顺序；正文与补充对白有冲突时进入 pending，不自行择一 |
+| S03–S06 | [Day 1 修改版](day_01_story_flow_revised.md)的对应阶段 | 保留角色动机、选择及剧情顺序；正文与补充对白有冲突时进入 pending，不自行择一。Beat 化初稿见 [S03–S06 初稿](day_01_stages_03_06_draft.md)（2026-10-18，对白逐字取自修改版） |
 | 已执行试编排 | [day1_scene01](day_01_scene_01.md)及[映射清单](../story_authoring/day1_scene01.json) | 仅独立开场至顾客点单；不能当成正式 S01 或制作教程完成 |
 | 历史范围差异 | [Day 1 精简执行稿](day_01_development_spec.md) | 仅用于识别差异。不得据此删除新版投掷、双守卫、混乱撤离、地图或接受/拒绝选项 |
 | 后续生成 | [编排工作流](../guides/story_authoring_workflow.md)、[指令表](../guides/story_authoring_commands.md) | Markdown 继续是剧情唯一内容来源；本文只补接线约定，不补对白、数值、坐标或节奏 |

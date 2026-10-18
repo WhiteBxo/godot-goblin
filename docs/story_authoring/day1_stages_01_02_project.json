@@ -1,7 +1,7 @@
 {
 	"version": 1.0,
 	"format": "goblin_story_project",
-	"next_step_id": 73.0,
+	"next_step_id": 77,
 	"manifest": {
 		"version": 1.0,
 		"source": "res://docs/design/day_01_stages_01_02_draft.md",
@@ -137,6 +137,13 @@
 			"event": "day1.opening",
 			"steps": [
 				{
+					"id": "step_0075",
+					"data": {
+						"command": "wait",
+						"seconds": 2.0
+					}
+				},
+				{
 					"id": "step_0004",
 					"data": {
 						"command": "play_sfx",
@@ -232,6 +239,13 @@
 			"mode": "自动演出",
 			"event": "day1.first_goblin",
 			"steps": [
+				{
+					"id": "step_0076",
+					"data": {
+						"command": "wait",
+						"seconds": 1.5
+					}
+				},
 				{
 					"id": "step_0014",
 					"data": {

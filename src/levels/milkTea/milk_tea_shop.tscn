@@ -8,9 +8,8 @@
 [ext_resource type="Texture2D" uid="uid://dtkfujuilha5d" path="res://assets/map/milkTea/room_occlusion/bathroom_reference.webp" id="7_bathroom_roof"]
 [ext_resource type="Shader" uid="uid://cri6we4d0xpvo" path="res://src/shaders/occlusion_cutout.gdshader" id="8_cutout"]
 [ext_resource type="Script" uid="uid://bx8pixv32pxds" path="res://src/gameplay/rooms/doorframe_foreground.gd" id="9_frame"]
-
-[ext_resource type="Script" path="res://src/core/navigation/scene_exit.gd" id="travel_exit"]
-[ext_resource type="Script" path="res://src/core/navigation/scene_entrance.gd" id="travel_entrance"]
+[ext_resource type="Script" uid="uid://0b1dim4o3s53" path="res://src/core/navigation/scene_entrance.gd" id="travel_entrance"]
+[ext_resource type="Script" uid="uid://cny88rvfajowu" path="res://src/core/navigation/scene_exit.gd" id="travel_exit"]
 
 [sub_resource type="RectangleShape2D" id="Shape_NorthWall"]
 size = Vector2(1144, 48)
@@ -58,7 +57,7 @@ size = Vector2(34, 296)
 size = Vector2(72, 38)
 
 [sub_resource type="RectangleShape2D" id="Shape_HallPanelWest"]
-size = Vector2(66, 104)
+size = Vector2(65.99997, 104)
 
 [sub_resource type="RectangleShape2D" id="Shape_HallPanelEast"]
 size = Vector2(12, 104)
@@ -228,7 +227,7 @@ shape = SubResource("Shape_StorageSouthWall")
 
 [node name="HallPanelWest" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1397415550]
 position = Vector2(420.99994, 401.99994)
-scale = Vector2(0.99999994, 0.99999994)
+scale = Vector2(0.9999998, 0.9999998)
 shape = SubResource("Shape_HallPanelWest")
 
 [node name="HallPanelEast" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1036112723]
@@ -551,38 +550,39 @@ visible = false
 [node name="Label" parent="InteractionPoints/TeaStation" index="2"]
 visible = false
 
-[node name="StoryPositions" type="Node2D" parent="."]
+[node name="StoryPositions" type="Node2D" parent="." unique_id=345155424]
 
-[node name="day1_player" type="Marker2D" parent="StoryPositions"]
+[node name="day1_player" type="Marker2D" parent="StoryPositions" unique_id=1754346411]
 position = Vector2(956, 365.6)
 
-[node name="day1_door" type="Marker2D" parent="StoryPositions"]
+[node name="day1_door" type="Marker2D" parent="StoryPositions" unique_id=1643420459]
 position = Vector2(1123, 710)
 
-[node name="day1_aisle" type="Marker2D" parent="StoryPositions"]
+[node name="day1_aisle" type="Marker2D" parent="StoryPositions" unique_id=1200252812]
 position = Vector2(1123, 550)
 
-[node name="day1_counter" type="Marker2D" parent="StoryPositions"]
+[node name="day1_counter" type="Marker2D" parent="StoryPositions" unique_id=779894938]
 position = Vector2(844, 550)
 
-[node name="day1_group_a" type="Marker2D" parent="StoryPositions"]
+[node name="day1_group_a" type="Marker2D" parent="StoryPositions" unique_id=1445358190]
 position = Vector2(760, 550)
 
-[node name="day1_group_b" type="Marker2D" parent="StoryPositions"]
+[node name="day1_group_b" type="Marker2D" parent="StoryPositions" unique_id=1610316701]
 position = Vector2(850, 550)
 
-[node name="day1_group_c" type="Marker2D" parent="StoryPositions"]
+[node name="day1_group_c" type="Marker2D" parent="StoryPositions" unique_id=1239892911]
 position = Vector2(940, 550)
 
-[node name="SceneExits" type="Node2D" parent="."]
+[node name="SceneExits" type="Node2D" parent="." unique_id=1849825946]
 
-[node name="ShopDoor" parent="SceneExits" instance=ExtResource("3_xdoh7")]
+[node name="ShopDoor" parent="SceneExits" unique_id=140925277 instance=ExtResource("3_xdoh7")]
 position = Vector2(1123, 700)
 script = ExtResource("travel_exit")
-interaction_id = &"shop_exit"
-display_name = "走出奶茶店"
 destination_scene = "res://src/core/settlement.tscn"
 destination_entrance = &"shop_door"
+required_flags = Array[StringName]([])
+interaction_id = &"shop_exit"
+display_name = "走出奶茶店"
 feedback_rect = Rect2(-30, -55, 60, 60)
 
 [node name="Marker" parent="SceneExits/ShopDoor" index="1"]
@@ -591,9 +591,9 @@ visible = false
 [node name="Label" parent="SceneExits/ShopDoor" index="2"]
 visible = false
 
-[node name="SceneEntrances" type="Node2D" parent="."]
+[node name="SceneEntrances" type="Node2D" parent="." unique_id=1596705659]
 
-[node name="StreetDoor" type="Marker2D" parent="SceneEntrances"]
+[node name="StreetDoor" type="Marker2D" parent="SceneEntrances" unique_id=1600333591]
 position = Vector2(1123, 650)
 script = ExtResource("travel_entrance")
 entrance_id = &"street_door"

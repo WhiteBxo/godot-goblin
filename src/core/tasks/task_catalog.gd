@@ -15,6 +15,25 @@ func load_file(path: String, references: Dictionary = {}) -> Error:
 		return FileAccess.get_open_error()
 	return load_json(file.get_as_text(), references)
 
+## Several chapter files form one catalog: task and order IDs stay unique across all.
+func load_files(paths: Array[String], references: Dictionary = {}) -> Error:
+	var tasks: Array = []
+	for path: String in paths:
+		if not FileAccess.file_exists(path):
+			last_error = "Task file does not exist: " + path
+			return ERR_FILE_NOT_FOUND
+		var parser := JSON.new()
+		if parser.parse(FileAccess.get_file_as_string(path)) != OK:
+			last_error = "%s line %d: %s" % [path, parser.get_error_line(), parser.get_error_message()]
+			return ERR_PARSE_ERROR
+		if not parser.data is Dictionary or not is_number(parser.data.get("version")) or parser.data.version != 1 or not parser.data.get("tasks") is Array:
+			last_error = path + ": Expected version 1 and a tasks array"
+			return ERR_INVALID_DATA
+		if not _keys(parser.data, ["version", "tasks"], path):
+			return ERR_INVALID_DATA
+		tasks.append_array(parser.data.tasks)
+	return load_json(JSON.stringify({"version": 1, "tasks": tasks}), references)
+
 func load_json(text: String, references: Dictionary = {}) -> Error:
 	var parser := JSON.new()
 	var error := parser.parse(text)

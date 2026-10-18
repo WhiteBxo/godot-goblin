@@ -54,7 +54,8 @@ func _verify() -> void:
 			check(handbook != null and not handbook.visible, "Handbook stays hidden before either system unlocks")
 			check(not screen_layer.has_node("TaskHUD") and not screen_layer.has_node("ChronicleHUD"), "Formal HUD uses a single handbook entry")
 		if name == "TransitionLayer":
-			check(screen_layer.get_child_count() == 0, "Unused UI layer remains empty: " + name)
+			check(game.get_title_card() != null and game.get_title_card().get_parent() == screen_layer, "Title card belongs to the existing transition layer")
+			check(not game.get_title_card().is_showing(), "Idle title card does not cover the game")
 	check(game.get_ui_manager() != null, "MainGame exposes scene-local UI manager")
 	check(game.get_node("PopupLayer/DialogueUI") != null, "Dialogue belongs to PopupLayer")
 	check(game.get_node("PauseLayer/PauseMenu") != null, "Pause menu belongs to PauseLayer")

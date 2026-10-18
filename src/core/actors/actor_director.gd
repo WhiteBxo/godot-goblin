@@ -126,6 +126,18 @@ func actor_emote(actor_id: StringName, symbol: String = "!", duration: float = 0
 			_active[actor_id].merge({"symbol": symbol, "duration": duration})
 	return action
 
+## Plays a SpriteFrames animation; a missing animation fails instead of skipping.
+## Finite animations settle on their last frame; looping ones settle at once and keep
+## playing only when held. A held pose stays after control is released.
+func actor_animate(actor_id: StringName, animation: StringName, hold: bool = false) -> ActorAction:
+	var action := _request(actor_id, &"animate")
+	if not action.completed:
+		if animation.is_empty():
+			_finish(actor_id, ERR_INVALID_PARAMETER, "Animation name required: %s" % actor_id)
+		else:
+			_active[actor_id].merge({"animation": animation, "hold": hold})
+	return action
+
 ## Cancel by handle so an old callback cannot cancel a newer action on this actor.
 func cancel_action(action: ActorAction, reason: String = "Action cancelled") -> void:
 	if action != null and not action.completed and _active.has(action.actor_id) and _active[action.actor_id].action == action:
@@ -251,6 +263,16 @@ func _start(actor_id: StringName, data: Dictionary) -> void:
 			actor.show()
 		&"hide":
 			actor.hide()
+		&"animate":
+			if not actor.play_performance_animation(self, data.animation, data.hold):
+				_finish(actor_id, ERR_DOES_NOT_EXIST, "Missing animation '%s' for actor: %s" % [data.animation, actor_id])
+				return
+			if not actor.is_animation_looping(data.animation):
+				var on_done := _on_animation_finished.bind(data.action)
+				data.animation_actor = weakref(actor)
+				data.animation_callback = on_done
+				actor.performance_animation_finished.connect(on_done)
+				return
 		&"emote":
 			var label := Label.new()
 			label.name = "ActorEmote"
@@ -309,6 +331,13 @@ func _finish(actor_id: StringName, error: Error, reason: String = "") -> void:
 		data.tween.kill()
 	if data.has("label") and is_instance_valid(data.label):
 		data.label.queue_free()
+	if data.has("animation_callback"):
+		var animated: PlayerController = data.animation_actor.get_ref()
+		if is_instance_valid(animated) and animated.performance_animation_finished.is_connected(data.animation_callback):
+			animated.performance_animation_finished.disconnect(data.animation_callback)
+		# An interrupted pose must not freeze the body; completed held poses remain.
+		if error != OK and is_instance_valid(animated):
+			animated.clear_performance_pose()
 	if data.claimed:
 		var actor: PlayerController = _actors.get(actor_id, {}).get("actor")
 		if is_instance_valid(actor):
@@ -322,6 +351,10 @@ func _on_action_finished(action: ActorAction) -> void:
 	action_finished.emit(action)
 
 func _on_emote_finished(action: ActorAction) -> void:
+	if _active.has(action.actor_id) and _active[action.actor_id].action == action:
+		_finish(action.actor_id, OK)
+
+func _on_animation_finished(_animation: StringName, action: ActorAction) -> void:
 	if _active.has(action.actor_id) and _active[action.actor_id].action == action:
 		_finish(action.actor_id, OK)
 

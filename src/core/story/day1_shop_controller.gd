@@ -64,7 +64,8 @@ func _resume_boundary(preserve_player_position: bool = false) -> void:
 	if not is_instance_valid(_game) or not is_inside_tree():
 		return
 	last_error = ""
-	if Day1Access.is_later_stage(_state):
+	if Day1ChapterController.owns_stage(_state, "shop"):
+		# S03 onward and the Day 2 placeholder belong to Day1ChapterController.
 		_game.get_business_hud().show_resume(false)
 		return
 	var director := _game.get_story_director()
@@ -121,7 +122,7 @@ func _process(_delta: float) -> void:
 			_show_resume()
 
 func _event_finished(_id: String, ok: bool, _reason: String) -> void:
-	if not ok:
+	if not ok and not Day1ChapterController.owns_stage(_state, "shop"):
 		_show_resume()
 	_refresh()
 

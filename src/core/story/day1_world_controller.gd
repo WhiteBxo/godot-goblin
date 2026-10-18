@@ -7,6 +7,7 @@ var _level: Node2D
 var _actors: Array[SettlementCharacter] = []
 var _points: Dictionary = {}
 var _refresh_pending := false
+var _staging: Callable
 
 func configure(state: Node, level: Node2D, actors: Array[SettlementCharacter], points: Dictionary) -> void:
 	_state = state
@@ -15,6 +16,12 @@ func configure(state: Node, level: Node2D, actors: Array[SettlementCharacter], p
 	_points = points
 	_state.state_changed.connect(_schedule_refresh)
 	_refresh()
+
+## `lookup(actor_id) -> Variant`: non-null when chapter staging owns that actor's
+## visibility for the current stage; null keeps the default projection.
+func set_staging_lookup(lookup: Callable) -> void:
+	_staging = lookup
+	_schedule_refresh()
 
 func _schedule_refresh() -> void:
 	if not _refresh_pending:
@@ -31,9 +38,13 @@ func _refresh() -> void:
 		if DayPhase.is_night(_state) or DayPhase.enter_night(_state):
 			_state.set_flag("day1.s05.night_started")
 	for actor: SettlementCharacter in _actors:
-		actor.refresh_phase(_state)
-		if _level is MilkTeaShop and actor.actor_id == &"fat_goblin" and Day1Access.is_later_stage(_state):
-			actor.visible = Day1Access.at_stage(_state, "day1.s06")
+		# Actors named by the chapter's stage setup keep the visibility staging and
+		# story events gave them; the default phase and S06 rules skip them.
+		var staged := _staging.is_valid() and _staging.call(actor.actor_id) != null
+		if not staged:
+			actor.refresh_phase(_state)
+			if _level is MilkTeaShop and actor.actor_id == &"fat_goblin" and Day1Access.is_later_stage(_state):
+				actor.visible = Day1Access.at_stage(_state, "day1.s06")
 		if _level is SettlementMap and _points.has(actor.actor_id):
 			_points[actor.actor_id].interaction_enabled = actor.visible
 	if _level is SettlementMap:

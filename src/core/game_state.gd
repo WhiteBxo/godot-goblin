@@ -166,6 +166,40 @@ func commit_story_interaction(receipt: String, items: Dictionary, facts: Diction
 	_business_transaction = false
 	return error
 
+## Story payment with inventory items. The receipt makes a retried request a no-op
+## (ERR_ALREADY_EXISTS) instead of a second charge; shortage changes nothing.
+func commit_item_payment(receipt: String, costs: Dictionary, facts: Dictionary) -> Error:
+	if _session_busy():
+		return ERR_BUSY
+	if not _is_namespaced_key(receipt) or costs.is_empty():
+		return ERR_INVALID_DATA
+	if get_flag(receipt):
+		return ERR_ALREADY_EXISTS
+	for key: Variant in facts:
+		if not key is String or not _is_namespaced_key(key) or not facts[key] is bool:
+			return ERR_INVALID_DATA
+	_ensure_business()
+	if not _warehouse_inventory.has_materials(costs):
+		return ERR_UNAVAILABLE
+	var draft := _economy.prepare_delivery(costs, {}, 0, "payment:" + receipt)
+	if draft.is_empty():
+		return ERR_INVALID_DATA
+	var before := _economy.to_dict()
+	_business_transaction = true
+	_replacing = true
+	var error := _economy._replace(draft)
+	if error == OK:
+		for key: String in facts:
+			_flags[key] = facts[key]
+		_flags[receipt] = true
+		_warehouse_inventory.set_session_locked(true)
+		state_changed.emit()
+		_economy.publish_restored(before)
+		_warehouse_inventory.set_session_locked(false)
+	_replacing = false
+	_business_transaction = false
+	return error
+
 ## DayPhase owns legal transitions; publish both phase keys and the day together.
 func commit_day_phase(phase: String) -> bool:
 	if _session_busy() or phase not in ["day", "night"] or DayPhase.get_phase(self) == phase:

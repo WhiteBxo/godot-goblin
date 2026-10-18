@@ -92,8 +92,10 @@ func _validate(data: Variant) -> bool:
 func _conditions(data: Variant, context: String, allow_choice: bool = true) -> bool:
 	if not data is Dictionary:
 		return _invalid(context, "conditions/when must be an object")
-	if not _keys(data, ["day", "stage", "flags", "completed_events", "not_completed_events", "choice"], context):
+	if not _keys(data, ["day", "stage", "flags", "completed_events", "not_completed_events", "choice", "items"], context):
 		return false
+	if data.has("items") and not _item_counts(data["items"]):
+		return _invalid(context, "items requires item IDs mapped to positive integer counts")
 	if data.has("day") and (not _number(data["day"]) or data["day"] < 1 or floor(data["day"]) != data["day"]):
 		return _invalid(context, "day must be a positive integer")
 	if data.has("stage") and not data["stage"] is String:
@@ -168,7 +170,31 @@ func _step(step: Variant, context: String) -> bool:
 				return _invalid(context, "play_sfx requires a non-empty id")
 			if step.has("path") and (not step["path"] is String or not step["path"].begins_with("res://")):
 				return _invalid(context, "play_sfx requires a res:// path")
-		"actor_spawn", "actor_move", "actor_face", "actor_emote", "actor_show", "actor_hide", "camera_focus", "camera_move", "camera_shake", "camera_zoom", "camera_reset", "play_bgm", "stop_bgm", "fade_bgm":
+		"pay_items":
+			fields.append_array(["items", "receipt", "set_flags"])
+			if not _item_counts(step.get("items")):
+				return _invalid(context, "pay_items requires item IDs mapped to positive integer counts")
+			if not is_namespaced(step.get("receipt")):
+				return _invalid(context, "pay_items requires a namespaced receipt")
+			var facts: Variant = step.get("set_flags", {})
+			if not facts is Dictionary:
+				return _invalid(context, "set_flags must be an object")
+			for key: Variant in facts:
+				if not is_namespaced(key) or not facts[key] is bool or key == step.receipt:
+					return _invalid(context, "set_flags requires namespaced keys, bool values and no receipt")
+		"set_phase":
+			fields.append("phase")
+			if step.get("phase") not in ["day", "night"]:
+				return _invalid(context, "set_phase requires day or night")
+		"title_card":
+			fields.append_array(["text", "subtitle", "seconds", "wait"])
+			if not _text(step.get("text")) or (step.has("subtitle") and not step.subtitle is String):
+				return _invalid(context, "title_card requires non-empty text; subtitle must be text")
+			if not _number(step.get("seconds", 2.5)) or step.get("seconds", 2.5) <= 0.0:
+				return _invalid(context, "title_card seconds must be finite and positive")
+			if not step.get("wait", true) is bool:
+				return _invalid(context, "wait must be bool")
+		"actor_spawn", "actor_move", "actor_face", "actor_emote", "actor_show", "actor_hide", "actor_animate", "camera_focus", "camera_move", "camera_shake", "camera_zoom", "camera_reset", "play_bgm", "stop_bgm", "fade_bgm":
 			return _cinematic_step(step, context)
 		_:
 			return _invalid(context, "Unknown command '%s'" % step["command"])
@@ -177,6 +203,16 @@ func _step(step: Variant, context: String) -> bool:
 
 func _text(value: Variant) -> bool:
 	return value is String and not value.strip_edges().is_empty()
+
+
+func _item_counts(value: Variant) -> bool:
+	if not value is Dictionary or value.is_empty():
+		return false
+	for id: Variant in value:
+		var count: Variant = value[id]
+		if not _text(id) or not _number(count) or count < 1 or floor(count) != count:
+			return false
+	return true
 
 
 func _target(value: Variant) -> bool:
@@ -214,6 +250,10 @@ func _cinematic_step(step: Dictionary, context: String) -> bool:
 			fields.append_array(["symbol", "duration"])
 			if not _text(step.get("symbol", "!")):
 				return _invalid(context, "symbol must be non-empty text")
+		"actor_animate":
+			fields.append_array(["animation", "hold"])
+			if not _text(step.get("animation")) or not step.get("hold", false) is bool:
+				return _invalid(context, "actor_animate requires an animation name; hold must be bool")
 		"camera_focus":
 			fields.append_array(["actor", "target", "duration"])
 			if step.has("actor") == step.has("target") or (step.has("actor") and not _text(step.actor)) or (step.has("target") and not _target(step.target)):

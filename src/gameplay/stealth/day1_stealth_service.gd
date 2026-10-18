@@ -7,6 +7,7 @@ signal attempt_failed(guard_id: StringName)
 signal guard_intercepted(event_id: String)
 signal escaped
 signal throw_resolved(kind: StringName, affected: bool)
+signal retry_travel_requested
 
 enum Status { IDLE, PENDING, RUNNING, FAILED, INTERCEPTED, ESCAPED }
 
@@ -75,6 +76,8 @@ func can_accept_input() -> bool:
 func select_throwable(kind: StringName) -> Error:
 	if kind not in [&"coin", &"torch"]:
 		return ERR_INVALID_PARAMETER
+	if _setup.wallet_coins and kind != &"coin":
+		return ERR_UNAVAILABLE
 	if not can_accept_input() or not _pending_throw.is_empty() or _releasing:
 		return ERR_BUSY
 	if not _player.set_held(kind):
@@ -116,19 +119,30 @@ func begin_attempt() -> Error:
 	if _state.get_flag("day1.s05.escape_completed"):
 		_set_status(Status.ESCAPED, "已安全撤离")
 		return ERR_ALREADY_EXISTS
-	_clear_local()
-	_player.teleport_to(_setup.checkpoint.global_position)
+	if _setup.wallet_coins:
+		_state.begin_infiltration_attempt()
+		_clear_local(false)
+	else:
+		_clear_local()
+		_player.teleport_to(_setup.checkpoint.global_position)
 	_set_status(Status.RUNNING, "鼠标指向落点，使用投掷操作")
 	return OK
 
 func retry_attempt() -> Error:
-	if not is_blocking() or _releasing or not _external_control_available():
+	if (not is_blocking() and not _setup.wallet_coins) or _releasing or not _external_control_available():
 		return ERR_BUSY
 	if not is_mission_stage() or not get_configuration_issues().is_empty():
 		return ERR_UNCONFIGURED
+	if _setup.wallet_coins:
+		var error: Error = _state.retry_infiltration_attempt()
+		if error != OK:
+			return error
+		if _setup.interior_only:
+			retry_travel_requested.emit()
+			return OK
 	_clear_local()
 	_player.teleport_to(_setup.checkpoint.global_position)
-	_set_status(Status.RUNNING, "已返回检查点；已使用的物品不会补回")
+	_set_status(Status.RUNNING, "已恢复潜入开始前的完整状态" if _setup.wallet_coins else "已返回检查点；已使用的物品不会补回")
 	return OK
 
 func cancel_attempt() -> void:
@@ -208,6 +222,8 @@ func _physics_process(delta: float) -> void:
 func _bindings_available() -> bool:
 	if not is_instance_valid(_setup):
 		return false
+	if _setup.interior_only:
+		return true
 	if not is_instance_valid(_setup.checkpoint) or not _setup.checkpoint.is_inside_tree() or not _setup.checkpoint.global_position.is_finite() or not _setup.has_escape_shape():
 		return false
 	for binding: Variant in _setup.guards + _setup.flammable_targets + _setup.destructible_targets:
@@ -222,6 +238,8 @@ func _bindings_available() -> bool:
 	return true
 
 func _guard_cleared(guard: Day1GuardResponse) -> bool:
+	if _setup.wallet_coins:
+		return guard.clearance_flag != &"" and _state.get_flag(String(guard.clearance_flag))
 	# A configured clearance fact cannot substitute for a successful payment.
 	return (guard.clearance_flag != &"" and _state.get_flag(String(guard.clearance_flag))
 		and _state.get_flag("day1.s05.guard_payment_completed")
@@ -257,7 +275,11 @@ func _on_action_triggered(action: StringName, _direction: Vector2) -> void:
 	var generation := _generation
 	_releasing = true
 	# The animation has one release; consume once under our reentry guard. Retry never consumes.
-	var consumed := _inventory.try_consume_drink(pending.drink_id) if pending.kind == &"drink" else _inventory.try_consume({item: 1})
+	var consumed: bool
+	if _setup.wallet_coins and pending.kind == &"coin":
+		consumed = _state.commit_story_transaction("day1.throw_%d" % Time.get_ticks_usec(), {}, {}, -WalletTransactions.COIN_FACE_VALUE) == OK
+	else:
+		consumed = _inventory.try_consume_drink(pending.drink_id) if pending.kind == &"drink" else _inventory.try_consume({item: 1})
 	_releasing = false
 	if not consumed:
 		message = "没有可用的投掷物品"
@@ -314,6 +336,8 @@ func _resolve_impact(result: Dictionary) -> void:
 	changed.emit()
 
 func _try_escape() -> void:
+	if _setup.interior_only:
+		return
 	if not _setup.contains_escape_position(_player.global_position):
 		return
 	for flag: StringName in _setup.required_flags:
@@ -324,7 +348,8 @@ func _try_escape() -> void:
 		active_confusion = active_confusion or target.remaining > 0.0
 	for guard: Day1GuardResponse in _setup.guards:
 		active_confusion = active_confusion or (guard.state == Day1GuardResponse.State.CONFUSED and guard.remaining > 0.0)
-	if not _inventory.has_materials(_setup.required_items) or (_setup.confusion_required and (not _confusion_created or not active_confusion)):
+	var has_items := _inventory.has_uses(_setup.required_items) if _setup.wallet_coins else _inventory.has_materials(_setup.required_items)
+	if not has_items or (_setup.confusion_required and (not _confusion_created or not active_confusion)):
 		return
 	for guard: Day1GuardResponse in _setup.guards:
 		if guard.role in [Day1GuardResponse.Role.MANSION_GATE, Day1GuardResponse.Role.DRUNKEN] and not _guard_cleared(guard):

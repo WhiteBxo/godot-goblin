@@ -586,6 +586,9 @@ func _initialize_settlement() -> void:
 func _initialize_room_map(map: Node2D) -> void:
 	_room_level = map
 	var chapter_map := map.has_method("get_chapter_host")
+	if map.has_method("get_chapter_characters"):
+		for actor: SettlementCharacter in map.get_chapter_characters():
+			actor.reparent($World/EntityRoot, true)
 	_shop_player = $World/EntityRoot/Player as ShopPlayer
 	if _shop_player == null:
 		push_error("Room scene needs a ShopPlayer under World/EntityRoot.")
@@ -636,6 +639,8 @@ func _initialize_room_map(map: Node2D) -> void:
 		_create_trigger_zones(map)
 		_create_map_ui()
 	_create_scene_travel(exits)
+	if chapter_map and map.has_method("get_stealth_setup") and map.get_stealth_setup() != null:
+		_create_stealth_system()
 	_create_debug_components()
 	_create_save_system()
 
@@ -651,12 +656,22 @@ func _create_stealth_system() -> void:
 	$Systems.add_child(_stealth_service)
 	_stealth_service.changed.connect(_refresh_input_lock)
 	_stealth_service.guard_intercepted.connect(_on_stealth_intercepted)
+	_stealth_service.retry_travel_requested.connect(_retry_infiltration_travel)
 	_stealth_service.configure(get_node("/root/GameState"), _warehouse_inventory, _shop_player,
-		$World/EffectRoot, _settlement_level.get_stealth_setup(), _actor_director.get_actor, _can_operate_stealth)
+		$World/EffectRoot, get_active_level().get_stealth_setup(), _actor_director.get_actor, _can_operate_stealth)
 	var hud: Day1StealthHUD = preload("res://src/UI/hud/day1_stealth_hud.tscn").instantiate()
 	_ui_manager.register_screen(ScreenIds.STEALTH_HUD, hud, &"hud", false)
 	hud.configure(_stealth_service)
 	_ui_manager.open_screen(ScreenIds.STEALTH_HUD)
+
+func _retry_infiltration_travel() -> void:
+	var destination: MainGame = preload("res://src/core/settlement.tscn").instantiate()
+	var error := destination.prepare_scene_arrival(&"infiltration_start", false)
+	if error == OK:
+		error = GameEntry.travel_to_scene(get_tree(), destination)
+	if error != OK:
+		destination.free()
+		push_error("Could not restore infiltration scene: " + error_string(error))
 
 func _can_operate_stealth() -> bool:
 	return (not get_tree().paused and not _ui_manager.has_modal()
@@ -796,7 +811,7 @@ func _with_npc_points(points: Array[InteractionPoint]) -> Array[InteractionPoint
 		point.display_name = entity.display_name
 		point.description = entity.story_role
 		entity.add_child(point)
-		if day1_story_enabled and entity.actor_id != &"fat_goblin":
+		if day1_story_enabled and _shop_level != null and entity.actor_id != &"fat_goblin":
 			point.position = Vector2(0, -150)
 			point.get_node("Marker").hide()
 			point.get_node("Label").hide()
@@ -1114,10 +1129,11 @@ func refresh_day1_access() -> void:
 		return
 	_refresh_handbook_access()
 	for id: StringName in _npc_points:
-		var available := false
+		var actor := _actor_director.get_actor(id)
+		var available := is_instance_valid(actor) and actor.visible
 		for task: Dictionary in _task_catalog.get_tasks():
 			if task.has("delivery") and task.delivery.target_object_id == String(id) and _task_journal.get_task(task.id).get("status") == "active":
-				available = not task.delivery.has("accepted_flag") or get_node("/root/GameState").get_flag(task.delivery.accepted_flag)
+				available = available or not task.delivery.has("accepted_flag") or get_node("/root/GameState").get_flag(task.delivery.accepted_flag)
 		_npc_points[id].interaction_enabled = available
 
 ## Capability only; the S04 story decides when to call this, not the UI.

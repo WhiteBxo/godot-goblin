@@ -12,6 +12,8 @@
 
 [ext_resource type="Script" path="res://src/gameplay/story_interaction/story_interaction_point.gd" id="story"]
 
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/casino.tscn" id="npc"]
+
 [node name="RpgMakerMap005" instance=ExtResource("base")]
 
 script = ExtResource("map")
@@ -75,3 +77,12 @@ position = Vector2(1080, 552)
 [node name="Interactions" type="Node2D" parent="."]
 
 [node name="GatherPoints" type="Node2D" parent="."]
+
+[node name="Characters" type="Node2D" parent="."]
+
+[node name="Owner" parent="Characters" instance=ExtResource("npc")]
+position = Vector2(696, 216)
+actor_id = &"casino"
+display_name = "赌场老板 · 黑齿"
+visible = true
+active_phase = "always"

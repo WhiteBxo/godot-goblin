@@ -56,5 +56,5 @@ func _refresh() -> void:
 func record_shop_arrival() -> void:
 	if _state.get_business_profile() != "day1":
 		return
-	if (Day1Access.at_stage(_state, "day1.s05") or Day1Access.at_stage(_state, "day1.s06")) and _state.get_flag("day1.s05.blood_acquired"):
+	if (Day1Access.at_stage(_state, "day1.s05") or Day1Access.at_stage(_state, "day1.s06")) and _state.get_flag("day1.s05.escape_completed"):
 		_state.set_flag("day1.s05.returned_shop")

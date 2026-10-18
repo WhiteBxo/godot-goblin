@@ -12,6 +12,21 @@
 
 [ext_resource type="Script" path="res://src/gameplay/story_interaction/story_interaction_point.gd" id="story"]
 
+[ext_resource type="Script" path="res://src/levels/rpg_maker/road_barrier.gd" id="barrier"]
+
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/guard.tscn" id="guard"]
+
+[ext_resource type="Script" path="res://src/gameplay/stealth/day1_stealth_setup.gd" id="stealth"]
+
+[ext_resource type="Script" path="res://src/gameplay/stealth/day1_guard_response.gd" id="response"]
+
+[ext_resource type="PackedScene" path="res://src/gameplay/story_interaction/story_trigger_zone.tscn" id="trigger"]
+
+[ext_resource type="Script" path="res://src/gameplay/gathering/gather_point.gd" id="gather"]
+
+[sub_resource type="RectangleShape2D" id="escape_shape"]
+size = Vector2(240, 144)
+
 [node name="RpgMakerMap001" instance=ExtResource("base")]
 
 script = ExtResource("map")
@@ -133,6 +148,7 @@ destination_scene = "res://src/core/elder_house.tscn"
 destination_entrance = &"exterior_door"
 
 allowed_stages = Array[String](["day1.s05"])
+required_flags = Array[StringName](["day1.s05.drunken_paid", "day1.s05.guard_payment_completed"])
 
 [node name="StoryPositions" type="Node2D" parent="."]
 
@@ -239,3 +255,162 @@ required_stages = Array[String](["day1.s03"])
 success_flags = Array[StringName](["day1.s03.observed_path"])
 
 [node name="GatherPoints" type="Node2D" parent="."]
+
+[node name="ClosedRoads" type="Node2D" parent="."]
+
+[node name="NorthPassage" type="StaticBody2D" parent="ClosedRoads"]
+position = Vector2(1560, 192)
+script = ExtResource("barrier")
+size = Vector2(48, 384)
+
+[node name="MilitaryPassage" type="StaticBody2D" parent="ClosedRoads"]
+position = Vector2(1968, 600)
+script = ExtResource("barrier")
+size = Vector2(864, 48)
+
+[node name="SouthPassage" type="StaticBody2D" parent="ClosedRoads"]
+position = Vector2(1560, 528)
+script = ExtResource("barrier")
+size = Vector2(48, 96)
+
+[node name="Characters" type="Node2D" parent="."]
+
+[node name="EntranceGuard" parent="Characters" instance=ExtResource("guard")]
+position = Vector2(1272, 456)
+actor_id = &"entrance_guard"
+display_name = "入口守卫"
+visible = false
+active_phase = "night"
+facing = 1
+
+[node name="DrunkenGuard" parent="Characters" instance=ExtResource("guard")]
+position = Vector2(1416, 456)
+actor_id = &"drunken_guard"
+display_name = "醉酒守卫"
+visible = false
+active_phase = "night"
+facing = 1
+
+[node name="MansionLure" parent="Characters" instance=ExtResource("guard")]
+position = Vector2(1704, 456)
+actor_id = &"mansion_lure"
+display_name = "宅邸左卫"
+visible = false
+active_phase = "night"
+facing = 1
+
+[node name="MansionGate" parent="Characters" instance=ExtResource("guard")]
+position = Vector2(1800, 456)
+actor_id = &"mansion_gate"
+display_name = "宅邸右卫"
+visible = false
+active_phase = "night"
+facing = 1
+
+[node name="EscapeZone" type="Area2D" parent="."]
+position = Vector2(1176, 648)
+collision_layer = 0
+collision_mask = 0
+monitoring = false
+[node name="Shape" type="CollisionShape2D" parent="EscapeZone"]
+shape = SubResource("escape_shape")
+
+[node name="StealthSetup" type="Node" parent="." node_paths=PackedStringArray("guards", "checkpoint", "escape_zone")]
+script = ExtResource("stealth")
+wallet_coins = true
+guards = Array[NodePath]([NodePath("Entrance"), NodePath("Lure"), NodePath("Gate"), NodePath("Drunken")])
+checkpoint = NodePath("../StoryPositions/day1_checkpoint")
+escape_zone = NodePath("../EscapeZone")
+required_flags = Array[StringName](["day1.s05.blood_acquired", "day1.s05.document_read"])
+required_items = {"day1_griffin_blood": 3, "day1_elder_document": 1}
+escape_rules_reference = "docs/design/two_day_flow_integration_plan.md：双物品、文书已读、实际原路撤离，无放火。"
+
+[node name="Entrance" type="Node2D" parent="StealthSetup" node_paths=PackedStringArray("actor")]
+script = ExtResource("response")
+actor = NodePath("../../Characters/EntranceGuard")
+role = 0
+clearance_flag = &""
+encounter_event_id = ""
+sight_range = 120.0
+sight_half_angle = 85.0
+discovery_seconds = 0.6
+distraction_seconds = 6.0
+
+[node name="Lure" type="Node2D" parent="StealthSetup" node_paths=PackedStringArray("actor")]
+script = ExtResource("response")
+actor = NodePath("../../Characters/MansionLure")
+role = 1
+clearance_flag = &"day1.s05.guard_payment_completed"
+encounter_event_id = ""
+sight_range = 60.0
+sight_half_angle = 85.0
+discovery_seconds = 0.6
+distraction_seconds = 6.0
+
+[node name="Gate" type="Node2D" parent="StealthSetup" node_paths=PackedStringArray("actor")]
+script = ExtResource("response")
+actor = NodePath("../../Characters/MansionGate")
+role = 2
+clearance_flag = &"day1.s05.guard_payment_completed"
+encounter_event_id = ""
+sight_range = 60.0
+sight_half_angle = 85.0
+discovery_seconds = 0.6
+distraction_seconds = 6.0
+
+[node name="Drunken" type="Node2D" parent="StealthSetup" node_paths=PackedStringArray("actor")]
+script = ExtResource("response")
+actor = NodePath("../../Characters/DrunkenGuard")
+role = 3
+clearance_flag = &"day1.s05.drunken_paid"
+encounter_event_id = "day1.s05.drunken_guard"
+sight_range = 60.0
+sight_half_angle = 85.0
+discovery_seconds = 0.6
+distraction_seconds = 6.0
+
+[node name="DrunkenEncounter" parent="." instance=ExtResource("trigger")]
+position = Vector2(1416, 456)
+trigger_id = &"day1_drunken_encounter"
+required_stages = Array[String](["day1.s05"])
+
+[node name="MansionPayment" parent="Interactions" instance=ExtResource("point")]
+position = Vector2(1656, 456)
+interaction_id = &"mansion_payment"
+display_name = "宅邸双卫 · 10G"
+description = "交给两名守卫一枚金币，本次往返放行。"
+
+[node name="NightGather0" parent="GatherPoints" instance=ExtResource("point")]
+position = Vector2(1128, 2136)
+script = ExtResource("gather")
+interaction_id = &"night_gather_0"
+display_name = "夜间采集 · moss_green"
+item_id = "moss_green"
+amount = 2
+refresh_mode = "daily"
+required_flag = "world.phase.night"
+
+[node name="NightGather1" parent="GatherPoints" instance=ExtResource("point")]
+position = Vector2(840, 2136)
+script = ExtResource("gather")
+interaction_id = &"night_gather_1"
+display_name = "夜间采集 · sugar_yam"
+item_id = "sugar_yam"
+amount = 2
+refresh_mode = "daily"
+required_flag = "world.phase.night"
+
+[node name="NightGather2" parent="GatherPoints" instance=ExtResource("point")]
+position = Vector2(888, 1896)
+script = ExtResource("gather")
+interaction_id = &"night_gather_2"
+display_name = "夜间采集 · firefly_cap"
+item_id = "firefly_cap"
+amount = 2
+refresh_mode = "daily"
+required_flag = "world.phase.night"
+
+[node name="InfiltrationStart" type="Marker2D" parent="Entrances"]
+position = Vector2(1176, 648)
+script = ExtResource("entrance")
+entrance_id = &"infiltration_start"

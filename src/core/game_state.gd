@@ -44,6 +44,24 @@ var _tea_production: TeaProduction
 var _replacing := false
 var _business_transaction := false
 var _pricing_rng := RandomNumberGenerator.new()
+## Transient across both mission scenes. Deliberately excluded from file saves.
+var _infiltration_snapshot: Dictionary = {}
+
+func begin_infiltration_attempt() -> bool:
+	if _session_busy():
+		return false
+	if _infiltration_snapshot.is_empty():
+		_infiltration_snapshot = to_dict()
+	return true
+
+func retry_infiltration_attempt() -> Error:
+	if _infiltration_snapshot.is_empty():
+		return ERR_UNCONFIGURED
+	var checkpoint := _infiltration_snapshot.duplicate(true)
+	var error := restore_state(checkpoint)
+	if error == OK:
+		_infiltration_snapshot = checkpoint
+	return error
 
 
 ## Optional configuration for isolated sessions; the autoload keeps its defaults.
@@ -665,6 +683,7 @@ func restore_state(data: Dictionary) -> Error:
 ## All components are validated first; publish only after the whole session commits.
 ## Keep service identities so existing UI subscriptions survive new game/restore.
 func _replace_session(data: Dictionary, new_game: bool) -> void:
+	_infiltration_snapshot.clear()
 	_ensure_business()
 	var economy_before := _economy.to_dict()
 	var profile_changed: bool = _business_profile != data.business.profile_id
@@ -725,6 +744,10 @@ func _migrate_snapshot(data: Dictionary) -> Dictionary:
 	# v6 adds the permanent price ledger: old free cups stay unpriced history.
 	if data.schema_version in [3, 4, 5]:
 		_fold_legacy_coins(migrated)
+	if data.schema_version < SCHEMA_VERSION:
+		for inventory: Dictionary in [migrated.business.inventory, migrated.economy.inventory]:
+			if migrated.business.get("profile_id") in ["day1", "tutorial"] and not inventory.ingredients.has("day1_elder_document"):
+				inventory.ingredients["day1_elder_document"] = {"quantity": 0, "used": 0, "discovered": false, "known_properties": []}
 	migrated.schema_version = SCHEMA_VERSION
 	migrated.economy = WalletTransactions.migrate_snapshot(migrated.economy)
 	if not migrated.economy.get("inventory") is Dictionary:

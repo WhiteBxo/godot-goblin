@@ -12,6 +12,8 @@
 
 [ext_resource type="Script" path="res://src/gameplay/story_interaction/story_interaction_point.gd" id="story"]
 
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/tavern.tscn" id="npc"]
+
 [node name="RpgMakerMap004" instance=ExtResource("base")]
 
 script = ExtResource("map")
@@ -67,3 +69,12 @@ position = Vector2(216, 648)
 [node name="Interactions" type="Node2D" parent="."]
 
 [node name="GatherPoints" type="Node2D" parent="."]
+
+[node name="Characters" type="Node2D" parent="."]
+
+[node name="Owner" parent="Characters" instance=ExtResource("npc")]
+position = Vector2(456, 216)
+actor_id = &"tavern"
+display_name = "酒馆老板 · 裂牙"
+visible = true
+active_phase = "always"

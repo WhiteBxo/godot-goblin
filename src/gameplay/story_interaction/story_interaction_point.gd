@@ -11,6 +11,7 @@ enum Kind { PICKUP, DOCUMENT }
 @export var entry_id: StringName
 @export var item_id: String = ""
 @export_range(1, 99) var amount := 1
+@export var amount_is_uses := false
 @export var required_flags: Array[StringName] = []
 ## Each entry permits that stage and its dot-separated operation substages.
 @export var required_stages: Array[String] = []
@@ -61,9 +62,13 @@ func resolve() -> Dictionary:
 	var facts := {}
 	for flag: StringName in success_flags:
 		facts[String(flag)] = true
-	var items := {item_id: amount} if kind == Kind.PICKUP else {}
+	var items := {item_id: amount} if not item_id.is_empty() else {}
 	_resolving = true
-	var error: Error = _state.commit_story_interaction(receipt_flag(), items, facts)
+	var error: Error
+	if amount_is_uses:
+		error = _state.commit_story_transaction(receipt_flag(), {}, items, 0, {}, facts)
+	else:
+		error = _state.commit_story_interaction(receipt_flag(), items, facts)
 	if error != OK:
 		_resolving = false
 		return _failure("调查未完成或无法放入库存，请重试。（%s）" % error_string(error))

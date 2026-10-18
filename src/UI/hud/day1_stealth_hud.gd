@@ -56,10 +56,14 @@ func _process(_delta: float) -> void:
 	var setup := _service.get_setup()
 	if not is_instance_valid(setup):
 		return
+	$Panel/Content/Actions/Torch.visible = not setup.wallet_coins
+	$Panel/Content/Drinks.visible = not setup.wallet_coins
 	var inventory := _service.get_inventory()
 	$Panel/Content/Actions/Coin.text = "古怪金币 %d%s" % [inventory.get_stock(setup.coin_item_id), " · 已选" if _service.selected_kind == &"coin" else ""]
+	if setup.wallet_coins:
+		$Panel/Content/Actions/Coin.text = "投掷金币 · 10G"
 	$Panel/Content/Actions/Torch.text = "火把 %d%s" % [inventory.get_stock(setup.torch_item_id), " · 已选" if _service.selected_kind == &"torch" else ""]
-	$Panel/Content/Actions/Retry.visible = _service.is_blocking()
+	$Panel/Content/Actions/Retry.visible = _service.is_blocking() or (setup.wallet_coins and _service.status == Day1StealthService.Status.RUNNING)
 	$Panel/Content/Actions/Start.visible = _service.status == Day1StealthService.Status.IDLE
 	$Panel/Content/Hint.visible = _service.status == Day1StealthService.Status.RUNNING
 	var watches := PackedStringArray()

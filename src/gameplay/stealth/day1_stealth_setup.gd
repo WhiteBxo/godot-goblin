@@ -9,6 +9,9 @@ extends Node
 @export var escape_zone: Area2D
 @export var coin_item_id := "strange_coin"
 @export var torch_item_id := ""
+## Published two-day route: currency coins, no arson, whole-attempt rollback.
+@export var wallet_coins := false
+@export var interior_only := false
 ## Confirms P08's actual requirements; a blank reference disables mission activation.
 @export_multiline var escape_rules_reference := ""
 @export var required_flags: Array[StringName] = [&"day1.s05.blood_acquired"]
@@ -18,7 +21,11 @@ extends Node
 
 func get_issues(inventory: WarehouseInventory, actor_lookup: Callable) -> PackedStringArray:
 	var issues := PackedStringArray()
+	if interior_only and wallet_coins:
+		return issues
 	for item: String in [coin_item_id, torch_item_id]:
+		if wallet_coins:
+			continue
 		if item.is_empty() or inventory.get_definition(item) == null:
 			issues.append("未绑定真实投掷物品：%s" % (item if not item.is_empty() else "火把（P09）"))
 	if not is_instance_valid(checkpoint) or not checkpoint.is_inside_tree() or not checkpoint.global_position.is_finite():
@@ -51,7 +58,7 @@ func get_issues(inventory: WarehouseInventory, actor_lookup: Callable) -> Packed
 	for role: int in Day1GuardResponse.Role.values():
 		if not roles.has(role):
 			issues.append("缺少独立守卫职责：%s（P09）" % Day1GuardResponse.Role.keys()[role])
-	if flammable_targets.is_empty():
+	if flammable_targets.is_empty() and not wallet_coins:
 		issues.append("没有已确认的可燃目标（P09）")
 	var target_ids := {}
 	for target: Variant in flammable_targets:

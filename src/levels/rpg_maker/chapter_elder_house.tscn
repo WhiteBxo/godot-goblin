@@ -12,11 +12,13 @@
 
 [ext_resource type="Script" path="res://src/gameplay/story_interaction/story_interaction_point.gd" id="story"]
 
+[ext_resource type="Script" path="res://src/gameplay/stealth/day1_stealth_setup.gd" id="stealth"]
+
 [node name="RpgMakerMap006" instance=ExtResource("base")]
 
 script = ExtResource("map")
 
-chapter_host = &"elder"
+chapter_host = &"elder_house"
 
 exterior_location = "settlement.elder"
 
@@ -67,3 +69,45 @@ position = Vector2(408, 552)
 [node name="Interactions" type="Node2D" parent="."]
 
 [node name="GatherPoints" type="Node2D" parent="."]
+
+[node name="day1_elder_document" parent="Interactions" instance=ExtResource("point")]
+position = Vector2(600, 264)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("story")
+kind = 1
+interaction_id = &"day1_elder_document"
+success_sound = "story.page_turn"
+sound_bus = "SFX"
+entry_id = &"day1_elder_document"
+success_flags = Array[StringName](["day1.s05.document_read"])
+required_flags = Array[StringName](["world.phase.night", "day1.s04.commission_accepted"])
+required_stages = Array[String](["day1.s05"])
+display_name = "古文书"
+description = "古文书 · 残页\n\n……黄金乡并非传说中虚构之地。\n\n关于其存在的记载，最早见于……\n\n若要实现原定计划，必须确认「变量」是否出现。\n\n在此之前，不得擅自采取行动。\n\n……其余事项，待进一步确认后再议。\n\n主角·内心：黄金乡……变量……原定计划？\n\n主角·内心：这老头到底在研究什么啊？"
+item_id = "day1_elder_document"
+
+
+[node name="day1_blood_storage" parent="Interactions" instance=ExtResource("point")]
+position = Vector2(648, 408)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("story")
+kind = 0
+interaction_id = &"day1_blood_storage"
+success_sound = "story.unlock"
+sound_bus = "SFX"
+entry_id = &"day1_blood_storage"
+success_flags = Array[StringName](["day1.s05.blood_acquired"])
+item_id = "day1_griffin_blood"
+amount = 3
+amount_is_uses = true
+required_flags = Array[StringName](["world.phase.night", "day1.s04.commission_accepted"])
+required_stages = Array[String](["day1.s05"])
+display_name = "圣物储存柜"
+description = "带锁的柜格，里面只有一支封蜡小瓶。标签写着：格里芬之血。"
+
+[node name="StealthSetup" type="Node" parent="."]
+script = ExtResource("stealth")
+wallet_coins = true
+interior_only = true

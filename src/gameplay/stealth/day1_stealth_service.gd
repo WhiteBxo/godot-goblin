@@ -11,8 +11,13 @@ signal throw_resolved(kind: StringName, affected: bool)
 enum Status { IDLE, PENDING, RUNNING, FAILED, INTERCEPTED, ESCAPED }
 
 var status: Status = Status.IDLE
-var selected_kind: StringName = &"coin"
-var selected_drink_id := ""
+## Forwarded from the player's held slot; this scene never keeps its own copy.
+var selected_kind: StringName:
+	get:
+		return _player.held_item if is_instance_valid(_player) else &""
+var selected_drink_id: String:
+	get:
+		return _player.held_variant_id if is_instance_valid(_player) and _player.held_item == &"drink" else ""
 var message := ""
 var _state: Node
 var _inventory: WarehouseInventory
@@ -72,7 +77,8 @@ func select_throwable(kind: StringName) -> Error:
 		return ERR_INVALID_PARAMETER
 	if not can_accept_input() or not _pending_throw.is_empty() or _releasing:
 		return ERR_BUSY
-	selected_kind = kind
+	if not _player.set_held(kind):
+		return ERR_INVALID_PARAMETER
 	changed.emit()
 	return OK
 
@@ -81,8 +87,8 @@ func select_drink(id: String) -> Error:
 		return ERR_DOES_NOT_EXIST
 	if not can_accept_input() or not _pending_throw.is_empty() or _releasing:
 		return ERR_BUSY
-	selected_kind = &"drink"
-	selected_drink_id = id
+	if not _player.set_held(&"drink", id):
+		return ERR_INVALID_PARAMETER
 	changed.emit()
 	return OK
 
@@ -127,6 +133,9 @@ func retry_attempt() -> Error:
 
 func cancel_attempt() -> void:
 	_clear_local()
+	# Leaving the attempt must not leave the coin in the player's hands.
+	if is_instance_valid(_player):
+		_player.clear_held()
 	_auto_start = false
 	_set_status(Status.IDLE, "")
 
@@ -220,6 +229,10 @@ func _guard_cleared(guard: Day1GuardResponse) -> bool:
 
 func _on_action_started(action: StringName, _direction: Vector2) -> void:
 	if action != &"throw" or not can_accept_input() or _releasing:
+		return
+	if not _player.has_held():
+		message = "没有手持物品"
+		changed.emit()
 		return
 	var target: Vector2 = _target_override if _target_override is Vector2 else _effects.get_global_mouse_position()
 	if not _valid_target(target):
@@ -344,9 +357,9 @@ func _clear_local(restore_actors: bool = true) -> void:
 	_generation += 1
 	_clear_flights()
 	_confusion_created = false
-	selected_kind = &"coin"
-	selected_drink_id = ""
 	if is_instance_valid(_player):
+		# A restarted or retried attempt always starts holding the coin again.
+		_player.set_held(&"coin")
 		_player.cancel_action()
 	_reset_responses(restore_actors)
 
@@ -375,6 +388,7 @@ func _on_session_replaced() -> void:
 func _exit_tree() -> void:
 	_clear_local(false)
 	if is_instance_valid(_player):
+		_player.clear_held()
 		_player.action_started.disconnect(_on_action_started)
 		_player.action_triggered.disconnect(_on_action_triggered)
 		_player.action_finished.disconnect(_on_action_finished)

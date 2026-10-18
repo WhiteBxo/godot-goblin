@@ -489,8 +489,7 @@ func _create_shop_business(ui: ShopUI) -> void:
 		ui.show_production_result(result))
 	ui.formula_requested.connect(func(materials: Array[String], iced: bool) -> void:
 		var result := _tea_production.craft_formula(materials, 1, "", iced)
-		if day1_story_enabled and result.ok:
-			_audio_manager.play_sfx("shop.tea_pour")
+		_interaction_audio.play_event("craft_success" if result.ok else "craft_failure")
 		ui.show_formula_result(result))
 
 func get_player() -> CharacterBody2D:

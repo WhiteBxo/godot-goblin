@@ -21,9 +21,9 @@ func get_issues(inventory: WarehouseInventory, actor_lookup: Callable) -> Packed
 	for item: String in [coin_item_id, torch_item_id]:
 		if item.is_empty() or inventory.get_definition(item) == null:
 			issues.append("未绑定真实投掷物品：%s" % (item if not item.is_empty() else "火把（P09）"))
-	if not is_instance_valid(checkpoint):
+	if not is_instance_valid(checkpoint) or not checkpoint.is_inside_tree() or not checkpoint.global_position.is_finite():
 		issues.append("检查点尚未确认（P09）")
-	if not is_instance_valid(escape_zone) or escape_zone.get_shape_owners().is_empty():
+	if not has_escape_shape():
 		issues.append("正式撤离区域尚未绑定（P08/P09）")
 	if escape_rules_reference.strip_edges().is_empty() or required_flags.is_empty() or required_items.is_empty():
 		issues.append("撤离任务条件及混乱要求尚未确认（P08）")
@@ -35,7 +35,7 @@ func get_issues(inventory: WarehouseInventory, actor_lookup: Callable) -> Packed
 	var roles := {}
 	var actors := {}
 	for guard: Variant in guards:
-		if not is_instance_valid(guard) or not is_instance_valid(guard.actor):
+		if not is_instance_valid(guard) or not guard.is_inside_tree() or not is_instance_valid(guard.actor) or not guard.actor.is_inside_tree():
 			issues.append("守卫必须绑定实际角色，Marker 不代表 NPC")
 			continue
 		if guard.role not in Day1GuardResponse.Role.values() or guard.actor.accepts_player_input or guard.discovery_seconds <= 0.0 or guard.distraction_seconds <= 0.0 or guard.sight_range <= 0.0:
@@ -55,20 +55,28 @@ func get_issues(inventory: WarehouseInventory, actor_lookup: Callable) -> Packed
 		issues.append("没有已确认的可燃目标（P09）")
 	var target_ids := {}
 	for target: Variant in flammable_targets:
-		if not is_instance_valid(target) or not target.is_confirmed() or target_ids.has(target.target_id):
+		if not is_instance_valid(target) or not target.is_inside_tree() or not target.is_confirmed() or target_ids.has(target.target_id):
 			issues.append("可燃目标缺少有效碰撞、唯一 ID 或确认依据（P09）")
 		else:
 			target_ids[target.target_id] = true
 	for target: Variant in destructible_targets:
-		if not is_instance_valid(target) or not target.is_confirmed() or target_ids.has(target.target_id):
+		if not is_instance_valid(target) or not target.is_inside_tree() or not target.is_confirmed() or target_ids.has(target.target_id):
 			issues.append("可腐蚀目标缺少有效阻挡、唯一 ID 或确认依据")
 		else:
 			target_ids[target.target_id] = true
 	return issues
 
+func has_escape_shape() -> bool:
+	if not is_instance_valid(escape_zone) or not escape_zone.is_inside_tree():
+		return false
+	for owner_id: int in escape_zone.get_shape_owners():
+		if not escape_zone.is_shape_owner_disabled(owner_id) and escape_zone.shape_owner_get_shape_count(owner_id) > 0:
+			return true
+	return false
+
 ## Test current feet against the authored shapes, avoiding cached overlaps after teleport.
 func contains_escape_position(position: Vector2) -> bool:
-	if not is_instance_valid(escape_zone):
+	if not has_escape_shape():
 		return false
 	var point := CircleShape2D.new()
 	point.radius = 0.1

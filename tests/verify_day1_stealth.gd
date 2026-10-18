@@ -130,6 +130,16 @@ func _run() -> void:
 	_fixture()
 	await _frames()
 	_check(_service.status == Day1StealthService.Status.RUNNING, "Complete fixture activates through the real service")
+	var escape_shape := _setup.escape_zone.get_child(0) as CollisionShape2D
+	var escape_owner: int = _setup.escape_zone.get_shape_owners()[0]
+	_setup.escape_zone.shape_owner_set_disabled(escape_owner, true)
+	_check(not _service.get_configuration_issues().is_empty() and not _setup.contains_escape_position(_setup.escape_zone.global_position), "Disabled escape shapes cannot authorize a mission")
+	_setup.escape_zone.shape_owner_set_disabled(escape_owner, false)
+	var authored_shape := escape_shape.shape
+	escape_shape.shape = null
+	_check(not _service.get_configuration_issues().is_empty() and not _setup.contains_escape_position(_setup.escape_zone.global_position), "An empty escape shape owner cannot authorize a mission")
+	escape_shape.shape = authored_shape
+	_check(_service.get_configuration_issues().is_empty(), "Restoring the authored escape shape restores valid bindings")
 	var original_actor := _setup.guards[2].actor
 	_setup.guards[2].actor = _setup.guards[1].actor
 	_check(not _service.get_configuration_issues().is_empty(), "One actor cannot stand in for the mansion's two guards")
@@ -214,6 +224,14 @@ func _run() -> void:
 	await _until(func() -> bool: return _service.status == Day1StealthService.Status.INTERCEPTED, "The distinct drunken guard intercepts instead of generic failure")
 	_check(not _state.get_flag("day1.s05.guard_payment_completed"), "Interception does not pretend payment succeeded")
 	_check(_service.retry_attempt() == OK, "Unresolved drunken event can retry without payment")
+	var drunk := _setup.guards[3]
+	_state.set_flag(String(drunk.clearance_flag))
+	_state.set_flag("day1.s05.guard_payment_completed")
+	_player.teleport_to(Vector2(4080, 0))
+	await _until(func() -> bool: return _service.status == Day1StealthService.Status.INTERCEPTED, "Payment and clearance alone cannot disable the mandatory drunken interception")
+	_state.set_flag(String(drunk.clearance_flag), false)
+	_state.set_flag("day1.s05.guard_payment_completed", false)
+	_check(_service.retry_attempt() == OK, "Incomplete mandatory event remains retryable without changing receipts")
 	# Fixture facts represent outputs of external businesses. No production price or order is invented.
 	_player.teleport_to(_setup.escape_zone.global_position)
 	await _frames()
@@ -257,12 +275,31 @@ func _run() -> void:
 	_service.request_throw(Vector2(0, 80))
 	await _frames(20)
 	_check(_results.size() == resolutions and _state.get_transactions().get_balance() == balance, "Insufficient coins do not fall back to ordinary wallet money or spawn a projectile")
+	_inventory.try_consume({"fixture_torch": _inventory.get_stock("fixture_torch")})
+	_check(_service.select_throwable(&"torch") == OK and _service.request_throw(target.global_position) == OK, "An exhausted torch uses the same animation release path")
+	await _frames(20)
+	_check(_results.size() == resolutions and target.remaining == 0 and _inventory.get_stock("fixture_torch") == 0, "Exhausted torches do not spawn fire or replenish themselves")
+	_player.teleport_to(Vector2(80, 0))
+	await _until(func() -> bool: return _service.status == Day1StealthService.Status.FAILED, "Discovery still fails an attempt with exhausted resources")
+	_check(_service.retry_attempt() == OK and _inventory.get_stock("strange_coin") == 0 and _inventory.get_stock("fixture_torch") == 0 and _state.get_flag("day1.s05.blood_acquired"), "Exhausted-resource retry preserves empty stock and prior investigation receipts")
 	_service.request_throw(Vector2(0, 80))
 	var snapshot: Dictionary = _state.to_dict()
 	_state.set_flag("fixture.snapshot_changed")
 	_check(_state.restore_state(snapshot) == OK, "Session snapshot restores")
 	await _frames()
 	_check(_player.get_active_action().is_empty() and target.remaining == 0 and _world.get_children().filter(func(node: Node) -> bool: return node is Day1ThrowProjectile).is_empty(), "Restore clears pending release, projectiles and fire")
+	var checkpoint := _setup.checkpoint
+	_world.remove_child(checkpoint)
+	await _frames()
+	_check(_service.status == Day1StealthService.Status.PENDING and _service.begin_attempt() == ERR_UNCONFIGURED, "A detached checkpoint cancels gameplay and prevents teleporting to a stale binding")
+	_world.add_child(checkpoint)
+	_check(_service.begin_attempt() == OK, "A restored checkpoint permits an explicit restart")
+	var escape_zone := _setup.escape_zone
+	_world.remove_child(escape_zone)
+	await _frames()
+	_check(_service.status == Day1StealthService.Status.PENDING and _service.begin_attempt() == ERR_UNCONFIGURED and not _setup.contains_escape_position(escape_zone.position), "A detached escape zone cancels gameplay instead of authorizing escape")
+	_world.add_child(escape_zone)
+	_check(_service.begin_attempt() == OK, "A restored escape zone permits an explicit restart")
 	target.queue_free()
 	await _frames()
 	_check(_service.status == Day1StealthService.Status.PENDING, "A disappearing binding cancels the attempt instead of leaving active local state")
@@ -289,6 +326,11 @@ func _check_real_host() -> void:
 	_check(service.get_inventory() == _state.get_warehouse_inventory(), "Formal host injects the sole shared inventory")
 	_check(service.status == Day1StealthService.Status.PENDING and service.begin_attempt() == ERR_UNCONFIGURED, "Formal host rejects missing torch, roles and unconfirmed escape design")
 	_check(host.get_actor_director().get_actor(&"guard") != null and host.get_actor_director().get_actor(&"drunken_guard") == null, "Formal guard actor and drunken marker are not conflated")
+	var issues := service.get_configuration_issues()
+	for role: String in Day1GuardResponse.Role.keys():
+		_check("缺少独立守卫职责：%s（P09）" % role in issues, "Formal host reports the missing role: " + role)
+	_check("未绑定真实投掷物品：火把（P09）" in issues and "没有已确认的可燃目标（P09）" in issues, "Formal host rejects decorative torches and scenery as gameplay bindings")
+	_check("检查点尚未确认（P09）" in issues and "正式撤离区域尚未绑定（P08/P09）" in issues and "撤离任务条件及混乱要求尚未确认（P08）" in issues, "Formal host reports checkpoint, escape volume and rule confirmation gaps")
 	var before: Dictionary = _state.to_dict()
 	var event := InputEventAction.new()
 	event.action = &"player_throw"

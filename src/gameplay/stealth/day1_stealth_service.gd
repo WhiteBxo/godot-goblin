@@ -199,6 +199,8 @@ func _physics_process(delta: float) -> void:
 func _bindings_available() -> bool:
 	if not is_instance_valid(_setup):
 		return false
+	if not is_instance_valid(_setup.checkpoint) or not _setup.checkpoint.is_inside_tree() or not _setup.checkpoint.global_position.is_finite() or not _setup.has_escape_shape():
+		return false
 	for binding: Variant in _setup.guards + _setup.flammable_targets + _setup.destructible_targets:
 		if not is_instance_valid(binding) or not binding.is_inside_tree():
 			return false
@@ -213,7 +215,8 @@ func _bindings_available() -> bool:
 func _guard_cleared(guard: Day1GuardResponse) -> bool:
 	# A configured clearance fact cannot substitute for a successful payment.
 	return (guard.clearance_flag != &"" and _state.get_flag(String(guard.clearance_flag))
-		and _state.get_flag("day1.s05.guard_payment_completed"))
+		and _state.get_flag("day1.s05.guard_payment_completed")
+		and (guard.role != Day1GuardResponse.Role.DRUNKEN or _state.is_event_completed(guard.encounter_event_id)))
 
 func _on_action_started(action: StringName, _direction: Vector2) -> void:
 	if action != &"throw" or not can_accept_input() or _releasing:

@@ -2,6 +2,32 @@
 
 2026-10-18：玩法组件已实现，**Day 1 第五阶段正式流程尚未接通**。来源为[修改稿第五阶段](../design/day_01_story_flow_revised.md#第五阶段夜间潜入)、[对接契约](../design/day_01_integration_contract.md)及 [P05/P06/P08/P09](../story_authoring/day_01_integration_pending.md)。没有发布新的 Story/Dialogue/Bridge 数据，也没有决定文书与血液的顺序。
 
+## 2026-10-18 正式关卡核对
+
+本轮以 `e8aaa44` 的源码和实际正式宿主为基线。本轮只修复潜入组件的有效绑定与必然事件边界，并补相关验证；没有为缺少依据的配置生成角色、坐标、物品或支付金额。
+
+| 核对项 | 当前有来源的实现 | 正式接通仍需补齐 |
+| --- | --- | --- |
+| 1. 角色与职责 | [正式宿主](../../src/core/settlement.tscn)各实例化一名 `guard`、`guard_captain`；[守卫资源](../../src/gameplay/characters/guard.tscn)身份是“长老居所守卫；可供醉酒守卫剧情使用”。[地图](../../src/levels/settlement/settlement_map.tscn)另有 `StoryAnchors/drunken_guard` Marker 和 `InteractionPoints/drunken_guard` 调查点，两者均非 Actor。`Day1StealthSetup.guards` 为空。 | ENTRANCE、MANSION_LURE、MANSION_GATE、DRUNKEN 四个槽均缺实际绑定，以及有依据的身份、站位与朝向。资源中“可供醉酒剧情使用”不是角色复用方案的确认。若策划决定 `guard` 同时承担宅邸卫兵和醉酒事件，现有独立职责约束会拒绝，必须先确认交接方案；不能用守卫长补位或将 Marker 当角色。 |
+| 2. 投币、支付与醉酒事件 | [正式订单](../../src/resources/tasks/day1_stages_01_02.json)真实交付奖励 `strange_coin`，服务释放投掷时扣一枚库存币；只有入口与诱饵职责响应投币。放行还要求支付事实与角色放行事实，醉酒职责另要求事件完成。 | [后四阶段事件文件](../../src/resources/story/day1_stages_03_06.json)的 `events` 仍为空；没有已发布醉酒事件或正式支付写入者。P06/P09 的支付币种、金额、次数、对象关系、稳定交易 ID、余额不足处理和必然拦截节点均未确认。调查回执、对白结束不能代替支付。 |
+| 3. 火把与可燃目标 | Setup 的 `torch_item_id` 为空，`flammable_targets` 为空。组件只接受已确认目标的真实射线命中。 | 没有正式火把库存定义、取得点、取得数量和去重回执；也没有确认过的可燃对象、命中形状、唯一 ID 与来源引用。壁挂火把、柴堆等装饰不能作为配置依据。 |
+| 4. 文书、取血、混乱与撤离 | 地图已有 `day1_elder_document` 与 `day1_blood_storage`，均要求 S05、夜间与接受委托。文书关闭才写阅读事实；血液真实入库 `day1_griffin_blood` × 1 并写取得事实。Setup 缺省要求血液物品与取得事实，未额外要求先读文书。 | 文书是否必读／必拿、文书与取血先后、混乱是否必需仍受 P08 来源冲突阻塞。`escape_rules_reference`、`escape_zone` 和 `checkpoint` 仍未配置；`confusion_required = false` 只是缺省值，不能当成已经确认的撤离规则。现有返店区域和实际返店事实不能冒充潜入成功。 |
+| 5. 发现、重试与耗尽 | 普通守卫发现后失败，醉酒守卫发现后请求拦截事件；局部重试清理感知、火焰和在途物并回检查点，保留已消耗物品及已提交调查／支付结果。不向普通钱包回退，不自动补币／补火把。 | 检查点缺确认位置；金币／火把耗尽后的补给、替代路线或退出任务策略仍需 P05/P06/P09 决定。当前组件允许空库存重试，但这不保证任务仍可完成；本轮没有增加免费补给或退款。 |
+
+本轮修复：撤离区必须有启用且实际含 Shape2D 的碰撞 owner；检查点、守卫、目标必须位于场景树中。运行中检查点或撤离形状失效会取消本次尝试并回到 PENDING，避免继续使用脱离场景的绑定。醉酒职责即使已有支付及放行事实，事件完成前仍会拦截，不能提前停止感知。
+
+本轮验证使用 Godot `4.7.2.stable.official.ed1daf0bf`，在 Windows 仓库根执行 `Godot_v4.7.2-stable_win64_console.exe --headless --path . --script res://tests/<脚本>`：
+
+- 修改前 `verify_day1_stealth.gd`：84 项通过。
+- 修改后 `verify_day1_stealth.gd`：103 项通过，含正式 `settlement.tscn` 宿主、唯一库存注入、全部职责缺口、真实 InputMap 和暂停锁。新增覆盖无效撤离形状、检查点／撤离区退出场景、支付不能跳过醉酒事件，以及火把／金币耗尽后的重试。
+- `verify_drink_throw.gd`：96 项通过；`verify_day1_world_flow.gd`：通过真实文书展示关闭、取血、返店与后续业务检查。
+
+上述日志无脚本错误。没有修改场景、角色资源、正式对白、剧情顺序、GameState、共享交易或 MainGame；没有运行全项目回归、Release 导出或人工整段通关。本轮未新增关卡配置：现有来源没有提供可合法落地的缺失绑定。组件夹具通过、世界流程返店通过均不代表正式潜入通关。
+
+试玩仍使用下方 F6 入口：观察夜间聚落及“夜间潜入暂不可用”，按 F 不扣物品、不产生支付／撤离事实；文书与血液可通过原有 E 调查验证，其结果不解锁缺失的潜入配置。守卫分心、点火与完整撤离只能在独立测试夹具中验证，不能作为正式关卡验收。
+
+引擎核对：[Godot 4.7 CollisionObject2D](https://docs.godotengine.org/en/4.7/classes/class_collisionobject2d.html) 的 shape owner 与实际形状数量分别查询，并排除 disabled owner；保留[物理 tick 内执行射线查询](https://docs.godotengine.org/en/4.7/tutorials/physics/ray-casting.html)的既有实现。
+
 ## 已实现的组件
 
 - Day1StealthService 是 Systems 下的场景内服务，使用宿主提供的共享库存、玩家、EffectRoot、Actor 查询和控制权限。无新 Autoload、钱包、业务副本或存档。
@@ -54,8 +80,8 @@ retry_attempt 只接受失败或拦截状态，并再次核对外部控制权与
 
 F6 运行现有 `src/debug/story/day1_world_flow_demo.tscn`，它继承正式 `src/core/settlement.tscn` 并只准备已接受委托的夜间 S05。预期：聚落夜景和“夜间潜入暂不可用”提示，金币/火把操作禁用；具体缺口由服务 get_configuration_issues 返回，并记录在 pending。WASD、原有 E 调查与暂停流程保留。按 F 不会扣资源或写支付/撤离事实。这个入口不是完整潜入通关 Demo。
 
-本次自动化结果：Day1Stealth 84 项、玩家动作 177 项、MainGame 73 项、GameplayBridge 248 项、UI 主题 156 项及 Day1WorldFlow、Settlement 均通过。新增检查覆盖飞行中被发现的投掷物清理、已释放资源不退款，以及目标/守卫释放后的安全取消；发现并修复了已释放对象进入强类型循环时的脚本错误，最终日志无脚本错误。Bridge 首次沙箱运行因 user:// 临时 JSON 不可写产生 20 项连带失败，正常权限下复跑 248 项全部通过。编辑器导入无脚本解析错误；沙箱存在系统证书、编辑器设置保存和退出资源诊断。没有执行全项目回归或 Release 导出，因为未更改共享状态协议、Loader 或数据格式。
+组件首次交付的历史结果（非本轮）：Day1Stealth 84 项、玩家动作 177 项、MainGame 73 项、GameplayBridge 248 项、UI 主题 156 项及 Day1WorldFlow、Settlement 均通过。新增检查覆盖飞行中被发现的投掷物清理、已释放资源不退款，以及目标/守卫释放后的安全取消；发现并修复了已释放对象进入强类型循环时的脚本错误，最终日志无脚本错误。Bridge 首次沙箱运行因 user:// 临时 JSON 不可写产生 20 项连带失败，正常权限下复跑 248 项全部通过。编辑器导入无脚本解析错误；沙箱存在系统证书、编辑器设置保存和退出资源诊断。没有执行全项目回归或 Release 导出，因为未更改共享状态协议、Loader 或数据格式。
 
-独立 Metal 图形进程执行组件及真实宿主交互检查；最终 HUD 缩窄后，只以 `-- --host-only --capture` 复查正式宿主，8 项通过，截图保存于 `/tmp/day1_stealth_pending.png`，确认提示及按钮未越出视口。输入和暂停由脚本驱动，不计为人工整段通关。已有编辑器本次 F6 运行窗口黑屏并出现 UID 诊断，因此未将编辑器 F6 观察计为通过；独立图形宿主已正常渲染。正式通关仍受上述配置与剧情待定项阻塞。
+组件首次交付的历史图形验证：独立 Metal 图形进程执行组件及真实宿主交互检查；最终 HUD 缩窄后，只以 `-- --host-only --capture` 复查正式宿主，8 项通过，截图保存于 `/tmp/day1_stealth_pending.png`，确认提示及按钮未越出视口。输入和暂停由脚本驱动，不计为人工整段通关。已有编辑器本次 F6 运行窗口黑屏并出现 UID 诊断，因此未将编辑器 F6 观察计为通过；独立图形宿主已正常渲染。正式通关仍受上述配置与剧情待定项阻塞。
 
 引擎依据：[Godot 4.7 射线查询的物理帧和世界坐标约定](https://docs.godotengine.org/en/4.7/tutorials/physics/ray-casting.html)、[PhysicsDirectSpaceState2D](https://docs.godotengine.org/en/4.7/classes/class_physicsdirectspacestate2d.html)、[InputEvent](https://docs.godotengine.org/en/4.7/classes/class_inputevent.html)。投掷与视线查询都只在物理 tick 执行，输入继续走 InputMap。

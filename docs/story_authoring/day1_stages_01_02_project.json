@@ -1,7 +1,7 @@
 {
 	"version": 1.0,
 	"format": "goblin_story_project",
-	"next_step_id": 77.0,
+	"next_step_id": 81.0,
 	"manifest": {
 		"version": 1.0,
 		"source": "res://docs/design/day_01_stages_01_02_draft.md",
@@ -314,11 +314,34 @@
 					}
 				},
 				{
+					"id": "step_0077",
+					"data": {
+						"command": "fade_bgm",
+						"volume_db": -26.0,
+						"fade": 0.35
+					}
+				},
+				{
 					"id": "step_0021",
 					"data": {
 						"command": "camera_focus",
 						"actor": "goblin_customer",
 						"duration": 0.9
+					}
+				},
+				{
+					"id": "step_0078",
+					"data": {
+						"command": "camera_zoom",
+						"value": 1.15,
+						"duration": 0.35
+					}
+				},
+				{
+					"id": "step_0079",
+					"data": {
+						"command": "wait",
+						"seconds": 0.6
 					}
 				},
 				{
@@ -364,6 +387,14 @@
 					"data": {
 						"command": "set_stage",
 						"value": "day1.wait_goblin"
+					}
+				},
+				{
+					"id": "step_0080",
+					"data": {
+						"command": "fade_bgm",
+						"volume_db": -12.0,
+						"fade": 0.7
 					}
 				},
 				{
@@ -837,7 +868,8 @@
 				},
 				"line_3": {
 					"speaker": "主角",
-					"text": "卧槽……你还真就只给我个游戏币？我一杯奶茶就这么没了？！"
+					"text": "卧槽……你还真就只给我个游戏币？我一杯奶茶就这么没了？！",
+					"portrait": "res://assets/characters/apron_man/player_neutral_portrait.png"
 				}
 			}
 		},

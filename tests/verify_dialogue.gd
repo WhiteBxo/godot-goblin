@@ -70,9 +70,7 @@ func _run() -> void:
 	_check(root.get_node("GameState").call("to_dict") == state_before, "Dialogue components never change GameState")
 	await _test_main_input_lock()
 	state_before.flags["shop.orders_viewed"] = true
-	state_before.flags["task.shop.first_order.active"] = true
-	state_before.flags["ui.handbook.tasks_unlocked"] = true
-	_check(root.get_node("GameState").call("to_dict") == state_before, "Shop integration records the viewed order board and accepts only its revealed order")
+	_check(root.get_node("GameState").call("to_dict") == state_before, "Opening the order board records viewing without implicitly accepting an order")
 	print("DIALOGUE: %s (%d checks, %d failures)" % ["PASS" if _failures.is_empty() else "FAIL", _checks, _failures.size()])
 	quit(0 if _failures.is_empty() else 1)
 
@@ -238,7 +236,7 @@ func _test_speaker_portraits() -> void:
 	_check(_manager.start_dialogue("demo.speaker_portraits") == OK, "Portrait demo starts through the real manager")
 	var portrait: TextureRect = _ui.get_node("Portrait")
 	var expected := {
-		"player": "res://assets/characters/apron_man/player_neutral_portrait.png",
+		"player": "res://assets/characters/apron_man/player_talking_portrait.png",
 		"goblin": "res://assets/characters/goblin/goblin_smiling_portrait.png",
 		"narrator": "",
 		"inner": "res://assets/characters/apron_man/player_neutral_portrait.png",
@@ -270,7 +268,7 @@ func _test_speaker_portraits() -> void:
 	_check(not portrait.visible and portrait.texture == null, "Cancelling dialogue clears the portrait")
 	_check(_manager.load_dialogues("res://src/resources/dialogue/day1_demo_dialogues.json") == OK, "Existing Day 1 dialogue loads without adding portrait fields")
 	_manager.start_dialogue("day1.opening")
-	_check(portrait.visible and portrait.texture == _manager.speaker_portraits["主角"], "Existing opening resolves the protagonist portrait automatically")
+	_check(portrait.visible and portrait.texture == _manager.speaker_portraits["主角·内心"], "Existing opening resolves the protagonist portrait automatically")
 	_manager.end_dialogue()
 	_check(_manager.load_dialogues() == OK, "Restore default dialogue catalogue after portrait checks")
 

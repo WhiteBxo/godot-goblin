@@ -9,6 +9,8 @@ var _foreground: Array[DoorframeForeground] = []
 
 func _ready() -> void:
 	process_physics_priority = 2
+	for point: InteractionPoint in get_interaction_points():
+		point.hide_development_markers()
 	for container: Node2D in [$Doorframes, $EquipmentForeground]:
 		for foreground: DoorframeForeground in container.get_children():
 			_foreground.append(foreground)

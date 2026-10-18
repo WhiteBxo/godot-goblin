@@ -3191,7 +3191,8 @@
 				"line_1": {
 					"speaker": "主角",
 					"text": "……这玩意儿真的能喝吗？",
-					"next": "line_2"
+					"next": "line_2",
+					"portrait": "res://assets/characters/apron_man/player_neutral_portrait.png"
 				},
 				"line_2": {
 					"speaker": "主角·内心",

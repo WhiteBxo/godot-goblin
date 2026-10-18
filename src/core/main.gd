@@ -114,6 +114,7 @@ func _ready() -> void:
 		var points := _with_npc_points(_shop_level.get_interaction_points())
 		points.append_array(_shop_level.get_scene_exits())
 		interaction.configure(_shop_player, ui, points, _route_story_interaction)
+		interaction.set_priority_resolver(_order_board.get_interaction_priority)
 		_shop_ui = ui
 		_shop_interaction = interaction
 		_create_interaction_feedback(interaction)
@@ -577,6 +578,8 @@ func _initialize_settlement() -> void:
 	_shop_interaction.name = "SettlementInteraction"
 	$Systems.add_child(_shop_interaction)
 	_shop_interaction.configure(_shop_player, _shop_ui, points, _route_story_interaction)
+	if is_instance_valid(_order_board):
+		_shop_interaction.set_priority_resolver(_order_board.get_interaction_priority)
 	_create_interaction_feedback(_shop_interaction)
 	_create_dialogue_system()
 	for marker: Marker2D in _settlement_level.get_story_positions():
@@ -615,6 +618,8 @@ func _initialize_room_map(map: Node2D) -> void:
 		map.call(&"configure_depth_sort", $World/EntityRoot)
 	_shop_ui = preload("res://src/UI/milk_tea/shop_ui.tscn").instantiate()
 	_shop_ui.help_text = "房间                  WASD 移动 · E 交互 · Esc / P 暂停"
+	if chapter_map and map.get_chapter_host() == "settlement":
+		_shop_ui.help_text = "陌生的洞窟聚落 · WASD 移动 · E 调查 · Esc / P 暂停"
 	_shop_ui.show_help = not DebugRuntime.is_enabled()
 	_shop_ui.close_text = "继续探索  [Esc]"
 	$HudLayer.add_child(_shop_ui)
@@ -642,6 +647,8 @@ func _initialize_room_map(map: Node2D) -> void:
 	_shop_interaction.name = "RoomInteraction"
 	$Systems.add_child(_shop_interaction)
 	_shop_interaction.configure(_shop_player, _shop_ui, points, _route_story_interaction)
+	if is_instance_valid(_order_board):
+		_shop_interaction.set_priority_resolver(_order_board.get_interaction_priority)
 	_create_interaction_feedback(_shop_interaction)
 	_create_dialogue_system()
 	if chapter_map:
@@ -828,6 +835,8 @@ func _with_npc_points(points: Array[InteractionPoint]) -> Array[InteractionPoint
 		point.interaction_id = entity.actor_id
 		point.display_name = entity.display_name
 		point.description = entity.story_role
+		if _shop_level != null:
+			point.selection_group = &"orders"
 		entity.add_child(point)
 		if day1_story_enabled:
 			point.hide_development_markers()

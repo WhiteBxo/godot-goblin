@@ -39,6 +39,7 @@ func capture(label: String) -> void:
 
 func _run() -> void:
 	_capture = "--capture" in OS.get_cmdline_user_args()
+	ProjectSettings.set_setting("persistence/save_directory", "/tmp/goblin_order_ui_%d" % OS.get_process_id())
 	root.size = Vector2i(640, 360)
 	ProjectSettings.set_setting("debug/developer_tools/enabled", false)
 	var state: StateData = root.get_node("GameState")
@@ -100,8 +101,12 @@ func _run() -> void:
 	check(crafting.submit().get("ok", false), "One confirmation crafts the tracked recipe")
 	check(inventory.get_stock("classic_boba_milk_tea") == before + 1, "Order crafting produces exactly one carried cup")
 	check(not state.get_flag("day1.group_c_settled"), "Crafting never settles the order")
+	check(_game.get_order_board().get_entry("day1_group_c").remaining_to_craft == 2, "One shared cup leaves two cups to prepare for three accepted orders")
+	check(crafting.get_ticket().get_primary_button().text == "制作 1 杯并入库", "A ready shared cup does not interrupt batch preparation")
+	check(crafting.submit().get("ok", false) and crafting.submit().get("ok", false), "All three same-product orders can be prepared before any delivery")
+	check(inventory.get_stock("classic_boba_milk_tea") == before + 3, "Three confirmations create three distinct carried cups")
 	var snapshot := state.to_dict()
-	check(not crafting.submit().get("ok", false) and state.to_dict() == snapshot, "Repeated confirmation after stock is ready is harmless")
+	check(not crafting.submit().get("ok", false) and state.to_dict() == snapshot, "Further preparation stops only after all accepted demand is covered")
 	await capture("ready_640")
 	check(crafting.get_ticket().get_primary_button().text == "返回店铺，去交付" and not crafting.get_ticket().get_primary_button().disabled, "Ready cup offers a usable return action")
 	crafting.get_ticket().get_primary_button().grab_focus()

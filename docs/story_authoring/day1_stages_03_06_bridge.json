@@ -25,7 +25,7 @@
       "mode": "自动演出",
       "event": "day1.s03.street_gone",
       "start": 0,
-      "count": 3,
+      "count": 8,
       "dialogues": [
         "day1.s03.street_gone",
         "day1.s03.limited_exploration"
@@ -192,6 +192,6 @@
     }
   ],
   "authoring_project": "res://docs/story_authoring/day1_stages_03_06_project.json",
-  "authoring_sha256": "082c103b996ebfea508470574aebeb1a664d55a341b5080986c47cab399013c4",
+  "authoring_sha256": "a4337e0e09c04f060903c02712b180ce9e1405f3aca6661fda42801caea4084e",
   "verification": "res://tests/verify_two_day_flow.gd"
 }

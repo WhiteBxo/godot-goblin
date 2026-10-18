@@ -32,12 +32,40 @@
       },
       "steps": [
         {
+          "command": "camera_zoom",
+          "value": 0.8,
+          "duration": 0.7
+        },
+        {
+          "command": "camera_move",
+          "target": [
+            1392.0,
+            2376.0
+          ],
+          "duration": 1.2
+        },
+        {
+          "command": "wait",
+          "seconds": 0.7
+        },
+        {
           "command": "dialogue",
           "id": "day1.s03.street_gone"
         },
         {
+          "command": "camera_move",
+          "target": [
+            1272.0,
+            2184.0
+          ],
+          "duration": 1.0
+        },
+        {
           "command": "dialogue",
           "id": "day1.s03.limited_exploration"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "set_stage",

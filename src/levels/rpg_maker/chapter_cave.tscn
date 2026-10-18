@@ -24,6 +24,8 @@
 
 [ext_resource type="Script" path="res://src/gameplay/gathering/gather_point.gd" id="gather"]
 
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/common_goblin.tscn" id="goblin"]
+
 [sub_resource type="RectangleShape2D" id="escape_shape"]
 size = Vector2(240, 144)
 
@@ -201,6 +203,7 @@ position = Vector2(1320, 2376)
 script = ExtResource("story")
 
 kind = 1
+show_world_marker = true
 
 interaction_id = &"day1_s03_yard"
 
@@ -221,6 +224,7 @@ position = Vector2(1176, 2280)
 script = ExtResource("story")
 
 kind = 1
+show_world_marker = true
 
 interaction_id = &"day1_s03_street"
 
@@ -241,6 +245,7 @@ position = Vector2(1272, 2184)
 script = ExtResource("story")
 
 kind = 1
+show_world_marker = true
 
 interaction_id = &"day1_s03_path"
 
@@ -374,11 +379,12 @@ position = Vector2(1416, 456)
 trigger_id = &"day1_drunken_encounter"
 required_stages = Array[String](["day1.s05"])
 
-[node name="MansionPayment" parent="Interactions" instance=ExtResource("point")]
+[node name="MansionPayment" parent="Interactions" node_paths=PackedStringArray("required_actors") instance=ExtResource("point")]
+required_actors = Array[NodePath]([NodePath("../../Characters/MansionLure"), NodePath("../../Characters/MansionGate")])
 position = Vector2(1656, 456)
 interaction_id = &"mansion_payment"
 display_name = "宅邸双卫 · 10G"
-description = "交给两名守卫一枚金币，本次往返放行。"
+description = "支付10G给两名守卫，本次往返放行。"
 
 [node name="NightGather0" parent="GatherPoints" instance=ExtResource("point")]
 position = Vector2(1128, 2136)
@@ -414,3 +420,24 @@ required_flag = "world.phase.night"
 position = Vector2(1176, 648)
 script = ExtResource("entrance")
 entrance_id = &"infiltration_start"
+
+[node name="ReturningGoblinA" parent="Characters" instance=ExtResource("goblin")]
+position = Vector2(1416, 2424)
+actor_id = &"goblin_a"
+display_name = "哥布林甲"
+active_phase = "day"
+facing = 2
+
+[node name="ReturningGoblinB" parent="Characters" instance=ExtResource("goblin")]
+position = Vector2(1416, 2328)
+actor_id = &"goblin_b"
+display_name = "哥布林乙"
+active_phase = "day"
+facing = 3
+
+[node name="ReturningGoblinC" parent="Characters" instance=ExtResource("goblin")]
+position = Vector2(1272, 2472)
+actor_id = &"goblin_c"
+display_name = "哥布林丙"
+active_phase = "day"
+facing = 1

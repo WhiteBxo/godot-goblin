@@ -11,6 +11,10 @@ signal interacted(point: InteractionPoint)
 @export var feedback_rect := Rect2(-18, -18, 36, 36)
 @export var success_sound: String = ""
 @export_enum("UI", "SFX") var sound_bus: String = "UI"
+## Scene-authored links stay valid when the host reparents actors.
+@export var required_actors: Array[Node2D] = []
+## Related overlapping targets may use business priority after spatial selection.
+@export var selection_group: StringName
 @export var interaction_enabled := true:
 	set(value):
 		interaction_enabled = value
@@ -30,7 +34,10 @@ func hide_development_markers() -> void:
 func is_available() -> bool:
 	_bodies = _bodies.filter(func(body: Node2D) -> bool:
 		return is_instance_valid(body) and body.is_inside_tree() and not body.is_queued_for_deletion())
-	return interaction_enabled and is_visible_in_tree() and is_inside_tree() and not is_queued_for_deletion() and not _bodies.is_empty()
+	return (interaction_enabled and is_visible_in_tree() and is_inside_tree()
+		and not is_queued_for_deletion() and not _bodies.is_empty()
+		and required_actors.all(func(actor: Node2D) -> bool:
+			return is_instance_valid(actor) and actor.is_visible_in_tree() and not actor.is_queued_for_deletion()))
 
 func interact() -> void:
 	if is_available():

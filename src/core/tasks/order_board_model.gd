@@ -15,12 +15,18 @@ var _production: TeaProduction
 var _delivery: TaskDelivery
 var _entries: Array[Dictionary] = []
 var _target_names: Dictionary = {}
+var _delivery_targets: Dictionary = {}
 var _tracked_id := ""
 
 func configure(catalog: TaskCatalog, journal: TaskJournal, state: StateData,
 		inventory: WarehouseInventory, production: TeaProduction, delivery: TaskDelivery) -> void:
 	_disconnect_sources()
 	_catalog = catalog
+	_delivery_targets.clear()
+	if _catalog != null:
+		for task: Dictionary in _catalog.get_tasks():
+			if task.has("delivery"):
+				_delivery_targets[task.delivery.target_object_id] = true
 	_journal = journal
 	_state = state
 	_inventory = inventory
@@ -104,11 +110,48 @@ func refresh() -> void:
 		if view.status not in ["failed", "expired", "cancelled"] and not done and not accepted and not _delivery.can_accept_order(order_id):
 			continue
 		next.append(_project(task, view, accepted, done))
+	_project_shared_demand(next)
 	var tracked := str(_state.get_variable(TRACKED_KEY, ""))
 	if next != _entries or _tracked_id != tracked:
 		_entries = next
 		_tracked_id = tracked
 		changed.emit()
+
+## Cups remain shared inventory. Readiness means this customer can receive one;
+## preparation covers the total demand of every unfinished accepted order.
+func _project_shared_demand(entries: Array[Dictionary]) -> void:
+	var demand: Dictionary = {}
+	for entry: Dictionary in entries:
+		if entry.status == "active" and not entry.product_id.is_empty():
+			demand[entry.product_id] = int(demand.get(entry.product_id, 0)) + 1
+	for entry: Dictionary in entries:
+		entry.remaining_to_craft = 0
+		if entry.status != "active" or entry.product_id.is_empty():
+			continue
+		var needed: int = demand[entry.product_id]
+		var owned := _inventory.get_stock(entry.product_id)
+		entry.remaining_to_craft = maxi(0, needed - owned)
+		if not entry.recipe_materials.is_empty() and entry.remaining_to_craft > 0:
+			var materials: Array[String] = []
+			materials.assign(entry.recipe_materials)
+			var preview := _production.preview_craft(materials)
+			entry.can_craft = preview.code == "ok"
+			entry.missing = preview.missing.duplicate(true)
+			var missing_names := PackedStringArray()
+			for id: String in entry.missing:
+				missing_names.append("%s ×%d" % [_production.get_item_name(id), entry.missing[id]])
+			entry.missing_text = "、".join(missing_names)
+		if needed > 1:
+			entry.hint = "同款待交 %d 杯 · 库存 %d 杯 · 还需制作 %d 杯" % [needed, owned, entry.remaining_to_craft]
+			if owned > 0 and owned < needed:
+				entry.status_text = "可交付一单 · 共用库存"
+
+## Priority only resolves competing targets inside the counter's selection group.
+func get_interaction_priority(id: StringName) -> int:
+	for entry: Dictionary in _entries:
+		if entry.target_id == String(id) and entry.status == "active" and entry.ready:
+			return 1
+	return -1 if _delivery_targets.has(String(id)) else 0
 
 func _project(task: Dictionary, view: Dictionary, accepted: bool, done: bool) -> Dictionary:
 	var order_id: String = task.delivery.order_id

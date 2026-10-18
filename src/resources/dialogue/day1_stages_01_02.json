@@ -72,7 +72,8 @@
         },
         "line_3": {
           "speaker": "主角",
-          "text": "卧槽……你还真就只给我个游戏币？我一杯奶茶就这么没了？！"
+          "text": "卧槽……你还真就只给我个游戏币？我一杯奶茶就这么没了？！",
+          "portrait": "res://assets/characters/apron_man/player_neutral_portrait.png"
         }
       }
     },

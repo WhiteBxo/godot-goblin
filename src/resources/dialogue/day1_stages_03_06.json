@@ -332,7 +332,8 @@
         "line_24": {
           "speaker": "主角",
           "text": "……",
-          "next": "line_25"
+          "next": "line_25",
+          "portrait": "res://assets/characters/apron_man/player_neutral_portrait.png"
         },
         "line_25": {
           "speaker": "胖哥布林",

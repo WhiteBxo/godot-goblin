@@ -1,7 +1,7 @@
 {
 	"version": 1.0,
 	"format": "goblin_story_project",
-	"next_step_id": 10045.0,
+	"next_step_id": 10050.0,
 	"manifest": {
 		"version": 1.0,
 		"source": "res://docs/design/day_01_stages_03_06_draft.md",
@@ -166,6 +166,32 @@
 			"event": "day1.s03.street_gone",
 			"steps": [
 				{
+					"id": "step_10045",
+					"data": {
+						"command": "camera_zoom",
+						"value": 0.8,
+						"duration": 0.7
+					}
+				},
+				{
+					"id": "step_10046",
+					"data": {
+						"command": "camera_move",
+						"target": [
+							1392.0,
+							2376.0
+						],
+						"duration": 1.2
+					}
+				},
+				{
+					"id": "step_10047",
+					"data": {
+						"command": "wait",
+						"seconds": 0.7
+					}
+				},
+				{
 					"id": "step_10003",
 					"data": {
 						"command": "dialogue",
@@ -173,10 +199,27 @@
 					}
 				},
 				{
+					"id": "step_10048",
+					"data": {
+						"command": "camera_move",
+						"target": [
+							1272.0,
+							2184.0
+						],
+						"duration": 1.0
+					}
+				},
+				{
 					"id": "step_10004",
 					"data": {
 						"command": "dialogue",
 						"id": "day1.s03.limited_exploration"
+					}
+				},
+				{
+					"id": "step_10049",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -957,7 +1000,8 @@
 				"line_24": {
 					"speaker": "主角",
 					"text": "……",
-					"next": "line_25"
+					"next": "line_25",
+					"portrait": "res://assets/characters/apron_man/player_neutral_portrait.png"
 				},
 				"line_25": {
 					"speaker": "胖哥布林",

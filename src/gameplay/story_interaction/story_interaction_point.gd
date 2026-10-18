@@ -16,6 +16,8 @@ enum Kind { PICKUP, DOCUMENT }
 ## Each entry permits that stage and its dot-separated operation substages.
 @export var required_stages: Array[String] = []
 @export var success_flags: Array[StringName] = []
+## Authored clues remain visible from a distance until their first investigation.
+@export var show_world_marker := false
 
 var _state: Node
 var _resolving := false
@@ -23,9 +25,18 @@ var _resolving := false
 func _ready() -> void:
 	super._ready()
 	_state = get_node_or_null("/root/GameState")
+	if show_world_marker and is_instance_valid(_state):
+		_state.state_changed.connect(_refresh_world_marker)
+		_refresh_world_marker.call_deferred()
 	if entry_id == &"" or (kind == Kind.PICKUP and item_id.is_empty()):
 		push_error("StoryInteractionPoint %s has invalid configuration" % get_path())
 		interaction_enabled = false
+
+func _refresh_world_marker() -> void:
+	$Marker.visible = show_world_marker and conditions_met() and not is_resolved()
+
+func is_world_marker_visible() -> bool:
+	return $Marker.is_visible_in_tree()
 
 func conditions_met() -> bool:
 	if not is_instance_valid(_state):

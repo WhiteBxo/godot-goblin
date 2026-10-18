@@ -58,14 +58,14 @@ func _refresh_detail() -> void:
 		entry = {"title": "先接取一张饮品订单", "target_name": "订单板", "status_text": "暂无制作目标",
 			"stage": "empty", "status": "empty", "product_id": "", "items": [], "missing_text": "",
 			"rewards": "—", "hint": "也可以切换到自由调配，制作已解锁的饮品。"}
-	elif entry.ready:
+	elif entry.ready and entry.get("remaining_to_craft", 0) == 0:
 		action = "返回店铺，去交付"
 		entry.hint = "靠近%s，按 E 交付" % entry.target_name
 	_ticket.present(entry, action, bool(entry.get("can_craft", false)) or bool(entry.get("ready", false)))
 
 func _on_primary_pressed() -> void:
 	var entry := _model.get_entry(_selected) if is_instance_valid(_model) else {}
-	if entry.get("status") == "active" and entry.get("ready", false):
+	if entry.get("status") == "active" and entry.get("ready", false) and entry.get("remaining_to_craft", 0) == 0:
 		track_requested.emit(_selected)
 		return_requested.emit()
 	else:

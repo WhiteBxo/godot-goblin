@@ -501,6 +501,7 @@ uv = PackedVector2Array(550, 154, 615, 154, 615, 292, 550, 292)
 [node name="OrderBoard" parent="InteractionPoints" unique_id=1304020900 instance=ExtResource("3_xdoh7")]
 position = Vector2(844, 447)
 interaction_id = "orders"
+selection_group = &"orders"
 success_sound = "shop.order_open"
 sound_bus = "SFX"
 display_name = "收银台"

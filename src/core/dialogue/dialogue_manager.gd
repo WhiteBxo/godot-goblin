@@ -12,9 +12,9 @@ signal line_changed(line_id: String)
 @export var left_portrait_speakers: PackedStringArray = ["主角", "主角·内心", "玩家"]
 ## Exact speaker names; per-line portrait paths override these defaults.
 @export var speaker_portraits: Dictionary[String, Texture2D] = {
-	"主角": preload("res://assets/characters/apron_man/player_neutral_portrait.png"),
+	"主角": preload("res://assets/characters/apron_man/player_talking_portrait.png"),
 	"主角·内心": preload("res://assets/characters/apron_man/player_neutral_portrait.png"),
-	"玩家": preload("res://assets/characters/apron_man/player_neutral_portrait.png"),
+	"玩家": preload("res://assets/characters/apron_man/player_talking_portrait.png"),
 	"胖哥布林": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
 	"哥布林": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
 }

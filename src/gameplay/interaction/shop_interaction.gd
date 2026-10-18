@@ -19,6 +19,11 @@ var _event_handler: Callable
 var _dispatching := false
 var _last_dispatch_frame := -1
 var _armed := true
+var _priority_resolver: Callable
+
+func set_priority_resolver(resolver: Callable) -> void:
+	_priority_resolver = resolver
+	refresh_target()
 
 func is_input_enabled() -> bool:
 	return _input_enabled
@@ -84,14 +89,27 @@ func refresh_target() -> void:
 		if score < best_score:
 			best = point
 			best_score = score
+	# First select the nearby equipment/group by distance and facing. Only then
+	# resolve competing actions within that group; delivery cannot steal a station.
+	if best != null and best.selection_group != &"":
+		for point: InteractionPoint in _points:
+			if not is_instance_valid(point) or not point.is_available() or point.selection_group != best.selection_group:
+				continue
+			if _priority(point) > _priority(best) or (_priority(point) == _priority(best) and _score(point) < _score(best)):
+				best = point
+		best_score = _score(best)
 	if is_instance_valid(_target) and _target.is_available() and best != _target:
-		if best_score + switch_margin >= _score(_target):
+		var priority_changed := best != null and best.selection_group != &"" and best.selection_group == _target.selection_group and _priority(best) > _priority(_target)
+		if not priority_changed and best_score + switch_margin >= _score(_target):
 			best = _target
 	_set_target(best)
 
 func _score(point: InteractionPoint) -> float:
 	var offset := point.global_position - _player.global_position
 	return offset.length() - _player.get_facing_vector().dot(offset.normalized()) * facing_weight
+
+func _priority(point: InteractionPoint) -> int:
+	return int(_priority_resolver.call(point.interaction_id)) if _priority_resolver.is_valid() else 0
 
 func _set_target(point: InteractionPoint) -> void:
 	if is_instance_valid(_target) and _target == point:

@@ -139,6 +139,7 @@ func _test_discovery_ui() -> void:
 	var panel := WarehousePanel.new()
 	root.add_child(panel)
 	panel.configure(inventory)
+	_check(panel.find_child("ItemImage", true, false).texture == inventory.get_ingredient_view(panel.get_list().get_item_metadata(0)).icon, "Warehouse detail displays the selected catalog artwork")
 	_check(not inventory.is_discovered("test_otherworld") and inventory.get_ingredients("otherworld").is_empty(), "Undiscovered material is absent from the list")
 	_check(inventory.discover("test_otherworld") and inventory.get_stock("test_otherworld") == 0, "Discovering does not grant stock")
 	_check(not inventory.discover("test_otherworld"), "Repeated discovery is idempotent")

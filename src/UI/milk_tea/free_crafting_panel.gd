@@ -4,6 +4,9 @@ extends VBoxContainer
 
 signal formula_requested(materials: Array[String], iced: bool)
 
+const Artwork = preload("res://src/UI/milk_tea/item_artwork.gd")
+
+var _images: Array[TextureRect] = []
 var _production: TeaProduction
 var _slots: VBoxContainer
 var _options: Array[OptionButton] = []
@@ -77,6 +80,7 @@ func refresh() -> void:
 		for child: Node in _slots.get_children():
 			child.free()
 		_options.clear()
+		_images.clear()
 		for index in range(slot_count):
 			var row := HBoxContainer.new()
 			_slots.add_child(row)
@@ -84,6 +88,10 @@ func refresh() -> void:
 			label.text = "基底" if index == 0 else "辅料 %d" % index
 			label.custom_minimum_size.x = 48
 			row.add_child(label)
+			var image := Artwork.preview(24)
+			image.name = "IngredientImage"
+			row.add_child(image)
+			_images.append(image)
 			var option := OptionButton.new()
 			option.name = "Slot%d" % index
 			option.fit_to_longest_item = false
@@ -106,13 +114,20 @@ func refresh() -> void:
 				selected = item
 		option.select(selected)
 		_selected[index] = str(option.get_item_metadata(selected))
+		_refresh_slot_image(index)
 	_refreshing = false
 	_refresh_preview()
 
 func _on_slot_selected(item: int, slot: int) -> void:
 	_selected[slot] = str(_options[slot].get_item_metadata(item))
+	_refresh_slot_image(slot)
 	_result.text = ""
 	_refresh_preview()
+
+func _refresh_slot_image(slot: int) -> void:
+	var view := _production.get_inventory().get_ingredient_view(_selected[slot])
+	_images[slot].texture = view.get("icon")
+	_images[slot].tooltip_text = str(view.get("name", ""))
 
 func get_materials() -> Array[String]:
 	if _selected.is_empty() or _selected[0].is_empty():

@@ -377,6 +377,10 @@ func _test_ui() -> void:
 	shop.open(station)
 	var panel := shop.get_popup().get_page().get_formula_panel()
 	_check(panel.get_slots().size() == 3 and shop.select_formula(SWEET), "Real host populates the configured base and two additive slots")
+	var base_image: TextureRect = panel.get_slots()[0].get_parent().get_node("IngredientImage")
+	_check(base_image.texture == inventory.get_ingredient_view(BASE).icon, "Selected wine displays its catalog artwork in the real crafting page")
+	_check(panel.select_formula([BASE]) and panel.get_slots()[1].get_parent().get_node("IngredientImage").texture == null, "Clearing an additive removes its old artwork")
+	shop.select_formula(SWEET)
 	_check(not panel.get_craft_button().disabled and not "甜度" in panel.get_preview().text, "Selection preview shows flavors and price without internal taste values")
 	for option: OptionButton in panel.get_slots():
 		for index in range(option.item_count):
@@ -401,6 +405,7 @@ func _test_ui() -> void:
 	_check(game.get_player().movement_enabled and game.open_drinks() == OK, "Closing the crafting modal restores movement and the first drink unlocks the handbook page")
 	var drinks := book.get_drinks_page()
 	_check(book.get_pages().current_tab == 2 and drinks.get_list().item_count == 1 and "甜度 8" in drinks.get_details().text, "Encyclopedia displays the formula's six tastes through the shared handbook")
+	_check(drinks.get_list().get_item_icon(0) != null and drinks.find_child("DrinkImage", true, false).texture != null, "Discovered free drink has both list and detail artwork")
 	await _capture("encyclopedia_640")
 	_check(shop.select_formula(SWEET) and not panel.is_iced(), "Selecting a formula without an ice option resets the separate option to no ice")
 	var before := state.to_dict()

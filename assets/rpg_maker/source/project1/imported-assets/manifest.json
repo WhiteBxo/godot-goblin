@@ -1,0 +1,1274 @@
+{
+  "backup": "D:\\taptapgamejam\\map\\Project1\\backups\\material-import-20261018-174723",
+  "originalHash": "C539B42B130974762185733E0B4F67FA29205B4834AD20D0810A18E94140E1D1",
+  "files": [
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Ancient Dungeons Base Pack__EULA.pdf",
+      "target": "imported-assets/AD/Ancient Dungeons Base Pack__EULA.pdf",
+      "category": "reference",
+      "bytes": 65156
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Bonus BGM/Dungeon_Sorcerers_Sanctum.ogg",
+      "target": "audio/bgm/AD_Dungeon_Sorcerers_Sanctum.ogg",
+      "category": "bgm",
+      "bytes": 2195370
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Bonus BGM/Town_Town_Square.ogg",
+      "target": "audio/bgm/AD_Town_Town_Square.ogg",
+      "category": "bgm",
+      "bytes": 2369723
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Characters/!$_boat.png",
+      "target": "img/characters/!$AD__boat.png",
+      "category": "characters",
+      "bytes": 16176
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Characters/!$_boat2.png",
+      "target": "img/characters/!$AD__boat2.png",
+      "category": "characters",
+      "bytes": 33124
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Characters/!$_chest_1.png",
+      "target": "img/characters/!$AD__chest_1.png",
+      "category": "characters",
+      "bytes": 6245
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Characters/!$_chest_2.png",
+      "target": "img/characters/!$AD__chest_2.png",
+      "category": "characters",
+      "bytes": 17277
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Characters/!$_chest_3.png",
+      "target": "img/characters/!$AD__chest_3.png",
+      "category": "characters",
+      "bytes": 16948
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Characters/!$_chest_4.png",
+      "target": "img/characters/!$AD__chest_4.png",
+      "category": "characters",
+      "bytes": 3848
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Characters/!$_chest_5.png",
+      "target": "img/characters/!$AD__chest_5.png",
+      "category": "characters",
+      "bytes": 14213
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Characters/!$_chest_6.png",
+      "target": "img/characters/!$AD__chest_6.png",
+      "category": "characters",
+      "bytes": 14119
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Characters/!$_fireplace.png",
+      "target": "img/characters/!$AD__fireplace.png",
+      "category": "characters",
+      "bytes": 70856
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Characters/!$_fireplace2.png",
+      "target": "img/characters/!$AD__fireplace2.png",
+      "category": "characters",
+      "bytes": 16477
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Characters/!$_fountain.png",
+      "target": "img/characters/!$AD__fountain.png",
+      "category": "characters",
+      "bytes": 75879
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Characters/!$_sparkle.png",
+      "target": "img/characters/!$AD__sparkle.png",
+      "category": "characters",
+      "bytes": 3038
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Characters/!$_spikes.png",
+      "target": "img/characters/!$AD__spikes.png",
+      "category": "characters",
+      "bytes": 2092
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Characters/!$_torch.png",
+      "target": "img/characters/!$AD__torch.png",
+      "category": "characters",
+      "bytes": 15070
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Characters/!_clutter.png",
+      "target": "img/characters/!AD__clutter.png",
+      "category": "characters",
+      "bytes": 99527
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Characters/!_doors.png",
+      "target": "img/characters/!AD__doors.png",
+      "category": "characters",
+      "bytes": 240485
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Characters/!_fire.png",
+      "target": "img/characters/!AD__fire.png",
+      "category": "characters",
+      "bytes": 154254
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Characters/!_secrets.png",
+      "target": "img/characters/!AD__secrets.png",
+      "category": "characters",
+      "bytes": 185757
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Characters/!_switches.png",
+      "target": "img/characters/!AD__switches.png",
+      "category": "characters",
+      "bytes": 39494
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Characters/$_boulder.png",
+      "target": "img/characters/$AD__boulder.png",
+      "category": "characters",
+      "bytes": 9819
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Extra/parallax_clutter.png",
+      "target": "imported-assets/AD/Extra/parallax_clutter.png",
+      "category": "reference",
+      "bytes": 159918
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Extra/parallax_railings.png",
+      "target": "imported-assets/AD/Extra/parallax_railings.png",
+      "category": "reference",
+      "bytes": 20808
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileA1.png",
+      "target": "img/tilesets/AD_TileA1.png",
+      "category": "tilesets",
+      "bytes": 417500
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileA1_2.png",
+      "target": "img/tilesets/AD_TileA1_2.png",
+      "category": "tilesets",
+      "bytes": 438126
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileA2_exterior.png",
+      "target": "img/tilesets/AD_TileA2_exterior.png",
+      "category": "tilesets",
+      "bytes": 431987
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileA2_interior.png",
+      "target": "img/tilesets/AD_TileA2_interior.png",
+      "category": "tilesets",
+      "bytes": 446298
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileA3.png",
+      "target": "img/tilesets/AD_TileA3.png",
+      "category": "tilesets",
+      "bytes": 286198
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileA4_exterior.png",
+      "target": "img/tilesets/AD_TileA4_exterior.png",
+      "category": "tilesets",
+      "bytes": 381915
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileA4_interior.png",
+      "target": "img/tilesets/AD_TileA4_interior.png",
+      "category": "tilesets",
+      "bytes": 348595
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileA5_exterior1.png",
+      "target": "img/tilesets/AD_TileA5_exterior1.png",
+      "category": "tilesets",
+      "bytes": 322893
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileA5_exterior2.png",
+      "target": "img/tilesets/AD_TileA5_exterior2.png",
+      "category": "tilesets",
+      "bytes": 303225
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileA5_exterior3.png",
+      "target": "img/tilesets/AD_TileA5_exterior3.png",
+      "category": "tilesets",
+      "bytes": 318006
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileA5_exterior4.png",
+      "target": "img/tilesets/AD_TileA5_exterior4.png",
+      "category": "tilesets",
+      "bytes": 323693
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileA5_interior.png",
+      "target": "img/tilesets/AD_TileA5_interior.png",
+      "category": "tilesets",
+      "bytes": 305911
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileB_exterior1.png",
+      "target": "img/tilesets/AD_TileB_exterior1.png",
+      "category": "tilesets",
+      "bytes": 602469
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileB_exterior2.png",
+      "target": "img/tilesets/AD_TileB_exterior2.png",
+      "category": "tilesets",
+      "bytes": 578186
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileB_exterior3.png",
+      "target": "img/tilesets/AD_TileB_exterior3.png",
+      "category": "tilesets",
+      "bytes": 512288
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileB_exterior4.png",
+      "target": "img/tilesets/AD_TileB_exterior4.png",
+      "category": "tilesets",
+      "bytes": 617850
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileB_interior.png",
+      "target": "img/tilesets/AD_TileB_interior.png",
+      "category": "tilesets",
+      "bytes": 426824
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileC_exterior.png",
+      "target": "img/tilesets/AD_TileC_exterior.png",
+      "category": "tilesets",
+      "bytes": 449543
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileC_interior.png",
+      "target": "img/tilesets/AD_TileC_interior.png",
+      "category": "tilesets",
+      "bytes": 446912
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileD_exterior1.png",
+      "target": "img/tilesets/AD_TileD_exterior1.png",
+      "category": "tilesets",
+      "bytes": 404094
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileD_exterior2.png",
+      "target": "img/tilesets/AD_TileD_exterior2.png",
+      "category": "tilesets",
+      "bytes": 423439
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileD_exterior3.png",
+      "target": "img/tilesets/AD_TileD_exterior3.png",
+      "category": "tilesets",
+      "bytes": 396098
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileD_interior.png",
+      "target": "img/tilesets/AD_TileD_interior.png",
+      "category": "tilesets",
+      "bytes": 377858
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileE_exterior.png",
+      "target": "img/tilesets/AD_TileE_exterior.png",
+      "category": "tilesets",
+      "bytes": 342402
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileE_interior1.png",
+      "target": "img/tilesets/AD_TileE_interior1.png",
+      "category": "tilesets",
+      "bytes": 505521
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileE_interior2.png",
+      "target": "img/tilesets/AD_TileE_interior2.png",
+      "category": "tilesets",
+      "bytes": 522987
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/Tilesets/TileE_interior3.png",
+      "target": "img/tilesets/AD_TileE_interior3.png",
+      "category": "tilesets",
+      "bytes": 428251
+    },
+    {
+      "pack": "AD",
+      "source": "Ancient Dungeons Base Pack for MV/エンシェントダンジョン・タイルセット素材集 for MV_はじめにお読みください.pdf",
+      "target": "imported-assets/AD/エンシェントダンジョン・タイルセット素材集 for MV_はじめにお読みください.pdf",
+      "category": "reference",
+      "bytes": 374367
+    },
+    {
+      "pack": "FBM",
+      "source": "FantasticBuildingsMedieval_GFX/Extras/MV_parallax_sheet.png",
+      "target": "imported-assets/FBM/Extras/MV_parallax_sheet.png",
+      "category": "reference",
+      "bytes": 228415
+    },
+    {
+      "pack": "FBM",
+      "source": "FantasticBuildingsMedieval_GFX/Extras/MV_TileA2_extra.png",
+      "target": "imported-assets/FBM/Extras/MV_TileA2_extra.png",
+      "category": "reference",
+      "bytes": 69825
+    },
+    {
+      "pack": "FBM",
+      "source": "FantasticBuildingsMedieval_GFX/Extras/parallax_sheet.png",
+      "target": "imported-assets/FBM/Extras/parallax_sheet.png",
+      "category": "reference",
+      "bytes": 228415
+    },
+    {
+      "pack": "FBM",
+      "source": "FantasticBuildingsMedieval_GFX/Extras/TileA2_extra.png",
+      "target": "imported-assets/FBM/Extras/TileA2_extra.png",
+      "category": "reference",
+      "bytes": 69825
+    },
+    {
+      "pack": "FBM",
+      "source": "FantasticBuildingsMedieval_GFX/Fantastic Buildings Medieval_EULA.pdf",
+      "target": "imported-assets/FBM/Fantastic Buildings Medieval_EULA.pdf",
+      "category": "reference",
+      "bytes": 80377
+    },
+    {
+      "pack": "FBM",
+      "source": "FantasticBuildingsMedieval_GFX/License.txt",
+      "target": "imported-assets/FBM/License.txt",
+      "category": "reference",
+      "bytes": 215
+    },
+    {
+      "pack": "FBM",
+      "source": "FantasticBuildingsMedieval_GFX/Tilesets/City_TileB.png",
+      "target": "img/tilesets/FBM_City_TileB.png",
+      "category": "tilesets",
+      "bytes": 1132471
+    },
+    {
+      "pack": "FBM",
+      "source": "FantasticBuildingsMedieval_GFX/Tilesets/City_TileC.png",
+      "target": "img/tilesets/FBM_City_TileC.png",
+      "category": "tilesets",
+      "bytes": 1084158
+    },
+    {
+      "pack": "FBM",
+      "source": "FantasticBuildingsMedieval_GFX/Tilesets/City_TileD.png",
+      "target": "img/tilesets/FBM_City_TileD.png",
+      "category": "tilesets",
+      "bytes": 1110473
+    },
+    {
+      "pack": "FBM",
+      "source": "FantasticBuildingsMedieval_GFX/Tilesets/City_TileE-2.png",
+      "target": "img/tilesets/FBM_City_TileE-2.png",
+      "category": "tilesets",
+      "bytes": 849709
+    },
+    {
+      "pack": "FBM",
+      "source": "FantasticBuildingsMedieval_GFX/Tilesets/City_TileE.png",
+      "target": "img/tilesets/FBM_City_TileE.png",
+      "category": "tilesets",
+      "bytes": 1038387
+    },
+    {
+      "pack": "FBM",
+      "source": "FantasticBuildingsMedieval_GFX/Tilesets/Rural_TileB.png",
+      "target": "img/tilesets/FBM_Rural_TileB.png",
+      "category": "tilesets",
+      "bytes": 1114216
+    },
+    {
+      "pack": "FBM",
+      "source": "FantasticBuildingsMedieval_GFX/Tilesets/Rural_TileC.png",
+      "target": "img/tilesets/FBM_Rural_TileC.png",
+      "category": "tilesets",
+      "bytes": 1109305
+    },
+    {
+      "pack": "FBM",
+      "source": "FantasticBuildingsMedieval_GFX/Tilesets/Rural_TileD.png",
+      "target": "img/tilesets/FBM_Rural_TileD.png",
+      "category": "tilesets",
+      "bytes": 1069819
+    },
+    {
+      "pack": "FBM",
+      "source": "FantasticBuildingsMedieval_GFX/Tilesets/Rural_TileE.png",
+      "target": "img/tilesets/FBM_Rural_TileE.png",
+      "category": "tilesets",
+      "bytes": 1191335
+    },
+    {
+      "pack": "FBM",
+      "source": "FantasticBuildingsMedieval_GFX/【MV】クラシックファンタジー・建物タイルセット素材集_はじめにお読みください.pdf",
+      "target": "imported-assets/FBM/【MV】クラシックファンタジー・建物タイルセット素材集_はじめにお読みください.pdf",
+      "category": "reference",
+      "bytes": 150635
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/A4 walls warning!.txt",
+      "target": "imported-assets/WL/A4 walls warning!.txt",
+      "category": "reference",
+      "bytes": 264
+    },
+    {
+      "pack": "WLG",
+      "source": "Winlu Fantasy Tileset - Exterior/Fantasy_Tileset_Green_Edition_upgrade/characters/!$Big_Trees_green.png",
+      "target": "img/characters/!$WLG_Big_Trees_green.png",
+      "category": "characters",
+      "bytes": 282516
+    },
+    {
+      "pack": "WLG",
+      "source": "Winlu Fantasy Tileset - Exterior/Fantasy_Tileset_Green_Edition_upgrade/characters/!$Big_Trees_green_NoShadow.png",
+      "target": "img/characters/!$WLG_Big_Trees_green_NoShadow.png",
+      "category": "characters",
+      "bytes": 284837
+    },
+    {
+      "pack": "WLG",
+      "source": "Winlu Fantasy Tileset - Exterior/Fantasy_Tileset_Green_Edition_upgrade/tilesets/Fantasy_Outside_A1_green.png",
+      "target": "img/tilesets/WLG_Fantasy_Outside_A1_green.png",
+      "category": "tilesets",
+      "bytes": 428227
+    },
+    {
+      "pack": "WLG",
+      "source": "Winlu Fantasy Tileset - Exterior/Fantasy_Tileset_Green_Edition_upgrade/tilesets/Fantasy_Outside_A2_2_green.png",
+      "target": "img/tilesets/WLG_Fantasy_Outside_A2_2_green.png",
+      "category": "tilesets",
+      "bytes": 557540
+    },
+    {
+      "pack": "WLG",
+      "source": "Winlu Fantasy Tileset - Exterior/Fantasy_Tileset_Green_Edition_upgrade/tilesets/Fantasy_Outside_A2_green.png",
+      "target": "img/tilesets/WLG_Fantasy_Outside_A2_green.png",
+      "category": "tilesets",
+      "bytes": 457851
+    },
+    {
+      "pack": "WLG",
+      "source": "Winlu Fantasy Tileset - Exterior/Fantasy_Tileset_Green_Edition_upgrade/tilesets/Fantasy_Outside_A3.png",
+      "target": "img/tilesets/WLG_Fantasy_Outside_A3.png",
+      "category": "tilesets",
+      "bytes": 310345
+    },
+    {
+      "pack": "WLG",
+      "source": "Winlu Fantasy Tileset - Exterior/Fantasy_Tileset_Green_Edition_upgrade/tilesets/Fantasy_Outside_A4_green.png",
+      "target": "img/tilesets/WLG_Fantasy_Outside_A4_green.png",
+      "category": "tilesets",
+      "bytes": 396202
+    },
+    {
+      "pack": "WLG",
+      "source": "Winlu Fantasy Tileset - Exterior/Fantasy_Tileset_Green_Edition_upgrade/tilesets/Fantasy_Outside_A5_green.png",
+      "target": "img/tilesets/WLG_Fantasy_Outside_A5_green.png",
+      "category": "tilesets",
+      "bytes": 251848
+    },
+    {
+      "pack": "WLG",
+      "source": "Winlu Fantasy Tileset - Exterior/Fantasy_Tileset_Green_Edition_upgrade/tilesets/Fantasy_Outside_B_green.png",
+      "target": "img/tilesets/WLG_Fantasy_Outside_B_green.png",
+      "category": "tilesets",
+      "bytes": 313823
+    },
+    {
+      "pack": "WLG",
+      "source": "Winlu Fantasy Tileset - Exterior/Fantasy_Tileset_Green_Edition_upgrade/tilesets/Fantasy_Outside_D_green.png",
+      "target": "img/tilesets/WLG_Fantasy_Outside_D_green.png",
+      "category": "tilesets",
+      "bytes": 352363
+    },
+    {
+      "pack": "WLG",
+      "source": "Winlu Fantasy Tileset - Exterior/Fantasy_Tileset_Green_Edition_upgrade/tilesets/Fantasy_Outside_D_green_NoShadow.png",
+      "target": "img/tilesets/WLG_Fantasy_Outside_D_green_NoShadow.png",
+      "category": "tilesets",
+      "bytes": 354139
+    },
+    {
+      "pack": "WLR",
+      "source": "Winlu Fantasy Tileset - Exterior/Fantasy_Tileset_red_Edition_upgrade/characters/!$Big_Trees_red.png",
+      "target": "img/characters/!$WLR_Big_Trees_red.png",
+      "category": "characters",
+      "bytes": 275421
+    },
+    {
+      "pack": "WLR",
+      "source": "Winlu Fantasy Tileset - Exterior/Fantasy_Tileset_red_Edition_upgrade/characters/!$Big_Trees_red_NoShadow.png",
+      "target": "img/characters/!$WLR_Big_Trees_red_NoShadow.png",
+      "category": "characters",
+      "bytes": 276504
+    },
+    {
+      "pack": "WLR",
+      "source": "Winlu Fantasy Tileset - Exterior/Fantasy_Tileset_red_Edition_upgrade/tilesets/Fantasy_Outside_A1_red.png",
+      "target": "img/tilesets/WLR_Fantasy_Outside_A1_red.png",
+      "category": "tilesets",
+      "bytes": 341291
+    },
+    {
+      "pack": "WLR",
+      "source": "Winlu Fantasy Tileset - Exterior/Fantasy_Tileset_red_Edition_upgrade/tilesets/Fantasy_Outside_A2_2_red.png",
+      "target": "img/tilesets/WLR_Fantasy_Outside_A2_2_red.png",
+      "category": "tilesets",
+      "bytes": 545558
+    },
+    {
+      "pack": "WLR",
+      "source": "Winlu Fantasy Tileset - Exterior/Fantasy_Tileset_red_Edition_upgrade/tilesets/Fantasy_Outside_A2_red.png",
+      "target": "img/tilesets/WLR_Fantasy_Outside_A2_red.png",
+      "category": "tilesets",
+      "bytes": 464805
+    },
+    {
+      "pack": "WLR",
+      "source": "Winlu Fantasy Tileset - Exterior/Fantasy_Tileset_red_Edition_upgrade/tilesets/Fantasy_Outside_A3_red.png",
+      "target": "img/tilesets/WLR_Fantasy_Outside_A3_red.png",
+      "category": "tilesets",
+      "bytes": 220687
+    },
+    {
+      "pack": "WLR",
+      "source": "Winlu Fantasy Tileset - Exterior/Fantasy_Tileset_red_Edition_upgrade/tilesets/Fantasy_Outside_A4_red.png",
+      "target": "img/tilesets/WLR_Fantasy_Outside_A4_red.png",
+      "category": "tilesets",
+      "bytes": 394638
+    },
+    {
+      "pack": "WLR",
+      "source": "Winlu Fantasy Tileset - Exterior/Fantasy_Tileset_red_Edition_upgrade/tilesets/Fantasy_Outside_A5_red.png",
+      "target": "img/tilesets/WLR_Fantasy_Outside_A5_red.png",
+      "category": "tilesets",
+      "bytes": 242421
+    },
+    {
+      "pack": "WLR",
+      "source": "Winlu Fantasy Tileset - Exterior/Fantasy_Tileset_red_Edition_upgrade/tilesets/Fantasy_Outside_B_red.png",
+      "target": "img/tilesets/WLR_Fantasy_Outside_B_red.png",
+      "category": "tilesets",
+      "bytes": 313154
+    },
+    {
+      "pack": "WLR",
+      "source": "Winlu Fantasy Tileset - Exterior/Fantasy_Tileset_red_Edition_upgrade/tilesets/Fantasy_Outside_D_red.png",
+      "target": "img/tilesets/WLR_Fantasy_Outside_D_red.png",
+      "category": "tilesets",
+      "bytes": 346867
+    },
+    {
+      "pack": "WLR",
+      "source": "Winlu Fantasy Tileset - Exterior/Fantasy_Tileset_red_Edition_upgrade/tilesets/Fantasy_Outside_D_red_NoShadow.png",
+      "target": "img/tilesets/WLR_Fantasy_Outside_D_red_NoShadow.png",
+      "category": "tilesets",
+      "bytes": 348458
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!$Bigger_drawbridge_animated.png",
+      "target": "img/characters/!$WL_Bigger_drawbridge_animated.png",
+      "category": "characters",
+      "bytes": 146509
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!$Big_Decoration.png",
+      "target": "img/characters/!$WL_Big_Decoration.png",
+      "category": "characters",
+      "bytes": 265999
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!$Big_drawbridge.png",
+      "target": "img/characters/!$WL_Big_drawbridge.png",
+      "category": "characters",
+      "bytes": 81549
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!$Big_drawbridge_animated.png",
+      "target": "img/characters/!$WL_Big_drawbridge_animated.png",
+      "category": "characters",
+      "bytes": 136110
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!$Big_Misc.png",
+      "target": "img/characters/!$WL_Big_Misc.png",
+      "category": "characters",
+      "bytes": 57962
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!$Big_Trees.png",
+      "target": "img/characters/!$WL_Big_Trees.png",
+      "category": "characters",
+      "bytes": 282633
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!$Big_Trees_NoShadow.png",
+      "target": "img/characters/!$WL_Big_Trees_NoShadow.png",
+      "category": "characters",
+      "bytes": 284723
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!$Cliff_decoration.png",
+      "target": "img/characters/!$WL_Cliff_decoration.png",
+      "category": "characters",
+      "bytes": 69759
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!$Door_fence.png",
+      "target": "img/characters/!$WL_Door_fence.png",
+      "category": "characters",
+      "bytes": 76154
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!$Gate_Cathedral1.png",
+      "target": "img/characters/!$WL_Gate_Cathedral1.png",
+      "category": "characters",
+      "bytes": 52465
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!$Gate_Stone1.png",
+      "target": "img/characters/!$WL_Gate_Stone1.png",
+      "category": "characters",
+      "bytes": 99554
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!$Gate_Wood1.png",
+      "target": "img/characters/!$WL_Gate_Wood1.png",
+      "category": "characters",
+      "bytes": 141357
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!$Giant_tree_No_Glowing.png",
+      "target": "img/characters/!$WL_Giant_tree_No_Glowing.png",
+      "category": "characters",
+      "bytes": 475877
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!$Glowing_tree.png",
+      "target": "img/characters/!$WL_Glowing_tree.png",
+      "category": "characters",
+      "bytes": 972884
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!$Roof_center.png",
+      "target": "img/characters/!$WL_Roof_center.png",
+      "category": "characters",
+      "bytes": 234631
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!$Smith.png",
+      "target": "img/characters/!$WL_Smith.png",
+      "category": "characters",
+      "bytes": 239781
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!$Waterwheel.png",
+      "target": "img/characters/!$WL_Waterwheel.png",
+      "category": "characters",
+      "bytes": 42258
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!Decoration.png",
+      "target": "img/characters/!WL_Decoration.png",
+      "category": "characters",
+      "bytes": 244059
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!Decoration_vegetation.png",
+      "target": "img/characters/!WL_Decoration_vegetation.png",
+      "category": "characters",
+      "bytes": 173251
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!diagonal_walls_top.png",
+      "target": "img/characters/!WL_diagonal_walls_top.png",
+      "category": "characters",
+      "bytes": 195491
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!diagonal_water.png",
+      "target": "img/characters/!WL_diagonal_water.png",
+      "category": "characters",
+      "bytes": 201224
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!Fantasy_chest.png",
+      "target": "img/characters/!WL_Fantasy_chest.png",
+      "category": "characters",
+      "bytes": 66019
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!Fantasy_chimney.png",
+      "target": "img/characters/!WL_Fantasy_chimney.png",
+      "category": "characters",
+      "bytes": 148456
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!Fantasy_door1.png",
+      "target": "img/characters/!WL_Fantasy_door1.png",
+      "category": "characters",
+      "bytes": 166778
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!Fantasy_door2.png",
+      "target": "img/characters/!WL_Fantasy_door2.png",
+      "category": "characters",
+      "bytes": 161900
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!Fantasy_door_fence.png",
+      "target": "img/characters/!WL_Fantasy_door_fence.png",
+      "category": "characters",
+      "bytes": 87394
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!Fantasy_switches.png",
+      "target": "img/characters/!WL_Fantasy_switches.png",
+      "category": "characters",
+      "bytes": 47451
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!Flags_banner.png",
+      "target": "img/characters/!WL_Flags_banner.png",
+      "category": "characters",
+      "bytes": 68419
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!lamp.png",
+      "target": "img/characters/!WL_lamp.png",
+      "category": "characters",
+      "bytes": 41078
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!Roof_Windows.png",
+      "target": "img/characters/!WL_Roof_Windows.png",
+      "category": "characters",
+      "bytes": 186874
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!Signs.png",
+      "target": "img/characters/!WL_Signs.png",
+      "category": "characters",
+      "bytes": 49757
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!Statue.png",
+      "target": "img/characters/!WL_Statue.png",
+      "category": "characters",
+      "bytes": 114473
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/characters/!waterfall_animation.png",
+      "target": "img/characters/!WL_waterfall_animation.png",
+      "category": "characters",
+      "bytes": 183869
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/tilesets/Fantasy_Outside_A1.png",
+      "target": "img/tilesets/WL_Fantasy_Outside_A1.png",
+      "category": "tilesets",
+      "bytes": 342193
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/tilesets/Fantasy_Outside_A2.png",
+      "target": "img/tilesets/WL_Fantasy_Outside_A2.png",
+      "category": "tilesets",
+      "bytes": 471093
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/tilesets/Fantasy_Outside_A2_2.png",
+      "target": "img/tilesets/WL_Fantasy_Outside_A2_2.png",
+      "category": "tilesets",
+      "bytes": 562199
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/tilesets/Fantasy_Outside_A3.png",
+      "target": "img/tilesets/WL_Fantasy_Outside_A3.png",
+      "category": "tilesets",
+      "bytes": 310345
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/tilesets/Fantasy_Outside_A4.png",
+      "target": "img/tilesets/WL_Fantasy_Outside_A4.png",
+      "category": "tilesets",
+      "bytes": 395508
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/tilesets/Fantasy_Outside_A5.png",
+      "target": "img/tilesets/WL_Fantasy_Outside_A5.png",
+      "category": "tilesets",
+      "bytes": 253218
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/tilesets/Fantasy_Outside_B.png",
+      "target": "img/tilesets/WL_Fantasy_Outside_B.png",
+      "category": "tilesets",
+      "bytes": 309309
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/tilesets/Fantasy_Outside_C.png",
+      "target": "img/tilesets/WL_Fantasy_Outside_C.png",
+      "category": "tilesets",
+      "bytes": 339726
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/tilesets/Fantasy_Outside_D.png",
+      "target": "img/tilesets/WL_Fantasy_Outside_D.png",
+      "category": "tilesets",
+      "bytes": 352628
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/tilesets/Fantasy_Outside_D_NoShadow.png",
+      "target": "img/tilesets/WL_Fantasy_Outside_D_NoShadow.png",
+      "category": "tilesets",
+      "bytes": 355077
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Exterior/tilesets/Fantasy_Roofs.png",
+      "target": "img/tilesets/WL_Fantasy_Roofs.png",
+      "category": "tilesets",
+      "bytes": 382504
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winlu Fantasy Tileset - Exterior_EULA.pdf",
+      "target": "imported-assets/WL/Winlu Fantasy Tileset - Exterior_EULA.pdf",
+      "category": "reference",
+      "bytes": 78802
+    },
+    {
+      "pack": "WL",
+      "source": "Winlu Fantasy Tileset - Exterior/Winluファンタジータイルセット - 外装_はじめにお読みください.pdf",
+      "target": "imported-assets/WL/Winluファンタジータイルセット - 外装_はじめにお読みください.pdf",
+      "category": "reference",
+      "bytes": 132634
+    }
+  ],
+  "tilesets": [
+    {
+      "id": 8,
+      "name": "Ancient Dungeons｜室外 1",
+      "images": [
+        "AD_TileA1",
+        "AD_TileA2_exterior",
+        "AD_TileA3",
+        "AD_TileA4_exterior",
+        "AD_TileA5_exterior1",
+        "AD_TileB_exterior1",
+        "AD_TileC_exterior",
+        "AD_TileD_exterior1",
+        "AD_TileE_exterior"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Ancient Dungeons｜室外 2",
+      "images": [
+        "AD_TileA1",
+        "AD_TileA2_exterior",
+        "AD_TileA3",
+        "AD_TileA4_exterior",
+        "AD_TileA5_exterior2",
+        "AD_TileB_exterior2",
+        "AD_TileC_exterior",
+        "AD_TileD_exterior2",
+        "AD_TileE_exterior"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Ancient Dungeons｜室外 3",
+      "images": [
+        "AD_TileA1",
+        "AD_TileA2_exterior",
+        "AD_TileA3",
+        "AD_TileA4_exterior",
+        "AD_TileA5_exterior3",
+        "AD_TileB_exterior3",
+        "AD_TileC_exterior",
+        "AD_TileD_exterior3",
+        "AD_TileE_exterior"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Ancient Dungeons｜室外 4",
+      "images": [
+        "AD_TileA1",
+        "AD_TileA2_exterior",
+        "AD_TileA3",
+        "AD_TileA4_exterior",
+        "AD_TileA5_exterior4",
+        "AD_TileB_exterior4",
+        "AD_TileC_exterior",
+        "AD_TileD_exterior3",
+        "AD_TileE_exterior"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Ancient Dungeons｜室内 1",
+      "images": [
+        "AD_TileA1",
+        "AD_TileA2_interior",
+        "AD_TileA3",
+        "AD_TileA4_interior",
+        "AD_TileA5_interior",
+        "AD_TileB_interior",
+        "AD_TileC_interior",
+        "AD_TileD_interior",
+        "AD_TileE_interior1"
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Ancient Dungeons｜室内 2",
+      "images": [
+        "AD_TileA1",
+        "AD_TileA2_interior",
+        "AD_TileA3",
+        "AD_TileA4_interior",
+        "AD_TileA5_interior",
+        "AD_TileB_interior",
+        "AD_TileC_interior",
+        "AD_TileD_interior",
+        "AD_TileE_interior2"
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Ancient Dungeons｜室内 3",
+      "images": [
+        "AD_TileA1",
+        "AD_TileA2_interior",
+        "AD_TileA3",
+        "AD_TileA4_interior",
+        "AD_TileA5_interior",
+        "AD_TileB_interior",
+        "AD_TileC_interior",
+        "AD_TileD_interior",
+        "AD_TileE_interior3"
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Ancient Dungeons｜室外 1・水面替换",
+      "images": [
+        "AD_TileA1_2",
+        "AD_TileA2_exterior",
+        "AD_TileA3",
+        "AD_TileA4_exterior",
+        "AD_TileA5_exterior1",
+        "AD_TileB_exterior1",
+        "AD_TileC_exterior",
+        "AD_TileD_exterior1",
+        "AD_TileE_exterior"
+      ]
+    },
+    {
+      "id": 16,
+      "name": "Fantastic Buildings｜城市",
+      "images": [
+        "Outside_A1",
+        "Outside_A2",
+        "Outside_A3",
+        "Outside_A4",
+        "Outside_A5",
+        "FBM_City_TileB",
+        "FBM_City_TileC",
+        "FBM_City_TileD",
+        "FBM_City_TileE"
+      ]
+    },
+    {
+      "id": 17,
+      "name": "Fantastic Buildings｜城市・建筑替换",
+      "images": [
+        "Outside_A1",
+        "Outside_A2",
+        "Outside_A3",
+        "Outside_A4",
+        "Outside_A5",
+        "FBM_City_TileB",
+        "FBM_City_TileC",
+        "FBM_City_TileD",
+        "FBM_City_TileE-2"
+      ]
+    },
+    {
+      "id": 18,
+      "name": "Fantastic Buildings｜乡村",
+      "images": [
+        "Outside_A1",
+        "Outside_A2",
+        "Outside_A3",
+        "Outside_A4",
+        "Outside_A5",
+        "FBM_Rural_TileB",
+        "FBM_Rural_TileC",
+        "FBM_Rural_TileD",
+        "FBM_Rural_TileE"
+      ]
+    },
+    {
+      "id": 19,
+      "name": "Winlu 室外｜基础・标准",
+      "images": [
+        "WL_Fantasy_Outside_A1",
+        "WL_Fantasy_Outside_A2",
+        "WL_Fantasy_Outside_A3",
+        "WL_Fantasy_Outside_A4",
+        "WL_Fantasy_Outside_A5",
+        "WL_Fantasy_Outside_B",
+        "WL_Fantasy_Outside_C",
+        "WL_Fantasy_Outside_D",
+        "WL_Fantasy_Roofs"
+      ]
+    },
+    {
+      "id": 20,
+      "name": "Winlu 室外｜基础・地面替换",
+      "images": [
+        "WL_Fantasy_Outside_A1",
+        "WL_Fantasy_Outside_A2_2",
+        "WL_Fantasy_Outside_A3",
+        "WL_Fantasy_Outside_A4",
+        "WL_Fantasy_Outside_A5",
+        "WL_Fantasy_Outside_B",
+        "WL_Fantasy_Outside_C",
+        "WL_Fantasy_Outside_D",
+        "WL_Fantasy_Roofs"
+      ]
+    },
+    {
+      "id": 21,
+      "name": "Winlu 室外｜基础・无阴影",
+      "images": [
+        "WL_Fantasy_Outside_A1",
+        "WL_Fantasy_Outside_A2",
+        "WL_Fantasy_Outside_A3",
+        "WL_Fantasy_Outside_A4",
+        "WL_Fantasy_Outside_A5",
+        "WL_Fantasy_Outside_B",
+        "WL_Fantasy_Outside_C",
+        "WL_Fantasy_Outside_D_NoShadow",
+        "WL_Fantasy_Roofs"
+      ]
+    },
+    {
+      "id": 22,
+      "name": "Winlu 室外｜绿色・标准",
+      "images": [
+        "WLG_Fantasy_Outside_A1_green",
+        "WLG_Fantasy_Outside_A2_green",
+        "WLG_Fantasy_Outside_A3",
+        "WLG_Fantasy_Outside_A4_green",
+        "WLG_Fantasy_Outside_A5_green",
+        "WLG_Fantasy_Outside_B_green",
+        "WL_Fantasy_Outside_C",
+        "WLG_Fantasy_Outside_D_green",
+        "WL_Fantasy_Roofs"
+      ]
+    },
+    {
+      "id": 23,
+      "name": "Winlu 室外｜绿色・地面替换",
+      "images": [
+        "WLG_Fantasy_Outside_A1_green",
+        "WLG_Fantasy_Outside_A2_2_green",
+        "WLG_Fantasy_Outside_A3",
+        "WLG_Fantasy_Outside_A4_green",
+        "WLG_Fantasy_Outside_A5_green",
+        "WLG_Fantasy_Outside_B_green",
+        "WL_Fantasy_Outside_C",
+        "WLG_Fantasy_Outside_D_green",
+        "WL_Fantasy_Roofs"
+      ]
+    },
+    {
+      "id": 24,
+      "name": "Winlu 室外｜绿色・无阴影",
+      "images": [
+        "WLG_Fantasy_Outside_A1_green",
+        "WLG_Fantasy_Outside_A2_green",
+        "WLG_Fantasy_Outside_A3",
+        "WLG_Fantasy_Outside_A4_green",
+        "WLG_Fantasy_Outside_A5_green",
+        "WLG_Fantasy_Outside_B_green",
+        "WL_Fantasy_Outside_C",
+        "WLG_Fantasy_Outside_D_green_NoShadow",
+        "WL_Fantasy_Roofs"
+      ]
+    },
+    {
+      "id": 25,
+      "name": "Winlu 室外｜红色・标准",
+      "images": [
+        "WLR_Fantasy_Outside_A1_red",
+        "WLR_Fantasy_Outside_A2_red",
+        "WLR_Fantasy_Outside_A3_red",
+        "WLR_Fantasy_Outside_A4_red",
+        "WLR_Fantasy_Outside_A5_red",
+        "WLR_Fantasy_Outside_B_red",
+        "WL_Fantasy_Outside_C",
+        "WLR_Fantasy_Outside_D_red",
+        "WL_Fantasy_Roofs"
+      ]
+    },
+    {
+      "id": 26,
+      "name": "Winlu 室外｜红色・地面替换",
+      "images": [
+        "WLR_Fantasy_Outside_A1_red",
+        "WLR_Fantasy_Outside_A2_2_red",
+        "WLR_Fantasy_Outside_A3_red",
+        "WLR_Fantasy_Outside_A4_red",
+        "WLR_Fantasy_Outside_A5_red",
+        "WLR_Fantasy_Outside_B_red",
+        "WL_Fantasy_Outside_C",
+        "WLR_Fantasy_Outside_D_red",
+        "WL_Fantasy_Roofs"
+      ]
+    },
+    {
+      "id": 27,
+      "name": "Winlu 室外｜红色・无阴影",
+      "images": [
+        "WLR_Fantasy_Outside_A1_red",
+        "WLR_Fantasy_Outside_A2_red",
+        "WLR_Fantasy_Outside_A3_red",
+        "WLR_Fantasy_Outside_A4_red",
+        "WLR_Fantasy_Outside_A5_red",
+        "WLR_Fantasy_Outside_B_red",
+        "WL_Fantasy_Outside_C",
+        "WLR_Fantasy_Outside_D_red_NoShadow",
+        "WL_Fantasy_Roofs"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+# RPG Maker 地图移植与编辑
+
+2026-10-18 从 `D:/taptapgamejam/map/Project1` 当前保存的 MZ 数据移植。地图使用 Godot 4.7 原生 TileMapLayer，可在编辑器逐格修改；运行时不依赖 RPG Maker 或外部源工程。
+
+## 地图与试玩
+
+打开 [rpg_maker_preview.tscn](../../../src/debug/rpg_maker/rpg_maker_preview.tscn)，按 **F6**。`1–4` 切图，WASD / 方向键行走，Shift 跑步，Ctrl 潜行，Tab 切换全图 / 跟随，R 回到出生点。独立宿主使用项目真实玩家、原尺寸素材、240 世界像素/秒的普通速度和唯一跟随相机。
+
+| 按键 | 地图 | 格数 / 世界像素 | 可编辑场景 | 试玩出生格 |
+| --- | --- | --- | --- | --- |
+| 1 | 哥布林洞窟 | 50×55 / 2400×2640 | [map_001.tscn](../../../src/levels/rpg_maker/map_001.tscn) | (24, 53) |
+| 2 | 哥布林酒馆｜裂牙 | 19×17 / 912×816 | [map_004.tscn](../../../src/levels/rpg_maker/map_004.tscn) | (9, 13) |
+| 3 | 哥布林赌场｜黑齿 | 25×21 / 1200×1008 | [map_005.tscn](../../../src/levels/rpg_maker/map_005.tscn) | (12, 17) |
+| 4 | 长老居所 | 17×15 / 816×720 | [map_006.tscn](../../../src/levels/rpg_maker/map_006.tscn) | (8, 11) |
+
+原点是地图左上；图块原生 48×48 世界像素。出生坐标位于格中心。源项目的 `startMapId=0` 无有效起点，所以转换工具在各图最大可达区域中选择靠近下方中央的位置，并保存为可编辑 `Spawn` Marker。旧说明中的 Map006 整村大地图已与当前文件不符；本次以实际数据库为准。
+
+观察路线：洞窟从南侧沿路进入建筑与帐篷之间；酒馆从南侧餐桌沿通道走向吧台；赌场从南侧牌桌走向中央与北侧柜台；长老居所从南侧通道向房间内部行走。墙、水域和家具阻挡按源通行标志生效；长老居所的部分方向墙仍可沿许可方向移动。人物保持当前约 118 世界像素站立高度，未拉伸地图或缩放角色。
+
+![四张地图实际运行全图](captures/overview_contact_sheet.png)
+
+![真实主角在酒馆中的原生比例](captures/map_004_player.png)
+
+当前源地图没有事件、传送门、视差背景或自动播放 BGM/BGS。已迁入地图与完整素材；跨图切换仅在独立试玩宿主中提供，正式剧情地图连接和业务事件尚未接入。主游戏入口保持现有标题菜单。
+
+## 在 Godot 中继续编辑
+
+直接打开上表的地图场景，选择 TileMapLayer 绘制并保存；再打开试玩宿主 F6 检查。
+
+- `Ground0..3`：源四层中的普通图块。它们均在人物下方。
+- `Upper0..3`：各源层的星号遮挡图块，始终覆盖人物。新绘制的星号格应放在对应 Upper 层；普通格放对应 Ground 层。
+- `Shadows`：16 种四分格阴影，可独立修改。
+- `TableEdges`：桌子南缘派生的半格图块。更改桌子后使用下方同步工具；不会在启动时自动重画。
+- 根节点 metadata 的 `regions` 保留源区域编号（格坐标 → ID），当前未绑定玩法；`Spawn` 可直接移动。
+
+外部图块资源位于 [src/resources/tilesets/rpg_maker](../../../src/resources/tilesets/rpg_maker/)。图块组 28、30、31 共 **16,053 个可选图块**，覆盖这三个图块组完整可用调色板，包含原地图未使用的内容。图集以原尺寸裁片拼接，水面与瀑布动画保留；当前没有自动推断邻接形状的 Godot Terrain 规则，需要选择对应边角形状。
+
+每格 TileData 的 `rpg_tile_id` 是源 ID，`passage` 的 1/2/4/8 位表示下/左/右/上阻挡，`star` 表示前景穿透。地图启动时只读取**已保存的图块**生成通行与边界碰撞；空格 / 星号跳过，从上往下第一个普通格决定方向。运行中改格后可显式调用 `rebuild_passability()`。覆盖贴地装饰可能改变通行，修改时要核对其 TileData。
+
+桌沿单独同步，先生成新文件检查：
+
+```powershell
+godot --headless --path . --script tools/map/sync_rpg_maker_table_edges.gd -- --input=res://src/levels/rpg_maker/map_004.tscn --output=res://src/levels/rpg_maker/map_004_review.tscn
+```
+
+确认后需要原位更新时，将 output 指向输入场景并显式添加 `--replace`。工具只重建 TableEdges，保留其他手工格子、出生点和 metadata；不会读取旧 JSON 覆盖地图。
+
+## 完整素材与来源
+
+[原始素材快照](../../../assets/rpg_maker/source/README.md) 包含 **1,453 个原文件 / 151,030,287 字节（约 144 MiB）**：全部 img、audio、effects、fonts、icon、movies、imported-assets、当前 data 和工程标识。原名、字节与许可证保留，清单逐文件记录 SHA-256。未复制旧备份、QA 截图和整套 RPG Maker 引擎。
+
+原素材在 `assets/rpg_maker/source/project1/`，可用文件管理器查看；`.gdignore` 使 Godot 不扫描未使用的整包素材。要新增当前三套调色板之外的资源，从快照选取原图复制到对应用途的正式素材目录，按该模块规范设置导入并记录来源。当前运行只引用 [派生图集](../../../assets/map/rpg_maker/README.md) 和 Godot 资源。源快照及转换 catalog 已从导出范围排除。
+
+## 从快照重新转换
+
+需要 Python 3.12+、Pillow，以及 Godot 4.7。以下命令在仓库根目录运行，`godot` 替换为本机可执行路径；本次使用 `D:/taptapgamejam/tools/godot-4.7.2/Godot_v4.7.2-stable_win64_console.exe`。
+
+```powershell
+python tools/map/archive_rpg_maker_assets.py --source D:/taptapgamejam/map/Project1 --output assets/rpg_maker/source --verify
+python tools/map/prepare_rpg_maker_maps.py --source assets/rpg_maker/source/project1 --tables assets/rpg_maker/source/autotile_tables.json --output assets/map/rpg_maker_review
+godot --headless --editor --path . --import
+godot --headless --path . --script tools/map/bake_rpg_maker_maps.gd -- --catalog=res://assets/map/rpg_maker_review/catalog.json --output=res://src/levels/rpg_maker_review --tilesets=res://src/resources/tilesets/rpg_maker_review
+```
+
+转换器要求新 output 目录；Godot 烘焙工具默认拒绝覆盖已存在的任何输出，只有显式 `--replace` 才允许。示例先生成独立 review 路径，避免覆盖团队已经编辑的正式地图。重新采集变更过的 MZ 原工程时同样使用新的快照路径；归档工具拒绝覆盖不同内容。
+
+## 验证与边界
+
+本次采用模块验证，未改公共玩家接口或正式剧情入口，因此未跑全项目回归，也未构建 Release 发行包。
+
+- 全部 1,453 原文件逐个大小 / SHA-256 核验通过；缺失与内容冲突保护通过。
+- 用**原项目 rmmz_core.js 的实际 Tilemap 绘制方法**独立产生参考矩形，四图各六个动画时刻，共 24 次整图逐像素比较通过，涵盖自动图块、桌沿、阴影与星号层。
+- Godot 模块检查 **63 项通过、0 失败**：验证外部共享 TileSet、源格和已保存场景、动画帧数 / 速度、阴影 / 桌沿 / 区域、四向阻挡、真实玩家移动、修改格子后的通行、保存重开、四图切换及唯一跟随相机。
+- 四图已使用 Godot 4.7.2 / D3D12 Forward+ 实际运行并截图；检查全图、原生比例与遮挡。酒馆另有 Compatibility 渲染冒烟通过。
+- 重复执行 bake 且不加 `--replace` 被正确拒绝，已有四场景与四个外部 TileSet 的八个哈希不变。
+- 临时副本重导入保留八个场景 / 资源原 UID 和外部 TileSet 引用；桌沿同步验证更改桌格后只更新派生边缘，其余九层、Spawn、metadata 保持，原位更新保留场景 UID。
+- 最终编辑器导入正常退出，无错误或警告。初次导入曾出现现有 Phantom Camera 更新检查的 `Dictionary → Array` 错误（`addons/phantom_camera/scripts/panel/updater/update_button.gd:62`）；该插件与 HEAD 完全一致。当次退出还报告未释放对象 / 资源，未定位其原因。地图烘焙、模块检查与实际试玩均正常退出，本次未修改插件。
+
+可重复运行：
+
+```powershell
+python tests/verify_rpg_maker_render.py --source D:/taptapgamejam/map/Project1 --catalog assets/map/rpg_maker/catalog.json --node node
+godot --headless --path . --script tests/verify_rpg_maker_map.gd
+godot --path . res://src/debug/rpg_maker/rpg_maker_preview.tscn -- --rpg-map=4 --rpg-overview --rpg-capture=D:/absolute/output.png
+```
+
+原引擎只用于本地像素比较，不随 Godot 游戏执行。关键官方接口：[TileMapLayer](https://docs.godotengine.org/en/latest/classes/class_tilemaplayer.html)（静态格子保存与坐标转换）、[TileSetAtlasSource](https://docs.godotengine.org/en/latest/classes/class_tilesetatlassource.html)（图集区域、动画帧与 padding）、[TileData](https://docs.godotengine.org/en/latest/classes/class_tiledata.html)（通行自定义数据）。本次核对 4.7 对应文档。

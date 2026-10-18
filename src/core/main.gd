@@ -17,6 +17,8 @@ var _business_hud: Day1BusinessHUD
 @onready var _player: CavePlayer = $World/EntityRoot/Player as CavePlayer
 var _shop_level: MilkTeaShop
 var _settlement_level: SettlementMap
+## A map that answers HOST_MAP_CONTRACT without being one of the known types.
+var _room_level: Node2D
 var _shop_player: ShopPlayer
 var _ui_manager: UIManager
 var _shop_ui: ShopUI
@@ -27,6 +29,7 @@ var _map_button: Button
 var _map_registered := false
 var _handbook: HandbookPanel
 var _handbook_hud: HandbookHUD
+var _inventory_panel: InventoryPanel
 var _chronicle_journal: ChronicleJournal
 var _character_journal: CharacterJournal
 var _tea_production: TeaProduction
@@ -82,6 +85,7 @@ func _ready() -> void:
 	_create_character_system()
 	_create_task_system()
 	_create_handbook()
+	_create_inventory_ui()
 	_settlement_level = $World/LevelRoot.get_child(0) as SettlementMap
 	if _settlement_level != null:
 		_initialize_settlement()
@@ -128,6 +132,10 @@ func _ready() -> void:
 		_create_scene_travel(_shop_level.get_scene_exits())
 		_create_debug_components()
 		_create_save_system()
+		return
+	var room_map := $World/LevelRoot.get_child(0) as Node2D
+	if room_map != null and _can_host_map(room_map):
+		_initialize_room_map(room_map)
 		return
 	var error := _active_level.load_error
 	if DebugRuntime.is_enabled():
@@ -223,6 +231,23 @@ func _open_handbook(page: StringName) -> Error:
 	_refresh_task_delivery_names()
 	return _ui_manager.open_screen(page)
 
+## Portable warehouse: one shared inventory, opened outside modals and cutscenes.
+func open_inventory() -> Error:
+	if not is_instance_valid(_inventory_panel):
+		return ERR_UNCONFIGURED
+	var blocked := (get_tree().paused
+		or _ui_manager.has_modal()
+		or (is_instance_valid(_scene_travel) and _scene_travel.is_busy())
+		or (is_instance_valid(_story_director) and _story_director.is_busy())
+		or (is_instance_valid(_actor_director) and _actor_director.is_actor_controlled(&"player"))
+		or (is_instance_valid(_stealth_service) and _stealth_service.is_blocking()))
+	if blocked:
+		return ERR_BUSY
+	return _ui_manager.open_screen(ScreenIds.INVENTORY)
+
+func get_inventory_panel() -> WarehousePanel:
+	return _inventory_panel.get_warehouse_panel() if is_instance_valid(_inventory_panel) else null
+
 func _refresh_task_delivery_names() -> void:
 	var target_names := {}
 	var level := get_active_level()
@@ -255,6 +280,10 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		return
 	if event.is_action_pressed(&"open_tasks") and not event.is_echo():
 		open_tasks()
+		get_viewport().set_input_as_handled()
+		return
+	if event.is_action_pressed(&"open_inventory") and not event.is_echo():
+		open_inventory()
 		get_viewport().set_input_as_handled()
 
 func _create_chronicle_system() -> void:
@@ -324,11 +353,39 @@ func _refresh_handbook_access() -> void:
 		_ui_manager.close_screen(ScreenIds.HANDBOOK)
 	_handbook_hud.refresh_access(tasks or chronicle or drinks or characters, _chronicle_journal.get_unread_count() if chronicle else 0, _character_journal.get_unread_count())
 
+## The portable warehouse keeps the same service and page as the in-world storage point.
+func _create_inventory_ui() -> void:
+	_inventory_panel = preload("res://src/UI/inventory/inventory_panel.tscn").instantiate()
+	_inventory_panel.name = "InventoryPanel"
+	$PopupLayer.add_child(_inventory_panel)
+	_inventory_panel.configure(get_node("/root/GameState").get_warehouse_inventory())
+	_inventory_panel.close_requested.connect(func() -> void: _ui_manager.close_screen(ScreenIds.INVENTORY))
+	_ui_manager.register_screen(ScreenIds.INVENTORY, _inventory_panel, &"popup", true)
+
 
 func get_active_level() -> Node2D:
 	if _settlement_level != null:
 		return _settlement_level
-	return _shop_level if _shop_level != null else _active_level
+	if _shop_level != null:
+		return _shop_level
+	if _room_level != null:
+		return _room_level
+	return _active_level
+
+## Methods a destination map must answer before a scene switch starts. The check
+## is capability-based so a new room scene never needs an edit here.
+const HOST_MAP_CONTRACT: Array[StringName] = [
+	&"get_scene_entrance", &"get_scene_exits",
+	&"get_spawn_position", &"get_camera_bounds",
+]
+
+func _can_host_map(map: Node) -> bool:
+	if map == null:
+		return false
+	for method: StringName in HOST_MAP_CONTRACT:
+		if not map.has_method(method):
+			return false
+	return true
 
 ## Called on a detached, instantiated destination, before the source is removed.
 func prepare_scene_arrival(id: StringName, record_travel: bool = true) -> Error:
@@ -339,7 +396,7 @@ func prepare_scene_arrival(id: StringName, record_travel: bool = true) -> Error:
 	if level == null or level.get_child_count() != 1 or player == null:
 		return ERR_UNCONFIGURED
 	var map := level.get_child(0)
-	if not map is MilkTeaShop and not map is SettlementMap:
+	if not _can_host_map(map):
 		return ERR_UNCONFIGURED
 	if map.get_scene_entrance(id) == null:
 		return ERR_DOES_NOT_EXIST
@@ -517,6 +574,46 @@ func _initialize_settlement() -> void:
 		preview.set_script(load("res://src/debug/settlement/settlement_preview.gd"))
 		preview.call("configure", self, $DebugLayer)
 		$Systems.add_child(preview)
+
+## Minimal host for a room scene: movement, interaction and doors only.
+## Business, chapter and map services stay unbuilt; every later call site
+## already guards those with is_instance_valid.
+func _initialize_room_map(map: Node2D) -> void:
+	_room_level = map
+	_shop_player = $World/EntityRoot/Player as ShopPlayer
+	if _shop_player == null:
+		push_error("Room scene needs a ShopPlayer under World/EntityRoot.")
+		return
+	_place_player(map)
+	_shop_player.configure_camera(map.get_camera_bounds())
+	_create_camera_system(_shop_player.camera)
+	if map.has_method(&"configure_depth_sort"):
+		map.call(&"configure_depth_sort", $World/EntityRoot)
+	_shop_ui = preload("res://src/UI/milk_tea/shop_ui.tscn").instantiate()
+	_shop_ui.help_text = "房间                  WASD 移动 · E 交互 · Esc / P 暂停"
+	_shop_ui.show_help = not DebugRuntime.is_enabled()
+	_shop_ui.close_text = "继续探索  [Esc]"
+	$HudLayer.add_child(_shop_ui)
+	_shop_ui.set_popup_layer($PopupLayer)
+	_shop_ui.bind_manager(_ui_manager)
+	var points: Array[InteractionPoint] = []
+	if map.has_method(&"get_interaction_points"):
+		for point: InteractionPoint in map.call(&"get_interaction_points"):
+			points.append(point)
+	var exits: Array[SceneExit] = []
+	for exit: SceneExit in map.get_scene_exits():
+		exits.append(exit)
+	points.append_array(exits)
+	_shop_interaction = ShopInteraction.new()
+	_shop_interaction.name = "RoomInteraction"
+	$Systems.add_child(_shop_interaction)
+	_shop_interaction.configure(_shop_player, _shop_ui, points, _route_story_interaction)
+	_create_interaction_feedback(_shop_interaction)
+	_create_dialogue_system()
+	_create_gameplay_bridge(false)
+	_create_scene_travel(exits)
+	_create_debug_components()
+	_create_save_system()
 
 func get_tea_production() -> TeaProduction:
 	return _tea_production

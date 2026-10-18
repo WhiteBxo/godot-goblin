@@ -28,6 +28,16 @@
 
 聚落复用现有 `00_shop_entrance` 的门前位置；原 `00_shop` 信息交互设为不可用，避免与进店出口抢目标。地图画面、剖面室内、原有碰撞和店内三个设施点保留；本轮不重做两幅店铺素材的内部陈设，也不新增门洞阻挡。
 
+## 新增房间场景
+
+到达预检不再点名具体地图类型，改为检查 `MainGame.HOST_MAP_CONTRACT`：`get_scene_entrance`、`get_scene_exits`、`get_spawn_position`、`get_camera_bounds`。地图具备这四个方法即可作为切换目的地，新增房间场景不需要再改宿主；缺少任一方法返回 `ERR_UNCONFIGURED`，入口 ID 不存在返回 `ERR_DOES_NOT_EXIST`。
+
+宿主按地图能力分三条装配路径：`SettlementMap`、`MilkTeaShop`、以及 `_initialize_room_map` 的通用房间装配。房间装配只建移动、镜头、交互、对话、转场和调试组件，不建经营、章节、任务与地图面板；这些服务在输入锁、存档检查和调试面板中的读取点均已有 `is_instance_valid` 守卫。
+
+房间场景的宿主骨架沿用 `settlement.tscn`：`Systems/AudioManager`、`World/LevelRoot/<地图>`、`World/EntityRoot/Player` 与 `EffectRoot`，再加 `HudLayer`、`PopupLayer`、`PauseLayer`、`TransitionLayer`、`DebugLayer` 五个屏幕层。地图可选实现 `get_interaction_points` 和 `configure_depth_sort`，缺省时跳过。
+
+房间内的剧情、任务和存档尚未接线：通用装配不创建 `Day1ChapterController`、`Day1ShopController` 和 `SaveCoordinator`，因此房间场景按 M 打开地图、进行章节恢复和写检查点都会被拒绝，这是当前边界而非缺口。
+
 ## 切换和错误边界
 
 请求首先检查资格并占用场景本地 busy，MainGame 同步锁住移动和交互；延迟调用加载并实例化目标。目标 MainGame 在入树前通过 `prepare_scene_arrival(id)` 校验宿主结构、玩家类型和命名入口，成功才淡出并调用 Godot 4.7 `change_scene_to_node`。目标 `_ready` 先落点和设朝向，再配置镜头；首次画面前盖黑，淡入后释放输入。
@@ -43,9 +53,12 @@
 ```sh
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --script tests/verify_scene_travel.gd
 /Applications/Godot.app/Contents/MacOS/Godot --path . --script tests/verify_scene_travel.gd -- --capture
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path . --script tests/verify_room_host.gd
 ```
 
-截图写 `/tmp/goblin_scene_travel_street.png`、`/tmp/goblin_scene_travel_shop.png`，不提交缓存。自动验证覆盖真实 E 键、重复/长按、命名落点/朝向/镜头、真实脚底碰撞和移动、往返状态完整相等、一次性交付、无订阅累积、错误目标、暂停/导航占用和源重载清理。店铺旧移动测试也将出口加入实体通路验证。
+截图写 `/tmp/goblin_scene_travel_street.png`、`/tmp/goblin_scene_travel_shop.png`，不提交缓存。自动验证覆盖真实 E 键、重复/长按、命名落点/朝向/镜头、真实脚底碰撞和移动、往返状态完整相等、一次性交付、无订阅累积、错误目标、暂停/导航占用和源重载清理。店铺旧移动测试也将出口加入实体通路验证。`verify_room_host.gd` 覆盖能力契约（缺少镜头边界或完全没有契约都被拒、未知入口仍报 `ERR_DOES_NOT_EXIST`、原有店铺行为不变）和一次真实房间宿主装配（活动关卡、出生点、转场、交互、屏幕层）。
+
+2026-10-18 能力契约改动，Godot 4.7.2 headless：`verify_room_host.gd` 14 项、`verify_scene_travel.gd` 163 项、`verify_main_game.gd` 74 项均 0 失败；`verify_settlement.gd` 48,623 个可达物理采样点 PASS；`verify_milk_tea_shop.gd` PASS（退出时保留历史已知的 ObjectDB / 资源提示）。未执行图形模式与 Release 导出。
 
 2026-10-17，Godot 4.7.2：进出 headless 开启/关闭开发工具各 163 项、Metal Forward+ 图形模式 165 项均为 0 失败，已查看两侧落点截图。回归通过：经营会话 48、标题导航 65、MainGame 73、转场 54、Gameplay Bridge 248、Debug 边界 97 项，以及原玩家、店铺和聚落测试（48,623 个可达物理采样点）。Bridge 初次沙箱运行无法写 `user://` 临时 JSON，允许测试临时文件写入后完整通过；headless 的系统证书读取诊断不影响断言。未执行 Release 导出。
 

@@ -4,3 +4,6 @@
 
 # Local agent worktrees
 .claude/worktrees/
+
+# Local assistant workspace and memory
+.workbuddy/

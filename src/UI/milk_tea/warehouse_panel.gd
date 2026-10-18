@@ -63,6 +63,10 @@ func get_list() -> ItemList:
 func get_details() -> Label:
 	return _details
 
+## Hosts that put this page straight into a modal shell need a focus target.
+func get_default_focus() -> Control:
+	return _list if _list != null and _list.item_count > 0 else null
+
 func refresh() -> void:
 	if not is_instance_valid(_inventory):
 		return

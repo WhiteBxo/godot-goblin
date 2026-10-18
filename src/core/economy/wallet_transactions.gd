@@ -42,6 +42,29 @@ func get_inventory() -> WarehouseInventory:
 func get_balance() -> int:
 	return _balance
 
+## Valid products in configured order; malformed entries remain queryable by ID
+## for their diagnostic but are never offered as purchasable products.
+func get_product_quotes() -> Array[Dictionary]:
+	var quotes: Array[Dictionary] = []
+	for product_id: Variant in _products:
+		var quote := get_product_quote(product_id)
+		if quote.ok:
+			quotes.append(quote)
+	return quotes
+
+## Read-only projection of this session's static product and live merchant stock.
+## Only scalar values escape; callers may edit the copy without changing the wallet.
+## A quote does not reserve stock or authorize a later purchase.
+func get_product_quote(product_id: Variant) -> Dictionary:
+	if not _id(product_id) or not _products.has(product_id):
+		return {"ok": false, "code": "unknown_product", "message": "商品不存在。"}
+	var product: Variant = _products[product_id]
+	if not product is Dictionary or not _amount(product.get("price"), true) or _inventory.get_definition(product.get("item_id")) == null or (product.has("stock") and not _amount(product.stock, true)):
+		return {"ok": false, "code": "invalid_configuration", "message": "商品配置无效。"}
+	return {"ok": true, "code": "ok", "message": "",
+		"product_id": product_id, "item_id": product.item_id, "unit_price": product.price,
+		"stock": _merchant_stock[product_id] if product.has("stock") else null}
+
 func is_busy() -> bool:
 	return _busy or (_session_guard.is_valid() and _session_guard.call())
 
@@ -90,21 +113,19 @@ func _prepare_and_commit(kind: String, request_id: Variant, subject: Variant, qu
 		"debit":
 			delta = -quantity
 		"purchase":
-			if not _id(subject) or not _products.has(subject):
-				return _result(false, "unknown_product", "商品不存在。", request_id)
-			var product: Variant = _products[subject]
-			if not product is Dictionary or not _amount(product.get("price"), true) or _inventory.get_definition(product.get("item_id")) == null or (product.has("stock") and not _amount(product.stock, true)):
-				return _result(false, "invalid_configuration", "商品配置无效。", request_id)
+			var quote := get_product_quote(subject)
+			if not quote.ok:
+				return _result(false, quote.code, quote.message, request_id)
 			# Both operands are bounded to 32 bits; their product fits a signed int64.
-			var cost: int = product.price * quantity
+			var cost: int = quote.unit_price * quantity
 			if cost > LIMIT:
 				return _result(false, "amount_overflow", "交易金额超出上限。", request_id)
-			if product.has("stock"):
-				if next.merchant_stock[subject] < quantity:
+			if quote.stock != null:
+				if quote.stock < quantity:
 					return _result(false, "out_of_stock", "商品库存不足。", request_id)
 				next.merchant_stock[subject] -= quantity
 			delta = -cost
-			items[product.item_id] = quantity
+			items[quote.item_id] = quantity
 		"reward":
 			if not _id(subject) or not _rewards.has(subject):
 				return _result(false, "unknown_reward", "奖励不存在。", request_id)

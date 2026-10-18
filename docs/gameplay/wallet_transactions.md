@@ -13,6 +13,8 @@
 | 方法 | 作用 |
 | --- | --- |
 | `get_balance() -> int` | 查询余额 |
+| `get_product_quotes() -> Array[Dictionary]` | 按配置顺序列出有效商品的当前报价，返回独立列表及字典 |
+| `get_product_quote(product_id) -> Dictionary` | 只读查询当前会话的商品、物品、实际单价及实时商人余量，返回独立值副本 |
 | `add_money(amount, request_id) -> Dictionary` | 经营收入或其他可信业务的入账，金额由调用方业务配置提供 |
 | `spend_money(amount, request_id) -> Dictionary` | 普通扣款，禁止负余额 |
 | `purchase(product_id, quantity, request_id) -> Dictionary` | 读取商品配置并整笔购买 |
@@ -25,6 +27,18 @@
 统一结果包含 `ok`、`code`、`message`、`request_id`、`balance`、`money_delta`、`items`。失败时 `money_delta = 0`、`items = {}`；UI 可直接展示 message。`changed` 在完整状态变化后通知；`transaction_finished(result)` 对最外层请求发出一次，包括失败请求。busy 重入请求直接返回失败，不再次发送结果信号，防止监听器无限递归。信号结果和快照均复制容器。
 
 常用失败码：`invalid_parameter`、`duplicate_transaction`、`unknown_product`、`invalid_configuration`、`out_of_stock`、`insufficient_funds`、`amount_overflow`、`invalid_item`、`inventory_full`、`unknown_reward`、`already_claimed`、`task_unavailable`、`task_incomplete`、`commit_failed`、`busy`。
+
+### 商品报价
+
+`get_product_quotes()` 按会话创建时的配置顺序返回有效商品报价列表，每项与单品查询字段一致；无商品时返回空数组。列表不提供配置无效的商品，已知 ID 可通过单品查询取得错误码；售罄商品仍保留在列表中。数组和条目均为新建副本，删除、替换条目或修改字段不会改变内部配置。
+
+`get_product_quote(product_id)` 成功返回 `{ "ok": true, "code": "ok", "message": "", "product_id": String, "item_id": String, "unit_price": int, "stock": int 或 null }`。`unit_price` 是钱包当前静态商品配置的实际扣款单价，不读取物品图鉴的 `price` / `market_price`。`stock` 是当前剩余可售份数，0 表示售罄，null 表示不限量。售罄或余额不足时仍可查询有效报价，报价本身不保证可购买。
+
+未知或无效商品 ID 返回 `{ "ok": false, "code": "unknown_product", "message": "商品不存在。" }`；商品配置无效返回 `invalid_configuration` 和对应 message，失败结果不含报价字段。查询与购买共用商品配置校验。查询不写状态、不消耗请求 ID、不发信号，在同步提交后的通知及会话写锁期间也可读取。返回字典只含标量，调用方可以修改或丢弃副本，不影响钱包配置、余量或后续扣款。每次查询读取实时余量，旧副本不自动更新。
+
+购买协调器和弹窗应注入 GameState 的同一钱包，只保存商品 ID，通过报价显示价格与余量；物品展示信息可用报价的 `item_id` 向同一库存查询定义。打开界面及钱包 `changed` 后重新取报价，不能从 TeaMenu 或图鉴价格维护第二份交易配置。确认时仍只提交 `purchase(product_id, quantity, request_id)`，不传金额或把报价当授权；钱包在锁内重新计算价格并校验余额、商人余量和入库上限。一次确认及其失败重试保持同一个 request_id，成功后的下一笔有意购买才换 ID。
+
+当前仓库未发现额外维护商品报价的交易适配组件。本次仅提供钱包查询接口与后续界面接入契约，不新增购买 UI。正式商品价格、动态折扣资格及舍入规则仍待确认，本接口只投影已有静态 `products`，不从设计稿或物品标价推导交易价格。
 
 ## 配置
 
@@ -90,13 +104,13 @@ godot --headless --path . --script res://tests/verify_tea_production.gd
 godot --headless --path . --script res://tests/verify_milk_tea_shop.gd
 ```
 
-交易测试覆盖余额、限量商品、免费商品、非法参数/配置、钱包和库存上限、多物品奖励、真实任务完成检查、重复领取与别名、同步重入、注入提交失败、JSON 及实际文件往返、损坏存档拒绝、旧/局部快照原子拒绝、跨主场景切换和制作共用库存。
+交易测试覆盖商品列表与单品一致性、未知商品、报价副本隔离、Resource 后续修改隔离、实时/售罄/不限量报价、查询无通知、余额不足与同 ID 重试、重复请求不减余量、恢复后重新报价及购买，以及余额、免费商品、非法参数/配置、钱包和库存上限、多物品奖励、真实任务完成检查、重复领取与别名、同步重入、注入提交失败、JSON 及实际文件往返、损坏存档拒绝、旧/局部快照原子拒绝、跨主场景切换和制作共用库存。
 
 手动回归入口：`src/core/main.tscn` 或 `src/core/settlement.tscn`，F6。打开仓库查看库存，在制作台交付订单后再开仓库，观察对应原料减少，任务与订单板照常更新。当前没有新增购买按钮或奖励数值；交易行为通过上述测试和公开 API 验收。
 
 ## Godot 4.7 官方依据
 
-在线文档站本次访问受限，核对同版本 Godot 官方仓库中的文档源：
+报价接口核对 [Godot 4.7 Dictionary 文档](https://docs.godotengine.org/en/4.7/classes/class_dictionary.html#class-dictionary-method-duplicate)：字典按引用传递，`duplicate(true)` 递归复制容器但仍共享 Resource。报价因此构造仅含标量的新字典，避免暴露内部配置或 Resource；不依赖只冻结最外层的 `make_read_only()` 来保护嵌套数据。既有事务与生命周期依据：
 
 - [Dictionary.xml / duplicate](https://github.com/godotengine/godot/blob/4.7/doc/classes/Dictionary.xml)：deep=true 会递归复制 Array/Dictionary，Resource 仍共享；交易暂存与快照只存值数据，配置中的 Resource 由既有库存独立复制。
 - [Object.xml / emit_signal](https://github.com/godotengine/godot/blob/4.7/doc/classes/Object.xml)：通过既有信号通知观察者，将通知延迟到所有交易参与者提交后。

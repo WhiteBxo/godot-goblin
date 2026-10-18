@@ -150,7 +150,11 @@ func _project_shared_demand(entries: Array[Dictionary]) -> void:
 func get_interaction_priority(id: StringName) -> int:
 	for entry: Dictionary in _entries:
 		if entry.target_id == String(id) and entry.status == "active" and entry.ready:
-			return 1
+			return 2
+	# A companion without an order is still a counter-group NPC. The register
+	# must outrank that neutral point as well as known, unready recipients.
+	if id == &"orders":
+		return 1
 	return -1 if _delivery_targets.has(String(id)) else 0
 
 func _project(task: Dictionary, view: Dictionary, accepted: bool, done: bool) -> Dictionary:

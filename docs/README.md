@@ -66,6 +66,7 @@
 | [Day 1 前两阶段正式流程](gameplay/day_01_stages_01_02.md) | `day_01_stages_01_02.md` |
 | [Day 1 世界门控、调查与血液特调](gameplay/day_01_world_flow.md) | `day_01_world_flow.md` |
 | [Day 1 投掷与守卫反应](gameplay/day_01_stealth.md) | 正式 RPG 首夜潜入、独立守卫与跨室内整次重试 |
+| [Day 2 完整流程与试玩](gameplay/day_02_flow.md) | 五阶段主线目标、真实接单／制作／交付、关店购酒、赌场、守卫与存档验证 |
 | [饮品投掷与区域效果（第三期）](gameplay/drink_throw_effects.md) | 扣杯、六种效果、区域修饰、可腐蚀物及独立试玩 |
 | [初级奶茶制作](gameplay/basic_tea_production.md) | `basic_tea_production.md` |
 | [订单板、按单制作与交付追踪](gameplay/order_system.md) | 逐单接取、暖纸订单笺、共享库存与 HUD |

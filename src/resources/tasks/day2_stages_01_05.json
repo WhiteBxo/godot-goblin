@@ -2,6 +2,274 @@
   "version": 1,
   "tasks": [
     {
+      "id": "day2.main.morning",
+      "type": "main",
+      "title": "第二天 · 胖哥布林的委托",
+      "description": "听取胖哥布林的委托，准备白天营业。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day1.s06.completed"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day1.s06.completed"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "objectives": [
+        {
+          "id": "morning",
+          "text": "听取胖哥布林的委托，取得独立代购专款",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.procurement.funded"
+          }
+        },
+        {
+          "id": "open",
+          "text": "准备营业，等待第一组顾客到柜台",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s02.open"
+          }
+        }
+      ]
+    },
+    {
+      "id": "day2.main.business",
+      "type": "main",
+      "title": "第二天 · 白天营业",
+      "description": "在收银台接单，到制作台制作，再交给指定顾客；四组剧情客全部接待后手动关店。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day2.s02.closed"
+      },
+      "objectives": [
+        {
+          "id": "festival",
+          "text": "到收银台按 E 接第一组订单，制作 H01 后交给顾客",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s02.festival_0.delivered"
+          }
+        },
+        {
+          "id": "elder",
+          "text": "到收银台接待谈论长老的顾客，制作并交付 H01",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s02.elder_0.delivered"
+          }
+        },
+        {
+          "id": "emissary",
+          "text": "到收银台接待谈论使者的顾客，制作并交付 H01",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s02.emissary_0.delivered"
+          }
+        },
+        {
+          "id": "rumor_first",
+          "text": "接取最后一组的两张订单，制作两杯 H01 并分别交付",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s02.rumor_0.delivered"
+          }
+        },
+        {
+          "id": "rumor_second",
+          "text": "将另一杯 H01 交给最后一组的另一位顾客",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s02.rumor_1.delivered"
+          }
+        },
+        {
+          "id": "close",
+          "text": "交清已接散客订单，点击左侧「关店 · 前往酒馆」；可先雇一名散客代购",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s02.closed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "day2.main.tavern",
+      "type": "main",
+      "title": "第二天 · 酒馆购酒",
+      "description": "前往酒馆购买守卫指定的琥珀酒，并听取酒馆老板的委托。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day2.s02.closed"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day2.s02.closed"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day2.s03.festival_accepted"
+      },
+      "objectives": [
+        {
+          "id": "arrive",
+          "text": "出店后前往居民区右下方的酒馆；按 M 查看地图",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.travel.tavern_arrived"
+          }
+        },
+        {
+          "id": "buy",
+          "text": "听完老板介绍后，点击左侧购买按钮，以 48G 购买一份琥珀酒",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s03.amber_wine_bought"
+          }
+        },
+        {
+          "id": "commission",
+          "text": "听取七日祭食材委托和格里芬令牌的线索",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s03.festival_accepted"
+          }
+        }
+      ]
+    },
+    {
+      "id": "day2.main.casino",
+      "type": "main",
+      "title": "第二天 · 赌场取材",
+      "description": "到赌场参加两局赌局，取得幻金菇并确认奶茶债务已经免除。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day2.s03.festival_accepted"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day2.s03.festival_accepted"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day2.s04.casino_reward_received"
+      },
+      "objectives": [
+        {
+          "id": "arrive",
+          "text": "离开酒馆，前往聚落西南方的赌场；按 M 查看地图",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.travel.casino_arrived"
+          }
+        },
+        {
+          "id": "first",
+          "text": "听完规则后，点击左侧「开始第一局」",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s04.first_loss"
+          }
+        },
+        {
+          "id": "second",
+          "text": "点击左侧「开始第二局」，取得幻金菇并听完结算",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s04.casino_reward_received"
+          }
+        }
+      ]
+    },
+    {
+      "id": "day2.main.guard",
+      "type": "main",
+      "title": "第二天 · 守卫的特殊奶茶",
+      "description": "返回店里制作守卫指定的特殊奶茶，送到醉酒守卫处，最后实际返回奶茶店结束今天。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day2.s04.casino_reward_received"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day2.s04.casino_reward_received"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day2.completed"
+      },
+      "objectives": [
+        {
+          "id": "leave",
+          "text": "离开赌场，带着材料返回奶茶店",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.travel.casino_exited"
+          }
+        },
+        {
+          "id": "shop",
+          "text": "沿原路返回聚落南侧的奶茶店",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.travel.shop_returned"
+          }
+        },
+        {
+          "id": "craft",
+          "text": "到制作台按 E，在「已知配方」选择守卫特调并制作一杯",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s05.special_drink_made"
+          }
+        },
+        {
+          "id": "greet",
+          "text": "带上奶茶出店，前往长老居所支路的醉酒守卫处，按 E 与他交谈",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s05.guard_delivery_open"
+          }
+        },
+        {
+          "id": "deliver",
+          "text": "交谈结束后，再按 E 将特殊奶茶交给醉酒守卫",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.s05.special_drink_delivered"
+          }
+        },
+        {
+          "id": "return",
+          "text": "送达后实际返回奶茶店，结束第二天",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.travel.final_shop_returned"
+          }
+        },
+        {
+          "id": "rest",
+          "text": "听完返店后的章末独白，休息进入次日",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.completed"
+          }
+        }
+      ]
+    },
+    {
       "id": "day2.orders.festival_0",
       "type": "commission",
       "title": "H01经典珍珠奶茶 → 七日祭顾客甲",

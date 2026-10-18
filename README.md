@@ -36,7 +36,9 @@ godot --path .
 
 标题“新游戏”清空整局，暂停返回标题只退出场景；普通进出店铺、重载和 F3 重启保留经营会话。安全操作阶段自动保存；标题“继续游戏”恢复最近检查点，潜入中途退出恢复尝试前状态。详见 [启动与新游戏](docs/guides/game_entry.md) 和 [统一经营会话](docs/gameplay/business_session.md)。
 
-制作台默认“按订单制作”；切到外层“自由调配”后，内层有“教学配方”和“自由调配”：前者是固定配方手动选料与批量制作，后者是三槽自由配方及独立加冰选项。C01–C10 初始各五份并可免费整份补给；异世界原料按实际剧情或采集取得。见 [制作](docs/gameplay/basic_tea_production.md)、[订单](docs/gameplay/order_system.md)、[自由配方](docs/gameplay/free_tea_recipes.md)。
+制作台有已接饮品订单时默认“按订单制作”，没有时直接显示“已知配方”。切到外层“自由调配”后，内层有“已知配方”和“自由调配”：前者是固定配方手动选料与批量制作，后者是三槽自由配方及独立加冰选项。C01–C10 初始各五份并可免费整份补给；异世界原料按实际剧情或采集取得。见 [制作](docs/gameplay/basic_tea_production.md)、[订单](docs/gameplay/order_system.md)、[自由配方](docs/gameplay/free_tea_recipes.md)。
+
+第二天从第一晚结束后自动开始，按右上主线目标完成营业、手动关店、酒馆购酒、两局赌场、守卫特调和返店换日。具体步骤与本次交互验证见 [第二天完整流程](docs/gameplay/day_02_flow.md)。
 
 ## 独立入口
 

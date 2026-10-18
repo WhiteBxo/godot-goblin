@@ -36,6 +36,7 @@ func _run() -> void:
 	check(board.get_entries().size() == 3, "Only the three revealed orders appear")
 	check(board.get_entry("day1_group_c").status == "available", "Chapter activation is not order acceptance")
 	check(board.get_interaction_priority(&"goblin_c") < board.get_interaction_priority(&"orders"), "Unaccepted customers defer to the counter")
+	check(board.get_interaction_priority(&"companion_without_order") < board.get_interaction_priority(&"orders"), "A companion without a catalog order cannot steal the counter")
 	var snapshot := state.to_dict()
 	board.refresh()
 	check(state.to_dict() == snapshot, "Reading the board never accepts orders or writes facts")

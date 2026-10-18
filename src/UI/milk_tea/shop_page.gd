@@ -118,7 +118,17 @@ func present(point: InteractionPoint) -> void:
 	if not is_instance_valid(_production):
 		return
 	if _station and not (is_instance_valid(_tea) and _tea.has_session()):
-		_craft_modes.current_tab = 0
+		# Story preparation can unlock a recipe before its recipient accepts a
+		# delivery. Keep those cups reachable when there is no accepted order.
+		var has_order := false
+		if is_instance_valid(_orders):
+			for entry: Dictionary in _orders.get_entries():
+				if entry.status == "active" and not entry.product_id.is_empty():
+					has_order = true
+					break
+		_craft_modes.current_tab = 0 if has_order else 1
+		if not has_order:
+			_making_tabs.current_tab = 0
 		_refresh_recipe()
 		if is_instance_valid(_orders):
 			_order_crafting.present()
@@ -161,7 +171,7 @@ func configure_production(production: TeaProduction) -> void:
 		_crafting_panel.name = "CraftingPanel"
 		_crafting_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		teaching_scroll.add_child(_crafting_panel)
-		_making_tabs.set_tab_title(0, "教学配方")
+		_making_tabs.set_tab_title(0, "已知配方")
 		_crafting_panel.craft_requested.connect(
 			func(materials: Array[String], quantity: int) -> void: craft_requested.emit(materials, quantity))
 		_formula_panel = preload("res://src/UI/milk_tea/free_crafting_panel.tscn").instantiate()
@@ -207,7 +217,8 @@ func uses_native_gui_input() -> bool:
 		return true
 	if is_instance_valid(_formula_panel) and _formula_panel.is_visible_in_tree():
 		return true
-	return is_instance_valid(_crafting_panel) and _crafting_panel.is_visible_in_tree() and _crafting_panel.uses_native_gui_input()
+	# Recipe lists, tabs and the confirmation button all use native GUI input.
+	return is_instance_valid(_crafting_panel) and _crafting_panel.is_visible_in_tree()
 
 func _refresh_order_board() -> void:
 	if _point_id == &"orders":

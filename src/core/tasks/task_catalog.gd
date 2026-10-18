@@ -134,7 +134,7 @@ func _validate(data: Variant, references: Dictionary) -> bool:
 			return _invalid(context + "/id", "Invalid or duplicate task ID '%s'" % task.get("id"))
 		used[task.id] = true
 		context += "(" + task.id + ")"
-		if not _keys(task, ["id", "type", "title", "description", "activate_when", "complete_when", "objectives", "location_id", "difficulty", "rewards", "reveal_when", "delivery"], context):
+		if not _keys(task, ["id", "type", "title", "description", "activate_when", "complete_when", "objectives", "location_id", "difficulty", "rewards", "reveal_when", "delivery", "fail_when", "deadline", "allow_cancel"], context):
 			return false
 		if task.get("type") not in ["main", "commission"]:
 			return _invalid(context + "/type", "Expected main or commission")
@@ -143,6 +143,12 @@ func _validate(data: Variant, references: Dictionary) -> bool:
 				return _invalid(context + "/" + field, "Expected non-empty text")
 		if not _condition(task.get("activate_when"), context + "/activate_when", references) or not _condition(task.get("complete_when"), context + "/complete_when", references, true):
 			return false
+		if task.has("fail_when") and not _condition(task.fail_when, context + "/fail_when", references, true):
+			return false
+		if task.has("deadline") and not DayPhase.is_valid_deadline(task.deadline):
+			return _invalid(context + "/deadline", "Expected day >= 1, day/night phase and explicit at/after boundary")
+		if task.has("allow_cancel") and not task.allow_cancel is bool:
+			return _invalid(context + "/allow_cancel", "Expected bool; refunds belong to the business coordinator")
 		if task.has("delivery"):
 			var delivery: Variant = task.delivery
 			if not delivery is Dictionary or not _keys(delivery, ["order_id", "product_id", "items", "drink", "target_object_id", "accepted_flag"], context + "/delivery"):
@@ -212,3 +218,25 @@ func _objectives(value: Variant, context: String, references: Dictionary) -> boo
 		if not _condition(objective.get("complete_when"), path + "/complete_when", references) or not _presentation(objective, path, references):
 			return false
 	return true if has_required else _invalid(context, "At least one required objective is needed")
+
+static func matches_condition(condition: Dictionary, state: Node) -> bool:
+	match condition.type:
+		"flag":
+			return state.get_flag(condition.key)
+		"event_completed":
+			return state.is_event_completed(condition.id)
+		"variable_at_least":
+			var value: Variant = state.get_variable(condition.key)
+			return is_number(value) and value >= condition.value
+	return false
+
+static func matches_facts(condition: Dictionary, flags: Dictionary, variables: Dictionary, events: Array) -> bool:
+	match condition.type:
+		"flag":
+			return flags.get(condition.key, false)
+		"event_completed":
+			return condition.id in events
+		"variable_at_least":
+			var value: Variant = variables.get(condition.key)
+			return is_number(value) and value >= condition.value
+	return false

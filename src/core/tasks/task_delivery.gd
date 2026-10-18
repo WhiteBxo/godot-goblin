@@ -82,7 +82,7 @@ func accept_order(order_id: String) -> Error:
 	if _committing or not _ready_for_delivery() or not _orders.has(order_id):
 		return ERR_UNAVAILABLE
 	var task: Dictionary = _orders[order_id]
-	if _state.get_flag(_receipt_key(order_id)) or _state.get_flag(task.complete_when.key):
+	if not _state.get_task_result(task.id).is_empty() or _state.get_flag(_receipt_key(order_id)) or _state.get_flag(task.complete_when.key):
 		return ERR_ALREADY_EXISTS
 	if is_order_accepted(order_id):
 		return ERR_ALREADY_EXISTS
@@ -103,7 +103,7 @@ func can_accept_order(order_id: String) -> bool:
 		return false
 	var task: Dictionary = _orders[order_id]
 	var view := _journal.get_task(task.id)
-	if task.activate_when.type != "flag" or not view.get("revealed", false) or view.status == "completed" or _state.get_flag(_receipt_key(order_id)):
+	if task.activate_when.type != "flag" or not view.get("revealed", false) or view.status in ["completed", "failed", "expired", "cancelled"] or _state.get_flag(_receipt_key(order_id)):
 		return false
 	# A separate chapter activation flag cannot be set by accepting an order.
 	if task.delivery.has("accepted_flag") and task.delivery.accepted_flag != task.activate_when.key and view.status != "active":
@@ -175,6 +175,8 @@ func try_submit(order_id: String, target_object_id: String, drink_id: String = "
 		return _failure("成品或交付对象与订单不符。未消耗库存。", order_id)
 	if _state.get_flag(_receipt_key(order_id)) or _journal.get_task(task.id).get("status") != "active":
 		return _failure("任务未激活或已经完成，不能交付。", order_id)
+	if not _state.can_complete_task(task.id):
+		return _failure("任务已结束、已到截止点或存在失败条件，不能交付。", order_id)
 	if task.delivery.has("accepted_flag") and not _state.get_flag(task.delivery.accepted_flag):
 		return _failure("请先在订单板接取这张订单。", order_id)
 	var requirement := get_requirement(order_id)
@@ -215,7 +217,7 @@ func try_submit(order_id: String, target_object_id: String, drink_id: String = "
 				facts[batch.completion_flag] = true
 		# Explicitly configured money (including zero) overrides the formula price.
 		var money := int(task.get("rewards", {}).get("money", sale_price))
-		var error := _state.commit_delivery(requirement, rewards, money, facts, get_completed_count() + 1, "delivery:" + order_id, delivered.emit.bind(order_id), drink_costs)
+		var error := _state.commit_delivery(requirement, rewards, money, facts, get_completed_count() + 1, "delivery:" + order_id, delivered.emit.bind(order_id), drink_costs, task.id)
 		_committing = false
 		if error != OK:
 			return _failure("交付结算失败：请检查成品、奖励容量或钱包上限。未消耗库存。", order_id)
@@ -244,19 +246,16 @@ func try_submit(order_id: String, target_object_id: String, drink_id: String = "
 		_state.end_business_transaction()
 		return _failure("所需成品或物资不足，或奖励库存已满。未消耗库存。", order_id)
 	var facts := {task.complete_when.key: true, _receipt_key(order_id): true}
-	var state_blocked := _state.is_blocking_signals()
-	_state.set_block_signals(true)
-	var error := _state.apply_flags(facts)
+	_inventory.set_session_locked(true)
+	var error := _state.commit_delivery_facts(facts, get_completed_count() + 1, task.id)
 	if error != OK:
+		_inventory.set_session_locked(false)
 		_inventory.restore_state(before)
-	else:
-		_state.set_variable("shop.orders_completed", maxi(int(_state.get_variable("shop.orders_completed", 0)), get_completed_count()))
-	_state.set_block_signals(state_blocked)
 	_inventory.set_block_signals(was_blocked)
 	if error == OK:
-		_state.state_changed.emit()
 		_inventory.changed.emit()
 		delivered.emit(order_id)
+	_inventory.set_session_locked(false)
 	_committing = false
 	_state.end_business_transaction()
 	if error != OK:

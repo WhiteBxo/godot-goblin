@@ -112,16 +112,18 @@ func _refresh() -> void:
 	_ids.clear()
 	var tasks: Array[Dictionary] = []
 	if is_instance_valid(_journal):
-		tasks = _journal.get_active_tasks()
+		tasks = _journal.get_visible_tasks()
 	for task in tasks:
 		var label := ("主线 · " if task.type == "main" else "委托 · ") + String(task.title).replace("\n", " ")
+		if task.status != "active":
+			label = "[" + _status_text(task.status) + "] " + label
 		var index := _list.add_item(label)
-		_list.set_item_tooltip(index, task.title)
+		_list.set_item_tooltip(index, label if task.status != "active" else task.title)
 		_ids.append(task.id)
 	var choose_first := _selected_id not in _ids
 	if choose_first:
 		_selected_id = _ids[0] if not _ids.is_empty() else ""
-	_summary.text = "活动任务 · %d" % _ids.size()
+	_summary.text = "任务记录 · %d" % _ids.size()
 	if _ids.is_empty():
 		_title.text = "暂无活动任务"
 		_title.tooltip_text = ""
@@ -141,6 +143,15 @@ func _number(value: float) -> String:
 func _show_task(task: Dictionary) -> void:
 	_title.text = task.title
 	_title.tooltip_text = task.title
+	if task.status in ["completed", "failed", "expired", "cancelled"]:
+		var lines := PackedStringArray([task.description, "", "任务结果：" + _status_text(task.status)])
+		var result: Dictionary = task.get("result", {})
+		if not result.is_empty():
+			lines.append("结算时间：第 %d 天 · %s" % [result.day, "白天" if result.phase == "day" else "夜晚"])
+			if not result.reason.is_empty():
+				lines.append("原因：" + result.reason)
+		_set_detail("\n".join(lines))
+		return
 	var order := _orders.get_task_entry(task.id) if is_instance_valid(_orders) else {}
 	if not order.is_empty():
 		var ready: bool = order.ready or order.status == "completed"
@@ -192,3 +203,6 @@ func _select(index: int) -> void:
 		return
 	_selected_id = _ids[index]
 	_refresh()
+
+func _status_text(status: String) -> String:
+	return {"completed": "已完成", "failed": "已失败", "expired": "已过期", "cancelled": "已取消"}.get(status, "进行中")

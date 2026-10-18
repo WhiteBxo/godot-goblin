@@ -28,6 +28,7 @@ GameState 还通过 `get_warehouse_inventory()` / `get_tea_production()` 持有�
 - `event_completed(event_id: String)`：首次完成事件后发一次。
 - `state_reset()`：实际 reset 后发一次。
 - `state_restored()`：恢复了不同状态后发一次。
+- `task_settled(task_id, result)`：正常首次锁存任务终态后通知，恢复/绑定不重发；接口与时序见[日程与任务结果](schedule_and_task_results.md)。
 
 每次操作先完成数据修改，再同步发 `state_changed`，最后发对应的事件/reset/restore signal。恢复和 reset 是整体操作，订阅者只会看到完整状态，不会收到逐字段通知。恢复已完成事件不会发 `event_completed`，避免读档重播演出。订阅方宜只读取状态，将进一步写入安排到后续操作，避免同步 signal 内递归修改状态。
 
@@ -48,9 +49,9 @@ GameState.state_changed.connect(_refresh_from_state)
 _refresh_from_state()
 ```
 
-`to_dict() -> Dictionary` 返回 `schema_version = 4` 的独立原生 Variant 快照，包含 `current_day`、`story_stage`、`flags`、`variables`、`completed_events`（排序后的字符串数组）、`business`（profile_id、v3 库存子快照、制作订单 ID 前缀及自由制作请求回执）及 `economy`（钱包、同一库存、商人余量、交易与领奖回执）。`restore_state(data: Dictionary) -> Error` 先检查全部字段、版本、命名空间、值类型及经营数据，再整体替换；无效数据返回 `ERR_INVALID_DATA`，保留原状态且无通知；相同状态返回 `OK` 且无通知，事件数组顺序不影响比较。所有八个字段必需；`business.inventory` 与 `economy.inventory` 必须完全一致，顶层额外字段忽略。旧 v1 缺少经营状态，拒绝恢复以免覆盖或猜测剧情对应的物品状态。旧完整 v2/v3 可迁移，补空配方成品、图鉴和自由制作请求回执，保留已有开封次数；v2 另补 tutorial 配置与古怪金币空条目。详见[配方快照边界](../gameplay/free_tea_recipes.md#快照与迁移)。
+`to_dict() -> Dictionary` 返回 `schema_version = 5` 的独立原生 Variant 快照，包含 `current_day`、`story_stage`、`flags`、`variables`、`completed_events`（排序后的字符串数组）、`business`（profile_id、v3 库存子快照、制作订单 ID 前缀及自由制作请求回执）及 `economy`（钱包、同一库存、商人余量、交易与领奖回执）。`restore_state(data: Dictionary) -> Error` 先检查全部字段、版本、命名空间、值类型及经营数据，再整体替换；无效数据返回 `ERR_INVALID_DATA`，保留原状态且无通知；相同状态返回 `OK` 且无通知，事件数组顺序不影响比较。新增必填 `task_results` 保存任务终态（见[日程与任务结果](schedule_and_task_results.md)）；所有九个字段必需；`business.inventory` 与 `economy.inventory` 必须完全一致，顶层额外字段忽略。旧 v1 缺少经营状态，拒绝恢复以免覆盖或猜测剧情对应的物品状态。旧完整 v2/v3/v4 可迁移，补空任务结果并在已绑定目录时静默归一化；v2/v3 另补空配方成品、图鉴和自由制作请求回执，保留已有开封次数；v2 另补 tutorial 配置与古怪金币空条目。详见[配方快照边界](../gameplay/free_tea_recipes.md#快照与迁移)。
 
-当前提供完整 v4 内存快照接口，没有文件读写或存档格式选择。后续存档适配层需保留 Variant 类型；普通 JSON 会将数字解析为浮点数，不能直接保证原生快照类型往返，应在适配层编码/恢复类型后再调用 `restore_state`。
+GameState 提供完整 v5 内存快照接口，文件读写由独立[存档系统](save_system.md)负责。适配层需保留 Variant 类型；普通 JSON 会将数字解析为浮点数，不能直接保证原生快照类型往返，应在适配层编码/恢复类型后再调用 `restore_state`。
 
 ## 验证
 

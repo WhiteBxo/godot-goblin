@@ -14,16 +14,16 @@ const NIGHT_PHASE := "night"
 static func get_phase(state: Node) -> String:
 	if state == null or not is_instance_valid(state):
 		return DAY_PHASE
-	var stored: Variant = state.get_variable(PHASE_VARIABLE, "")
-	if stored is String:
-		var phase: String = stored
-		if phase == DAY_PHASE or phase == NIGHT_PHASE:
-			return phase
-		if not phase.is_empty():
-			return ""
-	if state.get_flag(NIGHT_FLAG):
-		return NIGHT_PHASE
-	return DAY_PHASE
+	if state.has_variable(PHASE_VARIABLE):
+		var stored: Variant = state.get_variable(PHASE_VARIABLE)
+		return stored if stored is String and stored in [DAY_PHASE, NIGHT_PHASE] else ""
+	return NIGHT_PHASE if state.get_flag(NIGHT_FLAG) else DAY_PHASE
+
+static func phase_from_facts(variables: Dictionary, flags: Dictionary) -> String:
+	if variables.has(PHASE_VARIABLE):
+		var stored: Variant = variables[PHASE_VARIABLE]
+		return stored if stored is String and stored in [DAY_PHASE, NIGHT_PHASE] else ""
+	return NIGHT_PHASE if flags.get(NIGHT_FLAG, false) else DAY_PHASE
 
 static func is_night(state: Node) -> bool:
 	return get_phase(state) == NIGHT_PHASE
@@ -44,3 +44,43 @@ static func enter_day(state: Node) -> bool:
 ## gathering gates and debug tools, so both keys always change together.
 static func _write_phase(state: Node, phase: String) -> bool:
 	return is_instance_valid(state) and state.has_method("commit_day_phase") and state.commit_day_phase(phase)
+
+## Absolute adjacent target: safe to retry even after rebuilding the caller.
+## The caller supplies its business/story rule; this module does not close shops.
+static func advance_to(state: Node, day: int, phase: String) -> Error:
+	if not is_instance_valid(state) or not is_valid_point(day, phase):
+		return ERR_INVALID_PARAMETER
+	var current := get_phase(state)
+	if current.is_empty():
+		return ERR_INVALID_DATA
+	if state.current_day == day and current == phase:
+		return OK
+	var adjacent: bool = (current == DAY_PHASE and phase == NIGHT_PHASE and day == state.current_day) or (current == NIGHT_PHASE and phase == DAY_PHASE and day > state.current_day and day - state.current_day == 1)
+	if not adjacent:
+		return ERR_INVALID_PARAMETER
+	return OK if _write_phase(state, phase) else ERR_BUSY
+
+static func is_valid_point(day: Variant, phase: Variant) -> bool:
+	return day is int and day >= 1 and phase is String and phase in [DAY_PHASE, NIGHT_PHASE]
+
+## boundary is deliberately required: no implicit deadline policy.
+static func is_valid_deadline(value: Variant) -> bool:
+	if not value is Dictionary or value.size() != 3 or not value.has_all(["day", "phase", "boundary"]):
+		return false
+	var day: Variant = value.day
+	return typeof(day) in [TYPE_INT, TYPE_FLOAT] and is_finite(day) and day == floor(day) and day >= 1 and day < 9223372036854775807 and value.phase in [DAY_PHASE, NIGHT_PHASE] and value.boundary in ["at", "after"]
+
+static func is_deadline_reached(state: Node, deadline: Dictionary) -> bool:
+	if not is_instance_valid(state) or not is_valid_deadline(deadline):
+		return false
+	return is_deadline_reached_at(state.current_day, get_phase(state), deadline)
+
+static func is_deadline_reached_at(current_day: int, phase: String, deadline: Dictionary) -> bool:
+	if not is_valid_point(current_day, phase) or not is_valid_deadline(deadline):
+		return false
+	var day: int = int(deadline.day)
+	if current_day != day:
+		return current_day > day
+	if phase == deadline.phase:
+		return deadline.boundary == "at"
+	return phase == NIGHT_PHASE

@@ -5,9 +5,10 @@ extends Node
 signal state_changed
 signal event_completed(event_id: String)
 signal state_reset
+signal task_settled(task_id: String, result: Dictionary)
 signal state_restored
 
-const SCHEMA_VERSION: int = 4
+const SCHEMA_VERSION: int = 5
 const DAY1_MENU: TeaMenu = preload("res://src/resources/milk_tea/day1_menu.tres")
 const MAX_VALUE_DEPTH: int = 32
 
@@ -31,6 +32,9 @@ var _story_stage: String = ""
 var _flags: Dictionary[String, bool] = {}
 var _variables: Dictionary[String, Variant] = {}
 var _completed_events: Dictionary[String, bool] = {}
+var _task_results: Dictionary = {}
+# Static bindings survive scene disposal; reset/restore replace only session facts.
+var _task_definitions: Array[Dictionary] = []
 var _economy: WalletTransactions
 var _warehouse_inventory: WarehouseInventory
 var _tea_production: TeaProduction
@@ -54,7 +58,7 @@ func get_transactions() -> WalletTransactions:
 
 func _on_economy_changed() -> void:
 	if not _replacing and not _business_transaction and (_tea_production == null or not _tea_production.is_submitting()):
-		state_changed.emit()
+		_notify_state_changed()
 
 
 func get_warehouse_inventory() -> WarehouseInventory:
@@ -89,7 +93,7 @@ func select_business_profile(profile: String) -> Error:
 	if profile == _business_profile:
 		return OK
 	_ensure_business()
-	if _current_day != 1 or not _story_stage.is_empty() or not _flags.is_empty() or not _variables.is_empty() or not _completed_events.is_empty() or _tea_production.get_completed_count() != 0 or _economy.to_dict() != _economy.get_default_state():
+	if _current_day != 1 or not _story_stage.is_empty() or not _flags.is_empty() or not _variables.is_empty() or not _completed_events.is_empty() or not _task_results.is_empty() or _tea_production.get_completed_count() != 0 or _economy.to_dict() != _economy.get_default_state():
 		return ERR_ALREADY_IN_USE
 	_business_profile = profile
 	_tea_production.select_menu(_profile_menu(profile))
@@ -107,12 +111,14 @@ func _publish_profile_fact() -> void:
 		_flags["business.profile.day1"] = true
 
 ## All fallible validation precedes mutation; publish only the complete result.
-func commit_delivery(costs: Dictionary, rewards: Dictionary, money: int, facts: Dictionary, count: int, request_id: String, notify: Callable = Callable(), drink_costs: Dictionary = {}) -> Error:
+func commit_delivery(costs: Dictionary, rewards: Dictionary, money: int, facts: Dictionary, count: int, request_id: String, notify: Callable = Callable(), drink_costs: Dictionary = {}, task_id: String = "") -> Error:
 	if _session_busy():
 		return ERR_BUSY
 	for key: Variant in facts:
 		if not key is String or not _is_namespaced_key(key) or not facts[key] is bool:
 			return ERR_INVALID_DATA
+	if not _can_commit_task_delivery(task_id, facts):
+		return ERR_UNAVAILABLE
 	var draft := _economy.prepare_delivery(costs, rewards, money, request_id, drink_costs)
 	if draft.is_empty():
 		return ERR_INVALID_DATA
@@ -126,7 +132,7 @@ func commit_delivery(costs: Dictionary, rewards: Dictionary, money: int, facts: 
 			_flags[key] = facts[key]
 		_variables["shop.orders_completed"] = maxi(int(get_variable("shop.orders_completed", 0)), count)
 		_warehouse_inventory.set_session_locked(true)
-		state_changed.emit()
+		_notify_state_changed()
 		_economy.publish_restored(before)
 		if notify.is_valid():
 			notify.call()
@@ -159,7 +165,7 @@ func commit_story_interaction(receipt: String, items: Dictionary, facts: Diction
 			_flags[key] = facts[key]
 		_flags[receipt] = true
 		_warehouse_inventory.set_session_locked(true)
-		state_changed.emit()
+		_notify_state_changed()
 		_economy.publish_restored(before)
 		_warehouse_inventory.set_session_locked(false)
 	_replacing = false
@@ -193,7 +199,7 @@ func commit_item_payment(receipt: String, costs: Dictionary, facts: Dictionary) 
 			_flags[key] = facts[key]
 		_flags[receipt] = true
 		_warehouse_inventory.set_session_locked(true)
-		state_changed.emit()
+		_notify_state_changed()
 		_economy.publish_restored(before)
 		_warehouse_inventory.set_session_locked(false)
 	_replacing = false
@@ -206,12 +212,14 @@ func commit_day_phase(phase: String) -> bool:
 		return false
 	if DayPhase.get_phase(self).is_empty():
 		return false
+	if phase == "day" and _current_day == 9223372036854775807:
+		return false
 	_variables["world.phase"] = phase
 	_flags["world.phase.night"] = phase == "night"
 	if phase == "day":
 		_current_day += 1
 	_replacing = true
-	state_changed.emit()
+	_notify_state_changed()
 	_replacing = false
 	return true
 
@@ -219,7 +227,7 @@ func _on_business_changed() -> void:
 	if not _replacing and not _business_transaction and _tea_production.is_submitting():
 		if _business_profile == "day1":
 			_variables["shop.drinks_made"] = _tea_production.get_completed_count()
-		state_changed.emit()
+		_notify_state_changed()
 
 
 ## Delivery holds this through all synchronous notifications, including receipts.
@@ -243,7 +251,7 @@ func set_current_day(value: int) -> bool:
 	if _replacing or value < 1 or value == _current_day:
 		return false
 	_current_day = value
-	state_changed.emit()
+	_notify_state_changed()
 	return true
 
 
@@ -251,7 +259,7 @@ func set_story_stage(value: String) -> bool:
 	if _replacing or value == _story_stage:
 		return false
 	_story_stage = value
-	state_changed.emit()
+	_notify_state_changed()
 	return true
 
 
@@ -267,7 +275,7 @@ func set_flag(key: String, value: bool = true) -> bool:
 	if _replacing or not _is_namespaced_key(key) or (_flags.has(key) and _flags[key] == value):
 		return false
 	_flags[key] = value
-	state_changed.emit()
+	_notify_state_changed()
 	return true
 
 
@@ -291,7 +299,7 @@ func set_variable(key: String, value: Variant) -> bool:
 	if _variables.has(key) and _same_value(_variables[key], value):
 		return false
 	_variables[key] = _copy_value(value)
-	state_changed.emit()
+	_notify_state_changed()
 	return true
 
 
@@ -307,7 +315,7 @@ func apply_flags(flags: Dictionary) -> Error:
 		changed = changed or not _flags.has(key) or _flags[key] != flags[key]
 		_flags[key] = flags[key]
 	if changed:
-		state_changed.emit()
+		_notify_state_changed()
 	return OK
 
 
@@ -323,7 +331,7 @@ func complete_event(event_id: String) -> bool:
 	if _replacing or not _is_namespaced_key(event_id) or is_event_completed(event_id):
 		return false
 	_completed_events[event_id] = true
-	state_changed.emit()
+	_notify_state_changed()
 	event_completed.emit(event_id)
 	return true
 
@@ -382,6 +390,7 @@ func to_dict() -> Dictionary:
 		"flags": get_flags(),
 		"variables": get_variables(),
 		"completed_events": get_completed_events(),
+		"task_results": _task_results.duplicate(true),
 		"business": {"profile_id": _business_profile, "inventory": _warehouse_inventory.to_dict(), "production": _tea_production.to_dict()},
 		"economy": _economy.to_dict(),
 	}
@@ -400,9 +409,10 @@ func restore_state(data: Dictionary) -> Error:
 	for key: String in normalized:
 		normalized[key] = _copy_value(data[key])
 	normalized.completed_events.sort()
+	_resolve_snapshot_task_results(normalized)
 	if _same_value(to_dict(), normalized):
 		return OK
-	_replace_session(data, false)
+	_replace_session(normalized, false)
 	return OK
 
 
@@ -428,13 +438,14 @@ func _replace_session(data: Dictionary, new_game: bool) -> void:
 	_story_stage = data["story_stage"]
 	_flags.assign(data["flags"])
 	_variables.assign(data["variables"].duplicate(true))
+	_task_results = data.task_results.duplicate(true)
 	_completed_events.clear()
 	for event_id: String in data["completed_events"]:
 		_completed_events[event_id] = true
 	_warehouse_inventory.set_block_signals(inventory_blocked)
 	_tea_production.set_block_signals(production_blocked)
 	_warehouse_inventory.set_session_locked(true)
-	state_changed.emit()
+	_notify_state_changed(false)
 	_economy.publish_restored(economy_before)
 	if production_changed and not inventory_changed:
 		_tea_production.changed.emit()
@@ -447,9 +458,11 @@ func _replace_session(data: Dictionary, new_game: bool) -> void:
 
 
 func _migrate_snapshot(data: Dictionary) -> Dictionary:
-	if not data.get("schema_version") is int or data.schema_version not in [2, 3, SCHEMA_VERSION]:
+	if not data.get("schema_version") is int or data.schema_version not in [2, 3, 4, SCHEMA_VERSION]:
 		return data
 	var migrated := data.duplicate(true)
+	if data.schema_version in [2, 3, 4]:
+		migrated["task_results"] = {}
 	if not migrated.get("business") is Dictionary or not migrated.get("economy") is Dictionary or not migrated.business.get("inventory") is Dictionary or not migrated.economy.get("inventory") is Dictionary:
 		return data
 	if not _same_value(migrated.business.inventory, migrated.economy.inventory):
@@ -474,7 +487,7 @@ func _migrate_snapshot(data: Dictionary) -> Dictionary:
 	return migrated
 
 func _is_valid_snapshot(data: Dictionary) -> bool:
-	if not data.has_all(["schema_version", "current_day", "story_stage", "flags", "variables", "completed_events", "business", "economy"]):
+	if not data.has_all(["schema_version", "current_day", "story_stage", "flags", "variables", "completed_events", "task_results", "business", "economy"]):
 		return false
 	if not data["schema_version"] is int or data["schema_version"] != SCHEMA_VERSION:
 		return false
@@ -488,6 +501,8 @@ func _is_valid_snapshot(data: Dictionary) -> bool:
 	for key: Variant in data["variables"]:
 		if not key is String or not _is_namespaced_key(key) or not _is_story_value(data["variables"][key]):
 			return false
+	if not _valid_task_results(data.task_results):
+		return false
 	var seen_events: Dictionary[String, bool] = {}
 	for event_id: Variant in data["completed_events"]:
 		if not event_id is String or not _is_namespaced_key(event_id) or seen_events.has(event_id):
@@ -570,3 +585,172 @@ func _same_value(left: Variant, right: Variant) -> bool:
 				return false
 		return true
 	return left == right
+
+
+## Binding configuration is separate from projection refresh. No live settlement
+## signal is replayed when a catalog first encounters legacy completion facts.
+func bind_task_catalog(catalog: TaskCatalog) -> Error:
+	if _session_busy():
+		return ERR_BUSY
+	if catalog == null:
+		return ERR_INVALID_PARAMETER
+	_task_definitions = catalog.get_tasks()
+	var settled := _resolve_task_results()
+	if not settled.is_empty():
+		var blocked := _replacing
+		_replacing = true
+		_notify_state_changed(false)
+		_replacing = blocked
+	return OK
+
+## Delivery must check this before any inventory/wallet mutation.
+func can_complete_task(task_id: String) -> bool:
+	if _task_results.has(task_id) or DayPhase.get_phase(self).is_empty():
+		return false
+	for task: Dictionary in _task_definitions:
+		if task.id == task_id:
+			return _task_is_started(task) and not (task.has("fail_when") and TaskCatalog.matches_condition(task.fail_when, self)) and not (task.has("deadline") and DayPhase.is_deadline_reached(self, task.deadline))
+	return false
+
+func _can_commit_task_delivery(task_id: String, facts: Dictionary) -> bool:
+	if task_id.is_empty():
+		return true # Legacy raw business transaction, without a bound task.
+	if not can_complete_task(task_id):
+		return false
+	for task: Dictionary in _task_definitions:
+		if task.id == task_id:
+			return task.complete_when.type == "flag" and facts.get(task.complete_when.key, false)
+	return false
+
+func has_conflicting_task_result(task_id: String) -> bool:
+	for task: Dictionary in _task_definitions:
+		if task.id == task_id:
+			return _task_is_started(task) and _task_result_candidates(task).size() > 1
+	return false
+
+## Standalone inventory adapter: TaskDelivery holds the business lock and has
+## already exchanged inventory silently. Publish all facts/count/results once.
+func commit_delivery_facts(facts: Dictionary, count: int, task_id: String = "") -> Error:
+	if _replacing or not _business_transaction:
+		return ERR_BUSY
+	for key: Variant in facts:
+		if not key is String or not _is_namespaced_key(key) or not facts[key] is bool:
+			return ERR_INVALID_DATA
+	if not _can_commit_task_delivery(task_id, facts):
+		return ERR_UNAVAILABLE
+	for key: String in facts:
+		_flags[key] = facts[key]
+	_variables["shop.orders_completed"] = maxi(int(get_variable("shop.orders_completed", 0)), count)
+	_replacing = true
+	_notify_state_changed()
+	_replacing = false
+	return OK
+
+func get_task_result(task_id: String) -> Dictionary:
+	return _task_results.get(task_id, {}).duplicate(true)
+
+## Business coordinators explicitly request cancellation. No money/items change.
+## Success/failure/expiry still require their configured condition to be true.
+func settle_task_result(task_id: String, status: String, reason: String = "") -> Error:
+	if _session_busy():
+		return ERR_BUSY
+	if _task_results.has(task_id):
+		return ERR_ALREADY_EXISTS
+	for task: Dictionary in _task_definitions:
+		if task.id != task_id:
+			continue
+		if not _task_is_started(task) or DayPhase.get_phase(self).is_empty():
+			return ERR_UNAVAILABLE
+		var candidates := _task_result_candidates(task)
+		if status == "cancelled":
+			if not task.get("allow_cancel", false) or not candidates.is_empty():
+				return ERR_UNAVAILABLE
+		elif candidates.size() != 1 or candidates[0] != status:
+			return ERR_UNAVAILABLE
+		_task_results[task_id] = _new_task_result(status, reason)
+		var settled: Array[String] = [task_id]
+		_notify_state_changed(true, settled)
+		return OK
+	return ERR_DOES_NOT_EXIST
+
+func _task_is_started(task: Dictionary) -> bool:
+	if not TaskCatalog.matches_condition(task.activate_when, self):
+		return false
+	var delivery: Dictionary = task.get("delivery", {})
+	return not delivery.has("accepted_flag") or get_flag(delivery.accepted_flag)
+
+func _task_result_candidates(task: Dictionary) -> Array[String]:
+	var candidates: Array[String] = []
+	if TaskCatalog.matches_condition(task.complete_when, self):
+		candidates.append("completed")
+	if task.has("fail_when") and TaskCatalog.matches_condition(task.fail_when, self):
+		candidates.append("failed")
+	if task.has("deadline") and DayPhase.is_deadline_reached(self, task.deadline):
+		candidates.append("expired")
+	return candidates
+
+func _new_task_result(status: String, reason: String) -> Dictionary:
+	return {"status": status, "day": _current_day, "phase": DayPhase.get_phase(self), "reason": reason}
+
+func _resolve_task_results() -> Array[String]:
+	var context := {"current_day": _current_day, "flags": _flags, "variables": _variables,
+		"completed_events": get_completed_events(), "task_results": _task_results}
+	return _resolve_snapshot_task_results(context)
+
+## Reconcile legacy snapshots before comparison/replacement, silently. Repeating
+## the same legacy restore therefore compares against the same normalized result.
+func _resolve_snapshot_task_results(data: Dictionary) -> Array[String]:
+	var settled: Array[String] = []
+	var phase := DayPhase.phase_from_facts(data.variables, data.flags)
+	if phase.is_empty():
+		return settled
+	for task: Dictionary in _task_definitions:
+		if data.task_results.has(task.id) or not TaskCatalog.matches_facts(task.activate_when, data.flags, data.variables, data.completed_events):
+			continue
+		var delivery: Dictionary = task.get("delivery", {})
+		if delivery.has("accepted_flag") and not data.flags.get(delivery.accepted_flag, false):
+			continue
+		var candidates: Array[String] = []
+		if TaskCatalog.matches_facts(task.complete_when, data.flags, data.variables, data.completed_events):
+			candidates.append("completed")
+		if task.has("fail_when") and TaskCatalog.matches_facts(task.fail_when, data.flags, data.variables, data.completed_events):
+			candidates.append("failed")
+		if task.has("deadline") and DayPhase.is_deadline_reached_at(data.current_day, phase, task.deadline):
+			candidates.append("expired")
+		# Conflicting simultaneous conditions require an explicit design decision.
+		if candidates.size() == 1:
+			data.task_results[task.id] = {"status": candidates[0], "day": data.current_day, "phase": phase, "reason": ""}
+			settled.append(task.id)
+	return settled
+
+func _notify_state_changed(resolve_tasks: bool = true, explicit_results: Array[String] = []) -> void:
+	var settled: Array[String] = []
+	if resolve_tasks:
+		settled = _resolve_task_results()
+	settled.append_array(explicit_results)
+	var blocked := _replacing
+	var inventory_locked := false
+	if not settled.is_empty():
+		_replacing = true
+		_ensure_business()
+		inventory_locked = _warehouse_inventory.is_session_locked()
+		_warehouse_inventory.set_session_locked(true)
+	state_changed.emit()
+	for task_id: String in settled:
+		task_settled.emit(task_id, get_task_result(task_id))
+	if not settled.is_empty():
+		_warehouse_inventory.set_session_locked(inventory_locked)
+	_replacing = blocked
+
+func _valid_task_results(value: Variant) -> bool:
+	if not value is Dictionary:
+		return false
+	for id: Variant in value:
+		if not id is String or not _is_namespaced_key(id):
+			return false
+		var result: Variant = value[id]
+		if not result is Dictionary or result.size() != 4 or not result.has_all(["status", "day", "phase", "reason"]):
+			return false
+		if not result.status is String or result.status not in ["completed", "failed", "expired", "cancelled"] or not result.reason is String or not DayPhase.is_valid_point(result.day, result.phase):
+			return false
+	return true

@@ -179,7 +179,7 @@ func _test_saves() -> void:
 	_stock(inventory)
 	var result := state.get_tea_production().craft_formula(SWEET, 1, "save.receipt")
 	var saved := state.to_dict()
-	_check(saved.schema_version == 4 and saved.business.inventory.schema_version == 3, "Session v4 contains formula inventory v3")
+	_check(saved.schema_version == StateData.SCHEMA_VERSION and saved.business.inventory.schema_version == 3, "Current session schema contains formula inventory v3")
 	var file := FileAccess.open("user://verify_free_recipes.save", FileAccess.WRITE)
 	file.store_var(saved)
 	file.close()

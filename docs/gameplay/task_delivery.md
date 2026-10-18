@@ -1,5 +1,7 @@
 # 成品携带与指定 NPC 交付
 
+> 当前交付先检查 GameState.can_complete_task，成功同事务锁存 completed；失败、过期和取消均不可重新接取或交付。回执与持久终态一起快照恢复，见[日程与任务结果](../systems/schedule_and_task_results.md)。下文旧接口说明中的 flags 不再是唯一结果字段。
+
 正式 TeaProduction 的制作与交付分开。F5 进入标题菜单并开始 Day 1；F6 `src/core/main.tscn` 或 `src/core/settlement.tscn` 可独立运行宿主。当前订单板、制作和 HUD 操作见[订单系统](order_system.md)。
 
 ## 数据与复用

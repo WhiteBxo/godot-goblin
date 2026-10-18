@@ -97,9 +97,9 @@ func refresh() -> void:
 		if not view.get("revealed", false):
 			continue
 		var order_id: String = task.delivery.order_id
-		var done: bool = _state.get_flag("delivery." + order_id + ".completed") or view.status == "completed"
+		var done: bool = view.status == "completed" or (view.result.is_empty() and _state.get_flag("delivery." + order_id + ".completed"))
 		var accepted := _delivery.is_order_accepted(order_id)
-		if not done and not accepted and not _delivery.can_accept_order(order_id):
+		if view.status not in ["failed", "expired", "cancelled"] and not done and not accepted and not _delivery.can_accept_order(order_id):
 			continue
 		next.append(_project(task, view, accepted, done))
 	var tracked := str(_state.get_variable(TRACKED_KEY, ""))
@@ -158,6 +158,13 @@ func _project(task: Dictionary, view: Dictionary, accepted: bool, done: bool) ->
 		stage = "completed"
 		label = "已完成"
 		hint = "订单已交付并结算"
+	elif view.status in ["failed", "expired", "cancelled"]:
+		status = view.status
+		stage = status
+		label = {"failed": "已失败", "expired": "已过期", "cancelled": "已取消"}[status]
+		hint = "任务已结束"
+		ready = false
+		can_craft = false
 	elif not accepted:
 		label = "可接取"
 		hint = "接取后可追踪和交付"

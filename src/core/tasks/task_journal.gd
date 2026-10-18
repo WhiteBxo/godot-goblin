@@ -12,6 +12,9 @@ var _projection: Array[Dictionary] = []
 func configure(catalog: TaskCatalog, state: StateData) -> Error:
 	if catalog == null or not is_instance_valid(state):
 		return ERR_INVALID_PARAMETER
+	var error := state.bind_task_catalog(catalog)
+	if error != OK:
+		return error
 	_disconnect_state()
 	_definitions = catalog.get_tasks()
 	_state = state
@@ -48,10 +51,18 @@ func get_active_tasks() -> Array[Dictionary]:
 			result.append(task.duplicate(true))
 	return result
 
+## History includes hidden active entries with the same masking as get_task.
+func get_visible_tasks() -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	for task: Dictionary in _projection:
+		if task.status != "inactive":
+			result.append(task.duplicate(true))
+	return result
+
 ## Revealed active or completed history, including after restoring an older session.
 func has_started_tasks() -> bool:
 	for task: Dictionary in _projection:
-		if task.revealed and task.status in ["active", "completed"]:
+		if task.revealed and task.status != "inactive":
 			return true
 	return false
 
@@ -71,15 +82,7 @@ func refresh() -> void:
 		projection_changed.emit()
 
 func _matches(condition: Dictionary) -> bool:
-	match condition.type:
-		"flag":
-			return _state.get_flag(condition.key)
-		"event_completed":
-			return _state.is_event_completed(condition.id)
-		"variable_at_least":
-			var value: Variant = _state.get_variable(condition.key)
-			return TaskCatalog.is_number(value) and value >= condition.value
-	return false
+	return TaskCatalog.matches_condition(condition, _state)
 
 func _revealed(data: Dictionary) -> bool:
 	return not data.has("reveal_when") or _matches(data.reveal_when)
@@ -89,6 +92,12 @@ func _project(task: Dictionary) -> Dictionary:
 	var status := "inactive"
 	if _matches(task.activate_when):
 		status = "completed" if _matches(task.complete_when) else "active"
+	var result := _state.get_task_result(task.id)
+	if not result.is_empty():
+		status = result.status
+	# Ambiguous success/failure/deadline facts are pending, never guessed by UI.
+	elif status == "completed" and _state.has_conflicting_task_result(task.id):
+		status = "active"
 	var objectives: Array[Dictionary] = []
 	var current: Dictionary = {}
 	for definition: Dictionary in task.objectives:
@@ -118,7 +127,9 @@ func _project(task: Dictionary) -> Dictionary:
 			delivery.drink = task.delivery.drink.duplicate(true)
 		else:
 			delivery.product_id = task.delivery.product_id
-	return {"id": task.id, "type": task.type, "status": status, "revealed": revealed,
+	if status != "active":
+		current = {}
+	return {"id": task.id, "type": task.type, "status": status, "result": result if revealed else {}, "revealed": revealed,
 		"title": task.title if revealed else "???", "description": task.description if revealed else "???",
 		"location_id": task.get("location_id", "") if revealed else "",
 		"difficulty": task.get("difficulty", "") if revealed else "???",

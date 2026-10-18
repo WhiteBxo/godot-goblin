@@ -17,7 +17,7 @@
 
 ## 唯一写入者
 
-正式流程只允许 `DayPhase.enter_night()` / `DayPhase.enter_day()` 写这两个键。剧情、UI、Debug 需要切换阶段时调用它们，不要直接 `set_variable("world.phase")` 或 `set_flag("world.phase.night")`。
+正式流程通过 `DayPhase.advance_to(state, day, phase)` 或兼容的 `DayPhase.enter_night()` / `DayPhase.enter_day()` 写这两个键。剧情、UI、Debug 需要切换阶段时调用它们，不要直接 `set_variable("world.phase")` 或 `set_flag("world.phase.night")`。
 
 允许读取方：`SceneExit.are_conditions_met`（经 GameState 读 flag）、`GatherPoint` 的 `required_flag`、地图夜景覆盖层、任务截止判定。
 
@@ -36,7 +36,7 @@
 - 聚落夜景由 `SettlementMap` 在 `_ready` 实例化 `src/levels/settlement/night_overlay.tscn`（CanvasLayer，layer 5，低于 HudLayer 的 10），绑定 `DayPhase.is_night` 并监听 `state_changed`；地图场景不保存该节点。
 - 出店等条件门控用 `SceneExit.required_flags`：数组为空即无门控，缺任一 flag 时 `SceneTravel.request_exit` 返回 `ERR_UNAVAILABLE` 并发出 `travel_failed`，不进入切换流程。
 
-夜转昼会在同一次提交中将 `current_day` 加一；重复切换不推进日期。跨天截止判定尚未实现。正式 S05 接受委托后的夜间边界由 Day1WorldController 调用 DayPhase 建立。
+夜转昼会在同一次提交中将 `current_day` 加一；重复切换不推进日期。按天数与昼夜的截止比较、绝对目标推进和任务结果的接入契约见 [日程与任务结果](../../../docs/systems/schedule_and_task_results.md)；期限必须显式指定 at/after，不由本模块决定关店条件。正式 S05 接受委托后的夜间边界由 Day1WorldController 调用 DayPhase 建立。
 
 `Day1Access` 读取章节/操作阶段与真实业务事实，提供出店、长老宅和 S06 配方准入；地图物理门洞与昼夜 NPC 投影由宿主注入后协调。完整接入与待定内容边界见 [Day 1 世界流程](../../../docs/gameplay/day_01_world_flow.md)。
 

@@ -47,6 +47,7 @@
 | [CameraDirector：2D 剧情镜头](systems/camera_director.md) | `camera_director.md` |
 | [通用对话系统（P0-1）](systems/dialogue_system.md) | `dialogue_system.md` |
 | [GameState](systems/game_state.md) | `game_state.md` |
+| [日程推进与任务持久结果](systems/schedule_and_task_results.md) | 营业、代购、赌场接入接口、通知、恢复和 pending |
 | [Gameplay Bridge](systems/gameplay_bridge.md) | `gameplay_bridge.md` |
 | [ScreenTransition](systems/screen_transition.md) | `screen_transition.md` |
 | [店铺与聚落进出](systems/scene_travel.md) | `scene_travel.md` |

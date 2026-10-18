@@ -12,7 +12,7 @@
 
 [ext_resource type="Script" path="res://src/gameplay/story_interaction/story_interaction_point.gd" id="story"]
 
-[ext_resource type="PackedScene" path="res://src/gameplay/characters/casino.tscn" id="npc"]
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_casino.tscn" id="npc"]
 
 [node name="RpgMakerMap005" instance=ExtResource("base")]
 

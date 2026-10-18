@@ -7,8 +7,7 @@
 [ext_resource type="Script" uid="uid://7862dwu0dop4" path="res://src/gameplay/player/held_item_visual.gd" id="5_d63da"]
 
 [sub_resource type="CapsuleShape2D" id="Feet"]
-radius = 5.0
-height = 17.0
+height = 34.0
 
 [node name="Player" type="CharacterBody2D" unique_id=1146961907 groups=["player"]]
 z_index = 10
@@ -20,12 +19,10 @@ script = ExtResource("1")
 speed = 240.0
 
 [node name="Shadow" type="Polygon2D" parent="." unique_id=1522067794]
-scale = Vector2(0.5, 0.5)
 color = Color(0.08, 0.04, 0.03, 0.4)
 polygon = PackedVector2Array(-18, -2, -12, -7, 12, -7, 18, -2, 12, 4, -12, 4)
 
 [node name="Visual" type="Node2D" parent="." unique_id=757105287]
-scale = Vector2(0.5, 0.5)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Visual" unique_id=696907619]
 material = ExtResource("4_material")
@@ -45,10 +42,5 @@ position_smoothing_speed = 8.0
 script = ExtResource("3_camera")
 
 [node name="HeldItemVisual" type="Node2D" parent="." unique_id=1950531110]
-position = Vector2(12, -26)
-scale = Vector2(0.5, 0.5)
+position = Vector2(24, -52)
 script = ExtResource("5_d63da")
-offset_down = Vector2(12, -26)
-offset_up = Vector2(-12, -26)
-offset_left = Vector2(-12, -26)
-offset_right = Vector2(12, -26)

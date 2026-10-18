@@ -1,0 +1,37 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://src/gameplay/player/shop_player.tscn" id="base"]
+[ext_resource type="Script" path="res://src/gameplay/player/floor_aware_shop_player.gd" id="floor"]
+
+[sub_resource type="CapsuleShape2D" id="Feet"]
+radius = 5.0
+height = 17.0
+
+[node name="Player" instance=ExtResource("base")]
+z_index = 0
+script = ExtResource("floor")
+speed = 120.0
+acceleration = 900.0
+deceleration = 1200.0
+
+[node name="Shadow" parent="."]
+scale = Vector2(0.5, 0.5)
+
+[node name="Visual" parent="."]
+scale = Vector2(0.5, 0.5)
+
+[node name="CollisionShape2D" parent="."]
+shape = SubResource("Feet")
+
+[node name="Camera2D" parent="."]
+position = Vector2(0, -24)
+zoom = Vector2(1, 1)
+preferred_zoom = 1.0
+
+[node name="HeldItemVisual" parent="."]
+position = Vector2(12, -26)
+scale = Vector2(0.5, 0.5)
+offset_down = Vector2(12, -26)
+offset_up = Vector2(-12, -26)
+offset_left = Vector2(-12, -26)
+offset_right = Vector2(12, -26)

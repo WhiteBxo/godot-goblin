@@ -1,8 +1,7 @@
 [gd_scene format=3]
 [ext_resource type="Script" path="res://src/core/main.gd" id="main"]
 [ext_resource type="PackedScene" path="res://src/levels/rpg_maker/chapter_elder_house.tscn" id="map"]
-[ext_resource type="PackedScene" path="res://src/gameplay/player/shop_player.tscn" id="player"]
-[ext_resource type="Script" path="res://src/gameplay/player/floor_aware_shop_player.gd" id="floor"]
+[ext_resource type="PackedScene" path="res://src/gameplay/player/rpg_player.tscn" id="player"]
 [ext_resource type="PackedScene" path="res://src/core/audio/audio_manager.tscn" id="audio"]
 [node name="MainGame" type="Node"]
 process_mode = 3
@@ -18,7 +17,6 @@ texture_filter = 1
 [node name="Map" parent="World/LevelRoot" instance=ExtResource("map")]
 [node name="EntityRoot" type="Node2D" parent="World"]
 [node name="Player" parent="World/EntityRoot" instance=ExtResource("player")]
-script = ExtResource("floor")
 z_index = 0
 [node name="EffectRoot" type="Node2D" parent="World"]
 [node name="HudLayer" type="CanvasLayer" parent="."]

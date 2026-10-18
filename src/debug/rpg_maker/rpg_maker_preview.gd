@@ -8,8 +8,7 @@ const MAP_SCENES: Array[PackedScene] = [
 	preload("res://src/levels/rpg_maker/map_005.tscn"),
 	preload("res://src/levels/rpg_maker/map_006.tscn"),
 ]
-const PLAYER_SCENE := preload("res://src/gameplay/player/shop_player.tscn")
-const FLOOR_PLAYER := preload("res://src/gameplay/player/floor_aware_shop_player.gd")
+const PLAYER_SCENE := preload("res://src/gameplay/player/rpg_player.tscn")
 const PREVIEW_ACTIONS := {
 	&"rpg_preview_map_1": KEY_1,
 	&"rpg_preview_map_2": KEY_2,
@@ -20,7 +19,7 @@ const PREVIEW_ACTIONS := {
 }
 
 @export var initial_map_id: int = 1
-@export_range(0.1, 4.0, 0.1) var player_zoom: float = 1.0
+@export_range(0.1, 4.0, 0.1) var player_zoom: float = 2.0
 
 var _level: RpgMakerMap
 var _player: FloorAwareShopPlayer
@@ -48,11 +47,7 @@ func _ready() -> void:
 			_capture_path = argument.trim_prefix("--rpg-capture=")
 		elif argument == "--rpg-overview":
 			start_overview = true
-	var instance := PLAYER_SCENE.instantiate()
-	var scene_speed: float = instance.speed
-	instance.set_script(FLOOR_PLAYER)
-	_player = instance as FloorAwareShopPlayer
-	_player.speed = scene_speed
+	_player = PLAYER_SCENE.instantiate() as FloorAwareShopPlayer
 	_player.z_index = 0
 	$World/EntityRoot.add_child(_player)
 	get_viewport().size_changed.connect(_fit_overview)

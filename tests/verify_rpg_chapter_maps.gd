@@ -19,9 +19,36 @@ func _check(ok: bool, text: String) -> void:
 func _run() -> void:
 	for index in CHAPTERS.size():
 		await _verify_map(index)
+	_verify_presentation_profiles()
 	await _verify_host()
 	print("RPG_CHAPTER_MAPS: %d checks, %d failures" % [_checks, _failures.size()])
 	quit(0 if _failures.is_empty() else 1)
+
+## Inspect independently instantiated hosts so shared scene overrides cannot leak.
+func _verify_presentation_profiles() -> void:
+	var shop: Node = load("res://src/core/main.tscn").instantiate()
+	var rpg: Node = load("res://src/core/tavern.tscn").instantiate()
+	var shop_player: ShopPlayer = shop.get_node("World/EntityRoot/Player")
+	var rpg_player: FloorAwareShopPlayer = rpg.get_node("World/EntityRoot/Player")
+	_check(shop_player.get_node("Visual").scale == Vector2.ONE, "Standalone shop retains its full-size player")
+	_check(rpg_player.get_node("Visual").scale == Vector2.ONE * 0.5, "RPG host uses the half-size inherited player")
+	var shop_camera: BoundedFollowCamera = shop_player.get_node("Camera2D")
+	var rpg_camera: BoundedFollowCamera = rpg_player.get_node("Camera2D")
+	_check(shop_camera.preferred_zoom == 0.5 and rpg_camera.preferred_zoom == 1.0, "Only RPG hosts double the camera zoom")
+	_check(shop_player.speed == 240.0 and rpg_player.speed == 120.0, "Screen movement speed is preserved after RPG camera compensation")
+	_check(shop_player.acceleration == 1800.0 and rpg_player.acceleration == 900.0 and shop_player.deceleration == 2400.0 and rpg_player.deceleration == 1200.0, "Both profiles preserve acceleration and stopping times")
+	var shop_shape: CapsuleShape2D = shop_player.get_node("CollisionShape2D").shape
+	var rpg_shape: CapsuleShape2D = rpg_player.get_node("CollisionShape2D").shape
+	_check(shop_shape.height == 34.0 and shop_shape.radius == 10.0 and rpg_shape.height == 17.0 and rpg_shape.radius == 5.0, "Player foot shapes are isolated by host")
+	_check(shop_player.get_node("HeldItemVisual").offset_down == Vector2(24, -52) and rpg_player.get_node("HeldItemVisual").offset_down == Vector2(12, -26), "Held item anchors follow each host's character size")
+	for actor_name in ["FatGoblin", "HumanCustomer", "GoblinCustomer", "GoblinA", "GoblinB", "GoblinC"]:
+		var actor: Node = shop.get_node("World/EntityRoot/" + actor_name)
+		_check(actor.get_node("Visual").scale == Vector2.ONE and actor.get_node("CollisionShape2D").shape.height == 28.0, "Standalone shop preserves NPC size: " + actor_name)
+	var map: RpgChapterMap = rpg.get_node("World/LevelRoot/Map")
+	for actor: SettlementCharacter in map.get_chapter_characters():
+		_check(actor.get_node("Visual").scale == Vector2.ONE * 0.5 and actor.get_node("CollisionShape2D").shape.height == 14.0, "RPG NPC retains the half-size profile")
+	rpg.free()
+	shop.free()
 
 func _verify_map(index: int) -> void:
 	var map := load("res://src/levels/rpg_maker/chapter_%s.tscn" % CHAPTERS[index]).instantiate() as RpgChapterMap
@@ -79,6 +106,7 @@ func _verify_host() -> void:
 	var map := game.get_active_level() as RpgChapterMap
 	_check(map != null and map.chapter_host == &"tavern", "MainGame hosts new indoor map")
 	_check(game.get_player() is FloorAwareShopPlayer, "Real player uses native floor constraint")
+	_check(game.get_player().camera.zoom == Vector2.ONE, "Formal RPG host uses the compensated 1x camera after initialization")
 	_check(game.get_task_delivery() != null, "Chapter room has real delivery service")
 	_check(game.get_actor_director().get_position(&"tavern_bartender") != null, "Chapter room registers scene Marker")
 	_check(game.unlock_map() == OK, "Map assembles inside a room")

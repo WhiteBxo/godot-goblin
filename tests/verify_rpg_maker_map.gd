@@ -2,8 +2,7 @@ extends SceneTree
 ## Saved source fidelity, edit persistence, directional passages and real player motion.
 
 const MAP_RUNTIME := preload("res://src/levels/rpg_maker/rpg_maker_map.gd")
-const PLAYER_SCENE := preload("res://src/gameplay/player/shop_player.tscn")
-const FLOOR_PLAYER := preload("res://src/gameplay/player/floor_aware_shop_player.gd")
+const PLAYER_SCENE := preload("res://src/gameplay/player/rpg_player.tscn")
 const CATALOG := "res://assets/map/rpg_maker/catalog.json"
 const ROUNDTRIP := "res://.godot/rpg_maker_verification/edited_map.tscn"
 
@@ -90,11 +89,7 @@ func _verify_directional_fixture() -> void:
 	_check(not map.can_cross_edge(Vector2i(2, 1), Vector2i.LEFT), "Neighbor destination passage also rejects entry through its right edge")
 	_check(map.can_cross_edge(Vector2i(1, 1), Vector2i.DOWN), "Other edges of the same partial tile stay open")
 	_check(not map.can_stand_at(Vector2(4, 72), Vector2(17, 10)), "Footprint cannot extend outside the map")
-	var instance := PLAYER_SCENE.instantiate()
-	var scene_speed: float = instance.speed
-	instance.set_script(FLOOR_PLAYER)
-	var player := instance as FloorAwareShopPlayer
-	player.speed = scene_speed
+	var player := PLAYER_SCENE.instantiate() as FloorAwareShopPlayer
 	root.add_child(player)
 	player.set_floor_query(map.can_stand_at)
 	player.configure_camera(map.get_camera_bounds())
@@ -106,7 +101,7 @@ func _verify_directional_fixture() -> void:
 	await _move(&"move_left", 30)
 	_check(absf(player.global_position.x - (96.0 + player.footprint_half_size.x)) < 1.0, "Physical boundary also blocks reverse entry")
 	player.teleport_to(map.get_spawn_position())
-	await _move(&"move_down", 25)
+	await _move(&"move_down", 50)
 	_check(player.global_position.y > 130, "The real player can leave the same partial tile through an allowed edge: " + str(player.global_position))
 	player.teleport_to(Vector2(24, 120))
 	await _move(&"move_left", 30)
@@ -117,7 +112,7 @@ func _verify_directional_fixture() -> void:
 	await _settle()
 	_check(map.can_cross_edge(Vector2i(1, 1), Vector2i.RIGHT), "Erasing a directional tile and rebuilding removes its edge collision")
 	player.teleport_to(map.get_spawn_position())
-	await _move(&"move_right", 25)
+	await _move(&"move_right", 50)
 	_check(player.global_position.x > 120, "Real movement crosses the edited boundary after rebuild")
 	player.queue_free()
 	map.queue_free()
@@ -227,7 +222,8 @@ func _verify_preview() -> void:
 	var player: FloorAwareShopPlayer = preview.get_player()
 	var camera_id := player.camera.get_instance_id()
 	var player_id := player.get_instance_id()
-	_check(player.scale == Vector2.ONE and player.speed == 240.0 and player.z_index == 0, "Preview preserves actual player size/speed and lets star tiles cover it")
+	_check(player.scale == Vector2.ONE and player.speed == 120.0 and player.z_index == 0, "Preview uses the RPG player movement profile and lets star tiles cover it")
+	_check(player.camera.get_directed_zoom() == 2.0, "Preview doubles the previous 1x view to retain character screen size")
 	for id in [1, 4, 5, 6]:
 		preview.show_map(id)
 		await _settle()

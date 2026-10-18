@@ -43,7 +43,9 @@ F 通过 `_unhandled_input` 响应，遵守 GUI 对输入的消费，忽略键�
 | 蹲下待机 → `crouch_idle` | 合并图片 2.png | 合并图片.png | 合并图片 3.png |
 | 投掷 → `throw` | 合并图片 2.png | 合并图片.png | 合并图片 3.png |
 
-普通图以 64×64 格、24 像素间隔，逐行读取非空格。正面站立待机的 4096×1640 图片以 5×2 等分格缩为 64×64，保持原比例；其他素材不改变原始帧格。其他动作的左向由镜像右向生成；投掷的侧向源图本身朝左，因此由 `SIDE_FACES_LEFT` 反转处理：右向取其镜像，左向保留原图，修复 2026-10-18 反馈的左右投掷颠倒。洞穴兼容图集每帧 nearest 放大 3.5 倍，放入 224×300 透明画布。聚落 / 店铺专用图集直接从 64×64 原始帧 nearest 放大 2 倍，放入 128×160 透明画布，脚底锚点 y=156；图集保留 2 倍像素块，Visual 使用 0.5 倍、AnimatedSprite2D.offset=(0, -76)，还原原始像素尺寸。可见站立高度约 59 世界像素，适配原生 48 像素格的 RPG Maker 地图。阴影、脚底碰撞与手持物同步减半，玩家根节点保持 1 倍；FloorAwareShopPlayer 的通行半尺寸为 (8.5, 5)。同一方向的整段动画共用一个脚底锚点，保留逐帧起伏，不逐帧贴地。相机配置保持原值。
+普通图以 64×64 格、24 像素间隔，逐行读取非空格。正面站立待机的 4096×1640 图片以 5×2 等分格缩为 64×64，保持原比例；其他素材不改变原始帧格。其他动作的左向由镜像右向生成；投掷的侧向源图本身朝左，因此由 `SIDE_FACES_LEFT` 反转处理：右向取其镜像，左向保留原图，修复 2026-10-18 反馈的左右投掷颠倒。洞穴兼容图集每帧 nearest 放大 3.5 倍，放入 224×300 透明画布。店铺专用图集直接从 64×64 原始帧 nearest 放大 2 倍，放入 128×160 透明画布，脚底锚点 y=156。独立奶茶店仍使用 `shop_player.tscn`：Visual 1 倍、AnimatedSprite2D.offset=(0, -76)，可见站立高度约 118 世界像素，镜头 0.5 倍，速度 240、加速度 1800、减速度 2400。同一方向的整段动画共用一个脚底锚点，保留逐帧起伏，不逐帧贴地。
+
+RPG Maker 地图使用继承自店铺玩家的 `rpg_player.tscn`：Visual 0.5 倍还原原始像素，可见高度约 59 世界像素，适配 48 像素地图格；阴影、脚底碰撞与手持物同步减半，FloorAwareShopPlayer 的通行半尺寸为 (8.5, 5)。角色根节点保持 1 倍。镜头改为 1 倍，跟随偏移由 (0, -48) 改为 (0, -24)，保持人物在屏幕上的大小和纵向构图。速度 120、加速度 900、减速度 1200，镜头拉近后屏幕移动速度和启停时长与店铺玩家原配置一致；Shift / Ctrl 倍率、动画帧率保持原值。RPG 独立地图预览原为 1 倍镜头，现为 2 倍，同样补偿角色减半；Tab 全图预览仍按地图范围自动适配。
 
 `player_actions_atlas.png`、`player_actions_pixel_atlas.png` 和对应 SpriteFrames 均由 `tools/characters/build_player_actions.py` 生成。依赖 Python + Pillow，运行时只加载已导入的资源：
 
@@ -72,4 +74,4 @@ FPS：待机 8、走路 12、奔跑 18、潜行 12、蹲伏待机 10、投掷 12
 
 本次实现核对的官方 4.7 文档源码：[AnimatedSprite2D.xml](https://github.com/godotengine/godot/blob/4.7/doc/classes/AnimatedSprite2D.xml)、[Node.xml](https://github.com/godotengine/godot/blob/4.7/doc/classes/Node.xml)、[SpriteFrames.xml](https://github.com/godotengine/godot/blob/4.7/doc/classes/SpriteFrames.xml)。
 
-此次像素比例修正参考 [Godot 4.7 多分辨率与整数缩放](https://docs.godotengine.org/en/4.7/tutorials/rendering/multiple_resolutions.html#integer-scaling)：非整数缩放可能导致像素宽度不均。店铺 / 聚落主角当前以 0.5 倍显示原有 2 倍图集，默认镜头和窗口配置保持原值。
+此次像素比例修正参考 [Godot 4.7 多分辨率与整数缩放](https://docs.godotengine.org/en/4.7/tutorials/rendering/multiple_resolutions.html#integer-scaling)：非整数缩放可能导致像素宽度不均。店铺保持 1 倍显示，RPG 地图通过派生场景以 0.5 倍显示原有 2 倍图集，并在自己的相机中补偿倍率；窗口配置保持原值。

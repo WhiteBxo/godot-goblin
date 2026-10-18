@@ -4,8 +4,8 @@
 [ext_resource type="SpriteFrames" path="res://src/gameplay/characters/casino_frames.tres" id="2"]
 
 [sub_resource type="CapsuleShape2D" id="Feet"]
-radius = 4.0
-height = 14.0
+radius = 8.0
+height = 28.0
 
 [node name="Casino" type="CharacterBody2D"]
 texture_filter = 1
@@ -20,12 +20,10 @@ story_role = "赌场区域人物，可作为后续食材线索的表现角色。
 side_faces_left = false
 
 [node name="Shadow" type="Polygon2D" parent="."]
-scale = Vector2(0.5, 0.5)
 polygon = PackedVector2Array(-18, -2, -12, -6, 12, -6, 18, -2, 12, 4, -12, 4)
 color = Color(0.08, 0.04, 0.03, 0.35)
 
 [node name="Visual" type="Node2D" parent="."]
-scale = Vector2(0.5, 0.5)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Visual"]
 sprite_frames = ExtResource("2")

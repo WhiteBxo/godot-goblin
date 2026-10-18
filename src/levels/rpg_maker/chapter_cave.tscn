@@ -12,7 +12,7 @@
 
 [ext_resource type="Script" path="res://src/gameplay/story_interaction/story_interaction_point.gd" id="story"]
 
-[ext_resource type="PackedScene" path="res://src/gameplay/characters/guard.tscn" id="guard"]
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_guard.tscn" id="guard"]
 
 [ext_resource type="Script" path="res://src/gameplay/stealth/day1_stealth_setup.gd" id="stealth"]
 
@@ -22,7 +22,7 @@
 
 [ext_resource type="Script" path="res://src/gameplay/gathering/gather_point.gd" id="gather"]
 
-[ext_resource type="PackedScene" path="res://src/gameplay/characters/common_goblin.tscn" id="goblin"]
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_common_goblin.tscn" id="goblin"]
 
 [sub_resource type="RectangleShape2D" id="escape_shape"]
 size = Vector2(240, 144)

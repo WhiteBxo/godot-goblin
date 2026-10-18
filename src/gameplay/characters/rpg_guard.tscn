@@ -1,0 +1,18 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/guard.tscn" id="base"]
+
+[sub_resource type="CapsuleShape2D" id="Feet"]
+radius = 4.0
+height = 14.0
+
+[node name="Guard" instance=ExtResource("base")]
+
+[node name="Shadow" parent="."]
+scale = Vector2(0.5, 0.5)
+
+[node name="Visual" parent="."]
+scale = Vector2(0.5, 0.5)
+
+[node name="CollisionShape2D" parent="."]
+shape = SubResource("Feet")

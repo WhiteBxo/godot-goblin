@@ -1,25 +1,30 @@
 # 音效 ID 与资源映射（生成文件）
 
-由 `tools/audio/generate_sound_pack.py` 生成。基础 ID 指向首变体；重复播放通过 `choose_variant()` 选择非连续重复的变体 ID。
+由 `tools/audio/generate_sound_pack.py` 和 `sound_selection.json` 生成。基础 ID 指向首变体；原始路径相对 `assets/audio/source/`。
 
-| 基础 ID | 名称 | 变体 ID / 资源路径 / 秒 |
+| 基础 ID | 用途与适配说明 | 变体 ID / 成品路径 / 秒 / 原始素材 |
 | --- | --- | --- |
-| `ui.hover` | 菜单悬停 | `ui.hover` → `res://assets/audio/ui/hover.wav` (0.110) |
-| `ui.confirm` | 确认操作 | `ui.confirm` → `res://assets/audio/ui/confirm.wav` (0.290) |
-| `ui.cancel` | 取消操作 | `ui.cancel` → `res://assets/audio/ui/cancel.wav` (0.290) |
-| `ui.dialogue` | 对话文字 | `ui.dialogue.01` → `res://assets/audio/ui/dialogue_01.wav` (0.110)<br>`ui.dialogue.02` → `res://assets/audio/ui/dialogue_02.wav` (0.110)<br>`ui.dialogue.03` → `res://assets/audio/ui/dialogue_03.wav` (0.110) |
-| `shop.door_bell` | 店门双音铃 | `shop.door_bell` → `res://assets/audio/shop/door_bell.wav` (1.598) |
-| `shop.order_open` | 展开纸质订单 | `shop.order_open` → `res://assets/audio/shop/order_open.wav` (0.450) |
-| `shop.tea_pour` | 倒入奶茶 | `shop.tea_pour.01` → `res://assets/audio/shop/tea_pour_01.wav` (1.427)<br>`shop.tea_pour.02` → `res://assets/audio/shop/tea_pour_02.wav` (1.421) |
-| `shop.sealer` | 封口机压合 | `shop.sealer` → `res://assets/audio/shop/sealer.wav` (1.547) |
-| `player.step_wood` | 木地板脚步 | `player.step_wood.01` → `res://assets/audio/player/step_wood_01.wav` (0.340)<br>`player.step_wood.02` → `res://assets/audio/player/step_wood_02.wav` (0.340)<br>`player.step_wood.03` → `res://assets/audio/player/step_wood_03.wav` (0.340)<br>`player.step_wood.04` → `res://assets/audio/player/step_wood_04.wav` (0.340) |
-| `player.step_stone` | 石地脚步 | `player.step_stone.01` → `res://assets/audio/player/step_stone_01.wav` (0.340)<br>`player.step_stone.02` → `res://assets/audio/player/step_stone_02.wav` (0.340)<br>`player.step_stone.03` → `res://assets/audio/player/step_stone_03.wav` (0.340)<br>`player.step_stone.04` → `res://assets/audio/player/step_stone_04.wav` (0.340) |
-| `story.knock` | 门后神秘三连敲 | `story.knock.01` → `res://assets/audio/story/knock_01.wav` (1.283)<br>`story.knock.02` → `res://assets/audio/story/knock_02.wav` (1.274) |
-| `story.impact` | 剧情冲击 | `story.impact` → `res://assets/audio/story/impact.wav` (1.388) |
-| `ui.failure` | 交互失败 | `ui.failure` → `res://assets/audio/ui/failure.wav` (0.293) |
-| `ambience.drip` | 远处滴水 | `ambience.drip.01` → `res://assets/audio/ambience/drip_01.wav` (0.813)<br>`ambience.drip.02` → `res://assets/audio/ambience/drip_02.wav` (0.813) |
-| `ambience.rock_scrape` | 岩石摩擦 | `ambience.rock_scrape` → `res://assets/audio/ambience/rock_scrape.wav` (1.100) |
-| `story.goblin` | 哥布林含糊嘀咕 | `story.goblin.01` → `res://assets/audio/story/goblin_01.wav` (0.950)<br>`story.goblin.02` → `res://assets/audio/story/goblin_02.wav` (0.950)<br>`story.goblin.03` → `res://assets/audio/story/goblin_03.wav` (0.950) |
-| `ambience.shop` | 奶茶店室内循环 | `ambience.shop` → `res://assets/audio/ambience/shop.wav` (12.000) |
-| `ambience.cave` | 地下洞穴循环 | `ambience.cave` → `res://assets/audio/ambience/cave.wav` (12.000) |
-| `music.daily_milk_tea` | 奶茶店日常 BGM | `res://assets/audio/music/daily_milk_tea.ogg`；首次从 0 播放，末尾回到 68.279 秒循环 |
+| `ui.hover` | 菜单悬停；木勺短触声裁剪 | `ui.hover` → `res://assets/audio/ui/hover.wav` (0.110)；`accessory/sfx/wood-bowl-hit-wood-spoon-01.wav` |
+| `ui.confirm` | 确认操作；宝石拾取声 | `ui.confirm` → `res://assets/audio/ui/confirm.wav` (0.213)；`rpg_sfx/item_gem_01.ogg` |
+| `ui.cancel` | 取消操作；锁扣退回声裁剪 | `ui.cancel` → `res://assets/audio/ui/cancel.wav` (0.154)；`tinysized/sfx-cc0/handcuffs-metal-open-01.wav` |
+| `ui.dialogue` | 对话文字；木器轻触短片，降低响度 | `ui.dialogue.01` → `res://assets/audio/ui/dialogue_01.wav` (0.078)；`accessory/sfx/wood-bowl-drop-wood-spoon-02.wav`<br>`ui.dialogue.02` → `res://assets/audio/ui/dialogue_02.wav` (0.100)；`accessory/sfx/wood-bowl-drop-wood-spoon-03.wav`<br>`ui.dialogue.03` → `res://assets/audio/ui/dialogue_03.wav` (0.096)；`accessory/sfx/wood-bowl-drop-wood-spoon-04.wav` |
+| `shop.door_bell` | 店门风铃；木风铃片段，替换原双音合成铃 | `shop.door_bell` → `res://assets/audio/shop/door_bell.wav` (1.414)；`tinysized/sfx-cc0/chimes-wood-rattle.wav` |
+| `shop.order_open` | 展开纸质订单；翻页录音 | `shop.order_open` → `res://assets/audio/shop/order_open.wav` (0.643)；`tinysized/sfx-cc0/book-page-02.wav` |
+| `shop.tea_pour` | 倒入奶茶；倒水与注入小瓶录音，适配饮料 | `shop.tea_pour.01` → `res://assets/audio/shop/tea_pour_01.wav` (1.177)；`tinysized/sfx-cc0/water-pour-01.wav`<br>`shop.tea_pour.02` → `res://assets/audio/shop/tea_pour_02.wav` (1.983)；`tinysized/sfx-cc0/water-vial-fill-01.wav` |
+| `shop.sealer` | 封口机压合；抽屉压合与压缩空气组合，非真实封口机录音 | `shop.sealer` → `res://assets/audio/shop/sealer.wav` (0.699)；`tinysized/sfx-cc0/compressed-air-spray-01.wav`, `tinysized/sfx-cc0/drawer-close-01.wav` |
+| `player.step_wood` | 木地板脚步；皮靴落脚叠加低声木碗接触，四次独立录音组合 | `player.step_wood.01` → `res://assets/audio/player/step_wood_01.wav` (0.210)；`accessory/sfx/wood-bowl-put-wood-01.wav`, `tinysized/sfx-cc0/boots-leather-step-01.wav`<br>`player.step_wood.02` → `res://assets/audio/player/step_wood_02.wav` (0.216)；`accessory/sfx/wood-bowl-put-wood-02.wav`, `tinysized/sfx-cc0/boots-leather-step-01.wav`<br>`player.step_wood.03` → `res://assets/audio/player/step_wood_03.wav` (0.282)；`accessory/sfx/wood-bowl-put-wood-03.wav`, `tinysized/sfx-cc0/boots-leather-step-01.wav`<br>`player.step_wood.04` → `res://assets/audio/player/step_wood_04.wav` (0.265)；`accessory/sfx/wood-bowl-put-wood-04.wav`, `tinysized/sfx-cc0/boots-leather-step-01.wav` |
+| `player.step_stone` | 石地脚步；土壤落脚叠加石块轻响，适配硬地 | `player.step_stone.01` → `res://assets/audio/player/step_stone_01.wav` (0.187)；`rpg_sfx/item_stone_01.ogg`, `tinysized/sfx-cc0/soil-steps-01.wav`<br>`player.step_stone.02` → `res://assets/audio/player/step_stone_02.wav` (0.172)；`rpg_sfx/item_stone_02.ogg`, `tinysized/sfx-cc0/soil-steps-01.wav`<br>`player.step_stone.03` → `res://assets/audio/player/step_stone_03.wav` (0.314)；`rpg_sfx/item_stone_03.ogg`, `tinysized/sfx-cc0/soil-steps-01.wav`<br>`player.step_stone.04` → `res://assets/audio/player/step_stone_04.wav` (0.254)；`rpg_sfx/item_stone_04.ogg`, `tinysized/sfx-cc0/soil-steps-01.wav` |
+| `story.knock` | 门后神秘三连敲；木勺敲木碗，三次编排并附短反射 | `story.knock.01` → `res://assets/audio/story/knock_01.wav` (0.914)；`accessory/sfx/wood-bowl-hit-wood-spoon-01.wav`<br>`story.knock.02` → `res://assets/audio/story/knock_02.wav` (0.920)；`accessory/sfx/wood-bowl-hit-wood-spoon-01.wav` |
+| `story.impact` | 剧情冲击；石块撞击降低音高并附反射 | `story.impact` → `res://assets/audio/story/impact.wav` (0.924)；`rpg_sfx/stones_03.ogg` |
+| `ui.failure` | 交互失败；锁扣声降低音高 | `ui.failure` → `res://assets/audio/ui/failure.wav` (0.180)；`tinysized/sfx-cc0/handcuffs-metal-lock-01.wav` |
+| `ambience.drip` | 远处滴水；水滴录音与短反射 | `ambience.drip.01` → `res://assets/audio/ambience/drip_01.wav` (0.284)；`tinysized/sfx-cc0/water-drop-01.wav`<br>`ambience.drip.02` → `res://assets/audio/ambience/drip_02.wav` (0.270)；`tinysized/sfx-cc0/water-drop-02.wav` |
+| `ambience.rock_scrape` | 岩石摩擦；石块移动声，非金属刮擦 | `ambience.rock_scrape` → `res://assets/audio/ambience/rock_scrape.wav` (0.650)；`rpg_sfx/stones_02.ogg` |
+| `story.goblin` | 哥布林含糊嘀咕；生物短叫声降低音高，无语言含义 | `story.goblin.01` → `res://assets/audio/story/goblin_01.wav` (0.506)；`rpg_sfx/creature_misc_03.ogg`<br>`story.goblin.02` → `res://assets/audio/story/goblin_02.wav` (0.320)；`rpg_sfx/creature_misc_04.ogg`<br>`story.goblin.03` → `res://assets/audio/story/goblin_03.wav` (0.472)；`rpg_sfx/creature_misc_05.ogg` |
+| `ambience.shop` | 奶茶店室内循环；轻气流底层与木碗、玻璃器物录音组合；场景设计环境音 | `ambience.shop` → `res://assets/audio/ambience/shop.wav` (12.000)；`accessory/sfx/vials-glass-rattle-04.wav`, `accessory/sfx/wood-bowl-put-wood-01.wav`, `tinysized/sfx-cc0/compressed-air-spray-02.wav` |
+| `ambience.cave` | 地下洞穴循环；低速气流底层与远水滴组合；场景设计环境音 | `ambience.cave` → `res://assets/audio/ambience/cave.wav` (12.000)；`tinysized/sfx-cc0/compressed-air-spray-02.wav`, `tinysized/sfx-cc0/water-drop-03.wav` |
+| `shop.coins` | 收取钱币；钱币袋摇动，供交易使用 | `shop.coins.01` → `res://assets/audio/shop/coins_01.wav` (0.830)；`accessory/sfx/coins-shake-01.wav`<br>`shop.coins.02` → `res://assets/audio/shop/coins_02.wav` (0.742)；`accessory/sfx/coins-shake-02.wav`<br>`shop.coins.03` → `res://assets/audio/shop/coins_03.wav` (1.072)；`accessory/sfx/coins-shake-03.wav` |
+| `story.unlock` | 锁盒解锁；锁盒实际解锁录音 | `story.unlock.01` → `res://assets/audio/story/unlock_01.wav` (0.325)；`accessory/sfx/keyhole-lockbox-unlock-01.wav`<br>`story.unlock.02` → `res://assets/audio/story/unlock_02.wav` (1.320)；`accessory/sfx/keyhole-lockbox-unlock-02.wav` |
+| `shop.bottle_open` | 打开玻璃瓶；圆玻璃瓶拔塞 | `shop.bottle_open.01` → `res://assets/audio/shop/bottle_open_01.wav` (0.212)；`accessory/sfx/vial-glass-round-uncork-01.wav`<br>`shop.bottle_open.02` → `res://assets/audio/shop/bottle_open_02.wav` (0.140)；`accessory/sfx/vial-glass-round-uncork-02.wav` |
+| `shop.stir` | 碗勺搅拌；木碗与木勺录音，适配饮料准备 | `shop.stir.01` → `res://assets/audio/shop/stir_01.wav` (0.434)；`tinysized/sfx-cc0/wood-bowl-spoon-01.wav`<br>`shop.stir.02` → `res://assets/audio/shop/stir_02.wav` (0.314)；`tinysized/sfx-cc0/wood-bowl-spoon-02.wav`<br>`shop.stir.03` → `res://assets/audio/shop/stir_03.wav` (0.303)；`tinysized/sfx-cc0/wood-bowl-spoon-03.wav` |
+| `story.page_turn` | 书页翻动；两种原始翻页声 | `story.page_turn.01` → `res://assets/audio/story/page_turn_01.wav` (1.278)；`tinysized/sfx-cc0/book-page-01.wav`<br>`story.page_turn.02` → `res://assets/audio/story/page_turn_02.wav` (0.643)；`tinysized/sfx-cc0/book-page-02.wav` |
+| `music.daily_milk_tea` | 用户提供原音乐 | `res://assets/audio/music/daily_milk_tea.ogg`；末尾回到 68.279 秒 |

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "source": "res://docs/design/cinematic_opening.md",
-  "source_sha256": "5996eb02f842f21b167f5339a7184ac4e642249c5f1a7e3662fd2cc82de03350",
+  "source_sha256": "9c954efccc7063298e1b7f07ee0aa15bb391bc574bb83766ad141d1c160c369c",
   "scene": "res://src/debug/cinematic/cinematic_demo.tscn",
   "story": "res://src/resources/story/cinematic_opening.json",
   "dialogue": "res://src/resources/dialogue/cinematic_opening.json",

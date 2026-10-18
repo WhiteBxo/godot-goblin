@@ -6,7 +6,7 @@ extends Node
 func _ready() -> void:
 	if not OS.has_feature("debug"):
 		return
-	# Reuse the declared synthetic audio fixture, not a production soundtrack.
+	# Reuse the curated recording aliases for the isolated demo.
 	AudioDemoTones.populate(game.get_audio_manager())
 	var error := game.get_dialogue_manager().load_dialogues("res://src/resources/dialogue/gameplay_bridge_demo.json")
 	if error == OK:

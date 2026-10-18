@@ -128,7 +128,7 @@ ShopInteraction 接受可选 Callable `event_handler(interaction_id) -> bool`，
 4. 在开场 Esc 取消，或用上方“中止演出”按钮在停顿时取消；调查订单板显示开场前对白。可点“启动开场”重试，成功后不可重复。
 5. 仓库和制作台继续打开原弹窗。剧情 Demo 不 reset 跨场景 GameState；需要全新测试时重新启动进程。
 
-示例仅演示第一天流程文档的经营背景与异常引子，不代表完整剧情定稿。两次敲击是本项目原创的程序合成占位音效，无外部素材来源；可用 `python3 tools/story/generate_demo_knock.py` 确定性重建。它只在 Demo/测试中引用。
+示例仅演示第一天流程文档的经营背景与异常引子，不代表完整剧情定稿。敲击已换成本次 CC0 素材中的木勺敲木碗三连敲；`strange_knock.tres` 嵌入与音效库 `story/knock_01.wav` 相同的 PCM。`python tools/audio/generate_sound_pack.py` 同步重建，原路径只供 Demo/测试兼容使用。来源见 [音效库](../assets/sound_library.md)。
 
 测试覆盖条件组合、校验失败保留旧数据、严格顺序、真实对白等待、选项条件、暂停、单次去重、重复事件、输入恢复、资源失败、取消、节点移除及真实订单/仓库/制作台路由。可在非 headless 运行测试时添加 `-- --capture`，在 `/private/tmp/story-demo-intro.png` 和 `story-demo-orders.png` 保存画面。
 
@@ -200,7 +200,7 @@ Timer、ActorDirector、CameraDirector 随 Systems 暂停；AudioManager 保留�
 4. 音乐淡出、镜头恢复 Follow，WASD 移动与 E 店铺交互恢复。
 5. 随时点击“取消演出 / 恢复控制”；对白期间也可 Esc。检查顾客停止、表情消失、镜头复位且能移动。点击重播会清理旧顾客并重新加载同一段 JSON 流程。
 
-Demo 脚本只注册资源/Marker、加载目录、启动事件和提供重播/取消按钮，没有演出顺序。新增程序音调复用 AudioDemoTones，低沉敲击复用原 Story Demo 原创资源，无新增外部素材。Marker 坐标保存在 Demo 场景，未改动正式地图及其碰撞。
+Demo 脚本只注册资源/Marker、加载目录、启动事件和提供重播/取消按钮，没有演出顺序。音效使用本次 CC0 采样：门铃和房间环境直接引用音效库，低沉敲击沿用已更新内容的 Story Demo 兼容资源。Marker 坐标保存在 Demo 场景，未改动正式地图及其碰撞。
 
 新增测试覆盖完整 schema、阻塞和非阻塞的真实动作/顺序、末尾收束、重复通知、角色互斥、镜头替换/reset、BGM 淡入淡出、声音自然结束、缺失资源、重复请求、取消/重试、预先禁用输入、各服务/角色/目标删除、已完成 focus 目标丢失、场景退出和完整 20～30 秒演出。既有 Story Demo 与订单/仓库/制作台路由回归继续由 `verify_story_director.gd` 覆盖。
 

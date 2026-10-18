@@ -1,0 +1,1363 @@
+[
+  {
+    "pack": "rpg_sfx",
+    "archive": "80-CC0-RPG-SFX.zip",
+    "archive_sha256": "1c2f06ff4e8563b5b8b745b23cf213c1474142a69bb82bd8f5e10d9b3f7a7bbd",
+    "files": [
+      {
+        "path": "assets/audio/source/rpg_sfx/blade_01.ogg",
+        "sha256": "caf7a7cb9b25cda4bd487c1d12d18b74a34bb18c816fd67277cf3c8d7ef32a3a"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/blade_02.ogg",
+        "sha256": "c770afec8f62f14d3d082d5437c5cec28e2751d393df645ddd938eabc2588abd"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/blade_03.ogg",
+        "sha256": "2cd9e6926f4602a4350e703eeae4df520053e290f358ab692632d651ad368a7c"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/book_01.ogg",
+        "sha256": "39b2d652dc8de9d4100ae8a1d23364077fff39bf1c90009b0c0d72af8c47d0d4"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/book_02.ogg",
+        "sha256": "a3f87cfd37a452231a05ceebf746ae2459849c2e20f7b244e4a9b7dbc1d9e76b"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/book_03.ogg",
+        "sha256": "f72e4af8172ae98eaa350892072120e79eb87f91448b99aeaaf1febe070fbb2e"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/book_04.ogg",
+        "sha256": "0696632485ed31406f22e97dd38e7f46826739c0ad792878969a44a6e38a260f"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/chain_01.ogg",
+        "sha256": "d376caf0f61384b1d2e0b447f64f06be56d0ee0622ba70dd01cfdd78b3a10687"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/chain_02.ogg",
+        "sha256": "dd3b753e54fd4e6ed94c36231d1950fafd681ff4a93462cfa3980099a6454ecb"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/chain_03.ogg",
+        "sha256": "ae2247dc68aa85bca15d87355353b5858441644b6a65172e9659f4d0819b42d6"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/creature_die_01.ogg",
+        "sha256": "b34a816a401c5d80c77a61dabbedef7d1918a01320bbb67286c70f22db4acd43"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/creature_hurt_01.ogg",
+        "sha256": "9948f9ce067e1aae7bd780e974d51ceae03f2611a52afffb0e092ba47e9dc8e1"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/creature_hurt_02.ogg",
+        "sha256": "a4ea983e62ace874754c51d78239bd8b6532227119bd511c38fa827b2ccbca70"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/creature_misc_01.ogg",
+        "sha256": "62cbd7cc9b898932d15d05d62dc262dafb3381123ec778c4cf0e65f6ea341088"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/creature_misc_02.ogg",
+        "sha256": "cbaafa1a24ac04f803b3cdabcd13e6e1b1e64f36e53cc200da426cef7d33a20b"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/creature_misc_03.ogg",
+        "sha256": "f12261611d2a93ecb38555a3a1297ef2d0db2e669c9bce1f451d53c1e7c31b35"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/creature_misc_04.ogg",
+        "sha256": "43108cdb25a82a156b2b3be9da8bb2688536d78b70d8e01fbcf9a3ec7e29d5f8"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/creature_misc_05.ogg",
+        "sha256": "09cdd7df30a0f3918cb8a3ce86b999d260c7f289c2049122b550cab65bf9fa9c"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/creature_misc_06.ogg",
+        "sha256": "a304bbc2628cb2cfed87be7666c758f9c47746a72d45fe1a75de9c748b790614"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/creature_misc_07.ogg",
+        "sha256": "2b3ba62c004befe88418ef3286bceea9c6a59257fa6b75e7a010c2d4717141d6"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/creature_misc_08.ogg",
+        "sha256": "86dfb9bb5bf12a1af301ad6ad76ef35e29401240a7f93e37ccfd811770438c4c"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/creature_monster_01.ogg",
+        "sha256": "28d047e95058cecc3513eb831d14072318526fcb9207d8a50aad0f666e17893a"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/creature_monster_02.ogg",
+        "sha256": "2892a32ddfc8d0fc3896f6487adf5a2eb6f3f5766fa02151bddd55e18f218f2f"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/creature_monster_03.ogg",
+        "sha256": "b13abf8c710750bb3699ae61b450fc7c12e92cb9c180581b0f1a681f7f692c8b"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/creature_monster_04.ogg",
+        "sha256": "b78ef6dd16f74c7627c4d58c73ad60465b7729bff2cca6bbe3aa84db24bed448"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/creature_roar_01.ogg",
+        "sha256": "ca1b9198490f29037e6e6487dd6db6165ca8b2583a445c0edd6b9f474d2d1f5f"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/creature_roar_02.ogg",
+        "sha256": "4da0cf77a3506e1b573ec40e3688dc66400d1734853510db357fb3f843cde242"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/creature_roar_03.ogg",
+        "sha256": "3571f6372012fdebb2a38ef89e18a6137b3f17d519f1259aafeb166dbdd94195"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/creature_slime_01.ogg",
+        "sha256": "746d6ef073abfadd43fe184c50c6a2528350d4f566f2c0f54cd51ff0eb665118"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/creature_slime_02.ogg",
+        "sha256": "8c26b66076752b712dad7be704a3e4e11d3a49847fbd804ba7f858024ff33c8d"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/creature_slime_03.ogg",
+        "sha256": "0edd014144dbce5ff0386647c25e0c206ae3b382a16683240ab188bd926da8eb"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/creature_slime_04.ogg",
+        "sha256": "720c15c73a7fae29a02a9cd3cb5b9940ae8213e4b50f8deb0c531796289290d9"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/item_coins_01.ogg",
+        "sha256": "4e701b281a4f88768beccbe87af4574d13ac5a4bc5cab6c522f0e79823d6e428"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/item_coins_02.ogg",
+        "sha256": "c1124868c928ef06e9b95fd9bd314eb3aa9a2869cbfde7f5aadcc341fe3edca0"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/item_coins_03.ogg",
+        "sha256": "cd89cae2221ab5e911f93c208e8b905290f695eea3b1830bc9012cc46f6c047b"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/item_coins_04.ogg",
+        "sha256": "122b633be3e61f35363b28e7ca5f11257d9d7f2759547ba1441cf541a3e5792b"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/item_gem_01.ogg",
+        "sha256": "8a5d2964febb0c69cc4df2ee5257d173f2cae6960d9534df0001dbf356f27028"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/item_gem_02.ogg",
+        "sha256": "a5f4b0b3ae0e272765619289ef6709513e0dfa0785d7559e8a223176a8bcf181"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/item_gem_03.ogg",
+        "sha256": "7b29674b7c8fb0069814623d86fa56a3f370eedcde73d5ce1ecc7339be3a3cba"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/item_gem_04.ogg",
+        "sha256": "e12eb95d0458675c2692831454ed09c7a680de966e7c705ce67a7e12560aa73a"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/item_misc_01.ogg",
+        "sha256": "b1a884ddff3c77f1bb365c466fe6bff1507be82a910e10e56b6166dff0804387"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/item_misc_02.ogg",
+        "sha256": "d6061d8cb295d2d01d9519c09f96e3e31898f2f919a9ab564c30694dfc10a98e"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/item_misc_03.ogg",
+        "sha256": "6240b0727c7815dd4b039b4f5adf288e3cd76a7532eda38ef976f17d3bdec6e0"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/item_misc_04.ogg",
+        "sha256": "560304098c339cc948845dcbff5db58abd4391316f1d697a79aad0f4e35c349c"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/item_misc_05.ogg",
+        "sha256": "8cfab891c2867fa2177d18350107068a962b92045af72043e9bc0ea167b9c0db"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/item_misc_06.ogg",
+        "sha256": "ff7ae8c4934e1b2d6f323b99dc9a5bc1f684b9ec050dc659a126676cb16c8140"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/item_stone_01.ogg",
+        "sha256": "ca630a5d7420d031588b4f5f4e60273d5e6e30b71c6e5a34ec733fb10089b829"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/item_stone_02.ogg",
+        "sha256": "bc9d36c83f44415b16411878f460a5005bea1ede42259daeb179f59d82a754b5"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/item_stone_03.ogg",
+        "sha256": "91bc96742252fedcfed2b664f03336c33f6ffbc2039ba6fcaada32b9bb758da6"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/item_stone_04.ogg",
+        "sha256": "bfd2516d62b68f9c0fa02ad2924065b4d7dadbb2fba04e229da774df75ea45b6"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/item_wood_01.ogg",
+        "sha256": "86c961b9d266911d76e307486bee3c3a7734a200e2e59db10c59e5fc80181e45"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/item_wood_02.ogg",
+        "sha256": "2de39fd5be0ab8a6089bad92847fa725b3afa2195a5f6220c9b4c5424777cefd"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/item_wood_03.ogg",
+        "sha256": "a1f62c20ac2c294309966037fe66fbd5cddbee5df7ae6d6c29e4b2607a0db1e4"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/lock_01.ogg",
+        "sha256": "e828ad2a936e34a0212f3309c5ac706c0ded412b9b383a87f10bcfa1d1445271"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/lock_02.ogg",
+        "sha256": "e183464a4e28c1764c70e980465faaf6ea8c33c8ea4a2b636a3ae2c58e8740f5"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/lock_03.ogg",
+        "sha256": "5fdb74f95dc42dfd06eb89c548c2ab6a3c008a3c9ce3badcdb0e51409e0a4f44"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/metal_01.ogg",
+        "sha256": "433d7adf123f9de425047f6dec3f7b4da510c0fd0208d4893a22be8bd22d9e34"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/metal_02.ogg",
+        "sha256": "30fcaab83dc3fff5335b78f87f9df305f6f8bd7316e2b46e2a4eaed85ee21768"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/metal_03.ogg",
+        "sha256": "e780e2c2125161ed84fad0501af74bccc19ee9075dc9fac1d7d6f292ab3e81e2"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/misc_01.ogg",
+        "sha256": "f42a9e60a9c92772906d535bea4077e6a816f88c134952f99a55061e05d59b8e"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/misc_02.ogg",
+        "sha256": "5a17c4f8d8511fef5345ce5879b76795897c0f15a5b1898b62d719c488d1b546"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/misc_03.ogg",
+        "sha256": "162d7838b1b268a2db410b2282c01bde8bc22a51b29df2d7168adc5e1bfa3bbd"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/spell_01.ogg",
+        "sha256": "09821a53c418c5eeeac4fa25bada9d245e822fed302eeeae9ae4151522a45ae5"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/spell_02.ogg",
+        "sha256": "bf9c48b76921e56aa266172d969a2c08215d6ce0ffae7c3584f23fa05d3f8bd4"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/spell_fire_01.ogg",
+        "sha256": "02fa3a2c6e79e868e546802f45127c5cdda69aba6d5a24ac997ea66f81a816cb"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/spell_fire_02.ogg",
+        "sha256": "bf1eef4993f0adb4bd3a1c1ec91f8f6e4ddeb32d922671a14561846d5b7cab98"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/spell_fire_03.ogg",
+        "sha256": "2e4edee4ff8d7898198f1ab5213e086965e14a665cb947d53759505e28ddd3e4"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/spell_fire_04.ogg",
+        "sha256": "64d653cd0cc6eb71bb45a1dfbba29eaa769ed5b663cce275082d6971e4f2ca8e"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/spell_fire_05.ogg",
+        "sha256": "18025b21a4ecb3b41acc0dccb0697a8930262109ea198ff8c5ef0853d3ed1cfa"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/spell_fire_06.ogg",
+        "sha256": "66fa753e8033d08f3837d6ef1706b0450297db68c0d4b21782a03fd9ae960d63"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/spell_fire_07.ogg",
+        "sha256": "bb13cef9c0b0b4ec7f9335c356b14814c88418abd85dd3747cb62469e9ada93f"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/stones_01.ogg",
+        "sha256": "d11ce95031c2c36ae2a00979620fa95a7a3f5c6d6f2ac86962ed292aa556be8d"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/stones_02.ogg",
+        "sha256": "57dc6b85ee986e68ddc4b7fb2b41cc1c885151677d32439fdb299492a3103a65"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/stones_03.ogg",
+        "sha256": "b86d143d7ef4974c2b97fda9e5d1861482646eec754e15935eeb3680ea0d71da"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/stones_04.ogg",
+        "sha256": "66f1cef820f66d86414d481b37a48a7b7ea11f4a5d7358372ebcfb506af0e652"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/wood_01.ogg",
+        "sha256": "55d4527a1f7d8e158eff0921f7a533340ab6be69a7b9b52fdac7a19b9d8e1cb2"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/wood_02.ogg",
+        "sha256": "e64b95a1ec7675f28f8837ee4e4e81aa8e5b28e272159a0b3ed124fed037fc4f"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/wood_03.ogg",
+        "sha256": "64bc25ac915ded78136ef36f71867b08ac462b9178f7db9b461dafaea0a27fdd"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/wood_04.ogg",
+        "sha256": "bd5dc8469c4f1cb3abff35e2e01b541d4c97d58033f67dfe1c8e3b62ad5350ba"
+      },
+      {
+        "path": "assets/audio/source/rpg_sfx/wood_05.ogg",
+        "sha256": "767fbe18abd5c37ced7d9fa86b36862f9680abb79bb0acda448f70850675e7bf"
+      }
+    ]
+  },
+  {
+    "pack": "tinysized",
+    "archive": "tinysized.zip",
+    "archive_sha256": "7f00e2b1dae15e68db0e1d6096767f03755e9e7c247128afc3e935e63774d7db",
+    "files": [
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/apple-cut-01.wav",
+        "sha256": "ffe06f3cf2f4404b0ba0ef615607291a3e641bfe1a4f8322217a81873d4da154"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/apple-cut-02.wav",
+        "sha256": "dce2720987420a130fb25e071d0c53f8b2f4c3f457f2da05665698896da35b6c"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/apple-cut-03.wav",
+        "sha256": "b581e97211d76d1ab612fdfd25b97b98c9ad9359a97d319a1f7db0365d98e884"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/arrow-feathers-01.wav",
+        "sha256": "15493cd9a472a426602ab46fa27b5f012aa0b678dbf07fae0c1f68967ce96f5c"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/arrow-grab-from-quiver-01.wav",
+        "sha256": "1364a2223fa59834325f56c25eb5ad3a96cec19a3b2f8d97f0449d3fc25ad5cc"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/arrow-grab-from-quiver-02.wav",
+        "sha256": "bc5ad937c67f5e2968d462025c52c204e6168ede2e1b056bd27ea95730b481b9"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/arrow-return-to-quiver-01.wav",
+        "sha256": "ca56b43da2cb8eb967a101932d35b8645a252c417e2ff21654ba6bcbaf7afe98"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/arrow-return-to-quiver-02.wav",
+        "sha256": "dc2aa140593af3a74099633e3646e4433bf292313674b4b66bb26ea778f1ac60"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/book-page-01.wav",
+        "sha256": "d279158a5da1689941add3d5e148d827c38eb6b12f22834f499f72ddc47f0b44"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/book-page-02.wav",
+        "sha256": "b14e15141984eb84bcbe8841139d3f1d4715eac4e64cf52091acffd8fe440331"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/boots-leather-jump-01.wav",
+        "sha256": "9b8b6e3ac1f0263df49c60c1e571974b421bfe12c576f26328397ee644bb3ac4"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/boots-leather-step-01.wav",
+        "sha256": "5b0de415a95f7ad5ef4541d8142415587b2898c43ac26a45862cf14756894a06"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/bottle-clay-uncork-01.wav",
+        "sha256": "97ee737089a5dc3e918b98ca3a0c1b8f43e83f71cb8911530cf378dca7efda2d"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/bottle-glass-cork-01.wav",
+        "sha256": "def1357208b9283a570af8130de7a73f522ce12f6ff869d6f3bbc1411420fac9"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/bottle-glass-cork-twist-01.wav",
+        "sha256": "9c1fcef23ad844f0066801fb53527d0358800b3f0d16f1e7f86fa1dfc8997102"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/bottle-glass-uncork-01.wav",
+        "sha256": "af8a6f3fde9764856cbd1dde6749912876764e2c2cb34a5b72f97ee6c476f3b4"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/bottle-pills-shake-01.wav",
+        "sha256": "b80072d57bd55a302ed801083aab5cf1c11c20acf0f67739aa4711cac051d620"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/bottle-pills-shake-02.wav",
+        "sha256": "bb3f015d7d941780631a2a77d96f16b469b087e88ea8c3ae011298e9b8c45c99"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/bottle-plastic-lid-screw-01.wav",
+        "sha256": "979d39421c9aa33396e3342e59f62e1014b46c8c223cdfcffbf9fcca347a6fd3"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/bottle-plastic-lid-unscrew-01.wav",
+        "sha256": "6147270674f9fe3597daa6cefeb4136c06df79a29317bfe857fa63894eb08083"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/chimes-wood-rattle.wav",
+        "sha256": "4b62c715ef1767b6d180d81f9a65738f9777bb7f0f13a24eb31533954a9a3171"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/cloth-pouch-shake-01.wav",
+        "sha256": "96e0cb2529817e56bb4c967fa0bdd42192e71fca76164c706263d5a0e7c302b6"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/cloth-pouch-shake-02.wav",
+        "sha256": "1441af6eb1907eb85788bbab993524dda0070144a91c74ad9221d6c056476f92"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/coin-spin-fall-01.wav",
+        "sha256": "c22f51e651107b62b203ed093d709a914a22715e81a0189b102e747a2f4a0722"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/coinflip-01.wav",
+        "sha256": "60c652aca20c60e4fa6efe086f061bc52ddc66d7728dd23d9b625b7e6485a96c"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/coins-shake-01.wav",
+        "sha256": "11c1eb2f1052e83e50d7cd73454104cd684041a4c78f2500001b3bb75b46c290"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/compressed-air-spray-01.wav",
+        "sha256": "24439d722c11958197d39a351d6e26ba34c10df438f91e9c811e1e58b15f1135"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/compressed-air-spray-02.wav",
+        "sha256": "d5264863576370a549a5b2f321838f9f53680055d7ef9917b4acfde6bf1d7b9b"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/cover-paper-tear-01.wav",
+        "sha256": "2df88e5c0c0fce2b4ca056cbd80ddd0d8725355a3092b45205b63ecb060a02a8"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/cover-paper-tear-02.wav",
+        "sha256": "c53235914ff3cf0bf0afe244f2dc5aaf752eac1bd49ff51db0ae076b00351081"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/drawer-close-01.wav",
+        "sha256": "c929e52f2f77be075cb2a691f72988832906a820d2c1e8a9edfe5aae27051a4d"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/drawer-open-01.wav",
+        "sha256": "ad0e4a6a5da53a3642b0a1d3819b0e057a2e80e66780b91ebe2ff888d3d8225f"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/floor-creak-01.wav",
+        "sha256": "565bd04de41d915c2ff7eb875f2a0b965e1b3688607215f7820ca9ca80a14b41"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/handcuffs-metal-lock-01.wav",
+        "sha256": "5f2b35490e8e5976cd460f496fc6784f8ab7446706172c19ab7e18c7ef8b68cd"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/handcuffs-metal-lock-02.wav",
+        "sha256": "42ebc1c0759cf75f006c2b55f061b91c57d81f02d3f93d62411972cb5584b44e"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/handcuffs-metal-open-01.wav",
+        "sha256": "02285c82c5c7d4649bf09de739163ea671c626dbdcb665ee9797f3b33893be12"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/handsaw-knife-scrape-01.wav",
+        "sha256": "8d8ad4556773328be1411a3e3c3b6916b6610f2ca5f49eafd77028a21f410a6e"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/handsaw-knife-scrape-02.wav",
+        "sha256": "934bdd13292e664ef6fc174711a9ff19db2391d84c906256236fefb4d7e7c320"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/handsaw-sawing-wood-01.wav",
+        "sha256": "240ef0f9e186379cd8ad07e8299026d585bd6e90ec0ed7d145169bbb00436728"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/keyhole-lockbox-insert-01.wav",
+        "sha256": "64e8e246cf97792714e71832610964f2542b70aa8ce98f4d1103c38f01a02502"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/keyhole-lockbox-remove-01.wav",
+        "sha256": "cf7feb0e78fd0f74205f0785d158e6ac7b374cb3c000767ae3c001363de35f9b"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/keyhole-lockbox-turn-01.wav",
+        "sha256": "8a534c1cecba50a61ad031bb4fd2a2d085adb547b4652b960ec4e4fccc9bfb69"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/knife-sheathe-01.wav",
+        "sha256": "860b98f0f974bfddb2cbee9ab9f2676770c3a747d7c17398bd5b5c679822b428"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/knife-unsheathe-02.wav",
+        "sha256": "9cb559bcd1a1c0093a716b443f085cbd090d0c4c889afdca430e05a3e5d373a3"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/lighter-light-01.wav",
+        "sha256": "bbfae558335d51dd3ed31eb7e0ffe5582e7c12a7ad78e989839482a1a4bcd819"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/match-light-01.wav",
+        "sha256": "328c652eec7f5cbe6d63a3bc29d973e7391dca9d10da323a0cc37b994c02c536"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/metal-fork-scrape-01.wav",
+        "sha256": "a2efe30d47aaf3f72083e07156f8da064318f32dbce84a325072b3e913e41a45"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/metal-fork-scrape-02.wav",
+        "sha256": "4d5533f8edb613e637358606993fe4bd6c959298f0edc3308f17368537d7b9eb"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/metal-hammer-hit-01.wav",
+        "sha256": "5e3f5d77f72d5d700f8dd09e70f217de852f793e64056c7770618f59bf494d88"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/metal-hammer-hit-02.wav",
+        "sha256": "867f94bfb19e7fb43ccc4a06147d1c259d9f36129afa3ff441cfcffe13a786de"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/metal-knife-scrape-01.wav",
+        "sha256": "80a8a2647f9ac8dfa5709b75563cda48a8c815725094de6107201d65815c9e7a"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/metal-knife-scrape-02.wav",
+        "sha256": "8ecde2b02dd24529b706fb03d5dfeb46352ecc239a5f56d534118f9a87faaa33"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/metal-knife-scrape-03.wav",
+        "sha256": "382883e307140a7fe3a8460a11132ec6ce9c38c40938ee580cda8c2ecb0d4151"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/mud-steps-01.wav",
+        "sha256": "4893ff410db9277e430fb9c59ca95d893b2f0b99f53dc2b9915d107ff15e887e"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/mud-steps-02.wav",
+        "sha256": "a29ed34af317d1a02469730b82cd7a5d3de0bf444e48b9eedf0994cfa42ce4e3"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/mud-steps-03.wav",
+        "sha256": "28cc4a87724af470004fab1387177d6b7b9e71e4d38c3b99fec3101a2053d393"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/mud-steps-04.wav",
+        "sha256": "40abdbe1ac170bbe429decd656cab7939939a87a3102672db2f67a2a5a10b839"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/mud-steps-05.wav",
+        "sha256": "1963e834ad12d97aca880412f3a2c51e5bd2fc0cf6c1ef86c2c3b87b8178be58"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/paralyzer-discharge-01.wav",
+        "sha256": "8eaee5635e55ba4fe344f776e1b1830aa17501510ab9eb55a9fb1ba0dc82f827"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/paralyzer-discharge-02.wav",
+        "sha256": "37928eeef6c7711bfefaeaf21e8b9a7650bbabba2607c18cc5737cc9aa28eadc"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/plastic-bag-drop-01.wav",
+        "sha256": "65c1353ba9d673d8af0ef6e65298ae764d76b7cdbf1376470b29260657860566"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/plastic-bag-drop-02.wav",
+        "sha256": "accfa3d663a99c0e3ab9d3d0b391eadf630252df3180167c70095bafd2790124"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/plastic-bag-pickup-01.wav",
+        "sha256": "c51ead1513ac5564dc2af5836bfb380d1b1e6b153eda442d0f82aab8f0c17ec8"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/plastic-bag-pickup-02.wav",
+        "sha256": "3d9ca392e88218870570fa6b860c675ffcfb223854b8326cb460ac3865f8cc3e"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/quiver-leather-squeeze-01.wav",
+        "sha256": "e6c1f778db402d02aa20cbbb904fe4f7192fddda91d89ff70d818444a91bdc58"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/quiver-leather-squeeze-02.wav",
+        "sha256": "f33ecdc45a63fff9ae019319674a737d1bd40b2247ee73b384704d3acc451446"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/scissors-close-01.wav",
+        "sha256": "9b40bb3cb4e5ebc0acf74e3cee3d8bb88f501aa4c65646c469711be35c030e96"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/seax-sheathe-01.wav",
+        "sha256": "a17c51bfdbf248eddd7472fe320ecb9f6136ad5a1eadc49cfab916332827cab4"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/seax-sheathe-02.wav",
+        "sha256": "9bda95237c53557200548c977b2927fcb8aa17cfad51388be58d9795703af4d7"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/seax-unsheathe-01.wav",
+        "sha256": "d03e39f47367530c6cb251f8be3b7a21f15c1fc68cb204c5077456e3b45309d4"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/seax-unsheathe-02.wav",
+        "sha256": "c9a69a0631f7c094a4c9a0c388979858a3f5642564062783770b15b8fc28f570"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/sheath-squeeze-01.wav",
+        "sha256": "f8736ab0f790f7e23014b32cfec3993244425b0af8937495baffb9f40514de85"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/soil-steps-01.wav",
+        "sha256": "f776fc8c849646faa6b1058652326845d6a69393bc8447354f80b201c4c7e4ce"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/sword-clash-01.wav",
+        "sha256": "58072bf9c80d84a37c4cfaeb694659dad3b5c4ecd24e2f7fc1e7c2fcdc7fc325"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/sword-clash-02.wav",
+        "sha256": "6c8d3a0ca3daa0d8544848f847d879e17f60b49ab360507d7466f4fc42fbd0d5"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/sword-clash-03.wav",
+        "sha256": "2fb00a674fc987ef8aeca008c6b3987e0df9b0c11a81fc892ade97c59534b188"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/sword-clash-04.wav",
+        "sha256": "500ecab696085197f238d527b07ef7a9583a99d9ea28364f0a60942b5a40b059"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/sword-clash-05.wav",
+        "sha256": "3eb34d29cbc2f16d9a385ebebe36eb33fde2ffcab5c8fcf72429434b35df97e9"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/tin-whistle-whoosh-01.wav",
+        "sha256": "8ac3354d54c8f3bfce39810a9ef821490eabba77d4fe10da504b2e0a61ab569d"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/tin-whistle-whoosh-02.wav",
+        "sha256": "6ecd0cfa25f5598f5137260a0abcec7c9140ef31e4c12d2f3c7808b1e5538b16"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/tube-plastic-whoosh-01.wav",
+        "sha256": "6bf539745db12b4b546bb8bb1ab2f75ccf403db80c07fc8f473fa288d0d428b9"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/tube-plastic-whoosh-02.wav",
+        "sha256": "2ba001b889f1465d949b5531e7c9f61425a0f81d2a40febe3bdb4e449e99c190"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/vial-glass-close-01.wav",
+        "sha256": "e333a5ea7506025adb604eeb80cf6adb366f6b187cf193481a9af38c7e240a6a"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/vial-glass-open-01.wav",
+        "sha256": "d5b8c9d6967a2a731058bfc4c01a3e9c8ca549ce40bc02a3c3d88c55bbf6cb8d"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/vial-glass-uncork-01.wav",
+        "sha256": "ed873427b5b41827e904f7bdc75bd41147d9466d1c46a641b1bbaec1ebd644f4"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/water-drop-01.wav",
+        "sha256": "999b0667e48503ff8e5e6effbcacc49f1fc88e64f05c96b37f66ae166b2c7238"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/water-drop-02.wav",
+        "sha256": "6dfd259c7375e7df9756f019b05182af72fff418295dd65c3a35223e8e20093e"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/water-drop-03.wav",
+        "sha256": "e66ce053a9c8b3a64d26f733310d3c4a62d582124af1c63f9af310bd847dd87b"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/water-pour-01.wav",
+        "sha256": "c2c1ad4d138873a803feade2d5e080ae169ba24edc2d9c388cdfc002f766d9f6"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/water-vial-fill-01.wav",
+        "sha256": "6f1b325dcb28e726296185fcd3462b08ed77373559e4f6afd61ac0529e67d6d3"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/wood-bowl-spoon-01.wav",
+        "sha256": "0f81202c6959e852abb3ff49b1b1e067e6a5e4f5235ca4d939a461f4864d3404"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/wood-bowl-spoon-02.wav",
+        "sha256": "fb2799e315118e1e9cab88a7396350fd472bbbf28bb2461c5b9332ec73da38f0"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/wood-bowl-spoon-03.wav",
+        "sha256": "db4bff6480fd6fe00fe1526a876300f4798a0087847d675b87ba11d6d1e0dc32"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/wood-bowl-spoon-04.wav",
+        "sha256": "a6e953f2a456c9ff54b15503d2cdaaeac677b931aa39ad144baaadfe47c4f2f0"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/wood-twigs-break-01.wav",
+        "sha256": "383c87c96cf30a207a9922f16768b1bd5138d7fd66bb7f4c2ff4e15e058b1803"
+      },
+      {
+        "path": "assets/audio/source/tinysized/sfx-cc0/wood-twigs-break-02.wav",
+        "sha256": "444587434b25e876f34a585154f5bc339f120aee5edcc9c6605aca415995b354"
+      },
+      {
+        "path": "assets/audio/source/tinysized/preview.ogg",
+        "sha256": "e77c16e7e016deced9a90db1783bfc64435849eda14d49a5877e521dcae035ea"
+      },
+      {
+        "path": "assets/audio/source/tinysized/readme.txt",
+        "sha256": "6d6712d2a41e54f5dad0e61255da0d9259a299a9b2953b23534eb853429c10cd"
+      }
+    ]
+  },
+  {
+    "pack": "accessory",
+    "archive": "accessory.zip",
+    "archive_sha256": "1d1166b2469be771d8894cd77ffcd6d500bcb676e2b6cb1c9cecacf97e957217",
+    "files": [
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-clay-uncork-01.wav",
+        "sha256": "97ee737089a5dc3e918b98ca3a0c1b8f43e83f71cb8911530cf378dca7efda2d"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-clay-uncork-02.wav",
+        "sha256": "c7dade8b31f620368a512e4884f84c86511aacc775f918b07fa281f0119d0a7f"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-clay-uncork-03.wav",
+        "sha256": "714197c40c88025a569f92942a2cbf965d8a52b60c2b5ae2ee78586f8ead7f42"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-coffee-shake-01.wav",
+        "sha256": "254ce914c0d29149d7bd45e2b7128b972b13904ff6b7b9154d711a4a6c56a809"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-coffee-shake-02.wav",
+        "sha256": "4353d15fbfdb31095aff4ce3566d729432e945dd8e185e9928e312031c6cf1a7"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-coffee-shake-03.wav",
+        "sha256": "8fea406f35797b030f4436d5707796cb3921c0ff8182fd96ede1bcfae3285c5c"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-coffee-shake-04.wav",
+        "sha256": "9f366a07b50f1a9118d99b66bde1699ac50e623ea0cad0d9ad09e36a52867c13"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-coffee-shake-05.wav",
+        "sha256": "16fe80731a8d1937b55e30a4c6db114f32d5ed3e45e3552d00d6b50743c6bef0"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-coffee-shake-06.wav",
+        "sha256": "acfe52cc08a4b45cf73c6d1de32d52b75fe329762fd84f7590ce91b3b43ced4e"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-glass-cork-01.wav",
+        "sha256": "def1357208b9283a570af8130de7a73f522ce12f6ff869d6f3bbc1411420fac9"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-glass-uncork-01.wav",
+        "sha256": "af8a6f3fde9764856cbd1dde6749912876764e2c2cb34a5b72f97ee6c476f3b4"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-glass-uncork-02.wav",
+        "sha256": "0ba155957042afac710c80c00d5ce9973b5e12cec0d7fd62f5e28376b6e93808"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-glass-uncork-03.wav",
+        "sha256": "219d10a6dd0c54730fcfaebfa6c0f500108a39f6c4ffcb66093e45981bbdb8d1"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-glass-uncork-04.wav",
+        "sha256": "fb068d446d1f7ff26c83eb277afbe954a32957f2815646a3d94f4a2e519b606e"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-glass-uncork-05.wav",
+        "sha256": "04bcf2c83ee4f7be46b7c09324d465ef3b6261cbc952c3123a09164320d906ea"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-pills-shake-01.wav",
+        "sha256": "b80072d57bd55a302ed801083aab5cf1c11c20acf0f67739aa4711cac051d620"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-pills-shake-02.wav",
+        "sha256": "e98f38993b01ae564600eaadc39b4ba9b6ae0b03a1fbf2ea1671242be6e772bb"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-pills-shake-03.wav",
+        "sha256": "bb3f015d7d941780631a2a77d96f16b469b087e88ea8c3ae011298e9b8c45c99"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-pills-shake-04.wav",
+        "sha256": "979a7da831bd2112ea7f3bacf1e007c0b72252c51a5edf7bb3f7ac640138d203"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-pills-shake-05.wav",
+        "sha256": "07f8193dcb24ca25acb33fbac0016222266832df6b59ab853b6d5fff7533aa36"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-pills-shake-06.wav",
+        "sha256": "cbc049facd08079f949f08973694857c5f02b20e30b508db0125a7d099d48f09"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-pills-shake-07.wav",
+        "sha256": "3ed3e1ab38985a373d07b9acb163304f7aa58a4925486549dcdc0332509d103e"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-pills-shake-08.wav",
+        "sha256": "1bbac5002a9305289d8325c9b38e95ea2f374b9bbe9d986e5698981d89077569"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/bottle-pills-shake-09.wav",
+        "sha256": "c217202dd2217dd49cb8cc8f750c1194f66c432050bd6b797043e4cdd7e186e8"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/coin-spin-fall-01.wav",
+        "sha256": "c22f51e651107b62b203ed093d709a914a22715e81a0189b102e747a2f4a0722"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/coin-spin-fall-02.wav",
+        "sha256": "f12e7df55ed861bfa992481c09231388f5150d67a8bdeec7468aa123717f7d37"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/coin-spin-fall-03.wav",
+        "sha256": "a75cd0f711a7470bd8b40f7ee769559e3ac9f7c7ead51429109df708d01f0e72"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/coin-spin-fall-04.wav",
+        "sha256": "aea819e5f552cba89acdcdb418e75fef4ba56779e6c2a25d453d6d33c8792ec5"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/coin-spin-fall-05.wav",
+        "sha256": "549457e3d0ef68bc000d79afc0022cf580b694c025b5f4fbca0c82c4644f8f8e"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/coin-spin-fall-06.wav",
+        "sha256": "952372f1d2884139445f7f27dd0eb79fd628b3021e31309458528be587d4892b"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/coinflip-01.wav",
+        "sha256": "60c652aca20c60e4fa6efe086f061bc52ddc66d7728dd23d9b625b7e6485a96c"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/coinflip-02.wav",
+        "sha256": "44215b7af83d7e0d569b30898c94c5372e080675c05e3a030cfe1a764f843bc5"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/coinflip-03.wav",
+        "sha256": "fad73e7b55f32764bafe492aab81d7be255fada96e626daf135304a9e38d5b0e"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/coins-shake-01.wav",
+        "sha256": "11c1eb2f1052e83e50d7cd73454104cd684041a4c78f2500001b3bb75b46c290"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/coins-shake-02.wav",
+        "sha256": "a37bac4d4a9eba05c030b3214e3d7b7fab817c0f6d06cad213d39933e2b9baed"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/coins-shake-03.wav",
+        "sha256": "fc7dd309378bab5658dde5f222d2e4843eae79a9e2a89452fd10478f7cc1311b"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/coins-shake-04.wav",
+        "sha256": "e40e021be46e273c26afd720edfbe23250a3ae30a7c2d16d112c59226a078e6d"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/coins-shake-05.wav",
+        "sha256": "9d3b2aa65b27b7a0e5cddf7800c3f3ecf8f492cb1b3363d7e40370dcb496fe0a"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/coins-shake-06.wav",
+        "sha256": "e1d2c192d055a3113563f51e179415beff0f93b255b22589b6ab24386389dcc4"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/coins-shake-07.wav",
+        "sha256": "ee20a26929d261a54c8f0aaf310a0ad39d0691ecf7dd3e4457c9cba7e1c041e4"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/coins-shake-08.wav",
+        "sha256": "73305947db111393df950f89422bdbddd27fd649c932bb6ef62897a8013f3c18"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/container-nuts-01.wav",
+        "sha256": "434cb2cddd30062b813e0175420ae52f9491118ac620cf319574e2efe583b012"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/container-nuts-02.wav",
+        "sha256": "ba21bc4652f5c81a4919caefb4f2aea7b218058834d52bcbcdcca89439708a45"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/container-nuts-03.wav",
+        "sha256": "2413732fe846fd00aac38fc9a7ff829be15bb6a51aeb46d50887e3f61e67a984"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/container-nuts-04.wav",
+        "sha256": "ac67c143e347816dcca551a7a07d612a2f2bf156f5f3c543aab16bf34c6248c5"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/container-nuts-05.wav",
+        "sha256": "7c03c384d652476872cc4de0243b950bd8d98b8125e11f5a8d190e4a286fa3e3"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/dice-many-roll-01.wav",
+        "sha256": "15fe125b995d2fcb14a212af20d1bb2b497fe8e7b47f7d2db8a34c50ac23e766"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/dice-many-roll-02.wav",
+        "sha256": "767306fc014c2e3462b995b0b117e3f6d7756b309af24ef4ec2a422981dee967"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/dice-many-roll-03.wav",
+        "sha256": "6c9602c86a4de3f544e4ba6932d739ef0165e1a2ef1ec9e042d745865481f07a"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/dice-many-shake-01.wav",
+        "sha256": "6ca0a328de57ce8262b682acd410fccf54bc830db56df852ed7fc8ee33aab5a1"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/dice-many-shake-02.wav",
+        "sha256": "3530be9650ac0178135c82872bf55598583fbb099ec5d22ab0a040f21bc75b64"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/dice-many-shake-03.wav",
+        "sha256": "7e59e03a93177ce2ae0249476ec507aa2445e720bbf97efda259fd0c9bdce05b"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/dice-two-roll-01.wav",
+        "sha256": "28c7913ccae366b5d0dadfa819232771f3bf7fa8365834ffd5558626405ae8ff"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/dice-two-roll-02.wav",
+        "sha256": "ecb4d0258cb1838b6f4fe8bdc3f394fa7baaa25bab026c5eb9d1bff50258ad55"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/dice-two-roll-03.wav",
+        "sha256": "4698fc670632b6ea0526df72a48604cc6f58b67d7fd867a01fb719bd16d6f2fe"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/dice-two-roll-04.wav",
+        "sha256": "1d8d21881d6122b76b5492f9c5778bf73afa09e8975e069cb1f5e24196d11310"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/dice-two-roll-05.wav",
+        "sha256": "dfe186cb4fac801edbb6d05d0014becbe12c2a0f020555a9887c401dcd268e93"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/die-one-roll-01.wav",
+        "sha256": "6658d583a3bc91df4e26585b012fa763faf82ffaf647eacf8f99767ede139d1c"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/die-one-roll-02.wav",
+        "sha256": "8d24b9ec7d1b21827cba2723f223ee27c1fd47442f9f305e325135238456005a"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/die-one-roll-03.wav",
+        "sha256": "e34a93ac3b2c3a0c33358cfa067742671c2d3f3d2927f1f06b22a79d63264a8b"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/keyhole-lockbox-insert-01.wav",
+        "sha256": "64e8e246cf97792714e71832610964f2542b70aa8ce98f4d1103c38f01a02502"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/keyhole-lockbox-insert-02.wav",
+        "sha256": "a3eb4ecadc87fcf6213c9e75c37673a788a72b3bd9e5470a35dafc90662c84e6"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/keyhole-lockbox-insert-03.wav",
+        "sha256": "2c1d8a6c0998324f8bd9417212cf2ae1dbc7f84cca146640511bbe1150480da4"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/keyhole-lockbox-remove-01.wav",
+        "sha256": "cf7feb0e78fd0f74205f0785d158e6ac7b374cb3c000767ae3c001363de35f9b"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/keyhole-lockbox-remove-02.wav",
+        "sha256": "b2967ffe582fadf53579152c4617549399f4ed97605fafed0ada6750eb91aa41"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/keyhole-lockbox-remove-03.wav",
+        "sha256": "aa892528664700cacc79cc1c2888065bb5810927214369f522335299a31de22c"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/keyhole-lockbox-turn-01.wav",
+        "sha256": "8a534c1cecba50a61ad031bb4fd2a2d085adb547b4652b960ec4e4fccc9bfb69"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/keyhole-lockbox-turn-02.wav",
+        "sha256": "78f47f24880be06583e73c8ce6f48e5a590c8bb4945843cd9d391bd50a2cf282"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/keyhole-lockbox-turn-03.wav",
+        "sha256": "83bba8dbb0b9119fc6de1afdd7a3e38206708999ff1e43f50fbf445e9c6aa6e6"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/keyhole-lockbox-turn-04.wav",
+        "sha256": "cf9b99c40715ec0aff574efd64492872225e3d4c156f6eb0ea0a0af29ec201ea"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/keyhole-lockbox-turn-05.wav",
+        "sha256": "33e1df9a0800c3f591338378265e0afe946ebae2c73d6a12ae83e6f837098f49"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/keyhole-lockbox-turn-06.wav",
+        "sha256": "47fba948e9eab77cad4480ce88a75d842ae1fe7e3046fc13446178c4bff5d197"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/keyhole-lockbox-unlock-01.wav",
+        "sha256": "4a8307c941dc56d984fc460b4730b70bf4833252c29922f08457b96d1ce10df0"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/keyhole-lockbox-unlock-02.wav",
+        "sha256": "c670b8bf372db54acb8275b0ced51df4cc203a8553dd3cf77b9fad54e581b25f"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/keyhole-lockbox-unlock-03.wav",
+        "sha256": "8c41758e0084597defc62bb39933fa860418c520cbe19efbea7e9dff42a33518"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/keyhole-lockbox-unlock-04.wav",
+        "sha256": "1894e5659bf5210bae83f5ca1daa9de0483a2859c49bfc427312bc4f2f04f116"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/keyhole-lockbox-unlock-05.wav",
+        "sha256": "719f5642244cdb9a595c7e05546d777e77d1c1fc05e9784a93e057e2f2a1f954"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/keys-rattle-01.wav",
+        "sha256": "61a3b68470433fcbb3d6b4d167117413008e5c80cdd00ebb081d0d40c2b73c18"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/keys-rattle-02.wav",
+        "sha256": "eaf1184df0feb21aa99dd28999d9f2ccc8df49ee42c6e21da3587f9d3728144b"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/keys-rattle-03.wav",
+        "sha256": "2f9fdf8c509df23a3c39fe8578d3c7cddc1ca97d2381e1ee0dfae6ebb8d7853c"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/metal-pot-drop-grain-01.wav",
+        "sha256": "ec07cc40c0ddad634ec3ab2feef79488f2b60e1a03a0221705beb553b9b44738"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/metal-pot-drop-grain-02.wav",
+        "sha256": "1d286b52667b86394be4332c937414edb14f8563f418352509ddf63dd2a475ad"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/metal-pot-drop-grain-03.wav",
+        "sha256": "9dbc42286ca74743d73e79d388fd7eb5ab756d1da93bb1b20afc846dfbd543ea"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/metal-pot-drop-nuts-01.wav",
+        "sha256": "3e54ff0097aed4baed51ec0034ce7091c2ab6f7b85e28612a641a09610e0b9c4"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/metal-pot-drop-nuts-02.wav",
+        "sha256": "62a588d1dabad58923fd45522984d54b60de4716b32ee5af92b87c560eba1d0b"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/metal-pot-drop-nuts-03.wav",
+        "sha256": "4e24c7902da8592d726736ee705c621da8d627ec8620c8faca7fd3627e75692f"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/metal-pot-drop-nuts-04.wav",
+        "sha256": "53946ce4c46113b3706faa738ab07445046831f6eade40895dd2d1f203aee5d7"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-round-cork-twist-01.wav",
+        "sha256": "548bd6eea336f4adef6291b90129071ce0b3c57528fb7dbc08b637c1d6e549ad"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-round-cork-twist-02.wav",
+        "sha256": "a0dbc676594cf189aa9f80e72f35ad85ece21bdd8156821ea19572a262f38bad"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-round-cork-twist-03.wav",
+        "sha256": "ca2a988f6ab6c273d0dc8080ab9c304e64b8d531d758bb1896fa380eca741424"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-round-cork-twist-04.wav",
+        "sha256": "746dcef657e6111cff9d64b990ca7b769aef862b3342f860bcc86be4ffd5b63d"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-round-cork-twist-05.wav",
+        "sha256": "f89cc791af62d16aede458c738d96b08f17c769b53b0d09b006408f8a9db7a30"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-round-uncork-01.wav",
+        "sha256": "ed873427b5b41827e904f7bdc75bd41147d9466d1c46a641b1bbaec1ebd644f4"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-round-uncork-02.wav",
+        "sha256": "101e3216ea577ecb69674bb441806cfa51c43644578aabe2cbbed36af6f02a8e"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-round-uncork-03.wav",
+        "sha256": "b0985cf008fd351585779005cf9e2cce36d3a58f324205edc07069cbbc2d77f3"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-small-drop-01.wav",
+        "sha256": "3a6807cb1d5a7f0a0622ae5760415ad0ac0c73b66d4a40c094cc65472a19d1d5"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-small-drop-02.wav",
+        "sha256": "accfbe7dda7d081a7b8b84fb9f2bde754ab7fccddbd89487dcaf6cb00d226026"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-small-drop-03.wav",
+        "sha256": "4469f5972df1f25b06a812ac213c1139504d4976e0f61ceac36d76982ccfd169"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-square-cinnamon-sticks-open-01.wav",
+        "sha256": "2bb419ed7e2035f16e434fc04e09d20fd252a4aee62cd5b7e0159728f869b475"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-square-cinnamon-sticks-open-02.wav",
+        "sha256": "5684933160318afd0d29dc9fdc090a3174e5688b8902490d8f96402d868921e4"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-square-cinnamon-sticks-open-03.wav",
+        "sha256": "b03adf48ace0e63386c27e6f18e53d7379af4354c26a7cd337be2f7e5d61230c"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-square-cinnamon-sticks-open-04.wav",
+        "sha256": "53578dae23928618128a1435c314822f74151b71abea3b9c225af8313dd6d9e5"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-square-cinnamon-sticks-open-05.wav",
+        "sha256": "5aed4930d2e1f48702dbd8c61c0d2284278365195d624524dde05d3f278911b1"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-square-cinnamon-sticks-rattle-01.wav",
+        "sha256": "6357759fdc3959c48a4488b6c030714452896f86b89d4dde98a11105c20d5a39"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-square-cinnamon-sticks-rattle-02.wav",
+        "sha256": "b9180879cf504718375569e7160b2a9a6e1ec5797a7668a07b8a2a190a72f79d"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-square-cinnamon-sticks-rattle-03.wav",
+        "sha256": "38535bddbb12e9bc8e554c9df1fd2534a93b7e904075dbface6989cce98af3cb"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-square-cinnamon-sticks-rattle-04.wav",
+        "sha256": "fb9dae71b5aa6c0f1476405357e5b5576008faf37d34e09e8752511130873fe1"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-square-empty-close-01.wav",
+        "sha256": "e333a5ea7506025adb604eeb80cf6adb366f6b187cf193481a9af38c7e240a6a"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-square-empty-close-02.wav",
+        "sha256": "67c1fdad46346c1f391e205425516db89f758b490af0903292de3f700e7debf0"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-square-empty-close-03.wav",
+        "sha256": "35d70182a65a1beb1d0051f38f9ac9749af45b282010ee4f971bb840148bfa5e"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-square-empty-close-04.wav",
+        "sha256": "db5c52ed6ef24b6e622e9709e95f56ce7a8816dcf7d08477f3c6e7dc52cd6db3"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-square-empty-close-05.wav",
+        "sha256": "9bcf760a98029ecbe4f8a47c4a77269cd5ac5fe0b9d2b6788b7eaa532725efa3"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-square-empty-open-01.wav",
+        "sha256": "d5b8c9d6967a2a731058bfc4c01a3e9c8ca549ce40bc02a3c3d88c55bbf6cb8d"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vial-glass-square-empty-open-02.wav",
+        "sha256": "1d66f79829e8366532307f32f59d2d42c8ed663447a87331832c5c4ddd63da52"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vials-glass-rattle-01.wav",
+        "sha256": "3ba1ecb9db1a823b68e11faab14f6a39375da1309f47504ad5796be356c396aa"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vials-glass-rattle-02.wav",
+        "sha256": "9a61d013aa5567bfd328967f23dd605e498805c6567b979a9e27090c924dd0d7"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vials-glass-rattle-03.wav",
+        "sha256": "99fcfcce72676e35d8b283575bb1b76c6db80c5d355d19ceae19372772a4e830"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vials-glass-rattle-04.wav",
+        "sha256": "4563d079da442160daf9d9f9fbfab1d6a7cfba066c620a36a27bf03dd6f47bae"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/vials-glass-rattle-05.wav",
+        "sha256": "e8e23dfad36a93df1d7ade4d18a0fe7b783a3b9d555ba882225759d49f03feb2"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-grain-01.wav",
+        "sha256": "e4d07e04f1da70164e953e7602135ac524a55f1e9378a8a2a043853514ea8be4"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-grain-02.wav",
+        "sha256": "e238df081002da5d753f0a59dd762ecc64b5c2df2a27113ff770fccac160fde7"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-grain-03.wav",
+        "sha256": "be2f72ee7b1c702f8ecfee67f3b0cf81a91918d12d0e9788387abdec89c5c695"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-grain-04.wav",
+        "sha256": "ee5ffc47616a3b75e0f48b4b87ead5efa040a1501082faea97c5c68f78ab8bdf"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-metal-spoon-01.wav",
+        "sha256": "0f81202c6959e852abb3ff49b1b1e067e6a5e4f5235ca4d939a461f4864d3404"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-metal-spoon-02.wav",
+        "sha256": "b55ff3367b9095e5ed0fd2c0f891bba74cd41efe4c4f14f366973ef76a272c96"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-metal-spoon-03.wav",
+        "sha256": "fb2799e315118e1e9cab88a7396350fd472bbbf28bb2461c5b9332ec73da38f0"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-metal-spoon-04.wav",
+        "sha256": "7007a9a6f678e997474469eaab5e980f46b5b080fcb8bbd41f1d23c69876648d"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-nuts-01.wav",
+        "sha256": "33ff1ee7ff2251a3366a6f27a6e3bae972c9f7d1f05dda9b9df9c0895914c159"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-nuts-02.wav",
+        "sha256": "c3ede1b9346c50869602f2764119eff8cf5c91c948faa51735dc302348962eaa"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-nuts-03.wav",
+        "sha256": "840b677a9fa085360616f8ab7d69c48bf7d82cd4ff2b084e52068190087fdf6c"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-nuts-04.wav",
+        "sha256": "e01abc1ed818a0adbb83bab2d2dcbf159074527cdf0ab8cbc217ab9f3f57beaf"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-nuts-05.wav",
+        "sha256": "e9d6caedde13aceeac45dd1c137dfa616f159a81942143a7e87d845604c7f27c"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-nuts-06.wav",
+        "sha256": "9c50c0b7c3f86f36b6853eb60605427e4c974cb1b6a86d3d6c774a2c317bc9ad"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-wood-spoon-01.wav",
+        "sha256": "db4bff6480fd6fe00fe1526a876300f4798a0087847d675b87ba11d6d1e0dc32"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-wood-spoon-02.wav",
+        "sha256": "acfbcdcecdc09bc05c435533d35a43626cd26d557e407715111b2577c7120bee"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-wood-spoon-03.wav",
+        "sha256": "a6e953f2a456c9ff54b15503d2cdaaeac677b931aa39ad144baaadfe47c4f2f0"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-wood-spoon-04.wav",
+        "sha256": "41f5c8948791f751fca66ffff3fb105d140f392845edbbbadac8f1a719441707"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-wood-spoon-05.wav",
+        "sha256": "3ade37a90982dd5ba36b9beb8a30b46da3363056981698537024eee501f3a10a"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-wood-spoon-06.wav",
+        "sha256": "6a3df574113460e5a816a3647a8859328d7ef4827f052eac1285299126e473ca"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-wood-spoon-07.wav",
+        "sha256": "ecbb4c9dd8f0400eefefd063c24f3d18d45a649e60ee401af1776a8cacb2d36a"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-wood-spoon-08.wav",
+        "sha256": "ffd6a0c4c294a1d39daf3e6cc5c0e2e4bf70c006b1595c5d2f35ac97551e4bb7"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-drop-wood-spoon-09.wav",
+        "sha256": "f5ce61c46e2735998c6b59f3a63a03c28fc3c6faa66278fb47a853858a2a18e1"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-hit-wood-spoon-01.wav",
+        "sha256": "dac92db04d0a040d1d862638b26f0d0c0218b8fa27a2535728103ef24bcc8858"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-put-metal-spoon-01.wav",
+        "sha256": "16ccf58153c37882c60c10b1d24ea58f3d7ff42fce6bd70adbe00f244a5f253c"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-put-wood-01.wav",
+        "sha256": "9da8fa0e4fda1dff808984d7e4488294b338f9f3fb04b2d4a61866c7fee16a2c"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-put-wood-02.wav",
+        "sha256": "c6b85f559a599a923d6bb60870c6352d6781c7d71a4e1b73954a4497d82bae3a"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-put-wood-03.wav",
+        "sha256": "d9cb75836688928526d5667b81a38c5ac38f822ce92626c973301f01555b7544"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-put-wood-04.wav",
+        "sha256": "1026da527faae5d7a117793555890d7fd2ece2da563db9d28261244ae00de7f4"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-put-wood-05.wav",
+        "sha256": "30ec1f729acb3f3378b49b8e8b15f7c586627da532bfd5429dfcb4eec9e2a671"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-put-wood-06.wav",
+        "sha256": "cb3a74b68a0a69d42af6a4331ee03b0245546df1574a4adf27b5684343645f3b"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-put-wood-07.wav",
+        "sha256": "a28770b1c47196bd7f8aa04b68e5ca0d86ace854ea1283caa19238952c7c105a"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-put-wood-08.wav",
+        "sha256": "ed8e720a60e1e3d377e766a9a42b250568f36d9e20170e844420f5a1e8545225"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-put-wood-09.wav",
+        "sha256": "dfdf80174edc0272a40e4e698cb9d622f76379fb8abc0f78d5e088a34692ea50"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-put-wood-10.wav",
+        "sha256": "bd6bd2412014084455b58ae87baf6fe18670b1c1dd84b040fdae08cd49172331"
+      },
+      {
+        "path": "assets/audio/source/accessory/sfx/wood-bowl-put-wood-11.wav",
+        "sha256": "e3f806bd8c829b7a56b6aa3f058ba6c989d1544e85805e6f3ad1b8c9fca69be3"
+      },
+      {
+        "path": "assets/audio/source/accessory/preview.ogg",
+        "sha256": "e8b3e8e1f7bd62b2f49f79bc6e2d3c6929cfd4a31cb7fb9fdf5533976f73605a"
+      },
+      {
+        "path": "assets/audio/source/accessory/readme.txt",
+        "sha256": "affea851fb75db59b3dca83c997760bc080636b2eb35360ef8c791574176526b"
+      }
+    ]
+  }
+]

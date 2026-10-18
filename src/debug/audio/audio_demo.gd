@@ -41,7 +41,7 @@ func _ready() -> void:
 	daily.add_child(loop_note)
 	var sounds := HBoxContainer.new()
 	column.add_child(sounds)
-	_button(sounds, "叠加低音 + 高音", func() -> void:
+	_button(sounds, "叠加撞击 + 风铃", func() -> void:
 		_audio.play_sfx("demo.low")
 		_audio.play_sfx("demo.high"))
 	_button(sounds, "UI 提示音", func() -> void: _audio.play_ui("demo.ui"))
@@ -54,7 +54,7 @@ func _ready() -> void:
 		var handle := _audio.play_sfx("demo.story")
 		_audio.stop_sound(handle, 1.5))
 	var instructions := Label.new()
-	instructions.text = "取消演出音效时，BGM 应持续；淡出按钮应使音量平滑降低。\n奶茶日常为用户提供音频，其余为程序合成占位音。"
+	instructions.text = "取消演出音效时，BGM 应持续；淡出按钮应使音量平滑降低。\n奶茶日常为用户提供音乐，其余来自本次导入的 CC0 素材。"
 	column.add_child(instructions)
 	_status = Label.new()
 	column.add_child(_status)

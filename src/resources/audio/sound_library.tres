@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="SoundLibrary" load_steps=34 format=3]
+[gd_resource type="Resource" script_class="SoundLibrary" load_steps=46 format=3]
 
 [ext_resource type="Script" path="res://src/resources/audio/sound_library.gd" id="1"]
 [ext_resource type="AudioStream" path="res://assets/audio/ui/hover.wav" id="s1"]
@@ -32,8 +32,19 @@
 [ext_resource type="AudioStream" path="res://assets/audio/story/goblin_03.wav" id="s29"]
 [ext_resource type="AudioStream" path="res://assets/audio/ambience/shop.wav" id="s30"]
 [ext_resource type="AudioStream" path="res://assets/audio/ambience/cave.wav" id="s31"]
-
-[ext_resource type="AudioStream" path="res://assets/audio/music/daily_milk_tea.ogg" id="s32"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/coins_01.wav" id="s32"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/coins_02.wav" id="s33"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/coins_03.wav" id="s34"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/unlock_01.wav" id="s35"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/unlock_02.wav" id="s36"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/bottle_open_01.wav" id="s37"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/bottle_open_02.wav" id="s38"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/stir_01.wav" id="s39"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/stir_02.wav" id="s40"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/stir_03.wav" id="s41"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/page_turn_01.wav" id="s42"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/page_turn_02.wav" id="s43"]
+[ext_resource type="AudioStream" path="res://assets/audio/music/daily_milk_tea.ogg" id="music"]
 
 [resource]
 script = ExtResource("1")
@@ -42,7 +53,7 @@ entries = Array[Dictionary]([
 {"id": "ui.confirm", "label": "确认操作", "loop": false, "streams": [ExtResource("s2")]},
 {"id": "ui.cancel", "label": "取消操作", "loop": false, "streams": [ExtResource("s3")]},
 {"id": "ui.dialogue", "label": "对话文字", "loop": false, "streams": [ExtResource("s4"), ExtResource("s5"), ExtResource("s6")]},
-{"id": "shop.door_bell", "label": "店门双音铃", "loop": false, "streams": [ExtResource("s7")]},
+{"id": "shop.door_bell", "label": "店门风铃", "loop": false, "streams": [ExtResource("s7")]},
 {"id": "shop.order_open", "label": "展开纸质订单", "loop": false, "streams": [ExtResource("s8")]},
 {"id": "shop.tea_pour", "label": "倒入奶茶", "loop": false, "streams": [ExtResource("s9"), ExtResource("s10")]},
 {"id": "shop.sealer", "label": "封口机压合", "loop": false, "streams": [ExtResource("s11")]},
@@ -56,5 +67,10 @@ entries = Array[Dictionary]([
 {"id": "story.goblin", "label": "哥布林含糊嘀咕", "loop": false, "streams": [ExtResource("s27"), ExtResource("s28"), ExtResource("s29")]},
 {"id": "ambience.shop", "label": "奶茶店室内循环", "loop": true, "streams": [ExtResource("s30")]},
 {"id": "ambience.cave", "label": "地下洞穴循环", "loop": true, "streams": [ExtResource("s31")]},
-{"id": "music.daily_milk_tea", "label": "奶茶店日常 BGM", "loop": true, "loop_offset": 68.279, "streams": [ExtResource("s32")]}
+{"id": "shop.coins", "label": "收取钱币", "loop": false, "streams": [ExtResource("s32"), ExtResource("s33"), ExtResource("s34")]},
+{"id": "story.unlock", "label": "锁盒解锁", "loop": false, "streams": [ExtResource("s35"), ExtResource("s36")]},
+{"id": "shop.bottle_open", "label": "打开玻璃瓶", "loop": false, "streams": [ExtResource("s37"), ExtResource("s38")]},
+{"id": "shop.stir", "label": "碗勺搅拌", "loop": false, "streams": [ExtResource("s39"), ExtResource("s40"), ExtResource("s41")]},
+{"id": "story.page_turn", "label": "书页翻动", "loop": false, "streams": [ExtResource("s42"), ExtResource("s43")]},
+{"id": "music.daily_milk_tea", "label": "奶茶店日常 BGM", "loop": true, "loop_offset": 68.279, "streams": [ExtResource("music")]}
 ])

@@ -82,7 +82,7 @@ Dialogue ID、行 ID 非空，`start` 必须指向当前对话的行；`speaker`
 | MainGame | 默认 `player`；`res://src/core/main.tscn` 当前组装奶茶店、ShopPlayer 和各 Director。Day 1 奶茶店由 Day1ShopController、聚落由 Day1ChapterController 注册 `sound_library.tres` 全部音频；每个宿主都有 TitleCard |
 | Cinematic Demo | `door` (1500, 270)、`aisle` (1470, 560)、`counter` (1100, 610)，保存在 cinematic_demo.tscn 的 Positions；宿主注册后才可用 |
 | Cinematic 动态角色 | `customer` 由 Story spawn，资源 `res://src/debug/cinematic/customer.tscn`；复用 PlayerController 的暖色占位形象 |
-| Cinematic 音频 | `cinematic.bell` = AudioDemoTones.tone(880, 0.45)；`cinematic.room` = tone(164.81, 2, true) 循环；`cinematic.rumble` = `res://src/debug/story/strange_knock.tres`；仅 Demo 宿主注册 |
+| Cinematic 音频 | `cinematic.bell` = `res://assets/audio/shop/door_bell.wav`；`cinematic.room` = `res://assets/audio/ambience/shop.wav` 循环；`cinematic.rumble` = 已同步采样三连敲的 `res://src/debug/story/strange_knock.tres`；仅 Demo 宿主注册 |
 | 其他演示与测试 | 如 `demo.*` 音频、`test_position` 不属于正式注册表；只有目标宿主实际配置后才能引用 |
 
 此表是检索起点；每次编排重新核对目标场景实际注册和资源存在性，不把基线当全局常量。更多冲突/取消规则见 [StoryDirector](../systems/story_director.md#并行冲突与取消)，工作流见 [编排规范](story_authoring_workflow.md)。

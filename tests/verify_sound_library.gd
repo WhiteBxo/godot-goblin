@@ -57,7 +57,7 @@ func _run() -> void:
 			audio.stop_sound(handle)
 			audio.stop_sound(handle)
 			_check(audio.get_active_sound_count(owner) == 0, "Stop is idempotent: " + id)
-	_check(total == 32, "32 resources")
+	_check(total == 44, "43 sampled sounds and one preserved music resource")
 	var first := audio.play_sfx("player.step_wood", owner)
 	var second := audio.play_sfx("player.step_wood", owner)
 	_check(first > 0 and second != first and audio.get_active_sound_count(owner) == 2, "Repeated overlap")
@@ -80,7 +80,7 @@ func _run() -> void:
 	var demo := DEMO.instantiate()
 	root.add_child(demo)
 	await process_frame
-	_check(demo._rows.size() == 32, "Demo lists all files")
+	_check(demo._rows.size() == total, "Demo lists all files")
 	demo._filter(1)
 	_check(demo._visible_rows.size() == 7, "UI category contains seven variants")
 	demo.start_sequence()

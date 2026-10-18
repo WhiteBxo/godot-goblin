@@ -7,7 +7,7 @@
 - Dialogue：`res://src/resources/dialogue/cinematic_opening.json`。
 - 主角对应 `player`；暖色顾客对应 `customer`，场景为 `res://src/debug/cinematic/customer.tscn`（已有占位角色，不表示哥布林定稿）。
 - 门口、过道、柜台分别复用宿主已注册的 `door`、`aisle`、`counter`，不改变位置。
-- 房间底音、门铃、地下敲击分别复用 `cinematic.room`、`cinematic.bell`、`cinematic.rumble`，均为现有程序占位声音。
+- 房间底音、门铃、地下敲击分别复用 `cinematic.room`、`cinematic.bell`、`cinematic.rumble`，现分别绑定本次 CC0 成品室内环境、木风铃与木器三连敲；ID 与演出步骤保持不变。
 - 对白由玩家手动推进。验收时每段约阅读 4 秒，总长约 24 秒；不自动定时关闭对白。
 
 ## Beat quiet_shop

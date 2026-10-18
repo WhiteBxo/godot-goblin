@@ -1,7 +1,7 @@
 {
   "version": 1,
   "source": "res://docs/design/gameplay_bridge_demo.md",
-  "source_sha256": "3817bfd46bd6a2b618bf9f1e627fbf1357207c957061fef667343ad5e9a2b121",
+  "source_sha256": "7f2128fde2015ed9c23cd1657bcda7e00c8a79507a02532a593a0f90c569c85c",
   "scene": "res://src/debug/gameplay_bridge/gameplay_bridge_demo.tscn",
   "story": "res://src/resources/story/gameplay_bridge_demo.json",
   "dialogue": "res://src/resources/dialogue/gameplay_bridge_demo.json",

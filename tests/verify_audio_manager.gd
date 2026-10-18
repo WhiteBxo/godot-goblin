@@ -101,7 +101,7 @@ func _test_music() -> void:
 	_audio.stop_bgm()
 	await _delay(0.25)
 	_check(not _audio.get_bgm_state()["playing"], "Immediate stop cancels pending switch")
-	_audio.register_sound("short", AudioDemoTones.tone(220.0, 0.06))
+	_audio.register_sound("short", AudioDemoTones.sample_clip(preload("res://assets/audio/ui/confirm.wav"), 0.06))
 	_audio.play_bgm("short", 0.0)
 	_audio.play_bgm("demo.music_b", 0.15)
 	await _delay(0.4)

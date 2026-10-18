@@ -82,7 +82,7 @@ godot --headless --path . --script res://tests/verify_bgm_loop.gd
 
 测试使用本项目合成的 `tests/fixtures/bgm_intro_loop.ogg`（1.2 秒；0～0.4 秒 220 Hz Intro，后续 440 Hz Loop），观察真实解码播放位置跨文件结尾回跳，覆盖整首循环、两次后半段循环、不循环、重播/切回、淡变、非法输入、资源隔离和原剧情适配接口。素材生成方式见同目录 `bgm_intro_loop.md`。
 
-人工试听：在现有宿主注册该路径、`loop=true`、`loop_offset=0.4`，调用 `play_bgm`。应先听一次低音，再持续高音；重复调用保持高音，切回或显式重播再次出现低音。也可将示例配置放进自己的 `SoundLibrary` 后 F6 运行宿主。现有 `src/debug/audio/audio_demo.tscn` 的 F6 可继续验收淡变、总线和音效交互，其合成 WAV Demo 不用于验收 Ogg 接缝。
+人工试听：在现有宿主注册该路径、`loop=true`、`loop_offset=0.4`，调用 `play_bgm`。应先听一次低音，再持续高音；重复调用保持高音，切回或显式重播再次出现低音。也可将示例配置放进自己的 `SoundLibrary` 后 F6 运行宿主。现有 `src/debug/audio/audio_demo.tscn` 的 F6 可继续验收淡变、总线和音效交互，其 WAV 采样 Demo 不用于验收 Ogg 接缝。
 
 ## StoryDirector 适配
 
@@ -99,11 +99,11 @@ MainGame 注入 `StoryAudioAdapter.new(audio)`，Director 只调用适配层，�
 
 ## 独立试听与验证
 
-编辑器打开 `src/debug/audio/audio_demo.tscn`，F6 运行；无需加载 MainGame、对白或剧情目录。所有音色在 `audio_demo_tones.gd` 中确定性合成，为本项目原创占位资源，没有外部素材依赖。
+编辑器打开 `src/debug/audio/audio_demo.tscn`，F6 运行；无需加载 MainGame、对白或剧情目录。`audio_demo_tones.gd` 保留历史类名与 ID，实际绑定本次导入的 CC0 成品采样；片段通过裁剪与重复适配演示时长，不再生成占位音调。来源与映射见 [音效库](../assets/sound_library.md)。
 
 1. 点「BGM A」，听到淡入；再点「切换 BGM B」，旧曲用 0.6 秒淡出，新曲用 0.6 秒淡入。快速交替点击应以最后一次请求为准。
 2. 点「压低 BGM」「恢复 BGM」「淡出停止」，听到渐变音量，最后状态显示停止。
-3. 点「叠加低音 + 高音」，应同时听见两种音高；重复点击观察池槽上限和自然回收。
+3. 点「叠加撞击 + 风铃」，应同时听见两种音高；重复点击观察池槽上限和自然回收。
 4. BGM 播放时点「演出长音效」，随即点「取消所属音效」：长音立即停止，BGM 持续。
 5. 点「独立音效淡出」：长音在 1.5 秒内衰减；点「UI 提示音」验证独立 UI 路由。
 6. 点「缺失 ID」：状态显示诊断，其他按钮仍可操作。

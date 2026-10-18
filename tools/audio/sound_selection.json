@@ -1,0 +1,636 @@
+[
+  {
+    "id": "ui.hover",
+    "label": "菜单悬停",
+    "note": "木勺短触声裁剪",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "accessory/sfx/wood-bowl-hit-wood-spoon-01.wav",
+            "duration": 0.11
+          }
+        ],
+        "seconds": 0.11
+      }
+    ]
+  },
+  {
+    "id": "ui.confirm",
+    "label": "确认操作",
+    "note": "宝石拾取声",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "rpg_sfx/item_gem_01.ogg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ui.cancel",
+    "label": "取消操作",
+    "note": "锁扣退回声裁剪",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/handcuffs-metal-open-01.wav",
+            "duration": 0.24
+          }
+        ],
+        "seconds": 0.24
+      }
+    ]
+  },
+  {
+    "id": "ui.dialogue",
+    "label": "对话文字",
+    "note": "木器轻触短片，降低响度",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "accessory/sfx/wood-bowl-drop-wood-spoon-02.wav",
+            "duration": 0.1
+          }
+        ],
+        "seconds": 0.1
+      },
+      {
+        "parts": [
+          {
+            "source": "accessory/sfx/wood-bowl-drop-wood-spoon-03.wav",
+            "duration": 0.1
+          }
+        ],
+        "seconds": 0.1
+      },
+      {
+        "parts": [
+          {
+            "source": "accessory/sfx/wood-bowl-drop-wood-spoon-04.wav",
+            "duration": 0.1
+          }
+        ],
+        "seconds": 0.1
+      }
+    ]
+  },
+  {
+    "id": "shop.door_bell",
+    "label": "店门风铃",
+    "note": "木风铃片段，替换原双音合成铃",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/chimes-wood-rattle.wav",
+            "start": 2,
+            "duration": 1.5
+          }
+        ],
+        "seconds": 1.5
+      }
+    ]
+  },
+  {
+    "id": "shop.order_open",
+    "label": "展开纸质订单",
+    "note": "翻页录音",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/book-page-02.wav"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "shop.tea_pour",
+    "label": "倒入奶茶",
+    "note": "倒水与注入小瓶录音，适配饮料",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/water-pour-01.wav"
+          }
+        ]
+      },
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/water-vial-fill-01.wav"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "shop.sealer",
+    "label": "封口机压合",
+    "note": "抽屉压合与压缩空气组合，非真实封口机录音",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/drawer-close-01.wav",
+            "duration": 0.3
+          },
+          {
+            "source": "tinysized/sfx-cc0/compressed-air-spray-01.wav",
+            "at": 0.23,
+            "gain": 0.5
+          }
+        ],
+        "seconds": 0.9
+      }
+    ]
+  },
+  {
+    "id": "player.step_wood",
+    "label": "木地板脚步",
+    "note": "皮靴落脚叠加低声木碗接触，四次独立录音组合",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/boots-leather-step-01.wav",
+            "duration": 0.28,
+            "speed": 1.0
+          },
+          {
+            "source": "accessory/sfx/wood-bowl-put-wood-01.wav",
+            "duration": 0.28,
+            "gain": 0.35
+          }
+        ],
+        "seconds": 0.32
+      },
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/boots-leather-step-01.wav",
+            "duration": 0.28,
+            "speed": 1.025
+          },
+          {
+            "source": "accessory/sfx/wood-bowl-put-wood-02.wav",
+            "duration": 0.28,
+            "gain": 0.35
+          }
+        ],
+        "seconds": 0.32
+      },
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/boots-leather-step-01.wav",
+            "duration": 0.28,
+            "speed": 1.05
+          },
+          {
+            "source": "accessory/sfx/wood-bowl-put-wood-03.wav",
+            "duration": 0.28,
+            "gain": 0.35
+          }
+        ],
+        "seconds": 0.32
+      },
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/boots-leather-step-01.wav",
+            "duration": 0.28,
+            "speed": 1.075
+          },
+          {
+            "source": "accessory/sfx/wood-bowl-put-wood-04.wav",
+            "duration": 0.28,
+            "gain": 0.35
+          }
+        ],
+        "seconds": 0.32
+      }
+    ]
+  },
+  {
+    "id": "player.step_stone",
+    "label": "石地脚步",
+    "note": "土壤落脚叠加石块轻响，适配硬地",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/soil-steps-01.wav",
+            "duration": 0.3,
+            "speed": 1.0
+          },
+          {
+            "source": "rpg_sfx/item_stone_01.ogg",
+            "duration": 0.28,
+            "gain": 0.25
+          }
+        ],
+        "seconds": 0.34
+      },
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/soil-steps-01.wav",
+            "duration": 0.3,
+            "speed": 1.025
+          },
+          {
+            "source": "rpg_sfx/item_stone_02.ogg",
+            "duration": 0.28,
+            "gain": 0.25
+          }
+        ],
+        "seconds": 0.34
+      },
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/soil-steps-01.wav",
+            "duration": 0.3,
+            "speed": 1.05
+          },
+          {
+            "source": "rpg_sfx/item_stone_03.ogg",
+            "duration": 0.28,
+            "gain": 0.25
+          }
+        ],
+        "seconds": 0.34
+      },
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/soil-steps-01.wav",
+            "duration": 0.3,
+            "speed": 1.075
+          },
+          {
+            "source": "rpg_sfx/item_stone_04.ogg",
+            "duration": 0.28,
+            "gain": 0.25
+          }
+        ],
+        "seconds": 0.34
+      }
+    ]
+  },
+  {
+    "id": "story.knock",
+    "label": "门后神秘三连敲",
+    "note": "木勺敲木碗，三次编排并附短反射",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "accessory/sfx/wood-bowl-hit-wood-spoon-01.wav",
+            "speed": 1,
+            "times": [
+              0,
+              0.3,
+              0.65
+            ]
+          }
+        ],
+        "seconds": 1.2,
+        "echo": true
+      },
+      {
+        "parts": [
+          {
+            "source": "accessory/sfx/wood-bowl-hit-wood-spoon-01.wav",
+            "speed": 0.92,
+            "times": [
+              0,
+              0.3,
+              0.65
+            ]
+          }
+        ],
+        "seconds": 1.2,
+        "echo": true
+      }
+    ]
+  },
+  {
+    "id": "story.impact",
+    "label": "剧情冲击",
+    "note": "石块撞击降低音高并附反射",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "rpg_sfx/stones_03.ogg",
+            "speed": 0.8
+          }
+        ],
+        "seconds": 1.6,
+        "echo": true
+      }
+    ]
+  },
+  {
+    "id": "ui.failure",
+    "label": "交互失败",
+    "note": "锁扣声降低音高",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/handcuffs-metal-lock-01.wav",
+            "duration": 0.25,
+            "speed": 0.85
+          }
+        ],
+        "seconds": 0.3
+      }
+    ]
+  },
+  {
+    "id": "ambience.drip",
+    "label": "远处滴水",
+    "note": "水滴录音与短反射",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/water-drop-01.wav",
+            "gain": 0.7
+          }
+        ],
+        "seconds": 0.8,
+        "echo": true
+      },
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/water-drop-02.wav",
+            "gain": 0.7
+          }
+        ],
+        "seconds": 0.8,
+        "echo": true
+      }
+    ]
+  },
+  {
+    "id": "ambience.rock_scrape",
+    "label": "岩石摩擦",
+    "note": "石块移动声，非金属刮擦",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "rpg_sfx/stones_02.ogg",
+            "speed": 0.85
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "story.goblin",
+    "label": "哥布林含糊嘀咕",
+    "note": "生物短叫声降低音高，无语言含义",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "rpg_sfx/creature_misc_03.ogg",
+            "speed": 0.8
+          }
+        ]
+      },
+      {
+        "parts": [
+          {
+            "source": "rpg_sfx/creature_misc_04.ogg",
+            "speed": 0.8
+          }
+        ]
+      },
+      {
+        "parts": [
+          {
+            "source": "rpg_sfx/creature_misc_05.ogg",
+            "speed": 0.8
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ambience.shop",
+    "label": "奶茶店室内循环",
+    "note": "轻气流底层与木碗、玻璃器物录音组合；场景设计环境音",
+    "loop": true,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/compressed-air-spray-02.wav",
+            "bed": true,
+            "gain": 0.15
+          },
+          {
+            "source": "accessory/sfx/wood-bowl-put-wood-01.wav",
+            "times": [
+              1.5,
+              7
+            ],
+            "gain": 0.05
+          },
+          {
+            "source": "accessory/sfx/vials-glass-rattle-04.wav",
+            "times": [
+              4,
+              10
+            ],
+            "gain": 0.03
+          }
+        ],
+        "seconds": 12
+      }
+    ]
+  },
+  {
+    "id": "ambience.cave",
+    "label": "地下洞穴循环",
+    "note": "低速气流底层与远水滴组合；场景设计环境音",
+    "loop": true,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/compressed-air-spray-02.wav",
+            "bed": true,
+            "speed": 0.65,
+            "gain": 0.15
+          },
+          {
+            "source": "tinysized/sfx-cc0/water-drop-03.wav",
+            "times": [
+              1.2,
+              5,
+              9.4
+            ],
+            "gain": 0.05
+          }
+        ],
+        "seconds": 12,
+        "echo": true
+      }
+    ]
+  },
+  {
+    "id": "shop.coins",
+    "label": "收取钱币",
+    "note": "钱币袋摇动，供交易使用",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "accessory/sfx/coins-shake-01.wav"
+          }
+        ]
+      },
+      {
+        "parts": [
+          {
+            "source": "accessory/sfx/coins-shake-02.wav"
+          }
+        ]
+      },
+      {
+        "parts": [
+          {
+            "source": "accessory/sfx/coins-shake-03.wav"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "story.unlock",
+    "label": "锁盒解锁",
+    "note": "锁盒实际解锁录音",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "accessory/sfx/keyhole-lockbox-unlock-01.wav"
+          }
+        ]
+      },
+      {
+        "parts": [
+          {
+            "source": "accessory/sfx/keyhole-lockbox-unlock-02.wav"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "shop.bottle_open",
+    "label": "打开玻璃瓶",
+    "note": "圆玻璃瓶拔塞",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "accessory/sfx/vial-glass-round-uncork-01.wav"
+          }
+        ]
+      },
+      {
+        "parts": [
+          {
+            "source": "accessory/sfx/vial-glass-round-uncork-02.wav"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "shop.stir",
+    "label": "碗勺搅拌",
+    "note": "木碗与木勺录音，适配饮料准备",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/wood-bowl-spoon-01.wav"
+          }
+        ]
+      },
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/wood-bowl-spoon-02.wav"
+          }
+        ]
+      },
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/wood-bowl-spoon-03.wav"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "story.page_turn",
+    "label": "书页翻动",
+    "note": "两种原始翻页声",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/book-page-01.wav"
+          }
+        ]
+      },
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/book-page-02.wav"
+          }
+        ]
+      }
+    ]
+  }
+]

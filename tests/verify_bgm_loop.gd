@@ -112,7 +112,7 @@ func _run() -> void:
 	for offset: Variant in [-1.0, source.get_length(), source.get_length() + 1.0, NAN, INF, "0.4", true]:
 		_check(_audio.register_sound("intro", source, {"loop_offset": offset}) != OK and not _audio.last_error.is_empty(), "Invalid offset rejected safely: %s" % offset)
 	_check(_audio.register_sound("bad_bool", source, {"loop": "true"}) != OK, "Invalid loop type rejected")
-	var wav := AudioDemoTones.tone(220.0, 1.0)
+	var wav := AudioDemoTones.sample_clip(preload("res://assets/audio/ui/confirm.wav"), 1.0)
 	_check(_audio.register_sound("unsupported", wav, {"loop_offset": 0.4}) != OK and _audio.last_error.contains("AudioStreamOggVorbis"), "Unsupported format has clear diagnostic")
 	library.entries = [
 		{"id": "missing", "path": "res://tests/fixtures/missing.ogg", "loop": true},

@@ -18,8 +18,8 @@ func _ready() -> void:
 	for marker: Node in $Positions.get_children():
 		actors.register_position(StringName(marker.name), marker as Marker2D)
 	var audio := _game.get_audio_manager()
-	audio.register_sound("cinematic.bell", AudioDemoTones.tone(880.0, 0.45))
-	audio.register_sound("cinematic.room", AudioDemoTones.tone(164.81, 2.0, true))
+	audio.register_sound("cinematic.bell", preload("res://assets/audio/shop/door_bell.wav"))
+	audio.register_sound("cinematic.room", preload("res://assets/audio/ambience/shop.wav"))
 	audio.register_sound("cinematic.rumble", preload("res://src/debug/story/strange_knock.tres"))
 	var error := _game.get_dialogue_manager().load_dialogues(dialogue_file)
 	if error == OK:

@@ -3,7 +3,7 @@
 编排约定：宿主为 `src/debug/gameplay_bridge/gameplay_bridge_demo.tscn`。
 仅 Debug 运行时自动请求一次 `bridge.intro`；不重置已有 GameState。
 此稿是技术验收内容，不替代第一天正式剧情。音乐使用已有 `AudioDemoTones`
-注册的原创合成占位音 `demo.music_a`；成功事件结束后持续，最终不主动停止。
+注册的 CC0 室内环境采样循环 `demo.music_a`；成功事件结束后持续，最终不主动停止。
 
 ## Beat instruction
 

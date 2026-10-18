@@ -4,247 +4,891 @@
     "path": "assets/audio/ui/hover.wav",
     "loop": false,
     "seconds": 0.11,
-    "peak_db": -12.942,
-    "sha256": "7ccd2389acf8f12ea6eec4e008a36266ee3c3261cc4b55394b6b148527b25b2e"
+    "sha256": "86396f391fc5bbd70168def0094d4845f1c0684788b7d8a08eb92785ee89b9f4",
+    "sources": [
+      "assets/audio/source/accessory/sfx/wood-bowl-hit-wood-spoon-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "accessory/sfx/wood-bowl-hit-wood-spoon-01.wav",
+          "duration": 0.11
+        }
+      ],
+      "seconds": 0.11
+    }
   },
   {
     "id": "ui.confirm",
     "path": "assets/audio/ui/confirm.wav",
     "loop": false,
-    "seconds": 0.289955,
-    "peak_db": -13.025,
-    "sha256": "e8373c224f30f80990d2fad2edf93dbd6b93e743bc2db39f4369d830302e87cb"
+    "seconds": 0.213469,
+    "sha256": "ed4dfa0762aef29276f5a9e091107e6109b4066b6de0afea1e6242385bce2db4",
+    "sources": [
+      "assets/audio/source/rpg_sfx/item_gem_01.ogg"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "rpg_sfx/item_gem_01.ogg"
+        }
+      ]
+    }
   },
   {
     "id": "ui.cancel",
     "path": "assets/audio/ui/cancel.wav",
     "loop": false,
-    "seconds": 0.289909,
-    "peak_db": -13.047,
-    "sha256": "df05ec263e183f1552052c07a45db8c764f2303ae49671c84fc211d301956fcc"
+    "seconds": 0.153651,
+    "sha256": "8822737152ba6f43e94cd58ad893073373a42f86d82592295597c2b5e3dfde72",
+    "sources": [
+      "assets/audio/source/tinysized/sfx-cc0/handcuffs-metal-open-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/handcuffs-metal-open-01.wav",
+          "duration": 0.24
+        }
+      ],
+      "seconds": 0.24
+    }
   },
   {
     "id": "ui.dialogue.01",
     "path": "assets/audio/ui/dialogue_01.wav",
     "loop": false,
-    "seconds": 0.11,
-    "peak_db": -17.702,
-    "sha256": "5e8fc169941d0b5247536b8d53d4616463a6db5fac82a841d8368ec2affc7943"
+    "seconds": 0.077891,
+    "sha256": "18a12dda0284717ac4acaffc4ad0cac240d1dda196c2757e253325fd75f12918",
+    "sources": [
+      "assets/audio/source/accessory/sfx/wood-bowl-drop-wood-spoon-02.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "accessory/sfx/wood-bowl-drop-wood-spoon-02.wav",
+          "duration": 0.1
+        }
+      ],
+      "seconds": 0.1
+    }
   },
   {
     "id": "ui.dialogue.02",
     "path": "assets/audio/ui/dialogue_02.wav",
     "loop": false,
-    "seconds": 0.11,
-    "peak_db": -18.028,
-    "sha256": "983e00838de175ab3c9f931615f9d8db6f61f1f1d39ff324e9074fb81a9cf9d3"
+    "seconds": 0.1,
+    "sha256": "64c2315d6879670817f9b72ee25d5eb355a65f86e19c2fa05ddd6e8bd6612cef",
+    "sources": [
+      "assets/audio/source/accessory/sfx/wood-bowl-drop-wood-spoon-03.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "accessory/sfx/wood-bowl-drop-wood-spoon-03.wav",
+          "duration": 0.1
+        }
+      ],
+      "seconds": 0.1
+    }
   },
   {
     "id": "ui.dialogue.03",
     "path": "assets/audio/ui/dialogue_03.wav",
     "loop": false,
-    "seconds": 0.11,
-    "peak_db": -17.885,
-    "sha256": "86ca69c82e7f95727c07ad0046a57b7b0482f7af026eaae47752017e6befac97"
+    "seconds": 0.095624,
+    "sha256": "e14fefaabebee911bba9563b183519e3a907d91f0239fec2f057419d232b0f75",
+    "sources": [
+      "assets/audio/source/accessory/sfx/wood-bowl-drop-wood-spoon-04.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "accessory/sfx/wood-bowl-drop-wood-spoon-04.wav",
+          "duration": 0.1
+        }
+      ],
+      "seconds": 0.1
+    }
   },
   {
     "id": "shop.door_bell",
     "path": "assets/audio/shop/door_bell.wav",
     "loop": false,
-    "seconds": 1.5978,
-    "peak_db": -14.714,
-    "sha256": "2bdac7827e4f7c1b26506262ce18aeb57c4ae78d69381e7d4ad14da6037759e1"
+    "seconds": 1.413855,
+    "sha256": "a562176cb96a2571a7e031190c747fbcefa2cb700027a0952552317de48182a6",
+    "sources": [
+      "assets/audio/source/tinysized/sfx-cc0/chimes-wood-rattle.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/chimes-wood-rattle.wav",
+          "start": 2,
+          "duration": 1.5
+        }
+      ],
+      "seconds": 1.5
+    }
   },
   {
     "id": "shop.order_open",
     "path": "assets/audio/shop/order_open.wav",
     "loop": false,
-    "seconds": 0.45,
-    "peak_db": -10.13,
-    "sha256": "ed0883de5095131a1f09fcf8eb0fe728808bfdfe88336062991ec10601d13b54"
+    "seconds": 0.643356,
+    "sha256": "879ebc9bbb819cdf2cb69a7a63268e1b59669c5eddbe9dd49c0de31a869d0586",
+    "sources": [
+      "assets/audio/source/tinysized/sfx-cc0/book-page-02.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/book-page-02.wav"
+        }
+      ]
+    }
   },
   {
     "id": "shop.tea_pour.01",
     "path": "assets/audio/shop/tea_pour_01.wav",
     "loop": false,
-    "seconds": 1.426848,
-    "peak_db": -10.992,
-    "sha256": "662a82568ec8a2e915be2fd2078294ec1688a3cb47848d6b9e62eccf58a21fb0"
+    "seconds": 1.177052,
+    "sha256": "a3ce500e5f916b8d20307a9afd58e8d1882fd3996b536e1e54bf04679dda67b5",
+    "sources": [
+      "assets/audio/source/tinysized/sfx-cc0/water-pour-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/water-pour-01.wav"
+        }
+      ]
+    }
   },
   {
     "id": "shop.tea_pour.02",
     "path": "assets/audio/shop/tea_pour_02.wav",
     "loop": false,
-    "seconds": 1.420726,
-    "peak_db": -10.921,
-    "sha256": "affd935a4132b6c0662cd3ae068111dc886f7669ef4cf1b7e1c1b44a07af8845"
+    "seconds": 1.983447,
+    "sha256": "fce79a20e0bbbf0bc42ca0334462f4d197639fc0715830a8969007b482c2edf3",
+    "sources": [
+      "assets/audio/source/tinysized/sfx-cc0/water-vial-fill-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/water-vial-fill-01.wav"
+        }
+      ]
+    }
   },
   {
     "id": "shop.sealer",
     "path": "assets/audio/shop/sealer.wav",
     "loop": false,
-    "seconds": 1.546871,
-    "peak_db": -11.216,
-    "sha256": "deccb10fa466b316dbfecec67d23e9b1d9afce6b87ed15f3c75ed6702babccd5"
+    "seconds": 0.699433,
+    "sha256": "60d228dcf60f3ebee2b132ea94d3cdc1a8f18959396b7e090e883c176fbeee06",
+    "sources": [
+      "assets/audio/source/tinysized/sfx-cc0/compressed-air-spray-01.wav",
+      "assets/audio/source/tinysized/sfx-cc0/drawer-close-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/drawer-close-01.wav",
+          "duration": 0.3
+        },
+        {
+          "source": "tinysized/sfx-cc0/compressed-air-spray-01.wav",
+          "at": 0.23,
+          "gain": 0.5
+        }
+      ],
+      "seconds": 0.9
+    }
   },
   {
     "id": "player.step_wood.01",
     "path": "assets/audio/player/step_wood_01.wav",
     "loop": false,
-    "seconds": 0.34,
-    "peak_db": -12.598,
-    "sha256": "4f0ebeb27322d6a86c0eef9b7e629e7e6e241bb2358f78d23bd22bed853e768b"
+    "seconds": 0.209501,
+    "sha256": "f567fff5616419007e5f1765b255e0ccddca5b00f203224b9232aa3e2c845cf7",
+    "sources": [
+      "assets/audio/source/accessory/sfx/wood-bowl-put-wood-01.wav",
+      "assets/audio/source/tinysized/sfx-cc0/boots-leather-step-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/boots-leather-step-01.wav",
+          "duration": 0.28,
+          "speed": 1.0
+        },
+        {
+          "source": "accessory/sfx/wood-bowl-put-wood-01.wav",
+          "duration": 0.28,
+          "gain": 0.35
+        }
+      ],
+      "seconds": 0.32
+    }
   },
   {
     "id": "player.step_wood.02",
     "path": "assets/audio/player/step_wood_02.wav",
     "loop": false,
-    "seconds": 0.34,
-    "peak_db": -12.997,
-    "sha256": "6678c2604e2f23672c1870849554b9a3bff8740c305b16e4ad7aca8d0fa6e340"
+    "seconds": 0.216168,
+    "sha256": "be96234a50773b03db509d70f184b8f752fab29e8282e4bfe7ebe8c84bdb835c",
+    "sources": [
+      "assets/audio/source/accessory/sfx/wood-bowl-put-wood-02.wav",
+      "assets/audio/source/tinysized/sfx-cc0/boots-leather-step-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/boots-leather-step-01.wav",
+          "duration": 0.28,
+          "speed": 1.025
+        },
+        {
+          "source": "accessory/sfx/wood-bowl-put-wood-02.wav",
+          "duration": 0.28,
+          "gain": 0.35
+        }
+      ],
+      "seconds": 0.32
+    }
   },
   {
     "id": "player.step_wood.03",
     "path": "assets/audio/player/step_wood_03.wav",
     "loop": false,
-    "seconds": 0.34,
-    "peak_db": -13.575,
-    "sha256": "ff1f4910b9df6b4b99e5fd86f88516a7bdc6c3aac101aae4c66367a0026b0248"
+    "seconds": 0.281633,
+    "sha256": "236464d62e90dbb031e653d8e78485d5f957aa0ff9161b5731b14bfd16cabbd6",
+    "sources": [
+      "assets/audio/source/accessory/sfx/wood-bowl-put-wood-03.wav",
+      "assets/audio/source/tinysized/sfx-cc0/boots-leather-step-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/boots-leather-step-01.wav",
+          "duration": 0.28,
+          "speed": 1.05
+        },
+        {
+          "source": "accessory/sfx/wood-bowl-put-wood-03.wav",
+          "duration": 0.28,
+          "gain": 0.35
+        }
+      ],
+      "seconds": 0.32
+    }
   },
   {
     "id": "player.step_wood.04",
     "path": "assets/audio/player/step_wood_04.wav",
     "loop": false,
-    "seconds": 0.34,
-    "peak_db": -12.541,
-    "sha256": "13088bf83357dae70031609608c21fdce4f769a7a44ef51f10288ba4d4d695a4"
+    "seconds": 0.265397,
+    "sha256": "08d572e9d4d880df2397bc22351d4e99d03c77278683c32ae43513e985ecac76",
+    "sources": [
+      "assets/audio/source/accessory/sfx/wood-bowl-put-wood-04.wav",
+      "assets/audio/source/tinysized/sfx-cc0/boots-leather-step-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/boots-leather-step-01.wav",
+          "duration": 0.28,
+          "speed": 1.075
+        },
+        {
+          "source": "accessory/sfx/wood-bowl-put-wood-04.wav",
+          "duration": 0.28,
+          "gain": 0.35
+        }
+      ],
+      "seconds": 0.32
+    }
   },
   {
     "id": "player.step_stone.01",
     "path": "assets/audio/player/step_stone_01.wav",
     "loop": false,
-    "seconds": 0.34,
-    "peak_db": -12.44,
-    "sha256": "71fc6c6b75d74a0d25273d1355097e414148f0fa14705e7672ce5ebcc7a8573f"
+    "seconds": 0.186916,
+    "sha256": "37a7f1db310e542c701f7444fac0e2b2c17bb5ddce0d782068ad9f82ed5cbccb",
+    "sources": [
+      "assets/audio/source/rpg_sfx/item_stone_01.ogg",
+      "assets/audio/source/tinysized/sfx-cc0/soil-steps-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/soil-steps-01.wav",
+          "duration": 0.3,
+          "speed": 1.0
+        },
+        {
+          "source": "rpg_sfx/item_stone_01.ogg",
+          "duration": 0.28,
+          "gain": 0.25
+        }
+      ],
+      "seconds": 0.34
+    }
   },
   {
     "id": "player.step_stone.02",
     "path": "assets/audio/player/step_stone_02.wav",
     "loop": false,
-    "seconds": 0.34,
-    "peak_db": -12.359,
-    "sha256": "84d07f805c1cf9e6d54e2013d5849b1571d21de7043c628a4274a8a889ffdf53"
+    "seconds": 0.171995,
+    "sha256": "cebb4cc8850193102c830a12349b2f5afe294c519ad38339f6f07b860f30dbe7",
+    "sources": [
+      "assets/audio/source/rpg_sfx/item_stone_02.ogg",
+      "assets/audio/source/tinysized/sfx-cc0/soil-steps-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/soil-steps-01.wav",
+          "duration": 0.3,
+          "speed": 1.025
+        },
+        {
+          "source": "rpg_sfx/item_stone_02.ogg",
+          "duration": 0.28,
+          "gain": 0.25
+        }
+      ],
+      "seconds": 0.34
+    }
   },
   {
     "id": "player.step_stone.03",
     "path": "assets/audio/player/step_stone_03.wav",
     "loop": false,
-    "seconds": 0.34,
-    "peak_db": -13.001,
-    "sha256": "0520ccb2c50749c8bcbb754bbbcefa90050021119dbe65069dd94636211e08a1"
+    "seconds": 0.313968,
+    "sha256": "6c229e3e8c06a03559fe94f64d1ee51bda30406f77f592a84b6407111d1d0955",
+    "sources": [
+      "assets/audio/source/rpg_sfx/item_stone_03.ogg",
+      "assets/audio/source/tinysized/sfx-cc0/soil-steps-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/soil-steps-01.wav",
+          "duration": 0.3,
+          "speed": 1.05
+        },
+        {
+          "source": "rpg_sfx/item_stone_03.ogg",
+          "duration": 0.28,
+          "gain": 0.25
+        }
+      ],
+      "seconds": 0.34
+    }
   },
   {
     "id": "player.step_stone.04",
     "path": "assets/audio/player/step_stone_04.wav",
     "loop": false,
-    "seconds": 0.34,
-    "peak_db": -12.482,
-    "sha256": "7c02da83c859c9be626e5fc7e4c7270b18e5d6fd6b58fbf5b355416afb00ab31"
+    "seconds": 0.253537,
+    "sha256": "0ccef370df5f4447c60fd0768ae7f89e23401120df4ac730e012aaab7258490a",
+    "sources": [
+      "assets/audio/source/rpg_sfx/item_stone_04.ogg",
+      "assets/audio/source/tinysized/sfx-cc0/soil-steps-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/soil-steps-01.wav",
+          "duration": 0.3,
+          "speed": 1.075
+        },
+        {
+          "source": "rpg_sfx/item_stone_04.ogg",
+          "duration": 0.28,
+          "gain": 0.25
+        }
+      ],
+      "seconds": 0.34
+    }
   },
   {
     "id": "story.knock.01",
     "path": "assets/audio/story/knock_01.wav",
     "loop": false,
-    "seconds": 1.283175,
-    "peak_db": -13.124,
-    "sha256": "558a3bdba0455ca389837ac59470d24cad58cfb20487f8ba2595114426cdb4f7"
+    "seconds": 0.913537,
+    "sha256": "87197efe72f556ea77440b76d736e74ea38f300d0ad71def8d254270c84f6670",
+    "sources": [
+      "assets/audio/source/accessory/sfx/wood-bowl-hit-wood-spoon-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "accessory/sfx/wood-bowl-hit-wood-spoon-01.wav",
+          "speed": 1,
+          "times": [
+            0,
+            0.3,
+            0.65
+          ]
+        }
+      ],
+      "seconds": 1.2,
+      "echo": true
+    }
   },
   {
     "id": "story.knock.02",
     "path": "assets/audio/story/knock_02.wav",
     "loop": false,
-    "seconds": 1.274308,
-    "peak_db": -13.054,
-    "sha256": "1ae989f7c102d37e10be5aa8501f5f238d7830bccba2dfeb786fc79ba10fcf07"
+    "seconds": 0.920431,
+    "sha256": "349d81d0cdf15a62d84336aef0c6c82300fb76c1e24a18ee258f53fb34f7644c",
+    "sources": [
+      "assets/audio/source/accessory/sfx/wood-bowl-hit-wood-spoon-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "accessory/sfx/wood-bowl-hit-wood-spoon-01.wav",
+          "speed": 0.92,
+          "times": [
+            0,
+            0.3,
+            0.65
+          ]
+        }
+      ],
+      "seconds": 1.2,
+      "echo": true
+    }
   },
   {
     "id": "story.impact",
     "path": "assets/audio/story/impact.wav",
     "loop": false,
-    "seconds": 1.3878,
-    "peak_db": -13.393,
-    "sha256": "1bd76452f7eb42e70ee7670b91873d4d9a00a7f5befca2e4eec5824230c28484"
+    "seconds": 0.923832,
+    "sha256": "91d0d298a6322698e46f151cdab4541a6857ecb9febc48305af9d3e4d8f7ff33",
+    "sources": [
+      "assets/audio/source/rpg_sfx/stones_03.ogg"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "rpg_sfx/stones_03.ogg",
+          "speed": 0.8
+        }
+      ],
+      "seconds": 1.6,
+      "echo": true
+    }
   },
   {
     "id": "ui.failure",
     "path": "assets/audio/ui/failure.wav",
     "loop": false,
-    "seconds": 0.293492,
-    "peak_db": -13.27,
-    "sha256": "80b37e3a6feef7702582aabe958765c32bb92aa86936c541503cde3312e07796"
+    "seconds": 0.180295,
+    "sha256": "790b8521d09658fd07b1294b74f2b0d3d53f7140bf24fdac187f3f29132fc40a",
+    "sources": [
+      "assets/audio/source/tinysized/sfx-cc0/handcuffs-metal-lock-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/handcuffs-metal-lock-01.wav",
+          "duration": 0.25,
+          "speed": 0.85
+        }
+      ],
+      "seconds": 0.3
+    }
   },
   {
     "id": "ambience.drip.01",
     "path": "assets/audio/ambience/drip_01.wav",
     "loop": false,
-    "seconds": 0.812721,
-    "peak_db": -11.162,
-    "sha256": "f8a63cd43e9ec8ec2b2cfa606fd6e16f775b16903dd54aa50eb20931a999b7ba"
+    "seconds": 0.283741,
+    "sha256": "19991e646e78803821beaeb37ff0330822ee1ee5273d88d615af9c1d98faf739",
+    "sources": [
+      "assets/audio/source/tinysized/sfx-cc0/water-drop-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/water-drop-01.wav",
+          "gain": 0.7
+        }
+      ],
+      "seconds": 0.8,
+      "echo": true
+    }
   },
   {
     "id": "ambience.drip.02",
     "path": "assets/audio/ambience/drip_02.wav",
     "loop": false,
-    "seconds": 0.812925,
-    "peak_db": -11.381,
-    "sha256": "63b487a1ae6cb7700ed54ecc75e9f9890bb5f2e2cedf5aee04d09227fb60015d"
+    "seconds": 0.270476,
+    "sha256": "f88df1381ed2f7f922f8e5f57e0c65113c29500104b1e2b6ac14163a511f5be0",
+    "sources": [
+      "assets/audio/source/tinysized/sfx-cc0/water-drop-02.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/water-drop-02.wav",
+          "gain": 0.7
+        }
+      ],
+      "seconds": 0.8,
+      "echo": true
+    }
   },
   {
     "id": "ambience.rock_scrape",
     "path": "assets/audio/ambience/rock_scrape.wav",
     "loop": false,
-    "seconds": 1.1,
-    "peak_db": -9.809,
-    "sha256": "be28f85d6ecf659ddc7cc97287b450c41330b1be5f0e5c0b9d5756c26f3e9cd8"
+    "seconds": 0.650181,
+    "sha256": "60eb8e0f2889378cf9fe88373b272b1cfaec8bc41e6fd8b3ed4af1c8d3205f8e",
+    "sources": [
+      "assets/audio/source/rpg_sfx/stones_02.ogg"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "rpg_sfx/stones_02.ogg",
+          "speed": 0.85
+        }
+      ]
+    }
   },
   {
     "id": "story.goblin.01",
     "path": "assets/audio/story/goblin_01.wav",
     "loop": false,
-    "seconds": 0.95,
-    "peak_db": -10.293,
-    "sha256": "d87947693aa06b45a9ce1c38dc6ac1916683e7368b0769436d03b74fb2cfee00"
+    "seconds": 0.506236,
+    "sha256": "07f72d38dd9b2475192e41bcec13950ecd6b196d01980d7bcff4ea08de876be5",
+    "sources": [
+      "assets/audio/source/rpg_sfx/creature_misc_03.ogg"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "rpg_sfx/creature_misc_03.ogg",
+          "speed": 0.8
+        }
+      ]
+    }
   },
   {
     "id": "story.goblin.02",
     "path": "assets/audio/story/goblin_02.wav",
     "loop": false,
-    "seconds": 0.95,
-    "peak_db": -10.328,
-    "sha256": "7e297dc10a1ec4597c5e6619ada4748788f482176fd7174133d3c5a5eb526661"
+    "seconds": 0.32,
+    "sha256": "5f36f02d93da689bab87693f6ff96170f1c151c7b09f0934eb37ee64dc7a3db2",
+    "sources": [
+      "assets/audio/source/rpg_sfx/creature_misc_04.ogg"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "rpg_sfx/creature_misc_04.ogg",
+          "speed": 0.8
+        }
+      ]
+    }
   },
   {
     "id": "story.goblin.03",
     "path": "assets/audio/story/goblin_03.wav",
     "loop": false,
-    "seconds": 0.95,
-    "peak_db": -10.367,
-    "sha256": "e2d6912de87fcff7f7084db0e9a7537354a88a193d0feef95904b36c82baa1e3"
+    "seconds": 0.472449,
+    "sha256": "34a8f6e015b68afc10edf4fd9c3e2e9c2a589bf14dddf5c0fd6a0cee69b30f21",
+    "sources": [
+      "assets/audio/source/rpg_sfx/creature_misc_05.ogg"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "rpg_sfx/creature_misc_05.ogg",
+          "speed": 0.8
+        }
+      ]
+    }
   },
   {
     "id": "ambience.shop",
     "path": "assets/audio/ambience/shop.wav",
     "loop": true,
     "seconds": 12.0,
-    "peak_db": -19.378,
-    "sha256": "417c6ef156e150964a8059ae3ea003c845140a49d986105f291a3d9847c9d9a8"
+    "sha256": "b9072b573a1563361d8ee531c969206da65e3d773a87494d612e2948d3b261ae",
+    "sources": [
+      "assets/audio/source/accessory/sfx/vials-glass-rattle-04.wav",
+      "assets/audio/source/accessory/sfx/wood-bowl-put-wood-01.wav",
+      "assets/audio/source/tinysized/sfx-cc0/compressed-air-spray-02.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/compressed-air-spray-02.wav",
+          "bed": true,
+          "gain": 0.15
+        },
+        {
+          "source": "accessory/sfx/wood-bowl-put-wood-01.wav",
+          "times": [
+            1.5,
+            7
+          ],
+          "gain": 0.05
+        },
+        {
+          "source": "accessory/sfx/vials-glass-rattle-04.wav",
+          "times": [
+            4,
+            10
+          ],
+          "gain": 0.03
+        }
+      ],
+      "seconds": 12
+    }
   },
   {
     "id": "ambience.cave",
     "path": "assets/audio/ambience/cave.wav",
     "loop": true,
     "seconds": 12.0,
-    "peak_db": -19.667,
-    "sha256": "fa975a61422d437ad3a4c18a3f081f9755ced7f699c81acaaff0a0c0bbb9228f"
+    "sha256": "87b9168d06fc4a576b03d67204b2e62b60a15fe44050e40625d4b3045a3dd047",
+    "sources": [
+      "assets/audio/source/tinysized/sfx-cc0/compressed-air-spray-02.wav",
+      "assets/audio/source/tinysized/sfx-cc0/water-drop-03.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/compressed-air-spray-02.wav",
+          "bed": true,
+          "speed": 0.65,
+          "gain": 0.15
+        },
+        {
+          "source": "tinysized/sfx-cc0/water-drop-03.wav",
+          "times": [
+            1.2,
+            5,
+            9.4
+          ],
+          "gain": 0.05
+        }
+      ],
+      "seconds": 12,
+      "echo": true
+    }
+  },
+  {
+    "id": "shop.coins.01",
+    "path": "assets/audio/shop/coins_01.wav",
+    "loop": false,
+    "seconds": 0.829751,
+    "sha256": "ad329a9ce550eb7c664b654b2aba484fb22f862dd95651272388a2d784a8f159",
+    "sources": [
+      "assets/audio/source/accessory/sfx/coins-shake-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "accessory/sfx/coins-shake-01.wav"
+        }
+      ]
+    }
+  },
+  {
+    "id": "shop.coins.02",
+    "path": "assets/audio/shop/coins_02.wav",
+    "loop": false,
+    "seconds": 0.742063,
+    "sha256": "47ea0325c71c2c2a7571a0c47c295f7424fea1e547940dec2e5b8bd88bcea415",
+    "sources": [
+      "assets/audio/source/accessory/sfx/coins-shake-02.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "accessory/sfx/coins-shake-02.wav"
+        }
+      ]
+    }
+  },
+  {
+    "id": "shop.coins.03",
+    "path": "assets/audio/shop/coins_03.wav",
+    "loop": false,
+    "seconds": 1.072449,
+    "sha256": "5d19a00fdb93facd537c2db45bae5548933d0c0c9e8464561e764b47751b5cc1",
+    "sources": [
+      "assets/audio/source/accessory/sfx/coins-shake-03.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "accessory/sfx/coins-shake-03.wav"
+        }
+      ]
+    }
+  },
+  {
+    "id": "story.unlock.01",
+    "path": "assets/audio/story/unlock_01.wav",
+    "loop": false,
+    "seconds": 0.325374,
+    "sha256": "e9ada8b2472ce0ef5bca3becc0f0ccf6182be1f88c2583cbc4a715e74f8b300c",
+    "sources": [
+      "assets/audio/source/accessory/sfx/keyhole-lockbox-unlock-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "accessory/sfx/keyhole-lockbox-unlock-01.wav"
+        }
+      ]
+    }
+  },
+  {
+    "id": "story.unlock.02",
+    "path": "assets/audio/story/unlock_02.wav",
+    "loop": false,
+    "seconds": 1.319796,
+    "sha256": "0b7cd8d59334590093f21cfe5d39f283a3891416b89d1740a9db4214b8d67602",
+    "sources": [
+      "assets/audio/source/accessory/sfx/keyhole-lockbox-unlock-02.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "accessory/sfx/keyhole-lockbox-unlock-02.wav"
+        }
+      ]
+    }
+  },
+  {
+    "id": "shop.bottle_open.01",
+    "path": "assets/audio/shop/bottle_open_01.wav",
+    "loop": false,
+    "seconds": 0.212132,
+    "sha256": "ce6f0c75aab2ecde9253e540875c2af7ca977813fbb56b301e8536d33680df45",
+    "sources": [
+      "assets/audio/source/accessory/sfx/vial-glass-round-uncork-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "accessory/sfx/vial-glass-round-uncork-01.wav"
+        }
+      ]
+    }
+  },
+  {
+    "id": "shop.bottle_open.02",
+    "path": "assets/audio/shop/bottle_open_02.wav",
+    "loop": false,
+    "seconds": 0.140068,
+    "sha256": "11a8fb9fc7be477d24513bad21daa7dff9d3cf00919988090d4c211bc9a720e3",
+    "sources": [
+      "assets/audio/source/accessory/sfx/vial-glass-round-uncork-02.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "accessory/sfx/vial-glass-round-uncork-02.wav"
+        }
+      ]
+    }
+  },
+  {
+    "id": "shop.stir.01",
+    "path": "assets/audio/shop/stir_01.wav",
+    "loop": false,
+    "seconds": 0.434172,
+    "sha256": "d7dfc138dd3435fccaae931f9167d2c723630683e6591f05cee2f1ca94497c9a",
+    "sources": [
+      "assets/audio/source/tinysized/sfx-cc0/wood-bowl-spoon-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/wood-bowl-spoon-01.wav"
+        }
+      ]
+    }
+  },
+  {
+    "id": "shop.stir.02",
+    "path": "assets/audio/shop/stir_02.wav",
+    "loop": false,
+    "seconds": 0.313968,
+    "sha256": "414965af9cf693c5654f21f762883ff6ddb85aae857c46b18340586c0869801e",
+    "sources": [
+      "assets/audio/source/tinysized/sfx-cc0/wood-bowl-spoon-02.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/wood-bowl-spoon-02.wav"
+        }
+      ]
+    }
+  },
+  {
+    "id": "shop.stir.03",
+    "path": "assets/audio/shop/stir_03.wav",
+    "loop": false,
+    "seconds": 0.302676,
+    "sha256": "820559077cae4de44e26edbdeee43cfff76ff2abef5d691d7f111cc2be3c9c7a",
+    "sources": [
+      "assets/audio/source/tinysized/sfx-cc0/wood-bowl-spoon-03.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/wood-bowl-spoon-03.wav"
+        }
+      ]
+    }
+  },
+  {
+    "id": "story.page_turn.01",
+    "path": "assets/audio/story/page_turn_01.wav",
+    "loop": false,
+    "seconds": 1.278163,
+    "sha256": "8eb9b8a7cd33035d307683e626f234173f7acd2a1f0aeae920cc7a5897bfe99a",
+    "sources": [
+      "assets/audio/source/tinysized/sfx-cc0/book-page-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/book-page-01.wav"
+        }
+      ]
+    }
+  },
+  {
+    "id": "story.page_turn.02",
+    "path": "assets/audio/story/page_turn_02.wav",
+    "loop": false,
+    "seconds": 0.643356,
+    "sha256": "879ebc9bbb819cdf2cb69a7a63268e1b59669c5eddbe9dd49c0de31a869d0586",
+    "sources": [
+      "assets/audio/source/tinysized/sfx-cc0/book-page-02.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/book-page-02.wav"
+        }
+      ]
+    }
   }
 ]

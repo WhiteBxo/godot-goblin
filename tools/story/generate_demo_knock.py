@@ -1,29 +1,23 @@
-"""Generate the original, procedural demo placeholder (two wooden knocks).
+"""Preserve the legacy Story Demo resource path using the curated wooden knocks.
 
-Run from any directory with Python 3; no third-party packages or source audio.
+Called by generate_sound_pack.py; can also run after building the WAV pack.
+No generated oscillator, noise, or independent placeholder recording.
 """
-
 import base64
-import math
 from pathlib import Path
-import struct
+import wave
 
-rate = 22050
-samples = []
-for index in range(int(rate * 0.35)):
-    time = index / rate
-    value = 0.0
-    for start in (0.0, 0.17):
-        delta = time - start
-        if 0 <= delta < 0.12:
-            value += math.sin(2 * math.pi * 190 * delta) * math.exp(-delta * 65) * 0.55
-    samples.append(struct.pack("<h", int(value * 32767)))
 
-encoded = base64.b64encode(b"".join(samples)).decode("ascii")
-output = Path(__file__).resolve().parents[2] / "src/debug/story/strange_knock.tres"
-output.write_text(
-    '[gd_resource type="AudioStreamWAV" format=3]\n\n[resource]\n'
-    'format = 1\nmix_rate = 22050\nstereo = false\n'
-    f'data = PackedByteArray("{encoded}")\n',
-    encoding="utf-8",
-)
+def main():
+    root = Path(__file__).resolve().parents[2]
+    with wave.open(str(root / 'assets/audio/story/knock_01.wav')) as wav:
+        rate = wav.getframerate()
+        encoded = base64.b64encode(wav.readframes(wav.getnframes())).decode('ascii')
+    (root / 'src/debug/story/strange_knock.tres').write_text(
+        '[gd_resource type="AudioStreamWAV" format=3]\n\n[resource]\n'
+        f'format = 1\nmix_rate = {rate}\nstereo = false\n'
+        f'data = PackedByteArray("{encoded}")\n', encoding='utf-8', newline='\n')
+
+
+if __name__ == '__main__':
+    main()

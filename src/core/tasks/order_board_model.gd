@@ -37,18 +37,18 @@ func _exit_tree() -> void:
 	_disconnect_sources()
 
 func _connect_sources() -> void:
-	for source: Object in [_state, _inventory, _production]:
+	for source: Object in [_state, _inventory, _production, _delivery]:
 		if not is_instance_valid(source):
 			continue
-		var event: StringName = &"state_changed" if source == _state else &"changed"
+		var event: StringName = &"availability_changed" if source == _delivery else (&"state_changed" if source == _state else &"changed")
 		if not source.is_connected(event, refresh):
 			source.connect(event, refresh)
 
 func _disconnect_sources() -> void:
-	for source: Object in [_state, _inventory, _production]:
+	for source: Object in [_state, _inventory, _production, _delivery]:
 		if not is_instance_valid(source):
 			continue
-		var event: StringName = &"state_changed" if source == _state else &"changed"
+		var event: StringName = &"availability_changed" if source == _delivery else (&"state_changed" if source == _state else &"changed")
 		if source.is_connected(event, refresh):
 			source.disconnect(event, refresh)
 
@@ -98,6 +98,8 @@ func refresh() -> void:
 			continue
 		var order_id: String = task.delivery.order_id
 		var done: bool = view.status == "completed" or (view.result.is_empty() and _state.get_flag("delivery." + order_id + ".completed"))
+		if not done and view.status not in ["failed", "expired", "cancelled"] and not _delivery.is_order_available(order_id):
+			continue
 		var accepted := _delivery.is_order_accepted(order_id)
 		if view.status not in ["failed", "expired", "cancelled"] and not done and not accepted and not _delivery.can_accept_order(order_id):
 			continue

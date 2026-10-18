@@ -66,6 +66,7 @@
 | [饮品投掷与区域效果（第三期）](gameplay/drink_throw_effects.md) | 扣杯、六种效果、区域修饰、可腐蚀物及独立试玩 |
 | [初级奶茶制作](gameplay/basic_tea_production.md) | `basic_tea_production.md` |
 | [订单板、按单制作与交付追踪](gameplay/order_system.md) | 逐单接取、暖纸订单笺、共享库存与 HUD |
+| [营业与顾客调度](gameplay/business_scheduler.md) | 阶段发布、普通／固定顾客、出入场组件与 A 的持久接线需求 |
 | [统一经营会话](gameplay/business_session.md) | `business_session.md` |
 | [见闻录基础模块](gameplay/chronicle.md) | `chronicle.md` |
 | [采集点与任务物资提交](gameplay/gathering.md) | `gathering.md` |

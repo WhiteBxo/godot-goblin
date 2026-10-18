@@ -5,6 +5,7 @@ extends Node
 signal delivered(order_id: String)
 ## 失败也发信号：调试日志需要真实原因；返回值与调用方行为保持不变。
 signal delivery_failed(order_id: String, reason: String)
+signal availability_changed
 
 const StateData = preload("res://src/core/game_state.gd")
 
@@ -14,6 +15,32 @@ var _inventory: WarehouseInventory
 var _orders: Dictionary = {}
 var _committing := false
 var _batches: Array[Dictionary] = []
+var _availability: Dictionary = {}
+
+## Optional scene-local gates. Unmanaged orders retain their existing behavior.
+## A freed gate owner fails closed until the replacement scene binds its gate.
+func set_order_availability(order_ids: Array[String], predicate: Callable) -> Error:
+	if _committing or not predicate.is_valid():
+		return ERR_UNAVAILABLE
+	for id: String in order_ids:
+		if not _orders.has(id):
+			return ERR_DOES_NOT_EXIST
+		var existing: Callable = _availability.get(id, Callable())
+		if existing.is_valid() and existing != predicate:
+			return ERR_ALREADY_EXISTS
+	for id: String in order_ids:
+		_availability[id] = predicate
+	refresh_availability()
+	return OK
+
+func is_order_available(order_id: String) -> bool:
+	if not _availability.has(order_id):
+		return true
+	var predicate: Callable = _availability[order_id]
+	return predicate.is_valid() and predicate.call(order_id) == true
+
+func refresh_availability() -> void:
+	availability_changed.emit()
 
 func configure_batches(batches: Array[Dictionary]) -> void:
 	_batches = batches.duplicate(true)
@@ -99,7 +126,7 @@ func is_order_accepted(order_id: String) -> bool:
 	return _journal.get_task(task.id).get("status") == "active"
 
 func can_accept_order(order_id: String) -> bool:
-	if not _orders.has(order_id) or not is_instance_valid(_state):
+	if not _orders.has(order_id) or not is_instance_valid(_state) or not is_order_available(order_id):
 		return false
 	var task: Dictionary = _orders[order_id]
 	var view := _journal.get_task(task.id)
@@ -170,6 +197,8 @@ func try_submit(order_id: String, target_object_id: String, drink_id: String = "
 		return _failure("交付系统尚未就绪或正在提交。", order_id)
 	if not _orders.has(order_id):
 		return _failure("订单不存在。", order_id)
+	if not is_order_available(order_id):
+		return _failure("该订单尚未发布，或顾客当前无法接待。", order_id)
 	var task: Dictionary = _orders[order_id]
 	if task.delivery.target_object_id != target_object_id:
 		return _failure("成品或交付对象与订单不符。未消耗库存。", order_id)

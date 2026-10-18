@@ -7,3 +7,9 @@
 完整条款：[CC0 1.0 Universal legal code](https://creativecommons.org/publicdomain/zero/1.0/legalcode)。可选署名：`Goblin Sound Pack v1 / procedural synthesis`。
 
 此声明仅覆盖本目录 WAV，不改变项目代码、字体、贴图或其他素材的许可。生成工具及合成参数见 `docs/assets/sound_library.md`；逐文件来源均为该工具，SHA-256 见 `manifest.json`。
+
+## 用户提供的标题音乐
+
+`music/start.ogg` 于 2026-10-18 由用户提供，来源为 `D:/reaper/REAPER Media/start.ogg`，按用户要求用于本项目标题界面。原样复制，无转码或裁剪；淡入淡出由播放器完成。用户未声明额外许可，本文件的 WAV CC0 声明不适用于此曲。
+
+SHA-256：`a6366c55ce5de090eee1f25ba44a9fdc62cf60104c86d8121eb76c52b8357dde`。

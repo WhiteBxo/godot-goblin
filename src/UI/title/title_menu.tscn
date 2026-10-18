@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://src/UI/title/title_menu.gd" id="script"]
 [ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="theme"]
+[ext_resource type="Script" path="res://src/UI/title/title_music.gd" id="music_script"]
+[ext_resource type="AudioStream" path="res://assets/audio/music/start.ogg" id="music"]
 
 [node name="TitleMenu" type="Control"]
 process_mode = 3
@@ -13,6 +15,17 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("theme")
 script = ExtResource("script")
+
+[node name="TitleMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("music")
+volume_db = -80.0
+bus = &"Music"
+script = ExtResource("music_script")
+
+[node name="ReplayTimer" type="Timer" parent="TitleMusic"]
+wait_time = 15.0
+one_shot = true
+ignore_time_scale = true
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1

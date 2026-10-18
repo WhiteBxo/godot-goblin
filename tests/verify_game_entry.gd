@@ -112,6 +112,7 @@ func _run() -> void:
 	_button(title, "NewGame").pressed.emit()
 	_button(title, "NewGame").pressed.emit()
 	_check(_button(title, "NewGame").disabled and _button(title, "Quit").disabled, "Pending start disables both buttons")
+	await create_timer(0.6).timeout
 	await _frames()
 	_check(current_scene == title and _state.to_dict() == before, "Busy reset leaves scene and session intact")
 	_check(not _button(title, "NewGame").disabled and title.get_node("Center/Panel/Margin/Content/Error").visible, "Start failure is visible and retry enabled")

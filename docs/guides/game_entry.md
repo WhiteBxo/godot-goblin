@@ -26,7 +26,19 @@ F5 进入 `src/UI/title/title_menu.tscn`。标题显示 Godot Goblin、新游戏
 
 暂停菜单通过 `title_requested` signal 请求 MainGame 导航，不自行访问业务状态。UIManager 离树释放其暂停与模态，其他服务按现有离树规则取消。标题入口也调用 `DebugRuntime.apply_release_policy()`，Release 从停留标题时便停止 MCPRuntimeProbe 轮询；不修改插件源码。
 
-本功能不修改剧情原稿/JSON、地图、订单或任务配置，不产生 Day 1 阶段或完成事实。标题不播放音乐，没有继续游戏、存档、设置、确认弹窗或结尾界面。
+本功能不修改剧情原稿/JSON、地图、订单或任务配置，不产生 Day 1 阶段或完成事实。标题没有继续游戏、存档、设置、确认弹窗或结尾界面。
+
+## 标题音乐
+
+标题场景的 `TitleMusic` 使用 `assets/audio/music/start.ogg`，导入 `loop=false`（禁用循环），不设置节拍循环。Ogg 导入器使用 `loop` 布尔选项；WAV 才使用 `Loop Mode` 枚举。
+
+进入标题后自动从头播放，2 秒线性音量淡入至 -8 dB，通过现有 Music 总线路由。自然播放结束后由单次 Timer 等待 15 秒，再从头播放并淡入；计时与淡入淡出不受游戏 time_scale 影响。播放器的 `target_volume_db`、`fade_in_seconds`、`fade_out_seconds` 和 ReplayTimer 的 `wait_time` 可在 Inspector 调整。
+
+点击新游戏或退出时，禁用按钮并以 0.45 秒淡出后执行操作；静默间隔中离开则立即执行。新游戏失败恢复按钮、焦点和音乐淡入。播放器、计时器与 Tween 随标题释放，返回标题时重新开始，不遗留重播任务。音频来源见[许可证说明](../../assets/audio/LICENSE.md)。
+
+局部自动验证：`godot --headless --path . --script res://tests/verify_title_music.gd`，使用真实 Ogg 的自然结束信号和完整 15 秒等待，覆盖淡入、重播、失败恢复及离树清理。听感试玩：F5 或 F6 运行标题场景，试听入场与重播淡入，点击新游戏或退出观察短淡出；在游戏暂停菜单返回标题应从曲首重新播放。
+
+API 依据：[AudioStreamPlayer](https://docs.godotengine.org/en/4.7/classes/class_audiostreamplayer.html) 的自然结束 `finished` 信号与线性音量；[Ogg 导入器](https://docs.godotengine.org/en/4.7/classes/class_resourceimporteroggvorbis.html) 的 `loop=false`；[Timer](https://docs.godotengine.org/en/4.7/classes/class_timer.html) 单次计时；[Tween](https://docs.godotengine.org/en/4.7/classes/class_tween.html) 的节点生命周期绑定。
 
 ## 验证与试玩
 

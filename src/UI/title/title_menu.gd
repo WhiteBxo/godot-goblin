@@ -4,6 +4,7 @@ extends Control
 @onready var _new_game: Button = $Center/Panel/Margin/Content/NewGame
 @onready var _quit: Button = $Center/Panel/Margin/Content/Quit
 @onready var _error: Label = $Center/Panel/Margin/Content/Error
+@onready var _music: TitleMusic = $TitleMusic
 var _starting := false
 
 func _ready() -> void:
@@ -20,8 +21,10 @@ func _request_new_game() -> void:
 	_start_new_game.call_deferred()
 
 func _start_new_game() -> void:
+	await _music.fade_out()
 	var error := GameEntry.start_new_game(get_tree())
 	if error != OK:
+		_music.play_from_start()
 		push_warning("New game navigation failed: %s" % error_string(error))
 		_error.text = "正在处理上一项操作，请稍后重试。" if error == ERR_BUSY else "暂时无法开始游戏，请重试。"
 		_error.show()
@@ -32,7 +35,11 @@ func _request_quit() -> void:
 	if _starting:
 		return
 	_set_busy(true)
-	get_tree().quit.call_deferred()
+	_quit_after_fade.call_deferred()
+
+func _quit_after_fade() -> void:
+	await _music.fade_out()
+	get_tree().quit()
 
 func _set_busy(value: bool) -> void:
 	_starting = value

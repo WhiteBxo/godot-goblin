@@ -27,6 +27,7 @@ var _npc_points: Dictionary = {}
 var _story_points: Dictionary[StringName, StoryInteractionPoint] = {}
 var _pending_story_document: StoryInteractionPoint
 var _world_controller: Day1WorldController
+var _stealth_service: Day1StealthService
 var _dialogue_manager: DialogueManager
 var _story_director: StoryDirector
 var _actor_director: ActorDirector
@@ -302,6 +303,7 @@ func _can_leave_scene() -> bool:
 	var owns_lock := is_instance_valid(_scene_travel) and _scene_travel.is_busy()
 	var movement_available := _movement_before_dialogue if owns_lock else _shop_player.movement_enabled
 	return (not get_tree().paused and not _ui_manager.has_modal() and movement_available
+		and (not is_instance_valid(_stealth_service) or not _stealth_service.is_blocking())
 		and not _shop_player.is_performance_controlled()
 		and not _story_director.is_busy() and not _dialogue_manager.is_active()
 		and _gameplay_bridge.allows_story_start())
@@ -348,6 +350,7 @@ func _initialize_settlement() -> void:
 	_create_gameplay_bridge(false)
 	_create_world_controller()
 	_create_scene_travel(_settlement_level.get_scene_exits())
+	_create_stealth_system()
 	if DebugRuntime.is_enabled():
 		var preview := Node.new()
 		preview.name = "SettlementPreview"
@@ -357,6 +360,34 @@ func _initialize_settlement() -> void:
 
 func get_tea_production() -> TeaProduction:
 	return _tea_production
+
+func get_stealth_service() -> Day1StealthService:
+	return _stealth_service
+
+func _create_stealth_system() -> void:
+	_stealth_service = Day1StealthService.new()
+	_stealth_service.name = "Day1StealthService"
+	$Systems.add_child(_stealth_service)
+	_stealth_service.changed.connect(_refresh_input_lock)
+	_stealth_service.guard_intercepted.connect(_on_stealth_intercepted)
+	_stealth_service.configure(get_node("/root/GameState"), _warehouse_inventory, _shop_player,
+		$World/EffectRoot, _settlement_level.get_stealth_setup(), _actor_director.get_actor, _can_operate_stealth)
+	var hud: Day1StealthHUD = preload("res://src/UI/hud/day1_stealth_hud.tscn").instantiate()
+	_ui_manager.register_screen(ScreenIds.STEALTH_HUD, hud, &"hud", false)
+	hud.configure(_stealth_service)
+	_ui_manager.open_screen(ScreenIds.STEALTH_HUD)
+
+func _can_operate_stealth() -> bool:
+	return (not get_tree().paused and not _ui_manager.has_modal()
+		and not _dialogue_manager.is_active() and not _story_director.is_busy()
+		and not _shop_player.is_performance_controlled()
+		and (not is_instance_valid(_scene_travel) or not _scene_travel.is_busy())
+		and (_shop_player.movement_enabled or (_stealth_service.is_blocking() and _movement_before_dialogue)))
+
+func _on_stealth_intercepted(event_id: String) -> void:
+	var error := _story_director.request_event(event_id)
+	if error != OK:
+		push_warning("Drunken guard event is not available (%s); no payment or clearance was recorded" % error_string(error))
 
 func get_transactions() -> WalletTransactions:
 	return get_node("/root/GameState").get_transactions()
@@ -578,6 +609,7 @@ func _refresh_order_requirements(ui: ShopUI) -> void:
 
 func _can_start_story() -> bool:
 	return (not get_tree().paused and not _ui_manager.has_modal()
+		and (not is_instance_valid(_stealth_service) or _stealth_service.status != Day1StealthService.Status.FAILED)
 		and (not is_instance_valid(_scene_travel) or not _scene_travel.is_busy())
 		and (not is_instance_valid(_gameplay_bridge) or _gameplay_bridge.allows_story_start()))
 
@@ -601,6 +633,7 @@ func _refresh_input_lock() -> void:
 		or (is_instance_valid(_dialogue_manager) and _dialogue_manager.is_active())
 		or (is_instance_valid(_story_director) and _story_director.is_busy())
 		or (is_instance_valid(_actor_director) and _actor_director.is_actor_controlled(&"player"))
+		or (is_instance_valid(_stealth_service) and _stealth_service.is_blocking())
 	)
 	if is_instance_valid(_handbook_hud):
 		_handbook_hud.disabled = should_lock

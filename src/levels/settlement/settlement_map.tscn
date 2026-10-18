@@ -1,6 +1,7 @@
 [gd_scene format=4]
 
 [ext_resource type="Script" path="res://src/levels/settlement/settlement_map.gd" id="1_63nr7"]
+[ext_resource type="Script" path="res://src/gameplay/stealth/day1_stealth_setup.gd" id="stealth_setup"]
 [ext_resource type="TileSet" path="res://src/levels/settlement/settlement_ground.tres" id="2_0tgtd"]
 [ext_resource type="Texture2D" path="res://assets/map/settlement/river.png" id="3_3pu68"]
 [ext_resource type="Texture2D" path="res://assets/map/settlement/bridge.png" id="4_7nc6e"]
@@ -4826,6 +4827,9 @@ required_flag = "world.phase.night"
 feedback_rect = Rect2(-28, -28, 56, 56)
 
 [node name="StoryAnchors" type="Node2D" parent="." unique_id=469995804]
+
+[node name="Day1StealthSetup" type="Node" parent="."]
+script = ExtResource("stealth_setup")
 
 [node name="00_shop_entrance" type="Marker2D" parent="StoryAnchors" unique_id=1672133657]
 position = Vector2(5189, 8750)

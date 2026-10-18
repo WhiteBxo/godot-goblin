@@ -60,6 +60,7 @@
 | --- | --- |
 | [Day 1 前两阶段正式流程](gameplay/day_01_stages_01_02.md) | `day_01_stages_01_02.md` |
 | [Day 1 世界门控、调查与血液特调](gameplay/day_01_world_flow.md) | `day_01_world_flow.md` |
+| [Day 1 投掷与守卫反应](gameplay/day_01_stealth.md) | 玩法组件、正式绑定缺口与局部重试 |
 | [初级奶茶制作](gameplay/basic_tea_production.md) | `basic_tea_production.md` |
 | [统一经营会话](gameplay/business_session.md) | `business_session.md` |
 | [见闻录基础模块](gameplay/chronicle.md) | `chronicle.md` |

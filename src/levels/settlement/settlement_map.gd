@@ -84,3 +84,6 @@ func get_story_positions() -> Array[Marker2D]:
 
 func get_story_anchor(id: StringName) -> Marker2D:
 	return $StoryAnchors.get_node_or_null(NodePath(id)) as Marker2D
+
+func get_stealth_setup() -> Day1StealthSetup:
+	return get_node_or_null("Day1StealthSetup") as Day1StealthSetup

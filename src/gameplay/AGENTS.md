@@ -9,6 +9,7 @@
 | 交互点、目标选择、dispatch 与反馈 | [interaction/AGENTS.md](interaction/AGENTS.md) |
 | 采集点与采集规则 | [gathering/AGENTS.md](gathering/AGENTS.md) |
 | 剧情调查与拾取点位（文书、圣物） | [story_interaction/AGENTS.md](story_interaction/AGENTS.md) |
+| Day 1 投掷、守卫反应与局部重试 | [stealth/AGENTS.md](stealth/AGENTS.md) |
 | 奶茶制作、制作入口与共享库存 | [milk_tea/AGENTS.md](milk_tea/AGENTS.md) |
 | 哥布林动作 SpriteFrames | [goblin_actions/AGENTS.md](goblin_actions/AGENTS.md) |
 | 房间遮挡与门框前景 | [rooms/AGENTS.md](rooms/AGENTS.md) |

@@ -18,7 +18,11 @@ func configure(wallet: WalletTransactions, inventory: WarehouseInventory) -> voi
 	refresh()
 
 func refresh() -> void:
-	$BusinessBalance.text = "营业收入 %s    古怪金币 %d" % [WalletTransactions.format_money(_wallet.get_balance()), _inventory.get_stock("strange_coin")]
+	$BusinessBalance.text = "营业收入 %s    古怪金币 %d（%s）" % [
+		WalletTransactions.format_money(_wallet.get_balance()),
+		_inventory.get_stock("strange_coin"),
+		WalletTransactions.format_money(WalletTransactions.coin_worth(_inventory.get_stock("strange_coin"))),
+	]
 
 func show_resume(available: bool) -> void:
 	$ResumeStory.visible = available

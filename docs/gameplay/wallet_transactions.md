@@ -4,13 +4,15 @@
 
 全游戏只有一种货币，写作 **G**，它就是世界观里的**古怪金币**；所有标价、任务奖励、债务与余额都以 G 为单位，界面通过 `WalletTransactions.CURRENCY_SYMBOL` / `format_money()` 统一显示。
 
-区别只在叙事呈现，不是两套钱：主角第一次拿到它时还不知道那是钱，所以 `strange_coin` 以**剧情物品**入库，详情写「价值未知」；此后卖奶茶收款、投掷消耗、酒馆买酒一律是这同一种钱。面值 1 枚 = 1G，没有汇率、不打折。它被认作货币之前只记在库存里；主角弄清价值之后（Day 2 起）按 1:1 并入钱包余额，不需要玩家操作，也不产生额外费用。Day 2 宿主开放前这一并入没有落点，暂按库存保留。
+区别只在叙事呈现，不是两套钱：主角第一次拿到它时还不知道那是钱，所以 `strange_coin` 以**剧情物品**入库，详情写「价值未知」；此后卖奶茶收款、投掷消耗、酒馆买酒一律是这同一种钱。面值 **1 枚 = 10G**（`WalletTransactions.COIN_FACE_VALUE`，换算走 `coin_worth()`），没有汇率、不打折。它被认作货币之前只记在库存里；主角弄清价值之后（Day 2 起）按面额并入钱包余额，不需要玩家操作，也不产生额外费用。Day 2 宿主开放前这一并入没有落点，暂按库存保留。
+
+定价基准：普通成品奶茶（珍珠／椰果／原味）**10G 一杯**，Day 1 的五笔订单全部按此结算——人类首单现场付 10G，4 个哥布林单各付 1 枚（4 × 10G）。异世界食材的自由配方沿用 `RecipeRules.ordinary_price` 的 20G，因为它的单杯原料成本已接近这个量级，两者不是同一档商品。
 
 后续独立组件与边界见 [Day 2 酒馆购买与固定赌局](day_02_trade.md)：复用本事务，提供静态折后价购买、真实奖励入库及 A 的债务结果接入；运行时折扣接口仍需集成协调。
 
 ## 仓库检查与实现范围
 
-WarehouseInventory 提供共享库存、发现和原子快照；TeaProduction 消费同一库存；TaskJournal 只读投影事实。当前 TaskCatalog.rewards 支持显示 text、物品 items 与普通货币 money，正式 S01 交付收入 10，哥布林交付发 strange_coin。自由饮品订单默认使用配方售价，显式 rewards.money 可覆盖。
+WarehouseInventory 提供共享库存、发现和原子快照；TeaProduction 消费同一库存；TaskJournal 只读投影事实。当前 TaskCatalog.rewards 支持显示 text、物品 items 与普通货币 money；正式 S01 交付收入 10G（1 杯 × 10G），4 个哥布林单各发 strange_coin ×1（4 × 10G = 40G），Day 1 合计 50G。自由饮品订单默认使用配方售价，显式 rewards.money 可覆盖。
 
 经济服务复用 TeaMenu、WarehouseInventory 和 GameState；仍用任务 JSON v1，没有新增 autoload 或文件存档。普通交易接口与正式交付事务共用库存，但由各自稳定回执防重。跨场景余额、库存和领取记录由 GameState 的 WalletTransactions 子节点持有；MainGame 通过公开 getter 获取并注入同一库存。制作进度也由 GameState 持有；钱包、制作和交付复用同一份跨场景经营会话。
 

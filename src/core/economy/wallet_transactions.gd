@@ -9,9 +9,14 @@ const LIMIT: int = WarehouseInventory.MAX_QUANTITY
 const SCHEMA_VERSION: int = 1
 ## Every price, reward and balance in the game uses this single currency.
 const CURRENCY_SYMBOL: String = "G"
+## One 古怪金币 carries this face value. The coin is the Day 1 form of G, not a second currency.
+const COIN_FACE_VALUE: int = 10
 
 static func format_money(amount: int) -> String:
 	return "%d%s" % [amount, CURRENCY_SYMBOL]
+
+static func coin_worth(count: int) -> int:
+	return count * COIN_FACE_VALUE
 
 var _inventory: WarehouseInventory
 var _balance: int = 0

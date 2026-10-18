@@ -43,7 +43,7 @@
 | 接单事实 | task.day1.human.active、task.day1.goblin.active、task.day1.group_a/b/c.active；各单独立 |
 | Bridge | day1.first_drink_tutorial、day1.goblin_first_order、day1.goblin_group_orders；输出 day1.human_done / goblin_done / group_done |
 | 章节与见闻录 | day1.stages_01_02_completed、day1.chronicle_unlocked；条目 chronicle.casino / griffin_blood / elder，仅空白解锁 |
-| 库存 | strange_coin 为古怪金币，即唯一货币 G 的首次呈现（剧情物品、价值未知），1 枚 = 1G；pearl_milk_tea、coconut_milk_tea、plain_milk_tea 为教学固定成品 |
+| 库存 | strange_coin 为古怪金币，即唯一货币 G 的首次呈现（剧情物品、价值未知），1 枚 = 10G；普通成品奶茶 10G 一杯；pearl_milk_tea、coconut_milk_tea、plain_milk_tea 为教学固定成品 |
 
 每单回执为 `delivery.<order_id>.completed`。打开 orders 只写 `shop.orders_viewed`；玩家明确接取才写 accepted_flag。制作 UI 以真实任务与库存安排顺序，不依赖旧三单队列下标。
 

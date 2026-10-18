@@ -94,6 +94,7 @@
 | [奶茶店开放房间与遮挡渐隐](levels/milk_tea_map.md) | `milk_tea_map.md` |
 | [奶茶店宿主与试玩](levels/milk_tea_mvp.md) | 当前开放房间地图、五单入口、制作与导航 |
 | [新版洞窟聚落](levels/settlement/README.md) | `settlement/README.md` |
+| [RPG Maker 地图移植与编辑](levels/rpg_maker/README.md) | 四张原生 TileMapLayer 地图、完整源素材、独立试玩与重导入 |
 | [消失街道独立试玩](disappeared_street/README.md) | 美术、通行与店门连接示例 |
 | [第五阶段概念提案](stage_05_concept/README.md) | 静态概念图及来源差异，非正式可玩关卡 |
 

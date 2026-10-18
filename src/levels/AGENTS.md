@@ -7,6 +7,7 @@
 | 奶茶店（保留现有 milkTea 路径大小写） | [milkTea/AGENTS.md](milkTea/AGENTS.md) |
 | 洞窟聚落 | [settlement/AGENTS.md](settlement/AGENTS.md) |
 | 旧洞穴 Demo 地图 | [cave/AGENTS.md](cave/AGENTS.md) |
+| RPG Maker MZ 移植地图 | [rpg_maker/AGENTS.md](rpg_maker/AGENTS.md) |
 
 - 地图负责显示、边界、出生点与通行规则，通过公开方法向宿主提供查询；不承担玩家输入、剧情顺序或通用 UI。
 - 第一天与第二天的地图接口遵循 [场景连接约定](../../docs/design/scene_connections.md)：公共街道分别连接长老居所与商业街；夜间潜入区域只有左下一个对外接口，右下封闭。

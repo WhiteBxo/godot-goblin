@@ -1,0 +1,2 @@
+# Preserve original external snapshot bytes, including line endings.
+project1/** -text

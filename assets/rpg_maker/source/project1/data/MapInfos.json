@@ -1,0 +1,9 @@
+[
+null,
+{"id":1,"expanded":true,"name":"哥布林洞窟","order":1,"parentId":0,"scrollX":1500,"scrollY":846.8571428571428},
+null,
+null,
+{"id":4,"expanded":false,"name":"哥布林酒馆｜裂牙","order":2,"parentId":1,"scrollX":875,"scrollY":494},
+{"id":5,"expanded":false,"name":"哥布林赌场｜黑齿","order":3,"parentId":1,"scrollX":883,"scrollY":514},
+{"id":6,"expanded":false,"name":"长老居所","order":4,"parentId":1,"scrollX":0,"scrollY":0}
+]

@@ -1,0 +1,3 @@
+For RPG Maker users!
+Due to my decision to create as many walls as possible, there are also walls in the A4 sheet which are not recognized as walls and the player can walk through from below. 
+This can be fixed with a blocking event or region restriction plugin.

@@ -1,0 +1,44 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/debug/rpg_maker/rpg_maker_preview.gd" id="1"]
+[ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="2"]
+
+[node name="RpgMakerPreview" type="Node"]
+process_mode = 3
+script = ExtResource("1")
+
+[node name="Systems" type="Node" parent="."]
+process_mode = 1
+
+[node name="World" type="Node2D" parent="."]
+process_mode = 1
+texture_filter = 1
+
+[node name="LevelRoot" type="Node2D" parent="World"]
+
+[node name="EntityRoot" type="Node2D" parent="World"]
+
+[node name="DebugLayer" type="CanvasLayer" parent="."]
+layer = 50
+
+[node name="Panel" type="PanelContainer" parent="DebugLayer"]
+offset_left = 8.0
+offset_top = 8.0
+mouse_filter = 2
+theme = ExtResource("2")
+theme_type_variation = &"InsetPanel"
+
+[node name="Content" type="VBoxContainer" parent="DebugLayer/Panel"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="MapTitle" type="Label" parent="DebugLayer/Panel/Content"]
+layout_mode = 2
+mouse_filter = 2
+text = "RPG Maker 地图试玩"
+
+[node name="Controls" type="Label" parent="DebugLayer/Panel/Content"]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"Hint"
+text = "1–4 切换地图 · WASD / 方向键移动 · Shift 跑步 · Ctrl 潜行\nTab 全图 / 跟随 · R 回到出生点"

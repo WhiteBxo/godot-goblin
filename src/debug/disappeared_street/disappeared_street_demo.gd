@@ -30,7 +30,7 @@ func _ready() -> void:
 	_manager.register_screen(&"pause", pause, &"pause", true)
 	pause.resume_requested.connect(func() -> void: _manager.set_paused(false))
 	_ui = preload("res://src/UI/milk_tea/shop_ui.tscn").instantiate()
-	_ui.help_text = "消失的街道 · WASD 移动 · E 交互 · M 全景 · P 暂停"
+	_ui.help_text = "消失的街道 · WASD 移动 · E 交互 · F7 全景 · P 暂停"
 	_ui.close_text = "继续探索  [Esc]"
 	$HudLayer.add_child(_ui)
 	_ui.set_popup_layer($PopupLayer)

@@ -96,11 +96,13 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	if is_instance_valid(_status):
-		_status.text = "%s  ·  WASD 移动 / E 查看\nM 全图 / 跟随  ·  Tab 切换动线  ·  F4 %s  ·  %s" % [
+		_status.text = "%s  ·  WASD 移动 / E 查看\nF7 全图 / 跟随  ·  Tab 切换动线  ·  F4 %s  ·  %s" % [
 			_level.get_zone_at(_player.global_position), _phase_text(), _route_names[_route_index]]
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_echo():
+		return
+	if _game.get_ui_manager().has_modal():
 		return
 	if _game.get_dialogue_manager().is_active() or _game.get_story_director().is_busy():
 		return

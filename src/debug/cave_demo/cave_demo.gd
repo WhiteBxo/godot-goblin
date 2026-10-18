@@ -39,7 +39,7 @@ func set_wall_mode(mode: int) -> void:
 	if not DebugRuntime.is_enabled():
 		return
 	_level.set_wall_mode(mode)
-	_overlay.set_hint("WASD / 方向键移动   F2 切换墙体   M 全图\n当前：%s   墙高 %dpx" % [
+	_overlay.set_hint("WASD / 方向键移动   F2 切换墙体   F7 全图\n当前：%s   墙高 %dpx" % [
 		_level.get_wall_mode_name(), _level.walls.wall_height
 	])
 

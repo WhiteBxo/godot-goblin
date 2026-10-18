@@ -12,6 +12,7 @@ const DAY1_MENU: TeaMenu = preload("res://src/resources/milk_tea/day1_menu.tres"
 const MAX_VALUE_DEPTH: int = 32
 
 var _business_profile := "tutorial"
+var _session_menu: TeaMenu = TeaProduction.CATALOG
 
 var current_day: int:
 	get:
@@ -38,8 +39,10 @@ var _replacing := false
 var _business_transaction := false
 
 
-func _init() -> void:
-	_economy = WalletTransactions.new()
+## Optional configuration for isolated sessions; the autoload keeps its defaults.
+func _init(menu: TeaMenu = null) -> void:
+	_session_menu = menu if menu != null else TeaProduction.CATALOG
+	_economy = WalletTransactions.new(_session_menu)
 	_economy.name = "WalletTransactions"
 	add_child(_economy)
 	_economy.set_session_guard(func() -> bool:
@@ -74,6 +77,7 @@ func _ensure_business() -> void:
 	_tea_production = TeaProduction.new()
 	_tea_production.name = "TeaProduction"
 	add_child(_tea_production)
+	_tea_production.select_menu(_profile_menu(_business_profile))
 	_tea_production.configure(_warehouse_inventory, self)
 	_tea_production.changed.connect(_on_business_changed)
 
@@ -97,7 +101,7 @@ func select_business_profile(profile: String) -> Error:
 	return OK
 
 func _profile_menu(profile: String) -> TeaMenu:
-	return DAY1_MENU if profile == "day1" else TeaProduction.CATALOG
+	return DAY1_MENU if profile == "day1" else _session_menu
 
 
 ## Gated recipes read the active profile from session facts instead of
@@ -355,7 +359,7 @@ func start_new_game() -> Error:
 
 
 func _new_game_snapshot() -> Dictionary:
-	var fresh := get_script().new() as Node
+	var fresh := get_script().new(_session_menu) as Node
 	fresh.select_business_profile(_business_profile)
 	var defaults: Dictionary = fresh.to_dict()
 	fresh.free()
@@ -498,7 +502,7 @@ func _is_valid_snapshot(data: Dictionary) -> bool:
 	production_candidate.free()
 	if not production_valid:
 		return false
-	var candidate := WarehouseInventory.new()
+	var candidate := WarehouseInventory.new(_session_menu)
 	var valid := candidate.restore_state(data.business.inventory) == OK
 	candidate.free()
 	return valid

@@ -1,5 +1,7 @@
 # 自然语言剧情编排工作流
 
+已迁移为结构化工程的剧情（清单含 `authoring_project`）按[游戏内编排](story_editor.md)修改工程并生成；MD 保留为初稿，不能覆盖面板手调结果。以下 Markdown 来源、散列和局部区间维护规则适用于尚未迁移内容。
+
 入口：提供 `docs/design/<name>.md`，说「编排这段剧情」；局部修改可说「将 Beat arrival 的走路速度改为每秒 80 像素」。Codex 按本流程完成源稿、JSON、必要场景配置、验证和 commit。自然语言理解和生成由 Codex 执行，无需独立编译器、插件或新的 runtime。
 
 ## 创作源与产物

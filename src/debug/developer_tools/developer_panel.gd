@@ -59,8 +59,16 @@ var _write_reason := ""
 var _phase_signature := "<unset>"
 var _phase_unavailable := ""
 var _phases: Array[Dictionary] = []
+var story_editor: StoryEditorPanel
 
 func _ready() -> void:
+	if DebugRuntime.is_enabled():
+		story_editor = preload("res://src/debug/developer_tools/story_editor_panel.tscn").instantiate()
+		story_editor.close_requested.connect(func() -> void: close_requested.emit())
+		var tabs: TabContainer = $Panel/Margin/Tools/Tabs
+		tabs.add_child(story_editor)
+		tabs.tab_changed.connect(func(index: int) -> void:
+			$Panel.offset_left = -get_viewport_rect().size.x + 8.0 if tabs.get_tab_control(index) == story_editor else -312.0)
 	var details: TabContainer = $Panel/Margin/Tools/Tabs/剧情/Details
 	details.set_tab_title(0, "状态数据")
 	details.set_tab_title(1, "事件日志")
@@ -129,6 +137,8 @@ func on_ui_closed() -> void:
 	cancel_restart()
 
 func cancel_restart() -> void:
+	if is_instance_valid(story_editor):
+		story_editor.close_popups()
 	_confirmation.hide()
 	cancel_event_trigger()
 	cancel_write_confirmations()

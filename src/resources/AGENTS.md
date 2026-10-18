@@ -17,4 +17,4 @@
 - 可复用 TileSet 存为外部 Resource；素材与必要的 `.import` 设置一同管理，不引用 `.godot/` 中的派生缓存。
 - JSON 及运行时动态加载的数据必须纳入 `export_presets.cfg` 的现有导出规则；检查正式资源引用与 source / prompts、docs、tools、tests 等开发文件的排除范围，只改本次必要配置。
 - 菜单、配方和物品描述是数据，UI 与剧情不另维护一份目录；设计中的战斗属性或效果描述不自动意味着具备执行系统。
-- 剧情内容先改 Markdown 再生成现有 v1 数据及 Beat 清单；只改文案、立绘或音效引用时按 [验证分级](../../tests/AGENTS.md) 做局部校验，Schema 或共享契约变更才升级。
+- 剧情内容修改当前正式来源再生成 v1 数据及 Beat 清单：未迁移用 Markdown，清单含 authoring_project 时用结构化工程，见[游戏内编排](../../docs/guides/story_editor.md)。只改文案、立绘或音效引用时按 [验证分级](../../tests/AGENTS.md) 做局部校验，Schema 或共享契约变更才升级。

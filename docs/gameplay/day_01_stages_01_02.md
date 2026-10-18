@@ -16,7 +16,7 @@ F5 从标题菜单选择“新游戏”（或打开 src/core/main.tscn 后 F6）
 ## 装配与状态边界
 
 - MainGame 的 day1_story_enabled 只在正式店铺启用。Systems 下的 Day1ShopController 注入注册、加载数据、请求首次事件，并按配置恢复检查点；事件顺序由 Story v1 与 Bridge v2 JSON 控制。营业余额与续播按钮由 UI 模块的 Day1BusinessHUD 展示，宿主只连接公开接口。
-- 原稿 docs/design/day_01_stages_01_02_draft.md 是唯一内容来源；Dialogue、Story、phases 和 setup 数据在 src/resources 下，Beat 映射与源稿 SHA-256 在 docs/story_authoring/day1_stages_01_02_bridge.json。
+- 前两阶段已迁移，以 docs/story_authoring/day1_stages_01_02_project.json 为演出、对白和 Bridge phase 来源；原稿 docs/design/day_01_stages_01_02_draft.md 保留为初稿。Dialogue、Story、phases 和 setup 数据在 src/resources 下，Beat 映射与工程 SHA-256 在 docs/story_authoring/day1_stages_01_02_bridge.json。F3 编辑和预览见[游戏内编排](../guides/story_editor.md)。setup、订单和交付业务仍独立维护。
 - 门口、通道、柜台和三人站位保存在关卡 StoryPositions 中。Actor 预置并按剧情显隐，隐藏或未接单的人物不提供交付入口。NPC 不阻挡玩家，仍受原地图墙体限制。店内角色与家具按脚下位置和家具基线共同排序，同一家具区间的角色使用 Y 排序；玩家在柜台后、顾客在柜台前时分别保持正确遮挡，房间屋顶仍在角色之上。
 - GameState 持有唯一库存、钱包和制作服务。select_business_profile("day1") 仅允许从无进度会话选择；相同配置重入是幂等的。旧三单配置为 tutorial；原 Demo 与组件测试使用 src/debug/story/legacy_shop.tscn 明确关闭正式剧情。
 - TeaProduction 使用会话选定的菜单及 accepted_flag，不依赖静态三单队列；查看订单板写入接单事实，制作只生成成品和制作进度，交付才产生收入与剧情完成事实。

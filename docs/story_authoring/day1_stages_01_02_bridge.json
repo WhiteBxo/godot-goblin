@@ -180,5 +180,7 @@
       "day1.coins_raise_suspicion/line_2": "res://assets/characters/apron_man/player_bad_laugh.png"
     },
     "fallback": "Unprovided expressions retain speaker default; unconfirmed fat-goblin portraits are not bound."
-  }
+  },
+  "authoring_project": "res://docs/story_authoring/day1_stages_01_02_project.json",
+  "authoring_sha256": "5d23e21926a299f831c7e83695a4cd7671c74ad6807ba9d1effc83d7979d857e"
 }

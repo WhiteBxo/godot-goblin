@@ -9,5 +9,6 @@
 - 重启目标必须是实际当前宿主，并保持已有确认 / 取消交互；重启保留 GameState，不混入清空整局、作弊、存档或命令解释器。
 - UI 覆盖、焦点、取消与恢复交给 [UIManager](../../UI/management/AGENTS.md)；关闭 Console 后保留原有暂停、剧情和移动禁用状态。
 - 新增通用能力只面向公开接口，洞穴墙体、布局和截图仍留在洞穴专属组件。
+- 编排页通过 StoryProject 编辑结构化来源、校验并生成运行时文件；不再要求已迁移内容回写 MD。预览必须在独立进程中重建已声明的现场，不修改正在玩的 GameState，不绕开正式 Director 运行步骤。保存限 editor + debug，外部修改冲突不能静默覆盖。接口与边界见[游戏内编排](../../../docs/guides/story_editor.md)。
 
 候选验证：`tests/verify_developer_tools.gd`；涉及门控或接线再选择 `verify_debug_build.gd` 及目标宿主 F6，按 [验证分级](../../../tests/AGENTS.md) 控制范围。

@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://6t0rx233o1kq"]
+
+[ext_resource type="Script" path="res://src/debug/developer_tools/story_editor_panel.gd" id="1"]
+
+[node name="编排" type="VBoxContainer"]
+layout_mode = 2
+script = ExtResource("1")

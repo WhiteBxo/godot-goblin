@@ -8,7 +8,7 @@
 
 | 级别 | 触发条件 | 执行范围 |
 | --- | --- | --- |
-| 局部验证 | 单个 Beat 参数、逐字对白、立绘或音效引用、单场景内节点 / 数值调整 | 对应对象的清单校验、资源解析、宿主 F6 观察；剧情使用 `tools/story/validate_story.gd` 的对应清单 |
+| 局部验证 | 单个 Beat 参数、逐字对白、立绘或音效引用、单场景内节点 / 数值调整 | 对应对象的清单校验、资源解析、宿主 F6 观察；未迁移剧情用 `tools/story/validate_story.gd`，结构化工程用 `tools/story/edit_story_project.gd`，需要执行时用独立预览入口选择受影响事件，见[编排指南](../docs/guides/story_editor.md) |
 | 模块验证 | 模块内部逻辑，或影响其多个场景 / 调用方，例如步骤类型、对白解析、UI 弹窗、Bridge phase | 模块测试脚本，加直接调用方的最小验证；按模块 `AGENTS.md` 选择候选 |
 | 完整回归 | 核心公共接口、跨模块状态契约、场景生命周期、共享数据格式变更、大规模重构、发布验收 | `tests/` 下全部相关 `verify_*.gd` 及 `tests/verify_story_authoring.py`，结果按基线对照记录 |
 

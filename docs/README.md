@@ -34,6 +34,7 @@
 | [剧情编排指令速查（v1）](guides/story_authoring_commands.md) | `story_authoring_commands.md` |
 | [剧情编排 Markdown 写作规范（简版）](guides/story_authoring_fields_quick_guide.md) | `story_authoring_fields_quick_guide.md` |
 | [自然语言剧情编排工作流](guides/story_authoring_workflow.md) | `story_authoring_workflow.md` |
+| [游戏内剧情编排](guides/story_editor.md) | F3 手动编排、结构化工程、独立预览与 CLI |
 
 ## 系统与公共接口
 

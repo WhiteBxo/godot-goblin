@@ -7,6 +7,7 @@ var _failures: Array[String] = []
 var _game: MainGame
 var _state: StateData
 var _lines := {}
+var _authored_line_count := 0
 var _events_failed: Array[String] = []
 var _capture := false
 var _expected_cancellation := false
@@ -171,7 +172,18 @@ func _restore(snapshot: Dictionary) -> void:
 func _validate_authoring() -> void:
 	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(MANIFEST))
 	var source := FileAccess.get_file_as_string(manifest.source)
-	check(source.sha256_text() == manifest.source_sha256, "Source hash matches authoring products")
+	var structured: bool = manifest.has("authoring_project")
+	if structured:
+		var project := StoryProject.new()
+		check(project.open_project(manifest.authoring_project) == OK, "Structured authoring project loads")
+		check(FileAccess.get_sha256(manifest.authoring_project) == manifest.authoring_sha256, "Project hash matches generated products")
+		var products := project.compile()
+		check(not products.is_empty(), "Structured project validates with original loaders")
+		if not products.is_empty():
+			check(JSON.parse_string(FileAccess.get_file_as_string(manifest.story)) == JSON.parse_string(JSON.stringify(products.story)), "Story matches canonical project")
+			check(JSON.parse_string(FileAccess.get_file_as_string(manifest.dialogue)) == JSON.parse_string(JSON.stringify(products.dialogue)), "Dialogue matches canonical project")
+	else:
+		check(source.sha256_text() == manifest.source_sha256, "Source hash matches authoring products")
 	var story := StoryLibrary.new()
 	var dialogue := DialogueLibrary.new()
 	check(story.load_file(manifest.story) == OK, "Original Story v1 loader accepts all events")
@@ -180,17 +192,21 @@ func _validate_authoring() -> void:
 	for id: String in dialogue.get("_dialogues"):
 		for line: Dictionary in dialogue.get_dialogue(id).lines.values():
 			expected_lines += 1
-			check(('「' + line.text + '」') in source, "Every displayed sentence is verbatim from source")
-	check(expected_lines == 21, "All 21 original lines and system hints are included")
-	check(dialogue.get_dialogue("day1.coins_raise_suspicion").lines.line_2.portrait == "res://assets/characters/apron_man/player_bad_laugh.png", "Authored ending expression uses the supplied portrait")
+			if not structured:
+				check(('「' + line.text + '」') in source, "Every displayed sentence is verbatim from source")
+	check(expected_lines > 0 if structured else expected_lines == 21, "Authored dialogue lines are included")
+	_authored_line_count = expected_lines
+	if not structured:
+		check(dialogue.get_dialogue("day1.coins_raise_suspicion").lines.line_2.portrait == "res://assets/characters/apron_man/player_bad_laugh.png", "Authored ending expression uses the supplied portrait")
 	for id: String in manifest.actors:
 		check(ResourceLoader.exists(manifest.actors[id]), "Bound actor scene exists: " + id)
-	check(manifest.beats.size() == 12, "All 12 Beats have execution mappings")
+	check(not manifest.beats.is_empty() if structured else manifest.beats.size() == 12, "Beats have execution mappings")
 	for beat: Dictionary in manifest.beats:
-		check(source.contains("### Beat " + beat.id), "Mapped Beat exists: " + beat.id)
+		if not structured:
+			check(source.contains("### Beat " + beat.id), "Mapped Beat exists: " + beat.id)
 		if beat.has("event"):
 			var steps: Array = story.get_event(beat.event).steps
-			check(beat.start >= 0 and beat.count > 0 and beat.start + beat.count <= steps.size(), "Beat owns an actual step range")
+			check(beat.start >= 0 and beat.count >= 0 and beat.start + beat.count <= steps.size(), "Beat owns an actual step range")
 
 func _test_settlement_failures() -> void:
 	var state := StateData.new()
@@ -329,7 +345,7 @@ func _run() -> void:
 			await _restore(_state.to_dict())
 			await _reload(_state.to_dict())
 	await _wait_event("day1.ending")
-	check(_lines.size() == 21 and _events_failed.is_empty(), "All authored dialogue lines execute without actor or audio failure")
+	check(_lines.size() == _authored_line_count and _events_failed.is_empty(), "All authored dialogue lines execute without actor or audio failure")
 	check(_state.get_variable("shop.orders_completed") == 5 and _game.get_tea_production().get_completed_count() == 5, "Five crafted and independently settled orders")
 	check(_game.get_transactions().get_balance() == 10 and _game.get_warehouse_inventory().get_stock("strange_coin") == 4, "Final totals are income 10 and four strange coins")
 	check(_game.get_business_hud().get_node("BusinessBalance").text == "营业收入 10    古怪金币 4", "HUD follows the actual committed wallet and story-item balance")

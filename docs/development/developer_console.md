@@ -1,5 +1,7 @@
 # 通用 Developer Console（第一阶段）
 
+已增加 F3 →「编排」：结构化工程、步骤表单 / JSON、对白编辑、排序和撤销、保存生成与独立窗口预览。完整操作与来源切换见[游戏内剧情编排](../guides/story_editor.md)。已迁移的前两阶段以工程为正式来源；下文原事件页仍可重载和触发运行时产物。
+
 Godot 4.7.2，默认收起。F3 打开/关闭，Esc 关闭；沿用共享像素字体与暖棕主题，面板位于屏幕右侧。仅 `DebugRuntime.is_enabled()` 为 true 时由 MainGame 装配。F3 的 `debug_toggle_console` action 只在 Debug 工具创建时注册到内存 InputMap，不修改项目输入配置。
 
 ## 功能与操作

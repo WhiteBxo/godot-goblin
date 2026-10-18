@@ -75,7 +75,10 @@ func _interact(id: String) -> void:
 		print("INTERACT_DIAG ", id, " player=", _game.get_player().global_position, " point=", point.global_position, " visible=", point.is_visible_in_tree(), " bodies=", point.get("_bodies"), " overlap=", point.get_overlapping_bodies(), " layer=", _game.get_player().collision_layer, " available=", point.is_available(), " movement=", _game.get_player().movement_enabled, " input=", _game.get("_shop_interaction").is_input_enabled(), " modal=", _game.get_ui_manager().has_modal(), " target=", _game.get("_shop_interaction").get_target())
 		quit(1)
 	await _press_e()
-	check(_game.get_shop_ui().is_open(), "E opens business UI at " + id)
+	if _game.get_delivery_point(id) != null:
+		check(not _game.get_shop_ui().is_open(), "E at customer uses nonmodal delivery feedback: " + id)
+	else:
+		check(_game.get_shop_ui().is_open(), "E opens business UI at " + id)
 
 func _attach_observers() -> void:
 	_game.get_dialogue_manager().line_changed.connect(_record_line)
@@ -164,7 +167,7 @@ func _make() -> void:
 
 func _deliver(id: String) -> void:
 	await _interact(id)
-	check(_game.get_shop_ui().is_open(), "Settlement remains visible until explicitly closed")
+	check(not _game.get_shop_ui().is_open() and not _game.get_shop_ui().get_feedback_text().is_empty(), "Settlement reports its real result without a modal")
 	await _snapshot("delivery")
 
 func _restore(snapshot: Dictionary) -> void:
@@ -309,13 +312,13 @@ func _run() -> void:
 	_state.state_changed.disconnect(observe)
 	check(observations == [true], "Synchronous settlement observers see complete results and cannot reset or overwrite")
 	check(_state.get_transactions().get_balance() == 10, "Human first order really pays 10")
-	check(not _state.is_event_completed("day1.first_goblin"), "Open delivery modal blocks continuation")
+	check(not _game.get_ui_manager().is_open(ScreenIds.SHOP), "Delivery feedback adds no modal that delays continuation")
 	before = _state.to_dict()
 	check(not _game.get_task_delivery().try_submit("day1_human", "human_customer").ok and _state.to_dict() == before, "Repeated delivery cannot pay twice")
 	_game.get_shop_ui().close()
 	_game.get_ui_manager().set_paused(true)
 	await frames(8)
-	check(not _game.get_story_director().is_busy(), "Paused tree blocks continuation")
+	check(not _state.is_event_completed("day1.first_goblin"), "Paused tree prevents continuation from completing")
 	_game.get_ui_manager().set_paused(false)
 	await _wait_event("day1.first_goblin")
 	_waiting_snapshots.append(_state.to_dict())

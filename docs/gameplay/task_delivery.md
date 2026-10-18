@@ -1,6 +1,6 @@
 # 成品携带与指定 NPC 交付
 
-本次改动将正式 TeaProduction 的制作与交付分开。两个正式入口均可直接验收：F6 `src/core/main.tscn`，或 F5 当前聚落 `src/core/settlement.tscn`。
+正式 TeaProduction 的制作与交付分开。F5 进入标题菜单并开始 Day 1；F6 `src/core/main.tscn` 或 `src/core/settlement.tscn` 可独立运行宿主。当前订单板、制作和 HUD 操作见[订单系统](order_system.md)。
 
 ## 数据与复用
 
@@ -26,7 +26,7 @@
 
 材料需求与成品需求共用同一套结算：`get_requirement()` 把两种配置统一成 `{item_id: 数量}`（JSON 数字在此转成 int，库存 API 只接受 int），`try_submit(order_id, target_object_id)` 是规范入口，扣减仍由一次 `WarehouseInventory.try_exchange(需求, 奖励)` 完成。旧的 `try_deliver(order_id, product_id, target_object_id)` 保留为兼容包装：成品订单校验 `product_id` 一致，材料订单要求传入空字符串。
 
-原奖励字段仅用于展示，没有实际结算器。按本次确认，在现有 `rewards` 中增加可选的 `items`，复用 WarehouseInventory 发放物品，不引入货币或新奖励框架：
+`rewards.text` 仅用于展示；可选的 `items` 通过 WarehouseInventory 发放物品，`money` 通过现有 WalletTransactions 发放营业收入，沿用各任务既有奖励配置：
 
 ```json
 "rewards": {"text": "糖浆 × 1", "items": {"syrup": 1}}
@@ -36,11 +36,11 @@
 
 ## 执行流程
 
-1. MainGame 装配 Systems/TaskDelivery，注入原目录、Journal、GameState 和共享库存。订单板打开成功后接取已发布的交付任务；已有 StoryDirector 路由继续优先。
-2. TeaProduction 验证当前制作订单、配方和原料，原子扣料并增加成品。`get_completed_count()` 保持原 API，代表制作杯数；它不再代表交付次数，不再写任务完成事实。
+1. MainGame 装配 Systems/TaskDelivery，注入原目录、Journal、GameState 和共享库存。打开订单板只查看；每单点击“接取订单”后调用 `accept_order()`，重复接取返回 `ERR_ALREADY_EXISTS`。已有 StoryDirector 路由继续优先。
+2. TeaProduction 验证配方和原料，原子扣料并增加成品。正式 UI 使用 `craft()` 自由安排订单顺序。`get_completed_count()` 保持原 API，代表制作杯数，不代表交付次数或完成事实。
 3. MainGame 为现有 NPC 挂接通用 InteractionPoint，将 actor_id 交给原 ShopInteraction 分派。点位随 NPC 移动，NPC 场景没有交付规则。店铺入口增设一个胖哥布林，聚落复用已有角色。
-4. TaskDelivery 检查订单、成品、NPC、任务 active 状态与交付回执，之后通过 `WarehouseInventory.try_exchange` 一次校验扣除与奖励的全部数量和容量。
-5. 提交期间暂缓库存信号，扣成品、加奖励、`GameState.apply_flags` 一次写完成 flag 与 `delivery.<order_id>.completed` 回执。通知期间保留提交锁。任何库存或状态监听器第一次回调时都能读取完整的成品、奖励和任务结果。
+4. `deliver_to(target_id, preferred_order_id = "")` 优先选择已接取且可交付的追踪订单，否则按目录顺序选择。未接单不阻挡已接单。TaskDelivery 检查需求、NPC、接取状态、回执、库存与奖励容量。
+5. 正式共享会话经 `GameState.commit_delivery()` 原子提交物品、钱包、完成 flag 和 `delivery.<order_id>.completed` 回执；独立测试库存保留交换与批量 flag 提交路径。通知期间保留提交锁，任何监听器第一次回调时都能读取完整结果。
 6. TaskDelivery 在同一提交中从成功回执更新 `shop.orders_completed` 最高值，随后统一通知库存和事实变化。计数不依赖场景回调。重复制作信号不推进任务。现有 GameplayBridge 继续等待 `shop.order_001_delivered`，遵守原来的暂停/弹窗/剧情取消规则。
 
 回执存在 GameState 的原 flags 中，不是第二套任务状态。它防止重复交付、组件重建后发奖，以及外部单独撤销任务完成 flag 后再次领奖。GameState 已统一持有跨场景库存和制作服务，整体快照同时恢复物品、订单和回执；仅显式新游戏或恢复完整旧快照改变整局进度，详见 [统一经营会话](business_session.md)。未新增存档文件。
@@ -60,13 +60,13 @@
 
 ## 试玩
 
-1. 订单板按 E 接单：显示珍珠奶茶与胖哥布林，任务 HUD 显示交付目标。
-2. 制作台选择红茶、奶精、珍珠，糖浆自动加入，点击“制作并入库”。原料各减一，成品库存加一，任务保持 active。
+1. 在 `src/debug/story/legacy_shop.tscn` 到订单板按 E 查看，选珍珠奶茶并点击“接取订单”，HUD 显示下一步。正式 Day 1 的顾客和奖励以当前剧情阶段为准。
+2. 制作台默认按订单制作，自动带入配方，点击“制作 1 杯并入库”。原料各减一，成品库存加一，任务保持 active。
 3. Esc 关闭后可以移动；仓库可查看成品。前往其他 NPC 按 E，成品不减少，任务不变。
-4. 携带成品到胖哥布林按 E，显示交付成功：成品减一，糖浆奖励加一，任务 completed，HUD 隐藏。
-5. 关闭弹窗后再次按 E：安全拒绝，库存和奖励保持不变。
+4. 携带成品到胖哥布林按 E，显示短暂交付反馈：成品减一，糖浆奖励加一，任务 completed；HUD 切到其他有效订单或当前主线。
+5. 再次按 E：安全拒绝，库存和奖励保持不变，无需关闭交付结果弹窗。
 
-#002、#003 的原配方选择、扣料、制作队列及结束保护保留，改为分别入库椰果茉莉奶茶和原味奶茶；当前示例只发布 #001 交付任务。TeaMaking 的剧情 Demo 会话不变，仍不等同于正式库存制作。
+#002、#003 的旧制作队列 API 及快照保留兼容；正式订单界面不据此判断进度。上述 legacy 示例只发布 #001 交付任务，正式 Day 1 使用自己的剧情订单目录。TeaMaking 的剧情 Demo 会话不变，仍不等同于正式库存制作。
 
 ## 修改文件
 
@@ -82,7 +82,7 @@
 | 测试 | `tests/verify_task_delivery.gd`、对应 `.uid`；`verify_task_system.gd`、`verify_tea_production.gd`、`verify_warehouse_inventory.gd`、`verify_gameplay_bridge.gd`、`verify_milk_tea_shop.gd` |
 | 试玩说明 | `src/debug/tasks/task_demo.gd`、本文、`docs/gameplay/basic_tea_production.md`、`docs/levels/milk_tea_mvp.md`、`docs/gameplay/warehouse_inventory.md`、`docs/systems/gameplay_bridge.md`、`docs/gameplay/task_system.md` |
 
-## 实测结果
+## 早期实现实测记录
 
 Godot 4.7.2.stable.official.ed1daf0bf。本次实际执行：
 

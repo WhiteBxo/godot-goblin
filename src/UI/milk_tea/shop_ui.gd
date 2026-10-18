@@ -10,6 +10,8 @@ signal accept_requested(order_id: String)
 signal track_requested(order_id: String)
 var _production: TeaProduction
 var _inventory: WarehouseInventory
+var _orders: OrderBoardModel
+var _prompt_point: InteractionPoint
 
 func get_popup() -> ShopPopup:
 	return _popup
@@ -25,7 +27,23 @@ func configure_production(production: TeaProduction) -> void:
 		_popup.configure_production(production)
 
 func configure_orders(model: OrderBoardModel) -> void:
+	if is_instance_valid(_orders) and _orders.changed.is_connected(_refresh_order_prompt):
+		_orders.changed.disconnect(_refresh_order_prompt)
+	_orders = model
+	_orders.changed.connect(_refresh_order_prompt)
 	_popup.configure_orders(model)
+
+func show_feedback(message: String, succeeded: bool = true) -> void:
+	$Feedback/Panel/Text.text = message
+	$Feedback/Panel/Text.theme_type_variation = &"Success" if succeeded else &"Warning"
+	$Feedback.visible = not message.is_empty()
+	$FeedbackTimer.start()
+
+func get_feedback_text() -> String:
+	return $Feedback/Panel/Text.text if $Feedback.visible else ""
+
+func get_prompt_text() -> String:
+	return _prompt.get_text()
 
 func show_order_requirements(message: String) -> void:
 	if is_instance_valid(_popup):
@@ -50,6 +68,7 @@ var _manager: UIManager
 func _ready() -> void:
 	$Header.text = help_text
 	$Header.visible = show_help
+	$FeedbackTimer.timeout.connect(func() -> void: $Feedback.hide())
 
 func set_popup_layer(layer: CanvasLayer) -> void:
 	if is_instance_valid(_popup):
@@ -82,10 +101,24 @@ func bind_tea_making(tea: TeaMaking) -> void:
 		)
 
 func show_prompt(point: InteractionPoint) -> void:
+	_prompt_point = point
 	if point == null or is_open():
 		_prompt.clear()
 	else:
-		_prompt.show_prompt(point.display_name)
+		var text := point.display_name
+		if is_instance_valid(_orders):
+			var tracked := _orders.get_tracked_entry()
+			if tracked.get("target_id") == String(point.interaction_id) and tracked.get("ready", false):
+				text = "交付 · " + tracked.title
+			else:
+				for entry: Dictionary in _orders.get_entries():
+					if entry.status == "active" and entry.ready and entry.target_id == String(point.interaction_id):
+						text = "交付 · " + entry.title
+						break
+		_prompt.show_prompt(text)
+
+func _refresh_order_prompt() -> void:
+	show_prompt(_prompt_point if is_instance_valid(_prompt_point) else null)
 
 func open(point: InteractionPoint) -> void:
 	if not is_instance_valid(_popup):
@@ -97,6 +130,7 @@ func open(point: InteractionPoint) -> void:
 		_popup.show()
 		_popup.get_default_focus().grab_focus()
 	_popup.present(point)
+	$Feedback.hide()
 	point_opened.emit(point.interaction_id)
 	_focus_popup.call_deferred()
 	_prompt.clear()

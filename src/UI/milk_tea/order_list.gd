@@ -6,8 +6,10 @@ signal selection_requested(order_id: String)
 
 @onready var _rows: VBoxContainer = $Rows
 var _buttons: Dictionary[String, Button] = {}
+var _selected_id := ""
 
 func set_entries(entries: Array[Dictionary], selected_id: String) -> void:
+	_selected_id = selected_id
 	var ids: Array[String] = []
 	for entry: Dictionary in entries:
 		ids.append(entry.order_id)
@@ -42,7 +44,7 @@ func _make_row(id: String) -> Button:
 	button.pressed.connect(func() -> void: selection_requested.emit(id))
 	button.focus_entered.connect(func() -> void:
 		selection_requested.emit(id)
-		ensure_control_visible.call_deferred(button))
+		_reveal_row.call_deferred(button))
 	var content := HBoxContainer.new()
 	content.name = "Content"
 	content.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -76,7 +78,13 @@ func _make_row(id: String) -> Button:
 		labels.add_child(label)
 	return button
 
+func _reveal_row(button: Button) -> void:
+	if is_instance_valid(button) and is_ancestor_of(button) and button.is_inside_tree():
+		ensure_control_visible(button)
+
 func get_default_focus() -> Control:
+	if _buttons.has(_selected_id):
+		return _buttons[_selected_id]
 	return _rows.get_child(0) as Control if _rows.get_child_count() > 0 else null
 
 func focus_order(id: String) -> void:

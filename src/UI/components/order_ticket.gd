@@ -29,7 +29,7 @@ func present(entry: Dictionary, action: String = "", enabled: bool = false) -> v
 		if not entry.missing_text.is_empty() and entry.status != "completed":
 			lines.append("还缺：" + entry.missing_text)
 	_requirements.text = "\n".join(lines)
-	_hint.text = entry.get("hint", "可以返回店铺，等待新的客人。")
+	_hint.text = "下一步：" + str(entry.get("hint", "可以返回店铺，等待新的客人。"))
 	_primary.text = action
 	_primary.visible = not action.is_empty()
 	_primary.disabled = not enabled

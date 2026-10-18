@@ -161,11 +161,22 @@ func try_submit(order_id: String, target_object_id: String) -> Dictionary:
 	if _state.get_flag(_receipt_key(order_id)) or _journal.get_task(task.id).get("status") != "active":
 		return _failure("任务未激活或已经完成，不能交付。", order_id)
 	if task.delivery.has("accepted_flag") and not _state.get_flag(task.delivery.accepted_flag):
-		return _failure("请先查看订单板接单。未消耗库存。", order_id)
+		return _failure("请先在订单板接取这张订单。", order_id)
 	var requirement := get_requirement(order_id)
+	var missing := PackedStringArray()
+	for id: String in requirement:
+		var shortfall: int = int(requirement[id]) - _inventory.get_stock(id)
+		if shortfall > 0:
+			missing.append("%s ×%d" % [_inventory.get_definition(id).display_name, shortfall])
+	if not missing.is_empty():
+		return _failure("还缺：" + "、".join(missing) + "。", order_id)
 	var rewards := {}
 	for id: String in task.get("rewards", {}).get("items", {}):
 		rewards[id] = int(task.rewards.items[id])
+		if _inventory.get_stock(id) - int(requirement.get(id, 0)) > WarehouseInventory.MAX_QUANTITY - rewards[id]:
+			return _failure("奖励库存已满：" + _inventory.get_definition(id).display_name + "。请腾出空间后重试。", order_id)
+	if _inventory == _state.get_warehouse_inventory() and _state.get_transactions().get_balance() > WalletTransactions.LIMIT - int(task.get("rewards", {}).get("money", 0)):
+		return _failure("钱包已满，请腾出余额后重试。", order_id)
 	if _inventory == _state.get_warehouse_inventory():
 		var balance_before := _state.get_transactions().get_balance()
 		var reward_stock := {}

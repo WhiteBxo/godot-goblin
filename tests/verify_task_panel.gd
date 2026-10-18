@@ -268,7 +268,7 @@ func _test_host(path: String) -> void:
 	state.set_flag("task.panel.active")
 	game.open_tasks()
 	list.item_selected.emit(1)
-	check(not game.has_node("HudLayer/TaskHUD") and game.get_task_journal().get_current_main_task().id == "panel.main", "Commission selection preserves current main task without a tracker")
+	check(game.get_task_journal().get_current_main_task().id == "panel.main" and game.get_node("HudLayer/TaskHUD/Margin/Content/Title").text == game.get_task_journal().get_current_main_task().title, "Commission selection preserves the non-order main task in HUD")
 	await frames()
 	text.get_v_scroll_bar().value = 60
 	await frames()

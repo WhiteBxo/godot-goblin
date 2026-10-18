@@ -349,7 +349,7 @@ func _check_catalog_and_fallback() -> void:
 	root.add_child(delivery)
 	delivery.configure(test_catalog, journal, _state, _state.get_warehouse_inventory())
 	_state.set_flag("t.s04_open")
-	_check(delivery.accept_order("t_s04_order") == OK, "Accept the active order")
+	_check(delivery.is_order_accepted("t_s04_order") and delivery.accept_order("t_s04_order") == ERR_ALREADY_EXISTS, "Story-accepted order is already active and cannot be accepted twice")
 	var reported: Array[String] = []
 	delivery.delivery_failed.connect(func(order_id: String, _message: String) -> void: reported.append(order_id))
 	var result := delivery.deliver_to("fat_goblin")

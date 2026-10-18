@@ -92,7 +92,7 @@ func _run() -> void:
 		_check(ui.get_node("Prompt").visible, "Approach must display the interaction prompt")
 		await _key(KEY_E)
 		_check(ui.is_open(), "E must open UI: " + point.display_name)
-		_check(ui.get_popup().get_title() == point.display_name, "UI title must match point")
+		_check(ui.get_popup().get_title() == ("今日订单" if point.interaction_id == &"orders" else point.display_name), "UI title identifies the active page")
 		var position_before := player.global_position
 		Input.action_press("move_right")
 		await _frames(5)

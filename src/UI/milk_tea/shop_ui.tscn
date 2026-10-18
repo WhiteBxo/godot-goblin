@@ -40,3 +40,31 @@ offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
+
+[node name="Feedback" type="CenterContainer" parent="."]
+visible = false
+layout_mode = 1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -112.0
+offset_right = -16.0
+offset_bottom = -52.0
+mouse_filter = 2
+
+[node name="Panel" type="PanelContainer" parent="Feedback"]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"CardPanel"
+
+[node name="Text" type="Label" parent="Feedback/Panel"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"Success"
+autowrap_mode = 3
+
+[node name="FeedbackTimer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true

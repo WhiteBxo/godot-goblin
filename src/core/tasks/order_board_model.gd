@@ -132,6 +132,10 @@ func _project(task: Dictionary, view: Dictionary, accepted: bool, done: bool) ->
 	var missing: Dictionary = {}
 	var recipe_materials: Array[String] = []
 	var can_craft := false
+	if product_id.is_empty() and not ready:
+		for item: Dictionary in items:
+			if item.owned < item.needed:
+				missing[item.id] = item.needed - item.owned
 	if not product_id.is_empty() and not ready:
 		var recipe := _production.get_recipe_by_product(product_id)
 		if recipe == null or not recipe.is_available(_state):

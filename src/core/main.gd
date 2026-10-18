@@ -437,8 +437,16 @@ func _create_shop_business(ui: ShopUI) -> void:
 	ui.configure_orders(_order_board)
 	ui.track_requested.connect(_track_order)
 	ui.accept_requested.connect(func(id: String) -> void:
-		if _task_delivery.accept_order(id) == OK:
-			_track_order(id))
+		var accepted := _task_delivery.accept_order(id)
+		if accepted == OK:
+			_track_order(id)
+		elif accepted != ERR_ALREADY_EXISTS:
+			ui.show_feedback("暂时无法接取这张订单，请核对当前阶段。", false))
+	var task_hud: TaskHUD = preload("res://src/UI/tasks/task_hud.tscn").instantiate()
+	_ui_manager.register_screen(ScreenIds.TASK_HUD, task_hud, &"hud", false)
+	_ui_manager.open_screen(ScreenIds.TASK_HUD)
+	task_hud.bind_journal(_task_journal)
+	task_hud.bind_orders(_order_board)
 	ui.craft_requested.connect(func(materials: Array[String], quantity: int) -> void:
 		var result := _tea_production.craft(materials, quantity)
 		if day1_story_enabled and result.ok:
@@ -477,6 +485,9 @@ func get_task_delivery() -> TaskDelivery:
 
 func get_order_board() -> OrderBoardModel:
 	return _order_board
+
+func get_delivery_point(target_id: String) -> InteractionPoint:
+	return _npc_points.get(StringName(target_id))
 
 func _track_order(order_id: String) -> void:
 	if _order_board.get_entry(order_id).get("status") == "active":
@@ -540,9 +551,9 @@ func _route_story_interaction(id: StringName) -> Error:
 			_shop_ui.show_interaction_result(result.message)
 		return OK if result.ok else ERR_UNAVAILABLE
 	if _npc_points.has(id) and is_instance_valid(_task_delivery):
-		var delivery_result := _task_delivery.deliver_to(String(id))
-		_shop_ui.open(_npc_points[id])
-		_shop_ui.show_interaction_result(delivery_result.message)
+		var tracked := _order_board.get_tracked_entry()
+		var delivery_result := _task_delivery.deliver_to(String(id), tracked.get("order_id", ""))
+		_shop_ui.show_feedback(delivery_result.message, delivery_result.ok)
 		return OK if delivery_result.ok else ERR_UNAVAILABLE
 	return ERR_DOES_NOT_EXIST
 

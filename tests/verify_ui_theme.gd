@@ -68,6 +68,8 @@ func _run() -> void:
 		for type: String in _node_types(source):
 			seen_types[type] = true
 	for type: String in seen_types:
+		if not ClassDB.is_parent_class(type, &"Control"):
+			continue
 		if type in ALLOWED_UNTHEMED:
 			continue
 		var has_item := (not theme.get_stylebox_list(type).is_empty()

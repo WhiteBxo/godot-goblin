@@ -19,6 +19,18 @@ func frames(count: int = 4) -> void:
 	for index in range(count):
 		await process_frame
 
+func press(action: StringName) -> void:
+	var event := InputEventAction.new()
+	event.action = action
+	event.pressed = true
+	Input.parse_input_event(event)
+	await frames(2)
+	event = InputEventAction.new()
+	event.action = action
+	event.pressed = false
+	Input.parse_input_event(event)
+	await frames(2)
+
 func capture(label: String) -> void:
 	if not _capture or DisplayServer.get_name() == "headless":
 		return
@@ -58,7 +70,8 @@ func _run() -> void:
 	check(page.select_order("day1_group_c"), "Select the last order independently of queue position")
 	check(page.get_ticket().get_primary_button().text == "接取订单", "Available order has one clear acceptance action")
 	await capture("available_640")
-	page.get_ticket().get_primary_button().pressed.emit()
+	page.get_ticket().get_primary_button().grab_focus()
+	await press(&"ui_accept")
 	await frames()
 	check(_game.get_task_delivery().is_order_accepted("day1_group_c"), "Acceptance button commits the selected order")
 	check(not _game.get_task_delivery().is_order_accepted("day1_group_a"), "Acceptance never touches another order")
@@ -99,13 +112,78 @@ func _run() -> void:
 	check("可交付" == _game.get_order_board().get_entry("day1_group_c").status_text, "Board reflects actual crafted inventory")
 	root.size = Vector2i(1280, 720)
 	await frames(8)
+	check(page.get_selected_id() == "day1_group_c", "Deferred modal focus and resizing preserve the selected order")
 	await capture("active_1280")
 	check(page.get_ticket().get_global_rect().end.x <= ui.get_viewport_rect().size.x, "Ticket fits larger viewport")
 	ui.close()
 	await frames()
 	check(_game.get_player().movement_enabled, "Closing restores gameplay movement")
+	root.size = Vector2i(640, 360)
+	var point := _game.get_delivery_point("goblin_c")
+	_game.get_player().teleport_to(point.global_position + Vector2(0, -40))
+	for index in range(5):
+		await physics_frame
+	await frames()
+	check("交付" in ui.get_prompt_text() and "椰果" in ui.get_prompt_text(), "Ready customer prompt names the actual deliverable product")
+	await capture("hud_640")
+	var coins := inventory.get_stock("strange_coin")
+	await press(&"interact")
+	check(state.get_flag("day1.group_c_settled") and inventory.get_stock("strange_coin") == coins + 1, "Actual E interaction settles the selected customer once")
+	check(not ui.is_open() and not _game.get_ui_manager().has_modal() and _game.get_player().movement_enabled, "Settlement feedback keeps gameplay available")
+	check("交付成功" in ui.get_feedback_text() and "古怪金币" in ui.get_feedback_text(), "Nonmodal feedback reports actual committed reward")
+	check(_game.get_order_board().get_tracked_entry().order_id != "day1_group_c", "Completed tracking falls back to another active order")
+	await capture("delivered_640")
+	var settled := state.to_dict()
+	await press(&"interact")
+	check(state.to_dict() == settled, "Repeated physical E cannot pay twice")
+	ui.open(board)
+	await press(&"ui_cancel")
+	check(not ui.is_open() and _game.get_player().movement_enabled, "Keyboard Esc closes the board and restores movement")
+	await _test_long_content(_game.get_order_board().get_entries()[0])
 	_game.free()
 	await frames()
 	state.start_new_game()
 	print("ORDER_UI: %s (%d checks, %d failures)" % ["PASS" if _failures.is_empty() else "FAIL", _checks, _failures.size()])
 	quit(0 if _failures.is_empty() else 1)
+
+func _test_long_content(sample: Dictionary) -> void:
+	var list: OrderList = load("res://src/UI/milk_tea/order_list.tscn").instantiate()
+	_game.get_node("HudLayer").add_child(list)
+	list.position = Vector2(16, 16)
+	list.size = Vector2(176, 150)
+	var entries: Array[Dictionary] = []
+	for index: int in range(20):
+		var entry := sample.duplicate(true)
+		entry.order_id = "long.%d" % index
+		entries.append(entry)
+	list.set_entries(entries, "long.18")
+	list.focus_order("long.18")
+	await frames()
+	var focused := root.gui_get_focus_owner()
+	var scroll := list.get_v_scroll_bar().value
+	check(scroll > 0, "A long order list scrolls its focused row into view")
+	entries[18].status_text = "缺料"
+	list.set_entries(entries, "long.18")
+	await frames()
+	check(root.gui_get_focus_owner() == focused and is_equal_approx(list.get_v_scroll_bar().value, scroll), "Refreshing a long list preserves focus and scroll")
+	await press(&"ui_up")
+	check(root.gui_get_focus_owner() != focused and list.is_ancestor_of(root.gui_get_focus_owner()), "Keyboard arrows navigate long order lists")
+	list.free()
+	var ticket: OrderTicket = load("res://src/UI/components/order_ticket.tscn").instantiate()
+	_game.get_node("HudLayer").add_child(ticket)
+	ticket.position = Vector2(216, 116)
+	ticket.size = Vector2(396, 216)
+	var entry := sample.duplicate(true)
+	entry.product_id = ""
+	entry.items.clear()
+	for index: int in range(20):
+		entry.items.append({"name": "所需物资 %d" % index, "owned": 0, "needed": 1})
+	ticket.present(entry, "追踪此单", true)
+	await frames()
+	# A real parent Container reapplies the available size after wrapped text settles.
+	ticket.size = Vector2(396, 216)
+	await frames()
+	var hint := ticket.get_node("%NextStep") as Label
+	check(hint.get_global_rect().end.y <= ticket.get_primary_button().global_position.y and ticket.get_primary_button().get_global_rect().end.y <= 332, "Long requirements scroll independently while next step and action stay visible")
+	ticket.free()
+	await frames()

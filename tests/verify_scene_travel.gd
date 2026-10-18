@@ -81,7 +81,7 @@ func _cross(game: MainGame, destination: String) -> MainGame:
 	game.get_player().teleport_to(exit.global_position)
 	await _frames()
 	_check(exit.is_available(), "Door detects nearby player")
-	_check(game.get_shop_ui().get_node("Prompt").text == "[E] " + exit.display_name, "Door owns the actual interaction prompt")
+	_check(game.get_shop_ui().get_prompt_text() == exit.display_name, "Door owns the actual interaction prompt")
 	await _key(true)
 	_check(game.get_scene_travel().is_busy() and not game.get_player().movement_enabled, "E starts one transition and locks movement")
 	_check(game.get_scene_travel().request_exit(exit) == ERR_BUSY, "Duplicate request rejects while travelling")

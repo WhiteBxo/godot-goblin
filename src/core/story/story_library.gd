@@ -132,6 +132,10 @@ func _step(step: Variant, context: String) -> bool:
 		return _invalid(context, "Expected a command object")
 	var fields: Array = ["command", "when"]
 	match step["command"]:
+		"chapter_action":
+			fields.append("id")
+			if not is_namespaced(step.get("id")):
+				return _invalid(context, "chapter_action requires a namespaced action id")
 		"dialogue":
 			fields.append("id")
 			if not step.get("id") is String or step["id"].is_empty():

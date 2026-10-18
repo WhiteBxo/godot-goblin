@@ -172,6 +172,12 @@ func get_choice(dialogue_id: String, line_id: String) -> String:
 	return _choices.get(dialogue_id, {}).get(line_id, "")
 
 
+var _event_filter: Callable
+
+## Host membership is injected from chapter data, including Bridge continuations.
+func set_event_filter(filter: Callable) -> void:
+	_event_filter = filter
+
 func request_event(id: String) -> Error:
 	last_error = ""
 	if is_busy() or _finishing:
@@ -186,6 +192,8 @@ func request_event(id: String) -> Error:
 	var event := _library.get_event(id)
 	if event.is_empty():
 		return _reject(ERR_DOES_NOT_EXIST, "Unknown story event: " + id)
+	if _event_filter.is_valid() and not bool(_event_filter.call(id)):
+		return _reject(ERR_UNAUTHORIZED, "Story event belongs to another host: " + id)
 	if event.get("once", true) and _state.is_event_completed(id):
 		return _reject(ERR_ALREADY_EXISTS, "Story event already completed: " + id)
 	if not _matches(event.get("conditions", {})):
@@ -360,7 +368,7 @@ func _process(_delta: float) -> void:
 			if _is_current(generation):
 				_track(card, "title_card", step.get("wait", true), generation)
 			return
-		"unlock_map", "tavern_purchase", "casino_settle", "business":
+		"unlock_map", "tavern_purchase", "casino_settle", "business", "chapter_action":
 			_dispatch_business(step, generation)
 			return
 		"play_sfx", "play_bgm", "stop_bgm", "fade_bgm":
@@ -401,6 +409,8 @@ func _dispatch_business(step: Dictionary, generation: int) -> void:
 		return
 	var result: Dictionary
 	match step.command:
+		"chapter_action":
+			result = _business.chapter_action(step.id)
 		"unlock_map":
 			result = _business.unlock_map(step.get("locations", []))
 		"tavern_purchase":

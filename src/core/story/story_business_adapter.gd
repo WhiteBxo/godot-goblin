@@ -11,6 +11,16 @@ var _known_location: Callable
 var _tavern: TavernPurchase
 var _casino: FixedStoryCasino
 var _business: BusinessScheduler
+var _chapter_actions: Callable
+
+## Scene-local gameplay adapter. IDs are authored data; unbound actions fail closed.
+func set_chapter_actions(actions: Callable) -> void:
+	_chapter_actions = actions
+
+func chapter_action(id: String) -> Dictionary:
+	if not _chapter_actions.is_valid():
+		return _failure("unconfigured", "章节业务尚未接入。")
+	return _chapter_actions.call(id)
 
 ## known_location(id) -> bool lets the host reject unknown map regions.
 ## Map knowledge is additive: a rejected unlock never removes authored facts.

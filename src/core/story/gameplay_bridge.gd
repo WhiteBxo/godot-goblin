@@ -57,10 +57,12 @@ func load_phases(path: String) -> Error:
 	var used: Dictionary = {}
 	for link: Variant in data.phases:
 		var source_key := "recipe" if data.version == 1 else "completion"
-		if not link is Dictionary or link.size() != 6 or not link.has_all(["id", "after_event", "stage", source_key, "completion_flag", "next_event"]):
+		if not link is Dictionary or link.size() < 6 or link.size() > 7 or not link.has_all(["id", "after_event", "stage", source_key, "completion_flag", "next_event"]):
+			return _invalid_phase(path)
+		if link.has("allow_travel") and not link.allow_travel is bool:
 			return _invalid_phase(path)
 		for key: String in link:
-			if key == "completion":
+			if key in ["completion", "allow_travel"]:
 				continue
 			if not link[key] is String or link[key].is_empty():
 				return _invalid_phase(path)
@@ -113,6 +115,12 @@ func allows_story_start() -> bool:
 		if _eligible(link):
 			return false
 	return true
+
+## Only explicitly authored travel waits may cross hosts. Legacy waits stay local.
+func allows_scene_travel() -> bool:
+	if allows_story_start():
+		return true
+	return not _active.is_empty() and bool(_active.get("allow_travel", false))
 
 ## Independent read-only snapshot for tooling. Reads existing fields only: it
 ## never loads phases, dispatches continuations or mutates wait/reservation state.

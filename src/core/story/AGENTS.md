@@ -4,6 +4,7 @@
 
 - [StoryDirector](../../../docs/systems/story_director.md) 描述接入；Schema 以 `story_library.gd` 的 Loader 和 `story_director.gd` 的实际 dispatch 为准。Library 负责加载与校验，Director 负责步骤调度，不能把玩法规则写进调度器。
 - Director 使用宿主注入的 DialogueManager、ActorDirector、CameraDirector、AudioManager 等服务与已有 GameState，不自行查其他模块内部层级或创建第二份状态。
+- 业务步骤（`unlock_map`／`tavern_purchase`／`casino_settle`／`business`）只经 `StoryBusinessAdapter` 调用宿主注入的已配置服务并投影真实回执；调度器不持有价格、奖励、库存或关店规则。服务未绑定时步骤失败，不用默认值代替。
 - 演出顺序与内容留在现有 v1 Story / Dialogue JSON。宿主只做依赖注入、注册、加载、触发和必要的清理，不以 GDScript 硬编码 Beat 顺序。
 - `conditions` 不会自动启动事件；交互 `trigger` 必须接入真实 `request_interaction` 路由。改路由、优先级、once 或 flag 时检查直接消费者与遮蔽关系。
 - Blocking / 非阻塞动作、同角色动作互斥、失败后已执行状态不回滚等语义按工作流与当前实现核对；不要用额外等待掩盖缺失能力或路径受阻。

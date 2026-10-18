@@ -194,6 +194,38 @@ func _step(step: Variant, context: String) -> bool:
 			for key: Variant in facts:
 				if not is_namespaced(key) or not facts[key] is bool or key == step.receipt:
 					return _invalid(context, "set_flags requires namespaced keys, bool values and no receipt")
+		"unlock_map":
+			fields.append("locations")
+			var locations: Variant = step.get("locations", [])
+			if not locations is Array:
+				return _invalid(context, "unlock_map locations must be an array")
+			for location: Variant in locations:
+				if not is_namespaced(location):
+					return _invalid(context, "unlock_map requires namespaced location IDs")
+		"tavern_purchase":
+			fields.append_array(["product_id", "quantity", "receipt"])
+			if not _text(step.get("product_id")):
+				return _invalid(context, "tavern_purchase requires a non-empty product_id")
+			if not _number(step.get("quantity")) or step.quantity < 1 or floor(step.quantity) != step.quantity:
+				return _invalid(context, "tavern_purchase quantity must be a positive integer")
+			if not is_namespaced(step.get("receipt")):
+				return _invalid(context, "tavern_purchase requires a namespaced receipt")
+		"casino_settle":
+			fields.append_array(["step", "reason"])
+			if step.get("step") not in ["first_loss", "second_win", "waive"]:
+				return _invalid(context, "casino_settle requires first_loss, second_win or waive")
+			if step.get("step") == "waive" and not _text(step.get("reason")):
+				return _invalid(context, "casino_settle waive requires a non-empty reason")
+		"business":
+			fields.append_array(["action", "stage_id", "group_id"])
+			if step.get("action") not in ["publish", "request_arrival", "confirm_arrival",
+					"request_departure", "confirm_departure", "close"]:
+				return _invalid(context, "business requires a known action")
+			if step.action == "publish" and not _text(step.get("stage_id")):
+				return _invalid(context, "business publish requires a non-empty stage_id")
+			if step.action in ["request_arrival", "confirm_arrival", "request_departure", "confirm_departure"] \
+					and not _text(step.get("group_id")):
+				return _invalid(context, "business customer actions require a non-empty group_id")
 		"set_phase":
 			fields.append("phase")
 			if step.get("phase") not in ["day", "night"]:

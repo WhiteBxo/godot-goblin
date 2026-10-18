@@ -38,6 +38,7 @@ var _used_camera := false
 var _chronicle: ChronicleJournal
 var _characters: CharacterJournal
 var _title_card: TitleCard
+var _business: StoryBusinessAdapter
 
 
 func set_chronicle_journal(journal: ChronicleJournal) -> void:
@@ -52,6 +53,11 @@ func set_character_journal(journal: CharacterJournal) -> void:
 func set_title_card(card: TitleCard) -> void:
 	cancel_event("Title card replaced")
 	_title_card = card
+
+
+func set_business_adapter(adapter: StoryBusinessAdapter) -> void:
+	cancel_event("Business adapter replaced")
+	_business = adapter
 
 
 func _ready() -> void:
@@ -354,6 +360,9 @@ func _process(_delta: float) -> void:
 			if _is_current(generation):
 				_track(card, "title_card", step.get("wait", true), generation)
 			return
+		"unlock_map", "tavern_purchase", "casino_settle", "business":
+			_dispatch_business(step, generation)
+			return
 		"play_sfx", "play_bgm", "stop_bgm", "fade_bgm":
 			_dispatch_audio(step, generation)
 			return
@@ -382,6 +391,32 @@ func _target(value: Variant) -> Variant:
 	if value is Array:
 		return Vector2(value[0], value[1])
 	return StringName(value)
+
+
+## Business steps are synchronous: the service settles, then the adapter
+## projects its own facts. A rejected write stops the sequence.
+func _dispatch_business(step: Dictionary, generation: int) -> void:
+	if not is_instance_valid(_business):
+		_finish(false, "Business adapter unavailable")
+		return
+	var result: Dictionary
+	match step.command:
+		"unlock_map":
+			result = _business.unlock_map(step.get("locations", []))
+		"tavern_purchase":
+			result = _business.purchase(step.product_id, step.quantity, step.receipt)
+		"casino_settle":
+			result = _business.casino(String(step.get("step", "")), String(step.get("reason", "")))
+		_:
+			result = _business.business(step.action, String(step.get("stage_id", "")),
+				String(step.get("group_id", "")))
+	if not _is_current(generation):
+		return
+	if not result.get("ok", false):
+		_finish(false, "Business step '%s' failed (%s): %s" % [step.command,
+			String(result.get("code", "failed")), String(result.get("message", ""))])
+		return
+	_schedule_next()
 
 
 func _dispatch_actor(step: Dictionary, generation: int) -> void:

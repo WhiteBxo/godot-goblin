@@ -42,6 +42,7 @@ var _world_controller: Day1WorldController
 var _stealth_service: Day1StealthService
 var _dialogue_manager: DialogueManager
 var _story_director: StoryDirector
+var _story_business: StoryBusinessAdapter
 var _actor_director: ActorDirector
 var _camera_director: CameraDirector
 var _tea_making: TeaMaking
@@ -630,6 +631,11 @@ func get_actor_director() -> ActorDirector:
 func get_task_delivery() -> TaskDelivery:
 	return _task_delivery
 
+## Chapter hosts attach approved tavern, casino and business sessions here; the
+## adapter only projects their real results into story steps.
+func get_story_business() -> StoryBusinessAdapter:
+	return _story_business
+
 func get_order_board() -> OrderBoardModel:
 	return _order_board
 
@@ -757,8 +763,18 @@ func _create_dialogue_system() -> void:
 	_story_director.tree_exiting.connect(_on_story_exiting)
 	_story_director.set_audio_adapter(StoryAudioAdapter.new(_audio_manager))
 	_story_director.set_title_card(_create_title_card())
+	_create_story_business()
 	_story_director.event_started.connect(func(_id: String) -> void: _refresh_input_lock())
 	_story_director.event_finished.connect(_on_story_finished)
+
+## Authored steps reach real services through the adapter. Tavern, casino and
+## business sessions stay unbound until approved data exists; steps then report
+## unconfigured instead of inventing prices, rewards or close rules.
+func _create_story_business() -> void:
+	_story_business = StoryBusinessAdapter.new()
+	_story_business.configure(get_node("/root/GameState"), unlock_map,
+		func(location: String) -> bool: return SettlementMap.MAP_LOCATIONS.has(location))
+	_story_director.set_business_adapter(_story_business)
 
 ## The existing transition layer owns full-screen presentation. SceneTravel adds
 ## its transition after this card, so scene changes can still cover it.

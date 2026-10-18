@@ -1,6 +1,6 @@
 # 剧情编排指令速查（v1）
 
-以 `src/core/story/story_library.gd`、`story_director.gd` 及 `src/core/dialogue/dialogue_library.gd` 的实际校验和 dispatch 为准。共 25 条 Story 指令；Director 的公开 GDScript API 不一定能在 JSON 中使用，例如 `camera_follow` 不是 Story command。
+以 `src/core/story/story_library.gd`、`story_director.gd` 及 `src/core/dialogue/dialogue_library.gd` 的实际校验和 dispatch 为准。共 29 条 Story 指令；Director 的公开 GDScript API 不一定能在 JSON 中使用，例如 `camera_follow` 不是 Story command。
 
 ## Story JSON
 
@@ -20,6 +20,10 @@
 | `character_append` | 已解锁的 `character_id`；人物记录模块全局唯一命名空间 `record_id`；非空 `content`；同人物重试幂等，跨人物冲突失败 | 同步，不接受 wait |
 | `pay_items` | `items` 物品 ID→正整数；`receipt` 命名空间 flag；`set_flags = {}` 命名空间 key→bool，不得包含 receipt。经 `GameState.commit_item_payment` 原子扣物品并写 flags 与 receipt；receipt 已存在视为已付、不再扣；不足或会话忙时事件失败且不扣任何东西 | 同步，不接受 wait |
 | `set_phase` | `phase` 为 `day` / `night`；经 DayPhase 切换，已在目标阶段时成功且不变；夜→昼 `current_day` 加一 | 同步，不接受 wait |
+| `unlock_map` | `locations = []` 命名空间地点 ID 数组；逐项写 `ui.map.known.<id>` 后调用宿主 `unlock_map()`，装配失败时事件失败且不下发解锁提示。地图服务未接入时失败 | 同步，不接受 wait |
+| `tavern_purchase` | `product_id` 非空；`quantity` 正整数；`receipt` 命名空间 flag。经 `TavernPurchase.purchase` 走同一钱包事务；receipt 同时作为钱包请求号与持久事实，已结算视为成功且不重复扣款；商品未配置、余额/库存不足时事件失败 | 同步，不接受 wait |
+| `casino_settle` | `step` 为 `first_loss` / `second_win` / `waive`；`waive` 必填非空 `reason`。调用 `FixedStoryCasino` 的对应边界，重复或已结算视为成功；奖励入库、债务取消仍由服务与 GameState 原子提交 | 同步，不接受 wait |
+| `business` | `action` 为 `publish` / `request_arrival` / `confirm_arrival` / `request_departure` / `confirm_departure` / `close`；`publish` 必填 `stage_id`，顾客动作必填 `group_id`。每次只提交一次营业状态迁移；`close` 需要已配置关店规则，缺失时事件失败并保持营业进行中，成功后按规则原子写入 `to` 的日/阶段与完成 flag | 同步，不接受 wait |
 | `title_card` | `text` 非空；`subtitle = ""`；`seconds = 2.5`，> 0（停留时长，前后各 0.4 秒淡入淡出）；`wait` bool。全屏黑底文字，只做表现，不写状态；新卡替换旧卡 | 是 |
 | `play_sfx` | `id` 非空或 `path` 为 res://，严格二选一；`wait` bool | 否 |
 | `actor_spawn` | `actor` 尚未占用；`scene` 为 res://*.tscn，根继承 PlayerController；`target`；`wait` bool | 是 |

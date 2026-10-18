@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "events": {
+    "test.business.unlock": {
+      "once": false,
+      "trigger": "",
+      "steps": [
+        {"command": "unlock_map", "locations": ["settlement.casino"]},
+        {"command": "set_flag", "key": "test.business.unlock_done"}
+      ]
+    },
+    "test.business.purchase_unconfigured": {
+      "once": false,
+      "trigger": "",
+      "steps": [
+        {"command": "tavern_purchase", "product_id": "griffin_amber_wine", "quantity": 1, "receipt": "test.business.buy"},
+        {"command": "set_flag", "key": "test.business.unreachable"}
+      ]
+    },
+    "test.business.close": {
+      "once": false,
+      "trigger": "",
+      "steps": [
+        {"command": "business", "action": "publish", "stage_id": "s1"},
+        {"command": "business", "action": "close"},
+        {"command": "set_flag", "key": "test.business.closed_step"}
+      ]
+    }
+  }
+}

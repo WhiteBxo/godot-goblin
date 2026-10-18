@@ -134,3 +134,4 @@
 - **证据**：[C 的组件](../gameplay/day_02_trade.md)提供购买、第一局、第二局奖励与免除接口；StoryDirector 实际 dispatch 没有调用这些业务的指令。购买当前只支持会话开始前确定的同源静态价格；剧情中途折扣缺少钱包原子报价／资格接口。赌场 win 回执与债务 cancelled 是独立持久边界。
 - **需补接线**：集成负责人在批准的自动／玩家边界调用真实业务并消费其回执；恢复查询 `get_status()` 和 A.get_task_result 后续办免除。D07/D08 决定商品价格／限量、奖励、身份、赌局操作模式和债务规则。赌场自由赌博仍无实现，不能发布“自由探索含赌博机器已开放”的提示。
 - **可继续**：精确保存成功前后的原文段落，Phase 草案保留 pending；不发明 purchase/casino command，不用 `set_flag`、先全价买再退款或空奖励替代真实结算。
+- **2026-10-18 指令层**：Story 已新增 `tavern_purchase`、`casino_settle`、`business`（publish／顾客迁移／close）与 `unlock_map`，经 `StoryBusinessAdapter` 调用真实服务并投影回执，重复回执按成功重放。宿主尚未绑定正式报价、奖励与关店规则，对应步骤会返回 `unconfigured` 并中止事件；数据批准后只需在宿主注入服务，不改剧情 JSON。

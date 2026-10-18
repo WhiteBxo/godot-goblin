@@ -4,7 +4,7 @@ extends ShopPlayer
 
 var _floor_query: Callable
 ## World pixels matching the inherited, unscaled horizontal foot capsule.
-@export var footprint_half_size := Vector2(17, 10)
+@export var footprint_half_size := Vector2(8.5, 5)
 
 func set_floor_query(query: Callable) -> void:
 	_floor_query = query

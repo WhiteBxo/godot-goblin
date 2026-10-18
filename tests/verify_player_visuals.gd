@@ -13,7 +13,7 @@ func _check(condition: bool, message: String) -> void:
 func _run() -> void:
 	var player: PlayerController = load("res://src/gameplay/player/shop_player.tscn").instantiate()
 	root.add_child(player)
-	_check(player.animated_sprite.global_scale.is_equal_approx(Vector2.ONE), "Shop player displays final-size pixels without rescaling")
+	_check(player.animated_sprite.global_scale.is_equal_approx(Vector2.ONE * 0.5), "Shop player restores native pixels from the doubled atlas")
 	player.queue_free()
 	await process_frame
 	var viewport := SubViewport.new()

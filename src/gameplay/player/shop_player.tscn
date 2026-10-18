@@ -1,15 +1,15 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene format=3 uid="uid://5xakg2hsq3n5"]
 
-[ext_resource type="Script" path="res://src/gameplay/player/shop_player.gd" id="1"]
+[ext_resource type="Script" uid="uid://3sl4hjsemmf1" path="res://src/gameplay/player/shop_player.gd" id="1"]
 [ext_resource type="SpriteFrames" path="res://src/gameplay/player/player_actions_pixel_frames.tres" id="2"]
-[ext_resource type="Script" path="res://src/gameplay/player/bounded_follow_camera.gd" id="3_camera"]
+[ext_resource type="Script" uid="uid://04ca1oweqegy" path="res://src/gameplay/player/bounded_follow_camera.gd" id="3_camera"]
 [ext_resource type="Material" path="res://src/gameplay/player/player_sprite_material.tres" id="4_material"]
+[ext_resource type="Script" uid="uid://7862dwu0dop4" path="res://src/gameplay/player/held_item_visual.gd" id="5_d63da"]
 
 [sub_resource type="CapsuleShape2D" id="Feet"]
-radius = 10.0
 height = 34.0
 
-[node name="Player" type="CharacterBody2D" groups=["player"]]
+[node name="Player" type="CharacterBody2D" unique_id=1146961907 groups=["player"]]
 z_index = 10
 texture_filter = 1
 collision_layer = 2
@@ -18,26 +18,29 @@ motion_mode = 1
 script = ExtResource("1")
 speed = 240.0
 
-[node name="Shadow" type="Polygon2D" parent="."]
-polygon = PackedVector2Array(-18, -2, -12, -7, 12, -7, 18, -2, 12, 4, -12, 4)
+[node name="Shadow" type="Polygon2D" parent="." unique_id=1522067794]
 color = Color(0.08, 0.04, 0.03, 0.4)
+polygon = PackedVector2Array(-18, -2, -12, -7, 12, -7, 18, -2, 12, 4, -12, 4)
 
-[node name="Visual" type="Node2D" parent="."]
+[node name="Visual" type="Node2D" parent="." unique_id=757105287]
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Visual"]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Visual" unique_id=696907619]
 material = ExtResource("4_material")
 sprite_frames = ExtResource("2")
 animation = &"idle_down"
 offset = Vector2(0, -76)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1770863741]
 rotation = 1.5707964
 shape = SubResource("Feet")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=630693110]
 position = Vector2(0, -48)
 zoom = Vector2(0.5, 0.5)
 position_smoothing_enabled = true
 position_smoothing_speed = 8.0
-limit_smoothed = false
 script = ExtResource("3_camera")
+
+[node name="HeldItemVisual" type="Node2D" parent="." unique_id=1950531110]
+position = Vector2(24, -52)
+script = ExtResource("5_d63da")

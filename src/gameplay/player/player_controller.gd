@@ -14,6 +14,8 @@ signal action_finished(action: StringName, cancelled: bool)
 signal performance_animation_finished(animation: StringName)
 ## The held slot changed. [param variant_id] carries the drink id for drink items.
 signal held_changed(item: StringName, variant_id: String)
+## Facing changed through movement, [method face_direction] or a story pose.
+signal facing_changed(direction: Facing)
 
 const DIRECTION_NAMES: Array[StringName] = [&"down", &"left", &"right", &"up"]
 ## Physics layers: 1 = world and furniture, 2 = player body, 3 = solid NPC bodies.
@@ -32,7 +34,12 @@ const NPC_LAYER := 3
 @export_range(1.0, 4.0, 0.05) var run_speed_multiplier := 1.6
 @export_range(0.1, 1.0, 0.05) var sneak_speed_multiplier := 0.5
 
-var facing: Facing = Facing.DOWN
+var facing: Facing = Facing.DOWN:
+	set(value):
+		if facing == value:
+			return
+		facing = value
+		facing_changed.emit(value)
 var movement_enabled := true
 var speed_multiplier := 1.0
 ## Presentation-only held slot. Stock, pricing and consumption belong to the scene that owns the item.

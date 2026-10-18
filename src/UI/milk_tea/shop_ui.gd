@@ -6,6 +6,8 @@ signal point_opened(id: StringName)
 signal opened
 signal closed
 signal craft_requested(materials: Array[String], quantity: int)
+signal accept_requested(order_id: String)
+signal track_requested(order_id: String)
 var _production: TeaProduction
 var _inventory: WarehouseInventory
 
@@ -21,6 +23,9 @@ func configure_production(production: TeaProduction) -> void:
 	_production = production
 	if is_instance_valid(_popup):
 		_popup.configure_production(production)
+
+func configure_orders(model: OrderBoardModel) -> void:
+	_popup.configure_orders(model)
 
 func show_order_requirements(message: String) -> void:
 	if is_instance_valid(_popup):
@@ -51,9 +56,11 @@ func set_popup_layer(layer: CanvasLayer) -> void:
 		return
 	_popup = preload("res://src/UI/milk_tea/shop_popup.tscn").instantiate()
 	layer.add_child(_popup)
-	(_popup.get_default_focus() as Button).text = close_text
+	_popup.get_shell().get_close_button().text = close_text
 	_popup.close_requested.connect(close)
 	_popup.craft_requested.connect(func(materials: Array[String], quantity: int) -> void: craft_requested.emit(materials, quantity))
+	_popup.accept_requested.connect(func(id: String) -> void: accept_requested.emit(id))
+	_popup.track_requested.connect(func(id: String) -> void: track_requested.emit(id))
 	if _inventory != null:
 		_popup.configure_inventory(_inventory)
 	if _production != null:
@@ -91,8 +98,16 @@ func open(point: InteractionPoint) -> void:
 		_popup.get_default_focus().grab_focus()
 	_popup.present(point)
 	point_opened.emit(point.interaction_id)
+	_focus_popup.call_deferred()
 	_prompt.clear()
 	opened.emit()
+
+func _focus_popup() -> void:
+	if not is_inside_tree() or not is_open():
+		return
+	var focus := _popup.get_default_focus()
+	if is_instance_valid(focus) and focus.is_inside_tree() and focus.is_visible_in_tree():
+		focus.grab_focus()
 
 func close() -> void:
 	if not is_open():

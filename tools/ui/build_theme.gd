@@ -23,6 +23,7 @@ func _initialize() -> void:
 	_build_scrollbars(theme)
 	_build_popups(theme)
 	_build_misc(theme)
+	_build_orders(theme)
 	var error := ResourceSaver.save(theme, THEME_PATH)
 	print("THEME: save=%d types=%d" % [error, theme.get_type_list().size()])
 	quit(0 if error == OK else 1)
@@ -425,3 +426,30 @@ func _build_misc(theme: Theme) -> void:
 	theme.set_font_size("italics_font_size", "RichTextLabel", T.FONT_BODY)
 	theme.set_font_size("bold_italics_font_size", "RichTextLabel", T.FONT_BODY)
 	theme.set_font_size("mono_font_size", "RichTextLabel", T.FONT_BODY)
+
+
+func _build_orders(theme: Theme) -> void:
+	for type: StringName in [&"OrderRow", &"OrderRowSelected"]:
+		theme.set_type_variation(type, "Button")
+		var selected: bool = type == &"OrderRowSelected"
+		theme.set_stylebox("normal", type, _flat(T.RAISED if selected else Color.TRANSPARENT, T.BORDER if selected else Color.TRANSPARENT, 1, 2))
+		theme.set_stylebox("hover", type, _flat(T.RAISED_HOVER, T.BORDER_SOFT, 1, 2))
+		theme.set_stylebox("pressed", type, _flat(T.PRESSED, T.BORDER, 1, 2))
+	theme.set_type_variation("OrderTicket", "PanelContainer")
+	theme.set_stylebox("panel", "OrderTicket", _flat(T.PAPER, T.PAPER_EDGE, 1, 2, T.SPACE_3, T.SPACE_2, T.SPACE_3, T.SPACE_2, true))
+	_label_variation(theme, "TicketTitle", T.INK, T.FONT_BODY)
+	_label_variation(theme, "TicketText", T.INK, T.FONT_BODY)
+	_label_variation(theme, "TicketMuted", T.INK_MUTED, T.FONT_BODY)
+	_label_variation(theme, "TicketStamp", T.INK_SUCCESS, T.FONT_BODY)
+	_label_variation(theme, "TicketWarning", T.INK_WARNING, T.FONT_BODY)
+	theme.set_type_variation("TicketSeparator", "HSeparator")
+	theme.set_stylebox("separator", "TicketSeparator", _line(T.PAPER_EDGE))
+	theme.set_type_variation("TicketButton", "Button")
+	for state: String in ["normal", "hover", "pressed", "disabled"]:
+		var fill: Color = T.INK_MUTED if state == "hover" else T.INK
+		if state == "disabled":
+			fill = T.PAPER
+		theme.set_stylebox(state, "TicketButton", _flat(fill, T.PAPER_EDGE, 1, 2, T.SPACE_2, T.SPACE_1, T.SPACE_2, T.SPACE_1))
+	for state: String in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color", "font_focus_color"]:
+		theme.set_color(state, "TicketButton", T.PAPER)
+	theme.set_color("font_disabled_color", "TicketButton", T.INK_MUTED)

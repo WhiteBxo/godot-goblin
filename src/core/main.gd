@@ -429,13 +429,16 @@ func _create_shop_business(ui: ShopUI) -> void:
 	_order_board.name = "OrderBoardModel"
 	$Systems.add_child(_order_board)
 	_order_board.configure(_task_catalog, _task_journal, state, _warehouse_inventory, _tea_production, _task_delivery)
-	_order_board.changed.connect(_sync_tracked_order, CONNECT_DEFERRED)
 	_handbook.get_tasks_page().bind_orders(_order_board)
-	_sync_tracked_order()
 	_task_journal.projection_changed.connect(_refresh_order_requirements.bind(ui))
 	ui.point_opened.connect(_on_shop_point_opened)
 	ui.configure_inventory(_warehouse_inventory)
 	ui.configure_production(_tea_production)
+	ui.configure_orders(_order_board)
+	ui.track_requested.connect(_track_order)
+	ui.accept_requested.connect(func(id: String) -> void:
+		if _task_delivery.accept_order(id) == OK:
+			_track_order(id))
 	ui.craft_requested.connect(func(materials: Array[String], quantity: int) -> void:
 		var result := _tea_production.craft(materials, quantity)
 		if day1_story_enabled and result.ok:
@@ -474,14 +477,6 @@ func get_task_delivery() -> TaskDelivery:
 
 func get_order_board() -> OrderBoardModel:
 	return _order_board
-
-func _sync_tracked_order() -> void:
-	if not is_instance_valid(_order_board) or not is_inside_tree():
-		return
-	var entry := _order_board.get_tracked_entry()
-	var state := get_node("/root/GameState")
-	if not entry.is_empty() or state.has_variable(OrderBoardModel.TRACKED_KEY):
-		state.set_variable(OrderBoardModel.TRACKED_KEY, entry.get("order_id", ""))
 
 func _track_order(order_id: String) -> void:
 	if _order_board.get_entry(order_id).get("status") == "active":
@@ -652,8 +647,6 @@ func _on_shop_point_opened(id: StringName) -> void:
 		if day1_story_enabled:
 			_audio_manager.play_sfx("shop.order_open")
 		get_node("/root/GameState").set_flag("shop.orders_viewed")
-		for order: Dictionary in _task_delivery.get_orders():
-			_task_delivery.accept_order(order.order_id)
 		_refresh_order_requirements(_shop_ui)
 
 func _refresh_order_requirements(ui: ShopUI) -> void:

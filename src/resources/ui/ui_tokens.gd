@@ -26,6 +26,14 @@ const DANGER := Color("e08a72")
 const PRIMARY_TEXT := Color("241710")
 const SHADOW := Color(0, 0, 0, 0.35)
 
+# Order slips: the paper surface owns a separate, readable ink palette.
+const PAPER := Color("ead7ad")
+const PAPER_EDGE := Color("b38c57")
+const INK := Color("352419")
+const INK_MUTED := Color("705437")
+const INK_SUCCESS := Color("3e5d3b")
+const INK_WARNING := Color("8b3b28")
+
 # --- Type scale: pixel font, integer multiples only ---
 const FONT_BODY := 12
 const FONT_TITLE := 24

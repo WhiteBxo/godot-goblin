@@ -302,6 +302,7 @@ func _check_panel() -> void:
 		if point.interaction_id == &"tea_station":
 			station = point
 	ui.open(station)
+	popup.get_page().select_crafting_mode(true)
 	await process_frame
 	var panel: CraftingPanel = popup.get_crafting_panel()
 	_check(panel.visible, "Crafting panel opens at the tea station")

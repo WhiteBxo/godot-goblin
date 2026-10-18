@@ -104,6 +104,11 @@ func _snapshot(name: String) -> void:
 
 func _accept() -> void:
 	await _interact("orders")
+	var page := _game.get_shop_ui().get_popup().get_page().get_order_board_page()
+	for entry: Dictionary in _game.get_order_board().get_entries():
+		if entry.status == "available":
+			page.select_order(entry.order_id)
+			page.get_ticket().get_primary_button().pressed.emit()
 	await _snapshot("orders")
 	_game.get_shop_ui().close()
 	await frames()
@@ -115,6 +120,7 @@ func _make() -> void:
 	if order.is_empty():
 		return
 	await _interact("tea_station")
+	_game.get_shop_ui().get_popup().get_page().select_crafting_mode(true)
 	var panel: CraftingPanel = _game.get_shop_ui().get_popup().get_crafting_panel()
 	var before := _state.to_dict()
 	panel.clear_selection()

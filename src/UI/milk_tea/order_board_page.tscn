@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/UI/milk_tea/order_board_page.gd" id="script"]
+[ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="theme"]
+[ext_resource type="PackedScene" path="res://src/UI/components/order_ticket.tscn" id="ticket"]
+[ext_resource type="PackedScene" path="res://src/UI/milk_tea/order_list.tscn" id="list"]
+
+[node name="OrderBoardPage" type="VBoxContainer"]
+size_flags_vertical = 3
+theme = ExtResource("theme")
+script = ExtResource("script")
+
+[node name="OrderTabs" type="TabBar" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 2
+tab_count = 3
+tab_0/title = "进行中"
+tab_1/title = "可接取"
+tab_2/title = "已完成"
+
+[node name="Body" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="OrderList" parent="Body" instance=ExtResource("list")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Ticket" parent="Body" instance=ExtResource("ticket")]
+unique_name_in_owner = true
+layout_mode = 2

@@ -1,0 +1,83 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/UI/components/order_ticket.gd" id="script"]
+[ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="theme"]
+
+[node name="OrderTicket" type="PanelContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("theme")
+theme_type_variation = &"OrderTicket"
+script = ExtResource("script")
+
+[node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Heading" type="HBoxContainer" parent="Content"]
+layout_mode = 2
+
+[node name="ProductIcon" type="TextureRect" parent="Content/Heading"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="Labels" type="VBoxContainer" parent="Content/Heading"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="ProductTitle" type="Label" parent="Content/Heading/Labels"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"TicketTitle"
+text = "珍珠奶茶 ×1"
+autowrap_mode = 3
+
+[node name="Target" type="Label" parent="Content/Heading/Labels"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"TicketMuted"
+text = "交给：哥布林乙"
+autowrap_mode = 3
+
+[node name="Status" type="Label" parent="Content/Heading/Labels"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"TicketStamp"
+text = "待制作"
+
+[node name="Separator" type="HSeparator" parent="Content"]
+layout_mode = 2
+theme_type_variation = &"TicketSeparator"
+
+[node name="Scroll" type="ScrollContainer" parent="Content"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+follow_focus = true
+
+[node name="Details" type="VBoxContainer" parent="Content/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Requirements" type="Label" parent="Content/Scroll/Details"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"TicketText"
+autowrap_mode = 3
+
+[node name="NextStep" type="Label" parent="Content/Scroll/Details"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"TicketMuted"
+autowrap_mode = 3
+
+[node name="Primary" type="Button" parent="Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+theme_type_variation = &"TicketButton"
+text = "接取订单"

@@ -195,8 +195,11 @@ func _test_host(path: String) -> void:
 	player.global_position = board.global_position + Vector2(0, -55)
 	await _frames()
 	await _press_interact()
-	_check(ui.is_open() and game.get_task_journal().get_task("shop.first_order").status == "active", "E on order board accepts task: " + path)
-	_check("胖哥布林" in game.get_shop_ui().get_popup().get_page().get_description_text(), "Board displays delivery recipient")
+	_check(ui.is_open() and game.get_task_journal().get_task("shop.first_order").status == "inactive", "E opens board without accepting task: " + path)
+	var order_page := ui.get_popup().get_page().get_order_board_page()
+	order_page.select_order("order_001")
+	order_page.get_ticket().get_primary_button().pressed.emit()
+	_check(game.get_order_board().get_entry("order_001").target_name == "胖哥布林", "Board displays delivery recipient")
 	await _capture("delivery_" + path.get_file().get_basename() + "_board")
 	ui.close()
 	player.global_position = station.global_position

@@ -3,6 +3,8 @@ extends UIScreen
 ## Shop modal wrapper: ModalShell chrome + ShopPage content.
 
 signal craft_requested(materials: Array[String], quantity: int)
+signal accept_requested(order_id: String)
+signal track_requested(order_id: String)
 
 @onready var _shell: ModalShell = $ModalShell
 
@@ -13,9 +15,14 @@ func _ready() -> void:
 	_shell.close_requested.connect(func() -> void: close_requested.emit())
 	_page.craft_requested.connect(
 		func(materials: Array[String], quantity: int) -> void: craft_requested.emit(materials, quantity))
+	_page.accept_requested.connect(func(id: String) -> void: accept_requested.emit(id))
+	_page.track_requested.connect(func(id: String) -> void: track_requested.emit(id))
+
+func configure_orders(model: OrderBoardModel) -> void:
+	_page.configure_orders(model)
 
 func present(point: InteractionPoint) -> void:
-	_shell.set_title(point.display_name)
+	_shell.set_title("今日订单" if point.interaction_id == &"orders" else point.display_name)
 	_page.present(point)
 
 func bind_tea_making(tea: TeaMaking) -> void:

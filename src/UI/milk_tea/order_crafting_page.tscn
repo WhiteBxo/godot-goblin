@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/UI/milk_tea/order_crafting_page.gd" id="script"]
+[ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="theme"]
+[ext_resource type="PackedScene" path="res://src/UI/components/order_ticket.tscn" id="ticket"]
+[ext_resource type="PackedScene" path="res://src/UI/milk_tea/order_list.tscn" id="list"]
+
+[node name="OrderCraftingPage" type="HBoxContainer"]
+size_flags_vertical = 3
+theme = ExtResource("theme")
+theme_override_constants/separation = 12
+script = ExtResource("script")
+
+[node name="OrderList" parent="." instance=ExtResource("list")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Ticket" parent="." instance=ExtResource("ticket")]
+unique_name_in_owner = true
+layout_mode = 2

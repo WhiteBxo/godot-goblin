@@ -4,6 +4,8 @@ extends VBoxContainer
 ## The page owns no modal chrome; ShopPopup puts it in the shared ModalShell.
 
 signal craft_requested(materials: Array[String], quantity: int)
+signal accept_requested(order_id: String)
+signal track_requested(order_id: String)
 
 var _production: TeaProduction
 var _crafting_panel: CraftingPanel
@@ -12,12 +14,50 @@ var _point_id: StringName
 var _order_requirements := "制作后成品进入库存，携带到指定 NPC 按 E 交付。"
 var _tea: TeaMaking
 var _station := false
+var _orders: OrderBoardModel
 
 @onready var _description_scroll: ScrollContainer = %DescriptionScroll
 @onready var _description: Label = %Description
 @onready var _recipe_status: Label = %RecipeStatus
 @onready var _ingredients: HBoxContainer = %Ingredients
 @onready var _body: VBoxContainer = %Body
+@onready var _board: OrderBoardPage = $OrderBoard
+@onready var _craft_modes: TabBar = $CraftModes
+@onready var _order_crafting: OrderCraftingPage = $Body/OrderCrafting
+
+func _ready() -> void:
+	move_child(_craft_modes, 0)
+	_board.accept_requested.connect(func(id: String) -> void: accept_requested.emit(id))
+	_board.track_requested.connect(func(id: String) -> void: track_requested.emit(id))
+	_order_crafting.track_requested.connect(func(id: String) -> void: track_requested.emit(id))
+	_order_crafting.craft_requested.connect(func(materials: Array[String], quantity: int) -> void: craft_requested.emit(materials, quantity))
+	_craft_modes.tab_changed.connect(func(_index: int) -> void: _refresh_recipe())
+
+func configure_orders(model: OrderBoardModel) -> void:
+	_orders = model
+	_board.configure(model)
+	_order_crafting.configure(model)
+
+func get_order_board_page() -> OrderBoardPage:
+	return _board
+
+func get_order_crafting_page() -> OrderCraftingPage:
+	return _order_crafting
+
+func select_crafting_mode(free: bool) -> void:
+	_craft_modes.current_tab = 1 if free else 0
+	_refresh_recipe()
+	if free and is_instance_valid(_crafting_panel) and is_visible_in_tree():
+		_crafting_panel.grab_default_focus()
+
+func get_default_focus() -> Control:
+	if _board.visible:
+		return _board.get_default_focus()
+	if _order_crafting.visible:
+		return _order_crafting.get_default_focus()
+	if is_instance_valid(_crafting_panel) and _crafting_panel.visible:
+		return _crafting_panel.get_default_focus()
+	return null
 
 func bind_tea_making(tea: TeaMaking) -> void:
 	_tea = tea
@@ -39,14 +79,18 @@ func is_making_station() -> bool:
 func _refresh_recipe() -> void:
 	var demo_recipe := is_instance_valid(_tea) and _tea.has_session()
 	var crafting := _station and not demo_recipe
+	var order_mode := crafting and is_instance_valid(_orders) and _craft_modes.current_tab == 0
+	_board.visible = _point_id == &"orders" and is_instance_valid(_orders)
+	_craft_modes.visible = crafting and is_instance_valid(_orders)
+	_order_crafting.visible = order_mode
 	_ingredients.visible = _station and demo_recipe
 	_recipe_status.visible = _station and demo_recipe
 	_body.visible = crafting or _point_id == &"storage"
 	if is_instance_valid(_crafting_panel):
-		_crafting_panel.visible = crafting
+		_crafting_panel.visible = crafting and not order_mode
 	if is_instance_valid(_warehouse_panel):
 		_warehouse_panel.visible = _point_id == &"storage"
-	_description_scroll.visible = (not _station or demo_recipe) and _point_id != &"storage"
+	_description_scroll.visible = (not _station or demo_recipe) and _point_id != &"storage" and not _board.visible
 	_recipe_status.text = _tea.get_instruction() if is_instance_valid(_tea) else "当前没有制作目标。"
 	for button: Button in _ingredients.get_children():
 		button.disabled = not is_instance_valid(_tea) or not _tea.is_active()
@@ -63,9 +107,16 @@ func present(point: InteractionPoint) -> void:
 	if not is_instance_valid(_production):
 		return
 	if _station and not (is_instance_valid(_tea) and _tea.has_session()):
+		_craft_modes.current_tab = 0
+		_refresh_recipe()
+		if is_instance_valid(_orders):
+			_order_crafting.present()
 		_crafting_panel.refresh(true)
-		_crafting_panel.grab_default_focus()
+		if _crafting_panel.visible:
+			_crafting_panel.grab_default_focus()
 	elif _point_id == &"orders":
+		if is_instance_valid(_orders):
+			_board.present()
 		_refresh_order_board()
 	elif _point_id == &"storage":
 		_warehouse_panel.refresh()
@@ -108,7 +159,7 @@ func get_description_label() -> Label:
 	return _description
 
 func uses_native_gui_input() -> bool:
-	return is_instance_valid(_crafting_panel) and _crafting_panel.visible and _crafting_panel.uses_native_gui_input()
+	return _board.visible or _order_crafting.visible or (is_instance_valid(_crafting_panel) and _crafting_panel.visible and _crafting_panel.uses_native_gui_input())
 
 func _refresh_order_board() -> void:
 	if _point_id == &"orders":
@@ -122,5 +173,6 @@ func show_interaction_result(message: String) -> void:
 	_description.text = message
 
 func show_production_result(result: Dictionary) -> void:
+	_order_crafting.show_result(result)
 	if is_instance_valid(_crafting_panel):
 		_crafting_panel.show_result(result)

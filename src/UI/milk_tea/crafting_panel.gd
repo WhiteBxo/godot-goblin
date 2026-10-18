@@ -212,6 +212,9 @@ func grab_default_focus() -> void:
 	if is_inside_tree():
 		_list.grab_focus()
 
+func get_default_focus() -> Control:
+	return _list
+
 func uses_native_gui_input() -> bool:
 	var focus := get_viewport().gui_get_focus_owner()
 	return is_instance_valid(focus) and (focus == _list or focus == _recipe_list or focus == _quantity or _quantity.is_ancestor_of(focus))

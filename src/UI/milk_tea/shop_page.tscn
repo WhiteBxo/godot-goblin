@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://src/UI/milk_tea/shop_page.gd" id="1"]
 [ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="2"]
+[ext_resource type="PackedScene" path="res://src/UI/milk_tea/order_board_page.tscn" id="orders"]
+[ext_resource type="PackedScene" path="res://src/UI/milk_tea/order_crafting_page.tscn" id="order_crafting"]
 
 [node name="ShopPage" type="VBoxContainer"]
 size_flags_vertical = 3
@@ -39,3 +41,19 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 8
+
+[node name="OrderCrafting" parent="Body" instance=ExtResource("order_crafting")]
+visible = false
+layout_mode = 2
+
+[node name="OrderBoard" parent="." instance=ExtResource("orders")]
+visible = false
+layout_mode = 2
+
+[node name="CraftModes" type="TabBar" parent="."]
+visible = false
+layout_mode = 2
+focus_mode = 2
+tab_count = 2
+tab_0/title = "按订单制作"
+tab_1/title = "自由调配"

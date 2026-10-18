@@ -31,6 +31,7 @@ func _run() -> void:
 	var popup: ShopPopup = main.get_node("PopupLayer/Modal")
 	var panel: CraftingPanel = popup.get_crafting_panel()
 	ui.open(station)
+	popup.get_page().select_crafting_mode(true)
 	await process_frame
 	await process_frame
 	_check(panel.visible and ui.is_open(), "Station must open the production controls")

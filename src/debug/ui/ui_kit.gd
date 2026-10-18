@@ -39,6 +39,7 @@ func _ready() -> void:
 	_typography(column)
 	_buttons(column)
 	_panels(column)
+	_order_slip(column)
 	_prompt(column)
 	_lists(column)
 	_tabs(column)
@@ -56,6 +57,17 @@ func _section(parent: VBoxContainer, title: String) -> VBoxContainer:
 	box.add_child(HSeparator.new())
 	parent.add_child(box)
 	return box
+
+func _order_slip(parent: VBoxContainer) -> void:
+	var box := _section(parent, "订单笺 · 纸色与墨色")
+	var ticket: OrderTicket = preload("res://src/UI/components/order_ticket.tscn").instantiate()
+	ticket.custom_minimum_size = Vector2(0, 216)
+	box.add_child(ticket)
+	ticket.present({"title": "珍珠奶茶 ×1", "target_name": "哥布林乙", "status_text": "待制作",
+		"stage": "prepare", "status": "active", "product_id": "pearl_milk_tea",
+		"icon": preload("res://assets/ui/milk_tea/products/classic_boba_milk_tea.png"),
+		"items": [{"name": "珍珠奶茶", "owned": 0, "needed": 1}],
+		"missing_text": "", "rewards": "古怪金币 ×1", "hint": "前往制作台，配方已备好"}, "追踪此单", true)
 
 
 func _caption(parent: Control, text: String) -> void:

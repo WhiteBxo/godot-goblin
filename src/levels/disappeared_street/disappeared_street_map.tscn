@@ -200,13 +200,13 @@ description = "身后还是熟悉的奶茶店。"
 position = Vector2(460, 1020)
 interaction_id = &"market"
 display_name = "观察摊位"
-description = "附近摆着一些简陋的摊位，地上散落着与手中金币相似的硬币。这地方似乎真的有人长期生活。"
+description = "附近摆着一些简陋的摊位，地上散落着与手中古怪硬币相似的硬币。这地方似乎真的有人长期生活。"
 
 [node name="Coins" parent="InteractionPoints" unique_id=386984943 instance=ExtResource("27_nv10f")]
 position = Vector2(740, 1065)
 interaction_id = &"coins"
-display_name = "查看散落的金币"
-description = "地上的硬币与手中的金币相似，颜色暗沉、沾满污渍，上面刻着一种陌生的怪物。"
+display_name = "查看散落的硬币"
+description = "地上的硬币与手中的古怪硬币相似，颜色暗沉、沾满污渍，上面刻着一种陌生的怪物。"
 
 [node name="EmptyLane" parent="InteractionPoints" unique_id=727965538 instance=ExtResource("27_nv10f")]
 position = Vector2(1250, 625)

@@ -100,6 +100,6 @@ Godot 4.7.2 的 tests/verify_day1_world_flow.gd 使用真实聚落与店铺宿�
 - 结构化前两阶段工程及产物一致性通过，保留用户新增的 2 秒 / 1.5 秒停顿。`verify_story_authoring.py` 新增的 4 项物品与动画引用负例通过；随后仍被既有 `cinematic.opening/steps[9]` 移动失败阻塞。临时内存跳过该已确认历史用例后，其余 14 项通过，不把原始完整脚本报告为通过。Python 工具补齐 Windows UTF-8 与正斜杠资源路径处理。
 - OpenGL 图形窗口实际渲染并检查了标题卡及取消后的店铺画面。未做完整剧情人工试玩、听音或真实 Release 导出；`verify_cave_editor.gd` 需要编辑器，`verify_player_visuals.gd` 依赖实际渲染，未列入 headless 批次。引擎退出仍有少量资源 / ObjectDB 在用诊断。
 
-复现时在仓库根目录用本机 Godot 执行 `--headless --path . --script res://tests/verify_day1_chapter_systems.gd`；普通试玩 F5 从标题菜单新游戏，S01–S02 完成后停在金币调查边界。独立世界业务可 F6 运行 `src/debug/story/day1_world_flow_demo.tscn`，按上节路线调查、取血、返店、制作并交付；不代表空骨架中的后四阶段剧情已发布。
+复现时在仓库根目录用本机 Godot 执行 `--headless --path . --script res://tests/verify_day1_chapter_systems.gd`；普通试玩 F5 从标题菜单新游戏，S01–S02 完成后停在古怪硬币调查边界。独立世界业务可 F6 运行 `src/debug/story/day1_world_flow_demo.tscn`，按上节路线调查、取血、返店、制作并交付；不代表空骨架中的后四阶段剧情已发布。
 
 本轮尝试访问 [Object.call_deferred](https://docs.godotengine.org/en/4.7/classes/class_object.html#class-object-method-call-deferred)、[AnimatedSprite2D.animation_finished](https://docs.godotengine.org/en/4.7/classes/class_animatedsprite2d.html#class-animatedsprite2d-signal-animation-finished) 和 [Area2D.body_entered](https://docs.godotengine.org/en/4.7/classes/class_area2d.html#class-area2d-signal-body-entered) 的 4.7 官方在线文档均返回 HTTP 403；改用本机引擎导出的 API 元数据核对方法 / 信号，并用上述实际运行检查其生命周期行为，未声称在线正文核验通过。

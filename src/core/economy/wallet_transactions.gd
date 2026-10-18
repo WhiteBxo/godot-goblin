@@ -7,6 +7,11 @@ signal transaction_finished(result: Dictionary)
 
 const LIMIT: int = WarehouseInventory.MAX_QUANTITY
 const SCHEMA_VERSION: int = 1
+## Every price, reward and balance in the game uses this single currency.
+const CURRENCY_SYMBOL: String = "G"
+
+static func format_money(amount: int) -> String:
+	return "%d%s" % [amount, CURRENCY_SYMBOL]
 
 var _inventory: WarehouseInventory
 var _balance: int = 0

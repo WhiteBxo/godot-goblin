@@ -108,7 +108,7 @@ func _select_item(index: int) -> void:
 	_image.texture = ingredient.icon
 	Artwork.show_materials(_materials, _inventory, [])
 	if ingredient.category == "story_item":
-		_details.text = "%s · %d 枚\n剧情物品\n金币上印着某种兽类，价值未知。" % [ingredient.name, ingredient.quantity]
+		_details.text = "%s · %d 枚\n任务道具\n古怪硬币上印着某种兽类，价值未知。" % [ingredient.name, ingredient.quantity]
 		return
 	var category: String = {"tea": "茶底", "milk": "奶基底", "syrup": "糖浆", "topping": "小料", "product": "成品", "material": "原料"}.get(ingredient.category, ingredient.category)
 	var lines: PackedStringArray = ["%s · %d 份%s" % [ingredient.name, ingredient.quantity, " · 缺货" if ingredient.quantity == 0 else ""],
@@ -120,7 +120,7 @@ func _select_item(index: int) -> void:
 	if not str(ingredient.form).is_empty():
 		lines.append("形态：%s · 加工：%s" % [ingredient.form, _property_text(ingredient.processing_methods)])
 	if int(ingredient.price) > 0:
-		lines.append("标价：%d 金币" % int(ingredient.price))
+		lines.append("标价：%s" % WalletTransactions.format_money(int(ingredient.price)))
 	lines.append("已知风味：%s" % _property_text(ingredient.flavor_tags))
 	lines.append("战斗属性：%s" % _property_text(ingredient.combat_attributes))
 	lines.append("特殊效果：%s" % _property_text(ingredient.special_effects))

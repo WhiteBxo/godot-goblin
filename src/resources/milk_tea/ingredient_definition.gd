@@ -22,7 +22,7 @@ const BASE_SUFFIXES: PackedStringArray = ["奶茶", "茶", "咖啡", "特调"]
 @export var form: String = ""
 ## Spreadsheet 支持加工方式 column; empty for the teaching catalog.
 @export var processing_methods: PackedStringArray = []
-## Spreadsheet 标价（金币）column; 0 means no public price.
+## Spreadsheet 标价（G）column; 0 means no public price.
 @export var price: int = 0
 ## Spreadsheet 图鉴描述 column, shown only once the item is discovered.
 @export_multiline var description: String = ""

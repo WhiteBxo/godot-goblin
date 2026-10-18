@@ -47,7 +47,7 @@ UI 为 `src/UI/trade/tavern_purchase_popup.tscn`，继承 UIScreen，组合 Moda
 
 | 接口 | 提交与恢复约定 |
 | --- | --- |
-| `settle_first_loss()` | 通过 commit_story_interaction 同次提交第一局回执、债务 activate_when flag 和已有 accepted_flag；不扣金币、不发物、不自动将债务置为 failed。已截止或已有终态拒绝 |
+| `settle_first_loss()` | 通过 commit_story_interaction 同次提交第一局回执、债务 activate_when flag 和已有 accepted_flag；不扣 G、不发物、不自动将债务置为 failed。已截止或已有终态拒绝 |
 | `settle_second_win()` | 要求第一局已结算且债务仍可继续；原子提交全组奖励、真实库存与第二局回执。后一个物品满仓时，前一个也不发放；失败可重试 |
 | `waive_debt(reason)` | 第二局成功后单独执行；调用 settle_task_result(task_id, "cancelled", reason)。只有目录显式允许取消且无其他终态候选时成功；不写伪造完成 flag，不消费奶茶 |
 | `get_status()` | 查询 `{first_settled, second_settled, debt_result}`；恢复 / 重建后直接读取，不依赖重播信号 |

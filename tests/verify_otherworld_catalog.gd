@@ -214,7 +214,7 @@ func _check_warehouse_view() -> void:
 		panel._select_item(index)
 		var text: String = panel._details.text
 		_check(text.contains("形态：液体") and text.contains("加工：免加工"), "Details show form and processing")
-		_check(text.contains("标价：4 金币"), "Details show the spreadsheet price")
+		_check(text.contains("标价：4G"), "Details show the spreadsheet price")
 		_check(text.contains("用途：原料") and text.contains("稀有度：优秀"), "Details label the material category and rarity")
 		_check(text.contains("获取方式：???"), "Unexplored property groups stay masked")
 		inventory.discover_property("goblin_firebrew", "acquisition_sources")

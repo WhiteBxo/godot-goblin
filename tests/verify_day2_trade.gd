@@ -206,7 +206,7 @@ func _test_ui() -> void:
 	var quantity: SpinBox = page.get_node("%Quantity")
 	var feedback: Label = page.get_node("%Feedback")
 	var quote: Label = page.get_node("%Quote")
-	_check(quote.text.contains("原价 10 → 折后 8") and popup.get_default_focus() != null, "Purchase screen shows the configured discount and keyboard focus")
+	_check(quote.text.contains("原价 10G → 折后 8G") and popup.get_default_focus() != null, "Purchase screen shows the configured discount and keyboard focus")
 	_check(root.gui_get_focus_owner() == popup.get_default_focus(), "UIManager focuses the purchase list on opening")
 	quantity.get_line_edit().text = "2"
 	buy.pressed.emit()

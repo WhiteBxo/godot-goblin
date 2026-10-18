@@ -67,7 +67,7 @@ func _order_slip(parent: VBoxContainer) -> void:
 		"stage": "prepare", "status": "active", "product_id": "pearl_milk_tea",
 		"icon": preload("res://assets/ui/milk_tea/products/classic_boba_milk_tea.png"),
 		"items": [{"name": "珍珠奶茶", "owned": 0, "needed": 1}],
-		"missing_text": "", "rewards": "古怪金币 ×1", "hint": "前往制作台，配方已备好"}, "追踪此单", true)
+		"missing_text": "", "rewards": "古怪硬币 ×1", "hint": "前往制作台，配方已备好"}, "追踪此单", true)
 
 
 func _caption(parent: Control, text: String) -> void:
@@ -93,7 +93,7 @@ func _typography(parent: VBoxContainer) -> void:
 	_row(box).add_child(_label("正文 · 珍珠奶茶 × 1", &""))
 	_row(box).add_child(_label("Hint · 方向键选择", &"Hint"))
 	_row(box).add_child(_label("Muted · 暂无记录", &"Muted"))
-	_row(box).add_child(_label("Value · 128 金币", &"Value"))
+	_row(box).add_child(_label("Value · 128 G", &"Value"))
 	var states := _row(box)
 	states.add_child(_label("Success · 已完成", &"Success"))
 	states.add_child(_label("Warning · 材料不足", &"Warning"))

@@ -17,7 +17,7 @@
 | 阶段 | 当前实际结果 | 剩余边界 |
 | --- | --- | --- |
 | S01 | 标题新游戏进入店铺，day1.opening 后等待人类订单；接单、制作入库、交付并收 10 普通货币 | 人类角色、配方、货款已在 day1 配置落地，不再使用旧胖哥布林教学代替 |
-| S02 | 首位哥布林和甲乙丙三单，各交付发 strange_coin ×1；三个空白异闻录条目解锁；群单按独立回执聚合 | 前两阶段保持 current_day=1；最终到 day1.investigate_coins，尚未进入正式 S03 演出 |
+| S02 | 首位哥布林和甲乙丙三单，各交付发古怪硬币 strange_coin ×1；三个空白异闻录条目解锁；群单按独立回执聚合 | 前两阶段保持 current_day=1；最终到 day1.investigate_coins，尚未进入正式 S03 演出 |
 | S03 | 店门双向导航、出店门控、章节接管和 declared derived_facts 能力存在 | 尚无正式观察点集合、探索结束条件、Story / Dialogue / Phase；P13 |
 | S04 | 胖哥布林角色、地图 UI 的 unlock_map 接口与知识映射存在 | 店外 / 店内消费顺序、普通订单、地图教学、知识发布、接受 / 拒绝汇合尚未编排；P14/P16 |
 | S05 | 昼夜、长老宅门洞、文书关闭回执、一次取血、真实返店与潜入组件存在 | 正式支付、四职责绑定、火把来源、可燃物、检查点、撤离及资源耗尽策略仍缺；P06/P08/P09/P13 |
@@ -43,7 +43,7 @@
 | 接单事实 | task.day1.human.active、task.day1.goblin.active、task.day1.group_a/b/c.active；各单独立 |
 | Bridge | day1.first_drink_tutorial、day1.goblin_first_order、day1.goblin_group_orders；输出 day1.human_done / goblin_done / group_done |
 | 章节与见闻录 | day1.stages_01_02_completed、day1.chronicle_unlocked；条目 chronicle.casino / griffin_blood / elder，仅空白解锁 |
-| 库存 | strange_coin 为剧情物品；pearl_milk_tea、coconut_milk_tea、plain_milk_tea 为教学固定成品 |
+| 库存 | strange_coin（古怪硬币）为任务道具、非货币；pearl_milk_tea、coconut_milk_tea、plain_milk_tea 为教学固定成品 |
 
 每单回执为 `delivery.<order_id>.completed`。打开 orders 只写 `shop.orders_viewed`；玩家明确接取才写 accepted_flag。制作 UI 以真实任务与库存安排顺序，不依赖旧三单队列下标。
 

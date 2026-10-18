@@ -259,7 +259,7 @@ func _on_action_triggered(action: StringName, _direction: Vector2) -> void:
 	_effects.add_child(projectile)
 	projectile.global_position = _player.global_position
 	_projectiles.append(projectile)
-	message = "已投出%s" % ({&"coin": "金币", &"torch": "火把", &"drink": "饮品"}[pending.kind])
+	message = "已投出%s" % ({&"coin": "古怪硬币", &"torch": "火把", &"drink": "饮品"}[pending.kind])
 	changed.emit()
 
 func _on_action_finished(action: StringName, _cancelled: bool) -> void:

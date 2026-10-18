@@ -11,11 +11,11 @@ S03–S06 已有章节宿主和部分业务能力，但 `day1_stages_03_06.json`
 | 能力 | 当前实际范围 | 剩余边界 / 文档 |
 | --- | --- | --- |
 | 标题与新游戏 | 新游戏、退出、暂停返回标题；标题音乐淡入淡出与 15 秒间隔重播 | 没有继续、文件存档或设置；[入口](../guides/game_entry.md) |
-| S01–S02 | 1 名人类、1 名首位哥布林、甲乙丙群客；五单交付后余额 +10、古怪金币 4 枚 | 人类为红衣顾客；群体完成按独立回执聚合；[流程](../gameplay/day_01_stages_01_02.md) |
+| S01–S02 | 1 名人类、1 名首位哥布林、甲乙丙群客；五单交付后余额 +10、古怪硬币 4 枚 | 人类为红衣顾客；群体完成按独立回执聚合；[流程](../gameplay/day_01_stages_01_02.md) |
 | 订单 | 逐单接取、按单制作、暖纸订单笺、追踪 HUD、共享成品、非模态交付反馈 | 未接单不因查看而接取；没有通用随机来客 / 拒单 / 超时营业；[订单](../gameplay/order_system.md) |
 | 制作与库存 | 固定配方、手动选料和批量制作；唯一跨场景库存；新表原料按次消耗 | 制作只入库，交付才结算；[制作](../gameplay/basic_tea_production.md)、[库存](../gameplay/warehouse_inventory.md) |
 | 自由配方与图鉴 | 3 槽、重复辅料、独立加冰、确定性名称 / 口味 / 标签 / 成本、配方杯与首次图鉴 | 原料不会自动补给；正式爆品表为空，正式目录未发自由订单；[自由配方](../gameplay/free_tea_recipes.md) |
-| 经济与交付 | 物品、钱、任务事实和回执原子提交；三类需求；钱包按当前会话提供只读商品报价 | 市场价是计算数据，没有正式购买 UI；古怪金币不与钱包兑换；[交易](../gameplay/wallet_transactions.md)、[交付](../gameplay/task_delivery.md) |
+| 经济与交付 | 物品、钱、任务事实和回执原子提交；三类需求；钱包按当前会话提供只读商品报价；全游戏单一货币 G，UI 统一走 `format_money()` | 市场价是计算数据，没有正式购买 UI；古怪硬币是任务道具，不入钱包、不与 G 兑换；[交易](../gameplay/wallet_transactions.md)、[交付](../gameplay/task_delivery.md) |
 | 昼夜与采集 | DayPhase 昼夜迁移，夜转昼加一天；8 个 once / daily 采集点 | 无自动时钟、期限、failed / abandoned；醒神菇委托为 tutorial 示例；[日程](../systems/day_phase.md)、[采集](../gameplay/gathering.md) |
 | 调查与 S06 业务 | 文书关闭回执、一次取血、真实返店、特调门禁和胖哥布林交付 | 独立 Debug Demo 可验证；缺正式事件、用量和异常演出；[世界流程](../gameplay/day_01_world_flow.md) |
 | 潜入与投掷 | 感知、投币分心、火把命中混乱、检查点重试；配方杯六种效果及修饰 | 正式地图缺火把、四职责角色、支付、可燃物和撤离绑定，保持 PENDING；[潜入](../gameplay/day_01_stealth.md)、[饮品投掷](../gameplay/drink_throw_effects.md) |

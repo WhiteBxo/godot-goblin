@@ -89,7 +89,7 @@
         "accepted_flag": "task.day1.goblin.active"
       },
       "rewards": {
-        "text": "古怪金币 × 1",
+        "text": "古怪硬币 × 1",
         "items": {
           "strange_coin": 1
         }
@@ -137,7 +137,7 @@
         "accepted_flag": "task.day1.group_a.active"
       },
       "rewards": {
-        "text": "古怪金币 × 1",
+        "text": "古怪硬币 × 1",
         "items": {
           "strange_coin": 1
         }
@@ -185,7 +185,7 @@
         "accepted_flag": "task.day1.group_b.active"
       },
       "rewards": {
-        "text": "古怪金币 × 1",
+        "text": "古怪硬币 × 1",
         "items": {
           "strange_coin": 1
         }
@@ -233,7 +233,7 @@
         "accepted_flag": "task.day1.group_c.active"
       },
       "rewards": {
-        "text": "古怪金币 × 1",
+        "text": "古怪硬币 × 1",
         "items": {
           "strange_coin": 1
         }

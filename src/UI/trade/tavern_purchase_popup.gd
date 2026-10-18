@@ -106,12 +106,12 @@ func _refresh() -> void:
 	var next_index := 0
 	for offer: Dictionary in _offers:
 		var stock_text := "不限量" if offer.remaining < 0 else "余量 %d" % offer.remaining
-		_list.add_item("%s · %d 金币 · %s" % [offer.display_name, offer.unit_price, stock_text])
+		_list.add_item("%s · %s · %s" % [offer.display_name, WalletTransactions.format_money(offer.unit_price), stock_text])
 		if offer.product_id == selected:
 			next_index = _list.item_count - 1
 	if _list.item_count > 0:
 		_list.select(next_index)
-	_balance.text = "余额：%d 金币" % (_service.get_balance() if is_instance_valid(_service) else 0)
+	_balance.text = "余额：%s" % WalletTransactions.format_money(_service.get_balance() if is_instance_valid(_service) else 0)
 	_update_quote()
 
 func _update_quote() -> void:
@@ -126,10 +126,10 @@ func _update_quote() -> void:
 	var offer: Dictionary = _offers[indices[0]]
 	var quantity := int(_quantity.value)
 	var total: int = offer.unit_price * quantity
-	var price_text := "单价 %d" % offer.unit_price
+	var price_text := "单价 %s" % WalletTransactions.format_money(offer.unit_price)
 	if offer.has("discounted_price"):
-		price_text = "原价 %d → 折后 %d" % [offer.price, offer.unit_price]
-	_quote.text = "%s · %d 份 · 合计 %d 金币" % [price_text, quantity, total]
+		price_text = "原价 %s → 折后 %s" % [WalletTransactions.format_money(offer.price), WalletTransactions.format_money(offer.unit_price)]
+	_quote.text = "%s · %d 份 · 合计 %s" % [price_text, quantity, WalletTransactions.format_money(total)]
 	if _submitted:
 		_quote.text += " · 已完成"
 	elif offer.remaining == 0:

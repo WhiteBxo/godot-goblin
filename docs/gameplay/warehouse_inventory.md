@@ -53,6 +53,14 @@ TeaProduction 保留 `get_stock`、`get_ingredients`、`get_order`、`get_comple
 
 WarehousePanel 位于现有 ShopPopup 内，使用现有 theme、返回按钮、UIManager focus 和移动锁。筛选项为全部 / 人类食材 / 异世界食材 / 剧情物品；动态配方成品列在“全部”中。左侧图标、名称、数量，右侧详情可滚动；缺货仍可查看详情。库存 changed 自动刷新仓库列表及制作台选项，订单变化刷新订单板。UI 不保存或修改库存。图标使用目录绑定的 SVG 或用户导入 PNG，食材与成品分别位于 assets/ui/milk_tea/ingredients/ 和 products/；来源与未匹配素材见[导入记录](../assets/imports/user_assets_2026_10_18.md)。仓库与图鉴列表图标为 32×32，详情显示 64 像素等比预览；动态配方使用中性杯 custom_drink.svg 并展示已知原料缩略图，不借用另一款固定饮品立绘。
 
+## 随身入口
+
+`open_inventory`（默认 B）在任意可操作场景打开独立的 `InventoryPanel`（`ScreenIds.INVENTORY`，位于 `src/UI/inventory/`）。它用 `ModalShell` 包住 `inventory_body.tscn`，内容页就是同一个 `WarehousePanel`，读 GameState 持有的同一份库存：不新增 Autoload、不复制库存、不改快照格式。面板仍是只读展示，使用 / 丢弃 / 转移不在本阶段范围。
+
+打开条件与手册一致：暂停、已有模态、场景切换中、剧情或 Actor 接管玩家、潜行拦截期间返回 `ERR_BUSY`，不打开。关闭走 `Esc`、关闭按钮或 `UIManager.close_screen`；焦点恢复和移动锁沿用 UIManager 与 MainGame 现有规则，没有单独的锁代码。
+
+店铺与聚落的 `storage` 交互点保留原行为（`ShopPopup → ShopPage` 内的面板实例）。两个入口各持有一个只读 `WarehousePanel`，共享同一份库存和 `changed` 通知；`WarehousePanel.get_default_focus()` 供无交互点的模态宿主使用。
+
 ## 序列化边界
 
 ```json

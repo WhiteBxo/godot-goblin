@@ -39,6 +39,7 @@ UI 使用 Godot 原生 Control、Container、Theme。总体接口见 [UI 系统]
 | `screen_transition/`：黑场与转场视觉 | [screen_transition/AGENTS.md](screen_transition/AGENTS.md) |
 | `dialogue/`：逐字对白、选项与立绘 | [对话规范](../core/dialogue/AGENTS.md) |
 | `milk_tea/`：制作与仓库界面 | [制作与库存规范](../gameplay/milk_tea/AGENTS.md) |
+| `inventory/`：随身仓库入口（复用 `WarehousePanel`，B 键打开） | [制作与库存规范](../gameplay/milk_tea/AGENTS.md)、[仓库文档](../../docs/gameplay/warehouse_inventory.md) |
 | `tasks/`：任务列表、详情与 HUD | [任务规范](../core/tasks/AGENTS.md) |
 | `chronicle/`：见闻录入口、列表与详情 | [见闻录规范](../core/chronicle/AGENTS.md) |
 | `characters/`：人物记录列表与详情 | [人物记录规范](../core/characters/AGENTS.md) |

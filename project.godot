@@ -38,26 +38,29 @@ enabled=PackedStringArray("res://addons/GDQuest_GDScript_formatter/plugin.cfg", 
 
 player_run={
 "deadzone": 0.2,
-"events": [Object(InputEventKey,"physical_keycode":4194325)]
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":16,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194325,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
 }
 player_sneak={
 "deadzone": 0.2,
-"events": [Object(InputEventKey,"physical_keycode":4194326)]
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":16,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194326,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
 }
 player_throw={
 "deadzone": 0.2,
-"events": [Object(InputEventKey,"physical_keycode":70)]
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":16,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":70,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
 }
-
 open_map={
 "deadzone": 0.2,
-"events": [Object(InputEventKey,"physical_keycode":77)]
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":16,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":77,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
 }
 open_tasks={
 "deadzone": 0.2,
-"events": [Object(InputEventKey,"physical_keycode":74)]
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":16,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":74,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
 }
-
 open_inventory={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"physical_keycode":66)]

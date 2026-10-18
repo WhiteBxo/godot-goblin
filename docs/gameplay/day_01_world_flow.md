@@ -73,9 +73,9 @@ Godot 4.7.2 的 tests/verify_day1_world_flow.gd 使用真实聚落与店铺宿�
 
 人工观察可 F6 运行 src/debug/story/day1_world_flow_demo.tscn。该专用 Debug 入口重置会话并准备已接受委托的 S05，随后由正式宿主建立夜晚，可观察夜景及长老宅准入；到 elder_document / elder_blood_storage 锚点交互，取血后走奶茶店入口返店。该 Debug 入口在真实返店后自动设置 day1.s06.wait_blood_drink，打开订单板接取特调订单、在制作台制作、交给胖哥布林。这里只用于独立业务验收，正式 S03–S06 自动剧情尚未发布。
 
-本次没有修改源稿对白或生成新的剧情 Beat。原待定清单中的内容与表现决策继续保留。
+调查 / 制作的独立业务验证不产生正式后四阶段 Beat。当前待定状态见[P 编号清单](../story_authoring/day_01_integration_pending.md)，前段已解决项与后段开放项分开维护。
 
-## 本次验证记录（2026-10-17）
+## 历史验证记录（2026-10-17）
 
 使用 Godot 4.7.2。43 项检查通过，包括真实宿主 world flow、调查原子性、配方门禁、DayPhase、GameState、共享经营会话、SceneTravel、TaskDelivery、WalletTransactions、角色、聚落及既有 S01–S02。
 

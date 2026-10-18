@@ -50,7 +50,7 @@
 
 ## 验证与试玩
 
-验证范围按 [AGENTS.md 的测试与分级验证](../../AGENTS.md#测试与分级验证)选择。下列命令是候选清单，不是每次编排都要执行的清单：先按本次改动写下最小测试计划（风险点 → 要执行的命令），执行后汇报实际跑了哪些、跳过了哪些及原因。对白、立绘、音效引用和单个 Beat 参数的修改不做完整项目回归。
+验证范围按 [测试与分级验证](../../tests/AGENTS.md)选择。下列命令是候选清单，不是每次编排都要执行的清单：先按本次改动写下最小测试计划（风险点 → 要执行的命令），执行后汇报实际跑了哪些、跳过了哪些及原因。对白、立绘、音效引用和单个 Beat 参数的修改不做完整项目回归。
 
 | 本次改动 | 最低验证 |
 | --- | --- |
@@ -58,14 +58,14 @@
 | 增删 Beat、调整顺序、改绑定或 Marker | 对应清单的 `validate_story.gd` + 对应 F6 场景观察 |
 | Story JSON 结构、`when.choice`、trigger、stage/flag 契约 | `validate_story.gd` + `tests/verify_story_director.gd`；被其他宿主消费时加 `tests/verify_cinematic_integration.gd` |
 | 清单 schema、Loader 或验证器自身 | `validate_story.gd` + `python3 tests/verify_story_authoring.py` |
-| Gameplay Bridge phase、业务 flag 契约或跨模块状态 | `validate_story.gd` + `tests/verify_gameplay_bridge.gd` 和受该契约影响的业务模块测试 |
+| Gameplay Bridge phase、业务 flag 契约或跨模块状态 | 对应清单声明的验证入口（Bridge verification 清单不支持 cases 校验）+ `tests/verify_gameplay_bridge.gd` 和受该契约影响的业务模块测试 |
 | 仅修改源稿以外的文档 | 只检查 Markdown、链接和 Git diff |
 
 - 同一任务内代码、配置和测试数据未发生相关变化时，同一命令只运行一次；通过后不再为再次确认而重复执行。修复相关失败后只重跑受影响的那条命令，修改又触及别的模块时才扩展范围。
 - 失败先归因：只有能对应到本次 diff 的失败才在本任务内修复。与本次改动无关的历史失败（例如已知被同一顾客路线阻断的清单用例、沙箱证书诊断）记录为基线问题，不计入本次验收，也不顺手扩大范围去修。
 - 只有核心公共接口、跨模块状态契约、场景生命周期、共享数据格式、大规模重构或发布验收才触发完整回归；用户明确要求完整回归时以用户要求为准。
 
-首次 checkout 先用编辑器导入资源，同一任务内只做一次：
+需要运行 Godot 验证且首次 checkout 尚未导入时，先用编辑器导入资源；纯文档无需导入，同一任务内不重复：
 
 ```sh
 /Applications/Godot.app/Contents/MacOS/Godot --headless --editor --path . --quit
@@ -74,7 +74,7 @@
 候选验证命令，按上表取用：
 
 ```sh
-# 对应清单的离线校验与 cases 执行（改剧情必跑）
+# 适用 cases 清单的离线校验；工程 / Bridge 清单按各自声明的入口验证
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --script res://tools/story/validate_story.gd -- res://docs/story_authoring/cinematic_opening.json
 # 模块：Director 的 schema、顺序、阻塞与路由（改契约时）
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --script res://tests/verify_story_director.gd
@@ -109,12 +109,12 @@ python3 tests/verify_story_authoring.py
 2. 玩家操作 Beat 优先复用真实交互 trigger；只有需要等待跨帧业务结果并自动续播时生成 `src/resources/story/<name>_phases.json`。v1 的六字段 `id/after_event/stage/recipe/completion_flag/next_event` 保留，专供已绑定 TeaMaking 的宿主。新业务使用 v2，将 `recipe` 换成 `completion: {"flag": "业务命名空间.flag", "allow_existing": true或false}`，其余五字段不变；不支持表达式、数量 DSL 或虚构 command。v2 flag 和输出 completion_flag 必须不同，输出 flag 由 Bridge 独占。未知字段/来源策略拒绝加载，不覆盖有效旧配置。
 3. 下段自动演出生成另一个 v1 事件。`conditions` 同时要求前置 `completed_events`、目标 `stage` 和 `completion_flag: true`；末尾设置下一阶段。各段保持 `once: true`，自动续播事件不要配置交互 trigger。一个 phase 只引用已实现的业务事实；业务模块通过实际结果发布 Signal，由现有组装层写入 GameState。多个交替阶段依此连接，剧情顺序保留在数据中。
 4. 历史策略必须写回 Markdown：`allow_existing: true` 接受阶段进入前的持久业务结果（例如唯一订单已经交付）；false 需要等待本阶段内的新 false→true，提前为 true 必须先观察到 false，不能复用旧成功。业务 flag 是持久事实，不用同一帧的 true/false 脉冲代替。要求新操作但对应唯一订单已消耗时列 pending 或调整原稿，不擅自重置业务订单。制作过程仍归玩法模块。
-5. 宿主只加载对白、Story JSON、phase JSON 并启动首事件。`MainGame.get_gameplay_bridge().load_phases(path)` 接入服务；正式 MainGame/settlement 默认不加载 Demo 数据。聚落只组装 flag Bridge，不创建 TeaMaking/TeaProduction；当前真实奶茶订单在奶茶店 MainGame。尚无聚落进店/转场实现，正式 Day 1 不能假装聚落已具备制作能力。Bridge 不执行 steps，不控制 Actor/Camera，也不改输入锁。
+5. 宿主只加载对白、Story JSON、phase JSON 并启动首事件。`MainGame.get_gameplay_bridge().load_phases(path)` 接入服务；正式 MainGame/settlement 默认不加载 Demo 数据。店铺与聚落都绑定同一 GameState 的库存 / TeaProduction，聚落使用 flag Bridge，门口经 SceneTravel 双向连接。正式前两阶段由 Day1ShopController 加载，后四阶段章节宿主接管但数据为空；两宿主均不自动加载 Demo。Bridge 不执行 steps，不控制 Actor/Camera，也不改输入锁。
 6. TeaMaking 的 recipe_completed 要同时通过目标、Bridge session 和玩法实际 completed session 校验。v2 在 GameState.state_changed 时重查活跃条件，只记录待处理结果，process 边界写输出 flag；下一帧在 Director 空闲、全部 UIManager modal 关闭、树未暂停时请求后段。关闭未完成弹窗不算成功，完成不会自动关窗。Gameplay 阶段保留现有剧情准入保护；需要触发教学的订单板放在等待 phase 之前，等待阶段无匹配剧情时 fallback 原 UI。
 7. reset/restore、外部阶段改变、依赖退出失效旧 session/待续播；失败和取消不自动重试。modal/暂停/Director busy 在请求前等待；请求真正返回拒绝（含额外宿主准入导致的 ERR_BUSY）时只报一次 continuation_failed，由宿主明确处理或重建等待。恢复后显式 load_phases，不自动重播已执行事件。v2 用 GameState.variables 的 `<phase_id>.bridge_wait` 保存源 flag 与 armed 状态，避免把已激活等待期间的结果误认成历史提前完成；输出完成 flag 已存在时直接等待 UI。restore 回调不修改加载的快照；未完成 TeaMaking 杯的中间进度不保存。
 8. 成功事件结束保留场景 BGM，SFX 按 owner 清理；显式音乐指令与场景退出继续控制音乐。需要跨模式的音乐在源稿写清楚，不必每段重播。
 
-完整真实订单示例见 [order_bridge_demo.md](../design/order_bridge_demo.md) 与 [追踪清单](../story_authoring/order_bridge_demo_bridge.json)：开场 → 调查订单板触发教学 → TeaProduction 真正成功交付 #001 → flag → 关闭 UI 后自动续播。配方、库存失败、TeaMaking Demo Signal 均不算交付。业务事实为 `shop.order_001_delivered`，`shop.orders_completed` 记录固定订单队列已完成的最高进度；不是点击次数。该队列目前无跨天订单 ID 或库存存档，不把这组 ID 解释为所有日子的通用订单系统。
+完整真实订单示例见 [order_bridge_demo.md](../design/order_bridge_demo.md) 与 [追踪清单](../story_authoring/order_bridge_demo_bridge.json)：开场 → 调查订单板触发教学 → TeaProduction 制作入库、TaskDelivery 真正交付 #001 → flag → 关闭 UI 后自动续播。配方、库存失败、TeaMaking Demo Signal 均不算交付。业务事实为 `shop.order_001_delivered`，`shop.orders_completed` 是成功交付回执总量的最高进度，不是制作数或点击数。正式群客使用独立订单集合聚合；当前库存 / 制作 / 钱包 / 回执已纳入完整 v4 内存快照，没有文件存档。
 
 ### 一个交互点的多个阶段事件
 

@@ -26,8 +26,8 @@
 | `actor_move` | `actor`、`target`；`speed = 120`、`timeout = 15`，均 > 0；`wait` bool | 是 |
 | `actor_face` | `actor`、`direction` 为 up/down/left/right；`wait` bool | 是 |
 | `actor_emote` | `actor`；`symbol = "!"` 非空文字；`duration = 0.8`，> 0；`wait` bool | 是 |
-| `actor_show` | `actor`；`wait` bool；只显现，不改变碰撞 | 是 |
-| `actor_hide` | `actor`；`wait` bool；只隐藏，不注销/移除碰撞 | 是 |
+| `actor_show` | `actor`；`wait` bool；显现 NPC 并恢复其实体占据层 | 是 |
+| `actor_hide` | `actor`；`wait` bool；隐藏且 NPC 退出实体层；不注销 Actor | 是 |
 | `actor_animate` | `actor`；`animation` 为该角色 SpriteFrames 中存在的动画名；`hold = false`；`wait` bool。非循环动画播完即完成，循环动画立即完成；`hold` 为 true 时动作结束后保持该姿势（如倒地），直到下一次演出接管或传送；动画不存在时事件失败，不静默跳过 | 是 |
 | `camera_focus` | `actor` 或 `target` 二选一；`duration = 0.8 >= 0`；`wait` bool；到位后持续跟踪节点 | 是 |
 | `camera_move` | `target`；`duration = 0.8 >= 0`；`wait` bool；位置快照 | 是 |
@@ -40,7 +40,7 @@
 
 `conditions` / `when` 允许以下字段（均可省略，各项 AND）：`day` 正整数、`stage` string、`flags` 命名空间 key→bool（缺失 flag 为 false）、`completed_events` / `not_completed_events` 命名空间 ID 数组、`items` 物品 ID→正整数（当前库存不少于该数量）。仅 `when` 额外接受 `choice: {"dialogue": "ID", "line": "行ID", "id": "选项ID"}`，三个字符串非空。本次尚未作出的选择不匹配。
 
-付款分支写法：同一事件内用 `when.items` 分出"付得起 / 付不起"两组步骤，付得起那组以 `pay_items` 开头。`items` 只是读取库存，真正扣款只由 `pay_items` 完成；两者之间库存若被其他系统改变，`pay_items` 仍会因不足而失败，不会透支。
+以下付款数量仅是 API 示例，正式守卫金额与币种仍见[P06](../story_authoring/day_01_integration_pending.md#p06)。付款分支写法：同一事件内用 `when.items` 分出"付得起 / 付不起"两组步骤，付得起那组以 `pay_items` 开头。`items` 只是读取库存，真正扣款只由 `pay_items` 完成；两者之间库存若被其他系统改变，`pay_items` 仍会因不足而失败，不会透支。
 
 ```json
 {"command": "dialogue", "id": "day1.s05.guard_ask"},
@@ -83,7 +83,7 @@ Dialogue ID、行 ID 非空，`start` 必须指向当前对话的行；`speaker`
 
 | 宿主/作用域 | 可复用项与来源 |
 | --- | --- |
-| MainGame | 默认 `player`；`res://src/core/main.tscn` 当前组装奶茶店、ShopPlayer 和各 Director。Day 1 奶茶店由 Day1ShopController、聚落由 Day1ChapterController 注册 `sound_library.tres` 全部音频；每个宿主都有 TitleCard |
+| MainGame | 默认 `player`；`res://src/core/main.tscn` 当前组装奶茶店、ShopPlayer 和各 Director。MainGame 的交互音频初始化注册 sound_library.tres，Day1ShopController / Day1ChapterController 也注册剧情依赖；每个宿主都有 TitleCard |
 | Cinematic Demo | `door` (1500, 270)、`aisle` (1470, 560)、`counter` (1100, 610)，保存在 cinematic_demo.tscn 的 Positions；宿主注册后才可用 |
 | Cinematic 动态角色 | `customer` 由 Story spawn，资源 `res://src/debug/cinematic/customer.tscn`；复用 PlayerController 的暖色占位形象 |
 | Cinematic 音频 | `cinematic.bell` = `res://assets/audio/shop/door_bell.wav`；`cinematic.room` = `res://assets/audio/ambience/shop.wav` 循环；`cinematic.rumble` = 已同步采样三连敲的 `res://src/debug/story/strange_knock.tres`；仅 Demo 宿主注册 |

@@ -4,7 +4,7 @@
 
 ## 操作与显示
 
-- 点击 HUD 右下角、见闻录上方的“委托 [J]”，或按 J 打开。无任务时也能打开，显示“暂无活动任务”。
+- 正式入口为右上角统一手册；点击图标选“委托”，或按 J / MainGame.open_tasks() 打开该页。任务功能首次开放前页签隐藏且打开被拒绝；首次开放后活动列表为空仍可查看空态。
 - 鼠标或方向键选择任务，Tab 切换列表、正文和关闭按钮，正文支持独立滚动。Esc 或关闭按钮退出。
 - 任务按目录顺序排列，区分主线与委托。首次选择第一项；刷新和重新打开保留所选任务和滚动位置，完成、失败、过期或取消后继续显示该条历史。
 - 详情包含描述、全部目标、完成状态、可选标记、已揭示的计数、交付对象、成品或物资数量和奖励说明。目标全部达成仍等待原任务完成条件。
@@ -19,8 +19,8 @@
 - `MainGame.open_tasks() -> Error`：按钮和 InputMap `open_tasks`（物理 J）共用入口；重复打开幂等，输入忙碌时返回 `ERR_BUSY`。
 - `TaskPanel.bind_journal(journal)`：从 `get_visible_tasks()` 读取只读投影，订阅 `projection_changed`；支持解绑、重绑和离树/重入树。
 - `TaskPanel.set_delivery_names(target_names, product_names)`：复制宿主注入的名称字典。MainGame 使用现有 NPC 点位和物品定义解析，投影变化时同步新揭示的名称。
-- `TaskPanel.close_requested`：交由 UIManager 关闭 `tasks` 模态屏幕，节点归 PopupLayer；独立 `TaskButton` 归 HudLayer。
-- TaskJournal 的 Task view 新增 `delivery`：已揭示的成品任务返回 `{target_object_id, product_id}`，物资任务返回 `{target_object_id, items}`，其他情况返回 `{}`。不暴露订单 ID、条件或结算数据，不改变 TaskCatalog JSON v1。
+- 正式 TaskPanel 嵌入 HandbookBody，由外层 ModalShell 请求关闭 handbook；tasks 是同一模态的别名。TaskPopup / TaskButton 只用于独立预览和兼容测试。
+- TaskJournal 的 Task view 新增 `delivery`：已揭示的成品任务返回 `{target_object_id, product_id}`，物资任务返回 `{target_object_id, items}`，动态饮品任务返回 `{target_object_id, drink}`，其他情况返回 `{}`。不暴露订单 ID、条件或结算数据，不改变 TaskCatalog JSON v1。
 
 ## F6 试玩
 
@@ -30,7 +30,7 @@
 
 实际首单：F6 `src/debug/story/legacy_shop.tscn` 或 `src/core/settlement.tscn`，订单板接单后按 J，确认显示胖哥布林、珍珠奶茶和糖浆奖励；制作入库后任务仍活动，实际交付后保留“已完成”历史，详情显示结果与结算时间。
 
-## 验证记录
+## 历史验证记录
 
 Godot 4.7.2.stable.official.ed1daf0bf，2026-10-17。
 

@@ -1,6 +1,6 @@
 # GameState
 
-`src/core/game_state.gd` 作为 `GameState` Autoload 加载，先于游戏场景创建，跨场景保留数据。它不处理 UI、输入、剧情演出或文件存档，也不在场景切换时自动 reset。现有 ShopInteraction、ShopUI、Player 无需修改。
+`src/core/game_state.gd` 作为 `GameState` Autoload 加载，先于游戏场景创建，跨场景保留数据。它不处理 UI、输入、剧情演出或文件存档，也不在场景切换时自动 reset。当前完整快照为 **v5**，文件读写由独立[存档系统](save_system.md)负责；全局实现与发布范围见[项目现状](../development/development_status_2026_10_18.md)。
 
 ## 数据与公开 API
 
@@ -32,7 +32,7 @@ GameState 还通过 `get_warehouse_inventory()` / `get_tea_production()` 持有�
 
 每次操作先完成数据修改，再同步发 `state_changed`，最后发对应的事件/reset/restore signal。恢复和 reset 是整体操作，订阅者只会看到完整状态，不会收到逐字段通知。恢复已完成事件不会发 `event_completed`，避免读档重播演出。订阅方宜只读取状态，将进一步写入安排到后续操作，避免同步 signal 内递归修改状态。
 
-## 后续接入
+## 系统接入
 
 [StoryDirector（P0-2）](story_director.md) 已通过 MainGame 的交互路由接入，按 JSON 条件读取状态并在步骤中调用状态 API。GameState 不反向依赖交互点或主场景内部路径。其他协调组件也可以按以下方式使用：
 

@@ -7,13 +7,13 @@
 | 数据 | 唯一归属 | 生命周期 |
 | --- | --- | --- |
 | 钱包余额、商人余量、交易与领奖回执 | GameState 持有的 WalletTransactions | 整局会话 |
-| 原料、成品、剧情物品数量、发现及已知属性 | WalletTransactions 持有的 WarehouseInventory | 整局会话 |
+| 原料份数与已用次数、固定成品、配方杯、图鉴、剧情物品及发现属性 | WalletTransactions 持有的 WarehouseInventory | 整局会话 |
 | 经营配置及订单队列已制作 ID 前缀 | GameState 的 profile_id 与 TeaProduction | 整局会话；制作与交付分开 |
 | 接单、交付回执、批次完成、剧情阶段、单次事件、见闻录 | GameState 的 flags / variables / completed_events | 整局会话 |
 | 任务展示、交付协调器、弹窗、焦点、角色与演出动作 | 场景本地节点 | 重建后由会话投影 |
 | 食材目录、默认库存、订单配置 | basic_menu.tres / day1_menu.tres | 静态资源 |
 
-F5 进入标题菜单，“新游戏”进入 src/core/main.tscn 并启用 Day 1 五单经营配置；F6 可直接运行该店铺，原三单教学使用 src/debug/story/legacy_shop.tscn。完整流程见 [Day 1 前两阶段](day_01_stages_01_02.md)。钱包沿用已有事务接口；本次只接入首单收款，不增加购买玩法。
+F5 进入标题菜单，“新游戏”进入 src/core/main.tscn 并启用 Day 1 五单经营配置；F6 可直接运行该店铺，原三单教学使用 src/debug/story/legacy_shop.tscn。完整流程见 [Day 1 前两阶段](day_01_stages_01_02.md)。钱包沿用已有事务接口；人类首单收普通货币、哥布林四单发库存币。自由饮品交付也支持按售价结算，但正式自由订单和购买 UI 尚未发布。
 
 ## 生命周期与接口
 

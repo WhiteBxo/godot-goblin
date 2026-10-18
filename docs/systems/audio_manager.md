@@ -1,8 +1,10 @@
 # AudioManager（剧情演出第一阶段）
 
-`src/core/audio/audio_manager.tscn` 是可独立实例化的轻量音频服务，正式场景位于 `MainGame/Systems/AudioManager`，通过 `MainGame.get_audio_manager()` 取得。生命周期跟随 MainGame；当前没有跨 MainGame 切换保持播放的需求，因此不增加 autoload。正式入口不注册 Demo 音色、不自动播放音乐。
+`src/core/audio/audio_manager.tscn` 是可独立实例化的轻量音频服务，正式场景位于 `MainGame/Systems/AudioManager`，通过 `MainGame.get_audio_manager()` 取得。生命周期跟随 MainGame；当前没有跨 MainGame 切换保持播放的需求，因此不增加 autoload。正式宿主注册 SoundLibrary 与交互音效；Day 1 开场启动日常 BGM，标题场景单独播放 start.ogg。未加载 Demo 的测试音色；标题音乐生命周期见[入口](../guides/game_entry.md#标题音乐)。
 
 根目录 `default_bus_layout.tres` 使用 Godot 默认加载位置，保存 Music、SFX、UI 三个 Bus，均发送到 Master；无需改动 `project.godot`。不添加 Bus effect、空间声或混音编辑器。淡入淡出只调整对应播放器的音量，不改变整个 Bus。
+
+正式交互、制作（含自由配方）、接单、交付、对白和 UI 声音由 InteractionAudio / UIAudioFeedback 观察真实结果播放，配置与去重见[音效库](../assets/sound_library.md#交互音效配置)。自动脚步、循环环境与门口声音尚未启用。
 
 ## 资源与 API
 

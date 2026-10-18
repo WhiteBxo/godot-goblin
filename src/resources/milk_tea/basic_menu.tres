@@ -41,6 +41,8 @@
 [ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/mint_syrup.png" id="icon_art_mint_syrup"]
 [ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/strawberry_jam.png" id="icon_art_strawberry_jam"]
 
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/products/custom_drink.svg" id="icon_custom_drink"]
+
 [sub_resource type="Resource" id="Ingredient_black_tea"]
 script = ExtResource("ingredient")
 id = "black_tea"
@@ -116,21 +118,21 @@ throw_kind = ""
 script = ExtResource("ingredient")
 id = "pearl_milk_tea"
 display_name = "珍珠奶茶（成品）"
-icon = ExtResource("icon_pearl")
+icon = ExtResource("icon_art_classic_boba_milk_tea")
 category = "product"
 
 [sub_resource type="Resource" id="Product_coconut"]
 script = ExtResource("ingredient")
 id = "coconut_milk_tea"
 display_name = "椰果茉莉奶茶（成品）"
-icon = ExtResource("icon_coconut")
+icon = ExtResource("icon_custom_drink")
 category = "product"
 
 [sub_resource type="Resource" id="Product_plain"]
 script = ExtResource("ingredient")
 id = "plain_milk_tea"
 display_name = "原味奶茶（成品）"
-icon = ExtResource("icon_creamer")
+icon = ExtResource("icon_custom_drink")
 category = "product"
 
 [sub_resource type="Resource" id="Item_coin"]
@@ -869,7 +871,7 @@ throw_kind = ""
 script = ExtResource("ingredient")
 id = "day1_blood_milk_tea"
 display_name = "格里芬之血特调"
-icon = ExtResource("icon_creamer")
+icon = ExtResource("icon_custom_drink")
 origin = "human"
 category = "product"
 

@@ -13,9 +13,9 @@
 | F | `throw_*` | 面向当前方向投掷一次，期间原地播放，结束后恢复移动 |
 | E | 既有交互 | 保留原有交互入口 |
 
-输入映射为 `move_*`、`player_run`、`player_sneak`、`player_throw`。Ctrl 优先于 Shift；两种速度倍率可在 PlayerController Inspector 配置，与开发者速度倍率相乘。潜行目前只改变移动速度和动画；投掷只提供动画与信号，物品消耗、投射物、伤害、敌人感知等留待后续开发。
+输入映射为 `move_*`、`player_run`、`player_sneak`、`player_throw`。Ctrl 优先于 Shift；两种速度倍率可在 PlayerController Inspector 配置，与开发者速度倍率相乘。潜行输入本身改变移动速度和动画；投掷控制器提供动作与信号，物品消费、投掷物及守卫感知已由独立[潜入服务](../../../docs/gameplay/day_01_stealth.md)与[饮品效果](../../../docs/gameplay/drink_throw_effects.md)接入。正式聚落 setup 仍缺失，单独动画预览不会凭空消耗库存或生成投掷物；没有完整伤害 / 战斗系统。
 
-## 后续开发接口
+## 动作与演出接口
 
 公开接口位于 `src/gameplay/player/player_controller.gd`：
 
@@ -23,8 +23,10 @@
 - `request_action(&"throw") -> bool`：尝试播放动作。未知动作、忙碌、移动锁定或演出接管时返回 false。
 - `get_active_action() -> StringName`、`cancel_action()`：查询 / 中断当前动作。
 - `action_started(action, direction)`：动作开始，direction 为开始时锁定的世界朝向向量。
-- `action_triggered(action, direction)`：当前投掷进入索引 3 的出手帧时发出一次。后续可在此接入物品 / 投射物逻辑，不在逐帧播放回调中重复结算。
+- `action_triggered(action, direction)`：当前投掷进入索引 3 的出手帧时发出一次。潜入服务在此真实消费物品 / 杯并创建投掷物，不在其他逐帧回调中重复结算。
 - `action_finished(action, cancelled)`：正常完成或取消。移动锁、瞬移、剧情接管均取消动作；取消后不补发出手信号，也不会自行解除宿主移动锁。
+
+ActorDirector 还经 play_performance_animation / performance_animation_finished 调用已有动作，支持 hold 姿势，详见[角色演出](../../../docs/systems/actor_director.md)。
 
 F 通过 `_unhandled_input` 响应，遵守 GUI 对输入的消费，忽略键盘长按重复事件。`accepts_player_input = false` 的 NPC 不读取真人按键。演出移动继续通过原有公开接口驱动，普通输入不会抢占演出 owner。
 

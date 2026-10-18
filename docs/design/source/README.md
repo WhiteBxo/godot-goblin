@@ -9,4 +9,4 @@
 | [食材与酒水旧表](otherworld_ingredients_and_drinks.xlsx) | 2026-10-17 导入的运行时来源基线，保留 W/H 配方和图鉴等互补信息；重叠原料设计以更新表为准。 |
 | [Day 2 剧情 PDF](day_02.pdf) | 剧情原稿，本批未更改。 |
 
-新旧差异及未同步到运行时的内容见[更新说明](../milk_tea_recipe_update_2026_10_18.md)。
+新表 22 种原料的运行时导入、自由配方和图鉴分别见[数据层](../../gameplay/milk_tea_recipe_data.md)与[自由配方](../../gameplay/free_tea_recipes.md)。新旧差异及导入当时范围见[更新说明](../milk_tea_recipe_update_2026_10_18.md)。

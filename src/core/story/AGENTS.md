@@ -1,6 +1,6 @@
 # 剧情调度与 Gameplay Bridge
 
-本模块包含 StoryLibrary、StoryDirector、GameplayBridge、Day1ShopController 与剧情音频适配。内容编排必须先读 [剧情源稿规范](../../../docs/design/AGENTS.md)；修改配套 JSON 另读 [共享资源规范](../../resources/AGENTS.md)。
+本模块包含 StoryLibrary、StoryDirector、GameplayBridge、Day1ShopController、Day1ChapterController、Day1WorldController 与剧情音频适配。内容编排必须先读 [剧情源稿规范](../../../docs/design/AGENTS.md)；修改配套 JSON 另读 [共享资源规范](../../resources/AGENTS.md)。
 
 - [StoryDirector](../../../docs/systems/story_director.md) 描述接入；Schema 以 `story_library.gd` 的 Loader 和 `story_director.gd` 的实际 dispatch 为准。Library 负责加载与校验，Director 负责步骤调度，不能把玩法规则写进调度器。
 - Director 使用宿主注入的 DialogueManager、ActorDirector、CameraDirector、AudioManager 等服务与已有 GameState，不自行查其他模块内部层级或创建第二份状态。

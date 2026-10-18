@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Original project artwork: neutral cup for arbitrary player-created recipes. -->
+  <path d="M40 5h5L33 39h-5z" fill="#e6bb70" stroke="#493a35" stroke-width="2"/>
+  <path d="M16 22h32l-5 34q-11 6-22 0z" fill="#e7e0d0" stroke="#493a35" stroke-width="3"/>
+  <path d="M20 31h24l-3 22q-9 4-18 0z" fill="#b78d69"/>
+  <path d="M15 20q17-6 34 0v6H15z" fill="#f5ecd6" stroke="#493a35" stroke-width="3"/>
+  <path d="m24 33 2 16" stroke="#f5ecd6" stroke-width="3" stroke-linecap="round"/>
+</svg>

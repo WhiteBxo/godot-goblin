@@ -24,7 +24,7 @@ layout_mode = 2
 size_flags_vertical = 3
 allow_reselect = true
 same_column_width = true
-fixed_icon_size = Vector2i(16, 16)
+fixed_icon_size = Vector2i(32, 32)
 
 [node name="ProductDetail" type="Label" parent="Body/Left"]
 custom_minimum_size = Vector2(216, 30)

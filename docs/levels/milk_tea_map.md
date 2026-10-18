@@ -2,7 +2,7 @@
 
 ## 素材和场景
 
-当前主场景仍是 `src/core/main.tscn`。关卡使用用户本次提供的原始地图 `assets/map/milkTea/shop_interior_rooms.png`，1376 × 768，逐字节复制，未重绘、修改家具、处理像素或调整整张背景透明度。背景 Sprite2D 不居中，位置为 (0, 0)，缩放为 (1, 1)；MilkTeaShop 保留 (1.25, 1.25) 缩放，因此世界范围是 1720 × 960。
+当前奶茶店宿主是 src/core/main.tscn；F5 先进入标题再由新游戏进入该宿主，F6 可单独运行。关卡使用用户本次提供的原始地图 `assets/map/milkTea/shop_interior_rooms.png`，1376 × 768，逐字节复制，未重绘、修改家具、处理像素或调整整张背景透明度。背景 Sprite2D 不居中，位置为 (0, 0)，缩放为 (1, 1)；MilkTeaShop 保留 (1.25, 1.25) 缩放，因此世界范围是 1720 × 960。
 
 地图内所有自动门节点、脚本和门扇碰撞已移除，包括柜台小门和店铺正门。卧室、卫生间、柜台与正门均直接通行。原自动门处理过的旧底图不再被当前关卡引用。
 
@@ -34,11 +34,11 @@ MilkTeaShop (Node2D, scale 1.25)
 | --- | --- |
 | Bedroom / Bathroom | 实例化 `src/gameplay/rooms/room_reveal.tscn`；脚本为 `room_reveal.gd`，类型 Area2D。Collision Layer 全关（0），Mask 仅第 2 层（数值 2），Monitoring 开启，Monitorable 关闭。`observer_group = player`，`fade_duration = 0.25`。 |
 | Interior | CollisionPolygon2D，Build Mode 为 Solids；绘制室内与门槛感应范围，不产生实体阻挡。实例启用 Editable Children 后编辑 polygon。 |
-| Occlusion | Node2D，仅该节点的 `modulate.a` 被 Tween 控制。`z_index = 20`，高于玩家的 10，沿用世界坐标，不放入 CanvasLayer。 |
+| Occlusion | Node2D，仅该节点的 `modulate.a` 被 Tween 控制。`z_index = 20`，高于宿主分配的角色 / 家具 Z 区间，沿用世界坐标，不放入 CanvasLayer。 |
 | Roof | 独立 Polygon2D，使用原始附件纹理及整数顶点/UV。卧室使用第二张木梁素材，卫生间使用第一张斜面板，经 UV 校正到房间轮廓。两房 PlaceholderRoof 均隐藏。 |
-| Doorframes | 卧室门楣和立柱、卫生间上下门柱分别使用原 Background 的纹理；polygon 与 uv 逐点相同，节点没有额外缩放/偏移，因此门框与底图像素完全重合。玩家脚点在门框基线后方时 z=12，在前方时 z=8；玩家 z=10。 |
+| Doorframes | 卧室门楣和立柱、卫生间上下门柱分别使用原 Background 的纹理；polygon 与 uv 逐点相同，节点没有额外缩放/偏移，因此门框与底图像素完全重合。宿主 configure_depth_sort 收集门框 / 设备基线，为前景分配偶数 Z、角色分配其间奇数 Z；同区间角色 Y 排序，保证多个顾客也正确遮挡。 |
 | Background | 始终保持 `modulate.a = 1`，不被房间组件引用或改动。 |
-| WallsAndFurniture | 实体阻挡沿用玩家的 layer 2 / mask 1。卧室下墙、中间浅色墙、卫生间上墙和浅色侧墙保持碰撞；门洞没有阻挡体。 |
+| WallsAndFurniture | 世界阻挡为层 1；玩家 layer 2 / mask 5（世界和 NPC），NPC 为层 3。卧室下墙、中间浅色墙、卫生间上墙和浅色侧墙保持碰撞；门洞没有阻挡体。 |
 | Player / Camera2D | 原有 ShopPlayer、脚部 CapsuleShape2D 和 BoundedFollowCamera，房间系统不调整输入、位置、速度、镜头限制或缩放。 |
 
 所有下述坐标都是地图原始像素坐标，已经保存在关卡场景内，不在运行时覆盖。
@@ -80,7 +80,7 @@ MilkTeaShop (Node2D, scale 1.25)
 
 要调整屋顶，只编辑各房间 `Occlusion/Roof` 的 polygon 与 uv；不要修改原图、Background 透明度或门洞碰撞。要增加房间仍可从 room_reveal.tscn 的默认占位开始，配置完成后隐藏占位并添加 Roof。
 
-`DoorframeForeground` 的 baseline_y 是门框基线的关卡本地 Y：卧室 480，卫生间上柱 612、下柱 677。前景始终独立于 Occlusion，因此进入房间不会把真实门框一起淡掉；排序在玩家移动后的物理优先级 1 更新。
+`DoorframeForeground` 的 baseline_y 是门框基线的关卡本地 Y：卧室 480，卫生间上柱 612、下柱 677。前景始终独立于 Occlusion，因此进入房间不会把真实门框一起淡掉；DoorframeForeground 在物理优先级 1 更新局部关系；正式店铺由 MilkTeaShop 在优先级 2 统一分配角色 / 前景区间，避免旧固定 z=10 假设。
 
 ## 验证与试玩
 
@@ -98,7 +98,7 @@ Godot --headless --path . --script tests/verify_story_director.gd
 
 房间测试通过真实 InputMap 移动检查两个门洞、持续跟随镜头、场景身份与移动权限，另外覆盖自动门删除后的通路、门框前后关系及 1:1 背景采样、墙体阻挡、0.25 秒时长、渐变中间值、室内出生、快速往返、补间中断、两房独立、多观察者、非玩家和释放中的生命周期。测试中的瞬时位置设置只用于边界条件准备，正式房间组件从不移动玩家。
 
-F6 独立运行关卡仅查看地图和素材遮挡；正式试玩请 F5 运行 main.tscn。先由营业区向左穿过中间墙下方缺口进入走廊，再向上走进卧室，观察木质屋顶在 0.25 秒内消失；退出后恢复。再从走廊下方绕过卫生间浅色侧墙底端，向左走进卫生间，观察相同渐隐效果。全程无需 E、没有黑屏或场景切换。最后尝试沿墙推动，确认只能从门洞通行。观察角色位于卧室门框两侧时，门框会按脚点正确切换前后遮挡；柜台和正门不再有动态门扇。
+F6 独立运行关卡仅查看地图和素材遮挡；正式试玩请 F5 从标题新游戏进入，或 F6 运行 main.tscn。先由营业区向左穿过中间墙下方缺口进入走廊，再向上走进卧室，观察木质屋顶在 0.25 秒内消失；退出后恢复。再从走廊下方绕过卫生间浅色侧墙底端，向左走进卫生间，观察相同渐隐效果。全程无需 E、没有黑屏或场景切换。最后尝试沿墙推动，确认只能从门洞通行。观察角色位于卧室门框两侧时，门框会按脚点正确切换前后遮挡；柜台和正门不再有动态门扇。
 
 ## Godot 4.7 官方文档
 

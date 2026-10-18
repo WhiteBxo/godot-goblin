@@ -2,11 +2,11 @@
 
 ## 数据与生命周期
 
-`basic_menu.tres` 是唯一食材目录及教学默认配置。`TeaMenu.ingredients` 使用 `Array[IngredientDefinition]`，可在 Inspector 编辑 ID、名称、图标、origin、category、稀有度、风味标签、战斗属性、特殊效果和获取来源。origin 为 `human` / `otherworld`；category 为 `tea` / `milk` / `syrup` / `topping` / `product` / `material`，两者独立。战斗属性和效果目前只作为描述数据，不实现战斗或效果执行系统。
+`basic_menu.tres` 与 `day1_menu.tres` 保存相同物品定义，分别带 tutorial / day1 配置；GameState 选定配置后所有场景共用一份库存，不各建目录副本。两菜单引用同一份 recipe_book.tres 与 recipe_rules.tres。IngredientDefinition 支持来源、类别、稀有度、图标、形态、加工、描述、价格、配方计算与投掷字段，见[旧表映射](../design/otherworld_data_mapping.md)和[新数据层](milk_tea_recipe_data.md)。
 
-`material` 用于不在奶茶配方里的采集材料。目录现有唯一的异世界材料是醒神菇 `insomnia_mushroom`（`origin = otherworld`、稀有），默认 0 份且未发现；只有夜间采集点入库时才 `discovered`，此后在仓库的「异世界食材」筛选里可见。采集与交付见 [采集与任务物资提交](gathering.md)。
+origin 为 human / otherworld；category 为 tea / milk / syrup / topping / product / material / story_item。固定成品使用 product，金币使用 story_item，新表原料与酒品按目录定义；动态配方杯单独存 drinks，不伪造为静态 IngredientDefinition。描述性战斗属性不会自动执行效果，饮品投掷只消费明确生成的 throw 参数。
 
-`initial_stock` 单位为份，六种初始数量保持 12 / 12 / 12 / 8 / 8 / 10。`initial_discovery` 的键是初始已发现的食材 ID，值是已知属性组列表。默认六种人类材料均已知，没有新增异世界剧情内容。新增食材只需编辑该资源；没有初始库存或发现配置的食材默认数量为零且未发现。
+六种教学食材初始为 12 / 12 / 12 / 8 / 8 / 10 份，已发现并知晓原属性；新表食材、酒品及剧情材料通常初始 0 份且未发现。醒神菇已不是唯一异世界条目；采集示例仍使用它，见[采集](gathering.md)。入库会发现材料，但不会自动揭示四个属性组。
 
 原料表内的 22 种原料现支持每份 5 次，旧教学原料、成品与剧情物品仍为每份 1 次。库存新增 `get_uses`、`has_uses`、`try_spend_uses`，仓库显示当前份与总剩余次数；现有教学制作和交付继续按整份扣除。字段、换份规则和迁移详见[奶茶配方数据层](milk_tea_recipe_data.md)。
 
@@ -47,9 +47,11 @@ basic_menu.tres → WarehouseInventory（数量、发现、已知属性组）
 
 TeaProduction 保留 `get_stock`、`get_ingredients`、`get_order`、`get_completed_count`、`make_drink` 等 API。独立使用时先 `configure(inventory)`；未配置不能制作，不能再次绑定另一份库存重置营业进度。
 
-`make_drink(recipe, order_id = "")` 先验证当前订单和配方，将重复 ID 汇总成所需份数，再检查整组库存。提交阶段没有 await，订单进度与全部扣料在通知前完成，失败则保留原状态。提交锁持续到同步通知结束，监听器不能重入制作。旧的单参数调用仍按当前订单制作；正式 UI 始终传递显示的订单 ID，拒绝过期请求。订单全部完成后拒绝继续制作。制作成功增加 `category=product` 成品，不写交付事实。TaskDelivery 在指定 NPC 交互时校验任务并通过 `try_exchange` 合并扣成品与发放物品奖励；重复 changed 不会完成任务。详见 [成品交付](task_delivery.md)。
+`make_drink(recipe, order_id = "")` 保留旧队列兼容：校验当前订单、重复材料总量及库存，成功更新制作前缀，队列结束后拒绝该入口。当前正式按单 / 教学配方 UI 使用 craft(materials, quantity)，可以按库存自由安排已接订单；三槽自由制作使用 craft_formula，并按次扣料。
 
-WarehousePanel 位于现有 ShopPopup 内，使用现有 theme、返回按钮、UIManager focus 和移动锁。筛选项为全部 / 人类食材 / 异世界食材 / 剧情物品；动态配方成品列在“全部”中。左侧图标、名称、数量，右侧详情可滚动；缺货仍可查看详情。库存 changed 自动刷新仓库列表及制作台选项，订单变化刷新订单板。UI 不保存或修改库存。图标是本次直接编写的 16×16 SVG 像素风源文件，位于 `assets/ui/milk_tea/ingredients/`，随附 Godot `.import` 设置，无需生成派生图片。
+各提交入口在同步通知前完成整组扣料、成品及对应制作记录；失败不留部分修改，通知期间拒绝重入。制作不写交付事实。TaskDelivery 的正式交付通过 GameState.commit_delivery 合并扣物品 / 配方杯、钱与物品奖励、完成事实和回执；独立测试库存保留 try_exchange 兼容路径。详见[成品交付](task_delivery.md)。
+
+WarehousePanel 位于现有 ShopPopup 内，使用现有 theme、返回按钮、UIManager focus 和移动锁。筛选项为全部 / 人类食材 / 异世界食材 / 剧情物品；动态配方成品列在“全部”中。左侧图标、名称、数量，右侧详情可滚动；缺货仍可查看详情。库存 changed 自动刷新仓库列表及制作台选项，订单变化刷新订单板。UI 不保存或修改库存。图标使用目录绑定的 SVG 或用户导入 PNG，食材与成品分别位于 assets/ui/milk_tea/ingredients/ 和 products/；来源与未匹配素材见[导入记录](../assets/imports/user_assets_2026_10_18.md)。仓库与图鉴列表图标为 32×32，详情显示 64 像素等比预览；动态配方使用中性杯 custom_drink.svg 并展示已知原料缩略图，不借用另一款固定饮品立绘。
 
 ## 序列化边界
 
@@ -75,6 +77,8 @@ WarehousePanel 位于现有 ShopPopup 内，使用现有 theme、返回按钮、
 
 ## 验证与试玩
 
+以下十脚本结果属于 2026-10-17 的库存批次；当前数据、页面和订单流程已更新，本轮文档维护未复跑。
+
 项目引擎为 Godot 4.7.2。macOS 本机可使用 `/Applications/Godot.app/Contents/MacOS/Godot`，以下以 `Godot` 代指可执行文件：
 
 ```sh
@@ -94,7 +98,9 @@ Gameplay Bridge 测试会在 user:// 写临时 JSON，需要允许写入该目�
 
 2026-10-17 使用 Godot 4.7.2 实测以上十个脚本全部通过：仓库 125 checks、Gameplay Bridge 246 checks、UIManager 47 checks、GameState 120 checks、主场景 72 checks、设备 36 checks、交互反馈 46 checks；制作、移动及聚落验证均 PASS。仓库另外在 Metal Forward+ 图形模式通过 125 checks，已检查两个入口的渲染截图。沙箱内的 macOS 证书读取/编辑器设置写入提示与业务断言无关；Gameplay Bridge 临时 user:// 写入在允许该目录写入后重跑通过。
 
-非 headless 运行仓库测试附加 `-- --capture`，输出 `.godot/warehouse_main.png` 和 `.godot/warehouse_settlement.png`，不提交缓存截图。F5 或 F6 店铺场景后，E 打开仓库查看默认六种材料，筛选异世界应为空；Esc 后移动恢复。制作 #001 后成品入库，红茶/奶精/珍珠/糖浆各减一，重开仓库仍保持扣料，订单板与制作台均显示 #002；按原教学配方制作三杯后不能重复制作；首单在胖哥布林交付才结算。
+非 headless 运行仓库测试附加 `-- --capture`，输出 `.godot/warehouse_main.png` 和 `.godot/warehouse_settlement.png`，不提交缓存截图。当前试玩：F5 新游戏，开场结束后 E 打开仓库查看初始六项，异世界筛选为空；接单并制作后原料减少、成品增加，指定顾客交付后成品减少。普通进出店和重载保留状态。
+
+新表原料取得后显示每份次数与剩余次数；动态杯在“全部”显示，售空仍可在手册图鉴查看。固定配方和三槽自由制作是不同入口，详见[制作](basic_tea_production.md)与[自由配方](free_tea_recipes.md)。
 
 ## Godot 4.7 官方依据
 

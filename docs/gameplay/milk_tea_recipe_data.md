@@ -36,7 +36,7 @@ F09 格里芬之血可以作为剧情基底，但禁止普通配方使用、市�
 
 ## 投掷参数
 
-`src/resources/milk_tea/throw_tuning.tres` 集中保存面积、时长上限，以及每种效果和区域修饰的参数。数值是后续执行器的输入，本期不会改变守卫行为。
+`src/resources/milk_tea/throw_tuning.tres` 集中保存面积、时长上限，以及每种效果和区域修饰的参数。第一期只保存数值；当前第二期计算配方参数，第三期由 DrinkEffectArea 执行守卫效果，见[饮品投掷](drink_throw_effects.md)。
 
 | 原料 | 参数键 | 含义 |
 | --- | --- | --- |

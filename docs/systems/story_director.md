@@ -1,8 +1,8 @@
 # StoryDirector / P0 Cinematic Integration
 
-自然语言编排入口见 [Story Authoring Workflow](../guides/story_authoring_workflow.md)，全部 JSON 指令/默认参数见 [编排指令速查](../guides/story_authoring_commands.md)。创作源保存在 `docs/design/`，运行时继续使用本页的原有系统与 Schema。
+自然语言编排入口见 [Story Authoring Workflow](../guides/story_authoring_workflow.md)，全部 JSON 指令/默认参数见 [编排指令速查](../guides/story_authoring_commands.md)。未迁移创作源在 docs/design/；已迁移剧情以 docs/story_authoring 的结构化工程为正式来源，见[游戏内编排](../guides/story_editor.md)。运行时继续使用 Story / Dialogue v1 与 Bridge v2。
 
-`src/core/story/story_library.gd` 负责 JSON 加载和完整校验；`story_director.gd` 只调度步骤。MainGame 在 `Systems` 创建 StoryDirector，传入原有 DialogueManager；Director 通过 `/root/GameState` 取得已有 Autoload，不创建第二份状态。正式入口不加载第一天示例、不自动播放剧情。
+`src/core/story/story_library.gd` 负责 JSON 加载和完整校验；`story_director.gd` 只调度步骤。MainGame 在 `Systems` 创建 StoryDirector，传入原有 DialogueManager；Director 通过 `/root/GameState` 取得已有 Autoload，不创建第二份状态。正式新游戏由 Day1ShopController 加载并启动 S01–S02；S03–S06 由 Day1ChapterController 接管但当前数据为空。独立 Demo 不自动进入正式目录。
 
 ## 接入与公开接口
 
@@ -76,7 +76,7 @@ Signal 同步调用。收尾期间拒绝递归启动新事件，串联事件请�
 
 事件 ID、flag key 和前置事件 ID 遵循 GameState 的命名空间规则。`once` 默认 true，只有全部步骤成功才调用 `GameState.complete_event`；`once: false` 可重复执行，不进入单次事件集合。`trigger` 为可选的交互 ID，如 `orders`、`storage`、`tea_station`。
 
-`conditions` 的各字段为 AND：`day` 为正整数精确匹配，`stage` 精确匹配 `story_stage`，`flags` 为 bool 字典（缺失 flag 视为 false），`completed_events` 全部已完成，`not_completed_events` 全部未完成。省略表示不限。事件条件仅在接受请求时检查。
+`conditions` 的各字段为 AND：`day` 为正整数精确匹配，`stage` 精确匹配 `story_stage`，`flags` 为 bool 字典（缺失 flag 视为 false），`completed_events` 全部已完成，`not_completed_events` 全部未完成；`items` 要求当前共享库存不少于指定正整数数量。省略表示不限。事件条件仅在接受请求时检查。
 
 每步可带 `when`，在该步骤执行时重新判断以上条件；还可根据本次演出内已收到的选项决定是否执行：
 
@@ -109,11 +109,13 @@ Director 每个 process tick 执行一个步骤；对白结束和 Timer timeout 
 
 对白取消、UI/Manager/Director 移除、宿主场景退出和 GameState reset/restore 均安全取消。不失败回滚已执行的 flag/stage；最终成功标记应放在末尾。失败不记录事件完成，允许重试。声音步骤（含 BGM）的缺失素材/服务采用可选资源容错，缺失事件 JSON 或对白会报错。
 
-MainGame 的 `_refresh_input_lock` 统一计算“对白活跃 OR 剧情忙碌”，只在首次锁定时保存移动和交互状态，整段演出结束后恢复原值。Director 不直接管理玩家输入。停顿中独立对白被宿主 guard 拒绝，ShopUI 已打开时剧情请求也被拒绝。
+MainGame 的 `_refresh_input_lock` 合并模态、对白、剧情、Actor 控制、导航与潜入等已有操作锁，只在首次锁定时保存移动和交互状态，最后一个锁解除后恢复原值。Director 不直接管理玩家输入。停顿中独立对白被宿主 guard 拒绝，ShopUI 已打开时剧情请求也被拒绝。
 
-ShopInteraction 接受可选 Callable `event_handler(interaction_id) -> bool`，先询问路由。仅无匹配事件时返回 false 并继续原 ShopUI，已处理或拒绝的剧情请求返回 true，避免一按 E 同时打开两种弹窗。正式场景目录为空，三个交互仍使用原 UI；Demo 仅接管 `orders`。没有新增交互组件或依赖具体 UI 子节点路径。
+ShopInteraction 接受可选路由 Callable。MainGame 返回 Error：OK 表示获准，ERR_DOES_NOT_EXIST 才回退原 ShopUI，其他错误消耗请求并报告失败，避免一按 E 同时打开两种弹窗或失败仍发成功反馈。旧 bool handler 兼容 false 回退、true 已处理且成功。正式前段已加载阶段事件，后章仅为空骨架；Demo 的 orders 路由局限对应宿主。详见[交互反馈](../gameplay/interaction_feedback.md)。
 
 ## Demo 与验证
+
+本页后文的早期实现测试数量保留历史，不作为本轮文档同步实测。当前正式内容与未发布范围见[项目现状](../development/development_status_2026_10_18.md)。
 
 直接运行 `src/debug/story/story_demo.tscn`（编辑器 F6），或：
 
@@ -134,7 +136,7 @@ ShopInteraction 接受可选 Callable `event_handler(interaction_id) -> bool`，
 
 ## 演出 JSON 指令
 
-MainGame 在现有 `Systems` 中创建各 Director，通过 `configure_cinematic` 注入，不增加 autoload。StoryDirector 只做逐步 dispatch 和结果管理；移动、碰撞、表情、镜头跟随、音频池与淡变仍由原 module 执行。未改动 DialogueManager 或 GameState。正式入口不加载 Demo。
+MainGame 在现有 `Systems` 中创建各 Director，通过 `configure_cinematic` 注入，不增加 autoload。StoryDirector 只做逐步 dispatch 和结果管理；移动、碰撞、表情、镜头跟随、音频池与淡变仍由原 module 执行。依赖通过现有公开接口注入；正式入口加载自己的剧情配置，不加载 Demo。
 
 所有新演出指令允许 `wait: bool`，默认 **true**；原 `play_sfx` 默认 **false**。`dialogue` 始终等待自然结束，原 `wait` 步骤仍用 `seconds`，这两个旧指令不增加同名 bool 字段。`wait: false` 只启动动作，下一 process tick 执行下一步；Blocking 则等待该次 action 的完成 Signal，而不是估算耗时。
 

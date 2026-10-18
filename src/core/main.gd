@@ -834,10 +834,11 @@ func _with_npc_points(points: Array[InteractionPoint]) -> Array[InteractionPoint
 		if _shop_level != null:
 			point.selection_group = &"orders"
 		entity.add_child(point)
-		if day1_story_enabled:
-			point.hide_development_markers()
+		# NPC identity is shown by the focused interaction prompt, never debug markers.
+		point.hide_development_markers()
 		if day1_story_enabled and _shop_level != null and entity.actor_id != &"fat_goblin":
 			point.position = Vector2(0, -150)
+		point.feedback_rect = point.transform.affine_inverse() * entity.get_interaction_feedback_rect().grow(4.0)
 		points.append(point)
 		_npc_points[point.interaction_id] = point
 	return points

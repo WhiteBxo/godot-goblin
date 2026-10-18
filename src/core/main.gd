@@ -2,6 +2,8 @@ class_name MainGame
 extends Node
 
 @export var day1_story_enabled := false
+@export var interaction_audio_scene: PackedScene = preload("res://src/core/audio/interaction_audio.tscn")
+var _interaction_audio: InteractionAudio
 var _day1_controller: Day1ShopController
 var _chapter_controller: Day1ChapterController
 var _trigger_zones: Array[StoryTriggerZone] = []
@@ -64,6 +66,7 @@ func _ready() -> void:
 		elif profile_error != OK:
 			push_error("Cannot switch an existing business session to Day 1 (%d)" % profile_error)
 			return
+	_create_audio_feedback()
 	_create_ui_system()
 	_create_chronicle_system()
 	_create_task_system()
@@ -93,10 +96,7 @@ func _ready() -> void:
 		interaction.configure(_shop_player, ui, points, _route_story_interaction)
 		_shop_ui = ui
 		_shop_interaction = interaction
-		var feedback := InteractionFeedback.new()
-		feedback.name = "InteractionFeedback"
-		$World/EffectRoot.add_child(feedback)
-		feedback.configure(interaction, _audio_manager)
+		_create_interaction_feedback(interaction)
 		_create_dialogue_system()
 		_create_gameplay_bridge()
 		if day1_story_enabled:
@@ -133,6 +133,20 @@ func _ready() -> void:
 		_demo_tools.capture_started.connect(_debug_tools.close_panel)
 		_demo_tools.start()
 
+func _create_audio_feedback() -> void:
+	_interaction_audio = interaction_audio_scene.instantiate() as InteractionAudio
+	$Systems.add_child(_interaction_audio)
+	for message in _interaction_audio.configure(_audio_manager):
+		push_warning(message)
+	get_transactions().transaction_finished.connect(_interaction_audio.on_transaction_finished)
+
+func _create_interaction_feedback(interaction: ShopInteraction) -> void:
+	var feedback := InteractionFeedback.new()
+	feedback.name = "InteractionFeedback"
+	$World/EffectRoot.add_child(feedback)
+	feedback.configure(interaction, _audio_manager, _interaction_audio.play_sound)
+	interaction.interaction_failed.connect(func(_point: InteractionPoint) -> void: _interaction_audio.play_event("interaction_failure"))
+
 func get_ui_manager() -> UIManager:
 	return _ui_manager if is_instance_valid(_ui_manager) else null
 
@@ -147,6 +161,10 @@ func _create_ui_system() -> void:
 	pause.resume_requested.connect(func() -> void: _ui_manager.set_paused(false))
 	pause.title_requested.connect(_return_to_title.bind(pause), CONNECT_DEFERRED)
 	_ui_manager.modal_changed.connect(_refresh_input_lock)
+	var audio_feedback := UIAudioFeedback.new()
+	audio_feedback.name = "UIAudioFeedback"
+	$Systems.add_child(audio_feedback)
+	audio_feedback.configure(_interaction_audio.play_sound, [$HudLayer, $PopupLayer, $PauseLayer], _ui_manager)
 
 func _return_to_title(pause: PauseMenu) -> void:
 	var error := ERR_BUSY if is_instance_valid(_scene_travel) and _scene_travel.is_busy() else GameEntry.return_to_title(get_tree())
@@ -360,6 +378,7 @@ func _initialize_settlement() -> void:
 	_shop_interaction.name = "SettlementInteraction"
 	$Systems.add_child(_shop_interaction)
 	_shop_interaction.configure(_shop_player, _shop_ui, points, _route_story_interaction)
+	_create_interaction_feedback(_shop_interaction)
 	_create_dialogue_system()
 	for marker: Marker2D in _settlement_level.get_story_positions():
 		_actor_director.register_position(StringName(marker.name), marker)
@@ -425,6 +444,8 @@ func _create_shop_business(ui: ShopUI) -> void:
 	var error := _task_delivery.configure(_task_catalog, _task_journal, get_node("/root/GameState"), _warehouse_inventory)
 	if error != OK:
 		push_error("Could not configure task delivery (%d)" % error)
+	_task_delivery.delivered.connect(func(_id: String) -> void: _interaction_audio.play_event("delivery_success"))
+	_task_delivery.delivery_failed.connect(func(_id: String, _reason: String) -> void: _interaction_audio.play_event("delivery_failure"))
 	_order_board = OrderBoardModel.new()
 	_order_board.name = "OrderBoardModel"
 	$Systems.add_child(_order_board)
@@ -439,8 +460,10 @@ func _create_shop_business(ui: ShopUI) -> void:
 	ui.accept_requested.connect(func(id: String) -> void:
 		var accepted := _task_delivery.accept_order(id)
 		if accepted == OK:
+			_interaction_audio.play_event("order_accepted")
 			_track_order(id)
 		elif accepted != ERR_ALREADY_EXISTS:
+			_interaction_audio.play_event("order_failure")
 			ui.show_feedback("暂时无法接取这张订单，请核对当前阶段。", false))
 	var task_hud: TaskHUD = preload("res://src/UI/tasks/task_hud.tscn").instantiate()
 	_ui_manager.register_screen(ScreenIds.TASK_HUD, task_hud, &"hud", false)
@@ -449,8 +472,7 @@ func _create_shop_business(ui: ShopUI) -> void:
 	task_hud.bind_orders(_order_board)
 	ui.craft_requested.connect(func(materials: Array[String], quantity: int) -> void:
 		var result := _tea_production.craft(materials, quantity)
-		if day1_story_enabled and result.ok:
-			_audio_manager.play_sfx("shop.tea_pour")
+		_interaction_audio.play_event("craft_success" if result.ok else "craft_failure")
 		ui.show_production_result(result))
 
 func get_player() -> CharacterBody2D:
@@ -505,6 +527,8 @@ func _create_gathering(points: Array[GatherPoint]) -> void:
 	var error := _gathering_service.configure(get_node("/root/GameState"), _warehouse_inventory, points)
 	if error != OK:
 		push_error("Could not configure gathering (%d)" % error)
+	_gathering_service.harvested.connect(func(_point: GatherPoint, _id: String, _amount: int, _stock: int) -> void:
+		_interaction_audio.play_event("gather_success"))
 
 func _with_npc_points(points: Array[InteractionPoint]) -> Array[InteractionPoint]:
 	for entity in $World/EntityRoot.get_children():
@@ -595,6 +619,9 @@ func _create_dialogue_system() -> void:
 	_dialogue_manager.configure(ui, _can_start_dialogue)
 	_dialogue_manager.dialogue_started.connect(_on_dialogue_started)
 	_dialogue_manager.dialogue_ended.connect(_on_dialogue_ended)
+	_dialogue_manager.line_changed.connect(func(_line: String) -> void: _interaction_audio.play_event("dialogue_line"))
+	_dialogue_manager.choice_selected.connect(func(_dialogue: String, _line: String, _choice: String) -> void:
+		_interaction_audio.play_event("dialogue_choice"))
 	_story_director = StoryDirector.new()
 	_story_director.name = "StoryDirector"
 	$Systems.add_child(_story_director)
@@ -652,11 +679,10 @@ func _create_tea_making() -> void:
 	_tea_making.name = "TeaMaking"
 	$Systems.add_child(_tea_making)
 	_shop_ui.bind_tea_making(_tea_making)
+	_tea_making.recipe_completed.connect(func(_recipe: String, _session: int) -> void: _interaction_audio.play_event("craft_success"))
 
 func _on_shop_point_opened(id: StringName) -> void:
 	if id == &"orders":
-		if day1_story_enabled:
-			_audio_manager.play_sfx("shop.order_open")
 		get_node("/root/GameState").set_flag("shop.orders_viewed")
 		_refresh_order_requirements(_shop_ui)
 

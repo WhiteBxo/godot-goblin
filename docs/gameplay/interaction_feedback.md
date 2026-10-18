@@ -4,7 +4,7 @@
 
 `InteractionPoint` 仍用原 Area2D 的 player body 进出记录判定范围，`ShopInteraction` 是唯一目标选择与 dispatch 入口；没有增加检测 Area、全局交互管理器或新的玩法。订单板、仓库、制作台仍走原 StoryDirector 路由，未匹配的路由打开原 ShopUI，Esc 关闭并恢复移动。
 
-MainGame 在 `World/EffectRoot` 创建场景内 `InteractionFeedback`，注入已有 ShopInteraction 和 AudioManager。没有修改 main.tscn、关卡场景、正式剧情 JSON 或 project.godot。玩家增加公开 `get_facing_vector()`，反馈组件不依赖玩家子节点。
+MainGame 在店铺和聚落的 `World/EffectRoot` 创建场景内 `InteractionFeedback`，注入已有 ShopInteraction、AudioManager 与 `InteractionAudio.play_sound`。关卡中的交互点配置成功音，业务结果和通用 UI 音效见[音效配置](../assets/sound_library.md#交互音效配置)。玩家提供公开 `get_facing_vector()`，反馈组件不依赖玩家子节点。
 
 新增对象沿用 `interaction_point.tscn`，将其交给宿主已有的 `ShopInteraction.configure(player, shop_ui, points, handler)`。设置：
 
@@ -14,7 +14,7 @@ MainGame 在 `World/EffectRoot` 创建场景内 `InteractionFeedback`，注入�
 - `success_sound`：可选 AudioManager catalogue ID，默认空；空值、缺失 ID 或未注入音频时静默跳过。
 - `sound_bus`：`UI` 或 `SFX`，调用现有 `play_ui` / `play_sfx`，不建立新音频池。
 
-自定义反馈只需订阅 `target_changed(point)` 和 `interaction_succeeded(point)`；前者传 null 表示清除。世界反馈组件通过 `configure(interaction, audio)` 接入任意世界特效容器，移除组件不影响交互。提示通过 `target_changed` 接到现有 `ShopUI.show_prompt`，视觉组件不监听输入、不调用 interact。
+自定义反馈可订阅 `target_changed(point)`、`interaction_succeeded(point)` 和 `interaction_failed(point)`；前者传 null 表示清除，失败只在实际派发后被拒绝时通知，锁定和无目标时静默。世界反馈组件通过 `configure(interaction, audio, sound_player)` 接入任意世界特效容器；可选 Callable 接收 `(id, bus)`，省略时保留原 AudioManager 播放路径。移除组件不影响交互。提示通过 `target_changed` 接到现有 `ShopUI.show_prompt`，视觉组件不监听输入、不调用 interact。
 
 ## 选择、触发与锁定
 

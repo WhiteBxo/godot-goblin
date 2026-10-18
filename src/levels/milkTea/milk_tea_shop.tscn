@@ -501,6 +501,8 @@ uv = PackedVector2Array(550, 154, 615, 154, 615, 292, 550, 292)
 [node name="OrderBoard" parent="InteractionPoints" unique_id=1304020900 instance=ExtResource("3_xdoh7")]
 position = Vector2(844, 447)
 interaction_id = "orders"
+success_sound = "shop.order_open"
+sound_bus = "SFX"
 display_name = "收银台"
 description = "今日订单 #001
 珍珠奶茶 × 1 · 常温 · 少糖
@@ -517,6 +519,8 @@ visible = false
 [node name="Storage" parent="InteractionPoints" unique_id=762435014 instance=ExtResource("3_xdoh7")]
 position = Vector2(490, 286)
 interaction_id = "storage"
+success_sound = "shop.bottle_open"
+sound_bus = "SFX"
 display_name = "储物柜"
 description = "原料库存
 红茶 12 份　牛奶 12 份
@@ -534,6 +538,8 @@ visible = false
 [node name="TeaStation" parent="InteractionPoints" unique_id=840788172 instance=ExtResource("3_xdoh7")]
 position = Vector2(841, 296)
 interaction_id = "tea_station"
+success_sound = "shop.stir"
+sound_bus = "SFX"
 display_name = "奶茶制作台"
 description = "珍珠奶茶 · 配方
 红茶 × 1 + 牛奶 × 1 + 珍珠 × 1

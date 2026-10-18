@@ -23,7 +23,7 @@
 - 封口机以抽屉压合和压缩空气组合；木地脚步以皮靴与木器轻触组合，石地以土壤落脚与轻石声组合。这些是用途适配，不宣称是对应设备或地面的实录。
 - 神秘三连敲来自木勺敲木碗，冲击与摩擦来自石块，哥布林声来自生物短叫并降低音高。
 - 两条 12 秒循环环境音使用气流采样底层，分别加入器物或远水滴；它们是场景环境设计，并非完整现场环境录音。
-- 新增 `shop.coins`、`story.unlock`、`shop.bottle_open`、`shop.stir`、`story.page_turn`，可由现有宿主显式播放；登记不会自动在玩法中新增触发。
+- 新增 `shop.coins`、`story.unlock`、`shop.bottle_open`、`shop.stir`、`story.page_turn`，由宿主或交互点配置播放；仅在资源表登记不会自动新增触发。
 
 成品统一为 44.1 kHz、16-bit、单声道 PCM。处理包含 55–5500 Hz 带通、首尾包络、移除静音尾部；有效区 RMS 目标为普通音效 -23 dBFS、对白 -28 dBFS、环境 -32 dBFS。峰值保护优先保留动态，允许 RMS 比目标低 4 dB；4 倍过采样估计 true peak 不超过 -6 dBTP。短音显式关闭循环，环境显式使用 Forward；关闭 Godot 二次 normalize、trim 与压缩。
 
@@ -47,6 +47,39 @@ func play_wood_step(audio: AudioManager) -> void:
 ```
 
 基础 ID 指向首变体，多变体注册 `.01`、`.02` 等 ID。各角色独立保存 previous ID 避免连续重复；结束时调用 `audio.stop_owned(sound_owner)`。循环环境走既有 SFX 池，需使用 handle 或 owner 停止。未知 ID 或缺失资源继续由现有 AudioManager 安全处理。服务契约见 [AudioManager](../systems/audio_manager.md)。
+
+## 交互音效配置
+
+MainGame 的 `interaction_audio_scene` 默认使用 `src/core/audio/interaction_audio.tscn`。打开该场景，在 Inspector 修改脚本导出的 `event_sounds` 与音量即可统一调整所有宿主；专属宿主可替换该 PackedScene。标题界面也使用这套素材与反馈组件。初始化时注册正式素材库，因此旧店铺与聚落无需等待 Day 1 剧情启动才能播放。
+
+| 触发 | 默认音效 |
+| --- | --- |
+| 打开订单板 / 仓储 / 制作台 | `shop.order_open` / `shop.bottle_open` / `shop.stir` |
+| 制作成功 / 失败 | `shop.sealer` / `ui.failure` |
+| 采集成功 | `ui.confirm` |
+| 交付成功、钱包交易成功 / 失败 | `shop.coins` / `ui.failure` |
+| 接取订单成功 / 失败 | `ui.confirm` / `ui.failure` |
+| 对话换行 / 有效选择 | `ui.dialogue` / `ui.confirm` |
+| 按钮悬停、键盘焦点 / 按下、列表选择 | `ui.hover` / `ui.confirm` |
+| 打开手册、地图 / 关闭弹窗、暂停菜单 | `story.page_turn` / `ui.cancel` |
+| 查看长老文件 / 取得血液 | `story.page_turn` / `story.unlock` |
+
+具体世界对象在关卡内配置 `InteractionPoint.success_sound` 和 `sound_bus`，聚落区域说明点使用 `ui.confirm`。音效只观察既有事件：制作、采集、交付和交易以服务提交的实际结果为准；锁定、无目标或耗尽的采集点不会额外发成功音。
+
+`UIAudioFeedback` 只监听注入的正式 UI 根，自动接入后续创建的按钮和列表；DebugLayer 不在范围内。按钮 metadata `ui_press_sound` 可覆盖按下音，空字符串静音；对话选项由 DialogueManager 确认后播放，避免键鼠重复。关闭 / 恢复按钮覆盖为 `ui.cancel`。鼠标按下播放点击反馈，业务失败另播失败结果音。UIManager 的 `button_activating` 补足自定义键盘确认路径，在业务回调隐藏 / 禁用按钮前通知反馈组件。
+
+默认普通声音 -6 dB、悬停 -14 dB；相同基础 ID 在 80 ms 内合并，多变体避免连续重复。UI 显式走 UI Bus，暂停中继续处理；世界点按其 Bus 配置播放。退出宿主只清理该反馈组件持有的声音。未启用自动脚步、循环环境和出入口音效，剧情已有的显式音频步骤继续沿用。
+
+F5 进入标题，测试悬停和新游戏；F6 运行 `src/debug/story/legacy_shop.tscn` 或 `src/core/settlement.tscn`，靠近订单板、仓储、制作台按 E，Esc 关闭。制作一份有效配方，再以无效配方请求制作，分别检查封口和失败音；暂停后用键盘及鼠标恢复，检查声音与输入恢复。聚落切至夜晚后采集、交付，检查实际成功时才播放对应结果音。完整素材试听仍使用下方 Demo。
+
+实现核对 [Godot 4.7 BaseButton](https://docs.godotengine.org/en/4.7/classes/class_basebutton.html) 的 `button_down` / `pressed` 时机，以及 [Node](https://docs.godotengine.org/en/4.7/classes/class_node.html) 的生命周期与暂停处理。
+
+### 交互接入验证（2026-10-18）
+
+- Godot 4.7.2 headless：`verify_interaction_audio.gd` 71 项、`verify_interaction_feedback.gd` 46 项、`verify_ui_manager.gd` 47 项、`verify_game_entry.gd` 66 项、`verify_audio_manager.gd` 64 项、`verify_gameplay_bridge.gd` 249 项，均 0 failures。新测试经过真实店铺 / 聚落服务入口、动态控件、暂停和键盘恢复，检查 AudioStream、Bus、音量、去重与 owner 清理。
+- `verify_dialogue.gd` 154 项、1 failure：订单板集成后 GameState 快照断言不一致。在未修改提交 `175147d` 的独立副本完成导入后复现同一断言失败，未修改无关状态逻辑。
+- 编辑器导入成功，退出的 495 ObjectDB / 10 resources 诊断在相同未修改副本也存在。入口测试的 Busy 警告来自其显式导航失败用例；一次运行退出另有 4 ObjectDB / 1 resource 诊断，后一次未出现。
+- 未进行人工耳听、全项目回归或发布导出；以上为模块播放行为验证，不能替代主观听感验收。
 
 ## Demo 与试听
 

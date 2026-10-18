@@ -2,6 +2,7 @@ class_name UIManager
 extends Node
 ## Scene-local UI lifecycle. Gameplay locks belong to the host.
 
+signal button_activating(button: BaseButton)
 signal modal_changed
 signal pause_changed(paused: bool)
 signal screen_closed(id: StringName)
@@ -285,6 +286,7 @@ func _input(event: InputEvent) -> void:
 		elif action == &"interact" or action == &"ui_accept":
 			var focused := get_viewport().gui_get_focus_owner() as BaseButton
 			if focused != null and not focused.disabled and _focus_allowed(focused):
+				button_activating.emit(focused)
 				focused.pressed.emit()
 		else:
 			_navigate(action in [&"ui_up", &"ui_left", &"ui_focus_prev"] or (action == &"ui_focus_next" and event is InputEventKey and event.shift_pressed))

@@ -9,6 +9,15 @@ var _starting := false
 
 func _ready() -> void:
 	DebugRuntime.apply_release_policy(get_tree())
+	var audio: AudioManager = preload("res://src/core/audio/audio_manager.tscn").instantiate()
+	add_child(audio)
+	var sounds: InteractionAudio = preload("res://src/core/audio/interaction_audio.tscn").instantiate()
+	add_child(sounds)
+	for message in sounds.configure(audio):
+		push_warning(message)
+	var feedback := UIAudioFeedback.new()
+	add_child(feedback)
+	feedback.configure(sounds.play_sound, [self])
 	_new_game.pressed.connect(_request_new_game)
 	_quit.pressed.connect(_request_quit)
 	_new_game.grab_focus()

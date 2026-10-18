@@ -8,6 +8,7 @@ extends Node2D
 
 var _interaction: ShopInteraction
 var _audio: AudioManager
+var _sound_player: Callable
 var _focus: InteractionPoint
 var _pulse: InteractionPoint
 var _remaining := 0.0
@@ -16,12 +17,13 @@ func _ready() -> void:
 	# World feedback must stay visible over foreground furniture and room roofs.
 	z_index = 30
 
-func configure(interaction: ShopInteraction, audio: AudioManager = null) -> void:
+func configure(interaction: ShopInteraction, audio: AudioManager = null, sound_player: Callable = Callable()) -> void:
 	if is_instance_valid(_interaction):
 		_interaction.target_changed.disconnect(_on_target_changed)
 		_interaction.interaction_succeeded.disconnect(_on_succeeded)
 	_interaction = interaction
 	_audio = audio
+	_sound_player = sound_player
 	_interaction.target_changed.connect(_on_target_changed)
 	_interaction.interaction_succeeded.connect(_on_succeeded)
 	_on_target_changed(interaction.get_target())
@@ -33,7 +35,9 @@ func _on_target_changed(point: InteractionPoint) -> void:
 func _on_succeeded(point: InteractionPoint) -> void:
 	_pulse = point
 	_remaining = pulse_seconds
-	if not point.success_sound.is_empty() and is_instance_valid(_audio) and _audio.sounds.has(point.success_sound):
+	if not point.success_sound.is_empty() and _sound_player.is_valid():
+		_sound_player.call(point.success_sound, point.sound_bus)
+	elif not point.success_sound.is_empty() and is_instance_valid(_audio) and _audio.sounds.has(point.success_sound):
 		if point.sound_bus == "SFX":
 			_audio.play_sfx(point.success_sound)
 		else:

@@ -60,6 +60,8 @@ func present_line(speaker: String, text: String, portrait: Texture2D, choices: A
 	for index in range(choices.size()):
 		var button := Button.new()
 		button.text = choices[index]
+		# The manager confirms a valid choice for both mouse and custom keyboard input.
+		button.set_meta("ui_press_sound", "")
 		button.custom_minimum_size.y = 24
 		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT

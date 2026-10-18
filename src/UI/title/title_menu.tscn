@@ -69,6 +69,7 @@ layout_mode = 2
 text = "新游戏"
 
 [node name="Quit" type="Button" parent="Center/Panel/Margin/Content"]
+metadata/ui_press_sound = "ui.cancel"
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 text = "退出游戏"

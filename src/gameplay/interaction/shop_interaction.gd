@@ -4,6 +4,7 @@ extends Node
 
 signal target_changed(point: InteractionPoint)
 signal interaction_succeeded(point: InteractionPoint)
+signal interaction_failed(point: InteractionPoint)
 
 ## Scores use world pixels. A challenger must beat the incumbent by this margin.
 @export_range(0.0, 64.0) var switch_margin := 12.0
@@ -135,6 +136,8 @@ func _on_interacted(point: InteractionPoint) -> void:
 	refresh_target()
 	if succeeded and is_instance_valid(point) and not point.is_queued_for_deletion():
 		interaction_succeeded.emit(point)
+	elif not succeeded and is_instance_valid(point) and not point.is_queued_for_deletion():
+		interaction_failed.emit(point)
 
 func _on_closed() -> void:
 	_armed = false

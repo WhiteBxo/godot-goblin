@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "checkpoints": [
+    {"id": "day1.initial.shop", "scene": "res://src/core/main.tscn", "entrance": "", "stage": "", "after_event": "", "before_event": "day1.opening", "required_flags": [], "recovery": "opening"},
+    {"id": "day1.wait_human.shop", "scene": "res://src/core/main.tscn", "entrance": "", "stage": "day1.wait_human", "after_event": "day1.opening", "before_event": "day1.first_goblin", "required_flags": [], "recovery": "shop"},
+    {"id": "day1.wait_goblin.shop", "scene": "res://src/core/main.tscn", "entrance": "", "stage": "day1.wait_goblin", "after_event": "day1.first_goblin", "before_event": "day1.group_arrival", "required_flags": [], "recovery": "shop"},
+    {"id": "day1.wait_group.shop", "scene": "res://src/core/main.tscn", "entrance": "", "stage": "day1.wait_group", "after_event": "day1.group_arrival", "before_event": "day1.ending", "required_flags": [], "recovery": "shop"},
+    {"id": "day1.investigate.shop", "scene": "res://src/core/main.tscn", "entrance": "street_door", "stage": "day1.investigate_coins", "after_event": "day1.ending", "before_event": "", "required_flags": ["day1.stages_01_02_completed"], "recovery": "chapter"},
+    {"id": "day1.investigate.settlement", "scene": "res://src/core/settlement.tscn", "entrance": "shop_door", "stage": "day1.investigate_coins", "after_event": "day1.ending", "before_event": "", "required_flags": ["day1.stages_01_02_completed"], "recovery": "chapter"}
+  ]
+}

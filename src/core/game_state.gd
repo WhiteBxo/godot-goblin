@@ -362,6 +362,16 @@ func _new_game_snapshot() -> Dictionary:
 	return defaults
 
 
+## File coordinators must sample after synchronous transactions/notifications end.
+func can_take_snapshot() -> bool:
+	return not _session_busy()
+
+
+## Check migrations and the complete schema without replacing live facts/signals.
+func validate_snapshot(data: Dictionary) -> Error:
+	return OK if _is_valid_snapshot(_migrate_snapshot(data)) else ERR_INVALID_DATA
+
+
 ## Native Variant snapshot, with independent containers; no file I/O.
 func to_dict() -> Dictionary:
 	_ensure_business()

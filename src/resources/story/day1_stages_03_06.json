@@ -1,4 +1,63 @@
 {
   "version": 1,
-  "events": {}
+  "events": {
+    "day1.s03.coin_inspect": {
+      "once": true,
+      "conditions": {
+        "day": 1.0,
+        "stage": "day1.investigate_coins",
+        "completed_events": [
+          "day1.ending"
+        ]
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day1.s03.coin_inspect"
+        }
+      ]
+    },
+    "day1.s03.street_gone": {
+      "once": true,
+      "conditions": {
+        "day": 1.0,
+        "stage": "day1.s03",
+        "completed_events": [
+          "day1.s03.coin_inspect"
+        ],
+        "flags": {
+          "day1.s03.exited_shop": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day1.s03.street_gone"
+        }
+      ]
+    },
+    "day1.s03.back_to_door": {
+      "once": true,
+      "conditions": {
+        "day": 1.0,
+        "stage": "day1.s03.explore",
+        "completed_events": [
+          "day1.s03.street_gone"
+        ],
+        "flags": {
+          "day1.s03.exploration_completed": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day1.s03.back_to_door"
+        },
+        {
+          "command": "set_stage",
+          "value": "day1.s04"
+        }
+      ]
+    }
+  }
 }

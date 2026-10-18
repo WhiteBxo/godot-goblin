@@ -1,4 +1,41 @@
 {
   "version": 1,
-  "dialogues": {}
+  "dialogues": {
+    "day1.s03.coin_inspect": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角·内心",
+          "text": "这什么破玩意儿……该不会真有人拿假币买奶茶吧？"
+        }
+      }
+    },
+    "day1.s03.street_gone": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角·内心",
+          "text": "……我店门口什么时候变成这样了？"
+        }
+      }
+    },
+    "day1.s03.limited_exploration": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角·内心",
+          "text": "黑灯瞎火的，谁知道里面有什么？不去。"
+        }
+      }
+    },
+    "day1.s03.back_to_door": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角·内心",
+          "text": "……完了，我这店不会真穿越了吧？"
+        }
+      }
+    }
+  }
 }

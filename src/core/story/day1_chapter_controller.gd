@@ -139,7 +139,16 @@ func _activate() -> void:
 		_loaded = true
 		last_error = ""
 	apply_scene_setup()
+	_mark_shop_exit()
 	_schedule_refresh()
+
+## Real travel only: the shop door must actually lead here, not a stage switch.
+func _mark_shop_exit() -> void:
+	if _host != "settlement" or not _game.has_scene_arrival():
+		return
+	if not Day1Access.at_stage(_state, "day1.s03") or _state.get_flag("day1.s03.exited_shop"):
+		return
+	_state.set_flag("day1.s03.exited_shop")
 
 func is_loaded() -> bool:
 	return _loaded

@@ -101,9 +101,9 @@ S06 已有门控特调任务；S04 胖哥布林普通消费的配方、金额、
 <a id="p13"></a>
 ## P13 出店、探索范围与真实返店
 
-**导航与门禁已实现，S03 内容仍开放。** shop_exit / shop_enter 已双向连接，street_door / shop_door 提供命名落点；S01/S02 受门控，investigate_coins / S03 可探索，S05 还需接受委托与夜间。真实取血后通过店内入口抵达才写 returned_shop。
+**S03 已落地（2026-10-18）。** shop_exit / shop_enter 已双向连接，street_door / shop_door 提供命名落点；S01/S02 受门控，investigate_coins / S03 可探索，S05 还需接受委托与夜间。真实取血后通过店内入口抵达才写 returned_shop。
 
-仍需确认 S03 观察点、有限探索反馈、返回收束条件及 S04 出场位置。后章 setup 支持 declared derived_facts、自动事件和角色摆位，但当前列表全空。导航成功不代表探索或安全撤离完成，Debug 路线不能成为正式门槛。
+S03 的观察点定为店门外三处：明亮的摊位区、空荡荡的街道、昏暗的洞窟岔路（`settlement_map.tscn` 的 `day1_s03_yard` / `day1_s03_street` / `day1_s03_path`，均为 DOCUMENT 型剧情交互点，只写各自的 `day1.s03.observed_*`）。三处全部查看后，`day1_stages_03_06_setup.json` 的 `derived_facts` 写 `day1.s03.exploration_completed`，再由 bridge 推进 `day1.s03.back_to_door`。出店事实由 settlement 宿主在真实到达（`has_scene_arrival()`）且阶段为 `day1.s03` 时写 `day1.s03.exited_shop`，不用阶段切换冒充。**S04 出场位置与店内/店外两版取舍仍开放。** 导航成功不代表探索或安全撤离完成，Debug 路线不能成为正式门槛。
 
 <a id="p14"></a>
 ## P14 S04 店外正文与店内补充对白、地图及消费

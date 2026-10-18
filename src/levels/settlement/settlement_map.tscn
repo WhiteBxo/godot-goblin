@@ -4740,6 +4740,51 @@ description = "珍珠奶茶 · 配方
 
 加入茶底和牛奶，放入珍珠、糖浆后摇匀封杯。"
 
+[node name="day1_s03_yard" type="Area2D" parent="InteractionPoints" instance=ExtResource("22_trnvy")]
+position = Vector2(5020, 8560)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("25_story")
+kind = 1
+interaction_id = &"day1_s03_yard"
+success_sound = "story.page_turn"
+sound_bus = "SFX"
+entry_id = &"day1_s03_yard"
+success_flags = Array[StringName](["day1.s03.observed_yard"])
+required_stages = Array[String](["day1.s03"])
+display_name = "明亮的摊位区"
+description = "附近摆着一些简陋的摊位，地上散落着与手中金币相似的硬币。\n\n主角小心翼翼地靠近查看，发现这里似乎真的有人长期生活。"
+
+[node name="day1_s03_street" type="Area2D" parent="InteractionPoints" instance=ExtResource("22_trnvy")]
+position = Vector2(5180, 8380)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("25_story")
+kind = 1
+interaction_id = &"day1_s03_street"
+success_sound = "story.page_turn"
+sound_bus = "SFX"
+entry_id = &"day1_s03_street"
+success_flags = Array[StringName](["day1.s03.observed_street"])
+required_stages = Array[String](["day1.s03"])
+display_name = "空荡荡的街道"
+description = "四周没有行人，只有远处传来的模糊说话声和脚步声。\n\n主角犹豫了一下，最终决定不再往远处走。"
+
+[node name="day1_s03_path" type="Area2D" parent="InteractionPoints" instance=ExtResource("22_trnvy")]
+position = Vector2(5340, 8560)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("25_story")
+kind = 1
+interaction_id = &"day1_s03_path"
+success_sound = "story.page_turn"
+sound_bus = "SFX"
+entry_id = &"day1_s03_path"
+success_flags = Array[StringName](["day1.s03.observed_path"])
+required_stages = Array[String](["day1.s03"])
+display_name = "昏暗的洞窟岔路"
+description = "前方光线逐渐消失，深处传来不明声响。\n\n主角·内心：黑灯瞎火的，谁知道里面有什么？不去。"
+
 [node name="day1_elder_document" type="Area2D" parent="InteractionPoints" instance=ExtResource("22_trnvy")]
 position = Vector2(5990, 1170)
 collision_layer = 0

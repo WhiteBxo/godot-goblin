@@ -1,4 +1,27 @@
 {
   "version": 2,
-  "phases": []
+  "phases": [
+    {
+      "id": "day1.s03.explore_ready",
+      "after_event": "day1.s03.coin_inspect",
+      "stage": "day1.s03",
+      "completion": {
+        "flag": "day1.s03.exited_shop",
+        "allow_existing": true
+      },
+      "completion_flag": "day1.s03.explored_shop",
+      "next_event": "day1.s03.street_gone"
+    },
+    {
+      "id": "day1.s03.limited_exploration",
+      "after_event": "day1.s03.street_gone",
+      "stage": "day1.s03.explore",
+      "completion": {
+        "flag": "day1.s03.exploration_completed",
+        "allow_existing": true
+      },
+      "completion_flag": "day1.bridge.s03_exploration.completed",
+      "next_event": "day1.s03.back_to_door"
+    }
+  ]
 }

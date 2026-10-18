@@ -2,7 +2,52 @@
   "story": "res://src/resources/story/day1_stages_03_06.json",
   "dialogue": "res://src/resources/dialogue/day1_stages_03_06.json",
   "phases": "res://src/resources/story/day1_stages_03_06_phases.json",
-  "auto_events": [],
-  "derived_facts": [],
-  "scene_setups": []
+  "auto_events": [
+    "day1.s03.coin_inspect",
+    "day1.s03.street_gone",
+    "day1.s03.back_to_door"
+  ],
+  "derived_facts": [
+    {
+      "flag": "day1.s03.exploration_completed",
+      "stage": "day1.s03.explore",
+      "all_flags": [
+        "day1.s03.observed_yard",
+        "day1.s03.observed_street",
+        "day1.s03.observed_path"
+      ]
+    }
+  ],
+  "scene_setups": [
+    {
+      "host": "shop",
+      "stage": "day1.investigate_coins",
+      "actors": {}
+    },
+    {
+      "host": "shop",
+      "stage": "day1.s03",
+      "actors": {}
+    },
+    {
+      "host": "settlement",
+      "stage": "day1.s03",
+      "actors": {}
+    },
+    {
+      "host": "settlement",
+      "stage": "day1.s03.explore",
+      "actors": {}
+    },
+    {
+      "host": "shop",
+      "stage": "day1.s04",
+      "actors": {}
+    },
+    {
+      "host": "settlement",
+      "stage": "day1.s04",
+      "actors": {}
+    }
+  ]
 }

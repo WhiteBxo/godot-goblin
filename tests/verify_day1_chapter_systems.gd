@@ -326,9 +326,12 @@ func _check_settlement_host() -> void:
 func _check_catalog_and_fallback() -> void:
 	var catalog := TaskCatalog.new()
 	_check(catalog.load_files(Day1ChapterController.TASK_FILES) == OK, "Day 1 task files merge: " + catalog.last_error)
-	var first := TaskCatalog.new()
-	first.load_file(Day1ChapterController.TASK_FILES[0])
-	_check(catalog.get_tasks().size() == first.get_tasks().size(), "Empty chapter file adds no tasks")
+	var total := 0
+	for path: String in Day1ChapterController.TASK_FILES:
+		var single := TaskCatalog.new()
+		_check(single.load_file(path) == OK, "Chapter file loads alone: " + path)
+		total += single.get_tasks().size()
+	_check(catalog.get_tasks().size() == total, "Chapter files merge without losing or duplicating tasks")
 	var duplicate_path := "user://day1_chapter_systems_dup.json"
 	var file := FileAccess.open(duplicate_path, FileAccess.WRITE)
 	file.store_string(FileAccess.get_file_as_string(Day1ChapterController.TASK_FILES[0]))

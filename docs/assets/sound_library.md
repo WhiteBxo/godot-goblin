@@ -1,6 +1,6 @@
 # 项目音效库
 
-当前可用库包含 **24 个音效基础 ID、46 个 WAV 变体**，另保留用户提供的 `music.daily_milk_tea`。原有 18 个基础 ID、31 个 WAV 路径与导入 UID 全部保留，内容替换为本次三个素材包的采样与组合；现有调用方无需迁移 ID。新增登记钱币、锁盒解锁、开瓶、碗勺搅拌、翻页 5 类声音；后续补入 `shop.coins_chain`（金属链短响，收款的入袋收尾）。
+当前可用库包含 **28 个音效基础 ID、57 个 WAV 变体**，另保留用户提供的 `music.daily_milk_tea` 与 `music.two_days_end`。原有 18 个基础 ID、31 个 WAV 路径与导入 UID 全部保留，内容替换为本次三个素材包的采样与组合；现有调用方无需迁移 ID。新增登记钱币、锁盒解锁、开瓶、碗勺搅拌、翻页 5 类声音；后续补入 `shop.coins_chain`（金属链短响，收款的入袋收尾）、`story.coin_drop`（硬币落地）、`gather.plant` / `gather.crystal` / `gather.vial`（按采集材质分派）。
 
 ## 原始素材与许可
 
@@ -56,11 +56,12 @@ MainGame 的 `interaction_audio_scene` 默认使用 `src/core/audio/interaction_
 | --- | --- |
 | 打开订单板 / 仓储 / 制作台 | `shop.order_open` / `shop.bottle_open` / `shop.stir` |
 | 制作成功 / 失败 | `shop.sealer` / `ui.failure` |
-| 采集成功 | `ui.confirm` |
+| 采集成功 | 按物品材质：`gather.plant`（苔藓/菌菇/块茎）、`gather.crystal`（晶簇）、`gather.vial`（取血取样）；未登记物品回落 `ui.confirm` |
 | 交付成功、钱包交易成功 / 失败 | `shop.coins`，收款同时叠 `shop.coins_chain` / `ui.failure` |
 | 接取订单成功 / 失败 | `ui.confirm` / `ui.failure` |
 | 对话换行 / 有效选择 | `ui.dialogue` / `ui.confirm` |
-| 投掷命中 | `story.impact`（`throw_impact` 事件） |
+| 投掷命中 | 硬币 `story.coin_drop`；火把与饮品 `story.impact` |
+| 跨场景到达 | `shop.door_bell`（-13 dB，迟一帧等新宿主注册完音效库） |
 | 世界焦点切换 / 对白逐字 | `ui.hover`（-20 dB，90 ms 去重）/ `ui.dialogue`（-26 dB，70 ms 去重） |
 | 按钮悬停、键盘焦点 / 按下、列表选择 | `ui.hover` / `ui.confirm` |
 | 打开手册、地图 / 关闭弹窗、暂停菜单 | `story.page_turn` / `ui.cancel` |

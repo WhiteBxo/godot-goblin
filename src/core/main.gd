@@ -641,6 +641,13 @@ func _create_scene_travel(exits: Array[SceneExit]) -> void:
 	_scene_travel.travel_failed.connect(_on_scene_travel_failed)
 	if _arrival_entrance != &"":
 		_scene_travel.begin_arrival()
+		_play_door_bell.call_deferred()
+
+## Scene travel swaps the whole host, so the bell has to ring on the arriving
+## side; a deferred call lets the new AudioManager register the library first.
+func _play_door_bell() -> void:
+	await get_tree().process_frame
+	_interaction_audio.play_sound("shop.door_bell", "SFX", -13.0)
 
 func _can_leave_scene() -> bool:
 	if _shop_level != null and not Day1Access.can_leave_shop(get_node("/root/GameState")):
@@ -826,10 +833,11 @@ func _restore_stealth_camera() -> void:
 	if is_instance_valid(_camera_director):
 		_camera_director.camera_follow(0.35)
 
-func _on_stealth_throw_resolved(_kind: StringName, _affected: bool) -> void:
+func _on_stealth_throw_resolved(kind: StringName, _affected: bool) -> void:
 	if is_instance_valid(_camera_director):
 		_camera_director.camera_shake(2.0, 0.12, 1.6)
-	_interaction_audio.play_event("throw_impact")
+	# A thrown coin has its own metallic drop; everything else keeps the impact.
+	_interaction_audio.play_sound("story.coin_drop" if kind == &"coin" else "story.impact")
 
 func _retry_infiltration_travel() -> void:
 	var destination: MainGame = load("res://src/core/settlement.tscn").instantiate()
@@ -984,8 +992,8 @@ func _create_gathering(points: Array[GatherPoint]) -> void:
 	var error := _gathering_service.configure(get_node("/root/GameState"), _warehouse_inventory, points)
 	if error != OK:
 		push_error("Could not configure gathering (%d)" % error)
-	_gathering_service.harvested.connect(func(_point: GatherPoint, _id: String, _amount: int, _stock: int) -> void:
-		_interaction_audio.play_event("gather_success"))
+	_gathering_service.harvested.connect(func(_point: GatherPoint, id: String, _amount: int, _stock: int) -> void:
+		_interaction_audio.play_sound(GatherSoundKit.for_item(id)))
 
 func _with_npc_points(points: Array[InteractionPoint]) -> Array[InteractionPoint]:
 	for entity in $World/EntityRoot.get_children():

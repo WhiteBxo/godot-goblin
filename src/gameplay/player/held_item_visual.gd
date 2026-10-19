@@ -21,6 +21,9 @@ const BOB_SPEED := 9.0
 const MOVING_SPEED := 6.0
 ## Used when a drink has no product art (a free-formula cup).
 const DRINK_FALLBACK: Texture2D = preload("res://assets/ui/milk_tea/products/custom_drink.svg")
+## Drawn size of the carried item. A cup has to read at the 0.5 camera zoom, so
+## it is a little larger than the hand it sits in.
+const HELD_SIZE := Vector2(22.0, 26.0)
 
 var _player: PlayerController
 var _item: StringName = &""
@@ -85,14 +88,20 @@ func _draw() -> void:
 	if _item == &"drink":
 		# Product art when the menu has it, the neutral cup otherwise. Either way
 		# the player sees the drink they are about to hand over.
-		var art: Texture2D = _texture if _texture != null else DRINK_FALLBACK
-		draw_texture_rect(art, Rect2(Vector2(-9.0, -11.0), Vector2(18.0, 22.0)), false)
+		_draw_held(_texture if _texture != null else DRINK_FALLBACK)
 		return
 	if _texture != null:
-		draw_texture_rect(_texture, Rect2(Vector2(-9.0, -11.0), Vector2(18.0, 22.0)), false)
+		_draw_held(_texture)
 		return
 	if _item == &"torch":
 		draw_line(Vector2(-8, 6), Vector2(5, -5), Color.SADDLE_BROWN, 5.0)
 		draw_circle(Vector2(5, -5), 6.0, Color.ORANGE_RED)
 	else:
 		draw_circle(Vector2.ZERO, 5.0, Color.GOLD)
+
+## Pixel art keeps its own outline, but a pale cup still disappears over a pale
+## wooden floor: a soft dark copy underneath separates it on any background.
+func _draw_held(art: Texture2D) -> void:
+	var box := Rect2(-HELD_SIZE * 0.5, HELD_SIZE)
+	draw_texture_rect(art, Rect2(box.position + Vector2(1.0, 2.0), box.size), false, Color(0.09, 0.05, 0.04, 0.4))
+	draw_texture_rect(art, box, false)

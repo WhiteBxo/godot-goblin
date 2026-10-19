@@ -117,9 +117,7 @@ func verify_interior() -> void:
 		check(not map.get_navigation_path(map.get_spawn_position(), point.global_position).is_empty(), "Corrected walls preserve the route to " + String(point.entry_id))
 	for cell: Vector2i in [Vector2i(8, 9), Vector2i(12, 9), Vector2i(13, 10), Vector2i(6, 8), Vector2i(15, 3), Vector2i(2, 5)]:
 		check(not map.can_stand_at(map.cell_to_world(cell), Vector2(8.5, 5)), "Wall or furniture blocks player feet at " + str(cell))
-	for guard: Day1GuardResponse in map.get_stealth_setup().guards:
-		for offset: Vector2 in guard.patrol_offsets:
-			check(map.can_stand_at(guard.actor.global_position + offset, Vector2(5, 5)), "Guard spawn and patrol stay on corrected floor")
+	check(map.get_stealth_setup() == null and game.get_stealth_service() == null, "Paid entry leads to investigation without indoor stealth")
 	var player := game.get_player() as PlayerController
 	check(player.test_move(Transform2D(0, map.cell_to_world(Vector2i(9, 9))), Vector2(-48, 0)), "Actual physics body is stopped by the decorative wooden wall")
 	game.get_player().teleport_to(document.global_position)

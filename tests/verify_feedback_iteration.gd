@@ -250,14 +250,12 @@ func _guards_on_real_maps() -> void:
 	root.add_child(game)
 	current_scene = game
 	await frames(20)
-	game.get_player().teleport_to(Vector2(408, 456))
-	setup = game.get_stealth_service().get_setup()
-	check(setup.guards.size() == 2 and game.get_stealth_service().get_configuration_issues().is_empty(), "Two registered indoor guards participate in the actual stealth service")
 	var map := game.get_active_level() as RpgChapterMap
-	for guard: Day1GuardResponse in setup.guards:
-		check(guard.actor.is_visible_in_tree() and map.can_stand_at(guard.actor.global_position, Vector2(8, 5)), "Indoor guard occupies authored walkable floor")
+	game.get_player().teleport_to(map.get_spawn_position())
+	check(map.get_stealth_setup() == null and game.get_stealth_service() == null, "Elder house does not create an indoor stealth service")
+	check(map.get_chapter_characters().is_empty(), "Indoor patrol guards are absent")
 	var document: Vector2 = map.get_objective_position("day1.s05.infiltration", "document")
-	check(not map.get_navigation_path(game.get_player().global_position, document).is_empty(), "Indoor navigation retains a floor route around occupied guard cells")
-	await picture("indoor_guards")
+	check(not map.get_navigation_path(game.get_player().global_position, document).is_empty(), "Indoor navigation retains a floor route to the document")
+	await picture("indoor_investigation")
 	game.free()
 	await frames()

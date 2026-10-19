@@ -252,15 +252,13 @@ func _run() -> void:
 			else:
 				blood = point
 	check(blood.resolve().ok and document.resolve().ok, "Blood then document works")
+	check(game.get_stealth_service() == null, "Indoor collection has no stealth or retry flow")
+	await travel("elder_exit")
 	var retry_error := game.get_stealth_service().retry_attempt()
-	check(retry_error == OK, "Interior retry restores exterior baseline")
+	check(retry_error == OK, "Exterior retry restores the whole attempt after leaving the house")
 	if retry_error != OK:
 		quit(1)
 		return
-	await scene_changed
-	attach()
-	while game.get_scene_travel().is_busy():
-		await process_frame
 	await frames(5)
 	check(state.to_dict() == baseline, "Retry restores full coins, inventory, facts and events")
 	for i in range(3):

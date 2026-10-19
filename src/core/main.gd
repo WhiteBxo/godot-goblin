@@ -1249,6 +1249,10 @@ func _create_debug_components() -> void:
 		"tasks": get_task_journal(),
 		"delivery": get_task_delivery(),
 		"bridge": get_gameplay_bridge(),
+		"get_level": get_active_level,
+		"get_player": get_player,
+		"can_cheat": func() -> bool:
+			return _can_control_debug_player() and not is_session_initializing() and not (is_instance_valid(_scene_travel) and _scene_travel.is_busy()),
 	})
 
 func _get_developer_status() -> Dictionary:

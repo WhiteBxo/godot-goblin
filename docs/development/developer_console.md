@@ -1,4 +1,6 @@
-# 通用 Developer Console（第一阶段）
+# 通用 Developer Console
+
+已增加 F3 →「流程测试」：前两天真实检查点独立试玩、当前目标与演出限制、问题报告、补钱／补物品、快速制作及场景内定位。操作见下文“前两天测试工作流”。
 
 已增加 F3 →「编排」：结构化工程、步骤表单 / JSON、对白编辑、排序和撤销、保存生成与独立窗口预览。完整操作与来源切换见[游戏内剧情编排](../guides/story_editor.md)。已迁移的前两阶段以工程为正式来源；下文原事件页仍可重载和触发运行时产物。
 
@@ -10,6 +12,7 @@ Godot 4.7.2，默认收起。F3 打开/关闭，Esc 关闭；沿用共享像素�
 | --- | --- |
 | 状态 | 当前宿主场景路径、关卡、玩家世界坐标、FPS、GameState 当前天数和剧情阶段；打开时约每 0.2 秒刷新 |
 | 角色 | 1×、2×、4×、8× 移速，返回当前关卡公开出生点，确认重启当前宿主；重启保留 GameState |
+| 流程测试 | 当前流程／检查点试玩／作弊调试三个子页；整段跳转用真实检查点在独立进程恢复，当前会话作弊全部记录日志 |
 | 剧情 / 状态数据 | flags、variables、已完成事件的只读快照；StoryDirector 已加载事件数、当前事件和从 0 开始的步骤序号、最近错误 |
 | 剧情 / 事件日志 | 跨场景单例 `DevLog` 的环形缓冲（最多 500 条，跨过门与场景重载保留）：每条含时间、来源（剧情 / 对话 / 业务 / 任务 / Bridge / 引擎 / 调试写入）、级别（信息 / 警告 / 错误）与正文；顶部“来源”下拉按分区过滤，“导出”写 `user://logs/devtools_YYYYMMDD_HHMMSS.log`，“清空日志”清空共享缓冲 |
 | 剧情 / 事件 | 已加载事件列表（id、已完成标记、条件是否满足、步骤数、可选 trigger）；“重新加载”重读宿主实际加载的 JSON，“触发…”先确认再关闭面板后触发，拒绝时在结果行显示 Director 的 `last_error` 原文 |
@@ -34,7 +37,7 @@ Godot 4.7.2，默认收起。F3 打开/关闭，Esc 关闭；沿用共享像素�
 
 Console 在 UIManager 中注册为 DebugLayer 的 modal screen。打开后 MainGame 原有的模态/剧情/Actor 合并锁禁用玩家移动及交互；底层 UI 的焦点、鼠标和处理状态由 UIManager 保存/恢复。Console 自己不取得全局暂停：P 在面板内被消费，关闭后保留原有暂停、剧情和移动禁用状态。面板打开期间，E、M、Tab 对应的聚落动线、F2 等玩法或专用调试操作不会穿透；Tab/方向键供 GUI 导航。速度下拉菜单使用原生 popup，F3 也能从 popup 关闭 Console。
 
-写入能力限定为 GameState 的公开事实入口：flag、variable、已完成事件、phase 完成条件 flag，以及确认后的会话重置。仍不提供库存或任务作弊（不直接改钱包、仓库、任务状态）、场景跳转、存档及命令解释器——它们都不是 flag/variable 入口，写入就得绕过对应服务自己的校验。会话重置放在面板内的确认框之后，文案明确会清空钱包、库存、任务与剧情进度，首次点击不会清空；重启按钮同样先显示确认与取消。
+“写状态”页限定为 GameState 的公开事实入口：flag、variable、已完成事件、phase 完成条件 flag，以及确认后的会话重置。“流程测试”的补钱、补物品与快速制作另经钱包、库存和制作服务的公开 API；不直接改任务终态。会话重置放在面板内的确认框之后，文案明确会清空钱包、库存、任务与剧情进度，首次点击不会清空；重启按钮同样先显示确认与取消。
 
 写入前统一走 `_allowed("can_control")` 这一套守卫：剧情 busy、对话 active、演出控制角色期间，写状态页所有控件禁用，并显示宿主给出的具体原因；拒绝也发生在 API 内，不只是禁用按钮。每次成功写入与每次拒绝都写入来源为“调试写入”的日志（拒绝为警告级“被拒绝 · …”），正常流程的剧情、对话、业务记录与注入状态因此可以区分。
 
@@ -45,6 +48,29 @@ Console 在 UIManager 中注册为 DebugLayer 的 modal screen。打开后 MainG
 “触发…”会先展开确认框，写明会锁定输入并可能移动角色/镜头；确认后 Console 先关闭自身（释放 modal，宿主准入检查才能放行），再调用 `request_event(id)`。返回非 `OK` 时面板重新打开并原样显示 `error_string(error)` 与 `last_error`（例如 `ERR_ALREADY_EXISTS` 对应 “Story event already completed: …”）。重载与触发都追加来源为“调试写入”的“调试重载事件 / 调试重载失败 / 调试触发事件 / 调试触发失败”日志；StoryDirector 五个信号的正文格式保持不变，只是多了来源与级别前缀。
 
 “阶段进入”只写 `completion.flag`。核对实际读取路径（`gameplay_bridge.gd` 的 `_eligible()` / `_save_flag_wait()`）后的结论：`GameplayBridge` 观察到该 flag 后自行写入 `completion_flag`，并用它作为 `next_event` 的完成条件，所以 Console 不写 `completion_flag`，也不调用 StoryDirector 或 Day1ShopController 的任何方法。推进还要求 `story_stage == phases[].stage` 且 `after_event` 已完成；这两项不写入——它们由剧情事件自身的 `set_stage` 和前序事件完成产生。当前阶段不匹配时，写入的 flag 处于“预置”状态，等流程到达该阶段（数据里 `allow_existing: true`）时自动完成。跨阶段直接跳转需要外部改写 `story_stage`，而 `GameplayBridge` 会把外部阶段变更判定为失效并停止等待（`verify_gameplay_bridge.gd` 已固化为期望行为），因此面板不提供跳转，只提供“写入所选阶段的完成条件”，按 1→2→3 逐段推进即可跳过经营与对话的重复劳动。
+
+## 前两天测试工作流
+
+1. 编辑器 F5 → 新游戏或继续游戏 → F3 →「流程测试」。工具沿用 Debug 门控；Release 不创建页面。当前流程页显示真实主线目标、阶段、Bridge 等待和写入限制；卡住时点击“导出并复制问题报告”。报告包括完整状态、宿主与坐标、剧情状态、Bridge、当前目标、存档目录和最近 500 条日志，并预留复现步骤／预期／实际结果。
+2. 在“检查点试玩”点击“后台生成两天检查点”。编辑器 Godot 独立 headless 进程运行 `verify_two_day_flow.gd --ordinary-order`，生成到 `user://developer_flow/run_…`；使用独立验证存档，不读写正式存档。进程有 36000 帧上限；未写成功完成标记的批次不会出现在列表，失败时查看页面显示的 `generation.log`。
+3. 结束后点击刷新。列表包含第一天 8 个、第二天 18 个现场；第一天覆盖首位客人、哥布林单客、三人组、硬币调查、首次出街、胖哥布林订单、潜入前及血奶茶制作；第二天覆盖营业等待、关店、酒馆、赌场、特调和守卫交付。第三／四天交接夹具不列入前两天测试台。
+4. 选择现场并启动。新窗口通过 `GameEntry.continue_game()` 与既有完整存档校验／恢复进入游戏；每次复制到单独 `user://developer_flow/play_…` 目录，后续自动存档写入该目录，原始夹具保留。新窗口仍可 F3 打开工具。再次从相同检查点启动即可复测。
+5. “作弊调试”提供 +100G、从真实物品目录选择并补充 1–100 份、当前已解锁配方一键制作一杯，以及定位到当前场景可见且启用的交互对象附近。定位检查地图通行与玩家实体碰撞，不自动执行 E 交互或产生跨场景旅行事实；缺安全落点时拒绝。制作消耗真实原料，仍需接单和指定交付；缺料先补物品。整段跳过使用检查点，局部 flag／事件操作沿用“写状态”页。
+
+作弊影响当前窗口会话及其后续自动存档，建议在独立试玩窗口使用。演出、对白、角色接管、场景初始化或切换期间拒绝作弊；缺服务／目录时禁用对应按钮。操作成功或拒绝均记录为“调试写入”。报告在 `user://developer_flow/report_…txt`；系统支持剪贴板时同时复制，headless 保留文件导出能力。页面底部显示结果，长路径可悬停查看完整内容。独立试玩和生成仅支持具有 editor 功能标签的 Debug 引擎，导出 Debug 游戏不具备生成入口。
+
+### 2026-10-19 验证
+
+- `verify_two_day_flow.gd --ordinary-order --save-fixtures=…`：372 项通过；生成 28 个真实存档，其中前两天 26 个。
+- `verify_two_day_persistence.gd` 对新增第一天 8 个现场逐个冷启动：每个 8 项，共 64 项通过。
+- `verify_flow_test_tools.gd`：无夹具 9 项通过；带第二天 `wait_festival` 夹具的 Windows / Compatibility 图形检查通过，覆盖目录筛选、非法路径、真实补钱／补料／制作、忙碌与工具关闭门控、定位不写旅行事实、模态锁及关闭恢复；截图在本地 `.godot/flow_test_panel.png` 与 `.godot/flow_test_page_1.png`、`.godot/flow_test_page_2.png`。
+- 最终后台生成入口的独立进程冒烟验证：26 个前两天现场可读，父进程 GameState 前后相同；夹具已准备在当前机器的 `user://developer_flow/` 下，可直接刷新列表使用。
+- `flow_test_runner.gd` 独立进程恢复 `wait_guard` 成功，恢复前后原夹具 SHA256 一致，使用独立 `play_…` 存档目录。
+- `verify_developer_tools.gd`、`verify_debug_build.gd`、`verify_main_game.gd` 通过。未执行无关模块全仓回归、正式 Release 导出或真人完整两天步行／听感验收。
+
+部分 headless 恢复退出时仍有 ObjectDB／资源释放诊断（本轮第一天独立恢复 4 对象／1 资源），与既有恢复记录同类；断言与退出诊断分开记录。后续模块与图形运行无脚本解析错误。
+
+实现依据：[Godot 4.7 PhysicsBody2D.test_move](https://docs.godotengine.org/en/4.7/classes/class_physicsbody2d.html#class-physicsbody2d-method-test-move) 在指定 transform 检查碰撞且不移动，启用 recovery_as_collision 检测重叠；[DisplayServer](https://docs.godotengine.org/en/4.7/classes/class_displayserver.html) 通过功能检测后写剪贴板。独立进程使用 [OS.create_process](https://docs.godotengine.org/en/stable/classes/class_os.html#class-os-method-create-process) 的参数数组与默认隐藏控制台；4.7 OS 页面在本次文档服务不可访问，补查官方 stable 页并在本地 4.7.2 实测。
 
 ## 装配与公开接口
 

@@ -130,8 +130,13 @@ func select_throwable(kind: StringName) -> Error:
 	return OK
 
 func select_drink(id: String) -> Error:
-	if _inventory.get_drink_stock(id) <= 0 or _inventory.get_drink_record(id).is_empty():
+	var record := _inventory.get_drink_record(id)
+	if _inventory.get_drink_stock(id) <= 0 or record.is_empty():
 		return ERR_DOES_NOT_EXIST
+	# Historical cups kept for display have no throw payload: selecting one would
+	# arm a throw that consumes the cup and lands nothing.
+	if record.get("read_only", false) or not record.get("throw") is Dictionary or record.throw.is_empty():
+		return ERR_UNAVAILABLE
 	if not can_accept_input() or not _pending_throw.is_empty() or _releasing:
 		return ERR_BUSY
 	if not _player.set_held(&"drink", id):
@@ -306,32 +311,35 @@ func _on_action_started(action: StringName, _direction: Vector2) -> void:
 	_pending_throw = {"kind": selected_kind, "target": target}
 	if selected_kind == &"drink":
 		var record := _inventory.get_drink_record(selected_drink_id)
-		if record.is_empty():
+		var payload: Variant = record.get("throw", {})
+		if record.is_empty() or record.get("read_only", false) or not payload is Dictionary or payload.is_empty():
 			_pending_throw.clear()
+			message = "这杯饮品无法投掷"
+			changed.emit()
 			return
 		_pending_throw["drink_id"] = selected_drink_id
-		_pending_throw["payload"] = record.throw.duplicate(true)
+		_pending_throw["payload"] = payload.duplicate(true)
 
 func _on_action_triggered(action: StringName, _direction: Vector2) -> void:
 	if action != &"throw" or _pending_throw.is_empty() or not can_accept_input() or _releasing:
 		return
 	var pending := _pending_throw
 	_pending_throw = {}
-	var item: String = _setup.coin_item_id if pending.kind == &"coin" else _setup.torch_item_id
 	var generation := _generation
 	_releasing = true
 	# The animation has one release; consume once under our reentry guard. Retry never consumes.
-	var consumed: bool
-	if _setup.wallet_coins and pending.kind == &"coin":
-		consumed = _state.commit_story_transaction("day1.throw_%d" % Time.get_ticks_usec(), {}, {}, -WalletTransactions.COIN_FACE_VALUE) == OK
-	else:
-		consumed = _inventory.try_consume_drink(pending.drink_id) if pending.kind == &"drink" else _inventory.try_consume({item: 1})
+	var consumed := _consume_throwable(pending)
 	_releasing = false
 	if not consumed:
 		message = "没有可用的投掷物品"
 		changed.emit()
 		return
 	if generation != _generation or not can_accept_input():
+		# The attempt ended while the item was being deducted. Give inventory
+		# items back instead of dropping them with the cancelled projectile.
+		var refunded := _refund_throwable(pending)
+		message = "投掷被打断，物品已退回" if refunded else "投掷被打断"
+		changed.emit()
 		return
 	var projectile := Day1ThrowProjectile.new()
 	projectile.speed *= _setup.effect_scale
@@ -349,6 +357,23 @@ func _on_action_triggered(action: StringName, _direction: Vector2) -> void:
 func _on_action_finished(action: StringName, _cancelled: bool) -> void:
 	if action == &"throw":
 		_pending_throw.clear()
+
+func _consume_throwable(pending: Dictionary) -> bool:
+	var item: String = _setup.coin_item_id if pending.kind == &"coin" else _setup.torch_item_id
+	if _setup.wallet_coins and pending.kind == &"coin":
+		return _state.commit_story_transaction("day1.throw_%d" % Time.get_ticks_usec(), {}, {}, -WalletTransactions.COIN_FACE_VALUE) == OK
+	if pending.kind == &"drink":
+		return _inventory.try_consume_drink(pending.get("drink_id", ""))
+	return _inventory.try_consume({item: 1})
+
+## Wallet coins belong to the attempt (retry restores the pre-attempt wallet),
+## so only physical inventory items can be handed back here.
+func _refund_throwable(pending: Dictionary) -> bool:
+	if _setup.wallet_coins and pending.kind == &"coin":
+		return false
+	if pending.kind == &"drink":
+		return _inventory.refund_drink(pending.get("drink_id", ""))
+	return _inventory.try_exchange({}, {_setup.torch_item_id: 1})
 
 func _valid_target(target: Vector2) -> bool:
 	var distance := _player.global_position.distance_to(target)

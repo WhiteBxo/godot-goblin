@@ -33,6 +33,9 @@ func _refresh_drinks() -> void:
 	choices.set_item_disabled(0, true)
 	choices.select(0)
 	for drink: Dictionary in _service.get_inventory().get_drinks():
+		# Historical cups kept for display carry no throw payload.
+		if drink.get("read_only", false) or not drink.get("throw") is Dictionary or drink.throw.is_empty():
+			continue
 		choices.add_item("%s ×%d" % [drink.name, drink.quantity])
 		var index := choices.item_count - 1
 		choices.set_item_metadata(index, drink.id)

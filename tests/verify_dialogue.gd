@@ -70,6 +70,8 @@ func _run() -> void:
 	await _test_fast_forward_and_auto()
 	await _test_compact_ui()
 	_test_edge_cases()
+	await _test_choice_handoff()
+	await _test_ui_unavailable()
 	await _test_speaker_portraits()
 	await _test_runtime_portraits()
 	await _test_lifecycle()
@@ -365,6 +367,57 @@ func _test_edge_cases() -> void:
 	_manager.choice_selected.disconnect(on_choice)
 	_manager.dialogue_ended.disconnect(on_end)
 	_check(_manager.load_dialogues() == OK, "Default catalogue can be explicitly reloaded")
+
+
+func _test_choice_handoff() -> void:
+	_check(_manager.start_dialogue("demo.first_shift") == OK, "Choice handoff fixture starts")
+	for index in range(3):
+		_ui.reveal_all()
+		_manager.advance()
+	_ui.reveal_all()
+	_check(_manager.get_current_line_id() == "question", "Choice handoff fixture reaches its choice")
+	var lines: Array[String] = []
+	var on_line := func(id: String) -> void: lines.append(id)
+	var on_choice := func(_dialogue: String, _line: String, _choice: String) -> void:
+		_manager.end_dialogue()
+		_manager.start_dialogue.call_deferred("demo.greeting")
+	_manager.line_changed.connect(on_line)
+	_manager.choice_selected.connect(on_choice)
+	_manager.select_choice(0)
+	await _frames(3)
+	_check(_manager.is_active() and _manager.get_current_line_id() == "hello", "A replacement dialogue keeps its own opening line")
+	_check(not "learn_result" in lines and not "ready_result" in lines, "The replaced dialogue never receives the old choice's next line")
+	_manager.choice_selected.disconnect(on_choice)
+	_manager.line_changed.disconnect(on_line)
+	_manager.end_dialogue()
+
+
+## A dialogue whose UI cannot open must end immediately: the host lock and the
+## visible screen stay in the same state.
+func _test_ui_unavailable() -> void:
+	var layer := CanvasLayer.new()
+	root.add_child(layer)
+	var manager_ui := UIManager.new()
+	root.add_child(manager_ui)
+	manager_ui.configure({"popup": layer})
+	var view: DialogueUI = load("res://src/UI/dialogue/dialogue_ui.tscn").instantiate()
+	root.add_child(view)
+	_check(manager_ui.register_screen(&"dialogue", view, &"popup", true) == OK, "Dialogue screen registers with a real manager")
+	var manager := DialogueManager.new()
+	root.add_child(manager)
+	manager.configure(view)
+	var ends: Array[bool] = []
+	manager.dialogue_ended.connect(func(_id: String, cancelled: bool) -> void: ends.append(cancelled))
+	paused = true
+	var error := manager.start_dialogue("demo.greeting")
+	paused = false
+	_check(error == ERR_BUSY and not manager.is_active(), "A dialogue blocked by a paused popup never stays active")
+	_check(ends == [true] and not manager.last_error.is_empty(), "The failed line ends the session so its input lock is released")
+	_check(not view.visible, "The dialogue view stays closed when it could not open")
+	view.queue_free()
+	manager.queue_free()
+	manager_ui.queue_free()
+	await _frames()
 
 
 func _test_speaker_portraits() -> void:

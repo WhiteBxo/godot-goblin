@@ -74,6 +74,7 @@ func _run() -> void:
 	wood.design_reference = "debug fixture wooden crate"
 	if "--capture-only" not in OS.get_cmdline_user_args():
 		_test_inventory()
+		await _test_read_only_drink()
 		_test_states()
 		await _test_areas()
 		await _test_scaled_profile()
@@ -101,6 +102,26 @@ func _test_inventory() -> void:
 	_check(_inventory.try_consume_drink(id) and notifications == [before - 1], "One cup commits before its single notification")
 	_check(_inventory.get_drink_record(id).ingredients == record.ingredients, "Throwing preserves encyclopedia discovery")
 	_check(_parameters(["mint_syrup"], true) == _parameters(["mint_syrup"]), "Iced name option grants no mine or extra combat buff")
+
+## A historical cup whose formula no longer evaluates is display-only. It must
+## never arm a throw that spends the cup and lands an empty payload.
+func _test_read_only_drink() -> void:
+	var legacy_id := DrinkFormula.key_for(["black_tea"], false)
+	var saved := _inventory.to_dict()
+	var data := saved.duplicate(true)
+	data.encyclopedia[legacy_id] = {"ingredients": ["black_tea"], "discovered_day": 1, "pricing": "legacy_readonly"}
+	data.drinks[legacy_id] = 1
+	_check(_inventory.restore_state(data) == OK, "A historical read-only cup can be restored")
+	var record := _inventory.get_drink_record(legacy_id)
+	_check(record.get("read_only", false) and record.throw.is_empty(), "Historical cup exposes no throw payload")
+	_check(_service.select_drink(legacy_id) == ERR_UNAVAILABLE, "Historical cup cannot be selected for throwing")
+	_check(not (_player.held_item == &"drink" and _player.held_variant_id == legacy_id), "Rejected cup never enters the held slot")
+	await _frames()
+	var choices: OptionButton = _demo.hud.get_node("Panel/Content/Drinks")
+	_check(choices.item_count == _inventory.get_drinks().size(), "HUD hides cups that cannot be thrown")
+	_check(_inventory.restore_state(saved) == OK and _inventory.get_drink_stock(legacy_id) == 0, "Removing the fixture cup restores the real inventory")
+	_demo.hud._invalidate_drinks()
+	await _frames()
 
 func _test_states() -> void:
 	_reset()
@@ -223,6 +244,12 @@ func _test_areas() -> void:
 	area.advance(3.0, _setup, _world)
 	_check(not area.armed and area.remaining == 3.0, "Mine timeout preserves its full active lifetime")
 	area.free()
+	var empty_area := DrinkEffectArea.new()
+	empty_area.configure({})
+	_demo.add_child(empty_area)
+	empty_area.advance(0.1, _setup, _world)
+	_check(empty_area.finished and empty_area.remaining == 0.0 and not empty_area.affected and empty_area.pulse_count == 0, "Empty payload area short-circuits instead of ticking zero timers")
+	empty_area.free()
 	# Real ray queries against a wall, and collision-safe pull across that wall.
 	_reset()
 	_guard.actor.teleport_to(Vector2(960, 440))
@@ -350,7 +377,8 @@ func _test_service() -> void:
 	_service.select_drink(cancel_id)
 	_service.request_throw(Vector2(680, 400))
 	await _frames(25)
-	_check(_inventory.get_drink_stock(cancel_id) == cancel_stock - 1 and _results.size() == resolutions and _service.get_active_areas().is_empty(), "Session cancellation inside release notification cannot spawn a stale cup")
+	_check(_inventory.get_drink_stock(cancel_id) == cancel_stock and _results.size() == resolutions and _service.get_active_areas().is_empty(), "Session cancellation inside release returns the deducted cup instead of dropping it")
+	_check(_service.message == "投掷被打断，物品已退回", "Interrupted release reports the returned cup")
 	_service.begin_attempt()
 	# Restore from shared GameState cancels transient state even in the isolated host.
 	await _throw(_demo.sample_ids[2], Vector2(680, 400))

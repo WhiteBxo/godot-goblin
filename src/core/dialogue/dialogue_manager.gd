@@ -99,7 +99,7 @@ func start_dialogue(id: String, cancel_protected: bool = false) -> Error:
 	_ui.set_cancel_protected(cancel_protected)
 	dialogue_started.emit(id)
 	if is_active():
-		_present_line()
+		return _present_line()
 	return OK
 
 
@@ -167,8 +167,8 @@ func skip_to_end() -> void:
 		moved = true
 	if not is_instance_valid(_ui):
 		return
-	if moved:
-		_present_line()
+	if moved and _present_line() != OK:
+		return
 	_ui.reveal_all()
 
 
@@ -184,8 +184,9 @@ func select_choice(index: int) -> void:
 	_selecting = true
 	choice_selected.emit(selected_dialogue, selected_line, choice["id"])
 	_selecting = false
-	# A listener may cancel the session. Never advance an already-ended dialogue.
-	if is_active():
+	# A listener may cancel this dialogue, or end it and start another one. The
+	# old choice must never advance the replacement session.
+	if _dialogue_id == selected_dialogue and _line_id == selected_line:
 		_go_to(choice.get("next", ""))
 
 
@@ -211,7 +212,7 @@ func _go_to(line_id: String) -> void:
 		_present_line()
 
 
-func _present_line() -> void:
+func _present_line() -> Error:
 	var line: Dictionary = _dialogue["lines"][_line_id]
 	var portrait: Texture2D = speaker_portraits.get(line["speaker"])
 	if line.has("portrait"):
@@ -222,8 +223,15 @@ func _present_line() -> void:
 	var choices: Array[String] = []
 	for choice: Dictionary in line.get("choices", []):
 		choices.append(choice["text"])
-	_ui.present_line(line["speaker"], line["text"], portrait, choices, line["speaker"] in left_portrait_speakers)
+	var error := _ui.present_line(line["speaker"], line["text"], portrait, choices, line["speaker"] in left_portrait_speakers)
+	if error != OK:
+		# Dropping the line would leave the host's input lock on with no visible
+		# dialogue, so the session ends instead.
+		last_error = "Dialogue UI could not present a line: %s" % error_string(error)
+		end_dialogue(true)
+		return error
 	line_changed.emit(_line_id)
+	return OK
 
 
 func _cancel() -> void:

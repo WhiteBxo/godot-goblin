@@ -29,8 +29,15 @@ func refresh() -> void:
 	var status := get_status()
 	if status.is_empty() or status.status in ["delivered", "expired"]:
 		return
-	if _state.get_flag("day3.procurement.delivered"):
+	# Delivery only closes an errand that already returned and settled its 35G.
+	# Any other state keeps its own branch so a stray flag cannot write an
+	# escrow that valid_status rejects.
+	if _state.get_flag("day3.procurement.delivered") and status.status == "returned":
 		status.status = "delivered"
+		status.purchase = 30
+		status.fee = 5
+		status.refund = 0
+		status.escrow = 0
 		_state.commit_story_transaction("day2.procurement.closed", {}, {}, 0, {}, {}, {KEY: status})
 	elif _state.current_day > 3:
 		status.status = "expired"

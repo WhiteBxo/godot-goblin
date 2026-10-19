@@ -59,10 +59,13 @@ func _ready() -> void:
 	hide()
 
 
-func present_line(speaker: String, text: String, portrait: Texture2D, choices: Array[String], portrait_on_left: bool = false) -> void:
+## Returns the reason the line could not be shown so the caller can end the
+## dialogue instead of leaving its input lock on with no visible text.
+func present_line(speaker: String, text: String, portrait: Texture2D, choices: Array[String], portrait_on_left: bool = false) -> Error:
 	if is_instance_valid(_ui_manager):
-		if _ui_manager.open_screen(_screen_id) != OK:
-			return
+		var open_error := _ui_manager.open_screen(_screen_id)
+		if open_error != OK:
+			return open_error
 	elif not visible:
 		_previous_focus = get_viewport().gui_get_focus_owner()
 	var portrait_changed := not visible or _speaker.text != speaker or _portrait.texture != portrait
@@ -105,6 +108,7 @@ func present_line(speaker: String, text: String, portrait: Texture2D, choices: A
 		reveal_all()
 	elif is_zero_approx(PlayerPreferences.get_values().dialogue_speed):
 		reveal_all()
+	return OK
 
 
 ## Change only the image; text reveal, choices, focus and placement stay intact.

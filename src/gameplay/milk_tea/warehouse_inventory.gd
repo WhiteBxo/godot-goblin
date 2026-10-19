@@ -102,6 +102,17 @@ func try_consume_drink(id: Variant, quantity: int = 1) -> bool:
 	changed.emit()
 	return true
 
+## Returns a cup when the consumer failed after the deduction (an interrupted
+## throw). Only cups the encyclopedia still knows can come back.
+func refund_drink(id: Variant, quantity: int = 1) -> bool:
+	if _session_locked or not id is String or not _encyclopedia.has(id) or not _is_quantity(quantity):
+		return false
+	if get_drink_stock(id) > MAX_QUANTITY - quantity:
+		return false
+	_drinks[id] = get_drink_stock(id) + quantity
+	changed.emit()
+	return true
+
 func get_drink_record(id: Variant) -> Dictionary:
 	if not id is String or not _encyclopedia.has(id):
 		return {}
@@ -377,11 +388,14 @@ func validate_state(data: Variant) -> Error:
 		return ERR_INVALID_DATA
 	if not _is_snapshot_integer(data.schema_version) or data.schema_version != SCHEMA_VERSION or not data.ingredients is Dictionary:
 		return ERR_INVALID_DATA
-	if data.ingredients.size() != _definitions.size():
-		return ERR_INVALID_DATA
+	# The catalog may gain or retire ids between builds. Restore normalizes that
+	# difference, so validation only inspects entries that are still defined; a
+	# known id missing from the file is filled with zero stock on restore.
 	for id: Variant in data.ingredients:
-		if not _has_id(id):
+		if not id is String:
 			return ERR_INVALID_DATA
+		if not _has_id(id):
+			continue
 		var entry: Variant = data.ingredients[id]
 		if not entry is Dictionary or not entry.has_all(["quantity", "used", "discovered", "known_properties"]) or entry.size() != 4:
 			return ERR_INVALID_DATA
@@ -414,10 +428,12 @@ func validate_state(data: Variant) -> Error:
 			return ERR_INVALID_DATA
 		else:
 			# Legacy records may no longer form a legal formula; they stay visible.
+			# A retired catalog id is kept inside the read-only record so a cup
+			# made before the catalog edit does not invalidate the whole file.
 			if not entry.ingredients is Array or entry.ingredients.is_empty():
 				return ERR_INVALID_DATA
 			for material: Variant in entry.ingredients:
-				if not material is String or not _definitions.has(material):
+				if not material is String or not material.is_valid_identifier():
 					return ERR_INVALID_DATA
 			if DrinkFormula.key_for(entry.ingredients, entry.get("iced", false)) != id:
 				return ERR_INVALID_DATA
@@ -431,6 +447,11 @@ func restore_state(data: Variant, notify: bool = true) -> Error:
 	if _session_locked:
 		return ERR_BUSY
 	data = migrate_snapshot(data)
+	if not data is Dictionary or not data.get("ingredients") is Dictionary:
+		return ERR_INVALID_DATA
+	# Normalize on a copy so a caller's snapshot is never mutated.
+	data = data.duplicate(true)
+	_normalize_catalog_ids(data)
 	if validate_state(data) != OK:
 		return ERR_INVALID_DATA
 	var restored: Dictionary = {}
@@ -454,6 +475,18 @@ func restore_state(data: Variant, notify: bool = true) -> Error:
 
 func _has_id(id: Variant) -> bool:
 	return id is String and _definitions.has(id)
+
+## A save written against another catalog build keeps every still-defined id and
+## gains a zero entry for ids added since. Retired ids are dropped instead of
+## invalidating the whole file.
+func _normalize_catalog_ids(data: Dictionary) -> void:
+	var ingredients: Dictionary = data.ingredients
+	for id: String in _definitions:
+		if not ingredients.has(id):
+			ingredients[id] = {"quantity": 0, "used": 0, "discovered": false, "known_properties": []}
+	for id: Variant in ingredients.keys():
+		if not _has_id(id):
+			ingredients.erase(id)
 
 func _is_quantity(amount: Variant, allow_zero: bool = false) -> bool:
 	return amount is int and amount >= (0 if allow_zero else 1) and amount <= MAX_QUANTITY

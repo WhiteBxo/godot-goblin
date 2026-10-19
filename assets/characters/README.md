@@ -11,7 +11,7 @@
 
 随图提交 Godot 生成的 `.import` 设置；`.godot/` 下的派生缓存由编辑器重新生成。使用默认的 2D Texture2D 导入、无损压缩和关闭 mipmaps，避免再次有损压缩插画。现有玩家动画素材说明见 `player/README.md`。
 
-对话立绘已由 `src/core/dialogue/dialogue_manager.gd` 的 `speaker_portraits` 接入：主角（含内心独白）使用 `apron_man/player_neutral_portrait.png`，胖哥布林使用 `fat_goblin/fat_goblin_smiling_portrait.png`；单句可指定 `fat_goblin/fat_goblin_laughing_portrait.png`。`fat_goblin/` 内的四张图是**胖哥布林专属**，普通哥布林（`common_goblin` 及其甲/乙/丙、顾客）与酒馆、赌场老板没有立绘，不得复用这套图，详见 [立绘专属说明](fat_goblin/README.md)。这三张为透明 RGBA PNG，原始图片和六表情整图保留。主角在左侧、NPC 在右侧，图片下半身被对话框遮住。规则与试玩入口见 [对话系统](../../docs/systems/dialogue_system.md)。
+对话立绘已由 `src/core/dialogue/dialogue_manager.gd` 的 `speaker_portraits` 接入：主角（含内心独白）使用 `apron_man/player_neutral_portrait.png`，胖哥布林使用 `fat_goblin/fat_goblin_smiling_portrait.png`；单句可指定 `fat_goblin/fat_goblin_laughing_portrait.png`。`fat_goblin/` 内的四张图是**胖哥布林专属**，普通哥布林（`common_goblin` 及其甲/乙/丙、顾客）与酒馆、赌场老板使用各自独立立绘，不得复用这套图，详见 [立绘专属说明](fat_goblin/README.md)。这三张为透明 RGBA PNG，原始图片和六表情整图保留。主角在左侧、NPC 在右侧，图片下半身被对话框遮住。规则与试玩入口见 [对话系统](../../docs/systems/dialogue_system.md)。
 
 透明派生素材于 2026-10-16 使用内置 imagegen 编辑模式分别处理对应原图。每张使用相同提示词，可从原图重新执行；生成式编辑可能存在细微笔触变化，应以已提交 PNG 为显示依据：
 
@@ -34,3 +34,5 @@
 2026-10-17 用户附件已导入男、女顾客 12 张原始图集；男顾客替换正式人类顾客动画，
 女顾客提供独立复用场景。来源、逐帧映射、复现命令与 F6 入口见
 [普通顾客素材接入](../../docs/assets/characters.md#普通男女顾客2026-10-17)。
+
+2026-10-19 新增用户提供的守卫、酒馆老板、赌场老板、普通顾客及胖哥布林不适立绘，来源和裁边处理见 [对话立绘](dialogue/README.md)。对话插画与地图像素小人、头像分别使用。

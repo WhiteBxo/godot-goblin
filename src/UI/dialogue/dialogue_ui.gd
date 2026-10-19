@@ -15,6 +15,8 @@ signal skip_requested
 @export_range(0.0, 0.5, 0.01) var sentence_pause: float = 0.12
 @export_range(0.0, 0.5, 0.01) var ellipsis_pause: float = 0.18
 @export_range(0.0, 0.5, 0.01) var portrait_fade_seconds: float = 0.14
+## Artwork with a tall hat may need raising to keep the face above the panel.
+@export var portrait_vertical_offsets: Dictionary[Texture2D, float] = {}
 ## Holding confirm for this long starts continuous fast-forward.
 @export_range(0.1, 1.0, 0.05) var fast_forward_hold_seconds: float = 0.35
 @export_range(0.02, 0.3, 0.01) var fast_forward_interval: float = 0.06
@@ -116,6 +118,9 @@ func set_portrait(portrait: Texture2D) -> void:
 	if _portrait.texture != portrait or portrait == null:
 		_finish_portrait_fade()
 	_portrait.texture = portrait
+	var vertical_offset: float = portrait_vertical_offsets.get(portrait, 0.0)
+	_portrait.offset_top = -284.0 + vertical_offset
+	_portrait.offset_bottom = -12.0 + vertical_offset
 	_portrait.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST if portrait is AtlasTexture else CanvasItem.TEXTURE_FILTER_LINEAR
 	_portrait.visible = portrait != null
 

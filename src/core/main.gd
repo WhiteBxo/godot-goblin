@@ -878,7 +878,9 @@ func _create_shop_business(ui: ShopUI) -> void:
 	_ui_manager.open_screen(ScreenIds.TASK_HUD)
 	task_hud.bind_journal(_task_journal)
 	task_hud.bind_orders(_order_board)
-	# Dialogue and documents already own the frame; the one-line objective
+	task_hud.bind_wallet(get_transactions())
+	task_hud.tasks_requested.connect(open_tasks)
+	# Dialogue and documents already own the frame; the current task
 	# comes back when they close instead of adding a second guidance layer.
 	_ui_manager.modal_changed.connect(func() -> void: task_hud.set_obscured(_ui_manager.has_modal()))
 	task_hud.set_obscured(_ui_manager.has_modal())

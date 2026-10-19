@@ -65,3 +65,5 @@ Godot 4.7.2.stable.official.ed1daf0bf，2026-10-17。
 - [RichTextLabel](https://docs.godotengine.org/en/4.7/classes/class_richtextlabel.html)：使用独立滚动条，禁用 BBCode，按任务切换或内容刷新管理滚动位置。
 
 合并回归覆盖醒神菇委托的物资数量、中文名称、目标和深拷贝投影，兼容原成品详情。任务窗口示例显式使用无剧情 legacy_shop，避免启动正式 Day 1；正式演出及活动 Bridge phase 的原有窗口准入不变。
+
+2026-10-19：左上任务卡显示当前主线标题和目标，整块点击直接打开任务日志；旁侧金币卡持续显示钱包实际余额。主线优先于订单缺料提示；打开模态时隐藏卡片，关闭后恢复。截图与验证记录见 [第二天反馈修正](../development/day2_feedback_2026_10_19.md)。

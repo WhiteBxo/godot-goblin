@@ -10,7 +10,7 @@
 
 TaskJournal 状态为 inactive / active / completed / failed / expired / cancelled：激活条件不满足则隐藏；激活且完成条件不满足为 active；两者满足为 completed；`fail_when`、`deadline` 与 `allow_cancel` 提交的终态由 GameState 锁存并覆盖投影。孤立完成事实不激活任务。首个未完成 required 目标是 current_objective；全部目标完成但最终条件未满足时等待后续事实。终态与回执规则见[日程与任务结果](../systems/schedule_and_task_results.md)。
 
-普通当前主线按目录顺序选取；订单追踪由 OrderBoardModel 与 ui.tracked_order_id 补充，TaskHUD 优先显示有效追踪订单及其他进行中数量。手册活动页与订单板已完成记录用途不同，不把任务列表当历史账本。
+普通当前主线按目录顺序选取；订单追踪由 OrderBoardModel 与 ui.tracked_order_id 补充，TaskHUD 优先显示当前主线的标题和目标，缺少主线时显示有效追踪订单。点击任务卡直接进入任务日志，旁侧持续显示真实钱包余额；模态打开时暂时隐藏。手册活动页与订单板已完成记录用途不同，不把任务列表当历史账本。
 
 reset / restore 后按事实重新投影，已提交交付有独立回执保护，不能仅撤销任务完成 flag 再领奖。Journal configure 时复制 Catalog，绑定唯一 GameState.state_changed；查询返回深拷贝，投影实际变化才发 projection_changed。服务可随场景重建。
 

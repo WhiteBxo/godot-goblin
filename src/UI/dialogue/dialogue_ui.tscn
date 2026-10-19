@@ -1,7 +1,9 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://src/UI/dialogue/dialogue_ui.gd" id="1"]
 [ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="theme"]
+
+[ext_resource type="Texture2D" path="res://assets/characters/dialogue/guard_portrait.png" id="guard_art"]
 
 [sub_resource type="StyleBoxEmpty" id="EmptyStyle"]
 
@@ -15,6 +17,9 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("theme")
 script = ExtResource("1")
+portrait_vertical_offsets = Dictionary[Texture2D, float]({
+ExtResource("guard_art"): -40.0
+})
 
 [node name="Shade" type="ColorRect" parent="."]
 layout_mode = 1

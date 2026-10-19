@@ -263,7 +263,7 @@
         },
         {
           "id": "deliver",
-          "text": "交谈结束后，再按 E 将特殊奶茶交给醉酒守卫",
+          "text": "将奶茶提交给守卫",
           "location_id": "settlement.elder",
           "complete_when": {
             "type": "flag",

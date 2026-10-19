@@ -14,7 +14,7 @@
 
 这四张图是 `fat_goblin` 这一名角色的专属形象，对应 `character_catalog.json` 的 `fat_goblin`（显示名「胖哥布林」），由 `src/core/dialogue/dialogue_manager.gd` 的 `speaker_portraits["胖哥布林"]` 引用。
 
-- 普通哥布林（`common_goblin` 及剧情中的哥布林甲/乙/丙、哥布林顾客等）与酒馆老板、赌场老板没有立绘，对白中只显示姓名与文本，**不得**借用这套图充数。
+- 普通哥布林（`common_goblin` 及剧情中的哥布林甲/乙/丙、哥布林顾客等）与酒馆老板、赌场老板使用 [独立对话立绘](../dialogue/README.md)，**不得**借用这套图充数。
 - 新增角色需要立绘时，先在 `assets/characters/` 下建立自己的目录并入图，再接 `speaker_portraits`；不要复用本目录文件。
 - `tests/verify_dialogue.gd` 会检查非「胖哥布林」说话人没有配置该立绘，改动映射前先看该断言。
 

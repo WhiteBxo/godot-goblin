@@ -128,7 +128,7 @@ func _test_projection_and_lifecycle() -> void:
 	state.set_flag("test.reveal_task")
 	view = journal.get_task("test.progress")
 	_check(view.title == "测试主线" and view.location_id == "test.underground" and view.difficulty == "high" and view.rewards.text == "???", "Task reveal exposes confirmed metadata while reward remains hidden")
-	_check(view.current_objective.id == "board" and "查看订单板" in hud.get_node("Margin/Content/Objective").text, "First required incomplete objective displays")
+	_check(view.current_objective.id == "board" and "查看订单板" in hud.get_node("TaskCard/Margin/Content/Objective").text, "First required incomplete objective displays")
 	state.set_flag("shop.orders_viewed")
 	_check(journal.get_task("test.progress").current_objective.id == "deliveries" and journal.get_task("test.progress").current_objective.text == "???", "Optional event does not block current required objective")
 	state.set_flag("test.reveal_objective")
@@ -140,7 +140,7 @@ func _test_projection_and_lifecycle() -> void:
 		state.set_variable("shop.orders_completed", invalid)
 		_check(not journal.get_task("test.progress").objectives[2].completed and journal.get_task("test.progress").objectives[2].progress == 0, "Non-numeric counters cannot complete an objective")
 	state.set_variable("shop.orders_completed", 1)
-	_check(journal.get_task("test.progress").current_objective.progress == 1 and "1 / 2" in hud.get_node("Margin/Content/Objective").text, "Numeric progress appears in HUD: %s; %s" % [journal.get_task("test.progress").current_objective, hud.get_node("Margin/Content/Objective").text])
+	_check(journal.get_task("test.progress").current_objective.progress == 1 and "1 / 2" in hud.get_node("TaskCard/Margin/Content/Objective").text, "Numeric progress appears in HUD: %s; %s" % [journal.get_task("test.progress").current_objective, hud.get_node("TaskCard/Margin/Content/Objective").text])
 	var saved_window_size := root.size
 	var saved_canvas_size := root.content_scale_size
 	root.content_scale_size = Vector2i(320, 360)
@@ -152,7 +152,7 @@ func _test_projection_and_lifecycle() -> void:
 	root.size = saved_window_size
 	await _frames()
 	state.set_variable("shop.orders_completed", 2.0)
-	_check(journal.get_task("test.progress").current_objective.is_empty() and journal.get_task("test.progress").status == "active" and "等待" in hud.get_node("Margin/Content/Objective").text, "All objectives reached still wait for an explicit final fact")
+	_check(journal.get_task("test.progress").current_objective.is_empty() and journal.get_task("test.progress").status == "active" and "等待" in hud.get_node("TaskCard/Margin/Content/Objective").text, "All objectives reached still wait for an explicit final fact")
 	state.complete_event("task_test.accept")
 	_check(journal.get_task("test.commission").status == "active" and journal.get_active_tasks().size() == 2 and journal.get_current_main_task().id == "test.progress", "Commission activates via completed event without replacing tracked main")
 	state.complete_event("task_test.finish")

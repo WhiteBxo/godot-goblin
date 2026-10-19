@@ -1785,6 +1785,7 @@
 				},
 				"line_2": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "昨天……奶茶……头……晕……",
 					"next": "line_3"
 				},
@@ -1795,11 +1796,13 @@
 				},
 				"line_4": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "可是……格里芬之血……",
 					"next": "line_5"
 				},
 				"line_5": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "能洗清罪孽……得到庇护……不能浪费……",
 					"next": "line_6"
 				},
@@ -1810,16 +1813,19 @@
 				},
 				"line_7": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "可是……不喝的话……万一……",
 					"next": "line_8"
 				},
 				"line_8": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "……昨天，真的……好难受……",
 					"next": "line_9"
 				},
 				"line_9": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "可是……长老说……",
 					"next": "line_10"
 				},
@@ -1835,6 +1841,7 @@
 			"lines": {
 				"line_1": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "还要……",
 					"next": "line_2"
 				},
@@ -1845,6 +1852,7 @@
 				},
 				"line_3": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "那个……红红的……再来一杯……",
 					"next": "line_4"
 				},
@@ -1855,6 +1863,7 @@
 				},
 				"line_5": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "可是……格里芬的恩赐……不能浪费……",
 					"next": "line_6"
 				},
@@ -1865,16 +1874,19 @@
 				},
 				"line_7": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "长老说……喝了……就能得到庇护……",
 					"next": "line_8"
 				},
 				"line_8": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "……可是，昨天……好难受……",
 					"next": "line_9"
 				},
 				"line_9": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "愿……格里芬垂顾我……",
 					"next": "line_10"
 				},
@@ -1935,6 +1947,7 @@
 				},
 				"line_4": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "你……慢……点……说……",
 					"next": "line_5"
 				},
@@ -1950,6 +1963,7 @@
 				},
 				"line_7": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "琥珀酒……酒馆……幻金菇……赌场……",
 					"next": "line_8"
 				},
@@ -1975,6 +1989,7 @@
 				},
 				"line_2": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "有一种……能让人清醒一点的食材……",
 					"next": "line_3"
 				},
@@ -1985,6 +2000,7 @@
 				},
 				"line_4": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "你这里……有吗？",
 					"next": "line_5"
 				},
@@ -1995,6 +2011,7 @@
 				},
 				"line_6": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "那个叫……醒神菇……不太好买……而且很贵……",
 					"next": "line_7"
 				},
@@ -2010,6 +2027,7 @@
 			"lines": {
 				"line_1": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "我给你钱……你帮我买……",
 					"next": "line_2"
 				},
@@ -2020,6 +2038,7 @@
 				},
 				"line_3": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "不想……为了这点眩晕……花太多钱……买不到就算了……",
 					"next": "line_4"
 				},
@@ -2030,6 +2049,7 @@
 				},
 				"line_5": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "不……你不知道……对我们哥布林来说……金币才是最重要的……",
 					"next": "line_6"
 				},
@@ -2040,6 +2060,7 @@
 				},
 				"line_7": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "不……你不懂……格里芬……",
 					"next": "line_8"
 				},
@@ -2050,11 +2071,13 @@
 				},
 				"line_9": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "也许……你说得对……身体……还是重要一点……",
 					"next": "line_10"
 				},
 				"line_10": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "醒神菇……30G以上的……不要买……",
 					"next": "line_11"
 				},
@@ -2065,6 +2088,7 @@
 				},
 				"line_12": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "雇一个哥布林……5G……应该够了……",
 					"next": "line_13"
 				},
@@ -2085,11 +2109,13 @@
 				},
 				"line_16": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "我的金币……没了……",
 					"next": "line_17"
 				},
 				"line_17": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "愿格里芬……垂顾我的金币……",
 					"next": "line_18"
 				},
@@ -3530,11 +3556,13 @@
 				},
 				"line_2": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "唔……好多了……大概……",
 					"next": "line_3"
 				},
 				"line_3": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "就是还有点晕……腿也没什么力气……",
 					"next": "line_4"
 				},
@@ -3550,6 +3578,7 @@
 				},
 				"line_6": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "回来……？你还要去哪儿？",
 					"next": "line_7"
 				},
@@ -3816,6 +3845,7 @@
 			"lines": {
 				"line_10": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "愿……格里芬……赐福……",
 					"next": "line_11"
 				},
@@ -3836,6 +3866,7 @@
 				},
 				"line_14": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "偷……？",
 					"next": "line_15"
 				},
@@ -3846,6 +3877,7 @@
 				},
 				"line_16": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "没……偷过……不知道……",
 					"next": "line_17"
 				},
@@ -3856,6 +3888,7 @@
 				},
 				"line_18": {
 					"speaker": "胖哥布林",
+					"portrait": "res://assets/characters/dialogue/fat_goblin_sick_portrait.png",
 					"text": "不过……赌场老板……有私兵……小心……",
 					"next": "line_19"
 				},

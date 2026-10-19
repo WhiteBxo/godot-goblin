@@ -15,11 +15,15 @@ signal line_changed(line_id: String)
 	"主角": preload("res://assets/characters/apron_man/player_talking_portrait.png"),
 	"主角·内心": preload("res://assets/characters/apron_man/player_neutral_portrait.png"),
 	"玩家": preload("res://assets/characters/apron_man/player_talking_portrait.png"),
-	# The fat goblin illustration belongs to that one character only. Common
-	# goblins, tavern and casino keepers have no finished portrait, so they show
-	# no image instead of borrowing the fat goblin's face.
+	# Each NPC uses their own dialogue illustration, separate from map sprites.
 	"胖哥布林": preload("res://assets/characters/fat_goblin/fat_goblin_smiling_portrait.png"),
-	"醉酒守卫": preload("res://src/resources/dialogue/guard_portrait.tres"),
+	"醉酒守卫": preload("res://assets/characters/dialogue/guard_portrait.png"),
+	"守卫": preload("res://assets/characters/dialogue/guard_portrait.png"),
+	"酒馆老板": preload("res://assets/characters/dialogue/tavern_portrait.png"),
+	"赌场老板": preload("res://assets/characters/dialogue/casino_portrait.png"),
+	"哥布林顾客": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	"哥布林顾客甲": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	"哥布林顾客乙": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
 }
 
 var last_error: String = ""

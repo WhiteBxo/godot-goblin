@@ -143,3 +143,5 @@ UI 按 640×360 视口设计，底部面板为 560×136px，水平居中、距�
 实现依据 Godot 4.7 官方文档：[InputEvent 的处理顺序与消费](https://docs.godotengine.org/en/4.7/tutorials/inputs/inputevent.html)、[RichTextLabel 的 visible_characters](https://docs.godotengine.org/en/4.7/classes/class_richtextlabel.html#class-richtextlabel-property-visible-characters)、[JSON](https://docs.godotengine.org/en/4.7/classes/class_json.html)、[导出资源过滤](https://docs.godotengine.org/en/4.7/tutorials/export/exporting_projects.html#resource-options)。
 
 本次新增 API 与导入素材已在 Godot 4.7.2 验证。官网文档站本次访问返回 403，因此实现前直接核对同版本的官方文档源文件：[TextureRect 4.7.2](https://github.com/godotengine/godot/blob/4.7.2-stable/doc/classes/TextureRect.xml)（替换 `texture`、等比居中与忽略图片最小尺寸）、[ResourceLoader 4.7.2](https://github.com/godotengine/godot/blob/4.7.2-stable/doc/classes/ResourceLoader.xml)（已导入资源加载及缓存复用）。
+
+2026-10-19：守卫、酒馆老板、赌场老板与普通顾客使用用户提供的独立插画，见 [对话立绘来源](../../assets/characters/dialogue/README.md)。第二天胖哥布林对白显式使用不适表情。`DialogueUI.portrait_vertical_offsets` 可按 Texture2D 配置垂直偏移；当前守卫为 -40 逻辑像素，使高头盔下的脸露出对话框，切换到其他角色时恢复默认位置。

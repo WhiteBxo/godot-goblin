@@ -439,9 +439,9 @@ func _test_speaker_portraits() -> void:
 			_check(boot_rim_clear, "Both toes, instep, heel and sole have no leftover paper rim: " + path)
 		_check(image.get_pixel(0, 0).a == 0.0 and image.get_pixel(image.get_width() - 1, image.get_height() - 1).a == 0.0, "Portrait background corners are transparent: " + path)
 	# The fat goblin illustration is exclusive to that character; every other
-	# goblin speaker in the authored scenes has no portrait and must not borrow it.
+	# goblin speaker must use their own artwork or omit the illustration.
 	for speaker: String in ["哥布林", "哥布林甲", "哥布林乙", "哥布林丙", "哥布林顾客", "哥布林顾客甲", "哥布林顾客乙", "另一名哥布林", "酒馆老板", "赌场老板"]:
-		_check(not _manager.speaker_portraits.has(speaker), "The fat goblin portrait stays exclusive to 胖哥布林: " + speaker)
+		_check(_manager.speaker_portraits.get(speaker) != _manager.speaker_portraits["胖哥布林"], "The fat goblin portrait stays exclusive to 胖哥布林: " + speaker)
 	_check(_manager.start_dialogue("demo.speaker_portraits") == OK, "Portrait demo starts through the real manager")
 	var portrait: TextureRect = _ui.get_node("Portrait")
 	var expected := {
@@ -482,9 +482,39 @@ func _test_speaker_portraits() -> void:
 	_manager.end_dialogue()
 	_check(_manager.load_dialogues("res://src/resources/dialogue/day1_stages_03_06.json") == OK, "Infiltration dialogue loads with the guard speaker binding")
 	_check(_manager.start_dialogue("day1.s05.drunken_guard") == OK, "The actual guard interception starts")
-	_check(portrait.visible and portrait.texture == _manager.speaker_portraits["醉酒守卫"] and portrait.texture is AtlasTexture, "The guard interception shows the existing guard artwork")
-	_check(portrait.texture_filter == CanvasItem.TEXTURE_FILTER_NEAREST, "Guard sprite portrait keeps crisp pixels")
+	_check(portrait.visible and portrait.texture == _manager.speaker_portraits["醉酒守卫"] and not portrait.texture is AtlasTexture, "The guard interception shows the supplied guard illustration")
+	_check(portrait.texture_filter == CanvasItem.TEXTURE_FILTER_LINEAR, "Guard illustration uses smooth filtering")
+	_check(_ui.get_node("Portrait").offset_top < -284.0, "Tall guard helmet is raised so the face clears the dialogue panel")
 	_manager.end_dialogue()
+	_check(_manager.load_dialogues("res://src/resources/dialogue/day2_stages_01_05.json") == OK, "Load the actual Day 2 dialogue illustrations")
+	for example: Array in [
+		["day2.s03.tavern_commission", "酒馆老板", "tavern"],
+		["day2.s04.casino_boss", "赌场老板", "casino"],
+		["day2.s02.emissary_rumor", "哥布林顾客", "common_goblin"],
+		["day2.s05.deliver_guard", "守卫", "guard"],
+		["day2.s05.deliver_guard_after_delivery", "守卫", "guard"],
+		["day2.s01.fat_goblin_wakes", "胖哥布林", "fat_goblin_sick"],
+	]:
+		_check(_manager.start_dialogue(example[0]) == OK, "Start actual illustration scene: " + example[0])
+		var reached := false
+		for index in range(16):
+			if not _manager.is_active():
+				break
+			if _ui.get_node("Panel/Margin/Content/Speaker").text == example[1]:
+				reached = true
+				break
+			_ui.reveal_all()
+			await _frames()
+			_manager.advance()
+		_check(reached and portrait.visible and portrait.texture.resource_path == "res://assets/characters/dialogue/%s_portrait.png" % example[2], "The correct character illustration is shown: " + example[1])
+		_check(portrait.texture != null and portrait.texture.get_height() > 500 and not portrait.texture is AtlasTexture, "Dialogue uses a full illustration, separate from a pixel avatar")
+		if "--capture" in OS.get_cmdline_user_args() and DisplayServer.get_name() != "headless":
+			_ui.reveal_all()
+			await _frames()
+			await RenderingServer.frame_post_draw
+			DirAccess.make_dir_recursive_absolute("res://.godot/portrait_feedback/captures")
+			root.get_texture().get_image().save_png("res://.godot/portrait_feedback/captures/" + example[2] + ".png")
+		_manager.end_dialogue()
 	_check(_manager.load_dialogues() == OK, "Restore default dialogue catalogue after portrait checks")
 
 
@@ -575,13 +605,13 @@ func _test_demo() -> void:
 		var ui: DialogueUI = demo.get_node("PopupLayer/DialogueUI")
 		ui.reveal_all()
 		await RenderingServer.frame_post_draw
-		root.get_texture().get_image().save_png("/private/tmp/dialogue-demo-welcome.png")
+		root.get_texture().get_image().save_png("user://dialogue-demo-welcome.png")
 		for index in range(2):
 			manager.advance()
 			ui.reveal_all()
 		await _frames()
 		await RenderingServer.frame_post_draw
-		root.get_texture().get_image().save_png("/private/tmp/dialogue-demo-choices.png")
+		root.get_texture().get_image().save_png("user://dialogue-demo-choices.png")
 	var demo_ui: DialogueUI = demo.get_node("PopupLayer/DialogueUI")
 	var demo_portrait: TextureRect = demo_ui.get_node("Portrait")
 	await _click(demo.get_node("DebugLayer/Screen/PortraitControls/Talking"))
@@ -647,7 +677,7 @@ func _test_main_input_lock() -> void:
 	_check(Rect2(Vector2.ZERO, root.get_visible_rect().size).encloses(panel.get_global_rect()), "Dialogue panel fits the 640x360 viewport")
 	if "--capture" in OS.get_cmdline_user_args():
 		await RenderingServer.frame_post_draw
-		root.get_texture().get_image().save_png("/private/tmp/dialogue-choices.png")
+		root.get_texture().get_image().save_png("user://dialogue-choices.png")
 	manager.end_dialogue(true)
 	var protected_ends: Array[bool] = []
 	manager.dialogue_ended.connect(func(_id: String, cancelled: bool) -> void: protected_ends.append(cancelled))

@@ -80,7 +80,9 @@ func _refresh() -> void:
 			if _level is MilkTeaShop and actor.actor_id == &"fat_goblin" and Day1Access.is_later_stage(_state):
 				actor.visible = Day1Access.at_stage(_state, "day1.s06")
 		if _points.has(actor.actor_id):
-			_points[actor.actor_id].interaction_enabled = actor.visible
+			var resting: bool = (_level is MilkTeaShop and actor.actor_id == &"fat_goblin"
+				and (Day1Access.at_stage(_state, "day2") or _state.story_stage == "day3.handoff"))
+			_points[actor.actor_id].interaction_enabled = actor.visible and not resting
 	if _level is SettlementMap:
 		_level.set_elder_access(_state.get_business_profile() != "day1" or Day1Access.can_enter_elder(_state))
 	if _level is RpgChapterMap:

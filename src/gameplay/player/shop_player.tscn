@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://04ca1oweqegy" path="res://src/gameplay/player/bounded_follow_camera.gd" id="3_camera"]
 [ext_resource type="Material" path="res://src/gameplay/player/player_sprite_material.tres" id="4_material"]
 [ext_resource type="Script" uid="uid://7862dwu0dop4" path="res://src/gameplay/player/held_item_visual.gd" id="5_d63da"]
+[ext_resource type="Script" uid="uid://dedypp2qk3yg0" path="res://src/gameplay/player/player_body_feel.gd" id="6_feel"]
 
 [sub_resource type="CapsuleShape2D" id="Feet"]
 height = 34.0
@@ -23,6 +24,7 @@ color = Color(0.08, 0.04, 0.03, 0.4)
 polygon = PackedVector2Array(-18, -2, -12, -7, 12, -7, 18, -2, 12, 4, -12, 4)
 
 [node name="Visual" type="Node2D" parent="." unique_id=757105287]
+script = ExtResource("6_feel")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Visual" unique_id=696907619]
 material = ExtResource("4_material")

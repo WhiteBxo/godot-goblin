@@ -171,11 +171,11 @@ func redo_selected_product() -> bool:
 func submit() -> Dictionary:
 	_last_result = {}
 	if not is_instance_valid(_production):
-		_last_result = {"ok": false, "code": "busy", "message": "制作系统尚未就绪。"}
+		_last_result = {"ok": false, "code": "busy", "message": "暂时无法制作，请稍后再试。"}
 		return _last_result
 	craft_requested.emit(selected_materials(), batch_quantity())
 	if _last_result.is_empty():
-		_last_result = {"ok": false, "code": "busy", "message": "制作请求没有响应。"}
+		_last_result = {"ok": false, "code": "busy", "message": "制作没有成功，请再试一次。"}
 	return _last_result
 
 func show_result(result: Dictionary) -> void:

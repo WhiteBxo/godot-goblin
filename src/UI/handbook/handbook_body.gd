@@ -16,7 +16,7 @@ var _characters_available := false
 
 func _ready() -> void:
 	_pages.set_tab_title(0, "任务日志")
-	_pages.set_tab_title(1, "异闻录")
+	_pages.set_tab_title(1, "见闻录")
 	_pages.set_tab_title(2, "哥布林饮品图鉴")
 	_pages.set_tab_title(3, "人物记录")
 	_pages.set_tab_title(4, "奶茶订单")

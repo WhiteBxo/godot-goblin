@@ -68,8 +68,8 @@ func refresh() -> void:
 		if entry.valid:
 			var local_time: int = entry.saved_at + int(Time.get_time_zone_from_system().bias) * 60
 			var date := Time.get_datetime_dict_from_unix_time(local_time)
-			var place: String = {"main": "奶茶店", "settlement": "聚落", "tavern": "酒馆", "casino": "赌场"}.get(String(entry.scene).get_file().get_basename(), "场景入口")
-			detail = "%02d-%02d %02d:%02d:%02d · 第%d天%s · %s%s" % [date.month, date.day, date.hour, date.minute, date.second, entry.day, "夜晚" if entry.phase == "night" else "白天", place, " · 使用备份" if entry.used_backup else ""]
+			var place: String = {"main": "奶茶店", "settlement": "聚落", "tavern": "酒馆", "casino": "赌场"}.get(String(entry.scene).get_file().get_basename(), "未知地点")
+			detail = "%02d-%02d %02d:%02d · 第%d天 %s · %s%s" % [date.month, date.day, date.hour, date.minute, entry.day, "夜晚" if entry.phase == "night" else "白天", place, " · 使用备份" if entry.used_backup else ""]
 		elif entry.occupied:
 			detail = "损坏或版本不兼容"
 		_list.add_item(entry.label + "   " + detail)
@@ -79,7 +79,7 @@ func refresh() -> void:
 			first = _list.item_count - 1
 	if first >= 0:
 		_list.select(first)
-	_message.text = "手动存档不会被自动保存覆盖。所有存档均从安全检查点入口恢复。" if _saving else "自动存档 1 最新；2、3 保留更早记录。读取会放弃尚未保存的进度。"
+	_message.text = "手动存档不会被自动存档覆盖。" if _saving else "自动存档 1 是最新一份，2、3 是更早的记录。读取会放弃尚未保存的进度。"
 	_update_action()
 
 func _selected() -> Dictionary:

@@ -140,6 +140,7 @@ display_name = "古怪金币"
 icon = ExtResource("icon_coin")
 origin = "otherworld"
 category = "story_item"
+description = "金币上印着某种兽类，价值未知。"
 
 [sub_resource type="Resource" id="Ingredient_day1_griffin_blood"]
 script = ExtResource("ingredient")

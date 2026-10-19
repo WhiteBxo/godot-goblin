@@ -14,12 +14,12 @@ var _access_known := false
 func _ready() -> void:
 	_page = $ModalShell.get_content()
 	$ModalShell.close_requested.connect(close_requested.emit)
-	var titles := {ScreenIds.ORDER_HISTORY: "奶茶订单", ScreenIds.HIRING: "雇佣系统", ScreenIds.TASKS: "任务日志 [J]", ScreenIds.CHRONICLE: "异闻录", ScreenIds.DRINKS: "哥布林饮品图鉴", ScreenIds.CHARACTERS: "人物记录", ScreenIds.INVENTORY: "背包 [B]", ScreenIds.MAP: "地图 [M]", ScreenIds.SETTINGS: "设置"}
+	var titles := {ScreenIds.ORDER_HISTORY: "奶茶订单", ScreenIds.HIRING: "雇佣系统", ScreenIds.TASKS: "任务日志 [J]", ScreenIds.CHRONICLE: "见闻录", ScreenIds.DRINKS: "哥布林饮品图鉴", ScreenIds.CHARACTERS: "人物记录", ScreenIds.INVENTORY: "背包 [B]", ScreenIds.MAP: "地图 [M]", ScreenIds.SETTINGS: "设置"}
 	for id: StringName in titles:
 		var button := Button.new()
 		button.text = titles[id]
 		if id == ScreenIds.HIRING:
-			button.tooltip_text = "未来可雇佣哥布林寻找食材，目前暂未开放。"
+			button.tooltip_text = "暂时还不能雇佣哥布林。"
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.pressed.connect(func() -> void: navigation_requested.emit(id))
 		_page.get_node("Navigation").add_child(button)

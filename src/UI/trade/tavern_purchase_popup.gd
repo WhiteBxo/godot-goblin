@@ -121,7 +121,7 @@ func _update_quote() -> void:
 	var indices := _list.get_selected_items()
 	_buy.disabled = _submitted or _submitting or indices.is_empty()
 	if indices.is_empty():
-		_quote.text = "商品与价格尚未配置。"
+		_quote.text = "今天没有可买的商品。"
 		return
 	var offer: Dictionary = _offers[indices[0]]
 	var quantity := int(_quantity.value)

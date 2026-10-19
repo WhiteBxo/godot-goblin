@@ -64,6 +64,10 @@ func _refresh_detail() -> void:
 	elif entry.ready and entry.get("remaining_to_craft", 0) == 0:
 		action = "立即交付"
 		entry.hint = "成品已齐备，可立即交给%s" % entry.target_name
+	elif entry.get("stage", "") == "prepare":
+		# This page is the table itself, so the board's "go to the table" would
+		# point the player back at the page they are already looking at.
+		entry.hint = "配方已备好，可直接制作并入库"
 	var can_return := bool(entry.get("ready", false)) and int(entry.get("remaining_to_craft", 0)) == 0
 	_ticket.present(entry, action, bool(entry.get("can_craft", false)) or can_return)
 

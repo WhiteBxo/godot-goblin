@@ -382,6 +382,6 @@
     }
   ],
   "authoring_project": "res://docs/story_authoring/day1_stages_03_06_project.json",
-  "authoring_sha256": "6a3c3a9f96a0b1134ee38014745f70bdab60d9ba05d2db7dfd2bc8d22082d635",
+  "authoring_sha256": "0acd221623dd7406b5273df4f3502aa4d14a8c217ac72c3676aaf33c26626fef",
   "verification": "res://tests/verify_two_day_flow.gd"
 }

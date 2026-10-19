@@ -801,7 +801,7 @@
         },
         "gift_notice": {
           "speaker": "系统",
-          "text": "获得哥布林食材——萤火伞（T3）、纯正哥布林老火烧（T2）。",
+          "text": "获得哥布林食材：萤火伞、纯正哥布林老火烧。",
           "next": "line_1"
         }
       }
@@ -1342,7 +1342,7 @@
         },
         "line_2": {
           "speaker": "主角",
-          "text": "......",
+          "text": "……",
           "next": "line_3"
         },
         "line_3": {
@@ -1580,7 +1580,7 @@
         },
         "line_13": {
           "speaker": "哥布林母亲",
-          "text": "没想到这么快就到今年的祭典了，愿格里芬护佑，大家明年也要平平安安......",
+          "text": "没想到这么快就到今年的祭典了，愿格里芬护佑，大家明年也要平平安安……",
           "next": "line_14",
           "portrait": "res://assets/characters/npc/market_mother/portrait.png"
         },

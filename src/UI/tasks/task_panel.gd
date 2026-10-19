@@ -31,6 +31,10 @@ func _enter_tree() -> void:
 		_refresh()
 
 func _ready() -> void:
+	# A long title must stay one line: wrapping pushed the row over its
+	# neighbour and the tooltip already carries the full text.
+	_list.max_text_lines = 1
+	_list.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_list.item_selected.connect(_select)
 	_list.item_activated.connect(_select)
 	visibility_changed.connect(_on_visibility_changed)
@@ -159,7 +163,7 @@ func _show_task(task: Dictionary) -> void:
 		var lines := PackedStringArray([task.description, "", "任务结果：" + _status_text(task.status)])
 		if content_filter == "milk_orders":
 			var entry := _orders.get_task_entry(task.id) if is_instance_valid(_orders) else {}
-			lines = PackedStringArray(["饮品：" + str(entry.get("title", task.title)), "顾客：" + str(entry.get("target_name", "交付对象待确认")), "", "订单状态：" + _status_text(task.status), "报酬：" + str(entry.get("rewards", task.rewards.get("text", "—")))])
+			lines = PackedStringArray(["饮品：" + str(entry.get("title", task.title)), "顾客：" + str(entry.get("target_name", "未知顾客")), "", "订单状态：" + _status_text(task.status), "报酬：" + str(entry.get("rewards", task.rewards.get("text", "—")))])
 		var result: Dictionary = task.get("result", {})
 		if not result.is_empty():
 			lines.append("结算时间：第 %d 天 · %s" % [result.day, "白天" if result.phase == "day" else "夜晚"])
@@ -192,21 +196,21 @@ func _show_task(task: Dictionary) -> void:
 	if task.current_objective.is_empty():
 		lines.append("目标已达成，等待后续剧情。")
 	if not task.delivery.is_empty():
-		lines.append("\n交付对象：" + String(_target_names.get(task.delivery.target_object_id, "交付对象待确认")))
+		lines.append("\n交付对象：" + String(_target_names.get(task.delivery.target_object_id, "未知")))
 		if task.delivery.has("uses"):
 			var uses := PackedStringArray()
 			for id: String in task.delivery.uses:
-				uses.append("%s × %s 次" % [_product_names.get(id, "物资待确认"), _number(task.delivery.uses[id])])
+				uses.append("%s × %s 次" % [_product_names.get(id, "未知物资"), _number(task.delivery.uses[id])])
 			lines.append("使用物资：" + "、".join(uses))
 		elif task.delivery.has("items"):
 			var materials := PackedStringArray()
 			for id: String in task.delivery.items:
-				materials.append("%s × %s" % [_product_names.get(id, "物资待确认"), _number(task.delivery.items[id])])
+				materials.append("%s × %s" % [_product_names.get(id, "未知物资"), _number(task.delivery.items[id])])
 			lines.append("交付物资：" + "、".join(materials))
 		elif task.delivery.has("drink"):
 			lines.append("交付饮品：" + DrinkFormula.requirement_text(task.delivery.drink, _product_names))
 		else:
-			lines.append("交付成品：" + String(_product_names.get(task.delivery.product_id, "成品待确认")))
+			lines.append("交付成品：" + String(_product_names.get(task.delivery.product_id, "未知成品")))
 	lines.append("\n奖励：" + String(task.rewards.get("text", "暂无奖励说明")))
 	_set_detail("\n".join(lines))
 

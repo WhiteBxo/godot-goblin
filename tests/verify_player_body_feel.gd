@@ -18,6 +18,13 @@ func frames(count: int) -> void:
 	for index in range(count):
 		await process_frame
 
+func _dust_count(player: Node) -> int:
+	var total := 0
+	for child: Node in player.get_children():
+		if String(child.name).begins_with(PlayerBodyFeel.DUST_NAME):
+			total += 1
+	return total
+
 func _run() -> void:
 	ProjectSettings.set_setting("debug/developer_tools/enabled", false)
 	await _exercise(Vector2.ONE, "full-size")
@@ -75,6 +82,48 @@ func _exercise(base: Vector2, label: String) -> void:
 	player.move_direction(Vector2.LEFT, 0.1)
 	await frames(2)
 	check(visual.scale.y > base.y, "The second push-off still reacts after a brake (%s)" % label)
+
+	# Turn lean: the sprites have no turn frames, one pixel stands in for them.
+	player.move_direction(Vector2.DOWN, 0.1)
+	await frames(1)
+	check(is_zero_approx(visual.position.x), "Turning up or down does not lean the body (%s)" % label)
+	player.move_direction(Vector2.LEFT, 0.1)
+	await frames(1)
+	check(is_equal_approx(visual.position.x, -1.0), "Turning left leans the body one pixel (%s)" % label)
+	player.move_direction(Vector2.RIGHT, 0.1)
+	await frames(1)
+	check(is_equal_approx(visual.position.x, 1.0), "Turning right leans the other way (%s)" % label)
+	await frames(40)
+	check(is_zero_approx(visual.position.x), "The turn lean settles back (%s)" % label)
+
+	# Dust follows the walk cycle; sneaking is silent.
+	player.set_locomotion_mode(PlayerController.Locomotion.WALK)
+	player.move_direction(Vector2.RIGHT, 0.1)
+	var dust := 0
+	for index in range(150):
+		await process_frame
+		dust = maxi(dust, _dust_count(player))
+		if dust > 0:
+			break
+	check(dust > 0, "Walking raises dust at the footfalls (%s)" % label)
+	player.move_direction(Vector2.ZERO, 0.2)
+	for index in range(90):
+		await process_frame
+		if _dust_count(player) == 0:
+			break
+	check(_dust_count(player) == 0, "Dust expires on its own (%s)" % label)
+	player.set_locomotion_mode(PlayerController.Locomotion.SNEAK)
+	player.move_direction(Vector2.RIGHT, 0.1)
+	var sneaky := 0
+	for index in range(120):
+		await process_frame
+		sneaky = maxi(sneaky, _dust_count(player))
+	check(sneaky == 0, "Sneaking raises no dust (%s)" % label)
+	player.set_locomotion_mode(PlayerController.Locomotion.WALK)
+	player.move_direction(Vector2.ZERO, 0.2)
+
+	player.move_direction(Vector2.LEFT, 0.1)
+	await frames(2)
 	player.claim_performance_control(self)
 	await frames(3)
 	check(visual.scale.is_equal_approx(base) and is_zero_approx(visual.position.y), "A story pose returns the body to its authored size without a brake (%s)" % label)

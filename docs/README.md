@@ -109,7 +109,7 @@
 | [主角对话立绘：平静 / 说话](assets/imports/player_dialogue_portraits.md) | `imports/player_dialogue_portraits.md` |
 | [2026-10-19 古文书与洞窟全图](assets/imports/elder_feedback_2026_10_19.md) | 用户原图、来源散列与显示接入。 |
 | [2026-10-18 奶茶与原料素材更新](assets/imports/user_assets_2026_10_18.md) | 36 张 PNG、来源映射与接入边界。 |
-| [2026-10-18 卷轴与猫鸡素材导入](assets/imports/2026-10-18_story_and_creature_assets.md) | 22 个文件、归类与未接线边界。 |
+| [2026-10-18 卷轴与格里芬剧情物品素材导入](assets/imports/2026-10-18_story_and_creature_assets.md) | 22 个文件、归类与未接线边界。 |
 | [2026-10-17 用户素材导入清单](assets/imports/user_assets_2026_10_17.md) | `imports/user_assets_2026_10_17.md` |
 | [独立家具、道具与墙体素材库](assets/modular_assets/README.md) | `modular_assets/README.md` |
 | [Sound Library v1](assets/sound_library.md) | `sound_library.md` |

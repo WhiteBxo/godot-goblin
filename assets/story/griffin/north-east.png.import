@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cq6paqmn7d6ts"
-path="res://.godot/imported/cat_chicken_6b0f7677.png-d26791b2c34748117343e0a0d1607c03.ctex"
+uid="uid://bohiqswvwsnec"
+path="res://.godot/imported/north-east.png-ad417064d0de61a38dec6193798933b7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/creatures/cat_chicken/variants/cat_chicken_6b0f7677.png"
-dest_files=["res://.godot/imported/cat_chicken_6b0f7677.png-d26791b2c34748117343e0a0d1607c03.ctex"]
+source_file="res://assets/story/griffin/north-east.png"
+dest_files=["res://.godot/imported/north-east.png-ad417064d0de61a38dec6193798933b7.ctex"]
 
 [params]
 

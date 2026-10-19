@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c8a8o6evy3k2x"
-path="res://.godot/imported/cat_chicken_bdc4d020.png-2a97e4724cc605dd7440eaf1a32487e8.ctex"
+uid="uid://wsnhktkg2kbu"
+path="res://.godot/imported/griffin_e3bb0779.png-aec99d54fc415b245df8d16afb503d50.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/creatures/cat_chicken/variants/cat_chicken_bdc4d020.png"
-dest_files=["res://.godot/imported/cat_chicken_bdc4d020.png-2a97e4724cc605dd7440eaf1a32487e8.ctex"]
+source_file="res://assets/story/griffin/variants/griffin_e3bb0779.png"
+dest_files=["res://.godot/imported/griffin_e3bb0779.png-aec99d54fc415b245df8d16afb503d50.ctex"]
 
 [params]
 

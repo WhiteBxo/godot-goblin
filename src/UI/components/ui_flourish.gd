@@ -8,12 +8,19 @@ extends RefCounted
 ## by a screen closing can never leave a control distorted.
 
 const CUP_ICON: Texture2D = preload("res://assets/ui/milk_tea/products/custom_drink.svg")
+const COIN_ICON: Texture2D = preload("res://assets/ui/coin.svg")
+const COIN_SIZE := 12.0
+const COIN_RISE := 24.0
+const COIN_STAGGER := 0.055
+const COIN_LAUNCH := 0.16
+const COIN_FALL := 0.24
 const CUP_SIZE := 18.0
 const CUP_RISE := 18.0
 const CUP_STAGGER := 0.04
 const CUP_LIFE := 0.34
 const CUP_FADE := 0.20
 const CUP_OVERLAY_Z := 60
+const OVERLAY_SURFACE := &"FXOverlay"
 const FLOAT_RISE := 18.0
 const FLOAT_LIFE := 0.7
 const REFUSE_TINT := Color(1.0, 0.72, 0.66)
@@ -137,6 +144,55 @@ static func cups(anchor: Control, icon: Texture2D, count: int, from := Vector2(0
 		fade.tween_callback(cup.queue_free)
 
 
+## Money just landed: coins arc from [param from_global] (a viewport point, e.g.
+## above the player) into [param target] and fade on arrival. The target takes one
+## settle when the last coin lands, so the number reacts after the coins do.
+static func coins_to_wallet(from_global: Vector2, target: Control, count: int) -> void:
+	if count <= 0 or not is_instance_valid(target) or not target.is_inside_tree():
+		return
+	# HUD chips live straight under a CanvasLayer, where no Control ancestor exists
+	# to host the flight; a dedicated full-rect surface keeps viewport coordinates.
+	var host := _overlay_surface(target)
+	if host == null:
+		return
+	var start := from_global
+	var end := target.get_global_rect().get_center()
+	var shown := mini(count, 6)
+	var last_land := 0.0
+	for index in range(shown):
+		var coin := TextureRect.new()
+		coin.name = "PaidCoin%d" % index
+		coin.texture = COIN_ICON
+		coin.size = Vector2(COIN_SIZE, COIN_SIZE)
+		coin.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		coin.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		coin.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		coin.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		coin.z_index = CUP_OVERLAY_Z
+		coin.pivot_offset = coin.size * 0.5
+		coin.position = start - coin.size * 0.5
+		coin.scale = Vector2(0.5, 0.5)
+		coin.modulate.a = 0.0
+		host.add_child(coin)
+		# Deterministic fan-out: a fixed golden angle keeps runs reproducible.
+		var angle := float(index) * 2.399963
+		var peak := start.lerp(end, 0.32) + Vector2(cos(angle), sin(angle)) * 7.0 - Vector2(0.0, COIN_RISE)
+		var delay := COIN_STAGGER * index
+		var tween := host.create_tween().set_parallel(true).set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+		tween.tween_property(coin, "modulate:a", 1.0, 0.06).set_delay(delay)
+		tween.tween_property(coin, "scale", Vector2.ONE, 0.14).set_delay(delay).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		tween.tween_property(coin, "position", peak, COIN_LAUNCH).set_delay(delay).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		tween.tween_property(coin, "position", end - coin.size * 0.5, COIN_FALL).set_delay(delay + COIN_LAUNCH).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+		tween.tween_property(coin, "scale", Vector2(0.72, 0.72), COIN_FALL).set_delay(delay + COIN_LAUNCH)
+		tween.tween_property(coin, "modulate:a", 0.0, 0.08).set_delay(delay + COIN_LAUNCH + COIN_FALL)
+		tween.chain().tween_callback(coin.queue_free)
+		last_land = maxf(last_land, delay + COIN_LAUNCH + COIN_FALL)
+	if target.has_method("pop"):
+		var settle := host.create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+		settle.tween_interval(last_land)
+		settle.tween_callback(func() -> void: target.call("pop", shown))
+
+
 ## Kills the previous run of the same flourish and clears its residual
 ## transform. A control shown in this very frame has no size yet, so the pivot
 ## falls back to its requested size instead of waiting a frame.
@@ -169,3 +225,21 @@ static func _overlay_host(start: Control) -> Control:
 			return current
 		current = current.get_parent()
 	return null
+
+
+## HUD chips sit directly under a CanvasLayer, so there is no Control ancestor to
+## parent a flight onto. A single full-rect surface keeps viewport coordinates and
+## is reused across payments.
+static func _overlay_surface(target: Control) -> Control:
+	var parent := target.get_parent()
+	if parent == null:
+		return null
+	for child: Node in parent.get_children():
+		if child is Control and child.name == OVERLAY_SURFACE:
+			return child
+	var surface := Control.new()
+	surface.name = OVERLAY_SURFACE
+	surface.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	surface.set_anchors_preset(Control.PRESET_FULL_RECT)
+	parent.add_child(surface)
+	return surface

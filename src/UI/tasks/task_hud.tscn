@@ -50,28 +50,3 @@ text_overrun_behavior = 3
 layout_mode = 2
 mouse_filter = 2
 autowrap_mode = 3
-
-[node name="Wallet" type="PanelContainer" parent="."]
-custom_minimum_size = Vector2(76, 0)
-layout_mode = 2
-size_flags_vertical = 0
-mouse_filter = 2
-theme_type_variation = &"CoinPanel"
-
-[node name="Content" type="VBoxContainer" parent="Wallet"]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="Heading" type="Label" parent="Wallet/Content"]
-layout_mode = 2
-mouse_filter = 2
-theme_type_variation = &"Hint"
-text = "金币"
-horizontal_alignment = 1
-
-[node name="Balance" type="Label" parent="Wallet/Content"]
-layout_mode = 2
-mouse_filter = 2
-theme_type_variation = &"H2"
-text = "0G"
-horizontal_alignment = 1

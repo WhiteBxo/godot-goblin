@@ -1,6 +1,6 @@
 class_name TaskHUD
 extends HBoxContainer
-## Read-only task and wallet projections; the host handles navigation.
+## Read-only task projection; the host handles navigation and owns the wallet.
 
 signal tasks_requested
 
@@ -8,28 +8,14 @@ signal tasks_requested
 @onready var _objective: Label = $TaskCard/Margin/Content/Objective
 var _journal: TaskJournal
 var _orders: OrderBoardModel
-var _wallet: WalletTransactions
 var _signature := ""
-var _balance_text := ""
 var _shown := false
 ## Dialogue, documents and menus own the frame while they are open; the
 ## objective strip returns afterwards instead of stacking under the shade.
 var _obscured := false
 
-func bind_wallet(wallet: WalletTransactions) -> void:
-	if is_instance_valid(_wallet) and _wallet.changed.is_connected(_refresh):
-		_wallet.changed.disconnect(_refresh)
-	_wallet = wallet
-	if is_inside_tree():
-		_connect_wallet()
-	_refresh()
-
 func get_task_button() -> Button:
 	return $TaskCard/OpenTasks
-
-func _connect_wallet() -> void:
-	if is_instance_valid(_wallet) and not _wallet.changed.is_connected(_refresh):
-		_wallet.changed.connect(_refresh)
 
 func set_obscured(value: bool) -> void:
 	if _obscured == value:
@@ -53,7 +39,6 @@ func bind_journal(journal: TaskJournal) -> void:
 	_refresh()
 
 func _enter_tree() -> void:
-	_connect_wallet()
 	_connect_journal()
 	_connect_orders()
 	if not get_viewport().size_changed.is_connected(_resize_card):
@@ -70,8 +55,6 @@ func _ready() -> void:
 	_refresh()
 
 func _exit_tree() -> void:
-	if is_instance_valid(_wallet) and _wallet.changed.is_connected(_refresh):
-		_wallet.changed.disconnect(_refresh)
 	_disconnect_journal()
 	if is_instance_valid(_orders) and _orders.changed.is_connected(_refresh):
 		_orders.changed.disconnect(_refresh)
@@ -99,12 +82,9 @@ func get_objective_summary() -> Dictionary:
 func _refresh() -> void:
 	if not is_node_ready():
 		return
-	$Wallet.visible = is_instance_valid(_wallet)
-	if is_instance_valid(_wallet):
-		$Wallet/Content/Balance.text = WalletTransactions.format_money(_wallet.get_balance())
 	var task: Dictionary = _journal.get_current_main_task() if is_instance_valid(_journal) else {}
 	var entry := _orders.get_tracked_entry() if is_instance_valid(_orders) else {}
-	visible = not _obscured and (not task.is_empty() or not entry.is_empty() or is_instance_valid(_wallet))
+	visible = not _obscured and (not task.is_empty() or not entry.is_empty())
 	$TaskCard.visible = not task.is_empty() or not entry.is_empty()
 	if not entry.is_empty() and task.is_empty():
 		var others := -1
@@ -148,10 +128,6 @@ func _after_refresh() -> void:
 	if not _signature.is_empty() and signature != _signature:
 		_nudge($TaskCard, Vector2(1.015, 1.015), Vector2(0.0, 0.5))
 	_signature = signature
-	var balance: String = $Wallet/Content/Balance.text
-	if not _balance_text.is_empty() and balance != _balance_text:
-		_nudge($Wallet, Vector2(1.1, 1.1), Vector2(0.5, 0.5))
-	_balance_text = balance
 
 func _nudge(control: Control, scale_to: Vector2, pivot: Vector2) -> void:
 	if control.size == Vector2.ZERO:

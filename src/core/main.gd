@@ -35,6 +35,9 @@ var _handbook: HandbookPanel
 var _handbook_hud: HandbookHUD
 var _game_menu: ChapterActionsHUD
 var _task_hud: TaskHUD
+var _wallet_hud: WalletHUD
+var _payment_fx_orders := 0
+var _payment_fx_pending := false
 var _saved_status := "尚未自动保存"
 var _save_status: Label
 var _save_toast: Tween
@@ -866,7 +869,7 @@ func _create_shop_business(ui: ShopUI) -> void:
 	var error := _task_delivery.configure(_task_catalog, _task_journal, get_node("/root/GameState"), _warehouse_inventory)
 	if error != OK:
 		push_error("Could not configure task delivery (%d)" % error)
-	_task_delivery.delivered.connect(func(_id: String) -> void: _interaction_audio.play_event("delivery_success"))
+	_task_delivery.delivered.connect(func(_id: String) -> void: _celebrate_payment())
 	_task_delivery.delivery_failed.connect(func(_id: String, _reason: String) -> void: _interaction_audio.play_event("delivery_failure"))
 	_order_board = OrderBoardModel.new()
 	_order_board.name = "OrderBoardModel"
@@ -900,8 +903,10 @@ func _create_shop_business(ui: ShopUI) -> void:
 	_ui_manager.open_screen(ScreenIds.TASK_HUD)
 	task_hud.bind_journal(_task_journal)
 	task_hud.bind_orders(_order_board)
-	task_hud.bind_wallet(get_transactions())
 	task_hud.tasks_requested.connect(open_tasks)
+	_wallet_hud = preload("res://src/UI/hud/wallet_hud.tscn").instantiate()
+	$HudLayer.add_child(_wallet_hud)
+	_wallet_hud.bind_wallet(get_transactions())
 	# Dialogue and documents already own the frame; the current task
 	# comes back when they close instead of adding a second guidance layer.
 	_ui_manager.modal_changed.connect(func() -> void: task_hud.set_obscured(_ui_manager.has_modal()))
@@ -1052,6 +1057,29 @@ func _route_story_interaction(id: StringName) -> Error:
 		_shop_ui.show_feedback(delivery_result.message, delivery_result.ok)
 		return OK if delivery_result.ok else ERR_UNAVAILABLE
 	return ERR_DOES_NOT_EXIST
+
+## A sale just settled: the money bag shakes with a metallic tail, then coins arc
+## from the player into the wallet chip. A register batch fires delivered once per
+## order, so the burst is merged into one wave.
+func _celebrate_payment() -> void:
+	_interaction_audio.play_event("delivery_success")
+	# The chain is the metallic tail of the same beat, played now so the sound
+	# never drifts into the next interaction if the player acts quickly.
+	_interaction_audio.play_sound("shop.coins_chain")
+	_payment_fx_orders += 1
+	if _payment_fx_pending:
+		return
+	_payment_fx_pending = true
+	get_tree().create_timer(0.12).timeout.connect(_flush_payment_fx)
+
+func _flush_payment_fx() -> void:
+	_payment_fx_pending = false
+	var orders := _payment_fx_orders
+	_payment_fx_orders = 0
+	if not is_instance_valid(_wallet_hud) or not _wallet_hud.is_visible_in_tree() or not is_instance_valid(_shop_player):
+		return
+	var origin := get_viewport().get_canvas_transform() * (_shop_player.global_position + Vector2(0, -16))
+	UIFlourish.coins_to_wallet(origin, _wallet_hud, mini(2 + orders, 6))
 
 ## The register uses the same authoritative per-order settlement as NPC delivery.
 func _deliver_ready_orders() -> bool:

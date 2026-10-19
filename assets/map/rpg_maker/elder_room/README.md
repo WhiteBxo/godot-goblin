@@ -8,4 +8,4 @@ The files use exact RPG Maker tile footprints from the prompts. They are rendere
 
 The generated images are derived assets. The source PDF remains outside the repository and is not copied into the project.
 
-The pixel drawings can be regenerated with `python tools/art/generate_elder_room_assets.py` from the repository root. The generator is an independent redraw and does not read the earlier elder-room outputs. The generator keeps the requested RPG Maker footprints, RGBA transparency, nearest-neighbor edges, and the shared elder-room palette.
+The pixel drawings can be regenerated with `python assets/map/rpg_maker/elder_room/_generate_elder_room.py` from the repository root. The generator is an independent redraw and does not read the earlier elder-room outputs. The generator keeps the requested RPG Maker footprints, RGBA transparency, nearest-neighbor edges, and the shared elder-room palette.

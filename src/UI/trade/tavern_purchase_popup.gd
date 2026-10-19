@@ -147,9 +147,24 @@ func _purchase() -> void:
 	if indices.is_empty():
 		return
 	_submitting = true
+	var total: int = _offers[indices[0]].unit_price * int(_quantity.value)
 	var result := _service.purchase(_offers[indices[0]].product_id, int(_quantity.value), _request_id)
 	_submitting = false
 	_submitted = result.ok or result.code == "duplicate_transaction"
 	_feedback.text = result.message
 	_feedback.theme_type_variation = &"Success" if result.ok else &"Warning"
 	_refresh()
+	_present_result(result, total)
+
+## Money leaving the purse has an exit: the cost rises off the balance and the
+## receipt line lands; a rejected purchase recoils instead.
+func _present_result(result: Dictionary, spent: int) -> void:
+	if not is_instance_valid(_feedback):
+		return
+	if not result.ok:
+		UIFlourish.refuse(_feedback)
+		return
+	UIFlourish.settle(_feedback, 0.96)
+	if is_instance_valid(_balance):
+		UIFlourish.settle(_balance, 0.94)
+		UIFlourish.float_text(_balance, "-" + WalletTransactions.format_money(spent), _balance.get_theme_color("font_color", "Warning"))

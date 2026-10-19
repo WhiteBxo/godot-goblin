@@ -71,7 +71,7 @@ godot --headless --path . --script res://tools/ui/build_theme.gd
 
 `UIButtonMotion`（`src/UI/components/ui_button_motion.gd`）与 `UIAudioFeedback` 并列挂在宿主 Systems 下，扫过 Hud/Popup/Pause 层内的按钮：悬停轻微放大、按下回缩、松开回弹、键盘焦点微抬。它只改 `scale` 与 `pivot_offset`，不动布局、焦点和按钮信号；覆盖整张卡片的透明热区用 `metadata/ui_motion = false` 退出，避免悬停底框溢出卡片。弹窗打开、交互提示出现、任务目标/余额变化与标题画面另有各自的一次性缓动，全部由对应脚本在展示层完成。
 
-`UIFlourish`（`src/UI/components/ui_flourish.gd`）收纳“刚刚发生了什么”的一次性动效：`settle()` 数值落地、`stamp()` 状态改判、`refuse()` 操作被拒、`cups()` 产出物离开台面。它只动 `scale`/`rotation`/`modulate`，结束时回到单位变换；`cups()` 展示的浮层挂到最近的非 Container 祖先上，绝不进入任何容器的布局，也不吃鼠标。同一控件重复触发会先杀掉上一段同类型缓动，因此可以随手调用。按钮本体的按压反馈仍归 `UIButtonMotion`，这里只负责“结果”。
+`UIFlourish`（`src/UI/components/ui_flourish.gd`）收纳“刚刚发生了什么”的一次性动效：`settle()` 数值落地、`stamp()` 状态改判、`refuse()` 操作被拒、`cups()` 产出物离开台面、`reveal()` 就地换页后的落定、`float_text()` 金额变化浮字。它只动 `scale`/`rotation`/`modulate`，结束时回到单位变换；`cups()` 与 `float_text()` 的浮层挂到最近的非 Container 祖先上，绝不进入任何容器的布局，也不吃鼠标。同一控件重复触发会先杀掉上一段同类型缓动，因此可以随手调用。按钮本体的按压反馈仍归 `UIButtonMotion`，这里只负责“结果”。
 
 `src/debug/ui/ui_kit.tscn` 是主题画廊，F6 检查字体层级、按钮状态、面板、ItemList 选中、页签、输入框、进度条与长文本。`tests/verify_ui_theme.gd` 审计场景使用的控件类型、字号范围和 UI 脚本中的 raw Color；`tests/verify_ui_kit.gd` 冒烟加载画廊并输出截图。
 

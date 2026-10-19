@@ -32,6 +32,8 @@ func _visibility_changed() -> void:
 	set_process(is_visible_in_tree())
 	if is_visible_in_tree():
 		refresh()
+		# Where you stand gets one ring so the two dots are told apart at a glance.
+		_canvas.ping()
 
 func _process(_delta: float) -> void:
 	if is_instance_valid(_player) and _canvas.player_position != _map_player_position():
@@ -71,7 +73,9 @@ func refresh() -> void:
 		_canvas.player_position = _map_player_position()
 		_canvas.target = target
 		_canvas.queue_redraw()
-	_objective.text = text
+	if _objective.text != text:
+		_objective.text = text
+		UIFlourish.settle(_objective, 0.96)
 	var places: Array[String] = []
 	for region: Dictionary in data.regions:
 		places.append("%d  %s" % [int(region.get("ordinal", 0)), region.name])

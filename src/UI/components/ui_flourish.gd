@@ -14,6 +14,8 @@ const CUP_STAGGER := 0.04
 const CUP_LIFE := 0.34
 const CUP_FADE := 0.20
 const CUP_OVERLAY_Z := 60
+const FLOAT_RISE := 18.0
+const FLOAT_LIFE := 0.7
 const REFUSE_TINT := Color(1.0, 0.72, 0.66)
 const SETTLE_META := &"ui_flourish_settle"
 const REFUSE_META := &"ui_flourish_mark"
@@ -28,6 +30,44 @@ static func settle(control: Control, from := 0.88) -> void:
 	control.scale = Vector2(from, from)
 	var tween := control.create_tween()
 	tween.tween_property(control, "scale", Vector2.ONE, 0.22).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+
+## A container swapped its content: the replacement settles in instead of
+## snapping. Used for tab pages and other in-place page changes.
+static func reveal(control: Control, from := 0.985) -> void:
+	if not _prepare(control):
+		return
+	control.set_meta(SETTLE_META, true)
+	control.modulate.a = 0.0
+	control.scale = Vector2(from, from)
+	var tween := control.create_tween().set_parallel(true)
+	tween.tween_property(control, "modulate:a", 1.0, 0.12)
+	tween.tween_property(control, "scale", Vector2.ONE, 0.20).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+
+## A number just changed by this much: "+3G" rises off [param anchor] and fades.
+## The label lives on the nearest non-container ancestor, like the cups.
+static func float_text(anchor: Control, text: String, color := Color.WHITE) -> void:
+	if text.strip_edges().is_empty() or not is_instance_valid(anchor) or not anchor.is_inside_tree():
+		return
+	var host := _overlay_host(anchor)
+	if host == null:
+		return
+	var label := Label.new()
+	label.name = "FloatText"
+	label.text = text
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.z_index = CUP_OVERLAY_Z
+	label.add_theme_color_override("font_color", color)
+	host.add_child(label)
+	label.reset_size()
+	var rect := anchor.get_global_rect()
+	var center: Vector2 = host.get_global_transform().affine_inverse() * rect.get_center()
+	label.position = center - label.size * 0.5
+	var tween := host.create_tween().set_parallel(true)
+	tween.tween_property(label, "position:y", label.position.y - FLOAT_RISE, FLOAT_LIFE).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(label, "modulate:a", 0.0, FLOAT_LIFE * 0.7).set_delay(FLOAT_LIFE * 0.4)
+	tween.chain().tween_callback(label.queue_free)
 
 
 ## A status changed state: lands like a rubber stamp, slightly crooked.

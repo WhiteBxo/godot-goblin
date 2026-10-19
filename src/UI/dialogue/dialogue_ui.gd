@@ -134,10 +134,24 @@ func reveal_all() -> void:
 	_reveal_remaining = 0.0
 	_finish_portrait_fade()
 	_text.visible_characters = -1
+	var appeared := not _choice_scroll.visible and not _buttons.is_empty()
 	_choice_scroll.visible = not _buttons.is_empty()
 	_update_hint()
+	if appeared:
+		_reveal_choices()
 	if not _buttons.is_empty():
 		_buttons[_selected].grab_focus()
+
+
+## Choices arrive one after another so the eye reads them in order instead of
+## facing a wall of text. Only alpha moves, so focus and layout stay put.
+func _reveal_choices() -> void:
+	for index in range(_buttons.size()):
+		var button := _buttons[index]
+		button.modulate.a = 0.0
+		var tween := button.create_tween()
+		tween.tween_interval(0.03 * index)
+		tween.tween_property(button, "modulate:a", 1.0, 0.1)
 
 
 func close_dialogue() -> void:

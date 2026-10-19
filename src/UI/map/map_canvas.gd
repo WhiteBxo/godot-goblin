@@ -7,6 +7,40 @@ var player_position := Vector2.ZERO
 var target: Dictionary = {}
 @export var compact := false
 const OVERVIEW: Texture2D = preload("res://assets/map/cartography/cavern_floor_overview.png")
+const PING_SECONDS := 0.55
+
+## The objective marker breathes; opening the map pings where you stand so the
+## two dots are told apart before the labels are read.
+var _clock := 0.0
+var _ping_age := -1.0
+
+func ping() -> void:
+	_ping_age = 0.0
+	set_process(true)
+	queue_redraw()
+
+func _process(delta: float) -> void:
+	if not is_visible_in_tree():
+		return
+	_clock += delta
+	if _ping_age >= 0.0:
+		_ping_age += delta
+		if _ping_age > PING_SECONDS:
+			_ping_age = -1.0
+	if target.has("position") or _ping_age >= 0.0:
+		queue_redraw()
+
+func _draw_target_ring(center: Vector2, radius: float) -> void:
+	var beat := 0.5 + 0.5 * sin(_clock * 4.2)
+	var color := get_theme_color("font_color", "Warning")
+	draw_arc(center, radius + 3.0 * beat, 0, TAU, 24, Color(color, 0.4 + 0.35 * beat), 1.0)
+
+func _draw_player_ping(center: Vector2) -> void:
+	if _ping_age < 0.0:
+		return
+	var weight := clampf(_ping_age / PING_SECONDS, 0.0, 1.0)
+	var color := get_theme_color("font_color", "Success")
+	draw_arc(center, 4.0 + 16.0 * weight, 0, TAU, 32, Color(color, 0.7 * (1.0 - weight)), 1.0)
 
 func _art_rect() -> Rect2:
 	var extent := OVERVIEW.get_size()
@@ -43,9 +77,11 @@ func _draw_illustration() -> void:
 	if target.has("position"):
 		var point := _art_point(target.position)
 		draw_arc(point, 8.0, 0, TAU, 24, get_theme_color("font_color", "Warning"), 2.0)
+		_draw_target_ring(point, 8.0)
 	var player := _art_point(player_position)
 	draw_circle(player, 3.0, get_theme_color("font_color", "Success"))
 	draw_arc(player, 5.0, 0, TAU, 24, get_theme_color("font_color", "Label"), 1.0)
+	_draw_player_ping(player)
 
 func _draw_local_map() -> void:
 	var floor_color := get_theme_color("font_color", "Muted")
@@ -56,14 +92,17 @@ func _draw_local_map() -> void:
 	if target.has("position"):
 		var point := world_to_map(target.position).clamp(edge.position, edge.end)
 		draw_colored_polygon(PackedVector2Array([point + Vector2(0, -3), point + Vector2(3, 0), point + Vector2(0, 3), point + Vector2(-3, 0)]), get_theme_color("font_color", "Warning"))
+		_draw_target_ring(point, 4.0)
 	var player := world_to_map(player_position)
 	draw_circle(player, 2.0, get_theme_color("font_color", "Success"))
 	draw_arc(player, 3.5, 0, TAU, 16, get_theme_color("font_color", "Label"), 1.0)
+	_draw_player_ping(player)
 	var font := get_theme_font("font", "Label")
 	draw_string(font, Vector2(size.x - 14, 12), "北", HORIZONTAL_ALIGNMENT_LEFT, -1, get_theme_font_size("font_size", "Label"), get_theme_color("font_color", "Label"))
 
 func _ready() -> void:
 	resized.connect(queue_redraw)
+	set_process(false)
 
 func _view_rect() -> Rect2:
 	var view: Rect2 = map_data.get("view", map_data.get("bounds", Rect2()))
@@ -119,9 +158,11 @@ func _draw() -> void:
 		draw_colored_polygon(PackedVector2Array([
 			pos + Vector2(0, -7), pos + Vector2(7, 0), pos + Vector2(0, 7), pos + Vector2(-7, 0)]), warning)
 		draw_arc(pos, 11.0, 0, TAU, 24, warning, 1.0)
+		_draw_target_ring(pos, 11.0)
 	var player := world_to_map(player_position)
 	draw_circle(player, 3.0, success)
 	draw_arc(player, 7.0, 0, TAU, 24, success, 1.0)
+	_draw_player_ping(player)
 	# A north arrow keeps the schematic oriented without another legend line.
 	var north := Vector2(size.x - 18, 22)
 	draw_colored_polygon(PackedVector2Array([north, north + Vector2(-4, 9), north + Vector2(4, 9)]), ink)

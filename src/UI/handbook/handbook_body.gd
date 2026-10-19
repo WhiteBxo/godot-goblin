@@ -20,6 +20,14 @@ func _ready() -> void:
 	_pages.set_tab_title(2, "哥布林饮品图鉴")
 	_pages.set_tab_title(3, "人物记录")
 	_pages.set_tab_title(4, "奶茶订单")
+	_pages.tab_changed.connect(_reveal_page)
+
+## Flipping a tab opens that page instead of swapping the words underneath the
+## eye. Only alpha and scale move, so nothing reflows.
+func _reveal_page(_index: int) -> void:
+	var page := _pages.get_current_tab_control()
+	if page != null:
+		UIFlourish.reveal(page, 0.99)
 
 func bind_characters(journal: CharacterJournal) -> void:
 	_characters.bind_journal(journal)

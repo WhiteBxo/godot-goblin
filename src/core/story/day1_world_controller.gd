@@ -10,6 +10,8 @@ var _refresh_pending := false
 var _staging: Callable
 var _player: Node2D
 var _boundary_cooldown := 0.0
+## Authored once per level; the physics step must not walk the entrance list.
+var _shop_door: SceneEntrance
 signal boundary_reached(message: String)
 
 func set_player(player: Node2D) -> void:
@@ -29,17 +31,15 @@ func _physics_process(delta: float) -> void:
 	# An older save or an F6 spawn may already be beyond the newly gated market.
 	# Recover to the authored shop entrance rather than trapping every movement axis.
 	if _level.market_only and _level.first_visit_bounds.has_area() and not _level.first_visit_bounds.has_point(_level.to_local(_player.global_position)):
-		var arrival: SceneEntrance = _level.get_scene_entrance(&"shop_door")
-		if arrival != null:
-			_player.teleport_to(arrival.global_position)
+		if _shop_door != null:
+			_player.teleport_to(_shop_door.global_position)
 			_on_market_boundary()
 	if not Day1Access.at_stage(_state, "day1.s03.explore"):
 		return
 	if _level.is_observing_market(_player.global_position) and not _state.get_flag("day1.s03.observed_yard"):
 		_state.set_flag("day1.s03.observed_yard")
-	var door: SceneEntrance = _level.get_scene_entrance(&"shop_door")
-	if (door != null and _state.get_flag("day1.s03.exploration_completed")
-		and _player.global_position.distance_to(door.global_position) <= 80.0
+	if (_shop_door != null and _state.get_flag("day1.s03.exploration_completed")
+		and _player.global_position.distance_to(_shop_door.global_position) <= 80.0
 		and not _state.get_flag("day1.s03.returned_to_door")):
 		_state.set_flag("day1.s03.returned_to_door")
 
@@ -48,6 +48,7 @@ func configure(state: Node, level: Node2D, actors: Array[SettlementCharacter], p
 	_level = level
 	_actors = actors
 	_points = points
+	_shop_door = level.get_scene_entrance(&"shop_door")
 	_state.state_changed.connect(_schedule_refresh)
 	_refresh()
 

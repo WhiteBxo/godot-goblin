@@ -65,9 +65,7 @@ Godot F6 打开 `src/debug/characters/character_gallery.tscn`：同时查看 8 �
 源图不裁剪、不重编码，原附件路径记录在
 `src/gameplay/characters/customer_catalog.json` 的 `source_entry` 中。
 
-`human_customer.tscn` 使用红衣男顾客替换原主角动画及蓝色染色，正式店铺已有的
-`human_customer` 自动使用新图。`human_customer_female.tscn` 提供黄裙女顾客，
-可独立复用，尚未加入剧情出场排程。普通哥布林仍使用自己的素材。
+`human_customer.tscn` 生成时以 50% 概率选择红衣男顾客或黄裙女顾客，默认 `appearance = RANDOM`，也可在编辑器固定 `MALE` / `FEMALE`。两种外观都沿用 `human_customer` Actor ID、订单与剧情目标；同一实例的移动、转向、待机和显隐不重选。读档或重建场景产生新实例时重新选择，不新增存档字段。这里的 1:1 是概率比例，不保证短序列人数相等。`human_customer_female.tscn` 仍提供固定女顾客独立场景。普通哥布林仍使用自己的素材。
 
 两套资源均提供 `run_*`（8 FPS，现有 NPC 行走接口）和 `idle_*`（6 FPS）四向循环，
 左右共用侧面图，由 `SettlementCharacter` 镜像左向。每格 64×64、步长 88，
@@ -122,12 +120,21 @@ F6 打开 `src/debug/characters/character_gallery.tscn`，右下角两位顾客�
 | 守卫长 | 有基础场景、动画和画廊预览，未进入正式流程 | `assets/characters/npc/guard_captain/`，4 张；不把它自动认定为补充稿中的侍卫 |
 | 厨师 | 有基础场景、动画和画廊预览，未进入正式流程 | `assets/characters/npc/chef/`，4 张 |
 | 长老本人 | 有基础场景、动画和画廊预览，正式长老宅尚未实例化本人 | `assets/characters/npc/elder/`，5 张；地图中的长老宅不等于长老本人已出场 |
-| 普通女顾客 | 有基础场景、四向动画和画廊预览，未进入正式营业出场排程 | `assets/characters/npc/human_customer_female/`，6 张 |
 | 守卫长、厨师、守卫的攻击动画 | 有动作资源与独立预览，尚未接入正式战斗 / 行为 | `assets/characters/goblin_actions/` 的 `captain_attack_*`、`chef_attack_*`、`guard_attack_*`，各 3 张；不代表守卫整个角色没用 |
 | 普通哥布林攻击动画 | 资源被无背包哥布林读取，但正式外观只提取行走 / 待机，未触发攻击 | 同目录 `goblin_attack_*`，3 张；`goblin_walk_*` 已实际用于无背包哥布林 |
 
-已在正式场景使用的角色包括：主角、胖哥布林、普通哥布林（有 / 无背包）、原守卫、男顾客、酒馆老板、赌场老板，以及本次新增赌场侍卫。侍卫立绘已绑定，等待其补充稿对白的运行时编排。各类原始插画、旧像素头像和待机候选图属于来源或备选版本，不额外统计为未使用角色。
+已在正式场景使用的角色包括：主角、胖哥布林、普通哥布林（有 / 无背包）、原守卫、人类顾客（男 / 女各 50%）、酒馆老板、赌场老板，以及本次新增赌场侍卫。侍卫立绘已绑定，等待其补充稿对白的运行时编排。各类原始插画、旧像素头像和待机候选图属于来源或备选版本，不额外统计为未使用角色。
 
-未使用角色的原因：当前前两天主线未安排守卫长、厨师的独立出场；长老已在故事中被提及，但首夜潜入明确利用他外出的时机，当前没有本人出场演出；人类顾客已使用男顾客外观，女顾客属于尚未安排出场的备选外观。攻击动画未触发属于行为尚未接入，不意味着对应人物没有出场。
+未使用角色的原因：当前前两天主线未安排守卫长、厨师的独立出场；长老已在故事中被提及，但首夜潜入明确利用他外出的时机，当前没有本人出场演出。男女顾客现已通过正式人类顾客的 1:1 概率外观接入。攻击动画未触发属于行为尚未接入，不意味着对应人物没有出场。
 
 用户于 2026-10-19 确认，原按附件名误称“猫鸡”的 19 张图片属于**格里芬剧情物品素材**，已移到 `assets/story/griffin/`，候选图改用 `griffin_<hash>.png`，不再计入未使用人物。前两天剧情已经涉及格里芬与格里芬之血，但这批图片尚未绑定具体物品或场景；“没有使用这批图”不能解释成“前两天没有格里芬相关内容”。来源和当前路径见[格里芬素材说明](../../assets/story/griffin/README.md)。
+
+## 人类顾客男女比例（2026-10-19）
+
+正式店铺的 `human_customer.tscn` 已接入 `human_customer.gd`，生成时男、女各 50% 概率；女顾客素材不再属于未使用人物。角色画廊保留固定男、女两位，便于同时比较外观。
+
+局部验证：`tests/verify_human_customer_appearances.gd` 无图形 4362 项、OpenGL 图形 4363 项通过；固定种子的 256 次生成得到男 115、女 141，检查动画资源、四向行走与镜像、显隐碰撞、玩家输入隔离、稳定 Actor ID 和真实 ActorDirector 移动。未运行全项目回归，本次只改角色外观选择。
+
+F5 新游戏，第一位人类顾客可出现男或女；同一实例出入场不会变换外观。F6 打开 `src/debug/characters/character_gallery.tscn` 可同时观察两种外观的四向行走和待机。生命周期及随机选择沿用 Godot 4.7 [Node._ready](https://docs.godotengine.org/en/4.7/classes/class_node.html#class-node-private-method-ready) 与 [randf](https://docs.godotengine.org/en/4.7/classes/class_@globalscope.html#class-globalscope-method-randf)。
+
+![男女人类顾客](captures/human_customer_ratio_2026_10_19.png)

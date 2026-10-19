@@ -23,6 +23,8 @@ func _ready() -> void:
 	for index in IDS.size():
 		var id: String = IDS[index]
 		var actor: SettlementCharacter = load("res://src/gameplay/characters/%s.tscn" % id).instantiate()
+		if id == "human_customer":
+			actor.appearance = actor.Appearance.MALE
 		actor.position = Vector2(120 + index % 6 * 205, 270 + index / 6 * 310)
 		entities.add_child(actor)
 		_actors.actor_register(StringName(id), actor)

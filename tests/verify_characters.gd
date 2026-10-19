@@ -25,6 +25,8 @@ func _run() -> void:
 	var customers: Array = JSON.parse_string(FileAccess.get_file_as_string("res://src/gameplay/characters/customer_catalog.json"))
 	for item: Dictionary in catalog + customers:
 		var actor: SettlementCharacter = load("res://src/gameplay/characters/%s.tscn" % item.id).instantiate()
+		if item.id == "human_customer":
+			actor.appearance = actor.Appearance.MALE
 		if item.id == "common_goblin":
 			# The catalog coverage below checks the original backpack source sheets.
 			actor.appearance = actor.Appearance.WITH_BACKPACK

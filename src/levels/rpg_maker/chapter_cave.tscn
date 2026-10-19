@@ -47,6 +47,8 @@
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_market_vendor_1.tscn" id="vendor_1"]
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_market_vendor_2.tscn" id="vendor_2"]
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_market_vendor_3.tscn" id="vendor_3"]
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_signature_philosopher.tscn" id="philosopher"]
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_barracks_soldier.tscn" id="soldier"]
 
 [ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/scorch_tongue_pepper.png" id="gather_pepper"]
 [ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/honey_amber_crystal.png" id="gather_honey"]
@@ -338,7 +340,7 @@ success_flags = Array[StringName](["day1.s03.observed_path"])
 
 [node name="Characters" type="Node2D" parent="."]
 
-[node name="Philosopher" parent="Characters" instance=ExtResource("goblin")]
+[node name="Philosopher" parent="Characters" instance=ExtResource("philosopher")]
 position = Vector2(1464, 1896)
 actor_id = &"signature_philosopher"
 display_name = "酒馆外的哥布林哲人"
@@ -726,7 +728,7 @@ actor_id = &"market_vendor_3"
 display_name = "老练的摊主"
 active_phase = "always"
 
-[node name="BarracksSoldier" parent="Characters" instance=ExtResource("guard")]
+[node name="BarracksSoldier" parent="Characters" instance=ExtResource("soldier")]
 position = Vector2(1944, 984)
 actor_id = &"barracks_soldier"
 display_name = "哥布林军人"

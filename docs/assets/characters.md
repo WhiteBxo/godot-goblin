@@ -217,3 +217,24 @@ python tools/characters/build_character_frames.py --catalog src/gameplay/charact
 ```
 
 F6 运行 `src/core/settlement.tscn`，走到集市（三个摊位在 (1272, 2328)、(1416, 2328)、(1560, 2376)）按 E，即可看到各自立绘与台词。与既有普通哥布林的同地线尺寸对比见 `artifacts/market_vendors_preview.png`。
+
+## 具名可对话 NPC：诗人 / 哲人 / 军人（2026-10-20）
+
+同一附件里此前完全缺美术的三位已接入，替换 `chapter_casino.tscn` 的 `Poet`（原借用 `rpg_common_goblin.tscn`）与 `chapter_cave.tscn` 的 `Philosopher`（原 `rpg_common_goblin.tscn`）、`BarracksSoldier`（原 `rpg_guard.tscn`）。位置、Actor ID、场景里的显示名不变；只有诗句、哲思与口号这三种站桩人物，附件也只给单帧，因此八向动画共用一帧。
+
+| Actor ID / 场景 | 场景显示名 | 对白说话人（新增立绘绑定） | 对白事件 |
+| --- | --- | --- | --- |
+| `casino_poet` | 哥布林诗人 | 诗人 | `supplement.poet` |
+| `signature_philosopher` | 酒馆外的哥布林哲人 | 哥布林哲人 | `supplement.philosopher` |
+| `barracks_soldier` | 哥布林军人 | 军人 | `supplement.soldier` |
+
+- 三张像素图原件本身就是 64×64 单帧，派生图沿用成人 NPC 规格（脚底 y=62、可见高度 58px）；艺术上人物宽窄不同（诗人 36px、哲人 41px、军人 55px），窄的那位在原图里就是瘦，没有额外缩放。
+- `诗人` 的立绘本来就是透明底；`哲人`、`军人` 两张被压平到一张渲染出来的透明棋盘上（RGB，无 alpha）。用噪声与中性高亮把棋盘抠掉，再按“轮廓内空洞若整体为高亮中性色就一并去掉”补掉四肢之间的漏网区域，牙齿与眼白的饱和度更高因此保留。抠图仍有极细的浅色描边，若用户后续提供透明原图可直接替换 `source/portrait.png` 后重跑脚本。
+- 原件逐字节保存在 `source/`，来源、SHA-256 与派生方式见各家 `source/sources.json`；帧资源由 `talkable_npc_catalog.json` 生成。
+
+```sh
+python tools/characters/import_talkable_npcs.py --archive '<附件路径>'
+python tools/characters/build_character_frames.py --catalog src/gameplay/characters/talkable_npc_catalog.json
+```
+
+F6 运行 `src/core/casino.tscn` 找诗人、`src/core/settlement.tscn`（集市）找哲人与军人，按 E 触发对话即可看到立绘；三人与普通哥布林的同地线尺寸对比见 `artifacts/talkable_npc_lineup.png`。

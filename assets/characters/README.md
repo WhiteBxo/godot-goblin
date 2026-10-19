@@ -67,3 +67,7 @@
 ### 集市摊贩（2026-10-20）
 
 `哥布林npc：有特定对话，不能重复利用的npc(1).zip` 的 `其他可对话npc/小贩/小贩1-3` 接入为 `npc/market_vendor_1-3`：单帧像素图 + 透明立绘，原件在各自 `source/`。八个方向动画共用这一帧，摊主不移动；派生图与成人 NPC 同规格（64px 帧、脚底 y=62、可见高度 58px）。商品、对白与摊位位置沿用既有配置，映射见[人物接入](../../docs/assets/characters.md#集市三个摊贩2026-10-20)。
+
+### 诗人 / 哲人 / 军人（2026-10-20）
+
+同一附件的 `诗人`、`哲人`、`军人` 接入为 `npc/casino_poet`、`npc/signature_philosopher`、`npc/barracks_soldier`：单帧像素图 + 立绘。哲人与军人的立绘在原包里被压平在渲染出来的透明棋盘上（无 alpha），派生时用噪声/中性高亮抠掉。三位接管 `DialogueManager.speaker_portraits` 的诗人 / 哥布林哲人 / 军人。详见[人物接入](../../docs/assets/characters.md#具名可对话-npc诗人--哲人--军人2026-10-20)。

@@ -1,0 +1,21 @@
+[
+  {
+    "archive": "哥布林npc：有特定对话，不能重复利用的npc(1).zip",
+    "entry": "哥布林npc：有特定对话，不能重复利用的npc/其他可对话npc/诗人/job_d1b53dba84ef481abb7dc696cc746272_01.png",
+    "path": "assets/characters/npc/casino_poet/source/idle_sheet.png",
+    "sha256": "90b30198ca188c470cb42d9456f5ac0717e2e20595588487a0cbb93159349433"
+  },
+  {
+    "archive": "哥布林npc：有特定对话，不能重复利用的npc(1).zip",
+    "entry": "哥布林npc：有特定对话，不能重复利用的npc/其他可对话npc/诗人/微信图片_20261020035711_2405_2110.png",
+    "path": "assets/characters/npc/casino_poet/source/portrait.png",
+    "sha256": "65579f64e29e4ad8fd1c04f23367debb049f054ffecf4de3327dc59bd5dff93c",
+    "portrait_crop": [
+      0,
+      0,
+      732,
+      1189
+    ],
+    "derive": "alpha trim + 4px margin"
+  }
+]

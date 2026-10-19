@@ -19,7 +19,7 @@
 
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_casino_sentry.tscn" id="sentry"]
 
-[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_common_goblin.tscn" id="poet"]
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_casino_poet.tscn" id="poet"]
 
 [node name="RpgMakerMap005" instance=ExtResource("base")]
 

@@ -1,0 +1,21 @@
+[
+  {
+    "archive": "哥布林npc：有特定对话，不能重复利用的npc(1).zip",
+    "entry": "哥布林npc：有特定对话，不能重复利用的npc/其他可对话npc/哲人/job_3b0a6075a1c949b2b6e1b6cbbbf0d085_02.png",
+    "path": "assets/characters/npc/signature_philosopher/source/idle_sheet.png",
+    "sha256": "52f0e2a4777983a44ac7b183ec76f8608aabc2c722fe3f9fd0156c76704e2bfb"
+  },
+  {
+    "archive": "哥布林npc：有特定对话，不能重复利用的npc(1).zip",
+    "entry": "哥布林npc：有特定对话，不能重复利用的npc/其他可对话npc/哲人/e5d01d0c-4d1b-4592-83fe-8f37128379e1_0_0.png",
+    "path": "assets/characters/npc/signature_philosopher/source/portrait.png",
+    "sha256": "b5bcb0b3ba00cb4bc6c9e0c0e791eb8940929ef84602e600cf28a9a4b8f3ae25",
+    "portrait_crop": [
+      0,
+      0,
+      928,
+      1232
+    ],
+    "derive": "checkerboard matte + 4px trim"
+  }
+]

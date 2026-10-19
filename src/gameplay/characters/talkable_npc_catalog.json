@@ -1,0 +1,176 @@
+[
+  {
+    "id": "casino_poet",
+    "display_name": "哥布林诗人",
+    "role": "赌场里为黄金与格里芬吟诗、听不进人话的诗人。",
+    "active_archive": "哥布林npc：有特定对话，不能重复利用的npc(1).zip",
+    "side_faces_left": false,
+    "animations": {
+      "idle_down": {
+        "source": "idle_sheet",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 1
+      },
+      "run_down": {
+        "source": "idle_sheet",
+        "fps": 8,
+        "first_only": true,
+        "frame_count": 1
+      },
+      "idle_up": {
+        "source": "idle_sheet",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 1
+      },
+      "run_up": {
+        "source": "idle_sheet",
+        "fps": 8,
+        "first_only": true,
+        "frame_count": 1
+      },
+      "idle_left": {
+        "source": "idle_sheet",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 1
+      },
+      "run_left": {
+        "source": "idle_sheet",
+        "fps": 8,
+        "first_only": true,
+        "frame_count": 1
+      },
+      "idle_right": {
+        "source": "idle_sheet",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 1
+      },
+      "run_right": {
+        "source": "idle_sheet",
+        "fps": 8,
+        "first_only": true,
+        "frame_count": 1
+      }
+    },
+    "source_entry": "哥布林npc：有特定对话，不能重复利用的npc/其他可对话npc/诗人/job_d1b53dba84ef481abb7dc696cc746272_01.png"
+  },
+  {
+    "id": "signature_philosopher",
+    "display_name": "酒馆外的哥布林哲人",
+    "role": "S08：与醉鬼争论格里芬、感官认知与幻觉。",
+    "active_archive": "哥布林npc：有特定对话，不能重复利用的npc(1).zip",
+    "side_faces_left": false,
+    "animations": {
+      "idle_down": {
+        "source": "idle_sheet",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 1
+      },
+      "run_down": {
+        "source": "idle_sheet",
+        "fps": 8,
+        "first_only": true,
+        "frame_count": 1
+      },
+      "idle_up": {
+        "source": "idle_sheet",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 1
+      },
+      "run_up": {
+        "source": "idle_sheet",
+        "fps": 8,
+        "first_only": true,
+        "frame_count": 1
+      },
+      "idle_left": {
+        "source": "idle_sheet",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 1
+      },
+      "run_left": {
+        "source": "idle_sheet",
+        "fps": 8,
+        "first_only": true,
+        "frame_count": 1
+      },
+      "idle_right": {
+        "source": "idle_sheet",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 1
+      },
+      "run_right": {
+        "source": "idle_sheet",
+        "fps": 8,
+        "first_only": true,
+        "frame_count": 1
+      }
+    },
+    "source_entry": "哥布林npc：有特定对话，不能重复利用的npc/其他可对话npc/哲人/job_3b0a6075a1c949b2b6e1b6cbbbf0d085_02.png"
+  },
+  {
+    "id": "barracks_soldier",
+    "display_name": "哥布林军人",
+    "role": "军营前高喊「犯我格里芬者，虽远必诛」的军人。",
+    "active_archive": "哥布林npc：有特定对话，不能重复利用的npc(1).zip",
+    "side_faces_left": false,
+    "animations": {
+      "idle_down": {
+        "source": "idle_sheet",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 1
+      },
+      "run_down": {
+        "source": "idle_sheet",
+        "fps": 8,
+        "first_only": true,
+        "frame_count": 1
+      },
+      "idle_up": {
+        "source": "idle_sheet",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 1
+      },
+      "run_up": {
+        "source": "idle_sheet",
+        "fps": 8,
+        "first_only": true,
+        "frame_count": 1
+      },
+      "idle_left": {
+        "source": "idle_sheet",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 1
+      },
+      "run_left": {
+        "source": "idle_sheet",
+        "fps": 8,
+        "first_only": true,
+        "frame_count": 1
+      },
+      "idle_right": {
+        "source": "idle_sheet",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 1
+      },
+      "run_right": {
+        "source": "idle_sheet",
+        "fps": 8,
+        "first_only": true,
+        "frame_count": 1
+      }
+    },
+    "source_entry": "哥布林npc：有特定对话，不能重复利用的npc/其他可对话npc/军人/job_c6ebed9cb1e64d66a6751f6aab722b3d_02.png"
+  }
+]

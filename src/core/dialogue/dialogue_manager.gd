@@ -27,6 +27,10 @@ signal line_changed(line_id: String)
 	"吆喝的摊主": preload("res://assets/characters/npc/market_vendor_1/portrait.png"),
 	"懂行的摊主": preload("res://assets/characters/npc/market_vendor_2/portrait.png"),
 	"老练的摊主": preload("res://assets/characters/npc/market_vendor_3/portrait.png"),
+	# 具名可对话 NPC：诗人、哲人、军人。
+	"诗人": preload("res://assets/characters/npc/casino_poet/portrait.png"),
+	"哥布林哲人": preload("res://assets/characters/npc/signature_philosopher/portrait.png"),
+	"军人": preload("res://assets/characters/npc/barracks_soldier/portrait.png"),
 	"胆小的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
 	"围观的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
 	"凑热闹的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),

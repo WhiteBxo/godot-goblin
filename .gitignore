@@ -7,3 +7,6 @@
 
 # Local assistant workspace and memory
 .workbuddy/
+
+# Local export builds and playtest packages
+/dist/

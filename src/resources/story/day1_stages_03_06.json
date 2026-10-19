@@ -470,6 +470,12 @@
           "value": true
         },
         {
+          "command": "title_card",
+          "text": "第二天",
+          "subtitle": "早晨 · 胖哥布林的委托",
+          "seconds": 1.2
+        },
+        {
           "command": "set_phase",
           "phase": "day"
         },

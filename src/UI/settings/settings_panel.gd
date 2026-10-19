@@ -7,6 +7,7 @@ var _id: StringName
 var _music: OptionButton
 var _sound: OptionButton
 var _speed: OptionButton
+var _auto: OptionButton
 var _message: Label
 
 func _ready() -> void:
@@ -14,12 +15,15 @@ func _ready() -> void:
 	_music = page.get_node("Music/Value")
 	_sound = page.get_node("Sound/Value")
 	_speed = page.get_node("Speed/Value")
+	_auto = page.get_node("Auto/Value")
 	_message = page.get_node("Message")
 	for option: OptionButton in [_music, _sound]:
 		for percent in [0, 25, 50, 75, 100]:
 			option.add_item("%d%%" % percent)
 	for title: String in ["慢", "标准", "快", "立即显示"]:
 		_speed.add_item(title)
+	for title: String in ["关闭", "1.5 秒", "3 秒", "5 秒"]:
+		_auto.add_item(title)
 	page.get_node("Apply").pressed.connect(apply)
 	$ModalShell.close_requested.connect(_close)
 	visibility_changed.connect(func() -> void:
@@ -38,10 +42,11 @@ func refresh() -> void:
 	_music.select(roundi(values.music * 4.0))
 	_sound.select(roundi(values.sound * 4.0))
 	_speed.select(PlayerPreferences.SPEEDS.find(values.dialogue_speed))
+	_auto.select(PlayerPreferences.AUTO_DELAYS.find(values.dialogue_auto))
 	_message.text = "应用后立即生效；关闭可放弃尚未应用的调整。"
 
 func apply() -> void:
-	var error := PlayerPreferences.save_values({"music": _music.selected / 4.0, "sound": _sound.selected / 4.0, "dialogue_speed": PlayerPreferences.SPEEDS[_speed.selected]})
+	var error := PlayerPreferences.save_values({"music": _music.selected / 4.0, "sound": _sound.selected / 4.0, "dialogue_speed": PlayerPreferences.SPEEDS[_speed.selected], "dialogue_auto": PlayerPreferences.AUTO_DELAYS[_auto.selected]})
 	_message.text = "设置已保存。" if error == OK else "设置未能保存，请重试；原设置已保留。"
 
 func get_default_focus() -> Control:

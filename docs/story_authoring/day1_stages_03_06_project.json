@@ -1,7 +1,7 @@
 {
 	"version": 1.0,
 	"format": "goblin_story_project",
-	"next_step_id": 10072.0,
+	"next_step_id": 10073.0,
 	"manifest": {
 		"version": 1.0,
 		"source": "res://docs/design/day_01_stages_03_06_draft.md",
@@ -812,6 +812,15 @@
 						"command": "set_flag",
 						"key": "day1.s06.completed",
 						"value": true
+					}
+				},
+				{
+					"id": "step_10072",
+					"data": {
+						"command": "title_card",
+						"text": "第二天",
+						"subtitle": "早晨 · 胖哥布林的委托",
+						"seconds": 1.2
 					}
 				},
 				{

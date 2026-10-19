@@ -60,7 +60,8 @@ func refresh() -> void:
 			for region: Dictionary in data.regions:
 				if region.location_id == location:
 					target = {"position": region.position, "name": region.name}
-			text += " · " + (str(target.name) if not target.is_empty() else "位置未标注")
+			if not location.is_empty():
+				text += " · " + (str(target.name) if not target.is_empty() else "地图上未标注")
 		elif not objective.is_empty():
 			text = "当前目标尚未揭示"
 		else:

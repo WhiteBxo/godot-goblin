@@ -19,12 +19,13 @@ func _run() -> void:
 	ProjectSettings.set_setting("preferences/file", path)
 	ProjectSettings.set_setting("persistence/save_directory", directory)
 	check(PlayerPreferences.get_values() == PlayerPreferences.DEFAULTS, "Missing preferences use defaults")
-	var values := {"music": 0.5, "sound": 0.25, "dialogue_speed": 0.0}
+	var values := {"music": 0.5, "sound": 0.25, "dialogue_speed": 0.0, "dialogue_auto": 3.0}
 	check(PlayerPreferences.save_values(values) == OK, "Preferences save independently of the game session")
 	check(is_equal_approx(AudioServer.get_bus_volume_linear(AudioServer.get_bus_index("Music")), 0.5), "Music applies to Music bus")
 	check(is_equal_approx(AudioServer.get_bus_volume_linear(AudioServer.get_bus_index("UI")), 0.25), "Sound volume also controls UI effects")
 	var bytes := FileAccess.get_file_as_bytes(path)
-	check(PlayerPreferences.save_values({"music": -1, "sound": 0.0, "dialogue_speed": 0.0}) == ERR_INVALID_DATA and FileAccess.get_file_as_bytes(path) == bytes, "Invalid values preserve the saved file")
+	check(PlayerPreferences.save_values({"music": -1, "sound": 0.0, "dialogue_speed": 0.0, "dialogue_auto": 0.0}) == ERR_INVALID_DATA and FileAccess.get_file_as_bytes(path) == bytes, "Invalid values preserve the saved file")
+	check(PlayerPreferences.save_values({"music": 0.0, "sound": 0.0, "dialogue_speed": 0.0, "dialogue_auto": -1.0}) == ERR_INVALID_DATA and FileAccess.get_file_as_bytes(path) == bytes, "Invalid auto-play delay preserves the saved file")
 	ProjectSettings.set_setting("preferences/file", path + ".missing")
 	PlayerPreferences.get_values()
 	ProjectSettings.set_setting("preferences/file", path)
@@ -52,8 +53,10 @@ func _run() -> void:
 	check(PlayerPreferences.get_values() == values and get_root().gui_get_focus_owner() == settings_button, "Cancel discards unapplied changes and restores title focus")
 	settings_button.pressed.emit()
 	page.get_node("Music/Value").select(0)
+	page.get_node("Auto/Value").select(2)
 	page.get_node("Apply").pressed.emit()
 	check(AudioServer.is_bus_mute(AudioServer.get_bus_index("Music")), "Applying zero volume actually mutes music")
+	check(PlayerPreferences.get_values().dialogue_auto == 3.0, "Applying the auto-play option persists the selected delay")
 	if "--capture" in OS.get_cmdline_user_args() and DisplayServer.get_name() != "headless":
 		await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png("res://.godot/two_day_polish/settings.png")

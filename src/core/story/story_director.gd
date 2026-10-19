@@ -308,7 +308,8 @@ func _process(_delta: float) -> void:
 		"dialogue":
 			_waiting_dialogue = step["id"]
 			_starting_dialogue = true
-			var error := _manager.start_dialogue(_waiting_dialogue)
+			# Esc skips the rest of this line set; cancelling would strand the event.
+			var error := _manager.start_dialogue(_waiting_dialogue, true)
 			_starting_dialogue = false
 			if _is_current(generation) and error != OK:
 				_finish(false, "Dialogue '%s' failed (%d): %s" % [step["id"], error, _manager.last_error])

@@ -44,7 +44,7 @@ func _run() -> void:
 func _test_taste() -> void:
 	var state: Node = load("res://src/core/game_state.gd").new()
 	var catalog := TaskCatalog.new()
-	check(catalog.load_file("res://src/resources/tasks/day2_stages_01_05.json") == OK, "Published optional order loads through the strict catalogue")
+	check(catalog.load_file("res://src/resources/tasks/day2_stages_01_05.json", {"locations": RpgWorldMapData.location_ids()}) == OK, "Published optional order loads through the strict catalogue")
 	var journal := TaskJournal.new()
 	root.add_child(journal)
 	check(journal.configure(catalog, state) == OK, "Optional task binds to the existing state")

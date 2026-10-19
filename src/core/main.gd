@@ -35,6 +35,8 @@ var _handbook_hud: HandbookHUD
 var _game_menu: ChapterActionsHUD
 var _task_hud: TaskHUD
 var _saved_status := "尚未自动保存"
+var _save_status: Label
+var _save_toast: Tween
 var _menu_destination: StringName
 var _inventory_panel: InventoryPanel
 var _chronicle_journal: ChronicleJournal
@@ -368,7 +370,9 @@ func _create_chronicle_system() -> void:
 func _create_task_system() -> void:
 	_task_catalog = TaskCatalog.new()
 	var catalog := _task_catalog
-	var error := catalog.load_files(Day1ChapterController.TASK_FILES) if day1_story_enabled else catalog.load_file("res://src/resources/tasks/tasks.json")
+	# Objective location IDs resolve to the same authored map regions the map UI uses.
+	var references := {"locations": RpgWorldMapData.location_ids()}
+	var error := catalog.load_files(Day1ChapterController.TASK_FILES, references) if day1_story_enabled else catalog.load_file("res://src/resources/tasks/tasks.json", references)
 	if error != OK:
 		push_error("Could not load tasks: " + catalog.last_error)
 		return
@@ -542,20 +546,35 @@ func _create_save_system() -> void:
 	_save_coordinator.configure(get_node("/root/GameState"), store,
 		func() -> Dictionary: return store.checkpoints.find_checkpoint(get_node("/root/GameState").to_dict(), scene_file_path),
 		_can_save_checkpoint, _finish_session_initialization if _session_initializing else Callable(), _new_saved_session)
-	var status: Label = preload("res://src/UI/hud/save_status.tscn").instantiate()
-	$HudLayer.add_child(status)
-	status.hide()
-	_save_coordinator.status_changed.connect(func(text: String) -> void:
-		status.text = text
-		status.visible = "失败" in text
-		_saved_status = text
-		_refresh_game_menu()
-		_pause_menu.set_save_status(text)
-	)
-	status.text = _save_coordinator.get_status_text()
-	_saved_status = status.text
-	_pause_menu.set_save_status(status.text)
+	_save_status = preload("res://src/UI/hud/save_status.tscn").instantiate()
+	$HudLayer.add_child(_save_status)
+	_save_status.hide()
+	_save_coordinator.status_changed.connect(_on_save_status_changed)
+	_save_status.text = _save_coordinator.get_status_text()
+	_saved_status = _save_status.text
+	_pause_menu.set_save_status(_save_status.text)
 	_refresh_input_lock()
+
+
+## Successful saves surface as a short toast; only failures stay on screen.
+func _on_save_status_changed(text: String) -> void:
+	_saved_status = text
+	_refresh_game_menu()
+	_pause_menu.set_save_status(text)
+	if not is_instance_valid(_save_status):
+		return
+	if _save_toast != null:
+		_save_toast.kill()
+		_save_toast = null
+	_save_status.text = text
+	_save_status.modulate.a = 1.0
+	_save_status.show()
+	if "失败" in text:
+		return
+	_save_toast = create_tween()
+	_save_toast.tween_interval(2.2)
+	_save_toast.tween_property(_save_status, "modulate:a", 0.0, 0.35)
+	_save_toast.tween_callback(_save_status.hide)
 
 func _can_save_checkpoint() -> bool:
 	if get_tree().paused or _ui_manager.has_modal() or _story_director.is_busy() or _dialogue_manager.is_active():

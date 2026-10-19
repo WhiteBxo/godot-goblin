@@ -92,6 +92,7 @@
         {
           "id": "deliver",
           "text": "交付并收款",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "day1.s04.order_delivered"

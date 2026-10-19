@@ -22,6 +22,7 @@
         {
           "id": "morning",
           "text": "听取胖哥布林的委托，取得独立代购专款",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "day2.procurement.funded"
@@ -30,6 +31,7 @@
         {
           "id": "open",
           "text": "准备营业，等待第一组顾客到柜台",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.open"
@@ -58,6 +60,7 @@
         {
           "id": "festival",
           "text": "到收银台按 E 接第一组订单，制作 H01 后交给顾客",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.festival_0.delivered"
@@ -66,6 +69,7 @@
         {
           "id": "elder",
           "text": "到收银台接待谈论长老的顾客，制作并交付 H01",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.elder_0.delivered"
@@ -74,6 +78,7 @@
         {
           "id": "emissary",
           "text": "到收银台接待谈论使者的顾客，制作并交付 H01",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.emissary_0.delivered"
@@ -82,6 +87,7 @@
         {
           "id": "rumor_first",
           "text": "接取最后一组的两张订单，制作两杯 H01 并分别交付",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.rumor_0.delivered"
@@ -90,6 +96,7 @@
         {
           "id": "rumor_second",
           "text": "将另一杯 H01 交给最后一组的另一位顾客",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.rumor_1.delivered"
@@ -98,6 +105,7 @@
         {
           "id": "close",
           "text": "交清已接散客订单，点击「关店 · 前往酒馆」；可先雇一名散客代购",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.closed"
@@ -126,6 +134,7 @@
         {
           "id": "arrive",
           "text": "出店后前往居民区右下方的酒馆；按 M 查看地图",
+          "location_id": "settlement.tavern",
           "complete_when": {
             "type": "flag",
             "key": "day2.travel.tavern_arrived"
@@ -134,6 +143,7 @@
         {
           "id": "buy",
           "text": "入门后向北找到吧台，按 E 与裂牙交谈；再次按 E 以 48G 购酒",
+          "location_id": "settlement.tavern",
           "complete_when": {
             "type": "flag",
             "key": "day2.s03.amber_wine_bought"
@@ -142,6 +152,7 @@
         {
           "id": "commission",
           "text": "购酒后在吧台再按 E，听取七日祭委托与令牌线索",
+          "location_id": "settlement.tavern",
           "complete_when": {
             "type": "flag",
             "key": "day2.s03.festival_accepted"
@@ -170,6 +181,7 @@
         {
           "id": "arrive",
           "text": "离开酒馆，前往聚落西南方的赌场；按 M 查看地图",
+          "location_id": "settlement.casino",
           "complete_when": {
             "type": "flag",
             "key": "day2.travel.casino_arrived"
@@ -178,6 +190,7 @@
         {
           "id": "first",
           "text": "在入口上方的赌桌按 E 入座；听完规则后，再按 E 确认第一局",
+          "location_id": "settlement.casino",
           "complete_when": {
             "type": "flag",
             "key": "day2.s04.first_loss"
@@ -186,6 +199,7 @@
         {
           "id": "second",
           "text": "在同一赌桌再次按 E 确认第二局，取得幻金菇并听完结算",
+          "location_id": "settlement.casino",
           "complete_when": {
             "type": "flag",
             "key": "day2.s04.casino_reward_received"
@@ -214,6 +228,7 @@
         {
           "id": "leave",
           "text": "离开赌场，带着材料返回奶茶店",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "day2.travel.casino_exited"
@@ -222,6 +237,7 @@
         {
           "id": "shop",
           "text": "沿原路返回聚落南侧的奶茶店",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "day2.travel.shop_returned"
@@ -230,6 +246,7 @@
         {
           "id": "craft",
           "text": "到制作台按 E，在「已知配方」选择守卫特调并制作一杯",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "day2.s05.special_drink_made"
@@ -238,6 +255,7 @@
         {
           "id": "greet",
           "text": "带上奶茶出店，前往长老居所支路的醉酒守卫处，按 E 与他交谈",
+          "location_id": "settlement.elder",
           "complete_when": {
             "type": "flag",
             "key": "day2.s05.guard_delivery_open"
@@ -246,6 +264,7 @@
         {
           "id": "deliver",
           "text": "交谈结束后，再按 E 将特殊奶茶交给醉酒守卫",
+          "location_id": "settlement.elder",
           "complete_when": {
             "type": "flag",
             "key": "day2.s05.special_drink_delivered"
@@ -254,6 +273,7 @@
         {
           "id": "return",
           "text": "送达后实际返回奶茶店，结束第二天",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "day2.travel.final_shop_returned"
@@ -262,6 +282,7 @@
         {
           "id": "rest",
           "text": "听完返店后的章末独白，休息进入次日",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "day2.completed"

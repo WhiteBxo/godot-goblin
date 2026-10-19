@@ -239,7 +239,7 @@ func _test_real_orders_and_story() -> void:
 	var points := {}
 	for point: InteractionPoint in (game.get_active_level() as MilkTeaShop).get_interaction_points():
 		points[point.interaction_id] = point
-	_check(journal != null and not hud.visible and state.get_flags().is_empty(), "Production host loads catalog with no automatic activation or Demo facts")
+	_check(journal != null and hud.visible and state.get_flags().is_empty(), "Production host exposes the menu entry with no automatic activation or Demo facts")
 	_check(not director.get_runtime_status().loaded and director.get_runtime_status().event_count == 0, "Production host does not load fixture or Demo story")
 	_check(not game.get_ui_manager().has_modal() and (game.get_player() as PlayerController).movement_enabled, "Task HUD adds no modal/input lock")
 	_check(game.get_dialogue_manager().start_dialogue("demo.greeting") == OK, "Existing dialogue can reserve modal")
@@ -326,7 +326,7 @@ func _test_real_orders_and_story() -> void:
 	state.restore_state(active_snapshot)
 	_check(next_game.get_task_journal().get_task("shop.first_order").status == "active" and next_game.get_node("HudLayer/HandbookHUD").visible and state.to_dict() == active_snapshot, "Restore in rebuilt host reconstructs active task without replay or state writes")
 	state.reset_state()
-	_check(not next_game.get_node("HudLayer/HandbookHUD").visible, "Reset hides rebuilt host HUD")
+	_check(next_game.get_node("HudLayer/HandbookHUD").visible, "Reset keeps the rebuilt host menu entry available")
 	next_game.free()
 	await _frames()
 	_check(state.state_changed.get_connections().size() == initial_connections, "Scene rebuilding accumulates no state subscriptions")

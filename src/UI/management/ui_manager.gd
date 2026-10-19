@@ -136,6 +136,11 @@ func request_back() -> void:
 	if _owns_pause and not _stack.is_empty() and _stack.back() == ScreenIds.PAUSE:
 		set_paused(false)
 	elif not _stack.is_empty():
+		var view: Control = _screens[_stack.back()].view
+		# A screen may keep itself open for this key (story dialogue skips instead
+		# of cancelling the event).
+		if is_instance_valid(view) and view.has_method("request_back") and bool(view.request_back()):
+			return
 		close_screen(_stack.back())
 	elif not get_tree().paused:
 		set_paused(true)

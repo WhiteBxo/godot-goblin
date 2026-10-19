@@ -23,20 +23,21 @@ if error != OK:
 | API | 说明 |
 | --- | --- |
 | `configure(ui: DialogueUI, can_start: Callable = Callable()) -> void` | 绑定显示与输入请求；宿主应在 UI 进入场景树后、启动对话前完成配置 |
-| `start_dialogue(id: String) -> Error` | 首次调用自动加载 `dialogue_file`；成功返回 `OK`，已有对话或宿主拒绝返回 `ERR_BUSY`，无 UI 返回 `ERR_UNCONFIGURED`，未知 ID 返回 `ERR_DOES_NOT_EXIST` |
+| `start_dialogue(id: String, cancel_protected: bool = false) -> Error` | 首次调用自动加载 `dialogue_file`；成功返回 `OK`，已有对话或宿主拒绝返回 `ERR_BUSY`，无 UI 返回 `ERR_UNCONFIGURED`，未知 ID 返回 `ERR_DOES_NOT_EXIST`。`cancel_protected` 由剧情宿主声明本段属于事件：Esc 只跳到本段末尾，不能取消事件 |
 | `load_dialogues(path: String = "") -> Error` | 空参数重新加载导出的 `dialogue_file` 配置；显式 path 加载其他 JSON。仅 idle 时允许，失败保留旧目录。已加载目录中 ID 不存在时不会静默改载默认文件 |
 | `is_active() -> bool` | 当前是否有对话 |
 | `get_current_line_id() -> String` | 当前行 ID，idle 时为空 |
 | `set_current_portrait(portrait: Texture2D) -> Error` | 即时替换当前句立绘，传 `null` 隐藏；保留文字进度、选项、焦点及左右位置，不发 `line_changed`。下一句重新按 JSON / 默认图解析；idle 或 UI 不可用返回 `ERR_UNCONFIGURED` |
 | `set_speaker_portrait(speaker: String, portrait: Texture2D) -> void` | 更新角色默认图，`null` 移除映射；当前角色同名且该句没有 `portrait` 字段时立即刷新。显式单句图或显式隐藏优先 |
 | `advance() -> void` | 逐字显示时补全文本；完整显示后推进普通对白；选项行等待选择 |
+| `skip_to_end() -> void` | 一次走完当前对话的线性剩余行；遇到选项停下并显示完整选项。只对落点行发一次 `line_changed`，中间行不逐句通知；用于剧情对白的 Esc 跳过，与 `end_dialogue(true)` 的取消语义分开 |
 | `select_choice(index: int) -> void` | 使用从 0 开始的 UI 索引选择分支；逐字显示期间或索引无效时忽略 |
 | `end_dialogue(cancelled: bool = false) -> void` | 结束当前对话；idle 时不重复通知 |
 | `last_error: String` | 文件、JSON 和未知 ID 的详细诊断；按返回的 Error 判断调用结果 |
 
 Signals：`dialogue_started(dialogue_id: String)`、`dialogue_ended(dialogue_id: String, cancelled: bool)`、`choice_selected(dialogue_id: String, line_id: String, choice_id: String)`、`line_changed(line_id: String)`。
 
-开始 signal 先于第一行显示，方便宿主同步锁定输入。选择 signal 先于分支推进及可能的结束 signal；重复选择 dispatch 被阻止。自然结束 `cancelled = false`，Esc、UI 移除和 Manager 移除为 `true`。移除时仍发结束 signal 供宿主清理。Signal 回调宜执行状态更新；串联下一段对话时建议使用 `call_deferred`，避免同步生命周期回调中递归重入。
+开始 signal 先于第一行显示，方便宿主同步锁定输入。选择 signal 先于分支推进及可能的结束 signal；重复选择 dispatch 被阻止。自然结束与剧情对白的 Esc 跳过均为 `cancelled = false`；普通对白的 Esc、UI 移除和 Manager 移除为 `true`。移除时仍发结束 signal 供宿主清理。Signal 回调宜执行状态更新；串联下一段对话时建议使用 `call_deferred`，避免同步生命周期回调中递归重入。
 
 [StoryDirector（P0-2）](story_director.md) 已订阅 `choice_selected`，通过 JSON 步骤的 `when.choice` 条件消费稳定的 choice ID；Manager 继续不解释 flags、剧情条件或事件完成状态。
 
@@ -97,7 +98,9 @@ dialogue.set_current_portrait(null) # 只隐藏当前句，下一句重新解析
 
 ## 输入与界面边界
 
-UI 复用 InputMap 的 `interact`、`ui_accept`、`ui_up/down`、`ui_cancel`，没有硬编码 gameplay 按键。默认 E、空格、Enter：第一次补全文本，再按推进；完整显示选项后用 ↑↓ 及确认键选择，也可点击按钮；Esc 中止。长按 echo 不推进，进入新行的当前帧不接受推进键。确认键在 dispatch 前消费，结束对话的同一按键不会落入场景交互。
+UI 复用 InputMap 的 `interact`、`ui_accept`、`ui_up/down`、`ui_cancel`，没有硬编码 gameplay 按键。默认 E、空格、Enter：第一次补全文本，再按推进；完整显示选项后用 ↑↓ 及确认键选择，也可点击按钮。普通对白 Esc 中止；剧情宿主以 `cancel_protected` 启动的对白，Esc 只跳到本段末尾（遇选项停下），不会取消事件。长按 echo 不推进，进入新行的当前帧不接受推进键。确认键在 dispatch 前消费，结束对话的同一按键不会落入场景交互。
+
+持续按住确认键 0.35 秒后进入连续快进，每 0.06 秒推进一次；松开即停，遇选项停止，因此不会替玩家选择分支。两段时间是 `DialogueUI` 的导出参数。`PlayerPreferences` 另提供 `dialogue_auto`（0 关闭，1.5／3／5 秒）作为自动播放间隔：全文显示后按该间隔推进普通行，选项和快进期间不生效。设置页的“对白自动播放”与对白速度、音量一起应用并写入 `user://preferences.cfg`。
 
 逐字速度默认每秒 32 字，`DialogueUI` 的 Inspector 可调整 `comma_pause`（逗号／顿号，0.06 秒）、`sentence_pause`（句中句号／问号／叹号，0.12 秒）、`ellipsis_pause`（省略号，0.18 秒）。连续标点只采用一次最长停顿，行末及其闭引号不额外等待；设为 0 可关闭对应停顿。确认补全立即清除计时，选项在全文显示后取得焦点。
 

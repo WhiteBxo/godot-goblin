@@ -35,6 +35,16 @@ text = "对白速度"
 layout_mode = 2
 custom_minimum_size = Vector2(160, 0)
 
+[node name="Auto" type="HBoxContainer" parent="."]
+layout_mode = 2
+[node name="Label" type="Label" parent="Auto"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "对白自动播放"
+[node name="Value" type="OptionButton" parent="Auto"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 0)
+
 [node name="Message" type="Label" parent="."]
 layout_mode = 2
 theme_type_variation = &"Hint"

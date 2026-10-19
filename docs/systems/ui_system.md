@@ -127,7 +127,7 @@ godot --path . --log-file .godot/ui-visual.log --script res://tests/verify_ui_ma
 
 奶茶店是当前唯一默认已知地点。其他地点须由剧情或真实探索业务写入 `ui.map.known.<location_id>`（例如 `ui.map.known.settlement.elder`）；地图不擅自推断认知，也不写探索完成事实。即使取得长老住处知识，也只显示建筑轮廓和外部入口。当前尚无正式 S04 知识发布及查看完成条件接线，不能将地图能力视为 P14 整项完成。
 
-地图只读 `TaskJournal.get_current_main_task()` 及已揭示的 `current_objective`，优先采用目标 `location_id`，为空时采用明确配置的任务级位置。未知映射、未知区域、未揭示目标都不画目标；没有坐标配置显示“位置未标注”，不会用交付对象或剧情文本猜位置。当前正式任务目录未配置地点，所以正常任务暂无位置标记；位置能力由隔离测试夹具在真实聚落宿主中验证，未修改任务 Schema 或发布虚构主线。
+地图只读 `TaskJournal.get_current_main_task()` 及已揭示的 `current_objective`，优先采用目标 `location_id`，为空时采用明确配置的任务级位置。没有配置 `location_id` 的目标不附加地点文字；已配置但未映射、未揭示或未知区域不画目标，并显示“地图上未标注”，不会用交付对象或剧情文本猜位置。当前正式目录已为第二天五项主线任务和 `day1.s04.order` 配置地点，MainGame 用 `RpgWorldMapData.location_ids()` 作为 `references.locations` 校验；其余任务保持未配置，未修改任务 Schema。位置能力另由隔离测试夹具在真实聚落宿主中验证。
 
 `SettlementMapCanvas.world_to_map()` 统一处理世界原点、等比缩放和居中。打开时读取最新地图/玩家/投影；打开期间只逐帧检查玩家位置，任务与知识变化按信号刷新。隐藏时停止处理，暂停覆盖时由管理器禁用处理。
 

@@ -29,7 +29,7 @@ func setup() -> void:
 	state.add_child(service)
 	service.configure(state)
 	var catalog := TaskCatalog.new()
-	check(catalog.load_json(FileAccess.get_file_as_string("res://src/resources/tasks/day2_stages_01_05.json")) == OK, "Load real Day2/3 tasks")
+	check(catalog.load_json(FileAccess.get_file_as_string("res://src/resources/tasks/day2_stages_01_05.json"), {"locations": RpgWorldMapData.location_ids()}) == OK, "Load real Day2/3 tasks with map locations")
 	var journal := TaskJournal.new()
 	state.add_child(journal)
 	check(journal.configure(catalog, state) == OK, "Bind real task journal")

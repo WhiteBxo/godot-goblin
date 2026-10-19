@@ -62,6 +62,8 @@ func _run() -> void:
 	_test_library()
 	await _test_flow()
 	await _test_presentation_timing()
+	await _test_story_skip()
+	await _test_fast_forward_and_auto()
 	await _test_compact_ui()
 	_test_edge_cases()
 	await _test_speaker_portraits()
@@ -226,6 +228,62 @@ func _test_presentation_timing() -> void:
 	_check(not portrait.visible and portrait.texture == null and is_equal_approx(portrait.modulate.a, 1.0), "Closing and reopening cannot revive the previous portrait tween")
 	ui.queue_free()
 	await _frames()
+
+
+func _test_story_skip() -> void:
+	var changed: Array[String] = []
+	var ends: Array[bool] = []
+	var on_line := func(id: String) -> void: changed.append(id)
+	var on_end := func(_id: String, cancelled: bool) -> void: ends.append(cancelled)
+	_manager.line_changed.connect(on_line)
+	_manager.dialogue_ended.connect(on_end)
+	var hint: Label = _ui.get_node("Panel/Margin/Content/Hint")
+	_check(_manager.start_dialogue("demo.first_shift", true) == OK, "Story dialogue starts with cancellation protection")
+	_check(_ui.is_cancel_protected() and "跳过本段" in hint.text, "Protected dialogue tells the player Esc skips this segment")
+	_manager.skip_to_end()
+	_check(_manager.is_active() and _manager.get_current_line_id() == "question", "Skip stops on the next choice instead of choosing for the player")
+	_check(changed == ["welcome", "question"], "Skip notifies the opening and landing lines, not every skipped line")
+	await _frames()
+	var choices: VBoxContainer = _ui.get_node("Panel/Margin/Content/ChoiceScroll/Choices")
+	_check(choices.get_child_count() == 2 and choices.is_visible_in_tree(), "Skipped dialogue exposes its real choice")
+	await _tap(KEY_ESCAPE)
+	_check(_manager.is_active() and ends.is_empty(), "Esc on a protected choice neither cancels nor closes it")
+	_manager.select_choice(0)
+	_check(_manager.get_current_line_id() == "learn_result" and _ui.is_cancel_protected(), "Protection lasts until the story dialogue actually ends")
+	_manager.skip_to_end()
+	_check(not _manager.is_active() and ends == [false] and not _ui.is_cancel_protected(), "Skipping the final line completes the story dialogue without cancelling")
+	_check(_manager.start_dialogue("demo.player_expressions", true) == OK, "Second protected dialogue starts")
+	await _frames()
+	await _tap(KEY_ESCAPE)
+	_check(not _manager.is_active() and ends.back() == false, "Esc on a protected linear dialogue finishes it instead of cancelling the event")
+	_manager.line_changed.disconnect(on_line)
+	_manager.dialogue_ended.disconnect(on_end)
+
+
+func _test_fast_forward_and_auto() -> void:
+	_check(_manager.start_dialogue("demo.first_shift") == OK, "Fast-forward fixture starts")
+	_ui.reveal_all()
+	await _frames()
+	Input.action_press("interact")
+	await create_timer(0.9).timeout
+	Input.action_release("interact")
+	_check(_manager.get_current_line_id() == "question", "Holding confirm fast-forwards several lines and stops at the choice")
+	_manager.end_dialogue(true)
+	_check(_manager.start_dialogue("demo.greeting") == OK, "Auto-play fixture starts with a completed line")
+	_ui.reveal_all()
+	_ui._auto_seconds = 0.1
+	await create_timer(0.35).timeout
+	_check(not _manager.is_active(), "Auto-play advances a fully revealed line")
+	_check(_manager.start_dialogue("demo.first_shift") == OK, "Auto-play choice fixture starts")
+	for index in range(2):
+		_ui.reveal_all()
+		_manager.advance()
+	_ui.reveal_all()
+	_check(_manager.get_current_line_id() == "question", "Fixture reaches its choice")
+	_ui._auto_seconds = 0.1
+	await create_timer(0.35).timeout
+	_check(_manager.is_active() and _manager.get_current_line_id() == "question", "Auto-play never picks a choice for the player")
+	_manager.end_dialogue(true)
 
 
 func _test_compact_ui() -> void:
@@ -490,6 +548,13 @@ func _test_main_input_lock() -> void:
 	if "--capture" in OS.get_cmdline_user_args():
 		await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png("/private/tmp/dialogue-choices.png")
+	manager.end_dialogue(true)
+	var protected_ends: Array[bool] = []
+	manager.dialogue_ended.connect(func(_id: String, cancelled: bool) -> void: protected_ends.append(cancelled))
+	_check(manager.start_dialogue("demo.greeting", true) == OK and ui.is_cancel_protected(), "Real host starts a protected story dialogue")
+	await _frames()
+	await _tap(KEY_ESCAPE)
+	_check(not manager.is_active() and protected_ends == [false] and player.movement_enabled, "Esc through the modal stack skips story dialogue and restores input")
 	ui.queue_free()
 	await _frames()
 	_check(not manager.is_active() and player.movement_enabled and interaction.is_input_enabled(), "UI removal releases the real gameplay lock")

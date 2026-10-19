@@ -39,7 +39,9 @@ func _run() -> void:
 	game.get_save_coordinator().status_changed.emit("自动保存失败，原存档已保留。")
 	check(game.get_node("HudLayer/SaveStatus").visible, "Save errors remain visible without opening a menu")
 	game.get_save_coordinator().status_changed.emit(saved_text)
-	check(not game.get_node("HudLayer/SaveStatus").visible, "Normal save status returns to the menu")
+	check(game.get_node("HudLayer/SaveStatus").visible, "Successful save shows a short confirmation toast")
+	await create_timer(2.7).timeout
+	check(not game.get_node("HudLayer/SaveStatus").visible, "Save toast clears itself and the timestamp returns to the menu")
 	var task := game.get_node("HudLayer/TaskHUD") as TaskHUD
 	check(task.size.y <= 36 and task.get_objective_summary().objective.length() > 20, "One-line objective retains its full text for the menu")
 	await picture("idle_1280")

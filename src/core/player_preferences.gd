@@ -2,8 +2,10 @@ class_name PlayerPreferences
 extends RefCounted
 ## Device preferences live outside the game session and survive a new game.
 
-const DEFAULTS := {"music": 1.0, "sound": 1.0, "dialogue_speed": 1.0}
+const DEFAULTS := {"music": 1.0, "sound": 1.0, "dialogue_speed": 1.0, "dialogue_auto": 0.0}
 const SPEEDS := [0.5, 1.0, 2.0, 0.0]
+## 0 disables auto-play; the others are seconds a completed line stays readable.
+const AUTO_DELAYS := [0.0, 1.5, 3.0, 5.0]
 static var _path := ""
 static var _values: Dictionary = {}
 
@@ -23,7 +25,11 @@ static func get_values() -> Dictionary:
 static func _valid(key: String, value: Variant) -> bool:
 	if typeof(value) not in [TYPE_FLOAT, TYPE_INT] or not is_finite(value):
 		return false
-	return value in SPEEDS if key == "dialogue_speed" else value >= 0.0 and value <= 1.0
+	if key == "dialogue_speed":
+		return value in SPEEDS
+	if key == "dialogue_auto":
+		return value in AUTO_DELAYS
+	return value >= 0.0 and value <= 1.0
 
 static func save_values(values: Dictionary) -> Error:
 	if values.size() != DEFAULTS.size():

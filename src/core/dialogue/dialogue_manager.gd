@@ -29,6 +29,7 @@ var _dialogue: Dictionary = {}
 var _loaded: bool = false
 var _loaded_path: String = ""
 var _selecting: bool = false
+var _cancel_protected: bool = false
 
 
 func configure(ui: DialogueUI, can_start: Callable = Callable()) -> void:
@@ -37,12 +38,14 @@ func configure(ui: DialogueUI, can_start: Callable = Callable()) -> void:
 		_ui.advance_requested.disconnect(advance)
 		_ui.choice_requested.disconnect(select_choice)
 		_ui.cancel_requested.disconnect(_cancel)
+		_ui.skip_requested.disconnect(skip_to_end)
 		_ui.tree_exiting.disconnect(_cancel)
 	_ui = ui
 	_can_start = can_start
 	_ui.advance_requested.connect(advance)
 	_ui.choice_requested.connect(select_choice)
 	_ui.cancel_requested.connect(_cancel)
+	_ui.skip_requested.connect(skip_to_end)
 	_ui.tree_exiting.connect(_cancel)
 
 
@@ -65,7 +68,7 @@ func get_dialogue_source_path() -> String:
 	return _loaded_path
 
 
-func start_dialogue(id: String) -> Error:
+func start_dialogue(id: String, cancel_protected: bool = false) -> Error:
 	last_error = ""
 	if is_active() or _selecting or (_can_start.is_valid() and not _can_start.call()):
 		return ERR_BUSY
@@ -81,6 +84,8 @@ func start_dialogue(id: String) -> Error:
 	_dialogue = _library.get_dialogue(id)
 	_dialogue_id = id
 	_line_id = _dialogue["start"]
+	_cancel_protected = cancel_protected
+	_ui.set_cancel_protected(cancel_protected)
 	dialogue_started.emit(id)
 	if is_active():
 		_present_line()
@@ -129,6 +134,33 @@ func advance() -> void:
 	_go_to(line.get("next", ""))
 
 
+## Finish the current dialogue's remaining linear lines in one step. Choices stop
+## the skip so a branch still needs a deliberate decision.
+func skip_to_end() -> void:
+	if not is_active() or _selecting:
+		return
+	var visited := {_line_id: true}
+	var moved := false
+	while true:
+		var line: Dictionary = _dialogue["lines"][_line_id]
+		if not line.get("choices", []).is_empty():
+			break
+		var next := String(line.get("next", ""))
+		if next.is_empty():
+			end_dialogue()
+			return
+		if visited.has(next):
+			break
+		visited[next] = true
+		_line_id = next
+		moved = true
+	if not is_instance_valid(_ui):
+		return
+	if moved:
+		_present_line()
+	_ui.reveal_all()
+
+
 func select_choice(index: int) -> void:
 	if not is_active() or _selecting or _ui.is_revealing():
 		return
@@ -153,7 +185,9 @@ func end_dialogue(cancelled: bool = false) -> void:
 	_dialogue_id = ""
 	_line_id = ""
 	_dialogue = {}
+	_cancel_protected = false
 	if is_instance_valid(_ui):
+		_ui.set_cancel_protected(false)
 		_ui.close_dialogue()
 	dialogue_ended.emit(id, cancelled)
 

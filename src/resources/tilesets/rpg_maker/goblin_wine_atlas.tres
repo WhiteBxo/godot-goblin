@@ -1,0 +1,23 @@
+[gd_resource type="TileSetAtlasSource" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/goblin_wines/wine_tiles.png" id="1"]
+
+[resource]
+resource_name = "哥布林酒品（五种）"
+texture = ExtResource("1")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+0:0/0/custom_data_0 = 10000
+0:0/0/custom_data_2 = true
+1:0/0 = 0
+1:0/0/custom_data_0 = 10001
+1:0/0/custom_data_2 = true
+2:0/0 = 0
+2:0/0/custom_data_0 = 10002
+2:0/0/custom_data_2 = true
+3:0/0 = 0
+3:0/0/custom_data_0 = 10003
+3:0/0/custom_data_2 = true
+4:0/0 = 0
+4:0/0/custom_data_0 = 10004
+4:0/0/custom_data_2 = true

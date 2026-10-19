@@ -1,12 +1,78 @@
-[gd_resource type="TileSet" format=3]
+[gd_resource type="TileSet" format=3 uid="uid://cqs6g7v5flxyn"]
 
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_028_00.png" id="1_s10br"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_028_01.png" id="2_g3v68"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_028_02.png" id="3_nwsxw"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_028_03.png" id="4_35wn6"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_028_04.png" id="5_5ry14"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_028_05.png" id="6_pv5uv"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_028_06.png" id="7_g7njg"]
+[ext_resource type="Texture2D" uid="uid://bqg6h5s8770pq" path="res://assets/map/rpg_maker/tileset_028_00.png" id="1_s10br"]
+[ext_resource type="Texture2D" uid="uid://bfewn8a707hhs" path="res://assets/map/rpg_maker/tileset_028_01.png" id="2_g3v68"]
+[ext_resource type="Texture2D" uid="uid://clvwrcxtq7n4m" path="res://assets/map/rpg_maker/casino_refresh/sprites/gambling_table.png" id="3_81vud"]
+[ext_resource type="Texture2D" uid="uid://cbhyq7yewdn8d" path="res://assets/map/rpg_maker/tileset_028_02.png" id="3_nwsxw"]
+[ext_resource type="Texture2D" uid="uid://fcw4egk0eqmy" path="res://assets/map/rpg_maker/tileset_028_03.png" id="4_35wn6"]
+[ext_resource type="Texture2D" uid="uid://bwbt68hycio0t" path="res://assets/map/rpg_maker/casino_refresh/sprites/round_stool.png" id="4_imglj"]
+[ext_resource type="Texture2D" uid="uid://ugk7h5vllw0m" path="res://assets/map/rpg_maker/tileset_028_04.png" id="5_5ry14"]
+[ext_resource type="Texture2D" uid="uid://cucaonm5jas75" path="res://assets/map/rpg_maker/casino_refresh/sprites/dice_cup.png" id="5_ngits"]
+[ext_resource type="Texture2D" uid="uid://cijhv7t1pcl5y" path="res://assets/map/rpg_maker/casino_refresh/sprites/die_d4.png" id="6_1j6hr"]
+[ext_resource type="Texture2D" uid="uid://c2gxn68jbe2hd" path="res://assets/map/rpg_maker/tileset_028_05.png" id="6_pv5uv"]
+[ext_resource type="Texture2D" uid="uid://dc1c1ohn3d1rf" path="res://assets/map/rpg_maker/tileset_028_06.png" id="7_g7njg"]
+[ext_resource type="Texture2D" uid="uid://y6ouujyhc502" path="res://assets/map/rpg_maker/casino_refresh/sprites/die_d6.png" id="7_sck8f"]
+[ext_resource type="Texture2D" uid="uid://cb72i7ojn00ja" path="res://assets/map/rpg_maker/casino_refresh/sprites/die_d12.png" id="8_weop3"]
+[ext_resource type="Texture2D" uid="uid://siyfiagy7ci3" path="res://assets/map/rpg_maker/casino_refresh/sprites/chips.png" id="9_fnqon"]
+[ext_resource type="Texture2D" uid="uid://dfv3bowci7yyv" path="res://assets/map/rpg_maker/casino_refresh/sprites/clay_cup_upright.png" id="10_7vo0y"]
+[ext_resource type="Texture2D" uid="uid://bxdx4hroyqsol" path="res://assets/map/rpg_maker/casino_refresh/sprites/clay_cup_tilt_a.png" id="11_gjtj5"]
+[ext_resource type="Texture2D" uid="uid://th41ljplng7l" path="res://assets/map/rpg_maker/casino_refresh/sprites/clay_cup_tilt_b.png" id="12_i5d3t"]
+[ext_resource type="Texture2D" uid="uid://djko4pl1uxxin" path="res://assets/map/rpg_maker/casino_refresh/sprites/wall_oil_lamp.png" id="13_5npq2"]
+[ext_resource type="Texture2D" uid="uid://b25465r8nvk27" path="res://assets/map/rpg_maker/casino_refresh/sprites/boss_desk.png" id="14_sp3s2"]
+[ext_resource type="Texture2D" uid="uid://ded513iq874fm" path="res://assets/map/rpg_maker/casino_refresh/sprites/ledger.png" id="15_i17xx"]
+[ext_resource type="TileSetAtlasSource" path="res://src/resources/tilesets/rpg_maker/goblin_wine_atlas.tres" id="goblin_wines"]
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_cwbjg"]
+resource_name = "破旧赌桌"
+tile_data = PackedInt32Array(0, 100, 0, 1, 65636, 0, 65536, 100, 1, 65537, 65636, 1, 131072, 100, 2, 131073, 65636, 2)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_0m311"]
+resource_name = "圆木凳"
+tile_data = PackedInt32Array(0, 101, 0)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_5h341"]
+resource_name = "墙挂油灯"
+tile_data = PackedInt32Array(0, 110, 0, 65536, 110, 1)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_tvwxl"]
+resource_name = "老板书桌"
+tile_data = PackedInt32Array(0, 111, 0, 1, 65647, 0, 2, 131183, 0, 65536, 111, 1, 65537, 65647, 1, 65538, 131183, 1, 131072, 111, 2, 131073, 65647, 2, 131074, 131183, 2)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_jmsqc"]
+resource_name = "账本"
+tile_data = PackedInt32Array(0, 112, 0)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_pofbf"]
+resource_name = "骰盅"
+tile_data = PackedInt32Array(0, 102, 0)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_rgpc1"]
+resource_name = "骨质四面骰"
+tile_data = PackedInt32Array(0, 103, 0)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_hp733"]
+resource_name = "金属六面骰"
+tile_data = PackedInt32Array(0, 104, 0)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_pik4d"]
+resource_name = "矿石十二面骰"
+tile_data = PackedInt32Array(0, 105, 0)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_op34v"]
+resource_name = "磨损筹码"
+tile_data = PackedInt32Array(0, 106, 0)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_gl0br"]
+resource_name = "陶杯·直立"
+tile_data = PackedInt32Array(0, 107, 0)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_kle6b"]
+resource_name = "陶杯·左倾"
+tile_data = PackedInt32Array(0, 108, 0)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_32vw8"]
+resource_name = "陶杯·右倾"
+tile_data = PackedInt32Array(0, 109, 0)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3mmp1"]
 texture = ExtResource("1_s10br")
@@ -5439,6 +5505,152 @@ texture_region_size = Vector2i(48, 48)
 28:31/0 = 0
 28:31/0/custom_data_0 = 2433
 28:31/0/custom_data_1 = 15
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2cg41"]
+resource_name = "赌场 · 破旧赌桌"
+texture = ExtResource("3_81vud")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+0:0/0/custom_data_0 = 30000
+0:0/0/custom_data_2 = true
+1:0/0 = 0
+1:0/0/custom_data_0 = 30001
+1:0/0/custom_data_2 = true
+0:1/0 = 0
+0:1/0/custom_data_0 = 30002
+0:1/0/custom_data_1 = 15
+1:1/0 = 0
+1:1/0/custom_data_0 = 30003
+1:1/0/custom_data_1 = 15
+0:2/0 = 0
+0:2/0/custom_data_0 = 30004
+0:2/0/custom_data_1 = 15
+1:2/0 = 0
+1:2/0/custom_data_0 = 30005
+1:2/0/custom_data_1 = 15
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4pprb"]
+resource_name = "赌场 · 圆木凳"
+texture = ExtResource("4_imglj")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+0:0/0/custom_data_0 = 30016
+0:0/0/custom_data_1 = 15
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_av0a5"]
+resource_name = "赌场 · 骰盅"
+texture = ExtResource("5_ngits")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+0:0/0/custom_data_0 = 30032
+0:0/0/custom_data_2 = true
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_a5nf8"]
+resource_name = "赌场 · 骨质四面骰"
+texture = ExtResource("6_1j6hr")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+0:0/0/custom_data_0 = 30048
+0:0/0/custom_data_2 = true
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_afom5"]
+resource_name = "赌场 · 金属六面骰"
+texture = ExtResource("7_sck8f")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+0:0/0/custom_data_0 = 30064
+0:0/0/custom_data_2 = true
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_287kw"]
+resource_name = "赌场 · 矿石十二面骰"
+texture = ExtResource("8_weop3")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+0:0/0/custom_data_0 = 30080
+0:0/0/custom_data_2 = true
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2v6we"]
+resource_name = "赌场 · 磨损筹码"
+texture = ExtResource("9_fnqon")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+0:0/0/custom_data_0 = 30096
+0:0/0/custom_data_2 = true
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qwqxv"]
+resource_name = "赌场 · 陶杯·直立"
+texture = ExtResource("10_7vo0y")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+0:0/0/custom_data_0 = 30112
+0:0/0/custom_data_2 = true
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cv5u0"]
+resource_name = "赌场 · 陶杯·左倾"
+texture = ExtResource("11_gjtj5")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+0:0/0/custom_data_0 = 30128
+0:0/0/custom_data_2 = true
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wkg8e"]
+resource_name = "赌场 · 陶杯·右倾"
+texture = ExtResource("12_i5d3t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+0:0/0/custom_data_0 = 30144
+0:0/0/custom_data_2 = true
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_53qdx"]
+resource_name = "赌场 · 墙挂油灯"
+texture = ExtResource("13_5npq2")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+0:0/0/custom_data_0 = 30160
+0:0/0/custom_data_2 = true
+0:1/0 = 0
+0:1/0/custom_data_0 = 30161
+0:1/0/custom_data_2 = true
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_iisb5"]
+resource_name = "赌场 · 老板书桌"
+texture = ExtResource("14_sp3s2")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+0:0/0/custom_data_0 = 30176
+0:0/0/custom_data_2 = true
+1:0/0 = 0
+1:0/0/custom_data_0 = 30177
+1:0/0/custom_data_2 = true
+2:0/0 = 0
+2:0/0/custom_data_0 = 30178
+2:0/0/custom_data_2 = true
+0:1/0 = 0
+0:1/0/custom_data_0 = 30179
+0:1/0/custom_data_1 = 15
+1:1/0 = 0
+1:1/0/custom_data_0 = 30180
+1:1/0/custom_data_1 = 15
+2:1/0 = 0
+2:1/0/custom_data_0 = 30181
+2:1/0/custom_data_1 = 15
+0:2/0 = 0
+0:2/0/custom_data_0 = 30182
+0:2/0/custom_data_1 = 15
+1:2/0 = 0
+1:2/0/custom_data_0 = 30183
+1:2/0/custom_data_1 = 15
+2:2/0 = 0
+2:2/0/custom_data_0 = 30184
+2:2/0/custom_data_1 = 15
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_6m37r"]
+resource_name = "赌场 · 账本"
+texture = ExtResource("15_i17xx")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+0:0/0/custom_data_0 = 30192
+0:0/0/custom_data_2 = true
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_g0gyg"]
 texture = ExtResource("3_nwsxw")
@@ -17106,3 +17318,30 @@ sources/3 = SubResource("TileSetAtlasSource_414dl")
 sources/4 = SubResource("TileSetAtlasSource_o1kpx")
 sources/5 = SubResource("TileSetAtlasSource_chawu")
 sources/6 = SubResource("TileSetAtlasSource_81vud")
+sources/100 = SubResource("TileSetAtlasSource_2cg41")
+sources/101 = SubResource("TileSetAtlasSource_4pprb")
+sources/102 = SubResource("TileSetAtlasSource_av0a5")
+sources/103 = SubResource("TileSetAtlasSource_a5nf8")
+sources/104 = SubResource("TileSetAtlasSource_afom5")
+sources/105 = SubResource("TileSetAtlasSource_287kw")
+sources/106 = SubResource("TileSetAtlasSource_2v6we")
+sources/107 = SubResource("TileSetAtlasSource_qwqxv")
+sources/108 = SubResource("TileSetAtlasSource_cv5u0")
+sources/109 = SubResource("TileSetAtlasSource_wkg8e")
+sources/110 = SubResource("TileSetAtlasSource_53qdx")
+sources/111 = SubResource("TileSetAtlasSource_iisb5")
+sources/112 = SubResource("TileSetAtlasSource_6m37r")
+sources/200 = ExtResource("goblin_wines")
+pattern_0 = SubResource("TileMapPattern_cwbjg")
+pattern_1 = SubResource("TileMapPattern_0m311")
+pattern_2 = SubResource("TileMapPattern_pofbf")
+pattern_3 = SubResource("TileMapPattern_rgpc1")
+pattern_4 = SubResource("TileMapPattern_hp733")
+pattern_5 = SubResource("TileMapPattern_pik4d")
+pattern_6 = SubResource("TileMapPattern_op34v")
+pattern_7 = SubResource("TileMapPattern_gl0br")
+pattern_8 = SubResource("TileMapPattern_kle6b")
+pattern_9 = SubResource("TileMapPattern_32vw8")
+pattern_10 = SubResource("TileMapPattern_5h341")
+pattern_11 = SubResource("TileMapPattern_tvwxl")
+pattern_12 = SubResource("TileMapPattern_jmsqc")

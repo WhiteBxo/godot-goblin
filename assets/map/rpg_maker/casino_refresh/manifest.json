@@ -1,0 +1,899 @@
+{
+  "schema_version": 1,
+  "generation": {
+    "model": "gpt-image-2.5-sunburst",
+    "style_reference": "reference/map_005_native.png",
+    "requested_pixel_grid_scale": 8,
+    "requested_pixel_grid_contract_honored": false,
+    "source_deviation": "The service did not honor the requested 8x pixel grid; some returned canvas sizes also differ from requests."
+  },
+  "tile_size_px": [
+    48,
+    48
+  ],
+  "processing": {
+    "sampling": "explicit per-source integer nearest-neighbor factor, identical on both axes",
+    "sampling_padding": "transparent right/bottom padding to a whole factor multiple before sampling",
+    "alpha_threshold": 128,
+    "transparent_rgb": [
+      0,
+      0,
+      0
+    ],
+    "placement": "bottom center, with at least 2px transparent margin",
+    "bbox_coordinates": "[left, top, right, bottom], right/bottom exclusive",
+    "ground_anchor_coordinates": "pixel boundary at bottom center of alpha",
+    "reproduce": "python tools/art/prepare_casino_refresh.py"
+  },
+  "sources": [
+    {
+      "path": "source/gambling_table.png",
+      "actual_source_dimensions_px": [
+        1024,
+        1536
+      ],
+      "requested_source_dimensions_px": [
+        1024,
+        1536
+      ],
+      "source_size_matches_request": true,
+      "requested_pixel_grid_scale": 8,
+      "requested_pixel_grid_contract_honored": false,
+      "sample_factor": 10,
+      "source_alpha_bbox": [
+        86,
+        298,
+        943,
+        1254
+      ],
+      "prompt": "prompts/gambling_table.txt",
+      "object_count": 1
+    },
+    {
+      "path": "source/round_stool.png",
+      "actual_source_dimensions_px": [
+        1254,
+        1254
+      ],
+      "requested_source_dimensions_px": [
+        1024,
+        1024
+      ],
+      "source_size_matches_request": false,
+      "requested_pixel_grid_scale": 8,
+      "requested_pixel_grid_contract_honored": false,
+      "sample_factor": 12,
+      "source_alpha_bbox": [
+        447,
+        431,
+        800,
+        887
+      ],
+      "prompt": "prompts/round_stool.txt",
+      "object_count": 1
+    },
+    {
+      "path": "source/dice_cup.png",
+      "actual_source_dimensions_px": [
+        1254,
+        1254
+      ],
+      "requested_source_dimensions_px": [
+        1024,
+        1024
+      ],
+      "source_size_matches_request": false,
+      "requested_pixel_grid_scale": 8,
+      "requested_pixel_grid_contract_honored": false,
+      "sample_factor": 16,
+      "source_alpha_bbox": [
+        458,
+        453,
+        797,
+        870
+      ],
+      "prompt": "prompts/dice_cup.txt",
+      "object_count": 1
+    },
+    {
+      "path": "source/dice_set.png",
+      "actual_source_dimensions_px": [
+        1402,
+        1122
+      ],
+      "requested_source_dimensions_px": [
+        1024,
+        1024
+      ],
+      "source_size_matches_request": false,
+      "requested_pixel_grid_scale": 8,
+      "requested_pixel_grid_contract_honored": false,
+      "sample_factor": 20,
+      "source_alpha_bbox": [
+        103,
+        450,
+        1313,
+        820
+      ],
+      "prompt": "prompts/dice_set.txt",
+      "object_count": 3,
+      "component_noise_area_fraction_of_largest": 0.001,
+      "ignored_component_count": 0,
+      "ignored_alpha_area_px": 0
+    },
+    {
+      "path": "source/chips.png",
+      "actual_source_dimensions_px": [
+        1254,
+        1254
+      ],
+      "requested_source_dimensions_px": [
+        1024,
+        1024
+      ],
+      "source_size_matches_request": false,
+      "requested_pixel_grid_scale": 8,
+      "requested_pixel_grid_contract_honored": false,
+      "sample_factor": 20,
+      "source_alpha_bbox": [
+        290,
+        521,
+        970,
+        810
+      ],
+      "prompt": "prompts/chips.txt",
+      "object_count": 1
+    },
+    {
+      "path": "source/clay_cups.png",
+      "actual_source_dimensions_px": [
+        1536,
+        1024
+      ],
+      "requested_source_dimensions_px": [
+        1024,
+        1024
+      ],
+      "source_size_matches_request": false,
+      "requested_pixel_grid_scale": 8,
+      "requested_pixel_grid_contract_honored": false,
+      "sample_factor": 20,
+      "source_alpha_bbox": [
+        85,
+        282,
+        1475,
+        746
+      ],
+      "prompt": "prompts/clay_cups.txt",
+      "object_count": 3,
+      "component_noise_area_fraction_of_largest": 0.001,
+      "ignored_component_count": 0,
+      "ignored_alpha_area_px": 0
+    },
+    {
+      "path": "source/wall_oil_lamp.png",
+      "actual_source_dimensions_px": [
+        1024,
+        1536
+      ],
+      "requested_source_dimensions_px": [
+        1024,
+        1536
+      ],
+      "source_size_matches_request": true,
+      "requested_pixel_grid_scale": 8,
+      "requested_pixel_grid_contract_honored": false,
+      "sample_factor": 20,
+      "source_alpha_bbox": [
+        213,
+        93,
+        886,
+        1408
+      ],
+      "prompt": "prompts/wall_oil_lamp.txt",
+      "object_count": 1
+    },
+    {
+      "path": "source/boss_desk.png",
+      "actual_source_dimensions_px": [
+        1330,
+        1182
+      ],
+      "requested_source_dimensions_px": [
+        1536,
+        1024
+      ],
+      "source_size_matches_request": false,
+      "requested_pixel_grid_scale": 8,
+      "requested_pixel_grid_contract_honored": false,
+      "sample_factor": 10,
+      "source_alpha_bbox": [
+        38,
+        212,
+        1294,
+        989
+      ],
+      "prompt": "prompts/boss_desk.txt",
+      "object_count": 1
+    },
+    {
+      "path": "source/ledger.png",
+      "actual_source_dimensions_px": [
+        1254,
+        1254
+      ],
+      "requested_source_dimensions_px": [
+        1024,
+        1024
+      ],
+      "source_size_matches_request": false,
+      "requested_pixel_grid_scale": 8,
+      "requested_pixel_grid_contract_honored": false,
+      "sample_factor": 22,
+      "source_alpha_bbox": [
+        294,
+        259,
+        979,
+        990
+      ],
+      "prompt": "prompts/ledger.txt",
+      "object_count": 1
+    }
+  ],
+  "assets": [
+    {
+      "id": "gambling_table",
+      "label": "破旧赌桌",
+      "path": "sprites/gambling_table.png",
+      "dimensions_px": [
+        96,
+        144
+      ],
+      "tile_dimensions": [
+        2,
+        3
+      ],
+      "alpha_bbox": [
+        5,
+        46,
+        91,
+        142
+      ],
+      "ground_anchor": [
+        48,
+        142
+      ],
+      "source": "source/gambling_table.png",
+      "source_crop_px": [
+        86,
+        298,
+        943,
+        1254
+      ],
+      "source_crop_dimensions_px": [
+        857,
+        956
+      ],
+      "sample_factor": 10,
+      "sampling_padded_dimensions_px": [
+        860,
+        960
+      ],
+      "sampled_alpha_bbox_before_placement": [
+        0,
+        0,
+        86,
+        96
+      ],
+      "native_object_dimensions_px": [
+        86,
+        96
+      ],
+      "prompt": "prompts/gambling_table.txt"
+    },
+    {
+      "id": "round_stool",
+      "label": "圆木凳",
+      "path": "sprites/round_stool.png",
+      "dimensions_px": [
+        48,
+        48
+      ],
+      "tile_dimensions": [
+        1,
+        1
+      ],
+      "alpha_bbox": [
+        9,
+        8,
+        38,
+        46
+      ],
+      "ground_anchor": [
+        24,
+        46
+      ],
+      "source": "source/round_stool.png",
+      "source_crop_px": [
+        447,
+        431,
+        800,
+        887
+      ],
+      "source_crop_dimensions_px": [
+        353,
+        456
+      ],
+      "sample_factor": 12,
+      "sampling_padded_dimensions_px": [
+        360,
+        456
+      ],
+      "sampled_alpha_bbox_before_placement": [
+        0,
+        0,
+        29,
+        38
+      ],
+      "native_object_dimensions_px": [
+        29,
+        38
+      ],
+      "prompt": "prompts/round_stool.txt"
+    },
+    {
+      "id": "dice_cup",
+      "label": "骰盅",
+      "path": "sprites/dice_cup.png",
+      "dimensions_px": [
+        48,
+        48
+      ],
+      "tile_dimensions": [
+        1,
+        1
+      ],
+      "alpha_bbox": [
+        13,
+        20,
+        34,
+        46
+      ],
+      "ground_anchor": [
+        24,
+        46
+      ],
+      "source": "source/dice_cup.png",
+      "source_crop_px": [
+        458,
+        453,
+        797,
+        870
+      ],
+      "source_crop_dimensions_px": [
+        339,
+        417
+      ],
+      "sample_factor": 16,
+      "sampling_padded_dimensions_px": [
+        352,
+        432
+      ],
+      "sampled_alpha_bbox_before_placement": [
+        0,
+        0,
+        21,
+        26
+      ],
+      "native_object_dimensions_px": [
+        21,
+        26
+      ],
+      "prompt": "prompts/dice_cup.txt"
+    },
+    {
+      "id": "die_d4",
+      "label": "骨质四面骰",
+      "path": "sprites/die_d4.png",
+      "dimensions_px": [
+        48,
+        48
+      ],
+      "tile_dimensions": [
+        1,
+        1
+      ],
+      "alpha_bbox": [
+        15,
+        30,
+        33,
+        46
+      ],
+      "ground_anchor": [
+        24,
+        46
+      ],
+      "source": "source/dice_set.png",
+      "source_crop_px": [
+        103,
+        488,
+        455,
+        801
+      ],
+      "source_crop_dimensions_px": [
+        352,
+        313
+      ],
+      "sample_factor": 20,
+      "sampling_padded_dimensions_px": [
+        360,
+        320
+      ],
+      "sampled_alpha_bbox_before_placement": [
+        0,
+        0,
+        18,
+        16
+      ],
+      "native_object_dimensions_px": [
+        18,
+        16
+      ],
+      "prompt": "prompts/dice_set.txt"
+    },
+    {
+      "id": "die_d6",
+      "label": "金属六面骰",
+      "path": "sprites/die_d6.png",
+      "dimensions_px": [
+        48,
+        48
+      ],
+      "tile_dimensions": [
+        1,
+        1
+      ],
+      "alpha_bbox": [
+        16,
+        30,
+        32,
+        46
+      ],
+      "ground_anchor": [
+        24,
+        46
+      ],
+      "source": "source/dice_set.png",
+      "source_crop_px": [
+        538,
+        483,
+        852,
+        812
+      ],
+      "source_crop_dimensions_px": [
+        314,
+        329
+      ],
+      "sample_factor": 20,
+      "sampling_padded_dimensions_px": [
+        320,
+        340
+      ],
+      "sampled_alpha_bbox_before_placement": [
+        0,
+        0,
+        16,
+        16
+      ],
+      "native_object_dimensions_px": [
+        16,
+        16
+      ],
+      "prompt": "prompts/dice_set.txt"
+    },
+    {
+      "id": "die_d12",
+      "label": "矿石十二面骰",
+      "path": "sprites/die_d12.png",
+      "dimensions_px": [
+        48,
+        48
+      ],
+      "tile_dimensions": [
+        1,
+        1
+      ],
+      "alpha_bbox": [
+        15,
+        28,
+        32,
+        46
+      ],
+      "ground_anchor": [
+        24,
+        46
+      ],
+      "source": "source/dice_set.png",
+      "source_crop_px": [
+        971,
+        450,
+        1313,
+        820
+      ],
+      "source_crop_dimensions_px": [
+        342,
+        370
+      ],
+      "sample_factor": 20,
+      "sampling_padded_dimensions_px": [
+        360,
+        380
+      ],
+      "sampled_alpha_bbox_before_placement": [
+        0,
+        0,
+        17,
+        18
+      ],
+      "native_object_dimensions_px": [
+        17,
+        18
+      ],
+      "prompt": "prompts/dice_set.txt"
+    },
+    {
+      "id": "chips",
+      "label": "磨损筹码",
+      "path": "sprites/chips.png",
+      "dimensions_px": [
+        48,
+        48
+      ],
+      "tile_dimensions": [
+        1,
+        1
+      ],
+      "alpha_bbox": [
+        7,
+        32,
+        41,
+        46
+      ],
+      "ground_anchor": [
+        24,
+        46
+      ],
+      "source": "source/chips.png",
+      "source_crop_px": [
+        290,
+        521,
+        970,
+        810
+      ],
+      "source_crop_dimensions_px": [
+        680,
+        289
+      ],
+      "sample_factor": 20,
+      "sampling_padded_dimensions_px": [
+        680,
+        300
+      ],
+      "sampled_alpha_bbox_before_placement": [
+        0,
+        0,
+        34,
+        14
+      ],
+      "native_object_dimensions_px": [
+        34,
+        14
+      ],
+      "prompt": "prompts/chips.txt"
+    },
+    {
+      "id": "clay_cup_upright",
+      "label": "陶杯·直立",
+      "path": "sprites/clay_cup_upright.png",
+      "dimensions_px": [
+        48,
+        48
+      ],
+      "tile_dimensions": [
+        1,
+        1
+      ],
+      "alpha_bbox": [
+        15,
+        24,
+        33,
+        46
+      ],
+      "ground_anchor": [
+        24,
+        46
+      ],
+      "source": "source/clay_cups.png",
+      "source_crop_px": [
+        85,
+        287,
+        436,
+        729
+      ],
+      "source_crop_dimensions_px": [
+        351,
+        442
+      ],
+      "sample_factor": 20,
+      "sampling_padded_dimensions_px": [
+        360,
+        460
+      ],
+      "sampled_alpha_bbox_before_placement": [
+        0,
+        0,
+        18,
+        22
+      ],
+      "native_object_dimensions_px": [
+        18,
+        22
+      ],
+      "prompt": "prompts/clay_cups.txt"
+    },
+    {
+      "id": "clay_cup_tilt_a",
+      "label": "陶杯·左倾",
+      "path": "sprites/clay_cup_tilt_a.png",
+      "dimensions_px": [
+        48,
+        48
+      ],
+      "tile_dimensions": [
+        1,
+        1
+      ],
+      "alpha_bbox": [
+        14,
+        23,
+        33,
+        46
+      ],
+      "ground_anchor": [
+        24,
+        46
+      ],
+      "source": "source/clay_cups.png",
+      "source_crop_px": [
+        576,
+        287,
+        959,
+        746
+      ],
+      "source_crop_dimensions_px": [
+        383,
+        459
+      ],
+      "sample_factor": 20,
+      "sampling_padded_dimensions_px": [
+        400,
+        460
+      ],
+      "sampled_alpha_bbox_before_placement": [
+        0,
+        0,
+        19,
+        23
+      ],
+      "native_object_dimensions_px": [
+        19,
+        23
+      ],
+      "prompt": "prompts/clay_cups.txt"
+    },
+    {
+      "id": "clay_cup_tilt_b",
+      "label": "陶杯·右倾",
+      "path": "sprites/clay_cup_tilt_b.png",
+      "dimensions_px": [
+        48,
+        48
+      ],
+      "tile_dimensions": [
+        1,
+        1
+      ],
+      "alpha_bbox": [
+        14,
+        23,
+        33,
+        46
+      ],
+      "ground_anchor": [
+        24,
+        46
+      ],
+      "source": "source/clay_cups.png",
+      "source_crop_px": [
+        1085,
+        282,
+        1475,
+        745
+      ],
+      "source_crop_dimensions_px": [
+        390,
+        463
+      ],
+      "sample_factor": 20,
+      "sampling_padded_dimensions_px": [
+        400,
+        480
+      ],
+      "sampled_alpha_bbox_before_placement": [
+        0,
+        0,
+        19,
+        23
+      ],
+      "native_object_dimensions_px": [
+        19,
+        23
+      ],
+      "prompt": "prompts/clay_cups.txt"
+    },
+    {
+      "id": "wall_oil_lamp",
+      "label": "墙挂油灯",
+      "path": "sprites/wall_oil_lamp.png",
+      "dimensions_px": [
+        48,
+        96
+      ],
+      "tile_dimensions": [
+        1,
+        2
+      ],
+      "alpha_bbox": [
+        7,
+        28,
+        41,
+        94
+      ],
+      "ground_anchor": [
+        24,
+        94
+      ],
+      "source": "source/wall_oil_lamp.png",
+      "source_crop_px": [
+        213,
+        93,
+        886,
+        1408
+      ],
+      "source_crop_dimensions_px": [
+        673,
+        1315
+      ],
+      "sample_factor": 20,
+      "sampling_padded_dimensions_px": [
+        680,
+        1320
+      ],
+      "sampled_alpha_bbox_before_placement": [
+        0,
+        0,
+        34,
+        66
+      ],
+      "native_object_dimensions_px": [
+        34,
+        66
+      ],
+      "prompt": "prompts/wall_oil_lamp.txt"
+    },
+    {
+      "id": "boss_desk",
+      "label": "老板书桌",
+      "path": "sprites/boss_desk.png",
+      "dimensions_px": [
+        144,
+        144
+      ],
+      "tile_dimensions": [
+        3,
+        3
+      ],
+      "alpha_bbox": [
+        9,
+        64,
+        135,
+        142
+      ],
+      "ground_anchor": [
+        72,
+        142
+      ],
+      "source": "source/boss_desk.png",
+      "source_crop_px": [
+        38,
+        212,
+        1294,
+        989
+      ],
+      "source_crop_dimensions_px": [
+        1256,
+        777
+      ],
+      "sample_factor": 10,
+      "sampling_padded_dimensions_px": [
+        1260,
+        780
+      ],
+      "sampled_alpha_bbox_before_placement": [
+        0,
+        0,
+        126,
+        78
+      ],
+      "native_object_dimensions_px": [
+        126,
+        78
+      ],
+      "prompt": "prompts/boss_desk.txt"
+    },
+    {
+      "id": "ledger",
+      "label": "账本",
+      "path": "sprites/ledger.png",
+      "dimensions_px": [
+        48,
+        48
+      ],
+      "tile_dimensions": [
+        1,
+        1
+      ],
+      "alpha_bbox": [
+        8,
+        13,
+        39,
+        46
+      ],
+      "ground_anchor": [
+        24,
+        46
+      ],
+      "source": "source/ledger.png",
+      "source_crop_px": [
+        294,
+        259,
+        979,
+        990
+      ],
+      "source_crop_dimensions_px": [
+        685,
+        731
+      ],
+      "sample_factor": 22,
+      "sampling_padded_dimensions_px": [
+        704,
+        748
+      ],
+      "sampled_alpha_bbox_before_placement": [
+        0,
+        0,
+        31,
+        33
+      ],
+      "native_object_dimensions_px": [
+        31,
+        33
+      ],
+      "prompt": "prompts/ledger.txt"
+    }
+  ],
+  "previews": [
+    "previews/catalog.png",
+    "previews/map_005_art_preview.png"
+  ]
+}

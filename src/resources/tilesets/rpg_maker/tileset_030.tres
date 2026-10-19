@@ -1,12 +1,14 @@
-[gd_resource type="TileSet" format=3]
+[gd_resource type="TileSet" format=3 uid="uid://caquj8sryms5b"]
 
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_030_00.png" id="1_2c6iw"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_030_01.png" id="2_ygty7"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_030_02.png" id="3_v5hld"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_030_03.png" id="4_hmi0w"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_030_04.png" id="5_rfr2p"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_030_05.png" id="6_074i2"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_030_06.png" id="7_whdi5"]
+[ext_resource type="Texture2D" uid="uid://c3fm5hmb6qobb" path="res://assets/map/rpg_maker/tileset_030_00.png" id="1_2c6iw"]
+[ext_resource type="Texture2D" uid="uid://d2v5k2mphqyk3" path="res://assets/map/rpg_maker/tileset_030_01.png" id="2_ygty7"]
+[ext_resource type="Texture2D" uid="uid://c2u101n4sweed" path="res://assets/map/rpg_maker/tileset_030_02.png" id="3_v5hld"]
+[ext_resource type="Texture2D" uid="uid://bqqr1075lp0bc" path="res://assets/map/rpg_maker/tileset_030_03.png" id="4_hmi0w"]
+[ext_resource type="Texture2D" uid="uid://dl5up4l1fw5rl" path="res://assets/map/rpg_maker/tileset_030_04.png" id="5_rfr2p"]
+[ext_resource type="Texture2D" uid="uid://dajqdidmkrpf6" path="res://assets/map/rpg_maker/tileset_030_05.png" id="6_074i2"]
+[ext_resource type="Texture2D" uid="uid://caechh7873uua" path="res://assets/map/rpg_maker/tileset_030_06.png" id="7_whdi5"]
+
+[ext_resource type="TileSetAtlasSource" path="res://src/resources/tilesets/rpg_maker/goblin_wine_atlas.tres" id="goblin_wines"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7wde4"]
 texture = ExtResource("1_2c6iw")
@@ -16643,3 +16645,4 @@ sources/3 = SubResource("TileSetAtlasSource_cb0v6")
 sources/4 = SubResource("TileSetAtlasSource_rea5l")
 sources/5 = SubResource("TileSetAtlasSource_fpq2w")
 sources/6 = SubResource("TileSetAtlasSource_yuygg")
+sources/200 = ExtResource("goblin_wines")

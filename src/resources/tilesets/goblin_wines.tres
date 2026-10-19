@@ -1,0 +1,14 @@
+[gd_resource type="TileSet" format=3]
+
+[ext_resource type="TileSetAtlasSource" path="res://src/resources/tilesets/rpg_maker/goblin_wine_atlas.tres" id="wine"]
+
+[resource]
+resource_name = "哥布林酒品"
+tile_size = Vector2i(48, 48)
+custom_data_layer_0/name = "rpg_tile_id"
+custom_data_layer_0/type = 2
+custom_data_layer_1/name = "passage"
+custom_data_layer_1/type = 2
+custom_data_layer_2/name = "star"
+custom_data_layer_2/type = 1
+sources/200 = ExtResource("wine")

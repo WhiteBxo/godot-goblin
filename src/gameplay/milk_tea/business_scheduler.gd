@@ -7,6 +7,7 @@ signal projection_reset
 signal stage_published(stage_id: String)
 signal customer_transition(group_id: String, status: String)
 signal group_served(group_id: String)
+
 signal business_completed(session_id: String)
 signal operation_failed(error: Error)
 
@@ -26,6 +27,11 @@ var _changing := false
 var _active := false
 var _pending_served: Dictionary = {}
 var _recover_departures: Dictionary = {}
+var _departure_guard: Callable
+
+## A scene may hold a served customer while an accepted extra commission remains.
+func set_departure_guard(guard: Callable) -> void:
+	_departure_guard = guard
 
 ## plan: {session_id, stages:[{id, ordinary_customers:[], story_customers:[]}]}
 ## customer: {id, actor_ids:[String], order_ids:[String]}. No recipes or prices here.
@@ -150,7 +156,7 @@ func is_group_served(group_id: String) -> bool:
 	for id: String in _groups[group_id].order_ids:
 		if not _state.get_flag("delivery." + id + ".completed"):
 			return false
-	return true
+	return not _departure_guard.is_valid() or bool(_departure_guard.call(group_id))
 
 func is_order_available(order_id: String) -> bool:
 	if not _order_groups.has(order_id):

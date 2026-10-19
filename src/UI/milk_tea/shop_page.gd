@@ -121,14 +121,16 @@ func present(point: InteractionPoint) -> void:
 		# Story preparation can unlock a recipe before its recipient accepts a
 		# delivery. Keep those cups reachable when there is no accepted order.
 		var has_order := false
+		var has_formula_order := false
 		if is_instance_valid(_orders):
 			for entry: Dictionary in _orders.get_entries():
+				if entry.status == "active" and entry.get("free_formula", false) and not entry.ready:
+					has_formula_order = true
 				if entry.status == "active" and not entry.product_id.is_empty():
 					has_order = true
-					break
 		_craft_modes.current_tab = 0 if has_order else 1
 		if not has_order:
-			_making_tabs.current_tab = 0
+			_making_tabs.current_tab = 1 if has_formula_order else 0
 		_refresh_recipe()
 		if is_instance_valid(_orders):
 			_order_crafting.present()

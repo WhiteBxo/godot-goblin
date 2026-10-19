@@ -185,6 +185,15 @@ func _project(task: Dictionary, view: Dictionary, accepted: bool, done: bool) ->
 	var missing: Dictionary = {}
 	var recipe_materials: Array[String] = []
 	var can_craft := false
+	if task.delivery.has("drink"):
+		ready = _delivery.has_matching_drink(order_id)
+		stage = "ready" if ready else "experiment"
+		label = "可交付" if ready else "待自由调配"
+		var ingredient_names := {}
+		for ingredient: IngredientDefinition in WarehouseInventory.CATALOG.ingredients:
+			ingredient_names[ingredient.id] = ingredient.display_name
+		names.append(DrinkFormula.requirement_text(task.delivery.drink, ingredient_names))
+		hint = "交给" + target_name if ready else "制作台 → 自由实验；选择奶茶基底与辛辣原料，确认报价后制作"
 	if product_id.is_empty() and not ready:
 		for item: Dictionary in items:
 			if item.owned < item.needed:
@@ -229,4 +238,5 @@ func _project(task: Dictionary, view: Dictionary, accepted: bool, done: bool) ->
 		"status": status, "stage": stage, "status_text": label, "accepted": accepted, "ready": ready,
 		"target_id": target_id, "target_name": target_name, "items": items, "icon": icon,
 		"product_id": product_id, "recipe_materials": recipe_materials, "can_craft": can_craft and not done,
+		"free_formula": task.delivery.has("drink"),
 		"missing": missing, "missing_text": "、".join(missing_names), "hint": hint, "rewards": rewards}

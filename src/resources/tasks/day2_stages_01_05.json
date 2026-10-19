@@ -746,5 +746,23 @@
         "text": "0G"
       }
     }
+    ,{
+      "id": "day2.orders.taste",
+      "type": "commission",
+      "title": "散客 C · 辛辣奶茶试饮（可选）",
+      "allow_cancel": true,
+      "description": "试饮需求：奶茶基底，带辛辣风味。到制作台自由实验，可用昨日得到的老火烧；确认报价、制作后带给散客 C。未接取时不影响关店。",
+      "reveal_when": {"type": "flag", "key": "day2.s02.open"},
+      "activate_when": {"type": "flag", "key": "day2.s02.open"},
+      "complete_when": {"type": "flag", "key": "day2.taste.delivered"},
+      "objectives": [{"id": "taste", "text": "自由调一杯带辛辣风味的奶茶，确认报价后交给散客 C", "complete_when": {"type": "flag", "key": "day2.taste.delivered"}}],
+      "delivery": {
+        "order_id": "day2_taste",
+        "drink": {"base_id": "creamer_milk_tea_base", "flavors": ["辛辣"]},
+        "target_object_id": "day2_ordinary_c",
+        "accepted_flag": "task.day2_taste.accepted"
+      },
+      "rewards": {"text": "按已确认配方售价结算 · 留下饮品图鉴"}
+    }
   ]
 }

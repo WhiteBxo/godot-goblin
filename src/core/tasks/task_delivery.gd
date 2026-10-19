@@ -348,6 +348,9 @@ func _matching_drink(requirement: Dictionary, preferred_id: String = "") -> Dict
 			return drink
 	return {}
 
+func has_matching_drink(order_id: String) -> bool:
+	return _orders.has(order_id) and _orders[order_id].delivery.has("drink") and not _matching_drink(_orders[order_id].delivery.drink).is_empty()
+
 ## Fixed human menu price from the recipe. Teaching and story recipes carry no
 ## fixed price: their orders must spell the money out in rewards, and a missing
 ## amount pays nothing instead of inventing a dynamic price. Quest-only

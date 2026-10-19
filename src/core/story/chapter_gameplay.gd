@@ -159,6 +159,7 @@ func _configure_day2() -> void:
 	if _host == "shop":
 		_scheduler = BusinessScheduler.new()
 		add_child(_scheduler)
+		_scheduler.set_departure_guard(_can_depart)
 		var error := _scheduler.configure_session(config.business, _state, _game.get_task_delivery(), config.close_rule)
 		if error != OK:
 			last_error = "第二天客组营业配置无效：" + error_string(error)
@@ -180,7 +181,24 @@ func _configure_day2() -> void:
 				last_error = id + ": " + reason
 				push_error(last_error))
 	_game.get_task_delivery().set_order_availability(["day3_festival"], func(_id: String) -> bool: return _state.current_day == 3)
+	_game.get_task_delivery().set_order_availability(["day2_taste"], _taste_available)
+	_game.get_task_delivery().delivered.connect(_on_optional_delivered)
 	_services_ready = true
+
+func _taste_available(_id: String) -> bool:
+	var actor := _game.get_actor_director().get_actor(&"day2_ordinary_c")
+	return _host == "shop" and _state.current_day == 2 and is_instance_valid(_scheduler) and _scheduler.get_group("ordinary_c").get("status") == "waiting" and not _state.get_flag("day2.s02.closed") and actor != null and actor.visible
+
+func _can_depart(group: String) -> bool:
+	return group != "ordinary_c" or not _taste_pending()
+
+func _taste_pending() -> bool:
+	return _state.get_flag("task.day2_taste.accepted") and _state.get_task_result("day2.orders.taste").is_empty() and not _state.get_flag("delivery.day2_taste.completed")
+
+func _on_optional_delivered(id: String) -> void:
+	if id == "day2_taste":
+		_scheduler.request_departure("ordinary_c")
+		_game.get_shop_ui().show_feedback.call_deferred("试饮评价 · 奶香里带着辛辣，正合口味！配方已留在饮品图鉴。", true)
 
 func _quiet() -> bool:
 	var travel := _game.get_scene_travel()
@@ -188,6 +206,8 @@ func _quiet() -> bool:
 
 func get_user_actions() -> Array[Dictionary]:
 	var actions: Array[Dictionary] = []
+	if _host == "shop" and _taste_pending():
+		actions.append({"id": "cancel_taste", "text": "取消可选试饮", "kind": "cancel_taste"})
 	for action: Dictionary in _data.get("user_actions", []):
 		if action.host != _host or action.stage != _state.story_stage:
 			continue
@@ -200,6 +220,8 @@ func get_user_actions() -> Array[Dictionary]:
 		actions.append(action.duplicate(true))
 	if _host == "shop" and _state.current_day in [2, 3] and _procurement.get_status().get("status") == "funded":
 		for id: String in Day2Procurement.RUNNERS:
+			if id == "day2_ordinary_c" and _taste_pending():
+				continue
 			var actor := _game.get_actor_director().get_actor(StringName(id))
 			if actor != null and actor.visible:
 				actions.append({"id": "hire:" + id, "text": "雇佣 " + actor.display_name + " · 专款支付30G货款＋5G跑腿费", "kind": "hire", "actor": id})
@@ -216,6 +238,10 @@ func perform_user_action(id: String) -> void:
 			error = _game.get_story_director().request_interaction(action.trigger)
 		else:
 			match action.get("kind"):
+				"cancel_taste":
+					error = _state.settle_task_result("day2.orders.taste", "cancelled", "主动取消试饮")
+					if error == OK and is_instance_valid(_scheduler):
+						_scheduler.request_departure("ordinary_c")
 				"close":
 					error = close_business()
 				"hire":
@@ -231,6 +257,8 @@ func perform_user_action(id: String) -> void:
 func close_business() -> Error:
 	if not is_instance_valid(_scheduler):
 		return ERR_UNCONFIGURED
+	if _taste_pending():
+		return ERR_UNAVAILABLE
 	# Unaccepted optional orders never prevent closing; accepted ones must settle.
 	for id: String in Day2Procurement.RUNNERS:
 		if _state.get_flag("task." + id + ".accepted") and not _state.get_flag("delivery." + id + ".completed"):

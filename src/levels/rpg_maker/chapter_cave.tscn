@@ -44,6 +44,10 @@
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_goblin_boy.tscn" id="goblin_boy"]
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_goblin_girl.tscn" id="goblin_girl"]
 
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_market_vendor_1.tscn" id="vendor_1"]
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_market_vendor_2.tscn" id="vendor_2"]
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_market_vendor_3.tscn" id="vendor_3"]
+
 [ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/scorch_tongue_pepper.png" id="gather_pepper"]
 [ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/honey_amber_crystal.png" id="gather_honey"]
 [ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/insomnia_mushroom.png" id="gather_insomnia"]
@@ -704,19 +708,19 @@ actor_id = &"warehouse_guard_2"
 display_name = "心虚的守卫"
 active_phase = "always"
 
-[node name="Vendor1" parent="Characters" instance=ExtResource("goblin")]
+[node name="Vendor1" parent="Characters" instance=ExtResource("vendor_1")]
 position = Vector2(1272, 2328)
 actor_id = &"market_vendor_1"
 display_name = "吆喝的摊主"
 active_phase = "always"
 
-[node name="Vendor2" parent="Characters" instance=ExtResource("goblin")]
+[node name="Vendor2" parent="Characters" instance=ExtResource("vendor_2")]
 position = Vector2(1416, 2328)
 actor_id = &"market_vendor_2"
 display_name = "懂行的摊主"
 active_phase = "always"
 
-[node name="Vendor3" parent="Characters" instance=ExtResource("goblin")]
+[node name="Vendor3" parent="Characters" instance=ExtResource("vendor_3")]
 position = Vector2(1560, 2376)
 actor_id = &"market_vendor_3"
 display_name = "老练的摊主"

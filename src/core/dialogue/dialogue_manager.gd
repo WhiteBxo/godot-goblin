@@ -23,6 +23,10 @@ signal line_changed(line_id: String)
 	"护卫": preload("res://assets/characters/npc/casino_sentry/portrait.png"),
 	"酒馆老板": preload("res://assets/characters/dialogue/tavern_portrait.png"),
 	"赌场老板": preload("res://assets/characters/dialogue/casino_portrait.png"),
+	# 集市的三个摊主各用自己附件里的立绘。
+	"吆喝的摊主": preload("res://assets/characters/npc/market_vendor_1/portrait.png"),
+	"懂行的摊主": preload("res://assets/characters/npc/market_vendor_2/portrait.png"),
+	"老练的摊主": preload("res://assets/characters/npc/market_vendor_3/portrait.png"),
 	"胆小的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
 	"围观的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
 	"凑热闹的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),

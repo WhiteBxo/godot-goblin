@@ -196,3 +196,24 @@ Godot 4.7.2 OpenGL 图形运行 `tests/verify_women_and_girl.gd -- --capture`，
 实现核对 Godot 4.7 官方 [SpriteFrames](https://github.com/godotengine/godot/blob/4.7/doc/classes/SpriteFrames.xml) 的帧序列/循环/FPS，以及 [AtlasTexture](https://github.com/godotengine/godot/blob/4.7/doc/classes/AtlasTexture.xml) 的 `region` / `filter_clip`；不改变运行时 API。
 
 ![妇女与女孩更新预览](captures/women_and_girl_2026_10_20.png)
+
+## 集市三个摊贩（2026-10-20）
+
+用户附件 `哥布林npc：有特定对话，不能重复利用的npc(1).zip` 的 `其他可对话npc/小贩/小贩1-3` 已接入，替换 `chapter_cave.tscn` 里原先借用 `rpg_common_goblin.tscn` 的三个占位摊主。摊位位置、Actor ID、显示名与商品清单不变，所以 `chapter_actions.json` 的 `market_vendors`、`supplement.vendor_1-3` 对白和既有购买按钮无需改动。
+
+| Actor ID | 显示名 | 商品（原价格规则不变） | 对白 |
+| --- | --- | --- | --- |
+| `market_vendor_1` | 吆喝的摊主 | 炽舌椒、蜜珀晶、萤火伞 | `supplement.vendor_1` |
+| `market_vendor_2` | 懂行的摊主 | 苔痕青、窟窟糖芋、醒神菇 | `supplement.vendor_2` |
+| `market_vendor_3` | 老练的摊主 | 炽舌椒、蜜珀晶、醒神菇 | `supplement.vendor_3` |
+
+- 附件每家只给一张单帧像素图（64×64、128×128、64×64）与一张立绘，没有行走图：八个方向动画全部复用同一帧，摊主在集市里不移动。派生图按项目统一的 64px 帧、88px 步距、脚底 y=62、成人可见高度 58px 用最近邻生成，因此与同场普通哥布林同高、同地线；`market_vendor_2` 原图带一圈浅灰烘焙投影，派生时去掉，场景自身的地面阴影保留。
+- 立绘本身已是透明底，只做了 4px 余量的边界清理，未缩放、未重绘；接管 `DialogueManager.speaker_portraits` 的三个说话人名（吆喝的摊主 / 懂行的摊主 / 老练的摊主）。
+- 原件逐字节保存在各家 `source/`，来源与 SHA-256 见 `source/sources.json`；帧资源由 `market_vendor_catalog.json` 生成。
+
+```sh
+python tools/characters/import_market_vendors.py --archive '<附件路径>'
+python tools/characters/build_character_frames.py --catalog src/gameplay/characters/market_vendor_catalog.json
+```
+
+F6 运行 `src/core/settlement.tscn`，走到集市（三个摊位在 (1272, 2328)、(1416, 2328)、(1560, 2376)）按 E，即可看到各自立绘与台词。与既有普通哥布林的同地线尺寸对比见 `artifacts/market_vendors_preview.png`。

@@ -59,6 +59,8 @@ func execute(id: String) -> Dictionary:
 			error = OK if result.get("ok", false) else ERR_UNAVAILABLE
 		"transaction":
 			error = _state.commit_story_transaction(id, _counts(action.get("use_costs", {})), _counts(action.get("use_gains", {})), int(action.get("money", 0)), _counts(action.get("items", {})), action.get("flags", {}), action.get("variables", {}), _counts(action.get("item_costs", {})))
+			if error == OK:
+				_announce_gains(action)
 		"rest":
 			var actors := _game.get_actor_director()
 			var actor := actors.get_actor(StringName(action.actor))
@@ -75,6 +77,21 @@ func _counts(value: Dictionary) -> Dictionary:
 	for id: String in value:
 		result[id] = int(value[id])
 	return result
+
+## Ingredients arrive in "uses", not portions, so a silent grant reads as a bug:
+## the warehouse shows one partially consumed portion. Say the amount out loud.
+func _announce_gains(action: Dictionary) -> void:
+	var gains: Dictionary = _counts(action.get("use_gains", {}))
+	if gains.is_empty():
+		return
+	var inventory = _state.get_warehouse_inventory()
+	var parts := PackedStringArray()
+	for id: String in gains:
+		var definition = inventory.get_definition(id)
+		parts.append("%s ×%d 次用量" % [definition.display_name if definition != null else id, int(gains[id])])
+	var ui := _game.get_shop_ui()
+	if is_instance_valid(ui) and ui.has_method("show_feedback"):
+		ui.show_feedback("获得 " + "、".join(parts), true)
 
 func _schedule_refresh() -> void:
 	if not _refresh_pending:

@@ -52,6 +52,11 @@ func test_audio() -> void:
 	check(handle != 0 and audio._active[handle].player.bus == &"UI", "Non-UI ID respects explicit UI route")
 	handle = feedback.play_sound("ui.hover")
 	check(handle != 0 and audio._active[handle].player.volume_db == -14.0, "Hover uses quieter volume")
+	handle = feedback.play_focus()
+	check(handle != 0 and audio._active[handle].player.volume_db == feedback.focus_volume_db, "World focus tick uses its own quiet volume")
+	check(feedback.play_focus() == 0, "Rapid focus changes stay throttled")
+	handle = feedback.play_blip()
+	check(handle != 0 and audio._active[handle].player.volume_db == feedback.blip_volume_db, "Dialogue blip uses its own quiet volume")
 	check(feedback.play_event("unknown") == 0 and feedback.play_sound("missing") == 0, "Unknown mapping safely skips playback")
 	feedback.repeat_guard_ms = 0
 	feedback.configure(audio)

@@ -175,6 +175,7 @@ Beat 映射、验证清单及待定项；不供游戏运行时加载。
 | [前两天流程体验与地图关卡审查（2026-10-19 历史基线）](development/flow_and_level_review_2026_10_19.md) | `9337cd2` 的旧参数分析；当前尺度与优化顺序以新版方案为准。 |
 | [两工作树整合（2026-10-19）](development/two_day_integration_2026_10_19.md) | 单一经济账本、两天剧情、RPG Maker 地图、迁移与验证。 |
 | [前两天体验打磨（2026-10-19）](development/experience_polish_2026_10_19.md) | 制作与交付反馈、守卫警戒可读性、环境与脚步、截图及实际验证。 |
+| [前两天操作手感与反馈打磨（2026-10-19）](development/feel_polish_2026_10_19.md) | 投掷准星与命中、警戒张力与被发现冲击、交互/弹窗/对白节拍、镜头前瞻与钱包浮字；含实际检查与试玩步骤。 |
 | [首日可玩性修复（2026-10-19）](development/day1_playability_fixes_2026_10_19.md) | 柜台焦点、同款连续制作、说话立绘、出店调查引导与隐藏守卫交互；真实按键和步行验收。 |
 | [通用 Developer Console（第一阶段）](development/developer_console.md) | `developer_console.md` |
 | [项目开发现状（2026-10-18）](development/development_status_2026_10_18.md) | 10-18 历史快照，基线 88684ac；当前变化见 10-19 整合记录。 |

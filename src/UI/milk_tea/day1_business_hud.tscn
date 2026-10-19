@@ -25,6 +25,19 @@ grow_horizontal = 0
 horizontal_alignment = 2
 mouse_filter = 2
 
+[node name="BalanceFloat" type="Label" parent="."]
+visible = false
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -248.0
+offset_top = 34.0
+offset_right = -16.0
+offset_bottom = 54.0
+grow_horizontal = 0
+mouse_filter = 2
+theme_type_variation = &"Success"
+horizontal_alignment = 2
+
 [node name="ResumeStory" type="Button" parent="."]
 visible = false
 anchor_left = 1.0

@@ -87,3 +87,16 @@ F6 运行现有 `src/debug/story/day1_world_flow_demo.tscn`，它继承正式 `s
 组件首次交付的历史图形验证：独立 Metal 图形进程执行组件及真实宿主交互检查；最终 HUD 缩窄后，只以 `-- --host-only --capture` 复查正式宿主，8 项通过，截图保存于 `/tmp/day1_stealth_pending.png`，确认提示及按钮未越出视口。输入和暂停由脚本驱动，不计为人工整段通关。已有编辑器本次 F6 运行窗口黑屏并出现 UID 诊断，因此未将编辑器 F6 观察计为通过；独立图形宿主已正常渲染。正式通关仍受上述配置与剧情待定项阻塞。
 
 引擎依据：[Godot 4.7 射线查询的物理帧和世界坐标约定](https://docs.godotengine.org/en/4.7/tutorials/physics/ray-casting.html)、[PhysicsDirectSpaceState2D](https://docs.godotengine.org/en/4.7/classes/class_physicsdirectspacestate2d.html)、[InputEvent](https://docs.godotengine.org/en/4.7/classes/class_inputevent.html)。投掷与视线查询都只在物理 tick 执行，输入继续走 InputMap。
+
+## 2026-10-19 操作反馈
+
+本轮只补表现层，不改视距、视锥、警戒时间、投掷消耗、失败与重试规则。
+
+- 投掷准星：持可投物且 `can_accept_input()` 时，`ThrowAimIndicator` 在鼠标世界位置绘制整像素十字、1 像素中心点和 230 世界像素虚线射程圈；有效为暖金色、无效为红色。判定直接复用 `_valid_target`，表现不会承诺服务端会拒绝的落点。弹窗、暂停、外部控制或演出接管时隐藏。
+- 命中反馈：`_resolve_impact` 在同一物理帧生成 0.24 秒 `ThrowImpactEffect`（1 帧亮点、外扩圆环与四向尘点，按金币／火把／饮品取色）。宿主收到 `throw_resolved` 后加 2 像素、0.12 秒震屏并播放已登记的 `story.impact`；投掷物只在结算时消失，服务不等待表现。
+- 警戒：`Day1GuardResponse` 的视锥颜色随 `exposure / discovery_seconds` 由黄转橙，填充从 0.20 增至 0.32；初次进入视线时头顶警戒框上跳 4 像素并在 0.18 秒内恢复。`get_alert_ratio()` 返回所有处于 ALERT 守卫中的最大比例，供 UI 只读轮询。
+- 被发现：服务发 `attempt_failed` 时先在同一帧生成 0.8 秒 `StealthAlertMarker`（守卫头顶感叹号），宿主再触发全屏暖白闪（0.45 峰值，0.05 秒进、0.22 秒出）、4 像素 0.22 秒震屏、`ui.failure` 和 0.18 秒镜头聚焦发现者；0.55 秒后 0.35 秒回到跟随。镜头请求仍由宿主转交 CameraDirector，未让潜入组件直接抓相机。
+- 屏幕张力：`ThreatOverlay` 以 `get_alert_ratio()` 驱动径向暗角（最高 0.42 alpha，`GradientTexture2D` 生成、无外部素材），只显示在世界之上、HUD 之下；离开视线后按 1.6/秒回落。
+- 像素边界：准星、投射物与震屏偏移都在整像素上取整，沿用相机既有的限制内钳制；命中闪白与暗角只在潜行任务曝光时出现，不持续闪烁。
+
+验证：`verify_day1_stealth.gd` 105 项（含准星显示／锁定时隐藏、命中效果数量、警戒比例、发现标记），正式宿主 `--host-only` 9 项，`verify_feel_layer.gd` 10 项，`verify_two_day_flow.gd` 282 项。没有新增音频 ID；如需独立的投掷起手声，仍需走音效包生成链与 manifest 校验。持续推近镜头未采用，避免 640×360 像素网格在非整数缩放下抖动；张力改由暗角与视锥承担。

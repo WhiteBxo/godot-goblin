@@ -27,6 +27,8 @@ var _captured := false
 var _feedback_enabled := false
 var _sight_polygon := PackedVector2Array()
 const FEEDBACK_THEME = preload("res://src/resources/ui/game_theme.tres")
+const ALERT_POP_SECONDS := 0.18
+var _alert_pop := 0.0
 
 func set_feedback_enabled(enabled: bool) -> void:
 	_feedback_enabled = enabled
@@ -59,6 +61,7 @@ func reset_response(restore_actor: bool = true) -> void:
 	remaining = 0.0
 	corrosion_remaining = 0.0
 	detection_multiplier = 1.0
+	_alert_pop = 0.0
 	if restore_actor and _captured and is_instance_valid(actor) and not actor.is_performance_controlled():
 		actor.teleport_to(_home_position)
 		actor.face_direction(_home_facing)
@@ -124,6 +127,7 @@ func effective_sight_range() -> float:
 ## Called only by the service's physics tick. Returns true on actual discovery.
 func advance(delta: float, player: PlayerController, space: PhysicsDirectSpaceState2D) -> bool:
 	_update_sight_feedback(player, space)
+	_alert_pop = maxf(0.0, _alert_pop - delta)
 	queue_redraw()
 	if not _available() or state == State.CLEARED:
 		return false
@@ -143,8 +147,11 @@ func advance(delta: float, player: PlayerController, space: PhysicsDirectSpaceSt
 		var query := PhysicsRayQueryParameters2D.create(actor.global_position, player.global_position, 1)
 		query.hit_from_inside = true
 		seen = space.intersect_ray(query).is_empty()
+	var was_watching := exposure <= 0.0
 	exposure = clampf(exposure + (delta / detection_multiplier if seen else -delta * 2.0), 0.0, discovery_seconds)
 	state = State.ALERT if exposure > 0.0 else State.WATCHING
+	if was_watching and exposure > 0.0:
+		_alert_pop = ALERT_POP_SECONDS
 	queue_redraw()
 	return exposure >= discovery_seconds
 
@@ -178,13 +185,22 @@ func _draw() -> void:
 	if not _feedback_enabled or not _available():
 		return
 	var colors := [Color("e6c67e"), Color("ffb35c"), Color("8cdbed"), Color("f3a36a"), Color("a8dd9a"), Color("c8a5e8")]
+	var alert_ratio := clampf(exposure / maxf(discovery_seconds, 0.001), 0.0, 1.0)
 	var color: Color = colors[state]
+	if state == State.ALERT:
+		# The cone heats up as exposure fills so sight itself carries the warning.
+		var watching: Color = colors[State.WATCHING]
+		color = watching.lerp(Color("ff7a4d"), alert_ratio)
 	if state in [State.WATCHING, State.ALERT] and _sight_polygon.size() > 3:
-		draw_colored_polygon(_sight_polygon, Color(color, 0.10 if state == State.WATCHING else 0.20))
+		var fill := 0.10 if state == State.WATCHING else 0.20 + 0.12 * alert_ratio
+		draw_colored_polygon(_sight_polygon, Color(color, fill))
 		draw_polyline(_sight_polygon + PackedVector2Array([_sight_polygon[0]]), Color(color, 0.45), 1.0)
 	if state == State.WATCHING:
 		return
 	var center := to_local(actor.global_position) + actor.get_emote_offset()
+	var pop := _alert_pop / ALERT_POP_SECONDS
+	center.y -= roundf(4.0 * pop)
+	color = color.lerp(Color.WHITE, 0.35 * pop)
 	var font := FEEDBACK_THEME.default_font
 	var text := get_feedback_text()
 	var width := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20).x
@@ -192,5 +208,5 @@ func _draw() -> void:
 	draw_style_box(FEEDBACK_THEME.get_stylebox("panel", "PanelContainer"), box)
 	draw_string(font, center + Vector2(-width * 0.5, -3), text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20, color)
 	if state in [State.ALERT, State.DISTRACTED]:
-		var progress := exposure / discovery_seconds if state == State.ALERT else remaining / distraction_seconds
+		var progress := alert_ratio if state == State.ALERT else remaining / distraction_seconds
 		draw_line(box.position + Vector2(4, 29), box.position + Vector2(4 + (box.size.x - 8) * clampf(progress, 0, 1), 29), color, 2.0)

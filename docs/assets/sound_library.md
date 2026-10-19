@@ -60,6 +60,8 @@ MainGame 的 `interaction_audio_scene` 默认使用 `src/core/audio/interaction_
 | 交付成功、钱包交易成功 / 失败 | `shop.coins` / `ui.failure` |
 | 接取订单成功 / 失败 | `ui.confirm` / `ui.failure` |
 | 对话换行 / 有效选择 | `ui.dialogue` / `ui.confirm` |
+| 投掷命中 | `story.impact`（`throw_impact` 事件） |
+| 世界焦点切换 / 对白逐字 | `ui.hover`（-20 dB，90 ms 去重）/ `ui.dialogue`（-26 dB，70 ms 去重） |
 | 按钮悬停、键盘焦点 / 按下、列表选择 | `ui.hover` / `ui.confirm` |
 | 打开手册、地图 / 关闭弹窗、暂停菜单 | `story.page_turn` / `ui.cancel` |
 | 查看长老文件 / 取得血液 | `story.page_turn` / `story.unlock` |
@@ -68,7 +70,7 @@ MainGame 的 `interaction_audio_scene` 默认使用 `src/core/audio/interaction_
 
 `UIAudioFeedback` 只监听注入的正式 UI 根，自动接入后续创建的按钮和列表；DebugLayer 不在范围内。按钮 metadata `ui_press_sound` 可覆盖按下音，空字符串静音；对话选项由 DialogueManager 确认后播放，避免键鼠重复。关闭 / 恢复按钮覆盖为 `ui.cancel`。鼠标按下播放点击反馈，业务失败另播失败结果音。UIManager 的 `button_activating` 补足自定义键盘确认路径，在业务回调隐藏 / 禁用按钮前通知反馈组件。
 
-默认普通声音 -6 dB、悬停 -14 dB；相同基础 ID 在 80 ms 内合并，多变体避免连续重复。UI 显式走 UI Bus，暂停中继续处理；世界点按其 Bus 配置播放。退出宿主只清理该反馈组件持有的声音。未启用自动脚步、循环环境和出入口音效，剧情已有的显式音频步骤继续沿用。
+默认普通声音 -6 dB、悬停 -14 dB、世界焦点 -20 dB、对白字音 -26 dB；相同基础 ID 在 80 ms 内合并，多变体避免连续重复。焦点与字音使用独立去重键，不占用业务结果的 80 ms 窗口。UI 显式走 UI Bus，暂停中继续处理；世界点按其 Bus 配置播放。退出宿主只清理该反馈组件持有的声音。未启用自动脚步、循环环境和出入口音效，剧情已有的显式音频步骤继续沿用。
 
 F5 进入标题，测试悬停和新游戏；F6 运行 `src/debug/story/legacy_shop.tscn` 或 `src/core/settlement.tscn`，靠近订单板、仓储、制作台按 E，Esc 关闭。制作一份有效配方，再以无效配方请求制作，分别检查封口和失败音；暂停后用键盘及鼠标恢复，检查声音与输入恢复。聚落切至夜晚后采集、交付，检查实际成功时才播放对应结果音。完整素材试听仍使用下方 Demo。
 

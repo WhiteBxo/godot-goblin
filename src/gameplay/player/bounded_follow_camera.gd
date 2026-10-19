@@ -8,6 +8,9 @@ enum Mode { FOLLOW, CINEMATIC }
 
 @export_range(0.1, 4.0, 0.05) var preferred_zoom := 0.5
 @export var cinematic_pixel_snap := true
+## Leads the follow target in its movement direction, in world pixels. Zero
+## keeps the original centred follow for hosts that do not opt in.
+@export_range(0.0, 24.0, 1.0) var follow_look_ahead := 0.0
 
 var mode: Mode = Mode.FOLLOW
 var _world_bounds := Rect2()
@@ -20,6 +23,7 @@ var _cinematic_position := Vector2.ZERO
 var _focus_target: WeakRef
 var _focus_offset := Vector2.ZERO
 var _shake_pixels := Vector2.ZERO
+var _look_ahead := Vector2.ZERO
 
 @onready var _follow_target := get_parent() as Node2D
 
@@ -50,11 +54,25 @@ func _process(_delta: float) -> void:
 
 func _physics_process(_delta: float) -> void:
 	if mode == Mode.FOLLOW:
+		_advance_look_ahead(_delta)
 		_update_follow_target()
 		# End the smoothing tail exactly; pixel snapping can expose floating-point drift.
 		if not _settled and get_screen_center_position().distance_squared_to(global_position) < 0.0001:
 			reset_smoothing()
 			_settled = true
+
+## Looks ahead only while the target actually moves, so stopping recentres.
+func _advance_look_ahead(delta: float) -> void:
+	if follow_look_ahead <= 0.0 or not is_instance_valid(_follow_target):
+		_look_ahead = Vector2.ZERO
+		return
+	var desired := Vector2.ZERO
+	var body := _follow_target as CharacterBody2D
+	if body != null:
+		var speed := body.velocity.length()
+		if speed > 8.0:
+			desired = body.velocity / speed * follow_look_ahead
+	_look_ahead = _look_ahead.move_toward(desired, follow_look_ahead * 6.0 * delta)
 
 func configure(world_bounds: Rect2) -> void:
 	_world_bounds = world_bounds
@@ -68,12 +86,13 @@ func configure(world_bounds: Rect2) -> void:
 	force_update_scroll()
 
 func get_follow_position() -> Vector2:
-	return _clamp_center(_follow_target.global_position + _follow_offset)
+	return _clamp_center(_follow_target.global_position + _follow_offset + _look_ahead)
 
 func begin_cinematic() -> void:
 	_focus_target = null
 	if mode == Mode.CINEMATIC:
 		return
+	_look_ahead = Vector2.ZERO
 	force_update_scroll()
 	_cinematic_position = get_screen_center_position() - offset
 	mode = Mode.CINEMATIC
@@ -95,12 +114,14 @@ func restore_follow() -> void:
 	mode = Mode.FOLLOW
 	top_level = true
 	position_smoothing_enabled = _follow_smoothing
+	_look_ahead = Vector2.ZERO
 	reset_smoothing()
 	_update_follow_target()
 	force_update_scroll()
 
 func reset_camera() -> void:
 	set_shake_pixels(Vector2.ZERO)
+	_look_ahead = Vector2.ZERO
 	_requested_zoom = preferred_zoom
 	_update_zoom()
 	restore_follow()
@@ -174,7 +195,7 @@ func _update_follow_target() -> void:
 	var half_view := get_viewport_rect().size / zoom * 0.5
 	var minimum := Vector2(limit_left, limit_top) + half_view
 	var maximum := Vector2(limit_right, limit_bottom) - half_view
-	var target := (_follow_target.global_position + _follow_offset).clamp(minimum, maximum.max(minimum))
+	var target := (_follow_target.global_position + _follow_offset + _look_ahead).clamp(minimum, maximum.max(minimum))
 	if global_position.distance_squared_to(target) > 0.000001:
 		global_position = target
 		_settled = false

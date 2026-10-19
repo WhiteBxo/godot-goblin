@@ -16,7 +16,7 @@ MainGame 在店铺和聚落的 `World/EffectRoot` 创建场景内 `InteractionFe
 - `success_sound`：可选 AudioManager catalogue ID，默认空；空值、缺失 ID 或未注入音频时静默跳过。
 - `sound_bus`：`UI` 或 `SFX`，调用现有 `play_ui` / `play_sfx`，不建立新音频池。
 
-自定义反馈可订阅 `target_changed(point)`、`interaction_succeeded(point)` 和 `interaction_failed(point)`；前者传 null 表示清除，失败只在实际派发后被拒绝时通知，锁定和无目标时静默。世界反馈组件通过 `configure(interaction, audio, sound_player)` 接入任意世界特效容器；可选 Callable 接收 `(id, bus)`，省略时保留原 AudioManager 播放路径。移除组件不影响交互。提示通过 `target_changed` 接到现有 `ShopUI.show_prompt`，视觉组件不监听输入、不调用 interact。
+自定义反馈可订阅 `target_changed(point)`、`interaction_succeeded(point)` 和 `interaction_failed(point)`；前者传 null 表示清除，失败只在实际派发后被拒绝时通知，锁定和无目标时静默。世界反馈组件通过 `configure(interaction, audio, sound_player, focus_player)` 接入任意世界特效容器；前三个 Callable 与旧调用兼容，`sound_player` 接收 `(id, bus)`，`focus_player` 为无参焦点提示音。省略时保留原 AudioManager 播放路径。移除组件不影响交互。提示通过 `target_changed` 接到现有 `ShopUI.show_prompt`，视觉组件不监听输入、不调用 interact。
 
 ## 选择、触发与锁定
 
@@ -28,7 +28,7 @@ MainGame 在店铺和聚落的 `World/EffectRoot` 创建场景内 `InteractionFe
 
 MainGame 继续持有剧情/对白/ActorDirector 的锁定和原状态恢复逻辑；反馈不另造锁。额外检查玩家演出控制权、移动禁用、UI 是否打开、SceneTree 暂停、实例有效性和待删除状态。`set_input_enabled(false)` 同步清空目标；暂停通过 `NOTIFICATION_PAUSED` 清空 Always HUD，不需要把交互节点设为 Always。关闭弹窗不会覆盖仍有效的宿主禁用。
 
-世界角框采用不抗锯齿的硬边线，成功时用 0.18 秒、两级整数外扩反馈；不改对象 material、modulate、像素边缘或碰撞。暂停会取消残留 pulse。ShopUI 提示复用已有 Fusion Pixel 12px 字体、1px 阴影、底部 24px 高度与左右 16px 留白，长名称省略；保留 640×360 与 integer scaling。对白/剧情/弹窗期间提示隐藏，非交互提示使用 MOUSE_FILTER_IGNORE。
+世界角框采用不抗锯齿的硬边线，成功时用 0.18 秒、两级整数外扩反馈；新目标锁定后角框从 0 生长到 6 世界像素（`focus_grow_seconds`，默认 0.12 秒），目标切换时由宿主注入的 `focus_player` 播一声 -20 dB、90 ms 去重的 `ui.hover`。两处都只读已提交的目标与结果，不改对象 material、modulate、像素边缘或碰撞。暂停会取消残留 pulse。ShopUI 提示复用已有 Fusion Pixel 12px 字体、1px 阴影、底部 24px 高度与左右 16px 留白，长名称省略；提示首次出现用 0.08 秒 alpha 淡入（`PromptBar.appear_seconds`），已有提示改文本时不重复淡入。保留 640×360 与 integer scaling。对白/剧情/弹窗期间提示隐藏，非交互提示使用 MOUSE_FILTER_IGNORE。
 
 ## F6 试玩
 

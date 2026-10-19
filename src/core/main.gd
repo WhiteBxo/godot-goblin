@@ -50,6 +50,9 @@ var _story_points: Dictionary[StringName, StoryInteractionPoint] = {}
 var _pending_story_document: StoryInteractionPoint
 var _world_controller: Day1WorldController
 var _stealth_service: Day1StealthService
+var _threat_overlay: ThreatOverlay
+var _dialogue_blip_count := 0
+var _camera_return_tween: Tween
 var _dialogue_manager: DialogueManager
 var _story_director: StoryDirector
 var _story_business: StoryBusinessAdapter
@@ -176,7 +179,7 @@ func _create_interaction_feedback(interaction: ShopInteraction) -> void:
 	var feedback := InteractionFeedback.new()
 	feedback.name = "InteractionFeedback"
 	$World/EffectRoot.add_child(feedback)
-	feedback.configure(interaction, _audio_manager, _interaction_audio.play_sound)
+	feedback.configure(interaction, _audio_manager, _interaction_audio.play_sound, _interaction_audio.play_focus)
 	interaction.interaction_failed.connect(func(_point: InteractionPoint) -> void: _interaction_audio.play_event("interaction_failure"))
 
 func _create_soundscape() -> void:
@@ -741,13 +744,48 @@ func _create_stealth_system() -> void:
 	$Systems.add_child(_stealth_service)
 	_stealth_service.changed.connect(_refresh_input_lock)
 	_stealth_service.guard_intercepted.connect(_on_stealth_intercepted)
+	_stealth_service.attempt_failed.connect(_on_stealth_attempt_failed)
+	_stealth_service.throw_resolved.connect(_on_stealth_throw_resolved)
 	_stealth_service.retry_travel_requested.connect(_retry_infiltration_travel)
 	_stealth_service.configure(get_node("/root/GameState"), _warehouse_inventory, _shop_player,
 		$World/EffectRoot, get_active_level().get_stealth_setup(), _actor_director.get_actor, _can_operate_stealth)
+	_threat_overlay = preload("res://src/UI/hud/threat_overlay.tscn").instantiate()
+	$HudLayer.add_child(_threat_overlay)
+	$HudLayer.move_child(_threat_overlay, 0)
+	_threat_overlay.configure(_stealth_service)
 	var hud: Day1StealthHUD = preload("res://src/UI/hud/day1_stealth_hud.tscn").instantiate()
 	_ui_manager.register_screen(ScreenIds.STEALTH_HUD, hud, &"hud", false)
 	hud.configure(_stealth_service)
 	_ui_manager.open_screen(ScreenIds.STEALTH_HUD)
+
+## The failure fact is already committed by the service; these are reactions only.
+func _on_stealth_attempt_failed(guard_id: StringName) -> void:
+	if is_instance_valid(_threat_overlay):
+		_threat_overlay.pulse()
+	if is_instance_valid(_camera_director):
+		_camera_director.camera_shake(4.0, 0.22, 1.4)
+	_interaction_audio.play_event("interaction_failure")
+	if not is_instance_valid(_actor_director) or not is_instance_valid(_camera_director):
+		return
+	var guard := _actor_director.get_actor(guard_id)
+	if not is_instance_valid(guard):
+		return
+	# Hold the discoverer on screen for a beat, then hand the camera back.
+	_camera_director.camera_focus(guard, 0.18)
+	if _camera_return_tween != null:
+		_camera_return_tween.kill()
+	_camera_return_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_STOP)
+	_camera_return_tween.tween_interval(0.55)
+	_camera_return_tween.tween_callback(_restore_stealth_camera)
+
+func _restore_stealth_camera() -> void:
+	if is_instance_valid(_camera_director):
+		_camera_director.camera_follow(0.35)
+
+func _on_stealth_throw_resolved(_kind: StringName, _affected: bool) -> void:
+	if is_instance_valid(_camera_director):
+		_camera_director.camera_shake(2.0, 0.12, 1.6)
+	_interaction_audio.play_event("throw_impact")
 
 func _retry_infiltration_travel() -> void:
 	var destination: MainGame = load("res://src/core/settlement.tscn").instantiate()
@@ -987,7 +1025,10 @@ func _create_dialogue_system() -> void:
 	_dialogue_manager.configure(ui, _can_start_dialogue)
 	_dialogue_manager.dialogue_started.connect(_on_dialogue_started)
 	_dialogue_manager.dialogue_ended.connect(_on_dialogue_ended)
-	_dialogue_manager.line_changed.connect(func(_line: String) -> void: _interaction_audio.play_event("dialogue_line"))
+	_dialogue_manager.line_changed.connect(func(_line: String) -> void:
+		_dialogue_blip_count = 0
+		_interaction_audio.play_event("dialogue_line"))
+	ui.character_revealed.connect(_on_dialogue_character_revealed)
 	_dialogue_manager.choice_selected.connect(func(_dialogue: String, _line: String, _choice: String) -> void:
 		_interaction_audio.play_event("dialogue_choice"))
 	_story_director = StoryDirector.new()
@@ -1089,10 +1130,21 @@ func _can_start_dialogue() -> bool:
 	return _can_start_story() and (not is_instance_valid(_story_director) or not _story_director.is_busy() or _story_director.is_starting_dialogue())
 
 func _on_dialogue_started(_id: String) -> void:
+	_dialogue_blip_count = 0
 	_refresh_input_lock()
 
 func _on_dialogue_ended(_id: String, _cancelled: bool) -> void:
+	_dialogue_blip_count = 0
 	_refresh_input_lock()
+
+## Every third visible non-punctuation character gets a very quiet tick; the
+## line itself already carries one intentional voice cue.
+func _on_dialogue_character_revealed(character: String) -> void:
+	if character.strip_edges().is_empty() or character in "，。！？…、；：,.!?;:":
+		return
+	_dialogue_blip_count += 1
+	if _dialogue_blip_count % 3 == 0:
+		_interaction_audio.play_blip()
 
 func _on_actor_control_changed(actor_id: StringName, _controlled: bool) -> void:
 	if actor_id == &"player":

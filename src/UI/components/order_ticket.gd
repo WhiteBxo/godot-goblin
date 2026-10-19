@@ -13,6 +13,7 @@ signal primary_pressed
 @onready var _primary: Button = %Primary
 @onready var _feedback: Label = %CraftFeedback
 var _completion_tween: Tween
+var _flash_tween: Tween
 
 func _ready() -> void:
 	_primary.pressed.connect(func() -> void: primary_pressed.emit())
@@ -46,6 +47,11 @@ func show_result(result: Dictionary) -> void:
 	if not result.get("ok", false):
 		return
 	_status.text = "制作完成 · 已入库"
+	_status.modulate = Color(1.0, 0.94, 0.68)
+	if _flash_tween != null:
+		_flash_tween.kill()
+	_flash_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_STOP)
+	_flash_tween.tween_property(_status, "modulate", Color.WHITE, 0.4).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	_icon.pivot_offset = _icon.size * 0.5
 	_icon.scale = Vector2(0.8, 0.8)
 	_completion_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_STOP)
@@ -56,6 +62,10 @@ func _clear_result() -> void:
 	if _completion_tween != null:
 		_completion_tween.kill()
 		_completion_tween = null
+	if _flash_tween != null:
+		_flash_tween.kill()
+		_flash_tween = null
+	_status.modulate = Color.WHITE
 	_icon.scale = Vector2.ONE
 	_feedback.hide()
 

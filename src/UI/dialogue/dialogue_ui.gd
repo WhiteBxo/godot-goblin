@@ -4,6 +4,8 @@ extends Control
 signal advance_requested
 signal choice_requested(index: int)
 signal cancel_requested
+## One signal per revealed character; the host owns the sound and its volume.
+signal character_revealed(character: String)
 
 @export_range(1.0, 200.0) var characters_per_second: float = 32.0
 @export_range(0.0, 0.5, 0.01) var comma_pause: float = 0.06
@@ -142,6 +144,9 @@ func _process(delta: float) -> void:
 		if _text.visible_characters >= _text.get_total_character_count():
 			reveal_all()
 		else:
+			var index := _text.visible_characters - 1
+			if index >= 0 and index < _text.text.length():
+				character_revealed.emit(_text.text[index])
 			_reveal_remaining += (1.0 / characters_per_second + _punctuation_pause(_text.visible_characters - 1)) / speed
 
 

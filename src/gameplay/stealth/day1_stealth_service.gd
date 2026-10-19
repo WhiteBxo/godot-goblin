@@ -7,6 +7,8 @@ signal attempt_failed(guard_id: StringName)
 signal guard_intercepted(event_id: String)
 signal escaped
 signal throw_resolved(kind: StringName, affected: bool)
+## Emitted once per released throw, after the item has been consumed.
+signal throw_released(kind: StringName)
 signal retry_travel_requested
 
 enum Status { IDLE, PENDING, RUNNING, FAILED, INTERCEPTED, ESCAPED }
@@ -31,6 +33,7 @@ var _pending_throw: Dictionary = {}
 var _target_override: Variant
 var _projectiles: Array[Day1ThrowProjectile] = []
 var _areas: Array[DrinkEffectArea] = []
+var _aim: ThrowAimIndicator
 var _generation := 0
 var _releasing := false
 var _confusion_created := false
@@ -53,7 +56,18 @@ func configure(state: Node, inventory: WarehouseInventory, player: PlayerControl
 		for guard: Variant in _setup.guards:
 			if is_instance_valid(guard) and is_instance_valid(guard.actor):
 				guard.capture_checkpoint()
+	_create_aim()
 	_refresh_pending()
+
+func _create_aim() -> void:
+	if not is_instance_valid(_effects):
+		return
+	if is_instance_valid(_aim):
+		_aim.queue_free()
+	_aim = ThrowAimIndicator.new()
+	_aim.name = "ThrowAimIndicator"
+	_effects.add_child(_aim)
+	_aim.configure(_player, _setup.throw_range if is_instance_valid(_setup) else 0.0)
 
 func get_configuration_issues() -> PackedStringArray:
 	return _setup.get_issues(_inventory, _actor_lookup) if is_instance_valid(_setup) else PackedStringArray(["缺少潜入关卡配置（P09）"])
@@ -63,6 +77,16 @@ func get_inventory() -> WarehouseInventory:
 
 func get_setup() -> Day1StealthSetup:
 	return _setup
+
+## Highest active sight exposure across guards, 0..1. Presentation-only read.
+func get_alert_ratio() -> float:
+	if not is_instance_valid(_setup):
+		return 0.0
+	var ratio := 0.0
+	for guard: Day1GuardResponse in _setup.guards:
+		if is_instance_valid(guard) and guard.state == Day1GuardResponse.State.ALERT:
+			ratio = maxf(ratio, guard.exposure / maxf(guard.discovery_seconds, 0.001))
+	return clampf(ratio, 0.0, 1.0)
 
 func get_objective_progress() -> String:
 	var lines := PackedStringArray()
@@ -177,6 +201,7 @@ func _refresh_pending() -> void:
 func _physics_process(delta: float) -> void:
 	if not is_instance_valid(_state):
 		return
+	_update_aim()
 	if not is_mission_stage():
 		if status not in [Status.IDLE, Status.PENDING]:
 			cancel_attempt()
@@ -225,6 +250,7 @@ func _physics_process(delta: float) -> void:
 				_set_status(Status.INTERCEPTED, "醉酒守卫拦住了你；完成交涉后继续，或返回检查点")
 				guard_intercepted.emit(guard.encounter_event_id)
 			else:
+				_spawn_alert_marker(guard.actor.global_position)
 				_set_status(Status.FAILED, "%s发现了你。下次留意朝向，避开观察区域再通过。" % guard.actor.display_name)
 				attempt_failed.emit(guard.actor.actor_id)
 			return
@@ -308,6 +334,7 @@ func _on_action_triggered(action: StringName, _direction: Vector2) -> void:
 	projectile.global_position = _player.global_position
 	_projectiles.append(projectile)
 	message = "已投出%s" % ({&"coin": "古怪金币", &"torch": "火把", &"drink": "饮品"}[pending.kind])
+	throw_released.emit(pending.kind)
 	changed.emit()
 
 func _on_action_finished(action: StringName, _cancelled: bool) -> void:
@@ -318,8 +345,23 @@ func _valid_target(target: Vector2) -> bool:
 	var distance := _player.global_position.distance_to(target)
 	return target.is_finite() and distance > 1.0 and distance <= _setup.throw_range
 
+## Reads the same aimed point and range check the release uses, so the reticle
+## can never promise a landing the service would reject.
+func _update_aim() -> void:
+	if not is_instance_valid(_aim):
+		return
+	if not can_accept_input() or not _player.has_held() or not _player.is_visible_in_tree():
+		_aim.present(Vector2.ZERO, false, false)
+		return
+	var target: Vector2 = _target_override if _target_override is Vector2 else _effects.get_global_mouse_position()
+	_aim.present(target, _valid_target(target), true)
+
 func _resolve_impact(result: Dictionary) -> void:
 	var affected := false
+	var impact := ThrowImpactEffect.new()
+	impact.configure(result.kind)
+	_effects.add_child(impact)
+	impact.global_position = result.position
 	if result.kind == &"coin":
 		for guard: Variant in _setup.guards:
 			affected = guard.distract(result.position) or affected
@@ -347,6 +389,13 @@ func _resolve_impact(result: Dictionary) -> void:
 		message = "饮品已落地，效果区域正在生效"
 	throw_resolved.emit(result.kind, affected)
 	changed.emit()
+
+func _spawn_alert_marker(world_position: Vector2) -> void:
+	if not is_instance_valid(_effects):
+		return
+	var marker := StealthAlertMarker.new()
+	_effects.add_child(marker)
+	marker.global_position = world_position
 
 func _try_escape() -> void:
 	if _setup.interior_only:
@@ -429,6 +478,9 @@ func _on_session_replaced() -> void:
 
 func _exit_tree() -> void:
 	_clear_local(false)
+	if is_instance_valid(_aim):
+		_aim.queue_free()
+		_aim = null
 	if is_instance_valid(_player):
 		_player.clear_held()
 		_player.action_started.disconnect(_on_action_started)

@@ -12,6 +12,8 @@ var _service: Day1StealthService
 var _actors := {}
 var _external_lock := false
 var _results: Array[Dictionary] = []
+var _impacts := 0
+var _alert_markers := 0
 
 func _initialize() -> void:
 	_run.call_deferred()
@@ -104,6 +106,11 @@ func _fixture() -> void:
 		func() -> bool: return not _external_lock)
 	_service.throw_resolved.connect(func(kind: StringName, affected: bool) -> void:
 		_results.append({"kind": kind, "affected": affected}))
+	_world.child_entered_tree.connect(func(node: Node) -> void:
+		if node is ThrowImpactEffect:
+			_impacts += 1
+		elif node is StealthAlertMarker:
+			_alert_markers += 1)
 
 func _throw_at(kind: StringName, target: Vector2) -> void:
 	var before := _results.size()
@@ -130,6 +137,7 @@ func _run() -> void:
 	_fixture()
 	await _frames()
 	_check(_service.status == Day1StealthService.Status.RUNNING, "Complete fixture activates through the real service")
+	_check(_service._aim.is_showing(), "A held throwable shows the aim indicator during a live attempt")
 	var escape_shape := _setup.escape_zone.get_child(0) as CollisionShape2D
 	var escape_owner: int = _setup.escape_zone.get_shape_owners()[0]
 	_setup.escape_zone.shape_owner_set_disabled(escape_owner, true)
@@ -163,10 +171,12 @@ func _run() -> void:
 	await _throw_at(&"coin", Vector2(0, 80))
 	_check(_inventory.get_stock("strange_coin") == coins - 1, "One real coin consumed once, including synchronous reentry")
 	_check(_results[-1].affected and entry.state == Day1GuardResponse.State.DISTRACTED, "Coin impact actually distracts the entrance guard")
+	_check(_impacts == 1, "Every resolved throw leaves exactly one landing effect")
 	_external_lock = true
 	var remaining := entry.remaining
 	await _frames(15)
 	_check(is_equal_approx(entry.remaining, remaining), "Host modal/performance lock freezes gameplay timers")
+	_check(not _service._aim.is_showing(), "The aim indicator hides while another owner locks control")
 	_external_lock = false
 	await _until(func() -> bool: return entry.state == Day1GuardResponse.State.WATCHING, "Configured distraction expires")
 	_check(not _setup.guards[2].distract(_setup.guards[2].actor.global_position), "A coin cannot distract the mansion's second guard")
@@ -174,6 +184,7 @@ func _run() -> void:
 	_player.teleport_to(Vector2(80, 0))
 	await _frames(4)
 	_check(entry.state == Day1GuardResponse.State.ALERT, "Entering the sight cone raises alert before discovery")
+	_check(_service.get_alert_ratio() > 0.0, "Active exposure reports a throttled alert ratio for presentation")
 	_player.teleport_to(Vector2(-80, 0))
 	await _frames(10)
 	_check(entry.state == Day1GuardResponse.State.WATCHING, "Leaving sight lets alert decay")
@@ -186,6 +197,7 @@ func _run() -> void:
 	_check(entry.state == Day1GuardResponse.State.WATCHING, "World collision occludes guard sight")
 	wall.queue_free()
 	await _until(func() -> bool: return _service.status == Day1StealthService.Status.FAILED, "Unoccluded discovery fails the attempt")
+	_check(_alert_markers >= 1, "Discovery marks the guard before the failure UI")
 	coins = _inventory.get_stock("strange_coin")
 	_external_lock = true
 	_check(_service.retry_attempt() == ERR_BUSY, "Retry cannot bypass another control owner")

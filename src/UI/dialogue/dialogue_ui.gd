@@ -17,6 +17,8 @@ signal skip_requested
 @export_range(0.0, 0.5, 0.01) var portrait_fade_seconds: float = 0.14
 ## Artwork with a tall hat may need raising to keep the face above the panel.
 @export var portrait_vertical_offsets: Dictionary[Texture2D, float] = {}
+## Right-facing NPC artwork is mirrored when shown in the right portrait slot.
+@export var right_facing_portraits: Array[Texture2D] = []
 ## Holding confirm for this long starts continuous fast-forward.
 @export_range(0.1, 1.0, 0.05) var fast_forward_hold_seconds: float = 0.35
 @export_range(0.02, 0.3, 0.01) var fast_forward_interval: float = 0.06
@@ -32,6 +34,7 @@ var _buttons: Array[Button] = []
 var _selected: int = 0
 var _reveal_remaining: float = 0.0
 var _portrait_tween: Tween
+var _portrait_on_left := false
 var _revealing: bool = false
 var _input_ready_frame: int = 0
 var _previous_focus: Control
@@ -72,6 +75,7 @@ func present_line(speaker: String, text: String, portrait: Texture2D, choices: A
 		_previous_focus = get_viewport().gui_get_focus_owner()
 	var portrait_changed := not visible or _speaker.text != speaker or _portrait.texture != portrait
 	_speaker.text = speaker
+	_portrait_on_left = portrait_on_left
 	set_portrait(portrait)
 	if portrait_changed:
 		_finish_portrait_fade()
@@ -118,6 +122,7 @@ func set_portrait(portrait: Texture2D) -> void:
 	if _portrait.texture != portrait or portrait == null:
 		_finish_portrait_fade()
 	_portrait.texture = portrait
+	_portrait.flip_h = portrait != null and not _portrait_on_left and portrait in right_facing_portraits
 	var vertical_offset: float = portrait_vertical_offsets.get(portrait, 0.0)
 	_portrait.offset_top = -284.0 + vertical_offset
 	_portrait.offset_bottom = -12.0 + vertical_offset

@@ -145,3 +145,17 @@ UI 按 640×360 视口设计，底部面板为 560×136px，水平居中、距�
 本次新增 API 与导入素材已在 Godot 4.7.2 验证。官网文档站本次访问返回 403，因此实现前直接核对同版本的官方文档源文件：[TextureRect 4.7.2](https://github.com/godotengine/godot/blob/4.7.2-stable/doc/classes/TextureRect.xml)（替换 `texture`、等比居中与忽略图片最小尺寸）、[ResourceLoader 4.7.2](https://github.com/godotengine/godot/blob/4.7.2-stable/doc/classes/ResourceLoader.xml)（已导入资源加载及缓存复用）。
 
 2026-10-19：守卫、酒馆老板、赌场老板与普通顾客使用用户提供的独立插画，见 [对话立绘来源](../../assets/characters/dialogue/README.md)。第二天胖哥布林对白显式使用不适表情。`DialogueUI.portrait_vertical_offsets` 可按 Texture2D 配置垂直偏移；当前守卫为 -40 逻辑像素，使高头盔下的脸露出对话框，切换到其他角色时恢复默认位置。
+
+## 对话立绘朝向（2026-10-20）
+
+已核对现有20张对话立绘及表情。右侧显示的朝右 NPC 插画统一在显示时水平镜像：守卫 `dialogue/guard_portrait.png`、赌场侍卫 `npc/casino_sentry/portrait.png`、集市母亲 `npc/market_mother/portrait.png`、女孩 `npc/goblin_girl/portrait.png`，路径均相对 `assets/characters/`。左侧主角保持朝右；原本朝左或正面的立绘保持原方向，祭坛女同伴无需翻转。
+
+配置位于 `DialogueUI.right_facing_portraits: Array[Texture2D]`，按图片资源记录朝向，避免同名角色的不同表情被一概翻转。`present_line()` 先记录左右位置，`set_portrait()` 再设置 `TextureRect.flip_h`；逐句显示、程序即时换图、隐藏和切换到左侧均重新计算，避免上一张的镜像状态残留。图像原件、地图动画、对白内容和位置不因镜像变化。
+
+F6运行 `src/debug/dialogue/portrait_facing_preview.tscn`，点击“下一个角色”依次查看四位 NPC、主角、祭坛同伴与胖哥布林；“查看调整前 / 后”比较原朝向和正式显示。预览复用正式 DialogueUI，按 E / 空格 / Enter 也可切换角色。
+
+Godot 4.7.2 验证：`tests/run_all.py --filter verify_dialogue --jobs 1` 的对话模块264项通过，包含右侧镜像、同图切换到左侧、主角三表情、原本朝左/正面图和隐藏后的状态清理；带 OpenGL 运行 `tests/verify_women_and_girl.gd -- --capture` 的正式角色508项检查通过，并检查了集市母亲、女孩和祭坛同伴的真实游戏对话截图。未运行全项目回归，本次改动限对话显示。实现核对 Godot 4.7 官方 [TextureRect.flip_h](https://github.com/godotengine/godot/blob/4.7/doc/classes/TextureRect.xml)：仅水平翻转显示纹理。
+
+下图为正式 DialogueUI 渲染结果的相同区域裁切，按“调整前 / 调整后”成对排列；[左侧主角预览](captures/portrait_facing_player_2026_10_20.png)保持原朝向，[集市母亲游戏内预览](captures/portrait_facing_mother_ingame_2026_10_20.png)与[女孩游戏内预览](captures/portrait_facing_girl_ingame_2026_10_20.png)显示朝左效果。
+
+![NPC立绘朝向对照](captures/portrait_facing_comparison_2026_10_20.png)

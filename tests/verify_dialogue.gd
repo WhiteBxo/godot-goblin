@@ -74,6 +74,7 @@ func _run() -> void:
 	await _test_ui_unavailable()
 	await _test_speaker_portraits()
 	await _test_runtime_portraits()
+	_test_portrait_facing()
 	await _test_lifecycle()
 	await _test_demo()
 	_check(root.get_node("GameState").call("to_dict") == state_before, "Dialogue components never change GameState")
@@ -418,6 +419,34 @@ func _test_ui_unavailable() -> void:
 	manager.queue_free()
 	manager_ui.queue_free()
 	await _frames()
+
+
+func _test_portrait_facing() -> void:
+	var portrait: TextureRect = _ui.get_node("Portrait")
+	_check(_ui.right_facing_portraits.size() == 4, "All four audited right-facing NPC illustrations are configured")
+	for texture: Texture2D in _ui.right_facing_portraits:
+		_check(_ui.present_line("NPC", "朝向", texture, []) == OK and portrait.flip_h, "Right-facing NPC looks inward from the right: " + texture.resource_path)
+		_ui.reveal_all()
+		_ui.set_portrait(texture)
+		_check(portrait.flip_h, "Runtime portrait replacement preserves the facing rule")
+		_check(_ui.present_line("主角", "朝向", texture, [], true) == OK and not portrait.flip_h, "Moving the same portrait to the left clears the mirror")
+	for path: String in [
+		"res://assets/characters/apron_man/player_neutral_portrait.png",
+		"res://assets/characters/apron_man/player_talking_portrait.png",
+		"res://assets/characters/apron_man/player_bad_laugh.png",
+	]:
+		_check(_ui.present_line("主角", "主角保持朝右", load(path), [], true) == OK and not portrait.flip_h, "Player expression stays unchanged on the left")
+	for path: String in [
+		"res://assets/characters/npc/prayer_woman/portrait.png",
+		"res://assets/characters/npc/goblin_boy/portrait.png",
+		"res://assets/characters/dialogue/common_goblin_portrait.png",
+		"res://assets/characters/fat_goblin/fat_goblin_smiling_portrait.png",
+	]:
+		_ui.set_portrait(_ui.right_facing_portraits[0])
+		_check(_ui.present_line("NPC", "保留原朝向", load(path), []) == OK and not portrait.flip_h, "Left-facing and frontal artwork clears the previous mirror")
+	_ui.set_portrait(null)
+	_check(not portrait.visible and not portrait.flip_h, "Hiding a portrait clears mirroring")
+	_ui.close_dialogue()
 
 
 func _test_speaker_portraits() -> void:

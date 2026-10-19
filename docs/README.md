@@ -138,6 +138,7 @@
 | [day_02.pdf](design/source/day_02.pdf) | 第二天剧情原始 PDF。 |
 | [Day 2 五个阶段：剧情演出初稿](design/day_02_stages_01_05_draft.md) | 由 day_02.pdf 逐字整理的 Beat 化初稿。 |
 | [经营与战斗经济规则（10-19）](design/milk_tea_economy_revised.md) | 现行设计：人类 3G、哥布林持久槽位定价、爆品 150G、战斗独立采购及来源冲突。 |
+| [爆品配方配置（开发可视版）](design/signature_recipes_revised.md) | S01–S10 十款完整配方、图鉴与发现原文；专属售价、加冰及领奖时点差异待确认，尚未接入运行时。 |
 | [新经济实现方案](design/milk_tea_economy_implementation_plan.md) | 经营阶段 1–3 已接通；保留原始差距分析，独立战斗采购待实施。 |
 | [奶茶配方系统 V0.1](design/milk_tea_recipe_system_revised.md) | 保留原文与 12 张表格；售价等冲突规则由 10-19 经济方案替代。 |
 | [22 种原料 2.0 配置](design/recipe_ingredients_revised.md) | 10-19 原料来源，经营等级、价格及用量已导入运行时。 |

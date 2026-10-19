@@ -1,7 +1,7 @@
 {
 	"version": 1.0,
 	"format": "goblin_story_project",
-	"next_step_id": 24017.0,
+	"next_step_id": 24018.0,
 	"manifest": {
 		"version": 1.0,
 		"source": "res://docs/design/day_01_stages_03_06_draft.md",
@@ -1069,6 +1069,14 @@
 						"symbol": "!",
 						"duration": 0.8,
 						"wait": false
+					}
+				},
+				{
+					"id": "step_24017",
+					"data": {
+						"command": "set_flag",
+						"key": "day1.s06.blood_collapsed",
+						"value": true
 					}
 				},
 				{

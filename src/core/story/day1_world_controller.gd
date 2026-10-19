@@ -79,6 +79,8 @@ func _refresh() -> void:
 			actor.refresh_phase(_state)
 			if _level is MilkTeaShop and actor.actor_id == &"fat_goblin" and Day1Access.is_later_stage(_state):
 				actor.visible = Day1Access.at_stage(_state, "day1.s06")
+		if actor is FatGoblin:
+			actor.set_health(_fat_goblin_health())
 		if _points.has(actor.actor_id):
 			var resting: bool = (_level is MilkTeaShop and actor.actor_id == &"fat_goblin"
 				and (Day1Access.at_stage(_state, "day2") or _state.story_stage == "day3.handoff"))
@@ -92,6 +94,15 @@ func _refresh() -> void:
 	if _state.get_business_profile() == "day1":
 		var ready := Day1Access.can_make_blood_drink(_state)
 		_state.set_flag("day1.s06.blood_drink_available", ready)
+
+## 剧情事实投影：喝下格里芬之血倒地后是坐地反胃，第二天起改为坐地休养，
+## 救治成功（signature.S06.rescued_in_time）后恢复常态。
+func _fat_goblin_health() -> FatGoblin.Health:
+	if _state.get_business_profile() != "day1" or _state.get_flag("signature.S06.rescued_in_time"):
+		return FatGoblin.Health.NORMAL
+	if _state.current_day >= 2:
+		return FatGoblin.Health.RESTING
+	return FatGoblin.Health.COLLAPSED if _state.get_flag("day1.s06.blood_collapsed") else FatGoblin.Health.NORMAL
 
 func record_shop_arrival() -> void:
 	if _state.get_business_profile() != "day1":

@@ -444,6 +444,11 @@
           "wait": false
         },
         {
+          "command": "set_flag",
+          "key": "day1.s06.blood_collapsed",
+          "value": true
+        },
+        {
           "command": "dialogue",
           "id": "day1.s06.reaction_shock"
         },

@@ -1,12 +1,10 @@
 [gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://src/gameplay/story_interaction/story_interaction_point.gd" id="1_story"]
+[ext_resource type="FontFile" path="res://assets/fonts/fusion_pixel/fusion-pixel-12px-monospaced-zh_hans.otf.woff2" id="font"]
 
 [sub_resource type="CircleShape2D" id="Reach"]
 radius = 70.0
-
-[sub_resource type="SystemFont" id="Font"]
-font_names = PackedStringArray("Microsoft YaHei", "Noto Sans CJK SC", "sans-serif")
 
 [node name="StoryInteractionPoint" type="Area2D"]
 collision_layer = 0
@@ -17,8 +15,8 @@ script = ExtResource("1_story")
 shape = SubResource("Reach")
 
 [node name="Marker" type="Polygon2D" parent="."]
-polygon = PackedVector2Array(0, -10, 10, 0, 0, 10, -10, 0)
-color = Color(0.85, 0.78, 0.98, 0.9)
+polygon = PackedVector2Array(0, -5, 3, 0, 0, 5, -3, 0)
+color = Color(1, 0.82, 0.48, 0.55)
 
 [node name="Label" type="Label" parent="."]
 offset_left = -120.0
@@ -26,10 +24,10 @@ offset_top = -50.0
 offset_right = 120.0
 offset_bottom = -15.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.92, 0.88, 1, 1)
+theme_override_colors/font_color = Color(1, 0.93, 0.77, 1)
 theme_override_colors/font_shadow_color = Color(0.12, 0.06, 0.03, 1)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
-theme_override_fonts/font = SubResource("Font")
-theme_override_font_sizes/font_size = 28
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1

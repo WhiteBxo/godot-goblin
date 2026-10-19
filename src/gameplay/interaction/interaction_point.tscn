@@ -16,8 +16,8 @@ script = ExtResource("1")
 shape = SubResource("Reach")
 
 [node name="Marker" type="Polygon2D" parent="."]
-polygon = PackedVector2Array(0, -10, 10, 0, 0, 10, -10, 0)
-color = Color(1, 0.82, 0.48, 0.9)
+polygon = PackedVector2Array(0, -5, 3, 0, 0, 5, -3, 0)
+color = Color(1, 0.82, 0.48, 0.55)
 
 [node name="Label" type="Label" parent="."]
 offset_left = -120.0

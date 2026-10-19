@@ -11,6 +11,8 @@ signal confirm_formula_requested(materials: Array[String])
 @onready var _shell: ModalShell = $ModalShell
 
 var _page: ShopPage
+var _note: RichTextLabel
+var _story_note := false
 
 func _ready() -> void:
 	_page = _shell.get_content() as ShopPage
@@ -33,8 +35,35 @@ func show_formula_result(result: Dictionary) -> void:
 	_page.show_formula_result(result)
 
 func present(point: InteractionPoint) -> void:
+	# Investigation and pickup notes read as a scene document, not as another
+	# shop counter: hide the shop page and show the authored prose alone.
+	_story_note = point is StoryInteractionPoint
+	_shell.set_title(point.display_name if not point.display_name.is_empty() else "调查")
+	if _story_note:
+		_page.hide()
+		var note := _ensure_note()
+		note.text = point.description
+		note.show()
+		note.scroll_to_line(0)
+		return
+	if is_instance_valid(_note):
+		_note.hide()
+	_page.show()
 	_shell.set_title("今日订单" if point.interaction_id == &"orders" else point.display_name)
 	_page.present(point)
+
+func _ensure_note() -> RichTextLabel:
+	if is_instance_valid(_note):
+		return _note
+	_note = RichTextLabel.new()
+	_note.name = "StoryNote"
+	_note.bbcode_enabled = false
+	_note.fit_content = true
+	_note.scroll_active = true
+	_note.custom_minimum_size = Vector2(0, 132)
+	_note.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_page.get_parent().add_child(_note)
+	return _note
 
 func bind_tea_making(tea: TeaMaking) -> void:
 	_page.bind_tea_making(tea)
@@ -58,9 +87,17 @@ func get_page() -> ShopPage:
 	return _page
 
 func uses_native_gui_input() -> bool:
-	return _page.uses_native_gui_input()
+	return not _story_note and _page.uses_native_gui_input()
+
+func handle_ui_input(event: InputEvent) -> void:
+	if not _story_note or not event.is_pressed() or event.is_echo():
+		return
+	if event.is_action("interact") or event.is_action("ui_accept"):
+		close_requested.emit()
 
 func get_default_focus() -> Control:
+	if _story_note:
+		return _shell.get_close_button()
 	return _shell.get_default_focus()
 
 func get_title() -> String:
@@ -76,6 +113,9 @@ func show_order_requirements(message: String) -> void:
 	_page.show_order_requirements(message)
 
 func show_interaction_result(message: String) -> void:
+	if _story_note and is_instance_valid(_note):
+		_note.text = message
+		return
 	_page.show_interaction_result(message)
 
 func show_production_result(result: Dictionary) -> void:

@@ -4,7 +4,7 @@
     {
       "id": "day1.order_human",
       "type": "main",
-      "title": "H01经典珍珠奶茶 → 人类顾客",
+      "title": "经典珍珠奶茶 → 人类顾客",
       "description": "查看订单板接单，在制作台制作后交给指定顾客。",
       "reveal_when": {
         "type": "flag",
@@ -50,7 +50,7 @@
     {
       "id": "day1.order_goblin",
       "type": "main",
-      "title": "H01经典珍珠奶茶 → 哥布林顾客",
+      "title": "经典珍珠奶茶 → 哥布林顾客",
       "description": "查看订单板接单，在制作台制作后交给指定顾客。",
       "reveal_when": {
         "type": "flag",
@@ -96,7 +96,7 @@
     {
       "id": "day1.order_group_a",
       "type": "main",
-      "title": "H01经典珍珠奶茶 → 哥布林甲",
+      "title": "经典珍珠奶茶 → 哥布林甲",
       "description": "查看订单板接单，在制作台制作后交给指定顾客。",
       "reveal_when": {
         "type": "flag",
@@ -142,7 +142,7 @@
     {
       "id": "day1.order_group_b",
       "type": "main",
-      "title": "H01经典珍珠奶茶 → 哥布林乙",
+      "title": "经典珍珠奶茶 → 哥布林乙",
       "description": "查看订单板接单，在制作台制作后交给指定顾客。",
       "reveal_when": {
         "type": "flag",
@@ -188,7 +188,7 @@
     {
       "id": "day1.order_group_c",
       "type": "main",
-      "title": "H01经典珍珠奶茶 → 哥布林丙",
+      "title": "经典珍珠奶茶 → 哥布林丙",
       "description": "查看订单板接单，在制作台制作后交给指定顾客。",
       "reveal_when": {
         "type": "flag",

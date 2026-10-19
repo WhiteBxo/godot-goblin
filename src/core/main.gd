@@ -871,6 +871,10 @@ func _create_shop_business(ui: ShopUI) -> void:
 	_ui_manager.open_screen(ScreenIds.TASK_HUD)
 	task_hud.bind_journal(_task_journal)
 	task_hud.bind_orders(_order_board)
+	# Dialogue and documents already own the frame; the one-line objective
+	# comes back when they close instead of adding a second guidance layer.
+	_ui_manager.modal_changed.connect(func() -> void: task_hud.set_obscured(_ui_manager.has_modal()))
+	task_hud.set_obscured(_ui_manager.has_modal())
 	ui.craft_requested.connect(func(materials: Array[String], quantity: int) -> void:
 		var result := _tea_production.craft(materials, quantity)
 		_interaction_audio.play_event("craft_success" if result.ok else "craft_failure")

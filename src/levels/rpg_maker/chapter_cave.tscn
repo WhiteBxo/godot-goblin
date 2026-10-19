@@ -26,6 +26,7 @@
 
 [ext_resource type="PackedScene" path="res://src/levels/rpg_maker/wayfinding_sign.tscn" id="sign"]
 [ext_resource type="Script" path="res://src/levels/rpg_maker/chapter_wayfinding.gd" id="sign_visibility"]
+[ext_resource type="Script" path="res://src/gameplay/characters/ambient_wander.gd" id="wander"]
 [ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_030_00.png" id="gather_atlas"]
 
 [sub_resource type="AtlasTexture" id="moss_art"]
@@ -186,7 +187,7 @@ destination_entrance = &"exterior_door"
 
 allowed_stages = Array[String](["day1.s05"])
 required_flags = Array[StringName](["day1.s05.drunken_paid", "day1.s05.guard_payment_completed"])
-unavailable_message = "长老居所仅在受托夜访时开放，进门需要醉卫与宅邸双卫的放行。未交涉时，沿门前道路向左，在双卫之间按 E 支付10G；醉酒守卫在更西侧。侧路同样遵守放行条件。"
+unavailable_message = "长老居所只在受托夜访时开放。先到西侧找醉酒守卫交涉（10G），再回宅门前，在两名宅邸守卫之间按 E 支付 10G；放行后沿道路向东，走上门前台阶按 E 进门。"
 
 [node name="CollisionShape2D" parent="Exits/ShopDoor"]
 position = Vector2(0, 12)
@@ -361,8 +362,9 @@ throw_range = 230.0
 effect_scale = 0.5
 guards = Array[NodePath]([NodePath("Entrance"), NodePath("Lure"), NodePath("Gate"), NodePath("Drunken")])
 objective_names = {"day1.s05.document_read": "书房文书", "day1.s05.blood_acquired": "右室血液"}
-approach_hint = "可在路标处观察。向菱形处按 F 投币（10G），守卫原地转向 6 秒；侧路也可接近，进门仍需交涉。"
-escape_hint = "拿齐后离开宅门，向左下回到北侧观察位撤离，再返店。"
+approach_hint = "先到西侧找醉卫交涉（10G），再回宅门前，在双卫之间按 E 支付 10G。投币只能引开守卫。"
+escape_hint = "拿齐文书和血液，沿原路回到北侧观察位撤离。"
+controls_hint = "鼠标瞄落点 · 侧边可绕 · 别停在扇区里"
 checkpoint = NodePath("../StoryPositions/day1_checkpoint")
 escape_zone = NodePath("../EscapeZone")
 required_flags = Array[StringName](["day1.s05.blood_acquired", "day1.s05.document_read"])
@@ -375,11 +377,12 @@ actor = NodePath("../../Characters/EntranceGuard")
 role = 0
 clearance_flag = &""
 encounter_event_id = ""
-sight_range = 96.0
-sight_half_angle = 85.0
-hearing_range = 180.0
-discovery_seconds = 0.6
-distraction_seconds = 6.0
+sight_range = 84.0
+sight_half_angle = 45.0
+hearing_range = 156.0
+discovery_seconds = 0.9
+distraction_seconds = 3.0
+patrol_offsets = Array[Vector2]([Vector2(-48, 0), Vector2(48, 0)])
 
 [node name="Lure" type="Node2D" parent="StealthSetup" node_paths=PackedStringArray("actor")]
 script = ExtResource("response")
@@ -387,11 +390,12 @@ actor = NodePath("../../Characters/MansionLure")
 role = 1
 clearance_flag = &"day1.s05.guard_payment_completed"
 encounter_event_id = ""
-sight_range = 30.0
-sight_half_angle = 85.0
-hearing_range = 180.0
-discovery_seconds = 0.6
-distraction_seconds = 6.0
+sight_range = 48.0
+sight_half_angle = 45.0
+hearing_range = 132.0
+discovery_seconds = 1.0
+distraction_seconds = 2.5
+patrol_offsets = Array[Vector2]([Vector2(-96, 0), Vector2(0, 0)])
 
 [node name="Gate" type="Node2D" parent="StealthSetup" node_paths=PackedStringArray("actor")]
 script = ExtResource("response")
@@ -399,11 +403,12 @@ actor = NodePath("../../Characters/MansionGate")
 role = 2
 clearance_flag = &"day1.s05.guard_payment_completed"
 encounter_event_id = ""
-sight_range = 30.0
-sight_half_angle = 85.0
-hearing_range = 180.0
-discovery_seconds = 0.6
-distraction_seconds = 6.0
+sight_range = 60.0
+sight_half_angle = 45.0
+hearing_range = 132.0
+discovery_seconds = 1.0
+distraction_seconds = 2.5
+patrol_offsets = Array[Vector2]([Vector2(0, 0), Vector2(96, 0)])
 
 [node name="Drunken" type="Node2D" parent="StealthSetup" node_paths=PackedStringArray("actor")]
 script = ExtResource("response")
@@ -411,11 +416,12 @@ actor = NodePath("../../Characters/DrunkenGuard")
 role = 3
 clearance_flag = &"day1.s05.drunken_paid"
 encounter_event_id = "day1.s05.drunken_guard"
-sight_range = 30.0
-sight_half_angle = 85.0
-hearing_range = 180.0
-discovery_seconds = 0.6
-distraction_seconds = 6.0
+sight_range = 48.0
+sight_half_angle = 45.0
+hearing_range = 120.0
+discovery_seconds = 1.2
+distraction_seconds = 2.0
+patrol_offsets = Array[Vector2]([Vector2(-24, 0), Vector2(24, 0)])
 
 [node name="DrunkenEncounter" parent="." instance=ExtResource("trigger")]
 position = Vector2(1416, 456)
@@ -433,7 +439,7 @@ position = Vector2(1752, 504)
 feedback_rect = Rect2(-64, -112, 128, 112)
 interaction_id = &"mansion_payment"
 display_name = "宅邸双卫 · 10G"
-description = "支付10G给两名守卫，本次往返放行。"
+description = "先与西侧醉酒守卫完成交涉，再在这里支付10G给两名守卫；放行后沿道路向东进入长老居所。"
 
 [node name="NightGather0" parent="GatherPoints" instance=ExtResource("point")]
 position = Vector2(1128, 2136)
@@ -510,12 +516,20 @@ display_name = "哥布林甲"
 active_phase = "day"
 facing = 2
 
+[node name="Wander" type="Node" parent="Characters/ReturningGoblinA"]
+script = ExtResource("wander")
+radius = 28.0
+
 [node name="ReturningGoblinB" parent="Characters" instance=ExtResource("goblin")]
 position = Vector2(1416, 2328)
 actor_id = &"goblin_b"
 display_name = "哥布林乙"
 active_phase = "day"
 facing = 3
+
+[node name="Wander" type="Node" parent="Characters/ReturningGoblinB"]
+script = ExtResource("wander")
+radius = 24.0
 
 [node name="ReturningGoblinC" parent="Characters" instance=ExtResource("goblin")]
 position = Vector2(1272, 2472)
@@ -524,22 +538,84 @@ display_name = "哥布林丙"
 active_phase = "day"
 facing = 1
 
+[node name="Wander" type="Node" parent="Characters/ReturningGoblinC"]
+script = ExtResource("wander")
+radius = 32.0
+
 [node name="Wayfinding" type="Node2D" parent="."]
 
 [node name="ShopSign" parent="Wayfinding" instance=ExtResource("sign")]
-position = Vector2(1608, 2508)
+position = Vector2(1608, 2496)
 [node name="Text" parent="Wayfinding/ShopSign/Panel"]
 text = "奶茶店"
 
-[node name="MarketJunction" parent="Wayfinding" instance=ExtResource("sign")]
-position = Vector2(1176, 2220)
-[node name="Text" parent="Wayfinding/MarketJunction/Panel"]
-text = "↑ 北侧守卫\n← 酒馆 · 赌场\n奶茶店 ↘"
+[node name="NorthSign" parent="Wayfinding" instance=ExtResource("sign")]
+position = Vector2(1176, 2160)
+[node name="Text" parent="Wayfinding/NorthSign/Panel"]
+text = "↑ 北侧守卫"
 
-[node name="NorthObservation" parent="Wayfinding" instance=ExtResource("sign")]
+[node name="WestSign" parent="Wayfinding" instance=ExtResource("sign")]
+position = Vector2(1104, 2214)
+[node name="Text" parent="Wayfinding/WestSign/Panel"]
+text = "← 酒馆 · 赌场"
+
+[node name="JunctionShopSign" parent="Wayfinding" instance=ExtResource("sign")]
+position = Vector2(1248, 2214)
+[node name="Text" parent="Wayfinding/JunctionShopSign/Panel"]
+text = "奶茶店 ↘"
+
+[node name="ObservationSign" parent="Wayfinding" instance=ExtResource("sign")]
 position = Vector2(1032, 552)
-[node name="Text" parent="Wayfinding/NorthObservation/Panel"]
-text = "观察位 ↘\n撤离点 ↓"
+[node name="Text" parent="Wayfinding/ObservationSign/Panel"]
+text = "观察位 ↘"
+
+[node name="EvacuationSign" parent="Wayfinding" instance=ExtResource("sign")]
+position = Vector2(1032, 624)
+[node name="Text" parent="Wayfinding/EvacuationSign/Panel"]
+text = "撤离点 ↓"
+
+[node name="ElderDoorSign" type="Node2D" parent="Wayfinding"]
+position = Vector2(2040, 448)
+visible = false
+script = ExtResource("sign_visibility")
+required_stages = Array[String](["day1.s05"])
+
+[node name="Sign" parent="Wayfinding/ElderDoorSign" instance=ExtResource("sign")]
+[node name="Text" parent="Wayfinding/ElderDoorSign/Sign/Panel"]
+text = "长老居所 ↑ 进门"
+
+[node name="ReleasedSign" type="Node2D" parent="Wayfinding"]
+position = Vector2(1824, 520)
+visible = false
+script = ExtResource("sign_visibility")
+required_stages = Array[String](["day1.s05"])
+required_flags = Array[StringName](["day1.s05.drunken_paid", "day1.s05.guard_payment_completed"])
+
+[node name="Sign" parent="Wayfinding/ReleasedSign" instance=ExtResource("sign")]
+[node name="Text" parent="Wayfinding/ReleasedSign/Sign/Panel"]
+text = "长老居所 → 东侧"
+
+[node name="DetourSign" type="Node2D" parent="Wayfinding"]
+position = Vector2(1400, 552)
+visible = false
+script = ExtResource("sign_visibility")
+required_stages = Array[String](["day1.s05"])
+required_flags = Array[StringName](["day1.s05.drunken_paid"])
+
+[node name="Sign" parent="Wayfinding/DetourSign" instance=ExtResource("sign")]
+[node name="Text" parent="Wayfinding/DetourSign/Sign/Panel"]
+text = "石墙北侧可绕行"
+
+[node name="EscapeReadySign" type="Node2D" parent="Wayfinding"]
+position = Vector2(1104, 696)
+visible = false
+script = ExtResource("sign_visibility")
+required_stages = Array[String](["day1.s05"])
+required_flags = Array[StringName](["day1.s05.document_read", "day1.s05.blood_acquired"])
+
+[node name="Sign" parent="Wayfinding/EscapeReadySign" instance=ExtResource("sign")]
+[node name="Text" parent="Wayfinding/EscapeReadySign/Sign/Panel"]
+text = "撤离点 → 站上门圈"
 
 [node name="FestivalPreparation" type="Node2D" parent="Wayfinding"]
 position = Vector2(1176, 2136)
@@ -577,7 +653,7 @@ required_flags = Array[StringName](["day1.s04.commission_accepted"])
 [node name="CoinLanding" parent="Wayfinding/NightGuidance" instance=ExtResource("sign")]
 position = Vector2(1272, 504)
 [node name="Text" parent="Wayfinding/NightGuidance/CoinLanding/Panel"]
-text = "↓ 可选投币落点"
+text = "↓ 投币落点"
 
 [node name="Landing" type="Polygon2D" parent="Wayfinding/NightGuidance/CoinLanding"]
 polygon = PackedVector2Array(0, -5, 5, 0, 0, 5, -5, 0)

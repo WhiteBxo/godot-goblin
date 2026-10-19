@@ -71,7 +71,7 @@
       "mode": "自动演出",
       "event": "day1.s04.after_order",
       "start": 0,
-      "count": 15,
+      "count": 19,
       "dialogues": [
         "day1.s04.first_taste",
         "day1.s04.griffin_faith",
@@ -122,7 +122,7 @@
       "mode": "自动演出",
       "event": "day1.s05.mansion_payment",
       "start": 0,
-      "count": 1,
+      "count": 4,
       "dialogues": []
     },
     {
@@ -193,6 +193,6 @@
     }
   ],
   "authoring_project": "res://docs/story_authoring/day1_stages_03_06_project.json",
-  "authoring_sha256": "a882ac49345ff91f72e46282f5bc02ea4997c47f8448118fd70585097c32f052",
+  "authoring_sha256": "0daf66734e68e8e24c0b70213223e97a0a8512056ef929af559c4d8651e87ac6",
   "verification": "res://tests/verify_two_day_flow.gd"
 }

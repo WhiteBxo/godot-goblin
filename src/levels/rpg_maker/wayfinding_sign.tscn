@@ -3,12 +3,13 @@
 [ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="theme"]
 
 [node name="WayfindingSign" type="Node2D"]
-z_index = 20
+z_index = 14
 
 [node name="Panel" type="PanelContainer" parent="."]
-offset_left = -44.0
-offset_top = -28.0
-offset_right = 44.0
+offset_left = -78.0
+offset_top = -88.0
+offset_right = 78.0
+offset_bottom = -54.0
 mouse_filter = 2
 theme = ExtResource("theme")
 theme_type_variation = &"InsetPanel"
@@ -17,5 +18,6 @@ theme_type_variation = &"InsetPanel"
 layout_mode = 2
 mouse_filter = 2
 theme_type_variation = &"Hint"
+clip_text = true
 horizontal_alignment = 1
 text = "路标"

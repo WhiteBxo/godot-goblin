@@ -266,6 +266,26 @@ func _input(event: InputEvent) -> void:
 		return
 	handle_ui_input(event)
 
+## Left click reveals or advances the current line. The dialogue body passes
+## mouse input through to this Control; choice buttons keep their native press,
+## and the debug layer above still receives its own buttons.
+func _gui_input(event: InputEvent) -> void:
+	var mouse := event as InputEventMouseButton
+	if mouse == null or not mouse.pressed or mouse.button_index != MOUSE_BUTTON_LEFT:
+		return
+	if not _revealing and not _buttons.is_empty():
+		return
+	if Engine.get_process_frames() < _input_ready_frame:
+		return
+	accept_event()
+	_confirm()
+
+func _confirm() -> void:
+	if not _revealing and not _buttons.is_empty():
+		choice_requested.emit(_selected)
+	else:
+		advance_requested.emit()
+
 
 ## Story-owned dialogue cannot be cancelled by Esc; it finishes its remaining
 ## lines instead so the host event still completes.
@@ -304,10 +324,7 @@ func handle_ui_input(event: InputEvent) -> void:
 		else:
 			cancel_requested.emit()
 	elif confirm:
-		if not _revealing and not _buttons.is_empty():
-			choice_requested.emit(_selected)
-		else:
-			advance_requested.emit()
+		_confirm()
 	elif not _revealing and not _buttons.is_empty():
 		_selected = wrapi(_selected + (1 if event.is_action("ui_down") else -1), 0, _buttons.size())
 		_buttons[_selected].grab_focus()

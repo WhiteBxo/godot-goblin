@@ -6,6 +6,15 @@ extends PanelContainer
 @onready var _objective: Label = $Margin/Content/Objective
 var _journal: TaskJournal
 var _orders: OrderBoardModel
+## Dialogue, documents and menus own the frame while they are open; the
+## objective strip returns afterwards instead of stacking under the shade.
+var _obscured := false
+
+func set_obscured(value: bool) -> void:
+	if _obscured == value:
+		return
+	_obscured = value
+	_refresh()
 
 func bind_orders(orders: OrderBoardModel) -> void:
 	if is_instance_valid(_orders) and _orders.changed.is_connected(_refresh):
@@ -59,7 +68,7 @@ func _disconnect_journal() -> void:
 		_journal.projection_changed.disconnect(_refresh)
 
 func _resize_card() -> void:
-	offset_right = offset_left + minf(300.0, maxf(1.0, get_viewport_rect().size.x - 96.0))
+	offset_right = offset_left + minf(260.0, maxf(1.0, get_viewport_rect().size.x - 96.0))
 
 func get_objective_summary() -> Dictionary:
 	return {"title": _title.text, "objective": _objective.text}
@@ -74,13 +83,13 @@ func _refresh() -> void:
 		for order: Dictionary in _orders.get_entries():
 			if order.status == "active":
 				others += 1
-		visible = true
+		visible = not _obscured
 		$Margin/Content/Heading.text = "追踪订单" + (" · 另有 %d 单" % others if others > 0 else "")
 		_title.text = entry.title
 		_objective.text = "还缺：" + entry.missing_text if not entry.missing_text.is_empty() else entry.hint
 		return
 	$Margin/Content/Heading.text = "当前主线"
-	visible = not task.is_empty()
+	visible = not task.is_empty() and not _obscured
 	if task.is_empty():
 		_title.text = ""
 		_objective.text = ""

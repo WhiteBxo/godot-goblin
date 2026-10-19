@@ -120,3 +120,4 @@ required_items = {"day1_griffin_blood": 3, "day1_elder_document": 1}
 objective_names = {"day1.s05.document_read": "书房文书", "day1.s05.blood_acquired": "右室血液"}
 approach_hint = "中央书房找纸页，右室找封蜡小瓶，顺序自选。"
 escape_hint = "两件目标已取得。返回下方宅门，向左下回北侧观察位撤离，再返店。"
+controls_hint = "书房取文书 · 右室取血液 · 原路出门"

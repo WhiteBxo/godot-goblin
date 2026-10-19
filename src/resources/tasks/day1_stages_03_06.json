@@ -5,7 +5,7 @@
       "id": "day1.s03.explore",
       "type": "main",
       "title": "店门外的陌生世界",
-      "description": "沿店门左侧调查亮光中的摊位、街道与洞窟岔路，然后返回奶茶店。",
+      "description": "店外灯亮着，去摊位和岔路看看，再回奶茶店。",
       "reveal_when": {
         "type": "flag",
         "key": "day1.stages_01_02_completed"
@@ -21,7 +21,7 @@
       "objectives": [
         {
           "id": "exit",
-          "text": "从店铺门口出去，确认外面的变化",
+          "text": "店外好像不太对劲",
           "complete_when": {
             "type": "flag",
             "key": "day1.s03.exited_shop"
@@ -29,7 +29,7 @@
         },
         {
           "id": "yard",
-          "text": "往左上方走，按 E 调查亮光中的摊位 ◇",
+          "text": "去亮着灯的摊位看看",
           "complete_when": {
             "type": "flag",
             "key": "day1.s03.observed_yard"
@@ -37,7 +37,7 @@
         },
         {
           "id": "street",
-          "text": "沿摊位左上方走，按 E 认清主街与商业岔口 ◇",
+          "text": "认清主街与岔路的方向",
           "complete_when": {
             "type": "flag",
             "key": "day1.s03.observed_street"
@@ -45,7 +45,7 @@
         },
         {
           "id": "path",
-          "text": "继续向右上方，按 E 调查昏暗岔路 ◇",
+          "text": "去昏暗的岔路口看看",
           "complete_when": {
             "type": "flag",
             "key": "day1.s03.observed_path"
@@ -53,7 +53,7 @@
         },
         {
           "id": "return",
-          "text": "调查完成：沿原路回到右下方的奶茶店",
+          "text": "回奶茶店，和胖哥布林谈谈",
           "complete_when": {
             "type": "flag",
             "key": "day1.s03.returned_shop"
@@ -64,8 +64,8 @@
     {
       "id": "day1.s04.order",
       "type": "main",
-      "title": "H01经典珍珠奶茶 → 胖哥布林",
-      "description": "手动接单、制作并交付一杯H01，收取3G。",
+      "title": "经典珍珠奶茶 → 胖哥布林",
+      "description": "手动接单、制作并交付一杯经典珍珠奶茶，收取3G。",
       "reveal_when": {
         "type": "flag",
         "key": "day1.s04.order_open"
@@ -96,6 +96,74 @@
           "complete_when": {
             "type": "flag",
             "key": "day1.s04.order_delivered"
+          }
+        }
+      ]
+    },
+    {
+      "id": "day1.s05.infiltration",
+      "type": "main",
+      "title": "夜访长老居所",
+      "description": "先与西侧醉卫交涉，再在宅邸双卫之间支付 10G；进屋取得文书与血液，然后回观察位撤离。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day1.s04.commission_accepted"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day1.s04.commission_accepted"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day1.s05.escape_completed"
+      },
+      "rewards": {
+        "text": "取得格里芬之血与长老文书"
+      },
+      "objectives": [
+        {
+          "id": "approach",
+          "text": "去北侧观察位，与醉卫交涉（10G）",
+          "location_id": "settlement.elder",
+          "complete_when": {
+            "type": "flag",
+            "key": "day1.s05.drunken_paid"
+          }
+        },
+        {
+          "id": "pair",
+          "text": "在宅邸双卫之间支付 10G",
+          "location_id": "settlement.elder",
+          "complete_when": {
+            "type": "flag",
+            "key": "day1.s05.guard_payment_completed"
+          }
+        },
+        {
+          "id": "document",
+          "text": "进入长老居所，取得书房文书",
+          "location_id": "settlement.elder",
+          "complete_when": {
+            "type": "flag",
+            "key": "day1.s05.document_read"
+          }
+        },
+        {
+          "id": "blood",
+          "text": "取得右室格里芬之血",
+          "location_id": "settlement.elder",
+          "complete_when": {
+            "type": "flag",
+            "key": "day1.s05.blood_acquired"
+          }
+        },
+        {
+          "id": "escape",
+          "text": "离开宅门，回北侧观察位撤离",
+          "location_id": "settlement.elder",
+          "complete_when": {
+            "type": "flag",
+            "key": "day1.s05.escape_completed"
           }
         }
       ]

@@ -15,9 +15,14 @@ var _ids: Array[String] = []
 var _selected := ""
 var _filter := "active"
 var _refreshing := false
+## Set while an accept request is in flight. The model projection, not the
+## signal return, decides whether the page moves to 进行中.
+var _pending_accept := ""
 
 func _ready() -> void:
 	_tabs.tab_changed.connect(func(index: int) -> void:
+		if _refreshing or index < 0 or index >= FILTERS.size():
+			return
 		_filter = FILTERS[index]
 		refresh())
 	_list.selection_requested.connect(func(id: String) -> void:
@@ -40,7 +45,7 @@ func present() -> void:
 		if entry.status == "active":
 			_filter = "active"
 			break
-	_tabs.set_current_tab(FILTERS.find(_filter))
+	_sync_tab()
 	refresh()
 
 func refresh() -> void:
@@ -51,6 +56,7 @@ func refresh() -> void:
 	var entries: Array[Dictionary] = []
 	if is_instance_valid(_model):
 		entries = _model.get_entries()
+	_resolve_pending_accept()
 	var counts := {"active": 0, "available": 0, "completed": 0}
 	_ids.clear()
 	var filtered: Array[Dictionary] = []
@@ -65,10 +71,31 @@ func refresh() -> void:
 	var choose_first := _selected not in _ids
 	if choose_first:
 		_selected = _ids[0] if not _ids.is_empty() else ""
+	_sync_tab()
 	_list.set_entries(filtered, _selected)
 	_list.get_v_scroll_bar().set_deferred("value", scroll)
 	_refresh_detail()
 	_refreshing = false
+
+## A successful accept moves the board to 进行中 exactly once, even when the
+## project refresh arrives from a model change rather than this call stack.
+func _resolve_pending_accept() -> void:
+	if _pending_accept.is_empty():
+		return
+	var pending := _model.get_entry(_pending_accept) if is_instance_valid(_model) else {}
+	if pending.get("status") == "active":
+		_filter = "active"
+		_selected = _pending_accept
+	_pending_accept = ""
+
+## Programmatic tab changes stay silent so the filter has one owner: this page.
+func _sync_tab() -> void:
+	var index := FILTERS.find(_filter)
+	if index < 0 or _tabs.current_tab == index:
+		return
+	_tabs.set_block_signals(true)
+	_tabs.set_current_tab(index)
+	_tabs.set_block_signals(false)
 
 func _refresh_detail() -> void:
 	var entry := _model.get_entry(_selected) if is_instance_valid(_model) else {}
@@ -87,13 +114,11 @@ func _refresh_detail() -> void:
 func _primary() -> void:
 	var entry := _model.get_entry(_selected)
 	if entry.get("status") == "available":
-		var id := _selected
-		accept_requested.emit(id)
-		if _model.get_entry(id).get("status") == "active":
-			_filter = "active"
-			_selected = id
-			_tabs.set_current_tab(0)
-			refresh()
+		_pending_accept = _selected
+		accept_requested.emit(_selected)
+		# A rejected accept leaves the order available; the note below then
+		# stays on 可接取 instead of pretending the order moved.
+		refresh()
 	elif entry.get("status") == "active":
 		track_requested.emit(_selected)
 
@@ -103,7 +128,7 @@ func select_order(order_id: String) -> bool:
 		return false
 	_filter = entry.status
 	_selected = order_id
-	_tabs.set_current_tab(FILTERS.find(_filter))
+	_sync_tab()
 	refresh()
 	return true
 
@@ -115,3 +140,9 @@ func get_ticket() -> OrderTicket:
 
 func get_selected_id() -> String:
 	return _selected
+
+func get_active_filter() -> String:
+	return _filter
+
+func get_tabs() -> TabBar:
+	return _tabs

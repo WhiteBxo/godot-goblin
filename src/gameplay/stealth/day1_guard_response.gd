@@ -15,6 +15,14 @@ enum State { WATCHING, ALERT, DISTRACTED, CONFUSED, CLEARED, STUNNED }
 @export_range(0.05, 10.0) var discovery_seconds := 1.0
 @export_range(1.0, 1200.0) var hearing_range := 360.0
 @export_range(0.05, 30.0) var distraction_seconds := 4.0
+## Optional short back-and-forth route around the authored home position.
+## Offsets are in world pixels; an empty array keeps the guard stationary.
+@export var patrol_offsets: Array[Vector2] = []
+@export_range(1.0, 200.0) var patrol_speed := 45.0
+@export_range(0.0, 5.0, 0.1) var patrol_pause_seconds := 1.2
+@export_range(0.1, 2.0, 0.05) var patrol_stall_seconds := 0.3
+## A distracted guard walks toward the impact before returning to the route.
+@export_range(8.0, 200.0) var distraction_walk_stop := 28.0
 
 var state: State = State.WATCHING
 var exposure := 0.0
@@ -24,6 +32,10 @@ var detection_multiplier := 1.0
 var _home_position := Vector2.ZERO
 var _home_facing: PlayerController.Facing
 var _captured := false
+var _patrol_index := 0
+var _patrol_wait := 0.0
+var _patrol_stall := 0.0
+var _distraction_point := Vector2.ZERO
 var _feedback_enabled := false
 var _sight_polygon := PackedVector2Array()
 const FEEDBACK_THEME = preload("res://src/resources/ui/game_theme.tres")
@@ -62,6 +74,10 @@ func reset_response(restore_actor: bool = true) -> void:
 	corrosion_remaining = 0.0
 	detection_multiplier = 1.0
 	_alert_pop = 0.0
+	_patrol_index = 0
+	_patrol_wait = 0.0
+	_patrol_stall = 0.0
+	_distraction_point = Vector2.ZERO
 	if restore_actor and _captured and is_instance_valid(actor) and not actor.is_performance_controlled():
 		actor.teleport_to(_home_position)
 		actor.face_direction(_home_facing)
@@ -85,6 +101,8 @@ func distract(impact: Vector2, seconds: float = 0.0) -> bool:
 	state = State.DISTRACTED
 	exposure = 0.0
 	remaining = seconds if seconds > 0.0 else distraction_seconds
+	_distraction_point = impact
+	_patrol_stall = 0.0
 	_face_toward(impact)
 	queue_redraw()
 	return true
@@ -130,17 +148,29 @@ func advance(delta: float, player: PlayerController, space: PhysicsDirectSpaceSt
 	_alert_pop = maxf(0.0, _alert_pop - delta)
 	queue_redraw()
 	if not _available() or state == State.CLEARED:
+		_stop_walking(delta)
 		return false
 	corrosion_remaining = maxf(0.0, corrosion_remaining - delta)
 	if corrosion_remaining <= 0.0:
 		detection_multiplier = 1.0
-	if state in [State.DISTRACTED, State.CONFUSED, State.STUNNED]:
+	if state == State.DISTRACTED:
+		_advance_distraction(delta)
+		remaining = maxf(0.0, remaining - delta)
+		if remaining <= 0.0:
+			state = State.WATCHING
+			_distraction_point = Vector2.ZERO
+			actor.face_direction(_home_facing)
+		queue_redraw()
+		return false
+	if state in [State.CONFUSED, State.STUNNED]:
+		_stop_walking(delta)
 		remaining = maxf(0.0, remaining - delta)
 		if remaining <= 0.0:
 			state = State.WATCHING
 			actor.face_direction(_home_facing)
 		queue_redraw()
 		return false
+	_advance_patrol(delta)
 	var offset := player.global_position - actor.global_position
 	var seen := offset.length() <= sight_range and (offset.is_zero_approx() or actor.get_facing_vector().dot(offset.normalized()) >= cos(deg_to_rad(sight_half_angle)))
 	if seen and not offset.is_zero_approx():
@@ -164,6 +194,62 @@ func _face_toward(target: Vector2) -> void:
 		actor.face_direction(PlayerController.Facing.RIGHT if offset.x > 0 else PlayerController.Facing.LEFT)
 	elif not offset.is_zero_approx():
 		actor.face_direction(PlayerController.Facing.DOWN if offset.y > 0 else PlayerController.Facing.UP)
+
+## Short authored beat: walk to each offset, pause, turn, repeat. The service
+## already ticks this once per physics frame, so no extra node or autoload.
+func _advance_patrol(delta: float) -> void:
+	if patrol_offsets.is_empty() or not _available():
+		return
+	if _patrol_wait > 0.0:
+		_patrol_wait = maxf(0.0, _patrol_wait - delta)
+		actor.move_direction(Vector2.ZERO, delta, patrol_speed)
+		return
+	var target := _home_position + patrol_offsets[_patrol_index % patrol_offsets.size()]
+	var offset := target - actor.global_position
+	var distance := offset.length()
+	if distance <= 2.0:
+		_patrol_index = (_patrol_index + 1) % patrol_offsets.size()
+		_patrol_wait = patrol_pause_seconds
+		actor.move_direction(Vector2.ZERO, delta, patrol_speed)
+		return
+	var before := actor.global_position
+	actor.move_direction(offset / distance, delta, minf(patrol_speed, distance / maxf(delta, 0.001)))
+	# A body that cannot advance for a moment must not wedge the route.
+	if actor.global_position.distance_to(before) < 0.05:
+		_patrol_stall += delta
+		if _patrol_stall >= patrol_stall_seconds:
+			_patrol_index = (_patrol_index + 1) % patrol_offsets.size()
+			_patrol_wait = patrol_pause_seconds
+			_patrol_stall = 0.0
+	else:
+		_patrol_stall = 0.0
+
+## A coin does not merely freeze the guard: it walks to the sound, looks
+## around, then resumes the route when the timer ends.
+func _advance_distraction(delta: float) -> void:
+	# Stationary fixture watches keep their exact post; authored patrol guards
+	# investigate the sound before resuming the route.
+	if _distraction_point == Vector2.ZERO or patrol_offsets.is_empty() or not _available():
+		_stop_walking(delta)
+		return
+	var offset := _distraction_point - actor.global_position
+	if offset.length() <= distraction_walk_stop:
+		_stop_walking(delta)
+		return
+	var before := actor.global_position
+	var step_speed := minf(patrol_speed * 1.5, offset.length() / maxf(delta, 0.001))
+	actor.move_direction(offset.normalized(), delta, step_speed)
+	if actor.global_position.distance_to(before) < 0.05:
+		_patrol_stall += delta
+		if _patrol_stall >= patrol_stall_seconds:
+			_distraction_point = Vector2.ZERO
+			_patrol_stall = 0.0
+	else:
+		_patrol_stall = 0.0
+
+func _stop_walking(delta: float) -> void:
+	if _available():
+		actor.move_direction(Vector2.ZERO, delta, patrol_speed)
 
 ## Read-only geometry uses the same origin, range, angle and world layer as sight.
 func _update_sight_feedback(player: PlayerController, space: PhysicsDirectSpaceState2D) -> void:

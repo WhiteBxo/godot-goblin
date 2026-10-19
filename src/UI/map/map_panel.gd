@@ -73,8 +73,8 @@ func refresh() -> void:
 		_canvas.queue_redraw()
 	_objective.text = text
 	var places: Array[String] = []
-	for index in range(data.regions.size()):
-		places.append("%d  %s" % [index + 1, data.regions[index].name])
+	for region: Dictionary in data.regions:
+		places.append("%d  %s" % [int(region.get("ordinal", 0)), region.name])
 	(_shell.get_content().get_node("Details/Places/Names") as Label).text = "\n".join(places)
 
 func get_map_canvas() -> SettlementMapCanvas:

@@ -59,7 +59,7 @@
       "objectives": [
         {
           "id": "festival",
-          "text": "到收银台按 E 接第一组订单，制作 H01 后交给顾客",
+          "text": "到收银台按 E 接第一组订单，制作经典珍珠奶茶后交给顾客",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -68,7 +68,7 @@
         },
         {
           "id": "elder",
-          "text": "到收银台接待谈论长老的顾客，制作并交付 H01",
+          "text": "到收银台接待谈论长老的顾客，制作并交付经典珍珠奶茶",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -77,7 +77,7 @@
         },
         {
           "id": "emissary",
-          "text": "到收银台接待谈论使者的顾客，制作并交付 H01",
+          "text": "到收银台接待谈论使者的顾客，制作并交付经典珍珠奶茶",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -86,7 +86,7 @@
         },
         {
           "id": "rumor_first",
-          "text": "接取最后一组的两张订单，制作两杯 H01 并分别交付",
+          "text": "接取最后一组的两张订单，制作两杯经典珍珠奶茶并分别交付",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -95,7 +95,7 @@
         },
         {
           "id": "rumor_second",
-          "text": "将另一杯 H01 交给最后一组的另一位顾客",
+          "text": "将另一杯经典珍珠奶茶交给最后一组的另一位顾客",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -293,8 +293,8 @@
     {
       "id": "day2.orders.festival_0",
       "type": "commission",
-      "title": "H01经典珍珠奶茶 → 七日祭顾客甲",
-      "description": "H01经典珍珠奶茶 → 七日祭顾客甲",
+      "title": "经典珍珠奶茶 → 七日祭顾客甲",
+      "description": "经典珍珠奶茶 → 七日祭顾客甲",
       "reveal_when": {
         "type": "flag",
         "key": "day2.s02.festival.open"
@@ -310,7 +310,7 @@
       "objectives": [
         {
           "id": "deliver",
-          "text": "H01经典珍珠奶茶 → 七日祭顾客甲",
+          "text": "经典珍珠奶茶 → 七日祭顾客甲",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.festival_0.delivered"
@@ -331,8 +331,8 @@
     {
       "id": "day2.orders.elder_0",
       "type": "commission",
-      "title": "H01经典珍珠奶茶 → 议论长老的顾客甲",
-      "description": "H01经典珍珠奶茶 → 议论长老的顾客甲",
+      "title": "经典珍珠奶茶 → 议论长老的顾客甲",
+      "description": "经典珍珠奶茶 → 议论长老的顾客甲",
       "reveal_when": {
         "type": "flag",
         "key": "day2.s02.elder.open"
@@ -348,7 +348,7 @@
       "objectives": [
         {
           "id": "deliver",
-          "text": "H01经典珍珠奶茶 → 议论长老的顾客甲",
+          "text": "经典珍珠奶茶 → 议论长老的顾客甲",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.elder_0.delivered"
@@ -369,8 +369,8 @@
     {
       "id": "day2.orders.emissary_0",
       "type": "commission",
-      "title": "H01经典珍珠奶茶 → 谈论使者的顾客",
-      "description": "H01经典珍珠奶茶 → 谈论使者的顾客",
+      "title": "经典珍珠奶茶 → 谈论使者的顾客",
+      "description": "经典珍珠奶茶 → 谈论使者的顾客",
       "reveal_when": {
         "type": "flag",
         "key": "day2.s02.emissary.open"
@@ -386,7 +386,7 @@
       "objectives": [
         {
           "id": "deliver",
-          "text": "H01经典珍珠奶茶 → 谈论使者的顾客",
+          "text": "经典珍珠奶茶 → 谈论使者的顾客",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.emissary_0.delivered"
@@ -407,8 +407,8 @@
     {
       "id": "day2.orders.rumor_0",
       "type": "commission",
-      "title": "H01经典珍珠奶茶 → 打听酒馆与赌场的顾客甲",
-      "description": "H01经典珍珠奶茶 → 打听酒馆与赌场的顾客甲",
+      "title": "经典珍珠奶茶 → 打听酒馆与赌场的顾客甲",
+      "description": "经典珍珠奶茶 → 打听酒馆与赌场的顾客甲",
       "reveal_when": {
         "type": "flag",
         "key": "day2.s02.rumor.open"
@@ -424,7 +424,7 @@
       "objectives": [
         {
           "id": "deliver",
-          "text": "H01经典珍珠奶茶 → 打听酒馆与赌场的顾客甲",
+          "text": "经典珍珠奶茶 → 打听酒馆与赌场的顾客甲",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.rumor_0.delivered"
@@ -445,8 +445,8 @@
     {
       "id": "day2.orders.rumor_1",
       "type": "commission",
-      "title": "H01经典珍珠奶茶 → 打听酒馆与赌场的顾客乙",
-      "description": "H01经典珍珠奶茶 → 打听酒馆与赌场的顾客乙",
+      "title": "经典珍珠奶茶 → 打听酒馆与赌场的顾客乙",
+      "description": "经典珍珠奶茶 → 打听酒馆与赌场的顾客乙",
       "reveal_when": {
         "type": "flag",
         "key": "day2.s02.rumor.open"
@@ -462,7 +462,7 @@
       "objectives": [
         {
           "id": "deliver",
-          "text": "H01经典珍珠奶茶 → 打听酒馆与赌场的顾客乙",
+          "text": "经典珍珠奶茶 → 打听酒馆与赌场的顾客乙",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.rumor_1.delivered"
@@ -483,8 +483,8 @@
     {
       "id": "day2.orders.ordinary_a",
       "type": "commission",
-      "title": "散客 A · H01",
-      "description": "散客 A · H01",
+      "title": "散客 A · 经典珍珠奶茶",
+      "description": "散客 A · 经典珍珠奶茶",
       "reveal_when": {
         "type": "flag",
         "key": "day2.s02.open"
@@ -500,7 +500,7 @@
       "objectives": [
         {
           "id": "deliver",
-          "text": "散客 A · H01",
+          "text": "散客 A · 经典珍珠奶茶",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.ordinary_a.delivered"
@@ -521,8 +521,8 @@
     {
       "id": "day2.orders.ordinary_b",
       "type": "commission",
-      "title": "散客 B · H01",
-      "description": "散客 B · H01",
+      "title": "散客 B · 经典珍珠奶茶",
+      "description": "散客 B · 经典珍珠奶茶",
       "reveal_when": {
         "type": "flag",
         "key": "day2.s02.open"
@@ -538,7 +538,7 @@
       "objectives": [
         {
           "id": "deliver",
-          "text": "散客 B · H01",
+          "text": "散客 B · 经典珍珠奶茶",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.ordinary_b.delivered"
@@ -559,8 +559,8 @@
     {
       "id": "day2.orders.ordinary_c",
       "type": "commission",
-      "title": "散客 C · H01",
-      "description": "散客 C · H01",
+      "title": "散客 C · 经典珍珠奶茶",
+      "description": "散客 C · 经典珍珠奶茶",
       "reveal_when": {
         "type": "flag",
         "key": "day2.s02.open"
@@ -576,7 +576,7 @@
       "objectives": [
         {
           "id": "deliver",
-          "text": "散客 C · H01",
+          "text": "散客 C · 经典珍珠奶茶",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.ordinary_c.delivered"
@@ -688,8 +688,8 @@
     {
       "id": "day2.casino.debt",
       "type": "commission",
-      "title": "赌场债务：第三天十杯H01",
-      "description": "赌场债务：第三天十杯H01",
+      "title": "赌场债务：第三天十杯经典珍珠奶茶",
+      "description": "赌场债务：第三天十杯经典珍珠奶茶",
       "reveal_when": {
         "type": "flag",
         "key": "day2.casino.debt.active"
@@ -705,7 +705,7 @@
       "objectives": [
         {
           "id": "deliver",
-          "text": "赌场债务：第三天十杯H01",
+          "text": "赌场债务：第三天十杯经典珍珠奶茶",
           "complete_when": {
             "type": "flag",
             "key": "day2.casino.debt.paid"

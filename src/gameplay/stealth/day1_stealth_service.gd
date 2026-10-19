@@ -94,6 +94,15 @@ func get_objective_progress() -> String:
 		lines.append("%s %s" % ["✓" if _state.get_flag(flag) else "○", _setup.objective_names[flag]])
 	return " · ".join(lines)
 
+## Compact count for the small HUD; the objective list names the actual items.
+func get_objective_summary() -> String:
+	var total := 0
+	var completed := 0
+	for flag: String in _setup.objective_names:
+		total += 1
+		completed += 1 if _state.get_flag(flag) else 0
+	return "" if total == 0 else "目标 %d/%d" % [completed, total]
+
 func has_mission_items() -> bool:
 	if not _setup.required_flags.all(func(flag: StringName) -> bool: return _state.get_flag(String(flag))):
 		return false
@@ -160,7 +169,7 @@ func begin_attempt() -> Error:
 	else:
 		_clear_local()
 		_player.teleport_to(_setup.checkpoint.global_position)
-	_set_status(Status.RUNNING, "鼠标指向落点，使用投掷操作")
+	_set_status(Status.RUNNING, "F 投币引开守卫 · 避开扇区")
 	return OK
 
 func retry_attempt() -> Error:
@@ -177,7 +186,7 @@ func retry_attempt() -> Error:
 			return OK
 	_clear_local()
 	_player.teleport_to(_setup.checkpoint.global_position)
-	_set_status(Status.RUNNING, "已恢复潜入开始前的完整状态" if _setup.wallet_coins else "已返回检查点；已使用的物品不会补回")
+	_set_status(Status.RUNNING, "已回到潜入前状态" if _setup.wallet_coins else "已返回检查点；物品不补回")
 	return OK
 
 func cancel_attempt() -> void:
@@ -247,11 +256,11 @@ func _physics_process(delta: float) -> void:
 			_reset_responses(false)
 			_player.cancel_action()
 			if guard.role == Day1GuardResponse.Role.DRUNKEN:
-				_set_status(Status.INTERCEPTED, "醉酒守卫拦住了你；完成交涉后继续，或返回检查点")
+				_set_status(Status.INTERCEPTED, "醉酒守卫拦住了你，先和他交涉")
 				guard_intercepted.emit(guard.encounter_event_id)
 			else:
 				_spawn_alert_marker(guard.actor.global_position)
-				_set_status(Status.FAILED, "%s发现了你。下次留意朝向，避开观察区域再通过。" % guard.actor.display_name)
+				_set_status(Status.FAILED, "%s发现了你。绕到扇区侧面再走。" % guard.actor.display_name)
 				attempt_failed.emit(guard.actor.actor_id)
 			return
 	_try_escape()
@@ -333,7 +342,7 @@ func _on_action_triggered(action: StringName, _direction: Vector2) -> void:
 	_effects.add_child(projectile)
 	projectile.global_position = _player.global_position
 	_projectiles.append(projectile)
-	message = "已投出%s" % ({&"coin": "古怪金币", &"torch": "火把", &"drink": "饮品"}[pending.kind])
+	message = "投出了%s" % ({&"coin": "金币", &"torch": "火把", &"drink": "饮品"}[pending.kind])
 	throw_released.emit(pending.kind)
 	changed.emit()
 
@@ -384,7 +393,7 @@ func _resolve_impact(result: Dictionary) -> void:
 			_confusion_created = true
 			for guard: Day1GuardResponse in _setup.guards:
 				guard.confuse(target.global_position, target.confusion_radius * _setup.effect_scale, target.confusion_seconds)
-	message = ("守卫转移了注意力" if affected else "声响没有引开守卫") if result.kind == &"coin" else ("火把点燃了目标，附近守卫陷入混乱" if affected else "火把没有点燃目标")
+	message = ("守卫被引开了" if affected else "守卫没被引开") if result.kind == &"coin" else ("火把点燃了目标，守卫陷入混乱" if affected else "火把没有点燃目标")
 	if result.kind == &"drink":
 		message = "饮品已落地，效果区域正在生效"
 	throw_resolved.emit(result.kind, affected)

@@ -17,6 +17,17 @@ signal line_changed(line_id: String)
 	"玩家": preload("res://assets/characters/apron_man/player_talking_portrait.png"),
 	"胖哥布林": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
 	"哥布林": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
+	# The authored scenes name the same townsfolk by role; they share the one
+	# finished goblin portrait instead of blinking to an empty frame.
+	"哥布林甲": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
+	"哥布林乙": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
+	"哥布林丙": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
+	"哥布林顾客": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
+	"哥布林顾客甲": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
+	"哥布林顾客乙": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
+	"另一名哥布林": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
+	"酒馆老板": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
+	"赌场老板": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
 }
 
 var last_error: String = ""

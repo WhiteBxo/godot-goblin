@@ -1,7 +1,7 @@
 {
 	"version": 1.0,
 	"format": "goblin_story_project",
-	"next_step_id": 81.0,
+	"next_step_id": 87.0,
 	"manifest": {
 		"version": 1.0,
 		"source": "res://docs/design/day_01_stages_01_02_draft.md",
@@ -475,7 +475,7 @@
 					"data": {
 						"command": "play_sfx",
 						"id": "shop.door_bell",
-						"wait": true
+						"wait": false
 					}
 				},
 				{
@@ -483,6 +483,20 @@
 					"data": {
 						"command": "actor_show",
 						"actor": "goblin_a"
+					}
+				},
+				{
+					"id": "step_0081",
+					"data": {
+						"command": "actor_show",
+						"actor": "goblin_b"
+					}
+				},
+				{
+					"id": "step_0082",
+					"data": {
+						"command": "actor_show",
+						"actor": "goblin_c"
 					}
 				},
 				{
@@ -498,30 +512,9 @@
 					"data": {
 						"command": "actor_move",
 						"actor": "goblin_a",
-						"target": "day1_aisle"
-					}
-				},
-				{
-					"id": "step_0038",
-					"data": {
-						"command": "actor_move",
-						"actor": "goblin_a",
-						"target": "day1_group_a"
-					}
-				},
-				{
-					"id": "step_0039",
-					"data": {
-						"command": "actor_face",
-						"actor": "goblin_a",
-						"direction": "up"
-					}
-				},
-				{
-					"id": "step_0040",
-					"data": {
-						"command": "actor_show",
-						"actor": "goblin_b"
+						"target": "day1_aisle",
+						"speed": 240.0,
+						"wait": false
 					}
 				},
 				{
@@ -529,30 +522,9 @@
 					"data": {
 						"command": "actor_move",
 						"actor": "goblin_b",
-						"target": "day1_aisle"
-					}
-				},
-				{
-					"id": "step_0043",
-					"data": {
-						"command": "actor_move",
-						"actor": "goblin_b",
-						"target": "day1_group_b"
-					}
-				},
-				{
-					"id": "step_0044",
-					"data": {
-						"command": "actor_face",
-						"actor": "goblin_b",
-						"direction": "up"
-					}
-				},
-				{
-					"id": "step_0045",
-					"data": {
-						"command": "actor_show",
-						"actor": "goblin_c"
+						"target": "day1_aisle",
+						"speed": 240.0,
+						"wait": false
 					}
 				},
 				{
@@ -560,7 +532,36 @@
 					"data": {
 						"command": "actor_move",
 						"actor": "goblin_c",
-						"target": "day1_aisle"
+						"target": "day1_aisle",
+						"speed": 240.0,
+						"wait": true
+					}
+				},
+				{
+					"id": "step_0083",
+					"data": {
+						"command": "wait",
+						"seconds": 0.2
+					}
+				},
+				{
+					"id": "step_0038",
+					"data": {
+						"command": "actor_move",
+						"actor": "goblin_a",
+						"target": "day1_group_a",
+						"speed": 240.0,
+						"wait": false
+					}
+				},
+				{
+					"id": "step_0043",
+					"data": {
+						"command": "actor_move",
+						"actor": "goblin_b",
+						"target": "day1_group_b",
+						"speed": 240.0,
+						"wait": false
 					}
 				},
 				{
@@ -568,7 +569,34 @@
 					"data": {
 						"command": "actor_move",
 						"actor": "goblin_c",
-						"target": "day1_group_c"
+						"target": "day1_group_c",
+						"speed": 240.0,
+						"wait": true
+					}
+				},
+				{
+					"id": "step_0084",
+					"data": {
+						"command": "wait",
+						"seconds": 1.7
+					}
+				},
+				{
+					"id": "step_0039",
+					"data": {
+						"command": "actor_face",
+						"actor": "goblin_a",
+						"direction": "up",
+						"wait": false
+					}
+				},
+				{
+					"id": "step_0044",
+					"data": {
+						"command": "actor_face",
+						"actor": "goblin_b",
+						"direction": "up",
+						"wait": false
 					}
 				},
 				{
@@ -576,7 +604,8 @@
 					"data": {
 						"command": "actor_face",
 						"actor": "goblin_c",
-						"direction": "up"
+						"direction": "up",
+						"wait": true
 					}
 				},
 				{
@@ -678,22 +707,9 @@
 					"data": {
 						"command": "actor_move",
 						"actor": "goblin_a",
-						"target": "day1_aisle"
-					}
-				},
-				{
-					"id": "step_0060",
-					"data": {
-						"command": "actor_move",
-						"actor": "goblin_a",
-						"target": "day1_door"
-					}
-				},
-				{
-					"id": "step_0061",
-					"data": {
-						"command": "actor_hide",
-						"actor": "goblin_a"
+						"target": "day1_aisle",
+						"speed": 240.0,
+						"wait": false
 					}
 				},
 				{
@@ -701,22 +717,9 @@
 					"data": {
 						"command": "actor_move",
 						"actor": "goblin_b",
-						"target": "day1_aisle"
-					}
-				},
-				{
-					"id": "step_0063",
-					"data": {
-						"command": "actor_move",
-						"actor": "goblin_b",
-						"target": "day1_door"
-					}
-				},
-				{
-					"id": "step_0064",
-					"data": {
-						"command": "actor_hide",
-						"actor": "goblin_b"
+						"target": "day1_aisle",
+						"speed": 240.0,
+						"wait": false
 					}
 				},
 				{
@@ -724,7 +727,36 @@
 					"data": {
 						"command": "actor_move",
 						"actor": "goblin_c",
-						"target": "day1_aisle"
+						"target": "day1_aisle",
+						"speed": 240.0,
+						"wait": true
+					}
+				},
+				{
+					"id": "step_0085",
+					"data": {
+						"command": "wait",
+						"seconds": 0.9
+					}
+				},
+				{
+					"id": "step_0060",
+					"data": {
+						"command": "actor_move",
+						"actor": "goblin_a",
+						"target": "day1_door",
+						"speed": 240.0,
+						"wait": false
+					}
+				},
+				{
+					"id": "step_0063",
+					"data": {
+						"command": "actor_move",
+						"actor": "goblin_b",
+						"target": "day1_door",
+						"speed": 240.0,
+						"wait": false
 					}
 				},
 				{
@@ -732,7 +764,32 @@
 					"data": {
 						"command": "actor_move",
 						"actor": "goblin_c",
-						"target": "day1_door"
+						"target": "day1_door",
+						"speed": 240.0,
+						"wait": true
+					}
+				},
+				{
+					"id": "step_0086",
+					"data": {
+						"command": "wait",
+						"seconds": 0.8
+					}
+				},
+				{
+					"id": "step_0061",
+					"data": {
+						"command": "actor_hide",
+						"actor": "goblin_a",
+						"wait": false
+					}
+				},
+				{
+					"id": "step_0064",
+					"data": {
+						"command": "actor_hide",
+						"actor": "goblin_b",
+						"wait": false
 					}
 				},
 				{
@@ -852,8 +909,7 @@
 				},
 				"line_3": {
 					"speaker": "主角",
-					"text": "卧槽……你还真就只给我个游戏币？我一杯奶茶就这么没了？！",
-					"portrait": "res://assets/characters/apron_man/player_neutral_portrait.png"
+					"text": "卧槽……你还真就只给我个游戏币？我一杯奶茶就这么没了？！"
 				}
 			}
 		},

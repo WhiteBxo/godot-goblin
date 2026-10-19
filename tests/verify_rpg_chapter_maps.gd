@@ -118,8 +118,12 @@ func _verify_map(index: int) -> void:
 	if setup != null:
 		_check(setup.throw_range == 230.0 and setup.effect_scale == 0.5, "RPG throw range and effect distances are halved")
 		for guard: Day1GuardResponse in setup.guards:
-			_check(guard.sight_range == (96.0 if guard.role == Day1GuardResponse.Role.ENTRANCE else 30.0) and guard.hearing_range == 180.0, "Entrance watch covers the main street; other guards keep local ranges")
-			_check(guard.discovery_seconds == 0.6 and guard.distraction_seconds == 6.0 and guard.sight_half_angle == 85.0, "Scaling distance preserves guard timing and sight angle")
+			var expected_range: float = {Day1GuardResponse.Role.ENTRANCE: 84.0, Day1GuardResponse.Role.MANSION_LURE: 48.0,
+				Day1GuardResponse.Role.MANSION_GATE: 60.0, Day1GuardResponse.Role.DRUNKEN: 48.0}[guard.role]
+			_check(guard.sight_range == expected_range, "Guard sight reaches one post without covering the street: " + str(guard.role))
+			_check(guard.hearing_range == (156.0 if guard.role == Day1GuardResponse.Role.ENTRANCE else (120.0 if guard.role == Day1GuardResponse.Role.DRUNKEN else 132.0)), "Guard hearing matches the authored observation distance")
+			_check(guard.sight_half_angle == 45.0, "Guard cone is a forward sector, not a half-screen fan")
+			_check(not guard.patrol_offsets.is_empty(), "Guard has an authored patrol beat: " + str(guard.role))
 	var data := map.get_map_data(["settlement.shop", "settlement.elder"])
 	_check(data.regions.size() == 2, "Map exposes only requested known exterior locations")
 	_check(map.get_scene_entrance(&"unknown") == null, "Unknown entrances fail closed")
@@ -161,11 +165,28 @@ func _verify_north_guidance(map: RpgChapterMap) -> void:
 	var landing: Node2D = map.get_node("Wayfinding/NightGuidance/CoinLanding")
 	_check(map.can_stand_at(landing.global_position, Vector2(8.5, 5)) and player.global_position.distance_to(landing.global_position) <= setup.throw_range, "Optional coin landing is on floor and within actual throw range from observation")
 	_check(watch.distract(landing.global_position), "Coin landing lies inside this guard's actual hearing range")
+	# Isolate the sight lane from the authored patrol: the watch stands still here.
+	var patrol := watch.patrol_offsets.duplicate()
+	watch.patrol_offsets = []
 	for x: float in [1128.0, 1176.0, 1224.0]:
 		watch.reset_response()
 		player.teleport_to(Vector2(x, 504))
 		await physics_frame
-		_check(watch.advance(0.61, player, space), "South-facing watch covers native street lane: " + str(x))
+		_check(watch.advance(1.0, player, space), "Forward watch covers native street lane: " + str(x))
+	for x: float in [1104.0, 1248.0]:
+		watch.reset_response()
+		player.teleport_to(Vector2(x, 504))
+		await physics_frame
+		_check(not watch.advance(1.0, player, space), "Outside the forward sector stays safe: " + str(x))
+	watch.patrol_offsets = patrol
+	# The authored patrol actually moves the body and reset restores its post.
+	var start := watch.actor.global_position
+	for tick in range(24):
+		watch.advance(0.1, player, space)
+	_check(watch.actor.global_position.distance_to(start) > 4.0, "Patrolling guard leaves its starting post")
+	_check(watch.actor.global_position.distance_to(start) <= 60.0, "Patrol stays within its authored segment")
+	watch.reset_response()
+	_check(watch.actor.global_position.distance_to(start) < 1.0, "Retry restores the guard's patrol start")
 	watch.actor.visible = false
 	player.free()
 	await process_frame

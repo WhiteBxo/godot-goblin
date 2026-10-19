@@ -162,8 +162,28 @@
           "duration": 0.6
         },
         {
+          "command": "camera_zoom",
+          "value": 1.12,
+          "duration": 0.4
+        },
+        {
+          "command": "play_sfx",
+          "id": "shop.tea_pour",
+          "wait": false
+        },
+        {
+          "command": "wait",
+          "seconds": 0.35
+        },
+        {
           "command": "dialogue",
           "id": "day1.s04.first_taste"
+        },
+        {
+          "command": "actor_emote",
+          "actor": "fat_goblin",
+          "symbol": "♪",
+          "duration": 1.0
         },
         {
           "command": "dialogue",
@@ -351,6 +371,20 @@
         {
           "command": "chapter_action",
           "id": "day1.s05.pay_pair"
+        },
+        {
+          "command": "camera_focus",
+          "actor": "mansion_gate",
+          "duration": 0.6
+        },
+        {
+          "command": "title_card",
+          "text": "宅邸双卫放行",
+          "subtitle": "沿宅前道路向东，走上门前台阶按 E 进入长老居所",
+          "seconds": 1.2
+        },
+        {
+          "command": "camera_reset"
         }
       ]
     },

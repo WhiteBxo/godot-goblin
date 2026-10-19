@@ -113,6 +113,7 @@
 | [独立家具、道具与墙体素材库](assets/modular_assets/README.md) | `modular_assets/README.md` |
 | [Sound Library v1](assets/sound_library.md) | `sound_library.md` |
 | [音效 ID 与资源映射（生成文件）](assets/sound_library_ids.md) | `sound_library_ids.md` |
+| [后续流程 BGM 缺口与生成提示词](assets/bgm_prompts.md) | 待制作曲目、提示词与接线位置 |
 
 ## 设计与剧情源稿
 
@@ -168,6 +169,7 @@ Beat 映射、验证清单及待定项；不供游戏运行时加载。
 
 | 文档 | 文件 / 说明 |
 | --- | --- |
+| [试玩反馈处理（2026-10-19）](development/playtest_feedback_pass_2026_10_19.md) | 20 条试玩反馈：接单跳页、群客节奏、HUD/路标/调查页、H01、立绘、左键对白、地图、守卫巡逻与首夜引导。 |
 | [前两天引导与对白节奏 A+B（2026-10-19）](development/two_day_guidance_dialogue_2026_10_19.md) | 剧情 Esc 跳过、地图目标落点、存档短暂提示、换日标题卡、长按快进与自动播放。 |
 | [轻量常驻 HUD 与统一菜单（2026-10-19）](development/compact_game_menu_2026_10_19.md) | 单行目标、右上角菜单收纳经营／支线／地图／设置，含新旧入口验证与截图。 |
 | [前两天体验补完（2026-10-19）](development/two_day_experience_completion_2026_10_19.md) | 支线摘要、可选试饮、祭典变化、便捷返店、关键演出、赌场结果、章末回顾与基础设置。 |

@@ -282,19 +282,22 @@ func set_movement_enabled(enabled: bool) -> void:
 	velocity = Vector2.ZERO
 	_update_animation(false)
 
-func move_direction(direction: Vector2, delta: float) -> void:
+## [param speed_override] lets scene-owned ambient NPC movement use its own
+## pace without changing the body's configured player speed.
+func move_direction(direction: Vector2, delta: float, speed_override: float = 0.0) -> void:
 	if not movement_enabled or is_performance_controlled() or not _active_action.is_empty():
 		return
 	direction = direction.limit_length()
 	if not direction.is_zero_approx():
 		_update_facing(direction)
-	var target_velocity := direction * get_movement_speed()
+	var move_speed := speed_override if speed_override > 0.0 else get_movement_speed()
+	var target_velocity := direction * move_speed
 	var rate := deceleration if direction.is_zero_approx() else acceleration
 	velocity = velocity.move_toward(target_velocity, rate * delta)
 	var previous_position := global_position
 	_move_velocity(delta)
 	var distance := global_position.distance_to(previous_position)
-	var movement_ratio := distance / maxf(delta * get_movement_speed(), 0.001)
+	var movement_ratio := distance / maxf(delta * move_speed, 0.001)
 	_update_animation(distance > 0.01, movement_ratio)
 
 ## World effects displace bodies through collision without taking story control

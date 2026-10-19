@@ -45,7 +45,10 @@ func _tap(key: Key, echo: bool = false) -> void:
 
 
 func _click(button: Control) -> void:
-	var position := button.get_global_rect().get_center()
+	await _click_position(button.get_global_rect().get_center())
+
+
+func _click_position(position: Vector2) -> void:
 	for pressed: bool in [true, false]:
 		var event := InputEventMouseButton.new()
 		event.position = position
@@ -61,6 +64,7 @@ func _run() -> void:
 	var state_before: Dictionary = root.get_node("GameState").call("to_dict")
 	_test_library()
 	await _test_flow()
+	await _test_mouse_advance()
 	await _test_presentation_timing()
 	await _test_story_skip()
 	await _test_fast_forward_and_auto()
@@ -172,6 +176,39 @@ func _test_flow() -> void:
 	_check(not _ui.is_revealing(), "Typewriter can finish naturally without a skip")
 	await _tap(KEY_ENTER)
 	_check(not _manager.is_active() and not _ends.back()["cancelled"], "Single-line dialogue ends normally")
+
+
+func _test_mouse_advance() -> void:
+	var manager := DialogueManager.new()
+	root.add_child(manager)
+	var ui: DialogueUI = load("res://src/UI/dialogue/dialogue_ui.tscn").instantiate()
+	root.add_child(ui)
+	manager.configure(ui)
+	_check(manager.start_dialogue("demo.first_shift") == OK, "Mouse test starts a real dialogue")
+	await _frames(2)
+	var text: RichTextLabel = ui.get_node("Panel/Margin/Content/Line/Text")
+	var center: Vector2 = (ui.get_node("Panel") as Control).get_global_rect().get_center()
+	# The first click completes the typewriter instead of skipping the line.
+	await _click_position(center)
+	_check(not ui.is_revealing() and manager.get_current_line_id() == "welcome", "Left click reveals the current line first")
+	await _click_position(center)
+	_check(manager.get_current_line_id() == "explain", "A second left click advances the line")
+	# A click on a waiting choice belongs to the native button, not the line.
+	ui.reveal_all()
+	manager.advance()
+	ui.reveal_all()
+	manager.advance()
+	ui.reveal_all()
+	_check(manager.get_current_line_id() == "question", "Mouse test reaches the authored choice")
+	var choices: VBoxContainer = ui.get_node("Panel/Margin/Content/ChoiceScroll/Choices")
+	_check(choices.is_visible_in_tree() and choices.get_child_count() == 2, "Choice buttons are ready for native mouse input")
+	await _frames(2)
+	await _click(choices.get_child(0) as Button)
+	_check(manager.get_current_line_id() == "learn_result", "Clicking a choice selects it without double-advancing")
+	manager.end_dialogue()
+	ui.queue_free()
+	manager.queue_free()
+	await _frames(2)
 
 
 func _test_presentation_timing() -> void:

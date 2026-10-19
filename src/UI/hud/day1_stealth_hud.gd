@@ -57,13 +57,12 @@ func _process(_delta: float) -> void:
 	var setup := _service.get_setup()
 	if not is_instance_valid(setup):
 		return
-	$Panel/Content/Objectives.text = _service.get_objective_progress()
+	$Panel/Content/Objectives.text = _service.get_objective_summary()
 	$Panel/Content/Objectives.visible = not $Panel/Content/Objectives.text.is_empty()
-	if setup.wallet_coins:
-		$Panel/Content/Hint.text = setup.escape_hint if _service.has_mission_items() else setup.approach_hint
+	$Panel/Content/Hint.text = setup.controls_hint if not setup.controls_hint.is_empty() else "F 投币引开 · 侧边可绕"
 	if setup.interior_only and _service.status == Day1StealthService.Status.RUNNING:
 		$Panel/Content/Status.text = "长老居所 · 调查与取物"
-	$Panel/Content/Actions/Coin.visible = not setup.interior_only
+	$Panel/Content/Actions/Coin.visible = not setup.interior_only and _service.status == Day1StealthService.Status.RUNNING
 	$Panel/Content/Actions/Torch.visible = not setup.wallet_coins
 	$Panel/Content/Drinks.visible = not setup.wallet_coins
 	var inventory := _service.get_inventory()
@@ -71,16 +70,21 @@ func _process(_delta: float) -> void:
 	if setup.wallet_coins:
 		$Panel/Content/Actions/Coin.text = "投掷金币 · 10G"
 	$Panel/Content/Actions/Torch.text = "火把 %d%s" % [inventory.get_stock(setup.torch_item_id), " · 已选" if _service.selected_kind == &"torch" else ""]
-	$Panel/Content/Actions/Retry.visible = _service.is_blocking() or (setup.wallet_coins and _service.status == Day1StealthService.Status.RUNNING)
+	$Panel/Content/Actions/Retry.visible = _service.is_blocking()
 	$Panel/Content/Actions/Retry.text = "重新潜入" if setup.wallet_coins else "从检查点重试"
-	$Panel/Content/RetryHint.visible = _service.status == Day1StealthService.Status.FAILED
+	$Panel/Content/RetryHint.visible = _service.status in [Day1StealthService.Status.FAILED, Day1StealthService.Status.INTERCEPTED]
 	$Panel/Content/RetryHint.text = "重试会恢复本次潜入前的钱包和物品。" if setup.wallet_coins else "重试返回检查点，已用物品不会补回。"
 	$Panel/Content/Actions/Start.visible = _service.status == Day1StealthService.Status.IDLE
 	$Panel/Content/Hint.visible = _service.status == Day1StealthService.Status.RUNNING
 	var watches := PackedStringArray()
+	var cleared := 0
 	for guard: Variant in setup.guards:
 		if is_instance_valid(guard) and is_instance_valid(guard.actor):
-			if guard.state not in [Day1GuardResponse.State.WATCHING, Day1GuardResponse.State.CLEARED]:
+			if guard.state == Day1GuardResponse.State.CLEARED:
+				cleared += 1
+			elif guard.state != Day1GuardResponse.State.WATCHING:
 				watches.append("%s：%s" % [guard.actor.display_name, guard.get_feedback_text()])
+	if cleared > 0:
+		watches.append("已放行 %d 名" % cleared)
 	$Panel/Content/Guards.text = " · ".join(watches)
 	$Panel/Content/Guards.visible = not watches.is_empty()

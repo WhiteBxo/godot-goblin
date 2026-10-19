@@ -86,6 +86,8 @@ func _resume_boundary(preserve_player_position: bool = false) -> void:
 	last_error = ""
 	if Day1ChapterController.owns_stage(_state, "shop"):
 		# S03 onward and the Day 2 placeholder belong to Day1ChapterController.
+		# Their shop visits still need the scene track restored after travel.
+		_restore_scene_bgm()
 		_game.get_business_hud().show_resume(false)
 		return
 	var director := _game.get_story_director()
@@ -121,8 +123,7 @@ func _resume_boundary(preserve_player_position: bool = false) -> void:
 		actor.visible = checkpoint.actors.has(id)
 	_state.set_story_stage(checkpoint.stage)
 	# A recreated scene needs the current scene music, without replaying an event.
-	if not checkpoint.event.is_empty() and _game.get_audio_manager().get_bgm_state().id.is_empty():
-		_game.get_audio_manager().play_bgm("music.daily_milk_tea", 1.0, -12.0)
+	_restore_scene_bgm()
 	error = bridge.load_phases(PHASES)
 	if error != OK:
 		last_error = bridge.last_error
@@ -134,6 +135,15 @@ func _resume_boundary(preserve_player_position: bool = false) -> void:
 	_refresh()
 	_boundary_ready = true
 	_recovery_blocked = false
+
+## Each MainGame owns its AudioManager, so a door transition starts silent.
+## Restore the shop track only when the new host has nothing playing.
+func _restore_scene_bgm() -> void:
+	if not is_instance_valid(_game):
+		return
+	var audio := _game.get_audio_manager()
+	if is_instance_valid(audio) and audio.get_bgm_state().id.is_empty():
+		audio.play_bgm("music.daily_milk_tea", 1.0, -12.0)
 
 func _process(_delta: float) -> void:
 	if _opening_pending and not _game.is_session_initializing() and (not is_instance_valid(_game.get_scene_travel()) or not _game.get_scene_travel().is_busy()) and not get_tree().paused and not _game.get_ui_manager().has_modal() and not _game.get_story_director().is_busy():

@@ -29,9 +29,7 @@ func configure(game: MainGame) -> Error:
 	_procurement = Day2Procurement.new()
 	add_child(_procurement)
 	_procurement.configure(_state)
-	_hud = preload("res://src/UI/hud/chapter_actions_hud.tscn").instantiate()
-	game.get_ui_manager().register_screen(ScreenIds.CHAPTER_ACTIONS, _hud, &"hud", false)
-	game.get_ui_manager().open_screen(ScreenIds.CHAPTER_ACTIONS)
+	_hud = game.get_game_menu()
 	_hud.action_requested.connect(perform_user_action)
 	_recap = preload("res://src/UI/hud/chapter_recap.tscn").instantiate()
 	game.get_ui_manager().register_screen(ScreenIds.CHAPTER_RECAP, _recap, &"popup", true)
@@ -212,9 +210,11 @@ func _on_optional_delivered(id: String) -> void:
 		_scheduler.request_departure.call_deferred("ordinary_c")
 		_game.get_shop_ui().show_feedback.call_deferred("试饮评价 · 奶香里带着辛辣，正合口味！配方已留在饮品图鉴。", true)
 
-func _quiet() -> bool:
+func _quiet(allow_menu := false) -> bool:
 	var travel := _game.get_scene_travel()
-	return not get_tree().paused and not _game.is_session_initializing() and not _game.get_ui_manager().has_modal() and not _game.get_story_director().is_busy() and not _game.get_dialogue_manager().is_active() and (not is_instance_valid(travel) or not travel.is_busy())
+	var ui := _game.get_ui_manager()
+	var clear := not ui.has_modal() or (allow_menu and ui.get_top_screen_id() == ScreenIds.CHAPTER_ACTIONS)
+	return not get_tree().paused and not _game.is_session_initializing() and clear and not _game.get_story_director().is_busy() and not _game.get_dialogue_manager().is_active() and (not is_instance_valid(travel) or not travel.is_busy())
 
 func get_user_actions() -> Array[Dictionary]:
 	var actions: Array[Dictionary] = []
@@ -240,11 +240,12 @@ func get_user_actions() -> Array[Dictionary]:
 	return actions
 
 func perform_user_action(id: String) -> void:
-	if not _quiet():
+	if not _quiet(true):
 		return
 	for action: Dictionary in get_user_actions():
 		if action.id != id:
 			continue
+		_game.get_ui_manager().close_screen(ScreenIds.CHAPTER_ACTIONS)
 		var error := ERR_UNAVAILABLE
 		if action.has("trigger"):
 			error = _game.get_story_director().request_interaction(action.trigger)
@@ -305,17 +306,11 @@ func _process(_delta: float) -> void:
 	var gathering_notice := get_gathering_notice()
 	if not gathering_notice.is_empty():
 		notice += ("\n\n" if not notice.is_empty() else "") + gathering_notice
-	var enabled := _quiet()
-	var summary := get_optional_summary()
-	var context_details := _host == "tavern"
-	var level := _game.get_active_level()
-	if level.has_method("get_gather_points"):
-		for point: GatherPoint in level.get_gather_points():
-			context_details = context_details or point.is_available()
-	var signature := JSON.stringify([actions, notice, enabled, summary, context_details])
+	var enabled := _quiet(true)
+	var signature := JSON.stringify([actions, notice, enabled])
 	if signature != _hud_signature:
 		_hud_signature = signature
-		_hud.show_actions(actions, notice, enabled, summary, context_details)
+		_hud.show_actions(actions, notice, enabled)
 
 func get_optional_summary() -> String:
 	var lines := PackedStringArray()

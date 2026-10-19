@@ -190,20 +190,10 @@ func serve_order(order: String) -> void:
 	check(state.get_flag("delivery." + order + ".completed"), "Actual E delivers the selected customer's order: " + order)
 
 func press_chapter_action(id: String) -> void:
+	check(game.open_game_menu() == OK, "Open the upper-right menu for chapter action: " + id)
 	await frames(6)
-	var label := ""
-	for action: Dictionary in game.get_chapter_gameplay().get_user_actions():
-		if action.id == id:
-			label = action.text
-	var hud := game.find_children("*", "ChapterActionsHUD", true, false)[0] as ChapterActionsHUD
-	if id.begins_with("hire:") and not hud.get_node("Scroll/Content/OptionalButtons").visible:
-		hud.get_node("Scroll/Content/Details").grab_focus()
-		await tap(&"ui_accept")
-	var button: Button
-	for child: Node in hud.get_node("Scroll/Content/Buttons").get_children() + hud.get_node("Scroll/Content/OptionalButtons").get_children():
-		if child is Button and child.text == label:
-			button = child
-	check(button != null and not button.disabled and button.is_visible_in_tree(), "A usable chapter button exists: " + id)
+	var button := game.get_game_menu().get_action_button(id)
+	check(button != null and not button.disabled and button.is_visible_in_tree(), "A usable menu action exists: " + id)
 	if button == null or button.disabled:
 		finish()
 		return

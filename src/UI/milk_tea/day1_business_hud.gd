@@ -51,6 +51,7 @@ func _publish_change() -> void:
 	_change_tween.tween_callback(_clear_change)
 
 func _render_balance() -> void:
+	$BusinessBalance.visible = _shown_delta != 0
 	$BusinessBalance.text = "钱包 %s" % WalletTransactions.format_money(_wallet.get_balance())
 	if _shown_delta != 0:
 		$BusinessBalance.text += "  ·  %s%dG" % ["+" if _shown_delta > 0 else "", _shown_delta]

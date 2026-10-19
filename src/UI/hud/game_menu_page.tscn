@@ -1,0 +1,34 @@
+[gd_scene load_steps=2 format=3]
+[ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="theme"]
+[node name="GameMenuPage" type="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("theme")
+[node name="Status" type="Label" parent="."]
+layout_mode = 2
+theme_type_variation = &"Hint"
+autowrap_mode = 3
+[node name="Navigation" type="GridContainer" parent="."]
+layout_mode = 2
+columns = 4
+[node name="Scroll" type="ScrollContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+follow_focus = true
+[node name="Content" type="VBoxContainer" parent="Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="ObjectiveTitle" type="Label" parent="Scroll/Content"]
+layout_mode = 2
+theme_type_variation = &"H2"
+autowrap_mode = 3
+[node name="Objective" type="Label" parent="Scroll/Content"]
+layout_mode = 2
+autowrap_mode = 3
+[node name="Notice" type="Label" parent="Scroll/Content"]
+layout_mode = 2
+theme_type_variation = &"Hint"
+autowrap_mode = 3
+[node name="Actions" type="VBoxContainer" parent="Scroll/Content"]
+layout_mode = 2

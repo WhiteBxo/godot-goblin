@@ -6,15 +6,15 @@ UI 使用 Godot 4.7 原生 Control、Container 和 Theme，不增加 autoload �
 
 | 层 | 内容 | process mode |
 | --- | --- | --- |
-| HudLayer / 10 | 交互提示、TaskHUD 订单追踪、手册 / 地图入口、Day 1 业务及潜入状态 | Always |
-| PopupLayer / 20 | ShopPopup、DialogueUI、HandbookPanel、聚落地图 | Always；被覆盖时 Disabled |
+| HudLayer / 10 | 交互提示、单行 TaskHUD、右上角菜单入口、短暂收支及潜入状态 | Always |
+| PopupLayer / 20 | 游戏菜单、ShopPopup、DialogueUI、HandbookPanel、聚落地图及菜单设置 | Always；被覆盖时 Disabled |
 | PauseLayer / 30 | PauseMenu | WhenPaused |
 | TransitionLayer / 40 | SceneTravel 的 ScreenTransition 与 Story TitleCard，由宿主合并显隐 | Always |
 | DebugLayer / 50 | 调试显示和 UI demo 按钮 | Always |
 
 UIManager 在 Systems 下使用 Always；World 和其他普通 Systems 保持 Pausable。界面节点由其 CanvasLayer 持有，管理器保存注册和模态栈。店铺 HUD 和弹窗通过独立场景实例化，不再从 HUD 内部 reparent 弹窗。
 
-手册使用 `handbook_hud`（HudLayer 的右上角图标及未读圆点）与 `handbook`（PopupLayer 的统一模态窗口）。委托、异闻录与饮品图鉴通过页签切换，未解锁页签隐藏；全部未解锁时入口隐藏。`MainGame.open_handbook()` 选择上次页签，首次优先委托；`open_tasks()` / J 键、`open_chronicle()` 与 `open_drinks()` 选择对应页。饮品图鉴首次自由制作后开放。`tasks`、`chronicle`、`drinks` 保留为手册别名，复用弹窗互斥、操作锁、Esc 关闭和 P 暂停；ItemList 使用原生方向键、Enter 和鼠标输入，Tab 继续由原生 Control 导航及管理器焦点约束处理。详见 [见闻录模块](../gameplay/chronicle.md)。
+右上角 `handbook_hud` 现在显示“菜单”及未读圆点，打开 `chapter_actions`（PopupLayer 的按需游戏菜单）。完整目标、钱包、存档时间、支线与经营动作在菜单查看；委托、异闻录、饮品、人物、背包、地图和设置从这里进入，子页返回菜单，再返回游戏。手册本体仍使用 `handbook`（PopupLayer 的统一模态窗口）。委托、异闻录与饮品图鉴通过页签切换，未解锁页签隐藏；全部未解锁时手册不可打开，基础菜单仍可使用。`MainGame.open_handbook()` 选择上次页签，首次优先委托；`open_tasks()` / J 键、`open_chronicle()` 与 `open_drinks()` 选择对应页。饮品图鉴首次自由制作后开放。`tasks`、`chronicle`、`drinks` 保留为手册别名，复用弹窗互斥、操作锁、Esc 关闭和 P 暂停；ItemList 使用原生方向键、Enter 和鼠标输入，Tab 继续由原生 Control 导航及管理器焦点约束处理。详见 [见闻录模块](../gameplay/chronicle.md)。
 
 ## 接入接口
 
@@ -121,7 +121,7 @@ godot --path . --log-file .godot/ui-visual.log --script res://tests/verify_ui_ma
 
 `src/UI/map/map_panel.tscn` 使用 `UIScreen + ModalShell`，由聚落 MainGame 装配。`MainGame.unlock_map()` 在地图和玩家已装配、screen 注册成功后才写入 `day1.s04.map_available`；重复调用安全。它是供后续 S04 接线的公开能力，当前正式剧情没有调用，初始化和打开地图均不补写这个事实。已有事实在宿主重建时恢复入口；reset / restore 撤销事实会注销并关闭地图。
 
-解锁后 HUD 的“地图 [M]”或 M 调用 `open_map()`；未解锁返回 `ERR_UNAVAILABLE`，暂停、演出、其他模态、潜行拦截或现有移动锁期间返回 `ERR_BUSY`。Esc / 关闭按钮退出，P 暂停覆盖，焦点和玩家锁沿用 UIManager / MainGame。Debug 全图改为 F7，Tab 路线在模态期间不响应。独立店内及洞穴宿主未装配聚落地图，不能解锁或打开它。
+解锁后菜单的“地图 [M]”或 M 调用 `open_map()`；未解锁返回 `ERR_UNAVAILABLE`，暂停、演出、其他模态、潜行拦截或现有移动锁期间返回 `ERR_BUSY`。Esc / 关闭按钮退出，P 暂停覆盖，焦点和玩家锁沿用 UIManager / MainGame。Debug 全图改为 F7，Tab 路线在模态期间不响应。独立店内及洞穴宿主未装配聚落地图，不能解锁或打开它。
 
 `SettlementMap.get_map_data(known_locations)` 只返回世界边界、保存场景中的区域 footprint 和真实外部入口位置的值副本；不返回节点、内部贴图、文书、血液、书柜、隐藏石盖或路线。`SettlementMap.MAP_LOCATIONS` 是唯一的 `location_id → zone_id → *_entrance` 映射：`settlement.shop/muster/vestibule/training/lodging/kitchen/tavern/casino/dining/ritual/elder/growing/warehouse/yard/hearth/workshop`。正式展示采用克制的编号轮廓图和地点列表，不加载制作源 JSON，不生成或复制地图图片。
 

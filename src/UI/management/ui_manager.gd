@@ -129,6 +129,9 @@ func is_open(id: StringName) -> bool:
 func has_modal() -> bool:
 	return not _stack.is_empty()
 
+func get_top_screen_id() -> StringName:
+	return _stack.back() if not _stack.is_empty() else &""
+
 func request_back() -> void:
 	if _owns_pause and not _stack.is_empty() and _stack.back() == ScreenIds.PAUSE:
 		set_paused(false)

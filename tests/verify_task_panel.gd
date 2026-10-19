@@ -216,7 +216,7 @@ func _test_host(path: String) -> void:
 	var player := game.get_player() as PlayerController
 	var text: RichTextLabel = panel.get_detail_text()
 	var list: ItemList = panel.get_entries()
-	check(not button.visible and game.open_tasks() == ERR_UNAVAILABLE, path + ": Handbook is hidden before task unlock")
+	check(button.visible and game.open_tasks() == ERR_UNAVAILABLE, path + ": Menu remains available while tasks stay locked")
 	state.set_flag("task.shop.first_order.active")
 	check(button.visible, "First task unlocks handbook")
 	await tap(KEY_J, true)
@@ -230,6 +230,7 @@ func _test_host(path: String) -> void:
 	state.set_flag("task.shop.first_order.active")
 	var before := state.to_dict()
 	button.pressed.emit()
+	game.get_game_menu().navigation_requested.emit(ScreenIds.TASKS)
 	var expected_product: String = game.get_task_journal().get_task("shop.first_order").delivery.product_id
 	var expected_name: String = game.get_warehouse_inventory().get_definition(expected_product).display_name
 	var expected_target := "交付对象：胖哥布林" if game.get_actor_director().get_actor(&"fat_goblin") != null else "交付对象：交付对象待确认"
@@ -241,6 +242,9 @@ func _test_host(path: String) -> void:
 	await tap(KEY_ESCAPE)
 	check(not paused and ui.is_open(&"tasks") and not player.movement_enabled, "Esc resumes to the existing task window")
 	game.get_node("PopupLayer/HandbookPanel").get_close_button().pressed.emit()
+	await frames()
+	check(ui.is_open(ScreenIds.CHAPTER_ACTIONS), "Closing tasks returns to the menu")
+	ui.close_screen(ScreenIds.CHAPTER_ACTIONS)
 	check(not ui.has_modal() and player.movement_enabled, "Close button restores movement")
 	await tap(KEY_P)
 	await tap(KEY_J)

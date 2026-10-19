@@ -4,6 +4,7 @@ extends RefCounted
 
 const PAUSE := &"pause"
 const SETTINGS := &"settings"
+const MENU_SETTINGS := &"menu_settings"
 const HANDBOOK := &"handbook"
 const HANDBOOK_HUD := &"handbook_hud"
 const TASKS := &"tasks"

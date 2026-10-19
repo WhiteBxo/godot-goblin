@@ -32,6 +32,10 @@ func _enter_tree() -> void:
 		_refresh()
 
 func _ready() -> void:
+	$Margin/Content/Heading.hide()
+	_title.hide()
+	_objective.max_lines_visible = 1
+	_objective.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_resize_card()
 	_refresh()
 
@@ -55,7 +59,10 @@ func _disconnect_journal() -> void:
 		_journal.projection_changed.disconnect(_refresh)
 
 func _resize_card() -> void:
-	offset_right = offset_left + minf(208.0, maxf(1.0, get_viewport_rect().size.x - 32.0))
+	offset_right = offset_left + minf(300.0, maxf(1.0, get_viewport_rect().size.x - 96.0))
+
+func get_objective_summary() -> Dictionary:
+	return {"title": _title.text, "objective": _objective.text}
 
 func _refresh() -> void:
 	if not is_node_ready():

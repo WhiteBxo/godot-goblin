@@ -21,23 +21,15 @@ func _run() -> void:
 	var hud: ChapterActionsHUD = load("res://src/UI/hud/chapter_actions_hud.tscn").instantiate()
 	root.add_child(hud)
 	await frames()
-	var detail := "代购专款 35G · 跑腿途中\n\n七日祭食材\n苔痕青 2/2 · 缺0\n已齐备，第三天交付。"
-	var summary := "代购 · 跑腿途中\n七日祭 · 已齐备，第三天交付"
-	hud.show_actions([], detail, true, summary)
-	check(hud.get_node("Scroll/Content/NoticePanel/Notice").text == summary, "Optional HUD starts compact")
-	hud.get_node("Scroll/Content/Details").pressed.emit()
-	check(hud.get_node("Scroll/Content/NoticePanel/Notice").text == detail, "Details remain available on demand")
-	hud.show_actions([], detail, false, summary)
-	check(hud.get_node("Scroll/Content/Details").disabled, "World HUD cannot change while a modal owns input")
+	var detail := "代购专款 35G · 跑腿途中\n七日祭食材\n苔痕青 2/2 · 缺0"
+	hud.hide()
+	hud.show_actions([{"id": "close", "text": "关店", "kind": "close"}], detail, true)
+	check(not hud.visible, "Menu data updates never create a persistent sidebar")
+	check(hud.get_action_button("close") != null, "Chapter actions remain available inside the menu")
+	hud.show_actions([{"id": "close", "text": "关店", "kind": "close"}], detail, false)
+	check(hud.get_action_button("close").disabled, "Blocked actions remain disabled")
 	hud.show_actions([], "", true)
-	check(not hud.get_node("Scroll/Content/NoticePanel").visible and not hud.get_node("Scroll/Content/Details").visible, "Finished optional work leaves no empty card")
-	hud.show_actions([], detail, true, summary)
-	hud.get_node("Scroll/Content/Details").pressed.emit()
-	await frames()
-	if "--capture" in OS.get_cmdline_user_args() and DisplayServer.get_name() != "headless":
-		await RenderingServer.frame_post_draw
-		DirAccess.make_dir_recursive_absolute("res://.godot/two_day_polish")
-		root.get_texture().get_image().save_png("res://.godot/two_day_polish/hud.png")
+	check(hud.get_action_button("close") == null, "Obsolete chapter actions are removed")
 	hud.free()
 	_test_taste()
 	for argument: String in OS.get_cmdline_user_args():

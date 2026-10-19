@@ -32,6 +32,10 @@ var _map_registered := false
 var _map_provider: Object
 var _handbook: HandbookPanel
 var _handbook_hud: HandbookHUD
+var _game_menu: ChapterActionsHUD
+var _task_hud: TaskHUD
+var _saved_status := "尚未自动保存"
+var _menu_destination: StringName
 var _inventory_panel: InventoryPanel
 var _chronicle_journal: ChronicleJournal
 var _character_journal: CharacterJournal
@@ -197,6 +201,8 @@ func _create_ui_system() -> void:
 	_ui_manager.register_screen(ScreenIds.PAUSE, pause, &"pause", true)
 	var settings: Control = preload("res://src/UI/settings/settings_panel.tscn").instantiate()
 	_ui_manager.register_screen(ScreenIds.SETTINGS, settings, &"pause", true)
+	var menu_settings: Control = preload("res://src/UI/settings/settings_panel.tscn").instantiate()
+	_ui_manager.register_screen(ScreenIds.MENU_SETTINGS, menu_settings, &"popup", true)
 	pause.settings_requested.connect(func() -> void: _ui_manager.open_screen(ScreenIds.SETTINGS))
 	pause.resume_requested.connect(func() -> void: _ui_manager.set_paused(false))
 	pause.title_requested.connect(_return_to_title.bind(pause), CONNECT_DEFERRED)
@@ -232,12 +238,56 @@ func open_tasks() -> Error:
 func open_handbook() -> Error:
 	return _open_handbook(ScreenIds.HANDBOOK)
 
+func get_game_menu() -> ChapterActionsHUD:
+	return _game_menu
+
+func open_game_menu() -> Error:
+	if not is_inside_tree() or not is_instance_valid(_game_menu):
+		return ERR_UNCONFIGURED
+	if get_tree().paused or _ui_manager.has_modal() or is_session_initializing() or (is_instance_valid(_story_director) and _story_director.is_busy()) or (is_instance_valid(_scene_travel) and _scene_travel.is_busy()) or (is_instance_valid(_actor_director) and _actor_director.is_actor_controlled(&"player")) or (is_instance_valid(_stealth_service) and _stealth_service.is_blocking()):
+		return ERR_BUSY
+	_refresh_game_menu()
+	return _ui_manager.open_screen(ScreenIds.CHAPTER_ACTIONS)
+
+func _refresh_game_menu() -> void:
+	if not is_instance_valid(_game_menu):
+		return
+	var summary := _task_hud.get_objective_summary() if is_instance_valid(_task_hud) else {}
+	_game_menu.set_overview(summary.get("title", ""), summary.get("objective", ""), WalletTransactions.format_money(get_transactions().get_balance()), _saved_status)
+	var pages := _handbook.get_pages()
+	_game_menu.set_navigation_access({ScreenIds.TASKS: not pages.is_tab_hidden(0), ScreenIds.CHRONICLE: not pages.is_tab_hidden(1), ScreenIds.DRINKS: not pages.is_tab_hidden(2), ScreenIds.CHARACTERS: not pages.is_tab_hidden(3), ScreenIds.INVENTORY: true, ScreenIds.MAP: _map_registered, ScreenIds.SETTINGS: true})
+
+func _navigate_game_menu(id: StringName) -> void:
+	_ui_manager.close_screen(ScreenIds.CHAPTER_ACTIONS)
+	var error := ERR_UNAVAILABLE
+	match id:
+		ScreenIds.INVENTORY:
+			error = open_inventory()
+		ScreenIds.MAP:
+			error = open_map()
+		ScreenIds.SETTINGS:
+			id = ScreenIds.MENU_SETTINGS
+			error = _ui_manager.open_screen(id)
+		_:
+			error = _open_handbook(id)
+	if error == OK:
+		_menu_destination = ScreenIds.HANDBOOK if id in [ScreenIds.TASKS, ScreenIds.CHRONICLE, ScreenIds.DRINKS, ScreenIds.CHARACTERS] else id
+	else:
+		open_game_menu.call_deferred()
+
+func _on_menu_destination_closed(id: StringName) -> void:
+	if id == _menu_destination:
+		_menu_destination = &""
+		open_game_menu.call_deferred()
+
 func open_drinks() -> Error:
 	return _open_handbook(ScreenIds.DRINKS)
 
 func _open_handbook(page: StringName) -> Error:
 	_refresh_handbook_access()
 	if not _handbook_hud.visible:
+		return ERR_UNAVAILABLE
+	if page == ScreenIds.HANDBOOK and _handbook.get_pages().current_tab < 0:
 		return ERR_UNAVAILABLE
 	var blocked := (get_tree().paused
 		or (_ui_manager.has_modal() and not _ui_manager.is_open(ScreenIds.HANDBOOK))
@@ -346,7 +396,12 @@ func _create_handbook() -> void:
 	_handbook_hud = preload("res://src/UI/handbook/handbook_hud.tscn").instantiate()
 	_ui_manager.register_screen(ScreenIds.HANDBOOK_HUD, _handbook_hud, &"hud", false)
 	_ui_manager.open_screen(ScreenIds.HANDBOOK_HUD)
-	_handbook_hud.pressed.connect(open_handbook)
+	_game_menu = preload("res://src/UI/hud/chapter_actions_hud.tscn").instantiate()
+	_ui_manager.register_screen(ScreenIds.CHAPTER_ACTIONS, _game_menu, &"popup", true)
+	_game_menu.close_requested.connect(func() -> void: _ui_manager.close_screen(ScreenIds.CHAPTER_ACTIONS))
+	_game_menu.navigation_requested.connect(_navigate_game_menu)
+	_ui_manager.screen_closed.connect(_on_menu_destination_closed)
+	_handbook_hud.pressed.connect(open_game_menu)
 	_task_journal.projection_changed.connect(_refresh_handbook_access)
 	_task_journal.projection_changed.connect(_refresh_task_delivery_names)
 	_chronicle_journal.changed.connect(_refresh_handbook_access)
@@ -371,7 +426,8 @@ func _refresh_handbook_access() -> void:
 	_handbook.refresh_access(tasks, chronicle, drinks, characters)
 	if not tasks and not chronicle and not drinks and not characters:
 		_ui_manager.close_screen(ScreenIds.HANDBOOK)
-	_handbook_hud.refresh_access(tasks or chronicle or drinks or characters, _chronicle_journal.get_unread_count() if chronicle else 0, _character_journal.get_unread_count())
+	_handbook_hud.refresh_access(true, _chronicle_journal.get_unread_count() if chronicle else 0, _character_journal.get_unread_count())
+	_refresh_game_menu()
 
 ## The portable warehouse keeps the same service and page as the in-world storage point.
 func _create_inventory_ui() -> void:
@@ -485,11 +541,16 @@ func _create_save_system() -> void:
 		_can_save_checkpoint, _finish_session_initialization if _session_initializing else Callable(), _new_saved_session)
 	var status: Label = preload("res://src/UI/hud/save_status.tscn").instantiate()
 	$HudLayer.add_child(status)
+	status.hide()
 	_save_coordinator.status_changed.connect(func(text: String) -> void:
 		status.text = text
+		status.visible = "失败" in text
+		_saved_status = text
+		_refresh_game_menu()
 		_pause_menu.set_save_status(text)
 	)
 	status.text = _save_coordinator.get_status_text()
+	_saved_status = status.text
 	_pause_menu.set_save_status(status.text)
 	_refresh_input_lock()
 
@@ -748,6 +809,7 @@ func _create_shop_business(ui: ShopUI) -> void:
 			_interaction_audio.play_event("order_failure")
 			ui.show_feedback("暂时无法接取这张订单，请核对当前阶段。", false))
 	var task_hud: TaskHUD = preload("res://src/UI/tasks/task_hud.tscn").instantiate()
+	_task_hud = task_hud
 	_ui_manager.register_screen(ScreenIds.TASK_HUD, task_hud, &"hud", false)
 	_ui_manager.open_screen(ScreenIds.TASK_HUD)
 	task_hud.bind_journal(_task_journal)
@@ -1241,8 +1303,9 @@ func _refresh_map_access() -> void:
 		_map_registered = false
 	if _ui_manager.is_open(ScreenIds.MAP):
 		_map_panel.refresh()
-	_map_button.visible = unlocked
-	_map_button.focus_mode = Control.FOCUS_ALL if unlocked else Control.FOCUS_NONE
+	_map_button.hide()
+	_map_button.focus_mode = Control.FOCUS_NONE
+	_refresh_game_menu()
 
 func open_map() -> Error:
 	if not is_instance_valid(_map_panel) or not get_node("/root/GameState").get_flag("day1.s04.map_available"):

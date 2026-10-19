@@ -51,7 +51,7 @@ func _verify() -> void:
 		check(screen_layer.process_mode == expected_mode, "Screen layer process mode: " + name)
 		if name == "HudLayer":
 			var handbook := screen_layer.get_node("HandbookHUD") as HandbookHUD
-			check(handbook != null and not handbook.visible, "Handbook stays hidden before either system unlocks")
+			check(handbook != null and handbook.visible, "Basic menu remains available before handbook pages unlock")
 			check(not screen_layer.has_node("TaskHUD") and not screen_layer.has_node("ChronicleHUD"), "Formal HUD uses a single handbook entry")
 		if name == "TransitionLayer":
 			check(game.get_title_card() != null and game.get_title_card().get_parent() == screen_layer, "Title card belongs to the existing transition layer")

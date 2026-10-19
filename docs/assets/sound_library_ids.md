@@ -33,3 +33,4 @@
 | `shop.stir` | 碗勺搅拌；木碗与木勺录音，适配饮料准备 | `shop.stir.01` → `res://assets/audio/shop/stir_01.wav` (0.434)；`tinysized/sfx-cc0/wood-bowl-spoon-01.wav`<br>`shop.stir.02` → `res://assets/audio/shop/stir_02.wav` (0.314)；`tinysized/sfx-cc0/wood-bowl-spoon-02.wav`<br>`shop.stir.03` → `res://assets/audio/shop/stir_03.wav` (0.303)；`tinysized/sfx-cc0/wood-bowl-spoon-03.wav` |
 | `story.page_turn` | 书页翻动；两种原始翻页声 | `story.page_turn.01` → `res://assets/audio/story/page_turn_01.wav` (1.278)；`tinysized/sfx-cc0/book-page-01.wav`<br>`story.page_turn.02` → `res://assets/audio/story/page_turn_02.wav` (0.643)；`tinysized/sfx-cc0/book-page-02.wav` |
 | `music.daily_milk_tea` | 奶茶店日常 BGM | `res://assets/audio/music/daily_milk_tea.ogg`；末尾回到 68.279 秒 |
+| `music.two_days_end` | 两日终曲 | `res://assets/audio/music/two_days_end.wav`；不循环，按原速播放 |

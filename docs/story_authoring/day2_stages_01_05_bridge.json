@@ -241,7 +241,7 @@
       "mode": "自动演出",
       "event": "day2.s04.first_round",
       "start": 0,
-      "count": 7,
+      "count": 9,
       "dialogues": [
         "day2.s04.first_round_after_loss",
         "day2.s04.second_round"
@@ -252,7 +252,7 @@
       "mode": "自动演出",
       "event": "day2.s04.second_round",
       "start": 0,
-      "count": 10,
+      "count": 13,
       "dialogues": [
         "day2.s04.second_round_after_win",
         "day2.s04.second_round_after_reward",
@@ -336,7 +336,7 @@
       "mode": "自动演出",
       "event": "day2.s05.guard_after",
       "start": 0,
-      "count": 8,
+      "count": 11,
       "dialogues": [
         "day2.s05.deliver_guard_after_delivery",
         "day2.s05.deliver_guard_after_reward",
@@ -355,7 +355,7 @@
     }
   ],
   "authoring_project": "res://docs/story_authoring/day2_stages_01_05_project.json",
-  "authoring_sha256": "8d8d4f30521968f4ecfc13081f6ea4c408095edae2859d9429301c8de8829f6f",
+  "authoring_sha256": "58f9a159f18dcedaa9ed4f761d972197d25eaf2906da46f168463f4231b7dced",
   "verification": {
     "entry": "res://tests/verify_two_day_flow.gd",
     "scope": "标题开始、真实旅行和交付；代购及存档另测"

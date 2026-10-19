@@ -1,7 +1,7 @@
 {
 	"version": 1.0,
 	"format": "goblin_story_project",
-	"next_step_id": 20219.0,
+	"next_step_id": 20227.0,
 	"manifest": {
 		"version": 1.0,
 		"source": "res://docs/design/day_02_stages_01_05_draft.md",
@@ -1256,10 +1256,28 @@
 			"event": "day2.s04.first_round",
 			"steps": [
 				{
+					"id": "step_20222",
+					"data": {
+						"command": "title_card",
+						"text": "第一局 · 开局",
+						"subtitle": "赌约：十杯奶茶 ↔ 奇异食材",
+						"seconds": 0.9
+					}
+				},
+				{
 					"id": "step_20067",
 					"data": {
 						"command": "casino_settle",
 						"step": "first_loss"
+					}
+				},
+				{
+					"id": "step_20223",
+					"data": {
+						"command": "title_card",
+						"text": "第一局 · 败局",
+						"subtitle": "欠下十杯奶茶",
+						"seconds": 1.0
 					}
 				},
 				{
@@ -1312,10 +1330,28 @@
 			"event": "day2.s04.second_round",
 			"steps": [
 				{
+					"id": "step_20224",
+					"data": {
+						"command": "title_card",
+						"text": "第二局 · 再赌一次",
+						"subtitle": "胜负即将揭晓",
+						"seconds": 0.9
+					}
+				},
+				{
 					"id": "step_20071",
 					"data": {
 						"command": "casino_settle",
 						"step": "second_win"
+					}
+				},
+				{
+					"id": "step_20225",
+					"data": {
+						"command": "title_card",
+						"text": "第二局 · 胜局",
+						"subtitle": "获得奇异食材",
+						"seconds": 1.0
 					}
 				},
 				{
@@ -1360,6 +1396,15 @@
 						"command": "casino_settle",
 						"step": "waive",
 						"reason": "赌场老板在第二局获胜后免除十杯奶茶债务。"
+					}
+				},
+				{
+					"id": "step_20226",
+					"data": {
+						"command": "title_card",
+						"text": "赌约解除",
+						"subtitle": "十杯奶茶债务已免除",
+						"seconds": 1.0
 					}
 				},
 				{
@@ -1591,6 +1636,24 @@
 					}
 				},
 				{
+					"id": "step_20219",
+					"data": {
+						"command": "play_sfx",
+						"id": "shop.bottle_open",
+						"wait": true
+					}
+				},
+				{
+					"id": "step_20220",
+					"data": {
+						"command": "actor_emote",
+						"actor": "drunken_guard",
+						"symbol": "!",
+						"duration": 0.7,
+						"wait": false
+					}
+				},
+				{
 					"id": "step_20089",
 					"data": {
 						"command": "dialogue",
@@ -1615,6 +1678,14 @@
 					"id": "step_20216",
 					"data": {
 						"command": "camera_reset"
+					}
+				},
+				{
+					"id": "step_20221",
+					"data": {
+						"command": "play_sfx",
+						"id": "story.unlock",
+						"wait": true
 					}
 				},
 				{

@@ -251,6 +251,10 @@ func get_user_actions() -> Array[Dictionary]:
 			actions.append({"id": "signature_rescue", "text": "救治胖哥布林 · 醒神菇1次用量", "kind": "signature_rescue"})
 	if _host == "shop" and _taste_pending():
 		actions.append({"id": "cancel_taste", "text": "取消可选试饮", "kind": "cancel_taste"})
+		# 自由实验只能显示「缺货」时这单就没法做，关店也会被它挡住：
+		# 和第一天一样给一次补领，别让可选订单变成死路。
+		if not _has_spicy_uses():
+			actions.append({"id": "taste_supply", "text": "向胖哥布林补领辛辣试饮用料 · 老火烧1份", "kind": "taste_supply"})
 	for action: Dictionary in _data.get("user_actions", []):
 		if action.host != _host or action.stage != _state.story_stage:
 			continue
@@ -269,6 +273,17 @@ func get_user_actions() -> Array[Dictionary]:
 			if actor != null and actor.visible:
 				actions.append({"id": "hire:" + id, "text": "临时委托 " + actor.display_name + " · 专款支付30G货款＋5G跑腿费", "kind": "hire", "actor": id})
 	return actions
+
+## 已发现、还有余量的哥布林辛辣原料。缺了它自由实验只能显示「缺货」。
+func _has_spicy_uses() -> bool:
+	var inventory: WarehouseInventory = _state.get_warehouse_inventory()
+	for choice: Dictionary in inventory.get_formula_choices(false):
+		var definition: IngredientDefinition = inventory.get_definition(choice.id)
+		if definition == null or definition.origin != "otherworld":
+			continue
+		if "辛辣" in definition.recipe_flavors and inventory.get_uses(choice.id) > 0:
+			return true
+	return false
 
 func _near_point(id: StringName) -> bool:
 	var level := _game.get_active_level()
@@ -299,6 +314,9 @@ func perform_user_action(id: String) -> void:
 						if _state.get_warehouse_inventory().get_uses(item) == 0:
 							gains[item] = 1
 					error = _state.commit_story_transaction("day1.taste.resupply_%d" % Time.get_ticks_usec(), {}, gains)
+				"taste_supply":
+					error = _state.commit_story_transaction(
+						"day2.taste.supply_%d" % Time.get_ticks_usec(), {}, {}, 0, {"goblin_firebrew": 1})
 				"procurement_direct":
 					error = _procurement.purchase_direct()
 				"signature_buy_mushroom":

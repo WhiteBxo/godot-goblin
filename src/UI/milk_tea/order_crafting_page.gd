@@ -59,7 +59,7 @@ func _refresh_detail() -> void:
 	if entry.is_empty():
 		entry = {"title": "先接取一张饮品订单", "target_name": "订单板", "status_text": "暂无制作目标",
 			"stage": "empty", "status": "empty", "product_id": "", "items": [], "missing_text": "",
-			"rewards": "—", "hint": "也可以切换到自由调配，制作已解锁的饮品。"}
+			"rewards": "—", "hint": "也可以切换到已知配方或自由实验。"}
 	elif entry.ready and entry.get("remaining_to_craft", 0) == 0:
 		action = "返回店铺，去交付"
 		entry.hint = "靠近%s，按 E 交付" % entry.target_name

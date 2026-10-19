@@ -51,7 +51,7 @@ func get_order_crafting_page() -> OrderCraftingPage:
 	return _order_crafting
 
 func select_crafting_mode(free: bool) -> void:
-	_craft_modes.current_tab = 1 if free else 0
+	_craft_modes.current_tab = _making_tabs.current_tab + 1 if free else 0
 	_refresh_recipe()
 	if free and is_instance_valid(_making_tabs) and is_visible_in_tree():
 		if _making_tabs.current_tab == 1:
@@ -99,6 +99,8 @@ func _refresh_recipe() -> void:
 	_body.visible = crafting or _point_id == &"storage"
 	if is_instance_valid(_making_tabs):
 		_making_tabs.visible = crafting and not order_mode
+		if _craft_modes.current_tab > 0:
+			_making_tabs.current_tab = _craft_modes.current_tab - 1
 	if is_instance_valid(_warehouse_panel):
 		_warehouse_panel.visible = _point_id == &"storage"
 	_description_scroll.visible = (not _station or demo_recipe) and _point_id != &"storage" and not _board.visible
@@ -128,7 +130,7 @@ func present(point: InteractionPoint) -> void:
 					has_formula_order = true
 				if entry.status == "active" and not entry.product_id.is_empty():
 					has_order = true
-		_craft_modes.current_tab = 0 if has_order else 1
+		_craft_modes.current_tab = 0 if has_order else (2 if has_formula_order else 1)
 		if not has_order:
 			_making_tabs.current_tab = 1 if has_formula_order else 0
 		_refresh_recipe()
@@ -162,6 +164,7 @@ func configure_production(production: TeaProduction) -> void:
 	if not is_instance_valid(_crafting_panel):
 		_making_tabs = TabContainer.new()
 		_making_tabs.name = "MakingTabs"
+		_making_tabs.tabs_visible = false
 		_making_tabs.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		_body.add_child(_making_tabs)
 		var teaching_scroll := ScrollContainer.new()
@@ -191,7 +194,7 @@ func get_formula_panel() -> FreeCraftingPanel:
 func select_formula(materials: Array, iced := false) -> bool:
 	if not is_instance_valid(_formula_panel) or not _formula_panel.select_formula(materials, iced):
 		return false
-	_craft_modes.current_tab = 1
+	_craft_modes.current_tab = 2
 	_making_tabs.current_tab = 1
 	_refresh_recipe()
 	return true

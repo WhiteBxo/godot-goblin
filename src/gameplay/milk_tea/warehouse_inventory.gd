@@ -87,7 +87,7 @@ func get_formula_choices(base_only := false) -> Array[Dictionary]:
 		var definition: IngredientDefinition = _definitions[id]
 		# Additive choices include ordinary ingredients with either base eligibility.
 		if id != DrinkFormula.ICE_ID and is_discovered(id) and definition.free_recipe_allowed and (not base_only or definition.can_be_base):
-			var flavors := definition.recipe_flavors.duplicate() if is_property_known(id, "flavor_tags") else PackedStringArray(["未知风味"])
+			var flavors := definition.recipe_flavors.duplicate()
 			result.append({"id": id, "name": definition.display_name, "flavors": flavors, "uses": get_uses(id)})
 	return result
 

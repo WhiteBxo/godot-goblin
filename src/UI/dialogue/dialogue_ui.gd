@@ -116,6 +116,7 @@ func set_portrait(portrait: Texture2D) -> void:
 	if _portrait.texture != portrait or portrait == null:
 		_finish_portrait_fade()
 	_portrait.texture = portrait
+	_portrait.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST if portrait is AtlasTexture else CanvasItem.TEXTURE_FILTER_LINEAR
 	_portrait.visible = portrait != null
 
 

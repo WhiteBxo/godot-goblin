@@ -89,8 +89,47 @@ func _run() -> void:
 	journal.free()
 	state.free()
 	_test_shared_orders()
+	_test_day2_orders()
 	print("ORDER_BOARD: %s (%d checks, %d failures)" % ["PASS" if _failures.is_empty() else "FAIL", _checks, _failures.size()])
 	quit(0 if _failures.is_empty() else 1)
+
+func _test_day2_orders() -> void:
+	var state := StateData.new()
+	state.select_business_profile("day1")
+	state.set_current_day(2)
+	state.set_story_stage("day2.s02.wait_festival")
+	var catalog := TaskCatalog.new()
+	check(catalog.load_files(Day1ChapterController.TASK_FILES, {"locations": RpgWorldMapData.location_ids()}) == OK, "Load varied Day 2 orders")
+	var journal := TaskJournal.new()
+	journal.configure(catalog, state)
+	var inventory := state.get_warehouse_inventory()
+	var production := state.get_tea_production()
+	var delivery := TaskDelivery.new()
+	check(delivery.configure(catalog, journal, state, inventory) == OK, "Bind Day 2 delivery requirements")
+	var board := OrderBoardModel.new()
+	board.configure(catalog, journal, state, inventory, production, delivery)
+	for flag: String in ["open", "festival.open", "elder.open", "emissary.open", "rumor.open"]:
+		state.set_flag("day2.s02." + flag)
+	var products := {
+		"day2_s02_festival_0": "classic_boba_milk_tea", "day2_s02_elder_0": "mint_choc_milk_tea",
+		"day2_s02_emissary_0": "coffee_cocoa_ice_milk", "day2_s02_rumor_0": "apple_milk_green_tea",
+		"day2_s02_rumor_1": "strawberry_milk_green_tea", "day2_ordinary_a": "iced_mint_latte",
+		"day2_ordinary_b": "mint_choc_milk_tea", "day2_ordinary_c": "apple_milk_green_tea",
+	}
+	var balance := state.get_transactions().get_balance()
+	for id: String in products:
+		check(delivery.accept_order(id) == OK, "Accept a varied Day 2 drink: " + id)
+		var entry := board.get_entry(id)
+		check(entry.product_id == products[id] and entry.can_craft, "Board and recipe use the assigned human menu drink: " + id)
+		check(production.craft(entry.recipe_materials).ok, "Make the assigned drink through production: " + id)
+		check(delivery.try_submit(id, entry.target_id).ok, "Deliver the assigned drink through its real requirement: " + id)
+	check(state.get_transactions().get_balance() == balance + 24, "Eight varied human drinks still pay exactly 3G each")
+	var special := board.get_entry("day2_taste")
+	check(special.title == "特殊奶茶订单" and "植脂末奶茶底" in special.description and "辛辣" in special.description, "Special orders keep a short title and move base and flavor into the description")
+	board.free()
+	delivery.free()
+	journal.free()
+	state.free()
 
 func _test_shared_orders() -> void:
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://src/resources/tasks/tasks.json"))

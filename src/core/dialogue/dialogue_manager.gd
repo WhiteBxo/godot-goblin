@@ -19,6 +19,7 @@ signal line_changed(line_id: String)
 	# goblins, tavern and casino keepers have no finished portrait, so they show
 	# no image instead of borrowing the fat goblin's face.
 	"胖哥布林": preload("res://assets/characters/fat_goblin/fat_goblin_smiling_portrait.png"),
+	"醉酒守卫": preload("res://src/resources/dialogue/guard_portrait.tres"),
 }
 
 var last_error: String = ""

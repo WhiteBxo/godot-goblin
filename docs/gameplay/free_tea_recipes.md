@@ -32,13 +32,19 @@
 
 ## 制作、库存与图鉴
 
-界面从共享 `TeaProduction` 读取候选与预览，仅发送制作请求。可选原料限已发现且允许普通配方的条目；缺货仍可查看。选择时显示名称、已知风味和 24 像素原料预览，不显示六项内部数值。仓库 / 图鉴的动态杯使用中性杯图标，详情显示原料缩略图；固定成品仍用各自定义的专属图。
+界面从共享 `TeaProduction` 读取候选与预览，仅发送制作请求。可选原料限已发现且允许普通配方的条目；缺货仍可查看。选择时显示名称、原料表配置的完整风味和 24 像素原料预览，不受风味属性发现状态遮蔽，不显示六项内部数值。两套菜单的 22 行原料通过 `source_ids` 对应《哥布林奶茶配方》，由现有导入工具同步。仓库 / 图鉴的动态杯使用中性杯图标，详情显示原料缩略图；固定成品仍用各自定义的专属图。
+
+纯人类组合不能登记自由配方报价时，预览和按钮提示明确引导到「已知配方」制作固定 3G 菜品；加入至少一种可经营哥布林原料后才能确认新报价。暂不具备保存报价条件的阶段显示对应原因，不再要求玩家点击已禁用的报价按钮。
+
+![原料风味](captures/recipe_feedback_2026_10_19/ingredient_flavors.png)
+
+![纯人类组合的报价提示](captures/recipe_feedback_2026_10_19/human_quote.png)
 
 | API | 契约 |
 | --- | --- |
 | `TeaProduction.preview_formula(materials, quantity = 1, iced = false)` | 校验槽位、原料可用次数及成品容量，不修改状态 |
 | `TeaProduction.craft_formula(materials, quantity = 1, request_id = "", iced = false)` | 同步提交扣次、配方杯数和首次发现；成功请求 ID 可持久防重放，失败允许重试 |
-| `WarehouseInventory.get_formula_choices(base_only = false)` | 返回已发现候选及受发现规则遮蔽的风味 |
+| `WarehouseInventory.get_formula_choices(base_only = false)` | 返回已发现候选及原料表风味，不写入属性发现事实 |
 | `get_drink_stock(id)` / `get_drink_record(id)` | 查询配方库存及首次发现资料，返回独立数据 |
 | `get_drinks(include_empty = false)` | 默认只列持有饮品；传 true 包含已售空的图鉴记录 |
 

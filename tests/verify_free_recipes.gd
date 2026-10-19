@@ -455,10 +455,12 @@ func _test_ui() -> void:
 	inventory.add_ingredient("creamer_milk_tea_base", 1)
 	_check(panel.select_formula(["instant_coffee_concentrate", "creamer_milk_tea_base"]) and panel.get_materials() == ["instant_coffee_concentrate", "creamer_milk_tea_base"] and "咖啡\n" in panel.get_preview().text, "Real UI accepts creamer in an additive slot and previews a coffee name")
 	_check(panel.select_formula(["creamer_milk_tea_base", "instant_coffee_concentrate"]) and "奶茶\n" in panel.get_preview().text, "Real UI can exchange the base and additive without excluding either ingredient")
+	_check(panel.get_confirm_button().disabled and "已知配方" in panel.get_preview().text and "哥布林原料" in panel.get_preview().text and not "请先确认报价" in panel.get_preview().text, "A human-only experiment explains the fixed menu route instead of demanding an impossible quotation")
 	shop.select_formula(SWEET)
 	_check(not panel.get_craft_button().disabled and not "甜度" in panel.get_preview().text, "Selection preview shows flavors and price without internal taste values")
 	for option: OptionButton in panel.get_slots():
 		for index in range(option.item_count):
+			_check(not "未知风味" in option.get_item_text(index), "Ingredient choices disclose their authored flavors before property discovery")
 			_check(option.get_item_metadata(index) != "day1_griffin_blood", "Story-only blood never enters the free-form selection UI")
 			_check(option.get_item_metadata(index) != "ice", "Ice never occupies one of the three ingredient options")
 	_check(not panel.is_iced() and panel.get_ice_option().get_item_text(0) == "不加冰" and panel.get_ice_option().get_item_text(1) == "加冰", "Ice is a separate binary option with no ice selected by default")

@@ -71,10 +71,16 @@ Signals：`dialogue_started(dialogue_id: String)`、`dialogue_ended(dialogue_id:
 - 省略 `portrait` 时，Manager 按 `speaker` 精确匹配导出的 `speaker_portraits` 字典。默认主角、玩家、主角·内心使用用户提供的平静表情全身图 `player_neutral_portrait.png`；胖哥布林使用 `assets/characters/fat_goblin/fat_goblin_smiling_portrait.png`，该立绘为胖哥布林专属，普通哥布林（哥布林甲/乙/丙、哥布林顾客等）与酒馆老板、赌场老板没有立绘，不显示图片也不借用胖哥布林的脸；旁白及其他未配置角色同样不显示图片。宿主可在 Inspector 或启动前修改该字典，为新角色配置 Texture2D，不依赖 Actor 节点层级。
 - `portrait` 非空时必须为存在的 `res://` Texture2D 路径，优先于角色默认图，可用于单句表情变化；显式 `"portrait": ""` 隐藏该句立绘。每行重新解析，缺图、结束或取消均清除上一张图片。对话使用独立的透明背景 PNG，原始白底素材保留；默认图使用 preload 建立资源依赖。
 - `left_portrait_speakers` 配置主角的姓名（默认主角、主角·内心、玩家），这些角色显示在左侧；其他 NPC 显示在右侧。单句覆盖图片不改变角色所属侧。
+
+醉酒守卫的默认头像使用 `src/resources/dialogue/guard_portrait.tres`，从现有 `assets/characters/npc/guard/walk_sheet_02.png` 裁取正面首帧（64×64），潜入拦截与后续同名对白均显示。AtlasTexture 头像使用最近邻过滤，保持像素清晰；原始动画图集保留。区域与裁边依据 [Godot 4.7 AtlasTexture](https://docs.godotengine.org/en/4.7/classes/class_atlastexture.html)，过滤方式依据 [CanvasItem](https://docs.godotengine.org/en/4.7/classes/class_canvasitem.html#enum-canvasitem-texturefilter)；官方网页受限时可核对同版本 [AtlasTexture 类文档源码](https://github.com/godotengine/godot/blob/4.7/doc/classes/AtlasTexture.xml)。
 - 普通行用 `next` 指向同一对话中的行；省略或 `""` 表示确认后结束。连续对白必须显式连接。
 - 选项由 `id`、`text` 和可选 `next` 构成。ID 在当前行内唯一，文案非空；`next` 为空表示选择后直接完成。非空 choices 与行级 next 不能同时出现。
 - 加载时校验整个目录及全部分支目标；不会边演出边发现悬空的 `next`。循环分支允许，每次都等待用户确认，不会自动死循环。更新 JSON 后可 idle 时显式 reload。
 - `export_presets.cfg` 已用 `*.json` 导出所有对话文件，测试目录仍被排除。新增导出 preset 时需保留 JSON 包含规则，以及字体许可证规则；改为仅导出选择的场景时需显式包含头像等由 JSON 动态引用的资源。
+
+醉酒守卫的默认头像使用 `src/resources/dialogue/guard_portrait.tres`，从现有 `assets/characters/npc/guard/walk_sheet_02.png` 裁取正面首帧（64×64），潜入拦截与后续同名对白均显示。AtlasTexture 头像使用最近邻过滤，保持像素清晰；原始动画图集保留。区域与裁边依据 [Godot 4.7 AtlasTexture](https://docs.godotengine.org/en/4.7/classes/class_atlastexture.html)，过滤方式依据 [CanvasItem](https://docs.godotengine.org/en/4.7/classes/class_canvasitem.html#enum-canvasitem-texturefilter)；官方网页受限时可核对同版本 [AtlasTexture 类文档源码](https://github.com/godotengine/godot/blob/4.7/doc/classes/AtlasTexture.xml)。
+
+![醉酒守卫像素头像](../gameplay/captures/recipe_feedback_2026_10_19/guard_portrait.png)
 
 ## 主角立绘与程序切换
 

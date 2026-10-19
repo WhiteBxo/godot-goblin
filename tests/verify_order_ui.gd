@@ -204,10 +204,13 @@ func _test_long_content(sample: Dictionary) -> void:
 	ticket.size = Vector2(396, 216)
 	var entry := sample.duplicate(true)
 	entry.product_id = ""
+	entry.title = "特殊奶茶订单"
+	entry.description = "基底：植脂末奶茶底、辛辣"
 	entry.items.clear()
 	for index: int in range(20):
 		entry.items.append({"name": "所需物资 %d" % index, "owned": 0, "needed": 1})
 	ticket.present(entry, "追踪此单", true)
+	check(ticket.get_title_text() == "特殊奶茶订单" and "基底：植脂末奶茶底、辛辣" in ticket.get_node("%Requirements").text, "Special recipe requirements appear in the body below a short order title")
 	await frames()
 	# A real parent Container reapplies the available size after wrapped text settles.
 	ticket.size = Vector2(396, 216)

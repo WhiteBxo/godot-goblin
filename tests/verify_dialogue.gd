@@ -480,6 +480,11 @@ func _test_speaker_portraits() -> void:
 	_manager.start_dialogue("day1.opening")
 	_check(portrait.visible and portrait.texture == _manager.speaker_portraits["主角·内心"], "Existing opening resolves the protagonist portrait automatically")
 	_manager.end_dialogue()
+	_check(_manager.load_dialogues("res://src/resources/dialogue/day1_stages_03_06.json") == OK, "Infiltration dialogue loads with the guard speaker binding")
+	_check(_manager.start_dialogue("day1.s05.drunken_guard") == OK, "The actual guard interception starts")
+	_check(portrait.visible and portrait.texture == _manager.speaker_portraits["醉酒守卫"] and portrait.texture is AtlasTexture, "The guard interception shows the existing guard artwork")
+	_check(portrait.texture_filter == CanvasItem.TEXTURE_FILTER_NEAREST, "Guard sprite portrait keeps crisp pixels")
+	_manager.end_dialogue()
 	_check(_manager.load_dialogues() == OK, "Restore default dialogue catalogue after portrait checks")
 
 

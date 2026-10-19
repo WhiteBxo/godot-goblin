@@ -32,6 +32,12 @@
 
 顶层状态为 `available / active / completed`；进行中阶段为 `prepare / missing_materials / recipe_locked / collect / ready`。完整条目还包含需求及持有量、缺口、配方材料、可制作性、顾客名称和下一步提示。
 
+自由配比需求（`delivery.drink`）的订单标题统一为「特殊奶茶订单」，具体基底、辅料和风味要求放入投影的 `description`，由订单笺显示在下方详情。第二天白天的五张剧情单与三张普通散客单分配六款默认人类奶茶，实际 `product_id`、任务文字、制作材料与交付需求一致，每杯仍为 3G；可选辛辣试饮保留独立自由配比需求。
+
+![特殊配比的标题与详情](captures/recipe_feedback_2026_10_19/special_order.png)
+
+![第二天不同饮品的订单](captures/recipe_feedback_2026_10_19/varied_orders.png)
+
 UI 经信号提交请求，由 MainGame 调用 `TaskDelivery.accept_order()`、`TeaProduction.craft()` 或修改 `GameState` 的 `ui.tracked_order_id`。显式接取重复返回 `ERR_ALREADY_EXISTS`；剧情接取事实仍有效。手动追踪随现有快照保存；自动候选在读取时计算，不在场景装配、整体恢复或交易通知中偷偷写入状态。
 
 `TaskDelivery.deliver_to(target_id, preferred_order_id = "")` 优先提交已接取且可交付的指定订单，否则按目录稳定顺序选择可交付订单。未接订单不阻挡已接订单；没有可交付订单时给出当前已接订单的具体缺口。指定顾客的剧情路由仍先执行。

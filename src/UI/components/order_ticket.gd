@@ -27,6 +27,8 @@ func present(entry: Dictionary, action: String = "", enabled: bool = false) -> v
 	_status.theme_type_variation = &"TicketWarning" if entry.get("stage") in ["missing_materials", "recipe_locked"] else &"TicketStamp"
 	var lines := PackedStringArray()
 	if not entry.is_empty():
+		if not str(entry.get("description", "")).is_empty():
+			lines.append("订单要求：" + str(entry.description))
 		lines.append("报酬：" + entry.rewards)
 		for item: Dictionary in entry.items:
 			lines.append("%s  %d / %d" % ["已有成品" if not entry.product_id.is_empty() else item.name, item.owned, item.needed])

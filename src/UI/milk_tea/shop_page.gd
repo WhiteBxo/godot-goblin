@@ -21,6 +21,8 @@ var _order_requirements := "制作后成品进入库存，携带到指定 NPC �
 var _tea: TeaMaking
 var _station := false
 var _orders: OrderBoardModel
+## Loot row for a gathering result, created on first use.
+var _loot: HBoxContainer
 ## Last pouring step shown to the player, so a new cup never animates on open.
 var _last_step := 0
 
@@ -109,6 +111,9 @@ func _refresh_recipe() -> void:
 	if is_instance_valid(_warehouse_panel):
 		_warehouse_panel.visible = _point_id == &"storage"
 	_description_scroll.visible = (not _station or demo_recipe) and _point_id != &"storage" and not _board.visible
+	# The loot row belongs to the note; it never floats over the order board.
+	if is_instance_valid(_loot) and (not _description_scroll.visible or _board.visible):
+		_loot.visible = false
 	_recipe_status.text = _tea.get_instruction() if is_instance_valid(_tea) else "当前没有制作目标。"
 	_show_pouring_step(demo_recipe)
 	for button: Button in _ingredients.get_children():
@@ -129,6 +134,7 @@ func _show_pouring_step(active: bool) -> void:
 func present(point: InteractionPoint) -> void:
 	_point_id = point.interaction_id
 	_station = point.interaction_id == &"tea_station"
+	_clear_loot()
 	_last_step = _tea.get_progress() if is_instance_valid(_tea) else 0
 	_description.text = (
 		"固定配方：珍珠奶茶一杯\n按红茶 → 牛奶 → 珍珠依次投料。\n顺序错误会清空本杯进度；关窗可保留进度。\n仅当前玩法目标可制作，不消耗库存。"
@@ -252,16 +258,62 @@ func show_order_requirements(message: String) -> void:
 	_refresh_order_board()
 
 func show_interaction_result(message: String) -> void:
+	_clear_loot()
 	_description.text = message
 
-## A gathering is a pickup, not a shop transaction: the pulled material rises
-## out of the empty page area while the note lands under the new line, so the
-## icon never covers the sentence the player is reading.
+## A gathering is a pickup, not a shop transaction: the material gets a real row
+## under the note instead of a floating overlay. A row takes part in the layout,
+## so it can never sit on top of the order ticket or the note itself.
 func show_harvest_result(message: String, icon: Texture2D, amount: int) -> void:
 	_description.text = message
 	UIFlourish.settle(_description, 0.97)
-	if icon != null and amount > 0:
-		UIFlourish.cups(self, icon, amount, Vector2(0.07, 0.33))
+	_clear_loot()
+	# Only a page that is actually showing the note gets a loot row.
+	if icon == null or amount <= 0 or not _description_scroll.visible:
+		return
+	var row := _ensure_loot()
+	row.visible = true
+	var caption := Label.new()
+	caption.text = "获得"
+	caption.theme_type_variation = &"Hint"
+	row.add_child(caption)
+	for index in range(mini(amount, 3)):
+		var art := TextureRect.new()
+		art.texture = icon
+		art.custom_minimum_size = Vector2(24, 24)
+		art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		art.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_child(art)
+		UIFlourish.settle(art, 0.7)
+	var count := Label.new()
+	count.text = "×%d" % amount
+	count.theme_type_variation = &"Success"
+	row.add_child(count)
+
+
+func _ensure_loot() -> HBoxContainer:
+	if is_instance_valid(_loot):
+		return _loot
+	_loot = HBoxContainer.new()
+	_loot.name = "LootRow"
+	_loot.add_theme_constant_override("separation", 6)
+	_loot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_loot)
+	# Sits between the title and the note, so it never covers a line of text and
+	# never floats over whatever the page is showing.
+	move_child(_loot, _description_scroll.get_index())
+	return _loot
+
+
+func _clear_loot() -> void:
+	if not is_instance_valid(_loot):
+		return
+	for child: Node in _loot.get_children():
+		_loot.remove_child(child)
+		child.queue_free()
+	_loot.visible = false
 
 func show_production_result(result: Dictionary) -> void:
 	_order_crafting.show_result(result)

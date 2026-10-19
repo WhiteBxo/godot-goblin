@@ -6,13 +6,14 @@ extends Node2D
 
 @export var owner_path: NodePath = NodePath("..")
 ## Hand anchor per facing, in shop_player world units: the 128x160 frame puts the
-## feet at y=0 and the head at y=-114, so the hands hang around y=-52.
+## feet at y=0 and the head at y=-114, so the fists hang at about y=-36. A cup
+## anchored at shoulder height reads as floating beside the torso, not carried.
 ## The player uses four separate sprite sets instead of mirroring, so the anchor
 ## cannot be derived from a single offset.
-@export var offset_down := Vector2(24.0, -52.0)
-@export var offset_up := Vector2(-24.0, -52.0)
-@export var offset_left := Vector2(-24.0, -52.0)
-@export var offset_right := Vector2(24.0, -52.0)
+@export var offset_down := Vector2(28.0, -33.0)
+@export var offset_up := Vector2(-28.0, -33.0)
+@export var offset_left := Vector2(-28.0, -33.0)
+@export var offset_right := Vector2(28.0, -33.0)
 
 ## How far the carried item lifts on each step. One pixel of bob is enough to
 ## read as "held in a hand" instead of "pasted on the sprite".

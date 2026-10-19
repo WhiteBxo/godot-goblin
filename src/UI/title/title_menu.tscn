@@ -127,18 +127,18 @@ custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 text = "新游戏"
 
+[node name="Settings" type="Button" parent="Center/Panel/Margin/Content"]
+custom_minimum_size = Vector2(0, 26)
+layout_mode = 2
+theme_type_variation = &"GhostButton"
+text = "设置"
+
 [node name="Quit" type="Button" parent="Center/Panel/Margin/Content"]
 metadata/ui_press_sound = "ui.cancel"
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 theme_type_variation = &"GhostButton"
 text = "退出游戏"
-
-[node name="Settings" type="Button" parent="Center/Panel/Margin/Content"]
-custom_minimum_size = Vector2(0, 26)
-layout_mode = 2
-theme_type_variation = &"GhostButton"
-text = "设置"
 
 [node name="Confirmation" type="VBoxContainer" parent="Center/Panel/Margin/Content"]
 visible = false

@@ -525,7 +525,7 @@
     }
   ],
   "authoring_project": "res://docs/story_authoring/day2_stages_01_05_project.json",
-  "authoring_sha256": "eded82f3ed89f784d90539983a540c2e158b61460c2458107cf900849d486d88",
+  "authoring_sha256": "318de3f881aee676a2ace031ff8755f19ec83dd15b6e7763cae7ad1a1f68e671",
   "verification": {
     "entry": "res://tests/verify_two_day_flow.gd",
     "scope": "标题开始、真实旅行和交付；代购及存档另测"

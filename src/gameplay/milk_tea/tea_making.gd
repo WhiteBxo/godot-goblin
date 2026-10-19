@@ -44,6 +44,10 @@ func has_session() -> bool:
 func is_active() -> bool:
 	return not _recipe.is_empty() and not _completed
 
+## Read-only progress for presentation; the order of steps stays owned here.
+func get_progress() -> int:
+	return _progress
+
 func get_instruction() -> String:
 	if _completed:
 		return "制作完成！关闭弹窗后继续剧情。"

@@ -39,8 +39,27 @@ func configure_orders(model: OrderBoardModel) -> void:
 func show_feedback(message: String, succeeded: bool = true) -> void:
 	$Feedback/Panel/Text.text = message
 	$Feedback/Panel/Text.theme_type_variation = &"Success" if succeeded else &"Warning"
-	$Feedback.visible = not message.is_empty()
+	var shown := not message.is_empty()
+	$Feedback.visible = shown
+	if not shown:
+		return
+	if _feedback_tween != null:
+		_feedback_tween.kill()
+	$Feedback.modulate.a = 0.0
+	UIFlourish.settle($Feedback/Panel, 0.94)
+	_feedback_tween = create_tween()
+	_feedback_tween.tween_property($Feedback, "modulate:a", 1.0, 0.14)
 	$FeedbackTimer.start()
+
+## The notice leaves the way it arrived instead of blinking out.
+func _fade_feedback_out() -> void:
+	if not $Feedback.visible:
+		return
+	if _feedback_tween != null:
+		_feedback_tween.kill()
+	_feedback_tween = create_tween()
+	_feedback_tween.tween_property($Feedback, "modulate:a", 0.0, 0.32)
+	_feedback_tween.tween_callback($Feedback.hide)
 
 func get_feedback_text() -> String:
 	return $Feedback/Panel/Text.text if $Feedback.visible else ""
@@ -73,11 +92,12 @@ func show_formula_result(result: Dictionary) -> void:
 @onready var _prompt: PromptBar = $Prompt
 var _popup: ShopPopup
 var _manager: UIManager
+var _feedback_tween: Tween
 
 func _ready() -> void:
 	$Header.text = help_text
 	$Header.visible = show_help
-	$FeedbackTimer.timeout.connect(func() -> void: $Feedback.hide())
+	$FeedbackTimer.timeout.connect(_fade_feedback_out)
 
 func set_popup_layer(layer: CanvasLayer) -> void:
 	if is_instance_valid(_popup):

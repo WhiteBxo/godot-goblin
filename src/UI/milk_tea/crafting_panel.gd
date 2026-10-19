@@ -13,6 +13,8 @@ var _selected: Array[String] = []
 var _selected_product_id: String = ""
 var _last_result: Dictionary = {}
 var _refreshing := false
+## Chip rows by material, so a newly added one can pop in without a rebuild.
+var _chip_rows: Dictionary = {}
 ## Derived from the recipes this session may offer; locked recipes never reach the lists.
 var _available_materials: Dictionary = {}
 var _available_products: Dictionary = {}
@@ -89,6 +91,7 @@ func select_recipe(product_id: String) -> bool:
 	_selected.assign(recipe.materials)
 	_quantity.set_value_no_signal(1)
 	_after_selection_change(true)
+	UIFlourish.settle(_preview, 0.96)
 	return true
 
 func _on_recipe_selected(index: int) -> void:
@@ -116,6 +119,7 @@ func add_material(id: String) -> bool:
 		return false
 	_selected.append(id)
 	_after_selection_change(false)
+	_pop_chip(id)
 	return true
 
 func remove_material(id: String) -> bool:
@@ -187,8 +191,24 @@ func show_result(result: Dictionary) -> void:
 		_redo.disabled = true
 		_rebuild_chips()
 		refresh(false)
+		_present_batch(result)
 	else:
 		_refresh_preview()
+		if _result.visible:
+			# A refusal is felt as a recoil, not only read as red text.
+			UIFlourish.refuse(_result)
+
+## The cups leave the counter before the sentence is read, beside the button's
+## label rather than on top of it.
+func _present_batch(result: Dictionary) -> void:
+	UIFlourish.cups(_craft, _product_icon(str(result.get("product_id", ""))), int(result.get("quantity", 0)), Vector2(0.05, 0.5))
+	if _result.visible:
+		UIFlourish.settle(_result, 0.94)
+
+func _product_icon(product_id: String) -> Texture2D:
+	if product_id.is_empty() or not is_instance_valid(_production):
+		return null
+	return _production.get_inventory().get_ingredient_view(product_id).get("icon") as Texture2D
 
 func result_text() -> String:
 	return _result.text
@@ -319,6 +339,7 @@ func _add_row(item: Dictionary, kind: String, order_product: String) -> void:
 		_list.set_item_disabled(index, true)
 
 func _rebuild_chips() -> void:
+	_chip_rows.clear()
 	for child in _chips.get_children():
 		_chips.remove_child(child)
 		child.queue_free()
@@ -329,8 +350,16 @@ func _rebuild_chips() -> void:
 		hint.theme_type_variation = &"Hint"
 		_chips.add_child(hint)
 	for id: String in counts:
-		_chips.add_child(_make_chip(id, counts[id]))
+		var row := _make_chip(id, counts[id])
+		_chip_rows[id] = row
+		_chips.add_child(row)
 	_clear.disabled = _selected.is_empty()
+
+## Only the row that just gained a portion pops; the rest of the tray stays put.
+func _pop_chip(id: String) -> void:
+	var row: Control = _chip_rows.get(id, null)
+	if is_instance_valid(row):
+		UIFlourish.settle(row, 0.76)
 
 func _make_chip(id: String, amount: int) -> Control:
 	var row := HBoxContainer.new()
@@ -373,7 +402,12 @@ func _refresh_preview() -> void:
 			_preview.text = str(preview.message)
 			_preview.theme_type_variation = &"Warning"
 	_craft.disabled = preview.code != "ok"
-	_craft.text = "制作 %d 杯并入库" % int(_quantity.value)
+	var label := "制作 %d 杯并入库" % int(_quantity.value)
+	if label != _craft.text:
+		_craft.text = label
+		if not _craft.disabled:
+			# The batch size is the thing being chosen, so the action answers it.
+			UIFlourish.settle(_craft, 0.96)
 
 func _sync_selected_product() -> void:
 	if _selected_product_id.is_empty() or not is_instance_valid(_production):

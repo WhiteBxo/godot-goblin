@@ -200,6 +200,13 @@ func show_result(result: Dictionary) -> void:
 	_result.text = str(result.get("message", ""))
 	_result.theme_type_variation = &"Success" if result.get("ok", false) else &"Warning"
 	_refresh_preview()
+	if _result.text.is_empty():
+		return
+	if result.get("ok", false):
+		UIFlourish.cups(_craft, null, 1, Vector2(0.06, 0.5))
+		UIFlourish.settle(_result, 0.94)
+	else:
+		UIFlourish.refuse(_result)
 
 func get_default_focus() -> Control:
 	return _options[0] if not _options.is_empty() else _craft

@@ -21,6 +21,8 @@ var _order_requirements := "制作后成品进入库存，携带到指定 NPC �
 var _tea: TeaMaking
 var _station := false
 var _orders: OrderBoardModel
+## Last pouring step shown to the player, so a new cup never animates on open.
+var _last_step := 0
 
 @onready var _description_scroll: ScrollContainer = %DescriptionScroll
 @onready var _description: Label = %Description
@@ -108,12 +110,26 @@ func _refresh_recipe() -> void:
 		_warehouse_panel.visible = _point_id == &"storage"
 	_description_scroll.visible = (not _station or demo_recipe) and _point_id != &"storage" and not _board.visible
 	_recipe_status.text = _tea.get_instruction() if is_instance_valid(_tea) else "当前没有制作目标。"
+	_show_pouring_step(demo_recipe)
 	for button: Button in _ingredients.get_children():
 		button.disabled = not is_instance_valid(_tea) or not _tea.is_active()
+
+## One pour lands, a wrong order resets the cup; both are felt on the one line
+## the player is already reading.
+func _show_pouring_step(active: bool) -> void:
+	var step := _tea.get_progress() if is_instance_valid(_tea) and active else 0
+	if step == _last_step:
+		return
+	if step > _last_step:
+		UIFlourish.settle(_recipe_status, 0.94)
+	elif active:
+		UIFlourish.refuse(_recipe_status)
+	_last_step = step
 
 func present(point: InteractionPoint) -> void:
 	_point_id = point.interaction_id
 	_station = point.interaction_id == &"tea_station"
+	_last_step = _tea.get_progress() if is_instance_valid(_tea) else 0
 	_description.text = (
 		"固定配方：珍珠奶茶一杯\n按红茶 → 牛奶 → 珍珠依次投料。\n顺序错误会清空本杯进度；关窗可保留进度。\n仅当前玩法目标可制作，不消耗库存。"
 		if _station and is_instance_valid(_tea) else point.description

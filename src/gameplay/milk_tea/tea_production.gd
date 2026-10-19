@@ -233,7 +233,7 @@ func preview_craft(materials: Array, quantity: int = 1) -> Dictionary:
 		return result
 	if normalized.is_empty():
 		result.code = "empty"
-		result.message = "请从左侧选择原料。"
+		result.message = "请先选择配方或投入原料。"
 		return result
 	for id: String in normalized:
 		if _inventory.get_definition(id) == null:

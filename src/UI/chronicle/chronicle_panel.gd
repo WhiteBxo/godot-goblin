@@ -7,10 +7,14 @@ extends VBoxContainer
 @onready var _text: RichTextLabel = %Text
 @onready var _summary: Label = %Summary
 @onready var _body: BoxContainer = %Body
+@onready var _detail: Control = %Detail
 
 var _journal: ChronicleJournal
 var _ids: Array[String] = []
 var _selected_id := ""
+## Only a genuinely different entry turns the page; a journal refresh of the
+## entry already on screen must leave the words still.
+var _shown_id := ""
 
 func _ready() -> void:
 	_list.item_selected.connect(_select)
@@ -72,12 +76,22 @@ func _refresh() -> void:
 		_selected_id = ""
 		_title.text = "尚无见闻" if _ids.is_empty() else "选择一条见闻"
 		_text.text = "在旅途中发现的见闻会记录在这里。" if _ids.is_empty() else "点击左侧条目，回顾已记录的内容。"
+		_turn_page(str(selected.get("entry_id", "")))
 		return
 	_title.text = selected.title
 	var paragraphs := PackedStringArray()
 	for record: Dictionary in selected.records:
 		paragraphs.append(record.content)
 	_text.text = "\n\n".join(paragraphs) if not paragraphs.is_empty() else "暂时没有记录。"
+	_turn_page(str(selected.get("entry_id", "")))
+
+## The reading pane opens on the new entry instead of swapping the sentences
+## under the eye. Alpha and scale only, so the split layout never reflows.
+func _turn_page(entry_id: String) -> void:
+	var changed := entry_id != _shown_id
+	_shown_id = entry_id
+	if changed:
+		UIFlourish.reveal(_detail, 0.99)
 
 func _select(index: int) -> void:
 	if not is_visible_in_tree() or not can_process() or not is_instance_valid(_journal) or index < 0 or index >= _ids.size():

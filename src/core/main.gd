@@ -885,8 +885,7 @@ func _create_shop_business(ui: ShopUI) -> void:
 		if entry.get("status") != "active" or not entry.get("ready", false):
 			return
 		var result := _task_delivery.try_submit(id, entry.target_id)
-		ui.show_feedback(result.message, result.ok)
-		_present_handover(str(entry.target_id), entry, result))
+		ui.show_feedback(result.message, result.ok))
 	ui.accept_requested.connect(func(id: String) -> void:
 		var accepted := _task_delivery.accept_order(id)
 		if accepted == OK:
@@ -910,21 +909,15 @@ func _create_shop_business(ui: ShopUI) -> void:
 	ui.craft_requested.connect(func(materials: Array[String], quantity: int) -> void:
 		var result := _tea_production.craft(materials, quantity)
 		_interaction_audio.play_event("craft_success" if result.ok else "craft_failure")
-		ui.show_production_result(result)
-		if result.ok:
-			_carry_cup(str(result.get("product_id", ""))))
+		ui.show_production_result(result))
 	ui.formula_requested.connect(func(materials: Array[String], iced: bool) -> void:
 		var result := _tea_production.craft_formula(materials, 1, "", iced)
 		_interaction_audio.play_event("craft_success" if result.ok else "craft_failure")
-		ui.show_formula_result(result)
-		if result.ok:
-			_carry_cup(str(result.get("id", ""))))
+		ui.show_formula_result(result))
 	ui.confirm_formula_requested.connect(func(materials: Array[String]) -> void:
 		var result := _tea_production.confirm_formula(materials, "confirm-%d" % Time.get_ticks_usec())
 		_interaction_audio.play_event("craft_success" if result.ok else "craft_failure")
-		ui.show_formula_result(result)
-		if result.ok:
-			_carry_cup(str(result.get("id", ""))))
+		ui.show_formula_result(result))
 
 func get_player() -> CharacterBody2D:
 	return _shop_player if is_instance_valid(_shop_player) else (_player if is_instance_valid(_player) else null)
@@ -1057,7 +1050,6 @@ func _route_story_interaction(id: StringName) -> Error:
 		var tracked := _order_board.get_tracked_entry()
 		var delivery_result := _task_delivery.deliver_to(String(id), tracked.get("order_id", ""))
 		_shop_ui.show_feedback(delivery_result.message, delivery_result.ok)
-		_present_handover(String(id), tracked, delivery_result)
 		return OK if delivery_result.ok else ERR_UNAVAILABLE
 	return ERR_DOES_NOT_EXIST
 
@@ -1066,7 +1058,6 @@ func _deliver_ready_orders() -> bool:
 	if not is_instance_valid(_order_board) or not is_instance_valid(_task_delivery):
 		return false
 	var count := 0
-	var money := 0
 	var ids: Array[String] = []
 	for entry: Dictionary in _order_board.get_entries():
 		if entry.status == "active" and entry.ready and (not entry.product_id.is_empty() or entry.free_formula):
@@ -1078,48 +1069,9 @@ func _deliver_ready_orders() -> bool:
 		var result := _task_delivery.try_submit(id, current.target_id)
 		if result.ok:
 			count += 1
-			money += int(result.get("money_delta", 0))
 	if count > 0:
 		_shop_ui.show_feedback("交付成功：已在收银台结算 %d 张奶茶订单。" % count)
-		_settle_carried_cup()
-		_present_counter_payout(money, count)
 	return count > 0
-
-## The cup the player will hand over is carried in the hand, not only counted in
-## the warehouse. Presentation only: stock and pricing stay with the session.
-func _carry_cup(drink_id: String) -> void:
-	if drink_id.is_empty() or not is_instance_valid(_shop_player):
-		return
-	if not _shop_player.set_held(&"drink", drink_id):
-		return
-	_set_carried_art(drink_id)
-
-
-## Delivery consumed the cup in hand: the hand goes back to empty instead of
-## holding a cup that no longer exists in stock.
-func _settle_carried_cup() -> void:
-	if not is_instance_valid(_shop_player) or _shop_player.held_item != &"drink":
-		return
-	if _carried_cup_stock() > 0:
-		return
-	_shop_player.clear_held()
-	_set_carried_art("")
-
-
-func _carried_cup_stock() -> int:
-	if not is_instance_valid(_warehouse_inventory) or _shop_player.held_variant_id.is_empty():
-		return 0
-	var id := _shop_player.held_variant_id
-	if not _warehouse_inventory.get_drink_record(id).is_empty():
-		return _warehouse_inventory.get_drink_stock(id)
-	return _warehouse_inventory.get_stock(id)
-
-
-func _set_carried_art(drink_id: String) -> void:
-	var visual := _shop_player.get_node_or_null("HeldItemVisual") as HeldItemVisual
-	if visual == null:
-		return
-	visual.set_item_texture(_item_icon(drink_id) if not drink_id.is_empty() else null)
 
 
 func _item_icon(item_id: String) -> Texture2D:
@@ -1128,41 +1080,6 @@ func _item_icon(item_id: String) -> Texture2D:
 	var definition := _warehouse_inventory.get_definition(item_id)
 	return definition.icon if definition != null else null
 
-
-## The cup leaves the hand and lands with the customer, who acknowledges it.
-## Nothing is claimed on the world state: this runs after a committed delivery.
-func _present_handover(target_id: String, entry: Dictionary, result: Dictionary) -> void:
-	if not bool(result.get("ok", false)) or not is_instance_valid(_shop_player):
-		return
-	_settle_carried_cup()
-	if target_id.is_empty() or not is_instance_valid(_actor_director):
-		return
-	var receiver := _actor_director.get_actor(StringName(target_id))
-	if receiver == null or not is_instance_valid(receiver):
-		return
-	var money := int(result.get("money_delta", 0))
-	UIFlourish.world_toss($World, _hand_position(), receiver.global_position + Vector2(0.0, -46.0),
-		entry.get("icon"), WalletTransactions.format_money(money) if money > 0 else "")
-	UIFlourish.world_message(receiver, receiver.global_position + receiver.get_emote_offset(), "♪")
-
-
-## The register settles several slips at once, so the payout lands at the counter
-## instead of pretending the player walked to every customer.
-func _present_counter_payout(money: int, cups: int) -> void:
-	if not is_instance_valid(_shop_player):
-		return
-	UIFlourish.world_pop($World, _hand_position() + Vector2(0.0, -12.0), null, cups,
-		WalletTransactions.format_money(money) if money > 0 else "")
-
-
-## Hand anchor per facing, matching the carried art so the cup leaves the hand
-## that is actually holding it.
-func _hand_position() -> Vector2:
-	if not is_instance_valid(_shop_player):
-		return Vector2.ZERO
-	var facing := _shop_player.facing
-	var hand := -24.0 if facing == PlayerController.Facing.LEFT or facing == PlayerController.Facing.UP else 24.0
-	return _shop_player.global_position + Vector2(hand, -52.0)
 
 func _create_world_controller() -> void:
 	_world_controller = Day1WorldController.new()

@@ -88,10 +88,17 @@ func _orders_and_menu() -> void:
 	var accept := board.get_node("%AcceptAll") as Button
 	accept.pressed.emit()
 	await frames()
+	var first_frame := 0
+	for entry: Dictionary in game.get_order_board().get_entries():
+		first_frame += 1 if entry.accepted else 0
+	check(first_frame < 5, "One click accepts the queue one slip at a time (%d of 5 in the first frame)" % first_frame)
+	# The board walks the remaining slips with a short beat between them.
+	await create_timer(1.0).timeout
 	var accepted := 0
 	for entry: Dictionary in game.get_order_board().get_entries():
 		accepted += 1 if entry.accepted else 0
 	check(accepted == 5 and accept.disabled, "One acceptance click accepts all five current orders")
+	check(board.get_active_filter() == "active", "The queue lands on 进行中 once it has drained")
 	check(board.get_tabs().tab_count == 2, "Production board has no completed-order tab")
 	await picture("one_click_orders")
 	ui.close()

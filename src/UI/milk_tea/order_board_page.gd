@@ -7,6 +7,9 @@ signal deliver_requested(order_id: String)
 
 const FILTERS: Array[String] = ["active", "available"]
 const TITLES: Array[String] = ["进行中", "可接取"]
+## One slip at a time: the queue is walked instead of collapsed, so the player
+## sees five orders become five jobs rather than one frame where nothing is left.
+const ACCEPT_BEAT := 0.14
 
 @onready var _tabs: TabBar = %OrderTabs
 @onready var _list: OrderList = %OrderList
@@ -19,6 +22,9 @@ var _refreshing := false
 ## Set while an accept request is in flight. The model projection, not the
 ## signal return, decides whether the page moves to 进行中.
 var _pending_accept := ""
+## Set while 一键接单 walks the queue. The board keeps 可接取 on screen for the
+## duration so the list visibly empties, then lands on 进行中 once.
+var _accepting_all := false
 
 func _ready() -> void:
 	_tabs.tab_changed.connect(func(index: int) -> void:
@@ -73,7 +79,7 @@ func refresh() -> void:
 	for index: int in range(FILTERS.size()):
 		_tabs.set_tab_title(index, "%s %d" % [TITLES[index], counts[FILTERS[index]]])
 	%AcceptAll.text = "一键接单（%d）" % counts.available
-	%AcceptAll.disabled = counts.available == 0
+	%AcceptAll.disabled = counts.available == 0 or _accepting_all
 	var choose_first := _selected not in _ids
 	if choose_first:
 		_selected = _ids[0] if not _ids.is_empty() else ""
@@ -84,14 +90,37 @@ func refresh() -> void:
 	_refreshing = false
 
 func _accept_all() -> void:
+	if _accepting_all or not is_instance_valid(_model):
+		return
 	var pending: Array[String] = []
 	for entry: Dictionary in _model.get_entries():
 		if entry.status == "available" and _is_milk_order(entry):
 			pending.append(entry.order_id)
+	if pending.is_empty():
+		return
+	_accepting_all = true
+	var start_filter := _filter
+	%AcceptAll.disabled = true
+	var accepted := ""
 	for id: String in pending:
-		_pending_accept = id
+		if not is_inside_tree() or _model.get_entry(id).get("status") != "available":
+			continue
+		_selected = id
 		accept_requested.emit(id)
-	_filter = "active"
+		if _model.get_entry(id).get("status") != "active":
+			continue
+		accepted = id
+		# The slip leaves the list, the ticket turns to the next customer and the
+		# button count drops: one order's worth of beat before the next one.
+		await get_tree().create_timer(ACCEPT_BEAT).timeout
+	_accepting_all = false
+	if not is_inside_tree():
+		return
+	# The queue has drained: the player is looking at the work, not the offers.
+	if _filter == start_filter and _filter == "available":
+		_filter = "active"
+		if not accepted.is_empty():
+			_selected = accepted
 	refresh()
 
 func _is_milk_order(entry: Dictionary) -> bool:

@@ -42,5 +42,5 @@ position_smoothing_speed = 8.0
 script = ExtResource("3_camera")
 
 [node name="HeldItemVisual" type="Node2D" parent="." unique_id=1950531110]
-position = Vector2(24, -36)
+position = Vector2(24, -52)
 script = ExtResource("5_d63da")

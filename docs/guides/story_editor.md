@@ -59,6 +59,16 @@ godot --headless --path . --script res://tools/story/edit_story_project.gd -- --
 
 实现依据：[Godot 4.7 OptionButton](https://docs.godotengine.org/en/4.7/classes/class_optionbutton.html)、[ItemList](https://docs.godotengine.org/en/4.7/classes/class_itemlist.html)、[DirAccess](https://docs.godotengine.org/en/4.7/classes/class_diraccess.html)。OptionButton 的程序 select 不会发出用户 item_selected，视图刷新与用户编辑显式分开；文件替换检查 rename 的返回值。
 
+## 已发布剧情的取景约定
+
+第一、二天的三份正式工程保留对白、选项、事件条件和玩法完成边界，仅在短事件内配置演出。新聚焦为 0.6 秒，特调异常轻推近为 1.10／0.4 秒，关键对白段之间停顿为 0.25 秒；短事件最多新增两处独立停顿。群客沿原路线依次移动，镜头固定柜台，避免每人进门都重新切镜。首次出店沿用已有环境展示镜头。
+
+胖哥布林、次日营业顾客、酒馆／赌场老板与守卫采用真实 Actor 绑定，谈话保持稳定构图，最后一段对白后以 `camera_reset` 恢复取景；章末在标题卡前复位。不增加角色路线、音效重复触发或运行时指令。使用 F5 新游戏体验完整流程；前两阶段也可通过已有四个独立预览重演，后续通过正式宿主与实际业务推进验证。
+
 ## 验证记录
+
+2026-10-19 轻量演出优化（Godot 4.7.2）：三份工程生成与一致性检查通过；静态对比确认对白、分支、业务步骤、绑定和 Bridge phase 未变。对话测试 headless 与默认 D3D12／Forward+ 均为 170 项、0 failures。两天真实流程 headless 为 280 项、0 failures，覆盖对白移动锁及事件结束后的跟随／缩放恢复；OpenGL 图形流程为 388 项、0 failures，生成 98 张过程截图，并检查店内、街道揭示、特调异常、次日苏醒、酒馆、赌场、守卫和最终返店构图。图形运行时的自动推进用于观察构图，不代表人工阅读节奏或听感验收。
+
+独立开场补测通过 Esc 取消、镜头／移动锁恢复、重新启动、真实首单交接与移动响应共 8 项；该临时脚本退出有 8 ObjectDB／3 resources 释放诊断。旧 `verify_day1_stages_01_02.gd` 的配方、收入、金币和场景等待断言失败，在未修改 HEAD 的隔离副本复现（等待场景切换前记录 21 条错误）；两次运行均在同一等待点停止，未修改无关经济逻辑。未执行全项目回归、人工听音、全部选项分支试玩或 Release 导出。
 
 2026-10-18，Godot 4.7.2：编辑器 44 项、Console 152 项、Debug 边界 97 项、正式 Day 1 五单流程 225 项均通过；工程及派生产物一致性检查通过。四个独立演出预览均成功，开场另做图形窗口和连续两次重建重演检查；D3D12 图形窗口截图检查了编排页与实景预览。Console 测试中的 engine / warning probe 是预期日志夹具。未做人工听音、全部分支试玩或真实 Release 导出。

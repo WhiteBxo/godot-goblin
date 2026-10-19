@@ -140,7 +140,7 @@
 					"id": "step_0075",
 					"data": {
 						"command": "wait",
-						"seconds": 2.0
+						"seconds": 0.25
 					}
 				},
 				{
@@ -243,7 +243,7 @@
 					"id": "step_0076",
 					"data": {
 						"command": "wait",
-						"seconds": 1.5
+						"seconds": 0.25
 					}
 				},
 				{
@@ -489,8 +489,8 @@
 					"id": "step_0036",
 					"data": {
 						"command": "camera_focus",
-						"actor": "goblin_a",
-						"duration": 0.9
+						"target": "day1_counter",
+						"duration": 0.6
 					}
 				},
 				{
@@ -525,14 +525,6 @@
 					}
 				},
 				{
-					"id": "step_0041",
-					"data": {
-						"command": "camera_focus",
-						"actor": "goblin_b",
-						"duration": 0.9
-					}
-				},
-				{
 					"id": "step_0042",
 					"data": {
 						"command": "actor_move",
@@ -561,14 +553,6 @@
 					"data": {
 						"command": "actor_show",
 						"actor": "goblin_c"
-					}
-				},
-				{
-					"id": "step_0046",
-					"data": {
-						"command": "camera_focus",
-						"actor": "goblin_c",
-						"duration": 0.9
 					}
 				},
 				{

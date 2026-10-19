@@ -12,8 +12,16 @@
       },
       "steps": [
         {
+          "command": "camera_focus",
+          "actor": "player",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day1.s03.coin_inspect"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "set_stage",
@@ -84,8 +92,16 @@
       },
       "steps": [
         {
+          "command": "camera_focus",
+          "actor": "player",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day1.s03.back_to_door"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "set_stage",
@@ -108,8 +124,16 @@
           "actor": "fat_goblin"
         },
         {
+          "command": "camera_focus",
+          "actor": "fat_goblin",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day1.s04.fat_goblin_arrives"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "set_flag",
@@ -132,6 +156,11 @@
         }
       },
       "steps": [
+        {
+          "command": "camera_focus",
+          "actor": "fat_goblin",
+          "duration": 0.6
+        },
         {
           "command": "dialogue",
           "id": "day1.s04.first_taste"
@@ -169,6 +198,10 @@
           "content": "据胖哥布林所说，长老将偶尔到来的行脚商称为格里芬派来的使者。使者带来的稀奇商品，被视为格里芬对勤劳、守规矩的哥布林的赏赐。"
         },
         {
+          "command": "wait",
+          "seconds": 0.25
+        },
+        {
           "command": "dialogue",
           "id": "day1.s04.griffin_blood"
         },
@@ -179,6 +212,9 @@
         {
           "command": "dialogue",
           "id": "day1.s04.map_handover"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "unlock_map",
@@ -210,6 +246,11 @@
       },
       "steps": [
         {
+          "command": "camera_focus",
+          "actor": "fat_goblin",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day1.s04.commission_choice"
         },
@@ -234,6 +275,9 @@
               "id": "refuse"
             }
           }
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "chapter_action",
@@ -261,6 +305,11 @@
       "trigger": "day1_drunken_encounter",
       "steps": [
         {
+          "command": "camera_focus",
+          "actor": "drunken_guard",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day1.s05.drunken_guard"
         },
@@ -271,6 +320,9 @@
         {
           "command": "dialogue",
           "id": "day1.s05.drunken_guard_after_payment"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "actor_hide",
@@ -356,12 +408,29 @@
       },
       "steps": [
         {
+          "command": "camera_focus",
+          "actor": "fat_goblin",
+          "duration": 0.6
+        },
+        {
+          "command": "camera_zoom",
+          "value": 1.1,
+          "duration": 0.4
+        },
+        {
           "command": "dialogue",
           "id": "day1.s06.reaction"
         },
         {
+          "command": "wait",
+          "seconds": 0.25
+        },
+        {
           "command": "dialogue",
           "id": "day1.s06.help_and_rest"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "chapter_action",

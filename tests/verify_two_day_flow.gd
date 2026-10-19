@@ -54,9 +54,16 @@ func attach() -> void:
 
 func wait_event(id: String) -> bool:
 	var deadline := Time.get_ticks_msec() + 30000
+	var captured_dialogue := false
 	while not state.is_event_completed(id) and Time.get_ticks_msec() < deadline and event_errors.is_empty():
 		var dialogue := game.get_dialogue_manager()
 		if dialogue.is_active():
+			if not captured_dialogue:
+				captured_dialogue = true
+				check(not game.get_player().movement_enabled, "Dialogue retains the story movement lock: " + id)
+				if not screenshots.is_empty() and DisplayServer.get_name() != "headless":
+					dialogue.advance()
+					await picture(id + "_dialogue")
 			dialogue.advance()
 			dialogue.select_choice(0)
 		await process_frame
@@ -65,6 +72,8 @@ func wait_event(id: String) -> bool:
 		print("FLOW_ABORT ", event_errors, " director=", game.get_story_director().last_error, " chapter=", game.get_chapter_controller().last_error, " bridge=", game.get_gameplay_bridge().get_runtime_status())
 		quit(1)
 		return false
+	var camera := game.get_camera_director().get_camera()
+	check(camera.mode == BoundedFollowCamera.Mode.FOLLOW and is_equal_approx(camera.get_directed_zoom(), camera.preferred_zoom), "Event restores gameplay camera follow and zoom: " + id)
 	await frames()
 	await picture(id)
 	return true

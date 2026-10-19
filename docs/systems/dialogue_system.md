@@ -99,6 +99,10 @@ dialogue.set_current_portrait(null) # 只隐藏当前句，下一句重新解析
 
 UI 复用 InputMap 的 `interact`、`ui_accept`、`ui_up/down`、`ui_cancel`，没有硬编码 gameplay 按键。默认 E、空格、Enter：第一次补全文本，再按推进；完整显示选项后用 ↑↓ 及确认键选择，也可点击按钮；Esc 中止。长按 echo 不推进，进入新行的当前帧不接受推进键。确认键在 dispatch 前消费，结束对话的同一按键不会落入场景交互。
 
+逐字速度默认每秒 32 字，`DialogueUI` 的 Inspector 可调整 `comma_pause`（逗号／顿号，0.06 秒）、`sentence_pause`（句中句号／问号／叹号，0.12 秒）、`ellipsis_pause`（省略号，0.18 秒）。连续标点只采用一次最长停顿，行末及其闭引号不额外等待；设为 0 可关闭对应停顿。确认补全立即清除计时，选项在全文显示后取得焦点。
+
+立绘首次显示、更换说话人或更换图片时按 `portrait_fade_seconds`（默认 0.14 秒）淡入，位置不变，同角色同图片连续对白不重播。确认补全同时完成淡入；关闭、取消和重新打开会清理旧动画。公开 `set_current_portrait` 仍即时切图，不重启动画或文字。实现依据：[Godot 4.7 RichTextLabel](https://docs.godotengine.org/en/4.7/classes/class_richtextlabel.html) 的 Unicode 字符计数与 [Tween](https://docs.godotengine.org/en/4.7/classes/class_tween.html) 的取消和节点生命周期。
+
 MainGame 复用 `PlayerController.set_movement_enabled` 保存并关闭移动，并用 ShopInteraction 新增的通用 `set_input_enabled` / `is_input_enabled` 关闭交互和提示。交互点直接发 signal 也受此开关保护。MainGame 统一以“对白活跃 OR StoryDirector 忙碌”计算锁定；最后一个输入所有者结束才恢复原值，演出停顿也保持锁定，原先已禁用的控制不会被误启用。ShopUI 已打开时通过 `can_start` 拒绝启动对话，继续使用现有店铺弹窗锁定逻辑，不堆叠两个输入所有者。
 
 UI 按 640×360 视口设计，底部面板为 560×136px，水平居中、距底边 12px，棕色、金色边框与奶茶店一致。当前说话者立绘在左侧或右侧的 240×272px 区域内等比居中，使用线性过滤。区域中心对齐面板上边缘，面板以较高的 z_index 绘制在立绘前方，遮住下半身，约上半身露出；无图时隐藏立绘。正文超出固定范围后支持鼠标滚轮和右侧滚动条阅读，不再撑大面板，新的一行从顶部开始显示。选项列表也支持滚动。对话 UI 与独立场景使用随包分发的 [Fusion Pixel](../../assets/fonts/fusion_pixel/README.md) 中文字体，避免依赖宿主系统 CJK fallback；保留完整简体字符版本、原始许可证和导入设置。

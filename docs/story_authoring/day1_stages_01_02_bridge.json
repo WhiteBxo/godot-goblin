@@ -100,7 +100,7 @@
       "mode": "自动演出",
       "event": "day1.group_arrival",
       "start": 5,
-      "count": 17,
+      "count": 15,
       "dialogues": [
         "day1.goblin_group_customers"
       ]
@@ -109,7 +109,7 @@
       "id": "chronicle_unlocked",
       "mode": "自动演出",
       "event": "day1.group_arrival",
-      "start": 22,
+      "start": 20,
       "count": 8,
       "dialogues": [
         "day1.chronicle_unlocked"
@@ -182,5 +182,5 @@
     "fallback": "Unprovided expressions retain speaker default; unconfirmed fat-goblin portraits are not bound."
   },
   "authoring_project": "res://docs/story_authoring/day1_stages_01_02_project.json",
-  "authoring_sha256": "05889354cbd3d4c16dc29b5b1939dba1ee7447d236f5f1b1e24416c9dbf6fa82"
+  "authoring_sha256": "d514c435554ed90e623a7c70dd527c50e5b1f77717dbed0c99f88daf278b0909"
 }

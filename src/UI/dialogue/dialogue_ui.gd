@@ -6,6 +6,10 @@ signal choice_requested(index: int)
 signal cancel_requested
 
 @export_range(1.0, 200.0) var characters_per_second: float = 32.0
+@export_range(0.0, 0.5, 0.01) var comma_pause: float = 0.06
+@export_range(0.0, 0.5, 0.01) var sentence_pause: float = 0.12
+@export_range(0.0, 0.5, 0.01) var ellipsis_pause: float = 0.18
+@export_range(0.0, 0.5, 0.01) var portrait_fade_seconds: float = 0.14
 
 @onready var _speaker: Label = $Panel/Margin/Content/Speaker
 @onready var _portrait: TextureRect = $Portrait
@@ -16,7 +20,8 @@ signal cancel_requested
 
 var _buttons: Array[Button] = []
 var _selected: int = 0
-var _characters: float = 0.0
+var _reveal_remaining: float = 0.0
+var _portrait_tween: Tween
 var _revealing: bool = false
 var _input_ready_frame: int = 0
 var _previous_focus: Control
@@ -46,14 +51,21 @@ func present_line(speaker: String, text: String, portrait: Texture2D, choices: A
 			return
 	elif not visible:
 		_previous_focus = get_viewport().gui_get_focus_owner()
+	var portrait_changed := not visible or _speaker.text != speaker or _portrait.texture != portrait
 	_speaker.text = speaker
 	set_portrait(portrait)
+	if portrait_changed:
+		_finish_portrait_fade()
+		if portrait != null and portrait_fade_seconds > 0.0:
+			_portrait.modulate.a = 0.0
+			_portrait_tween = create_tween()
+			_portrait_tween.tween_property(_portrait, "modulate:a", 1.0, portrait_fade_seconds)
 	_portrait.offset_left = -268.0 if portrait_on_left else 28.0
 	_portrait.offset_right = -28.0 if portrait_on_left else 268.0
 	_text.text = text
 	_text.visible_characters = 0
 	_text.scroll_to_line(0)
-	_characters = 0.0
+	_reveal_remaining = 1.0 / characters_per_second
 	_revealing = not text.is_empty()
 	_clear_choices()
 	_selected = 0
@@ -79,6 +91,8 @@ func present_line(speaker: String, text: String, portrait: Texture2D, choices: A
 
 ## Change only the image; text reveal, choices, focus and placement stay intact.
 func set_portrait(portrait: Texture2D) -> void:
+	if _portrait.texture != portrait or portrait == null:
+		_finish_portrait_fade()
 	_portrait.texture = portrait
 	_portrait.visible = portrait != null
 
@@ -89,6 +103,8 @@ func is_revealing() -> bool:
 
 func reveal_all() -> void:
 	_revealing = false
+	_reveal_remaining = 0.0
+	_finish_portrait_fade()
 	_text.visible_characters = -1
 	_choice_scroll.visible = not _buttons.is_empty()
 	_hint.text = "↑↓ 选择 · E / 空格 / Enter 确认 · Esc 结束" if not _buttons.is_empty() else "E / 空格 / Enter 继续 · Esc 结束"
@@ -103,6 +119,7 @@ func close_dialogue() -> void:
 	hide()
 	set_portrait(null)
 	_revealing = false
+	_reveal_remaining = 0.0
 	_clear_choices()
 	if not is_instance_valid(_ui_manager) and is_instance_valid(_previous_focus) and _previous_focus.is_visible_in_tree():
 		_previous_focus.grab_focus()
@@ -113,10 +130,52 @@ func close_dialogue() -> void:
 func _process(delta: float) -> void:
 	if not visible or not _revealing:
 		return
-	_characters += delta * characters_per_second
-	_text.visible_characters = int(_characters)
-	if _text.visible_characters >= _text.get_total_character_count():
-		reveal_all()
+	_reveal_remaining -= delta
+	while _reveal_remaining <= 0.0 and _revealing:
+		_text.visible_characters += 1
+		if _text.visible_characters >= _text.get_total_character_count():
+			reveal_all()
+		else:
+			_reveal_remaining += 1.0 / characters_per_second + _punctuation_pause(_text.visible_characters - 1)
+
+
+func _punctuation_pause(index: int) -> float:
+	var text := _text.text
+	if _pause_for_character(text[index]) == 0.0 or _pause_for_character(text[index + 1]) > 0.0:
+		return 0.0
+	# Closing quotes and whitespace do not turn a line-ending mark into a pause.
+	var suffix := text.substr(index + 1).strip_edges()
+	while not suffix.is_empty() and suffix[0] in "”’\"'」』）】)]":
+		suffix = suffix.substr(1).strip_edges()
+	if suffix.is_empty():
+		return 0.0
+	var pause := 0.0
+	while index >= 0 and _pause_for_character(text[index]) > 0.0:
+		pause = maxf(pause, _pause_for_character(text[index]))
+		index -= 1
+	return pause
+
+
+func _pause_for_character(character: String) -> float:
+	if character in "，、,":
+		return comma_pause
+	if character in "。？！.!?":
+		return sentence_pause
+	if character == "…":
+		return ellipsis_pause
+	return 0.0
+
+
+func _finish_portrait_fade() -> void:
+	if _portrait_tween != null:
+		_portrait_tween.kill()
+		_portrait_tween = null
+	_portrait.modulate.a = 1.0
+
+
+func _exit_tree() -> void:
+	if _portrait_tween != null:
+		_portrait_tween.kill()
 
 
 func _input(event: InputEvent) -> void:

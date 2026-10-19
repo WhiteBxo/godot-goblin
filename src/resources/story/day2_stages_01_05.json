@@ -9,6 +9,11 @@
       },
       "steps": [
         {
+          "command": "camera_focus",
+          "actor": "fat_goblin",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day2.s01.fat_goblin_wakes"
         },
@@ -68,6 +73,9 @@
           "id": "day2.s01.mushroom_commission_after_funds"
         },
         {
+          "command": "camera_reset"
+        },
+        {
           "command": "set_stage",
           "value": "day2.s02.open"
         }
@@ -81,8 +89,16 @@
       },
       "steps": [
         {
+          "command": "camera_focus",
+          "actor": "player",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day2.s02.business_open"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "set_flag",
@@ -116,6 +132,11 @@
       },
       "steps": [
         {
+          "command": "camera_focus",
+          "actor": "day2_festival_0",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day2.s02.festival_talk"
         },
@@ -133,6 +154,9 @@
         {
           "command": "dialogue",
           "id": "day2.s02.festival_talk.chronicle_1"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "set_flag",
@@ -156,8 +180,16 @@
       },
       "steps": [
         {
+          "command": "camera_focus",
+          "actor": "day2_festival_0",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day2.s02.festival_talk_after"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "business",
@@ -191,8 +223,16 @@
       },
       "steps": [
         {
+          "command": "camera_focus",
+          "actor": "day2_elder_0",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day2.s02.elder_authority"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "set_flag",
@@ -216,8 +256,16 @@
       },
       "steps": [
         {
+          "command": "camera_focus",
+          "actor": "day2_elder_0",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day2.s02.elder_authority_after"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "chronicle_append",
@@ -257,8 +305,16 @@
       },
       "steps": [
         {
+          "command": "camera_focus",
+          "actor": "day2_emissary_0",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day2.s02.emissary_rumor"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "set_flag",
@@ -282,8 +338,16 @@
       },
       "steps": [
         {
+          "command": "camera_focus",
+          "actor": "day2_emissary_0",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day2.s02.emissary_rumor_after"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "chronicle_append",
@@ -323,8 +387,16 @@
       },
       "steps": [
         {
+          "command": "camera_focus",
+          "actor": "day2_rumor_0",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day2.s02.tavern_casino_talk"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "set_flag",
@@ -347,6 +419,11 @@
         }
       },
       "steps": [
+        {
+          "command": "camera_focus",
+          "actor": "player",
+          "duration": 0.6
+        },
         {
           "command": "dialogue",
           "id": "day2.s02.tavern_casino_talk_after"
@@ -371,6 +448,9 @@
         {
           "command": "dialogue",
           "id": "day2.s02.find_errand_runner"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "set_flag",
@@ -411,8 +491,16 @@
       "trigger": "tavern",
       "steps": [
         {
+          "command": "camera_focus",
+          "actor": "tavern",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day2.s03.amber_wine"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "set_flag",
@@ -440,8 +528,16 @@
           "receipt": "day2.s03.amber_wine_bought"
         },
         {
+          "command": "camera_focus",
+          "actor": "tavern",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day2.s03.amber_wine_after_purchase"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "set_stage",
@@ -457,6 +553,11 @@
       },
       "trigger": "tavern",
       "steps": [
+        {
+          "command": "camera_focus",
+          "actor": "tavern",
+          "duration": 0.6
+        },
         {
           "command": "dialogue",
           "id": "day2.s03.tavern_commission"
@@ -494,6 +595,10 @@
           "value": true
         },
         {
+          "command": "wait",
+          "seconds": 0.25
+        },
+        {
           "command": "dialogue",
           "id": "day2.s03.griffin_token"
         },
@@ -523,6 +628,9 @@
           "id": "day2.s03.to_casino"
         },
         {
+          "command": "camera_reset"
+        },
+        {
           "command": "set_stage",
           "value": "day2.s04.travel_casino"
         }
@@ -540,6 +648,11 @@
       "trigger": "casino_table",
       "steps": [
         {
+          "command": "camera_focus",
+          "actor": "casino",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day2.s04.afraid_to_enter"
         },
@@ -552,8 +665,15 @@
           "id": "day2.s04.stake"
         },
         {
+          "command": "wait",
+          "seconds": 0.25
+        },
+        {
           "command": "dialogue",
           "id": "day2.s04.first_round"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "set_stage",
@@ -574,12 +694,24 @@
           "step": "first_loss"
         },
         {
+          "command": "camera_focus",
+          "actor": "casino",
+          "duration": 0.6
+        },
+        {
+          "command": "wait",
+          "seconds": 0.25
+        },
+        {
           "command": "dialogue",
           "id": "day2.s04.first_round_after_loss"
         },
         {
           "command": "dialogue",
           "id": "day2.s04.second_round"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "set_stage",
@@ -598,6 +730,15 @@
         {
           "command": "casino_settle",
           "step": "second_win"
+        },
+        {
+          "command": "camera_focus",
+          "actor": "casino",
+          "duration": 0.6
+        },
+        {
+          "command": "wait",
+          "seconds": 0.25
         },
         {
           "command": "dialogue",
@@ -621,6 +762,9 @@
           "id": "day2.s04.leave_casino"
         },
         {
+          "command": "camera_reset"
+        },
+        {
           "command": "set_stage",
           "value": "day2.s05.street"
         }
@@ -637,8 +781,16 @@
       },
       "steps": [
         {
+          "command": "camera_focus",
+          "actor": "player",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day2.s05.street_check"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "set_stage",
@@ -657,12 +809,20 @@
       },
       "steps": [
         {
+          "command": "camera_focus",
+          "actor": "player",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day2.s05.back_in_shop"
         },
         {
           "command": "dialogue",
           "id": "day2.s05.make_special"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "set_flag",
@@ -686,8 +846,16 @@
       },
       "steps": [
         {
+          "command": "camera_focus",
+          "actor": "player",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day2.s05.make_special_after"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "set_stage",
@@ -704,8 +872,16 @@
       "trigger": "drunken_guard",
       "steps": [
         {
+          "command": "camera_focus",
+          "actor": "drunken_guard",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day2.s05.deliver_guard"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "set_flag",
@@ -729,6 +905,11 @@
       },
       "steps": [
         {
+          "command": "camera_focus",
+          "actor": "drunken_guard",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day2.s05.deliver_guard_after_delivery"
         },
@@ -739,6 +920,9 @@
         {
           "command": "dialogue",
           "id": "day2.s05.useful_guard"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "character_unlock",
@@ -768,8 +952,16 @@
       },
       "steps": [
         {
+          "command": "camera_focus",
+          "actor": "player",
+          "duration": 0.6
+        },
+        {
           "command": "dialogue",
           "id": "day2.s05.unsolved"
+        },
+        {
+          "command": "camera_reset"
         },
         {
           "command": "set_flag",

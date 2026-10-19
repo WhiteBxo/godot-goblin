@@ -24,7 +24,7 @@
         },
         {
           "command": "wait",
-          "seconds": 2.0
+          "seconds": 0.25
         },
         {
           "command": "play_sfx",
@@ -87,7 +87,7 @@
       "steps": [
         {
           "command": "wait",
-          "seconds": 1.5
+          "seconds": 0.25
         },
         {
           "command": "actor_move",
@@ -224,8 +224,8 @@
         },
         {
           "command": "camera_focus",
-          "actor": "goblin_a",
-          "duration": 0.9
+          "target": "day1_counter",
+          "duration": 0.6
         },
         {
           "command": "actor_move",
@@ -247,11 +247,6 @@
           "actor": "goblin_b"
         },
         {
-          "command": "camera_focus",
-          "actor": "goblin_b",
-          "duration": 0.9
-        },
-        {
           "command": "actor_move",
           "actor": "goblin_b",
           "target": "day1_aisle"
@@ -269,11 +264,6 @@
         {
           "command": "actor_show",
           "actor": "goblin_c"
-        },
-        {
-          "command": "camera_focus",
-          "actor": "goblin_c",
-          "duration": 0.9
         },
         {
           "command": "actor_move",

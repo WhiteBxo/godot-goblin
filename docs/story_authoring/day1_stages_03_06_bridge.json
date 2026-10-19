@@ -15,7 +15,7 @@
       "mode": "自动演出",
       "event": "day1.s03.coin_inspect",
       "start": 0,
-      "count": 2,
+      "count": 4,
       "dialogues": [
         "day1.s03.coin_inspect"
       ]
@@ -36,7 +36,7 @@
       "mode": "自动演出",
       "event": "day1.s03.back_to_door",
       "start": 0,
-      "count": 2,
+      "count": 4,
       "dialogues": [
         "day1.s03.back_to_door"
       ]
@@ -46,7 +46,7 @@
       "mode": "自动演出",
       "event": "day1.s04.commission",
       "start": 0,
-      "count": 4,
+      "count": 6,
       "dialogues": [
         "day1.s04.fat_goblin_arrives"
       ]
@@ -71,7 +71,7 @@
       "mode": "自动演出",
       "event": "day1.s04.after_order",
       "start": 0,
-      "count": 12,
+      "count": 15,
       "dialogues": [
         "day1.s04.first_taste",
         "day1.s04.griffin_faith",
@@ -99,7 +99,7 @@
       "mode": "自动演出",
       "event": "day1.s04.commission_choice",
       "start": 0,
-      "count": 6,
+      "count": 8,
       "dialogues": [
         "day1.s04.commission_choice",
         "day1.s04.commission_choice_accept",
@@ -111,7 +111,7 @@
       "mode": "自动演出",
       "event": "day1.s05.drunken_guard",
       "start": 0,
-      "count": 4,
+      "count": 6,
       "dialogues": [
         "day1.s05.drunken_guard",
         "day1.s05.drunken_guard_after_payment"
@@ -184,7 +184,7 @@
       "mode": "自动演出",
       "event": "day1.s06.reaction",
       "start": 0,
-      "count": 6,
+      "count": 10,
       "dialogues": [
         "day1.s06.reaction",
         "day1.s06.help_and_rest"
@@ -192,6 +192,6 @@
     }
   ],
   "authoring_project": "res://docs/story_authoring/day1_stages_03_06_project.json",
-  "authoring_sha256": "a4337e0e09c04f060903c02712b180ce9e1405f3aca6661fda42801caea4084e",
+  "authoring_sha256": "0fd1f67b30f12af6a70de345a03470ccc53eaf66f7563e4264ce0d8ecb583303",
   "verification": "res://tests/verify_two_day_flow.gd"
 }

@@ -15,7 +15,7 @@
       "mode": "自动演出",
       "event": "day2.s01.morning",
       "start": 0,
-      "count": 14,
+      "count": 16,
       "dialogues": [
         "day2.s01.fat_goblin_wakes",
         "day2.s01.wants_more",
@@ -32,7 +32,7 @@
       "mode": "自动演出",
       "event": "day2.s02.business_open",
       "start": 0,
-      "count": 5,
+      "count": 7,
       "dialogues": [
         "day2.s02.business_open"
       ]
@@ -42,7 +42,7 @@
       "mode": "自动演出",
       "event": "day2.s02.festival_order",
       "start": 0,
-      "count": 6,
+      "count": 8,
       "dialogues": [
         "day2.s02.festival_talk",
         "day2.s02.festival_talk.chronicle_1"
@@ -68,7 +68,7 @@
       "mode": "自动演出",
       "event": "day2.s02.festival_after",
       "start": 0,
-      "count": 5,
+      "count": 7,
       "dialogues": [
         "day2.s02.festival_talk_after"
       ]
@@ -78,7 +78,7 @@
       "mode": "自动演出",
       "event": "day2.s02.elder_order",
       "start": 0,
-      "count": 3,
+      "count": 5,
       "dialogues": [
         "day2.s02.elder_authority"
       ]
@@ -103,7 +103,7 @@
       "mode": "自动演出",
       "event": "day2.s02.elder_after",
       "start": 0,
-      "count": 6,
+      "count": 8,
       "dialogues": [
         "day2.s02.elder_authority_after"
       ]
@@ -113,7 +113,7 @@
       "mode": "自动演出",
       "event": "day2.s02.emissary_order",
       "start": 0,
-      "count": 3,
+      "count": 5,
       "dialogues": [
         "day2.s02.emissary_rumor"
       ]
@@ -138,7 +138,7 @@
       "mode": "自动演出",
       "event": "day2.s02.emissary_after",
       "start": 0,
-      "count": 6,
+      "count": 8,
       "dialogues": [
         "day2.s02.emissary_rumor_after"
       ]
@@ -148,7 +148,7 @@
       "mode": "自动演出",
       "event": "day2.s02.rumor_order",
       "start": 0,
-      "count": 3,
+      "count": 5,
       "dialogues": [
         "day2.s02.tavern_casino_talk"
       ]
@@ -173,7 +173,7 @@
       "mode": "自动演出",
       "event": "day2.s02.rumor_after",
       "start": 0,
-      "count": 7,
+      "count": 9,
       "dialogues": [
         "day2.s02.tavern_casino_talk_after",
         "day2.s02.find_errand_runner"
@@ -192,7 +192,7 @@
       "mode": "自动演出",
       "event": "day2.s03.amber_wine",
       "start": 0,
-      "count": 3,
+      "count": 5,
       "dialogues": [
         "day2.s03.amber_wine"
       ]
@@ -202,7 +202,7 @@
       "mode": "自动演出",
       "event": "day2.s03.purchase",
       "start": 0,
-      "count": 3,
+      "count": 5,
       "dialogues": [
         "day2.s03.amber_wine_after_purchase"
       ]
@@ -212,7 +212,7 @@
       "mode": "自动演出",
       "event": "day2.s03.commission_token",
       "start": 0,
-      "count": 13,
+      "count": 16,
       "dialogues": [
         "day2.s03.tavern_commission",
         "day2.s03.tavern_commission_gathered",
@@ -228,7 +228,7 @@
       "mode": "自动演出",
       "event": "day2.s04.casino",
       "start": 0,
-      "count": 5,
+      "count": 8,
       "dialogues": [
         "day2.s04.afraid_to_enter",
         "day2.s04.casino_boss",
@@ -241,7 +241,7 @@
       "mode": "自动演出",
       "event": "day2.s04.first_round",
       "start": 0,
-      "count": 4,
+      "count": 7,
       "dialogues": [
         "day2.s04.first_round_after_loss",
         "day2.s04.second_round"
@@ -252,7 +252,7 @@
       "mode": "自动演出",
       "event": "day2.s04.second_round",
       "start": 0,
-      "count": 7,
+      "count": 10,
       "dialogues": [
         "day2.s04.second_round_after_win",
         "day2.s04.second_round_after_reward",
@@ -265,7 +265,7 @@
       "mode": "自动演出",
       "event": "day2.s05.street",
       "start": 0,
-      "count": 2,
+      "count": 4,
       "dialogues": [
         "day2.s05.street_check"
       ]
@@ -275,7 +275,7 @@
       "mode": "自动演出",
       "event": "day2.s05.special_before",
       "start": 0,
-      "count": 4,
+      "count": 6,
       "dialogues": [
         "day2.s05.back_in_shop",
         "day2.s05.make_special"
@@ -301,7 +301,7 @@
       "mode": "自动演出",
       "event": "day2.s05.special_after",
       "start": 0,
-      "count": 2,
+      "count": 4,
       "dialogues": [
         "day2.s05.make_special_after"
       ]
@@ -311,7 +311,7 @@
       "mode": "自动演出",
       "event": "day2.s05.guard_greet",
       "start": 0,
-      "count": 3,
+      "count": 5,
       "dialogues": [
         "day2.s05.deliver_guard"
       ]
@@ -336,7 +336,7 @@
       "mode": "自动演出",
       "event": "day2.s05.guard_after",
       "start": 0,
-      "count": 6,
+      "count": 8,
       "dialogues": [
         "day2.s05.deliver_guard_after_delivery",
         "day2.s05.deliver_guard_after_reward",
@@ -348,14 +348,14 @@
       "mode": "自动演出",
       "event": "day2.s05.unsolved",
       "start": 0,
-      "count": 5,
+      "count": 7,
       "dialogues": [
         "day2.s05.unsolved"
       ]
     }
   ],
   "authoring_project": "res://docs/story_authoring/day2_stages_01_05_project.json",
-  "authoring_sha256": "666302b33cbb09e8a73b1930c7a9346a4cb98934f2048d2bd8682ad26f4ded96",
+  "authoring_sha256": "8d8d4f30521968f4ecfc13081f6ea4c408095edae2859d9429301c8de8829f6f",
   "verification": {
     "entry": "res://tests/verify_two_day_flow.gd",
     "scope": "标题开始、真实旅行和交付；代购及存档另测"

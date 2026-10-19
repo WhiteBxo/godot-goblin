@@ -1,7 +1,7 @@
 {
 	"version": 1.0,
 	"format": "goblin_story_project",
-	"next_step_id": 10050.0,
+	"next_step_id": 10067.0,
 	"manifest": {
 		"version": 1.0,
 		"source": "res://docs/design/day_01_stages_03_06_draft.md",
@@ -145,10 +145,24 @@
 			"event": "day1.s03.coin_inspect",
 			"steps": [
 				{
+					"id": "step_10050",
+					"data": {
+						"command": "camera_focus",
+						"actor": "player",
+						"duration": 0.6
+					}
+				},
+				{
 					"id": "step_10001",
 					"data": {
 						"command": "dialogue",
 						"id": "day1.s03.coin_inspect"
+					}
+				},
+				{
+					"id": "step_10051",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -237,10 +251,24 @@
 			"event": "day1.s03.back_to_door",
 			"steps": [
 				{
+					"id": "step_10052",
+					"data": {
+						"command": "camera_focus",
+						"actor": "player",
+						"duration": 0.6
+					}
+				},
+				{
 					"id": "step_10006",
 					"data": {
 						"command": "dialogue",
 						"id": "day1.s03.back_to_door"
+					}
+				},
+				{
+					"id": "step_10053",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -265,10 +293,24 @@
 					}
 				},
 				{
+					"id": "step_10054",
+					"data": {
+						"command": "camera_focus",
+						"actor": "fat_goblin",
+						"duration": 0.6
+					}
+				},
+				{
 					"id": "step_10009",
 					"data": {
 						"command": "dialogue",
 						"id": "day1.s04.fat_goblin_arrives"
+					}
+				},
+				{
+					"id": "step_10055",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -308,6 +350,14 @@
 			"mode": "自动演出",
 			"event": "day1.s04.after_order",
 			"steps": [
+				{
+					"id": "step_10056",
+					"data": {
+						"command": "camera_focus",
+						"actor": "fat_goblin",
+						"duration": 0.6
+					}
+				},
 				{
 					"id": "step_10012",
 					"data": {
@@ -366,6 +416,13 @@
 					}
 				},
 				{
+					"id": "step_10065",
+					"data": {
+						"command": "wait",
+						"seconds": 0.25
+					}
+				},
+				{
 					"id": "step_10019",
 					"data": {
 						"command": "dialogue",
@@ -384,6 +441,12 @@
 					"data": {
 						"command": "dialogue",
 						"id": "day1.s04.map_handover"
+					}
+				},
+				{
+					"id": "step_10057",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -432,6 +495,14 @@
 			"event": "day1.s04.commission_choice",
 			"steps": [
 				{
+					"id": "step_10058",
+					"data": {
+						"command": "camera_focus",
+						"actor": "fat_goblin",
+						"duration": 0.6
+					}
+				},
+				{
 					"id": "step_10024",
 					"data": {
 						"command": "dialogue",
@@ -467,6 +538,12 @@
 					}
 				},
 				{
+					"id": "step_10059",
+					"data": {
+						"command": "camera_reset"
+					}
+				},
+				{
 					"id": "step_10027",
 					"data": {
 						"command": "chapter_action",
@@ -495,6 +572,14 @@
 			"event": "day1.s05.drunken_guard",
 			"steps": [
 				{
+					"id": "step_10060",
+					"data": {
+						"command": "camera_focus",
+						"actor": "drunken_guard",
+						"duration": 0.6
+					}
+				},
+				{
 					"id": "step_10030",
 					"data": {
 						"command": "dialogue",
@@ -513,6 +598,12 @@
 					"data": {
 						"command": "dialogue",
 						"id": "day1.s05.drunken_guard_after_payment"
+					}
+				},
+				{
+					"id": "step_10061",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -623,6 +714,22 @@
 			"event": "day1.s06.reaction",
 			"steps": [
 				{
+					"id": "step_10062",
+					"data": {
+						"command": "camera_focus",
+						"actor": "fat_goblin",
+						"duration": 0.6
+					}
+				},
+				{
+					"id": "step_10063",
+					"data": {
+						"command": "camera_zoom",
+						"value": 1.1,
+						"duration": 0.4
+					}
+				},
+				{
 					"id": "step_10039",
 					"data": {
 						"command": "dialogue",
@@ -630,10 +737,23 @@
 					}
 				},
 				{
+					"id": "step_10066",
+					"data": {
+						"command": "wait",
+						"seconds": 0.25
+					}
+				},
+				{
 					"id": "step_10040",
 					"data": {
 						"command": "dialogue",
 						"id": "day1.s06.help_and_rest"
+					}
+				},
+				{
+					"id": "step_10064",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{

@@ -1,7 +1,7 @@
 {
 	"version": 1.0,
 	"format": "goblin_story_project",
-	"next_step_id": 20123.0,
+	"next_step_id": 20219.0,
 	"manifest": {
 		"version": 1.0,
 		"source": "res://docs/design/day_02_stages_01_05_draft.md",
@@ -244,6 +244,14 @@
 			"event": "day2.s01.morning",
 			"steps": [
 				{
+					"id": "step_20171",
+					"data": {
+						"command": "camera_focus",
+						"actor": "fat_goblin",
+						"duration": 0.6
+					}
+				},
+				{
 					"id": "step_20001",
 					"data": {
 						"command": "dialogue",
@@ -342,6 +350,12 @@
 					}
 				},
 				{
+					"id": "step_20172",
+					"data": {
+						"command": "camera_reset"
+					}
+				},
+				{
 					"id": "step_20008",
 					"data": {
 						"command": "set_stage",
@@ -356,10 +370,24 @@
 			"event": "day2.s02.business_open",
 			"steps": [
 				{
+					"id": "step_20173",
+					"data": {
+						"command": "camera_focus",
+						"actor": "player",
+						"duration": 0.6
+					}
+				},
+				{
 					"id": "step_20009",
 					"data": {
 						"command": "dialogue",
 						"id": "day2.s02.business_open"
+					}
+				},
+				{
+					"id": "step_20174",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -401,6 +429,14 @@
 			"event": "day2.s02.festival_order",
 			"steps": [
 				{
+					"id": "step_20175",
+					"data": {
+						"command": "camera_focus",
+						"actor": "day2_festival_0",
+						"duration": 0.6
+					}
+				},
+				{
 					"id": "step_20014",
 					"data": {
 						"command": "dialogue",
@@ -429,6 +465,12 @@
 					"data": {
 						"command": "dialogue",
 						"id": "day2.s02.festival_talk.chronicle_1"
+					}
+				},
+				{
+					"id": "step_20176",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -469,10 +511,24 @@
 			"event": "day2.s02.festival_after",
 			"steps": [
 				{
+					"id": "step_20177",
+					"data": {
+						"command": "camera_focus",
+						"actor": "day2_festival_0",
+						"duration": 0.6
+					}
+				},
+				{
 					"id": "step_20017",
 					"data": {
 						"command": "dialogue",
 						"id": "day2.s02.festival_talk_after"
+					}
+				},
+				{
+					"id": "step_20178",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -514,10 +570,24 @@
 			"event": "day2.s02.elder_order",
 			"steps": [
 				{
+					"id": "step_20179",
+					"data": {
+						"command": "camera_focus",
+						"actor": "day2_elder_0",
+						"duration": 0.6
+					}
+				},
+				{
 					"id": "step_20022",
 					"data": {
 						"command": "dialogue",
 						"id": "day2.s02.elder_authority"
+					}
+				},
+				{
+					"id": "step_20180",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -558,10 +628,24 @@
 			"event": "day2.s02.elder_after",
 			"steps": [
 				{
+					"id": "step_20181",
+					"data": {
+						"command": "camera_focus",
+						"actor": "day2_elder_0",
+						"duration": 0.6
+					}
+				},
+				{
 					"id": "step_20025",
 					"data": {
 						"command": "dialogue",
 						"id": "day2.s02.elder_authority_after"
+					}
+				},
+				{
+					"id": "step_20182",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -612,10 +696,24 @@
 			"event": "day2.s02.emissary_order",
 			"steps": [
 				{
+					"id": "step_20183",
+					"data": {
+						"command": "camera_focus",
+						"actor": "day2_emissary_0",
+						"duration": 0.6
+					}
+				},
+				{
 					"id": "step_20030",
 					"data": {
 						"command": "dialogue",
 						"id": "day2.s02.emissary_rumor"
+					}
+				},
+				{
+					"id": "step_20184",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -656,10 +754,24 @@
 			"event": "day2.s02.emissary_after",
 			"steps": [
 				{
+					"id": "step_20185",
+					"data": {
+						"command": "camera_focus",
+						"actor": "day2_emissary_0",
+						"duration": 0.6
+					}
+				},
+				{
 					"id": "step_20033",
 					"data": {
 						"command": "dialogue",
 						"id": "day2.s02.emissary_rumor_after"
+					}
+				},
+				{
+					"id": "step_20186",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -710,10 +822,24 @@
 			"event": "day2.s02.rumor_order",
 			"steps": [
 				{
+					"id": "step_20187",
+					"data": {
+						"command": "camera_focus",
+						"actor": "day2_rumor_0",
+						"duration": 0.6
+					}
+				},
+				{
 					"id": "step_20038",
 					"data": {
 						"command": "dialogue",
 						"id": "day2.s02.tavern_casino_talk"
+					}
+				},
+				{
+					"id": "step_20188",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -753,6 +879,14 @@
 			"mode": "自动演出",
 			"event": "day2.s02.rumor_after",
 			"steps": [
+				{
+					"id": "step_20189",
+					"data": {
+						"command": "camera_focus",
+						"actor": "player",
+						"duration": 0.6
+					}
+				},
 				{
 					"id": "step_20041",
 					"data": {
@@ -794,6 +928,12 @@
 					}
 				},
 				{
+					"id": "step_20190",
+					"data": {
+						"command": "camera_reset"
+					}
+				},
+				{
 					"id": "step_20044",
 					"data": {
 						"command": "set_flag",
@@ -830,10 +970,24 @@
 			"event": "day2.s03.amber_wine",
 			"steps": [
 				{
+					"id": "step_20191",
+					"data": {
+						"command": "camera_focus",
+						"actor": "tavern",
+						"duration": 0.6
+					}
+				},
+				{
 					"id": "step_20047",
 					"data": {
 						"command": "dialogue",
 						"id": "day2.s03.amber_wine"
+					}
+				},
+				{
+					"id": "step_20192",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -868,10 +1022,24 @@
 					}
 				},
 				{
+					"id": "step_20193",
+					"data": {
+						"command": "camera_focus",
+						"actor": "tavern",
+						"duration": 0.6
+					}
+				},
+				{
 					"id": "step_20051",
 					"data": {
 						"command": "dialogue",
 						"id": "day2.s03.amber_wine_after_purchase"
+					}
+				},
+				{
+					"id": "step_20194",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -888,6 +1056,14 @@
 			"mode": "自动演出",
 			"event": "day2.s03.commission_token",
 			"steps": [
+				{
+					"id": "step_20195",
+					"data": {
+						"command": "camera_focus",
+						"actor": "tavern",
+						"duration": 0.6
+					}
+				},
 				{
 					"id": "step_20053",
 					"data": {
@@ -943,6 +1119,13 @@
 					}
 				},
 				{
+					"id": "step_20196",
+					"data": {
+						"command": "wait",
+						"seconds": 0.25
+					}
+				},
+				{
 					"id": "step_20059",
 					"data": {
 						"command": "dialogue",
@@ -990,6 +1173,12 @@
 					}
 				},
 				{
+					"id": "step_20197",
+					"data": {
+						"command": "camera_reset"
+					}
+				},
+				{
 					"id": "step_20061",
 					"data": {
 						"command": "set_stage",
@@ -1003,6 +1192,14 @@
 			"mode": "自动演出",
 			"event": "day2.s04.casino",
 			"steps": [
+				{
+					"id": "step_20198",
+					"data": {
+						"command": "camera_focus",
+						"actor": "casino",
+						"duration": 0.6
+					}
+				},
 				{
 					"id": "step_20062",
 					"data": {
@@ -1025,10 +1222,23 @@
 					}
 				},
 				{
+					"id": "step_20199",
+					"data": {
+						"command": "wait",
+						"seconds": 0.25
+					}
+				},
+				{
 					"id": "step_20065",
 					"data": {
 						"command": "dialogue",
 						"id": "day2.s04.first_round"
+					}
+				},
+				{
+					"id": "step_20200",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -1053,6 +1263,21 @@
 					}
 				},
 				{
+					"id": "step_20201",
+					"data": {
+						"command": "camera_focus",
+						"actor": "casino",
+						"duration": 0.6
+					}
+				},
+				{
+					"id": "step_20202",
+					"data": {
+						"command": "wait",
+						"seconds": 0.25
+					}
+				},
+				{
 					"id": "step_20068",
 					"data": {
 						"command": "dialogue",
@@ -1064,6 +1289,12 @@
 					"data": {
 						"command": "dialogue",
 						"id": "day2.s04.second_round"
+					}
+				},
+				{
+					"id": "step_20203",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -1085,6 +1316,21 @@
 					"data": {
 						"command": "casino_settle",
 						"step": "second_win"
+					}
+				},
+				{
+					"id": "step_20204",
+					"data": {
+						"command": "camera_focus",
+						"actor": "casino",
+						"duration": 0.6
+					}
+				},
+				{
+					"id": "step_20205",
+					"data": {
+						"command": "wait",
+						"seconds": 0.25
 					}
 				},
 				{
@@ -1124,6 +1370,12 @@
 					}
 				},
 				{
+					"id": "step_20206",
+					"data": {
+						"command": "camera_reset"
+					}
+				},
+				{
 					"id": "step_20077",
 					"data": {
 						"command": "set_stage",
@@ -1138,10 +1390,24 @@
 			"event": "day2.s05.street",
 			"steps": [
 				{
+					"id": "step_20207",
+					"data": {
+						"command": "camera_focus",
+						"actor": "player",
+						"duration": 0.6
+					}
+				},
+				{
 					"id": "step_20078",
 					"data": {
 						"command": "dialogue",
 						"id": "day2.s05.street_check"
+					}
+				},
+				{
+					"id": "step_20208",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -1159,6 +1425,14 @@
 			"event": "day2.s05.special_before",
 			"steps": [
 				{
+					"id": "step_20209",
+					"data": {
+						"command": "camera_focus",
+						"actor": "player",
+						"duration": 0.6
+					}
+				},
+				{
 					"id": "step_20080",
 					"data": {
 						"command": "dialogue",
@@ -1170,6 +1444,12 @@
 					"data": {
 						"command": "dialogue",
 						"id": "day2.s05.make_special"
+					}
+				},
+				{
+					"id": "step_20210",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -1210,10 +1490,24 @@
 			"event": "day2.s05.special_after",
 			"steps": [
 				{
+					"id": "step_20211",
+					"data": {
+						"command": "camera_focus",
+						"actor": "player",
+						"duration": 0.6
+					}
+				},
+				{
 					"id": "step_20084",
 					"data": {
 						"command": "dialogue",
 						"id": "day2.s05.make_special_after"
+					}
+				},
+				{
+					"id": "step_20212",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -1231,10 +1525,24 @@
 			"event": "day2.s05.guard_greet",
 			"steps": [
 				{
+					"id": "step_20213",
+					"data": {
+						"command": "camera_focus",
+						"actor": "drunken_guard",
+						"duration": 0.6
+					}
+				},
+				{
 					"id": "step_20086",
 					"data": {
 						"command": "dialogue",
 						"id": "day2.s05.deliver_guard"
+					}
+				},
+				{
+					"id": "step_20214",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -1275,6 +1583,14 @@
 			"event": "day2.s05.guard_after",
 			"steps": [
 				{
+					"id": "step_20215",
+					"data": {
+						"command": "camera_focus",
+						"actor": "drunken_guard",
+						"duration": 0.6
+					}
+				},
+				{
 					"id": "step_20089",
 					"data": {
 						"command": "dialogue",
@@ -1293,6 +1609,12 @@
 					"data": {
 						"command": "dialogue",
 						"id": "day2.s05.useful_guard"
+					}
+				},
+				{
+					"id": "step_20216",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{
@@ -1327,10 +1649,24 @@
 			"event": "day2.s05.unsolved",
 			"steps": [
 				{
+					"id": "step_20217",
+					"data": {
+						"command": "camera_focus",
+						"actor": "player",
+						"duration": 0.6
+					}
+				},
+				{
 					"id": "step_20095",
 					"data": {
 						"command": "dialogue",
 						"id": "day2.s05.unsolved"
+					}
+				},
+				{
+					"id": "step_20218",
+					"data": {
+						"command": "camera_reset"
 					}
 				},
 				{

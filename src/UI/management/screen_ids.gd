@@ -3,6 +3,7 @@ extends RefCounted
 ## Stable screen IDs shared by the host, the manager and the UI scenes.
 
 const PAUSE := &"pause"
+const SETTINGS := &"settings"
 const HANDBOOK := &"handbook"
 const HANDBOOK_HUD := &"handbook_hud"
 const TASKS := &"tasks"

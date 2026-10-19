@@ -110,4 +110,12 @@ func _test_live_recap(directory: String) -> void:
 	check(state.get_flag("ui.two_day_recap_seen") and game.get_player().movement_enabled, "Closing acknowledges recap and releases player input")
 	before.flags["ui.two_day_recap_seen"] = true
 	check(state.to_dict() == before, "Acknowledging results changes only its presentation flag")
+	var manager := game.get_ui_manager()
+	manager.set_paused(true)
+	check(manager.open_screen(ScreenIds.SETTINGS) == OK, "Paused game opens the shared settings view")
+	manager.request_back()
+	check(paused and manager.is_open(ScreenIds.PAUSE), "Leaving settings preserves the underlying pause")
+	manager.open_screen(ScreenIds.SETTINGS)
+	manager.set_paused(false)
+	check(not paused and not manager.is_open(ScreenIds.SETTINGS) and not manager.has_modal(), "Unpausing cannot leave hidden settings owning input")
 	game.free()

@@ -195,6 +195,9 @@ func _create_ui_system() -> void:
 	_pause_menu = pause
 	$PauseLayer.add_child(pause)
 	_ui_manager.register_screen(ScreenIds.PAUSE, pause, &"pause", true)
+	var settings: Control = preload("res://src/UI/settings/settings_panel.tscn").instantiate()
+	_ui_manager.register_screen(ScreenIds.SETTINGS, settings, &"pause", true)
+	pause.settings_requested.connect(func() -> void: _ui_manager.open_screen(ScreenIds.SETTINGS))
 	pause.resume_requested.connect(func() -> void: _ui_manager.set_paused(false))
 	pause.title_requested.connect(_return_to_title.bind(pause), CONNECT_DEFERRED)
 	_ui_manager.modal_changed.connect(_refresh_input_lock)

@@ -1,0 +1,46 @@
+[gd_scene load_steps=2 format=3]
+[ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="theme"]
+
+[node name="SettingsPage" type="VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("theme")
+
+[node name="Music" type="HBoxContainer" parent="."]
+layout_mode = 2
+[node name="Label" type="Label" parent="Music"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "音乐音量"
+[node name="Value" type="OptionButton" parent="Music"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 0)
+
+[node name="Sound" type="HBoxContainer" parent="."]
+layout_mode = 2
+[node name="Label" type="Label" parent="Sound"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "音效与界面音量"
+[node name="Value" type="OptionButton" parent="Sound"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 0)
+
+[node name="Speed" type="HBoxContainer" parent="."]
+layout_mode = 2
+[node name="Label" type="Label" parent="Speed"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "对白速度"
+[node name="Value" type="OptionButton" parent="Speed"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 0)
+
+[node name="Message" type="Label" parent="."]
+layout_mode = 2
+theme_type_variation = &"Hint"
+autowrap_mode = 3
+
+[node name="Apply" type="Button" parent="."]
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+text = "应用并保存"

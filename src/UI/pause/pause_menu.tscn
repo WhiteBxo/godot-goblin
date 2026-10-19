@@ -68,6 +68,10 @@ custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 text = "返回标题"
 
+[node name="Settings" type="Button" parent="Center/Panel/Margin/Content"]
+layout_mode = 2
+text = "设置"
+
 [node name="Error" type="Label" parent="Center/Panel/Margin/Content"]
 visible = false
 custom_minimum_size = Vector2(240, 0)

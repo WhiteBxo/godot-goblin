@@ -3,6 +3,7 @@ extends Control
 
 signal resume_requested
 signal title_requested
+signal settings_requested
 
 @onready var _resume: Button = $Center/Panel/Margin/Content/Resume
 @onready var _title: Button = $Center/Panel/Margin/Content/ReturnTitle
@@ -12,6 +13,7 @@ var _leaving := false
 func _ready() -> void:
 	_resume.pressed.connect(func() -> void: resume_requested.emit())
 	_title.pressed.connect(_request_title)
+	$Center/Panel/Margin/Content/Settings.pressed.connect(settings_requested.emit)
 
 func _request_title() -> void:
 	if _leaving:

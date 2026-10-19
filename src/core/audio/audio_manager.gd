@@ -23,6 +23,7 @@ var _next_handle: int = 1
 
 
 func _ready() -> void:
+	PlayerPreferences.apply_audio()
 	# BGM and UI remain audible during pause. Each SFX voice overrides this mode.
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_music = AudioStreamPlayer.new()

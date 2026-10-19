@@ -9,6 +9,7 @@ extends Control
 var _starting := false
 var _confirming := false
 var _can_continue := false
+var _settings: Control
 @onready var _confirmation: VBoxContainer = $Center/Panel/Margin/Content/Confirmation
 
 func _ready() -> void:
@@ -25,6 +26,18 @@ func _ready() -> void:
 	_new_game.pressed.connect(_request_new_game)
 	_continue.pressed.connect(_request_continue)
 	_quit.pressed.connect(_request_quit)
+	_settings = preload("res://src/UI/settings/settings_panel.tscn").instantiate()
+	add_child(_settings)
+	_settings.hide()
+	$Center/Panel/Margin/Content/Settings.pressed.connect(func() -> void:
+		if _starting:
+			return
+		$Center.hide()
+		_settings.show()
+		_settings.get_default_focus().grab_focus())
+	_settings.dismissed.connect(func() -> void:
+		$Center.show()
+		$Center/Panel/Margin/Content/Settings.grab_focus())
 	_confirmation.get_node("Confirm").pressed.connect(_confirm_new_game)
 	_confirmation.get_node("Cancel").pressed.connect(_cancel_new_game)
 	var store := GameEntry.create_save_store()
@@ -47,6 +60,7 @@ func _request_new_game() -> void:
 		_continue.hide()
 		_new_game.hide()
 		_quit.hide()
+		$Center/Panel/Margin/Content/Settings.hide()
 		_confirmation.show()
 		_confirmation.get_node("Cancel").grab_focus()
 		return
@@ -65,6 +79,7 @@ func _cancel_new_game() -> void:
 	_continue.visible = _can_continue
 	_new_game.show()
 	_quit.show()
+	$Center/Panel/Margin/Content/Settings.show()
 	(_continue if _can_continue else _new_game).grab_focus()
 
 func _unhandled_key_input(event: InputEvent) -> void:
@@ -117,5 +132,6 @@ func _set_busy(value: bool) -> void:
 	_new_game.disabled = value
 	_continue.disabled = value
 	_quit.disabled = value
+	$Center/Panel/Margin/Content/Settings.disabled = value
 	_confirmation.get_node("Confirm").disabled = value
 	_confirmation.get_node("Cancel").disabled = value

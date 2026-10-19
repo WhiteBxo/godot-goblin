@@ -87,6 +87,8 @@ func present_line(speaker: String, text: String, portrait: Texture2D, choices: A
 	show()
 	if not _revealing:
 		reveal_all()
+	elif is_zero_approx(PlayerPreferences.get_values().dialogue_speed):
+		reveal_all()
 
 
 ## Change only the image; text reveal, choices, focus and placement stay intact.
@@ -130,13 +132,17 @@ func close_dialogue() -> void:
 func _process(delta: float) -> void:
 	if not visible or not _revealing:
 		return
+	var speed: float = PlayerPreferences.get_values().dialogue_speed
+	if is_zero_approx(speed):
+		reveal_all()
+		return
 	_reveal_remaining -= delta
 	while _reveal_remaining <= 0.0 and _revealing:
 		_text.visible_characters += 1
 		if _text.visible_characters >= _text.get_total_character_count():
 			reveal_all()
 		else:
-			_reveal_remaining += 1.0 / characters_per_second + _punctuation_pause(_text.visible_characters - 1)
+			_reveal_remaining += (1.0 / characters_per_second + _punctuation_pause(_text.visible_characters - 1)) / speed
 
 
 func _punctuation_pause(index: int) -> float:

@@ -130,7 +130,7 @@ func has_modal() -> bool:
 	return not _stack.is_empty()
 
 func request_back() -> void:
-	if _owns_pause:
+	if _owns_pause and not _stack.is_empty() and _stack.back() == ScreenIds.PAUSE:
 		set_paused(false)
 	elif not _stack.is_empty():
 		close_screen(_stack.back())
@@ -151,6 +151,11 @@ func set_paused(value: bool) -> void:
 	else:
 		if not _owns_pause:
 			return
+		# Close nested pause-layer screens before hiding their layer. Otherwise P
+		# could leave an invisible modal owning gameplay input after unpausing.
+		for id: StringName in _stack.duplicate():
+			if id != ScreenIds.PAUSE and _screens[id].layer == &"pause":
+				_close(id)
 		_owns_pause = false
 		get_tree().paused = false
 		if is_open(ScreenIds.PAUSE):

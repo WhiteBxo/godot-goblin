@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/map/settlement/modular/griffin_faith/emblem_shield_sign.png" id="1_texture"]
+
+[node name="EmblemShieldSign" type="Node2D"]
+texture_filter = 1
+metadata/pack = "griffin_faith"
+metadata/asset_id = "emblem_shield_sign"
+metadata/native_size = Vector2i(306, 321)
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(-153, -319)
+texture = ExtResource("1_texture")
+centered = false
+
+[node name="GroundAnchor" type="Marker2D" parent="."]

@@ -12,7 +12,7 @@ func _check(ok: bool, message: String) -> void:
 
 func _run() -> void:
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/map/settlement/modular/catalog.json"))
-	_check(data.count == 208 and data.packs.size() == 26, "Expected 208 standalone assets in 26 packs")
+	_check(data.count == 214 and data.packs.size() == 27, "Expected 214 standalone assets in 27 packs")
 	var images := 0
 	for pack: Dictionary in data.packs:
 		for asset: Dictionary in pack.assets:
@@ -23,6 +23,7 @@ func _run() -> void:
 			_check(visual.texture.get_size() == Vector2(asset.native_size[0], asset.native_size[1]), "Scene must reference the individual cropped PNG")
 			_check(not visual.region_enabled, "Scene must not depend on a crop of the old room background")
 			_check(object.has_node("GroundAnchor"), "Every asset needs an editable placement anchor")
+			_check(visual.position == -Vector2(asset.anchor[0], asset.anchor[1]), "Visual must preserve the catalog placement anchor: " + str(asset.id))
 			var image := visual.texture.get_image()
 			_check(image.get_pixel(0, 0).a == 0, "Asset corner must be genuinely transparent")
 			images += 1
@@ -31,13 +32,13 @@ func _run() -> void:
 	root.add_child(gallery)
 	current_scene = gallery
 	await process_frame
-	_check(gallery.get_pack_count() == 26, "Gallery must expose all packs")
+	_check(gallery.get_pack_count() == 27, "Gallery must expose all packs")
 	gallery.show_pack(1)
 	_check(gallery.get_pack_index() == 1, "Gallery selection must switch independent objects")
 	if "--capture" in OS.get_cmdline_user_args():
 		var dest := ProjectSettings.globalize_path("res://docs/assets/modular_assets/captures")
 		DirAccess.make_dir_recursive_absolute(dest)
-		for shot: Array in [[0, "tavern_godot"], [1, "casino_godot"], [17, "stone_walls_godot"]]:
+		for shot: Array in [[0, "tavern_godot"], [1, "casino_godot"], [17, "stone_walls_godot"], [26, "griffin_faith_godot"]]:
 			gallery.show_pack(shot[0])
 			await process_frame
 			await process_frame

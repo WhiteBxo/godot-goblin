@@ -19,6 +19,8 @@ signal line_changed(line_id: String)
 	"胖哥布林": preload("res://assets/characters/fat_goblin/fat_goblin_smiling_portrait.png"),
 	"醉酒守卫": preload("res://assets/characters/dialogue/guard_portrait.png"),
 	"守卫": preload("res://assets/characters/dialogue/guard_portrait.png"),
+	"侍卫": preload("res://assets/characters/npc/casino_sentry/portrait.png"),
+	"护卫": preload("res://assets/characters/npc/casino_sentry/portrait.png"),
 	"酒馆老板": preload("res://assets/characters/dialogue/tavern_portrait.png"),
 	"赌场老板": preload("res://assets/characters/dialogue/casino_portrait.png"),
 	"哥布林顾客": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),

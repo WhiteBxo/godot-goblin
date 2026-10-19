@@ -17,6 +17,8 @@
 [ext_resource type="Script" path="res://src/gameplay/interaction/chapter_service_point.gd" id="service"]
 [ext_resource type="Script" path="res://src/gameplay/story_interaction/signature_discovery_point.gd" id="signature"]
 
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_casino_sentry.tscn" id="sentry"]
+
 [node name="RpgMakerMap005" instance=ExtResource("base")]
 
 script = ExtResource("map")
@@ -106,3 +108,7 @@ signature_id = "S07"
 display_name = "赌桌上的烈酒与酒渍纸条"
 feedback_rect = Rect2(-96, -120, 72, 96)
 show_world_marker = true
+
+[node name="Sentry" parent="Characters" instance=ExtResource("sentry")]
+position = Vector2(120, 552)
+active_phase = "always"

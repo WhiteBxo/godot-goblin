@@ -1,0 +1,31 @@
+{
+  "archive": "侍卫2(1).zip",
+  "sources": [
+    {
+      "source_entry": "侍卫2/合并图片.png",
+      "path": "assets/characters/npc/casino_sentry/run_up.png",
+      "sha256": "2408f51ac6649e29bdd928f8d310a3ad7b1daf607108ceb5c21a904271467d86"
+    },
+    {
+      "source_entry": "侍卫2/侍卫2.png",
+      "path": "assets/characters/npc/casino_sentry/source/portrait.png",
+      "sha256": "2a34f5886d7db6e5b209b22d7c14ac7e60a49bc159a8687a73aa1962b305c97f"
+    },
+    {
+      "source_entry": "侍卫2/合并图片 2.png",
+      "path": "assets/characters/npc/casino_sentry/run_down.png",
+      "sha256": "b4249101edc4fb35232c3a707f00afc218d3b66a724ead3d08d44073f4b22f87"
+    },
+    {
+      "source_entry": "侍卫2/合并图片 3.png",
+      "path": "assets/characters/npc/casino_sentry/run_right.png",
+      "sha256": "b93dc7aad586662a7d67fe0020041c06f6faad107d7958d4b05caabb7abe5f3e"
+    }
+  ],
+  "portrait_crop": [
+    317,
+    0,
+    1564,
+    1640
+  ]
+}

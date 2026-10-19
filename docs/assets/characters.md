@@ -96,3 +96,35 @@ F6 打开 `src/debug/characters/character_gallery.tscn`，右下角两位顾客�
 的 `region`、`filter_clip`，循环与帧率沿用
 [SpriteFrames](https://docs.godotengine.org/en/4.7/classes/class_spriteframes.html)，
 侧向镜像沿用 [AnimatedSprite2D](https://docs.godotengine.org/en/4.7/classes/class_animatedsprite2d.html) 的 `flip_h`。
+
+## 赌场侍卫（2026-10-19）
+
+用户附件 `侍卫2(1).zip` 已接入独立 `casino_sentry`，按[最新聚落补充稿](../design/settlement_dialogue_supplement_revised.md)的“赌场：侍卫”确定身份，正文别名为“护卫”。基础场景 `src/gameplay/characters/casino_sentry.tscn`、RPG 场景 `rpg_casino_sentry.tscn`、独立 `sentry_catalog.json` 和 SpriteFrames 均已配置；不改变 `guard`、`guard_captain` 或四个潜入守卫的身份和素材。
+
+正式赌场继承场景在已有 `casino_guard_a` 锚点 `(120, 552)` 放置一名侍卫，随宿主注册到 ActorDirector，使用 RPG 人物比例。三向行走图分别为下 13、右 15、上 10 帧，左向镜像，待机使用对应首帧；保留原始插画并生成仅裁透明边的显示立绘。“侍卫”“护卫”均绑定这张立绘；原守卫两种说话人仍绑定原立绘。
+
+素材来源、SHA-256、裁切矩形与重建命令见[侍卫素材说明](../../assets/characters/npc/casino_sentry/README.md)。补充稿的分支对话尚未编排到运行时，本次接入 NPC 与素材；普通交互沿用忙碌反馈。
+
+试玩：F6 打开 `src/core/casino.tscn`，从入口向左上走到地毯左端，应看到独立侍卫，角色不受 WASD 控制，脚部可阻挡玩家且不与墙或家具重叠。F6 打开 `src/debug/characters/character_gallery.tscn`，第二排最右侧的侍卫自动循环四向行走、镜像和停止待机。
+
+![赌场侍卫正式宿主截图](captures/casino_sentry_2026_10_19.png)
+
+实际验证（Godot 4.7.2）：`verify_casino_sentry.gd` headless 263 项通过，OpenGL 图形 264 项通过（含正式赌场截图）；覆盖逐帧非空与边界、镜像、输入隔离、真实 ActorDirector 移动、隐藏退出碰撞层、原守卫素材隔离、正式注册、锚点和站位碰撞。未运行全项目回归，本次没有更改通用逻辑或剧情状态契约。首次导入新 PNG 时已有 autoload 提前解析产生预导入报错，完成导入后运行时验证通过；再次 editor 导入无脚本解析错误，退出时仍报告 495 个 ObjectDB 实例与 10 个资源未清理。
+
+实现沿用 Godot 4.7 [AtlasTexture](https://docs.godotengine.org/en/4.7/classes/class_atlastexture.html) 的 `region` / `filter_clip` 与 [SpriteFrames](https://docs.godotengine.org/en/4.7/classes/class_spriteframes.html) 的动画序列，不重编码行走图。
+
+## 角色素材使用盘点（2026-10-19）
+
+这里以正式店铺、外景、酒馆、赌场和长老宅的场景引用、实际角色组装为准；角色预览或帧资源引用不等于正式出场。原图、派生图和同角色不同表情不按新角色计数。上文早期“所有源图均被引用”是资源接入覆盖记录，不代表当前主线使用了所有角色。
+
+| 角色 / 素材 | 当前状态 | 路径与说明 |
+| --- | --- | --- |
+| 守卫长 | 有基础场景、动画和画廊预览，未进入正式流程 | `assets/characters/npc/guard_captain/`，4 张；不把它自动认定为补充稿中的侍卫 |
+| 厨师 | 有基础场景、动画和画廊预览，未进入正式流程 | `assets/characters/npc/chef/`，4 张 |
+| 长老本人 | 有基础场景、动画和画廊预览，正式长老宅尚未实例化本人 | `assets/characters/npc/elder/`，5 张；地图中的长老宅不等于长老本人已出场 |
+| 普通女顾客 | 有基础场景、四向动画和画廊预览，未进入正式营业出场排程 | `assets/characters/npc/human_customer_female/`，6 张 |
+| 猫鸡 | 仅导入素材，尚无角色场景、SpriteFrames 或正式出场 | `assets/characters/creatures/cat_chicken/`，8 张方向图与 11 张候选变体，共 19 张 |
+| 守卫长、厨师、守卫的攻击动画 | 有动作资源与独立预览，尚未接入正式战斗 / 行为 | `assets/characters/goblin_actions/` 的 `captain_attack_*`、`chef_attack_*`、`guard_attack_*`，各 3 张；不代表守卫整个角色没用 |
+| 普通哥布林攻击动画 | 资源被无背包哥布林读取，但正式外观只提取行走 / 待机，未触发攻击 | 同目录 `goblin_attack_*`，3 张；`goblin_walk_*` 已实际用于无背包哥布林 |
+
+已在正式场景使用的角色包括：主角、胖哥布林、普通哥布林（有 / 无背包）、原守卫、男顾客、酒馆老板、赌场老板，以及本次新增赌场侍卫。侍卫立绘已绑定，等待其补充稿对白的运行时编排。各类原始插画、旧像素头像和待机候选图属于来源或备选版本，不额外统计为未使用角色。

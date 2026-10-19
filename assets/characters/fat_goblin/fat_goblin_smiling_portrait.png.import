@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cqwnwr6ttqdqp"
-path="res://.godot/imported/goblin_img_6420.jpeg-e558f42755a919ab5baeafacb9ade6dd.ctex"
+uid="uid://v1kwcibtjnn3"
+path="res://.godot/imported/fat_goblin_smiling_portrait.png-117f96ee0db6e854f8c56f7d9f7275df.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/goblin/source/goblin_img_6420.jpeg"
-dest_files=["res://.godot/imported/goblin_img_6420.jpeg-e558f42755a919ab5baeafacb9ade6dd.ctex"]
+source_file="res://assets/characters/fat_goblin/fat_goblin_smiling_portrait.png"
+dest_files=["res://.godot/imported/fat_goblin_smiling_portrait.png-117f96ee0db6e854f8c56f7d9f7275df.ctex"]
 
 [params]
 

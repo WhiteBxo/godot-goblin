@@ -68,7 +68,7 @@ Signals：`dialogue_started(dialogue_id: String)`、`dialogue_ended(dialogue_id:
 ```
 
 - `speaker` 和 `text` 为必填字符串，可为空；文本支持 Unicode、换行，不启用 BBCode。长文本可滚动阅读。
-- 省略 `portrait` 时，Manager 按 `speaker` 精确匹配导出的 `speaker_portraits` 字典。默认主角、玩家、主角·内心使用用户提供的平静表情全身图 `player_neutral_portrait.png`，胖哥布林、哥布林使用微笑立绘；旁白及其他未配置角色不显示图片。宿主可在 Inspector 或启动前修改该字典，为新角色配置 Texture2D，不依赖 Actor 节点层级。
+- 省略 `portrait` 时，Manager 按 `speaker` 精确匹配导出的 `speaker_portraits` 字典。默认主角、玩家、主角·内心使用用户提供的平静表情全身图 `player_neutral_portrait.png`；胖哥布林使用 `assets/characters/fat_goblin/fat_goblin_smiling_portrait.png`，该立绘为胖哥布林专属，普通哥布林（哥布林甲/乙/丙、哥布林顾客等）与酒馆老板、赌场老板没有立绘，不显示图片也不借用胖哥布林的脸；旁白及其他未配置角色同样不显示图片。宿主可在 Inspector 或启动前修改该字典，为新角色配置 Texture2D，不依赖 Actor 节点层级。
 - `portrait` 非空时必须为存在的 `res://` Texture2D 路径，优先于角色默认图，可用于单句表情变化；显式 `"portrait": ""` 隐藏该句立绘。每行重新解析，缺图、结束或取消均清除上一张图片。对话使用独立的透明背景 PNG，原始白底素材保留；默认图使用 preload 建立资源依赖。
 - `left_portrait_speakers` 配置主角的姓名（默认主角、主角·内心、玩家），这些角色显示在左侧；其他 NPC 显示在右侧。单句覆盖图片不改变角色所属侧。
 - 普通行用 `next` 指向同一对话中的行；省略或 `""` 表示确认后结束。连续对白必须显式连接。
@@ -122,7 +122,7 @@ UI 按 640×360 视口设计，底部面板为 560×136px，水平居中、距�
 2. E 补全文本，再按推进；到达问题后出现两个选项，按 ↓ + Enter 或点击按钮选择，看到对应的不同回应。
 3. 最后一行确认后返回菜单，显示稳定的选项结果 ID；菜单可重复播放普通对白、连续对白和主角表情，体验另一个分支。
 4. 对话中 WASD 不移动角色；结束或 Esc 中止后 WASD 恢复移动，角色被限制在试玩区域。
-5. 返回菜单点击“角色立绘 · 切换与隐藏”，依次观察左侧主角 → 右侧胖哥布林 → 旁白（隐藏）→ 左侧主角内心 → 右侧哥布林大笑（单句覆盖）→ 显式隐藏。确认立绘无白底，约上半身露在对话框上方，下半身被面板遮住，不盖住正文或选项。每句用确认键补全文本，再按推进；Esc 中止后立绘消失。F5 的现有 Day 1 主角对白也会自动显示左侧立绘。
+5. 返回菜单点击“角色立绘 · 切换与隐藏”，依次观察左侧主角 → 右侧胖哥布林 → 右侧普通哥布林（无立绘，只有姓名与文本）→ 旁白（隐藏）→ 左侧主角内心 → 右侧胖哥布林大笑（单句覆盖）→ 显式隐藏。确认立绘无白底，约上半身露在对话框上方，下半身被面板遮住，不盖住正文或选项。每句用确认键补全文本，再按推进；Esc 中止后立绘消失。F5 的现有 Day 1 主角对白也会自动显示左侧立绘。
 
 立绘回归包含在 `tests/verify_dialogue.gd`；有渲染运行时加 `-- --capture-portraits` 可将各句截图保存至 `user://dialogue-portrait-<行 ID>.png`。立绘布局依据 [Godot 4.7 TextureRect](https://docs.godotengine.org/en/4.7/classes/class_texturerect.html) 的 `EXPAND_IGNORE_SIZE` 和 `STRETCH_KEEP_ASPECT_CENTERED`，前后遮挡依据 [CanvasItem 的 z_index](https://docs.godotengine.org/en/4.7/classes/class_canvasitem.html#class-canvasitem-property-z-index)，资源依赖依据 [preload](https://docs.godotengine.org/en/4.7/classes/class_@gdscript.html#class-gdscript-method-preload)。
 

@@ -10,7 +10,7 @@
 - **播放次数**：均为一次（`once: true`）；取消后可人工重试，不重复发物、扣钱或写成功事实。
 - **剧情范围**：从主角拿着古怪金币准备出店，到胖哥布林喝下特调后被安排在店里休息。Day 2 从次日清晨开始，见 [Day 2 初稿](day_02_stages_01_05_draft.md)。
 - **说话人约定**（沿用 S01–S02）：内心独白为「主角·内心」，出声为「主角」，系统提示为「系统」；说话人名称不等于 Actor ID。
-- **立绘约定**：沿用 S01–S02；主角默认 `res://assets/characters/apron_man/player_neutral_portrait.png`。原稿未标注表情，本稿不逐句添加。胖哥布林首次登场「显示角色立绘与角色名称」，候选 `res://assets/characters/goblin/goblin_smiling_portrait.png` / `goblin_laughing_portrait.png`，正式指定待确认。
+- **立绘约定**：沿用 S01–S02；主角默认 `res://assets/characters/apron_man/player_neutral_portrait.png`。原稿未标注表情，本稿不逐句添加。胖哥布林首次登场「显示角色立绘与角色名称」，使用 `res://assets/characters/fat_goblin/fat_goblin_smiling_portrait.png` / `fat_goblin_laughing_portrait.png`（胖哥布林专属，普通哥布林不复用）。
 - **音频约定**：修改版 S03–S06 没有指定任何音乐或音效。S04 店内段若仍在奶茶店营业场景，沿用 S01–S02 的 `music.daily_milk_tea`，不重新播放；其余段落不添加音频。
 - **开发者秘密（不得展示为玩家可见内容）**：衣柜连接两个世界、长老对「变量」的怀疑与搜查、格里芬之血的毒性与长老的隐瞒。它们只作为叙事约束保留在修改版「开发者须知」，不写进对白或见闻录。
 

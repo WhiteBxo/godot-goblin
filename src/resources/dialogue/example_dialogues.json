@@ -13,10 +13,11 @@
       "start": "player",
       "lines": {
         "player": {"speaker": "主角", "text": "立绘测试：现在显示主角。", "next": "goblin"},
-        "goblin": {"speaker": "胖哥布林", "text": "立绘测试：现在切换为胖哥布林。", "next": "narrator"},
+        "goblin": {"speaker": "胖哥布林", "text": "立绘测试：现在切换为胖哥布林。", "next": "common"},
+        "common": {"speaker": "哥布林甲", "text": "普通哥布林没有立绘，不借用胖哥布林的图。", "next": "narrator"},
         "narrator": {"speaker": "旁白", "text": "没有配置立绘的角色，不显示图片。", "next": "inner"},
         "inner": {"speaker": "主角·内心", "text": "内心独白也使用主角立绘。", "next": "override"},
-        "override": {"speaker": "胖哥布林", "portrait": "res://assets/characters/goblin/goblin_laughing_portrait.png", "text": "这一句单独指定大笑立绘。", "next": "hidden"},
+        "override": {"speaker": "胖哥布林", "portrait": "res://assets/characters/fat_goblin/fat_goblin_laughing_portrait.png", "text": "这一句单独指定大笑立绘。", "next": "hidden"},
         "hidden": {"speaker": "主角", "portrait": "", "text": "这一句显式隐藏立绘。"}
       }
     },

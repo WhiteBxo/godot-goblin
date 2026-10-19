@@ -424,8 +424,8 @@ func _test_speaker_portraits() -> void:
 	for path: String in [
 		"res://assets/characters/apron_man/player_neutral_portrait.png",
 		"res://assets/characters/apron_man/player_talking_portrait.png",
-		"res://assets/characters/goblin/goblin_smiling_portrait.png",
-		"res://assets/characters/goblin/goblin_laughing_portrait.png",
+		"res://assets/characters/fat_goblin/fat_goblin_smiling_portrait.png",
+		"res://assets/characters/fat_goblin/fat_goblin_laughing_portrait.png",
 	]:
 		var image := (load(path) as Texture2D).get_image()
 		_check(image.detect_alpha() != Image.ALPHA_NONE and not image.is_invisible(), "Portrait contains both transparency and a visible character: " + path)
@@ -438,14 +438,19 @@ func _test_speaker_portraits() -> void:
 				boot_rim_clear = boot_rim_clear and image.get_pixelv(point).a == 0.0
 			_check(boot_rim_clear, "Both toes, instep, heel and sole have no leftover paper rim: " + path)
 		_check(image.get_pixel(0, 0).a == 0.0 and image.get_pixel(image.get_width() - 1, image.get_height() - 1).a == 0.0, "Portrait background corners are transparent: " + path)
+	# The fat goblin illustration is exclusive to that character; every other
+	# goblin speaker in the authored scenes has no portrait and must not borrow it.
+	for speaker: String in ["哥布林", "哥布林甲", "哥布林乙", "哥布林丙", "哥布林顾客", "哥布林顾客甲", "哥布林顾客乙", "另一名哥布林", "酒馆老板", "赌场老板"]:
+		_check(not _manager.speaker_portraits.has(speaker), "The fat goblin portrait stays exclusive to 胖哥布林: " + speaker)
 	_check(_manager.start_dialogue("demo.speaker_portraits") == OK, "Portrait demo starts through the real manager")
 	var portrait: TextureRect = _ui.get_node("Portrait")
 	var expected := {
 		"player": "res://assets/characters/apron_man/player_talking_portrait.png",
-		"goblin": "res://assets/characters/goblin/goblin_smiling_portrait.png",
+		"goblin": "res://assets/characters/fat_goblin/fat_goblin_smiling_portrait.png",
+		"common": "",
 		"narrator": "",
 		"inner": "res://assets/characters/apron_man/player_neutral_portrait.png",
-		"override": "res://assets/characters/goblin/goblin_laughing_portrait.png",
+		"override": "res://assets/characters/fat_goblin/fat_goblin_laughing_portrait.png",
 		"hidden": "",
 	}
 	for line_id: String in expected:

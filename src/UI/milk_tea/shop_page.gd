@@ -254,6 +254,15 @@ func show_order_requirements(message: String) -> void:
 func show_interaction_result(message: String) -> void:
 	_description.text = message
 
+## A gathering is a pickup, not a shop transaction: the pulled material rises
+## out of the empty page area while the note lands under the new line, so the
+## icon never covers the sentence the player is reading.
+func show_harvest_result(message: String, icon: Texture2D, amount: int) -> void:
+	_description.text = message
+	UIFlourish.settle(_description, 0.97)
+	if icon != null and amount > 0:
+		UIFlourish.cups(self, icon, amount, Vector2(0.07, 0.33))
+
 func show_production_result(result: Dictionary) -> void:
 	_order_crafting.show_result(result)
 	if is_instance_valid(_crafting_panel):

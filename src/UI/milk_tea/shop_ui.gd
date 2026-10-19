@@ -75,6 +75,10 @@ func show_interaction_result(message: String) -> void:
 	if is_instance_valid(_popup):
 		_popup.show_interaction_result(message)
 
+func show_harvest_result(message: String, icon: Texture2D, amount: int) -> void:
+	if is_instance_valid(_popup):
+		_popup.show_harvest_result(message, icon, amount)
+
 func show_production_result(result: Dictionary) -> void:
 	if is_instance_valid(_popup):
 		_popup.show_production_result(result)

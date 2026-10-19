@@ -144,5 +144,11 @@ func show_interaction_result(message: String) -> void:
 		return
 	_page.show_interaction_result(message)
 
+func show_harvest_result(message: String, icon: Texture2D, amount: int) -> void:
+	if _story_note and is_instance_valid(_note):
+		_note.text = message
+		return
+	_page.show_harvest_result(message, icon, amount)
+
 func show_production_result(result: Dictionary) -> void:
 	_page.show_production_result(result)

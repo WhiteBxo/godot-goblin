@@ -14,8 +14,21 @@ extends Node2D
 @export var offset_left := Vector2(-24.0, -52.0)
 @export var offset_right := Vector2(24.0, -52.0)
 
+## How far the carried item lifts on each step. One pixel of bob is enough to
+## read as "held in a hand" instead of "pasted on the sprite".
+const BOB_HEIGHT := 1.5
+const BOB_SPEED := 9.0
+const MOVING_SPEED := 6.0
+## Used when a drink has no product art (a free-formula cup).
+const DRINK_FALLBACK: Texture2D = preload("res://assets/ui/milk_tea/products/custom_drink.svg")
+
 var _player: PlayerController
 var _item: StringName = &""
+## Authoritative hand position for the current facing, before the walk bob.
+var _anchor := Vector2.ZERO
+var _bob := 0.0
+## Real art for the held item; the drawn cup below is the fallback stand-in.
+var _texture: Texture2D
 
 func _ready() -> void:
 	_player = get_node_or_null(owner_path) as PlayerController
@@ -30,8 +43,26 @@ func _ready() -> void:
 func _on_held_changed(item: StringName, _variant_id: String) -> void:
 	_apply(item)
 
+## The scene that owns the item knows its art; this node only draws it.
+func set_item_texture(texture: Texture2D) -> void:
+	_texture = texture
+	queue_redraw()
+
 func _on_facing_changed(_direction: PlayerController.Facing) -> void:
 	_place()
+
+## A carried cup rides the walk cycle. Presentation only: the hand anchor stays
+## the same, so nothing gameplay-facing depends on this offset.
+func _process(delta: float) -> void:
+	if _item == &"":
+		return
+	var moving := is_instance_valid(_player) and _player.velocity.length() > MOVING_SPEED
+	if not moving:
+		_bob = 0.0
+		position = _anchor
+		return
+	_bob = fmod(_bob + delta * BOB_SPEED, TAU)
+	position = _anchor + Vector2(0.0, -absf(sin(_bob * 2.0)) * BOB_HEIGHT)
 
 func _apply(item: StringName) -> void:
 	_item = item
@@ -44,15 +75,23 @@ func _place() -> void:
 	if not is_instance_valid(_player):
 		return
 	var facing := _player.facing
-	position = [offset_down, offset_left, offset_right, offset_up][facing]
+	_anchor = [offset_down, offset_left, offset_right, offset_up][facing]
+	_bob = 0.0
+	position = _anchor
 	# Facing away puts both hands behind the body, so the item must draw underneath it.
 	z_index = -1 if facing == PlayerController.Facing.UP else 0
 
 func _draw() -> void:
 	if _item == &"drink":
-		draw_rect(Rect2(-7, -10, 14, 20), Color.MEDIUM_PURPLE)
-		draw_line(Vector2(2, -10), Vector2(5, -17), Color.WHITE, 2.0)
-	elif _item == &"torch":
+		# Product art when the menu has it, the neutral cup otherwise. Either way
+		# the player sees the drink they are about to hand over.
+		var art: Texture2D = _texture if _texture != null else DRINK_FALLBACK
+		draw_texture_rect(art, Rect2(Vector2(-9.0, -11.0), Vector2(18.0, 22.0)), false)
+		return
+	if _texture != null:
+		draw_texture_rect(_texture, Rect2(Vector2(-9.0, -11.0), Vector2(18.0, 22.0)), false)
+		return
+	if _item == &"torch":
 		draw_line(Vector2(-8, 6), Vector2(5, -5), Color.SADDLE_BROWN, 5.0)
 		draw_circle(Vector2(5, -5), 6.0, Color.ORANGE_RED)
 	else:

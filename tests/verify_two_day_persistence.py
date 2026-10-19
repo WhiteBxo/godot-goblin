@@ -27,7 +27,10 @@ def main():
             command = [args.godot, "--headless", "--path", str(root), "--log-file",
                        str(folder / f"process-{index}.log"), "--script",
                        "res://tests/verify_" + script + ".gd", "--", *parameters]
-            result = subprocess.run(command, capture_output=True, text=True, timeout=120)
+            # The flow phase plays the whole two days and now closes on the end
+            # card; a cold restore is quick by comparison.
+            budget = 300 if script == "two_day_flow" else 120
+            result = subprocess.run(command, capture_output=True, text=True, timeout=budget)
             output = result.stdout + result.stderr
             print(output, end="", flush=True)
             if result.returncode or "SCRIPT ERROR" in output:

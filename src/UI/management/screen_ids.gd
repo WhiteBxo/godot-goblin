@@ -27,3 +27,5 @@ const TAVERN_PURCHASE := &"tavern_purchase"
 
 const CHAPTER_ACTIONS := &"chapter_actions"
 const CHAPTER_RECAP := &"chapter_recap"
+## The two-day build ends here; the card owns its own music and leaves to the title.
+const TWO_DAYS_END := &"two_days_end"

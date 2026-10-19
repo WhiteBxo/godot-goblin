@@ -16,6 +16,8 @@ var _hud_signature := ""
 var _services_ready := false
 var _recap: Control
 var _recap_shown := false
+var _ending: Control
+var _ending_shown := false
 
 func configure(game: MainGame) -> Error:
 	_game = game
@@ -36,6 +38,9 @@ func configure(game: MainGame) -> Error:
 	_recap.dismissed.connect(func() -> void:
 		if _recap_shown:
 			_state.set_flag("ui.two_day_recap_seen"))
+	_ending = preload("res://src/UI/hud/two_days_end.tscn").instantiate()
+	game.get_ui_manager().register_screen(ScreenIds.TWO_DAYS_END, _ending, &"popup", true)
+	_ending.finished.connect(_finish_two_days)
 	_state.state_changed.connect(_schedule_refresh)
 	_game.get_tea_production().changed.connect(_schedule_refresh)
 	_schedule_refresh()
@@ -353,9 +358,15 @@ func _process(_delta: float) -> void:
 	if not is_instance_valid(_hud) or not is_instance_valid(_game.get_story_director()):
 		return
 	var actions := get_user_actions()
-	if _host == "shop" and _state.story_stage == "day3.handoff" and _state.get_flag("day2.completed") and not _state.get_flag("ui.two_day_recap_seen") and not _recap_shown and _quiet():
-		_recap.present(get_recap_text())
-		_recap_shown = _game.get_ui_manager().open_screen(ScreenIds.CHAPTER_RECAP) == OK
+	# Anything saved at the handoff is a finished run: reopening it shows the
+	# ending again instead of dropping the player into an empty third day.
+	if _host == "shop" and _state.story_stage == "day3.handoff" and _state.get_flag("day2.completed") and _quiet():
+		# The recap states the two days; the card behind it closes the build.
+		if not _recap_shown:
+			_recap.present(get_recap_text())
+			_recap_shown = _game.get_ui_manager().open_screen(ScreenIds.CHAPTER_RECAP) == OK
+		elif not _ending_shown:
+			_open_two_days_end()
 	var notice := ""
 	if _state.current_day in [2, 3]:
 		var status := _procurement.get_status()
@@ -383,16 +394,75 @@ func get_optional_summary() -> String:
 	return "\n".join(lines)
 
 func get_recap_text() -> String:
+	var discoveries := PackedStringArray()
+	for fact: Array in [["day1.s05.document_read", "取得文书"], ["day1.s05.blood_acquired", "取得血液"], ["day2.s05.special_drink_delivered", "完成守卫招待"]]:
+		if _state.get_flag(fact[0]):
+			discoveries.append(fact[1])
+	var text := "营业成果\n交付 %d 张饮品订单 · 当前余额 %s\n\n探索与发现\n记录了 %d 种自创饮品 · %d 位人物\n%s\n\n未解之谜\n黄金乡、变量，以及格里芬之血的秘密……" % [_delivered_orders(), WalletTransactions.format_money(_state.get_transactions().get_balance()), _discovered_recipes(), _character_records(), " · ".join(discoveries)]
+	# Anything still open belongs to the third day, which this build does not
+	# contain. Name it instead of letting the deadline judge it.
+	var handoffs := _open_handoffs()
+	if not handoffs.is_empty():
+		text += "\n\n待续\n" + "\n".join(handoffs)
+	return text
+
+
+## Short form for the end card, which follows the recap and should not repeat it.
+func get_ending_text() -> String:
+	return "交付 %d 张饮品订单 · 结余 %s" % [_delivered_orders(), WalletTransactions.format_money(_state.get_transactions().get_balance())]
+
+
+func _delivered_orders() -> int:
 	var orders := 0
 	for task: Dictionary in _game.get_task_catalog().get_tasks():
 		var delivery: Dictionary = task.get("delivery", {})
 		var id: String = delivery.get("order_id", "")
 		if (id.begins_with("day1") or id.begins_with("day2")) and (delivery.has("product_id") or delivery.has("drink")) and _state.get_flag("delivery." + id + ".completed"):
 			orders += 1
-	var recipes: int = _state.get_warehouse_inventory().get_drinks(true).size()
+	return orders
+
+
+func _discovered_recipes() -> int:
+	return _state.get_warehouse_inventory().get_drinks(true).size()
+
+
+func _character_records() -> int:
 	var records: Dictionary = _state.get_variable("characters.entries", {})
-	var discoveries := PackedStringArray()
-	for fact: Array in [["day1.s05.document_read", "取得文书"], ["day1.s05.blood_acquired", "取得血液"], ["day2.s05.special_drink_delivered", "完成守卫招待"]]:
-		if _state.get_flag(fact[0]):
-			discoveries.append(fact[1])
-	return "营业成果\n交付 %d 张饮品订单 · 当前余额 %s\n\n探索与发现\n记录了 %d 种自创饮品 · %d 位人物\n%s\n\n未解之谜\n黄金乡、变量，以及格里芬之血的秘密……" % [orders, WalletTransactions.format_money(_state.get_transactions().get_balance()), recipes, records.size(), " · ".join(discoveries)]
+	return records.size()
+
+
+## Commissions whose deadline sits on the day this build stops at.
+func _open_handoffs() -> PackedStringArray:
+	var lines := PackedStringArray()
+	if _state.get_flag("day2.s03.festival_accepted") and not _state.get_flag("day3.festival.delivered"):
+		lines.append("七日祭的食材还没送到酒馆")
+	if _state.get_flag("day2.casino.debt.active") and not _state.get_flag("day2.casino.debt.paid"):
+		lines.append("赌场的十杯奶茶还没还")
+	var status: String = _procurement.get_status().get("status", "")
+	if status in ["funded", "hired", "returned"] and not _state.get_flag("day3.procurement.delivered"):
+		lines.append("醒神菇还没交到胖哥布林手里")
+	return lines
+
+
+func _open_two_days_end() -> void:
+	_ending.present(get_ending_text())
+	if _game.get_ui_manager().open_screen(ScreenIds.TWO_DAYS_END) != OK:
+		return
+	_ending_shown = true
+	# The end card owns the bed and the cue: no shop ambience under the music.
+	var soundscape := _game.get_node_or_null("Systems/SceneSoundscape")
+	if soundscape != null and soundscape.has_method("stop_ambience"):
+		soundscape.stop_ambience(0.8)
+	var audio := _game.get_audio_manager()
+	if is_instance_valid(audio):
+		audio.play_bgm("music.two_days_end", 1.0, -7.0)
+
+
+func _finish_two_days() -> void:
+	# Only a finished run is marked. Quitting on the card and reloading shows it
+	# again, which is where that save actually stands.
+	_state.set_flag("ui.two_days_end_seen")
+	var audio := _game.get_audio_manager()
+	if is_instance_valid(audio):
+		audio.stop_bgm(1.0)
+	GameEntry.return_to_title.call_deferred(get_tree())

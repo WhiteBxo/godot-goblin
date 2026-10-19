@@ -397,6 +397,17 @@ func _run() -> void:
 	await picture("two_day_recap")
 	game.get_ui_manager().close_screen(ScreenIds.CHAPTER_RECAP)
 	check(state.get_flag("ui.two_day_recap_seen"), "Closing the recap acknowledges it for future saves")
+	await frames(10)
+	check(game.get_ui_manager().is_open(ScreenIds.TWO_DAYS_END), "Closing the recap ends the build on the end card")
+	# The switch lands after the outgoing track has faded; the card is up by then.
+	await frames(140)
+	check(game.get_audio_manager().get_bgm_state().id == "music.two_days_end", "The end card plays its own cue")
+	await picture("two_days_end")
+	# Dismiss the card without finishing it: the handoff state still has to be
+	# captured for the persistence pass, and the task clock exercised below.
+	game.get_ui_manager().close_screen(ScreenIds.TWO_DAYS_END)
+	check(not state.get_flag("ui.two_days_end_seen"), "Leaving the card early does not mark the run finished")
+	await frames(5)
 	await capture("day3_handoff")
 	check(DayPhase.advance_to(state, 3, "night") == OK, "Wait through the allowed third evening")
 	check(DayPhase.advance_to(state, 4, "day") == OK, "End the permitted handoff period")

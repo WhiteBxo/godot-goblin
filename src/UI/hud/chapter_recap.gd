@@ -8,7 +8,7 @@ var _id: StringName
 func _ready() -> void:
 	$ModalShell.close_requested.connect(func() -> void: close_requested.emit())
 	close_requested.connect(func() -> void: _manager.close_screen(_id))
-	$ModalShell.get_close_button().text = "继续 · 委托交接"
+	$ModalShell.get_close_button().text = "结束本版"
 
 func bind_ui(manager: UIManager, id: StringName) -> void:
 	_manager = manager

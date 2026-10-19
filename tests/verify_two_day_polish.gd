@@ -102,7 +102,11 @@ func _test_live_recap(directory: String) -> void:
 		root.get_texture().get_image().save_png("res://.godot/two_day_polish/recap.png")
 	game.get_ui_manager().close_screen(ScreenIds.CHAPTER_RECAP)
 	await frames(5)
-	check(state.get_flag("ui.two_day_recap_seen") and game.get_player().movement_enabled, "Closing acknowledges recap and releases player input")
+	check(state.get_flag("ui.two_day_recap_seen"), "Closing the recap acknowledges it")
+	check(game.get_ui_manager().is_open(ScreenIds.TWO_DAYS_END), "The chapter ends on the end card")
+	game.get_ui_manager().close_screen(ScreenIds.TWO_DAYS_END)
+	await frames(5)
+	check(game.get_player().movement_enabled, "Leaving the end card releases player input")
 	before.flags["ui.two_day_recap_seen"] = true
 	check(state.to_dict() == before, "Acknowledging results changes only its presentation flag")
 	var manager := game.get_ui_manager()

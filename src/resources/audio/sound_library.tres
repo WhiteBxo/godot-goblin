@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="SoundLibrary" load_steps=49 format=3]
+[gd_resource type="Resource" script_class="SoundLibrary" load_steps=50 format=3]
 
 [ext_resource type="Script" path="res://src/resources/audio/sound_library.gd" id="1"]
 [ext_resource type="AudioStream" path="res://assets/audio/ui/hover.wav" id="s1"]
@@ -48,6 +48,7 @@
 [ext_resource type="AudioStream" path="res://assets/audio/story/page_turn_01.wav" id="s45"]
 [ext_resource type="AudioStream" path="res://assets/audio/story/page_turn_02.wav" id="s46"]
 [ext_resource type="AudioStream" path="res://assets/audio/music/daily_milk_tea.ogg" id="music"]
+[ext_resource type="AudioStream" path="res://assets/audio/music/two_days_end.wav" id="music_end"]
 
 [resource]
 script = ExtResource("1")
@@ -77,4 +78,5 @@ entries = Array[Dictionary]([
 {"id": "shop.stir", "label": "碗勺搅拌", "loop": false, "streams": [ExtResource("s42"), ExtResource("s43"), ExtResource("s44")]},
 {"id": "story.page_turn", "label": "书页翻动", "loop": false, "streams": [ExtResource("s45"), ExtResource("s46")]},
 {"id": "music.daily_milk_tea", "label": "奶茶店日常 BGM", "loop": true, "loop_offset": 68.279, "streams": [ExtResource("music")]},
+{"id": "music.two_days_end", "label": "两日终曲", "loop": false, "streams": [ExtResource("music_end")]},
 ])

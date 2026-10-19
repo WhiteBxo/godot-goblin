@@ -23,6 +23,7 @@ var _step_cooldown := 0.0
 var _previous_step := ""
 var _night := false
 var _retry_seconds := 0.0
+var _ambient_stopped := false
 
 func configure(audio: AudioManager, player: PlayerController, state: Node, library: SoundLibrary, profile: String) -> void:
 	_disconnect()
@@ -42,11 +43,20 @@ func configure(audio: AudioManager, player: PlayerController, state: Node, libra
 	_start_ambience()
 
 func _start_ambience() -> void:
-	if _profile.is_empty() or not is_instance_valid(_audio) or not _audio.is_inside_tree():
+	if _ambient_stopped or _profile.is_empty() or not is_instance_valid(_audio) or not _audio.is_inside_tree():
 		return
 	var volume: float = _profile.volume - (4.0 if _night else 0.0)
 	_ambient_handle = _audio.play_sfx(_profile.ambience, _owner, volume)
 	_retry_seconds = 1.0
+
+## The chapter ending owns the soundscape: release the bed and stop retrying,
+## so the end card is not fighting a shop loop underneath its music.
+func stop_ambience(fade_seconds: float = 0.6) -> void:
+	_ambient_stopped = true
+	var handle := _ambient_handle
+	_ambient_handle = AudioManager.INVALID_HANDLE
+	if handle != AudioManager.INVALID_HANDLE and is_instance_valid(_audio):
+		_audio.stop_sound(handle, fade_seconds)
 
 func _refresh_phase() -> void:
 	var night := DayPhase.is_night(_state)
@@ -58,7 +68,6 @@ func _refresh_phase() -> void:
 	_ambient_handle = AudioManager.INVALID_HANDLE
 	_audio.stop_sound(old_handle, 0.4)
 	_start_ambience()
-
 func _on_sound_finished(handle: int, _cancelled: bool) -> void:
 	if handle == _ambient_handle:
 		_ambient_handle = AudioManager.INVALID_HANDLE

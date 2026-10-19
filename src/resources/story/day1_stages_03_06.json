@@ -288,6 +288,12 @@
           "actor": "fat_goblin"
         },
         {
+          "command": "title_card",
+          "text": "夜访长老居所",
+          "subtitle": "避开视线 · 寻找文书与血液",
+          "seconds": 1.0
+        },
+        {
           "command": "set_stage",
           "value": "day1.s05.ready"
         }
@@ -420,6 +426,28 @@
         {
           "command": "dialogue",
           "id": "day1.s06.reaction"
+        },
+        {
+          "command": "play_sfx",
+          "id": "story.impact",
+          "wait": false
+        },
+        {
+          "command": "camera_shake",
+          "intensity": 2.0,
+          "duration": 0.35,
+          "wait": false
+        },
+        {
+          "command": "actor_emote",
+          "actor": "player",
+          "symbol": "!",
+          "duration": 0.8,
+          "wait": false
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.s06.reaction_shock"
         },
         {
           "command": "wait",

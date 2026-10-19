@@ -99,7 +99,7 @@
       "mode": "自动演出",
       "event": "day1.s04.commission_choice",
       "start": 0,
-      "count": 8,
+      "count": 9,
       "dialogues": [
         "day1.s04.commission_choice",
         "day1.s04.commission_choice_accept",
@@ -184,14 +184,15 @@
       "mode": "自动演出",
       "event": "day1.s06.reaction",
       "start": 0,
-      "count": 10,
+      "count": 14,
       "dialogues": [
         "day1.s06.reaction",
+        "day1.s06.reaction_shock",
         "day1.s06.help_and_rest"
       ]
     }
   ],
   "authoring_project": "res://docs/story_authoring/day1_stages_03_06_project.json",
-  "authoring_sha256": "0fd1f67b30f12af6a70de345a03470ccc53eaf66f7563e4264ce0d8ecb583303",
+  "authoring_sha256": "e6053ee59064e35fc7bb265511311ada06f3c13a99d70828ac7a1d71387b0c89",
   "verification": "res://tests/verify_two_day_flow.gd"
 }

@@ -664,8 +664,38 @@
         "line_1": {
           "speaker": "胖哥布林",
           "text": "这就是格里芬之血做的？看起来就不一般！我早就想尝尝了！",
-          "next": "narration_line_1"
+          "next": ""
+        }
+      }
+    },
+    "day1.s06.help_and_rest": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角·内心",
+          "text": "……这下麻烦大了。",
+          "next": "line_2"
         },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "这玩意儿根本不是什么普通的食品原料。",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角·内心",
+          "text": "可问题是——为什么他们会把这种东西当成圣物？",
+          "next": "narration_line_3"
+        },
+        "narration_line_3": {
+          "speaker": "旁白",
+          "text": "胖哥布林望着剩下的格里芬之血，眼中第一次出现了恐惧。他一直相信，只要得到格里芬的庇护，自己就能过上好日子。可刚才发生的一切，让他连这份信仰都开始动摇了。",
+          "next": ""
+        }
+      }
+    },
+    "day1.s06.reaction_shock": {
+      "start": "narration_line_1",
+      "lines": {
         "line_2": {
           "speaker": "主角",
           "text": "卧槽？！你怎么了？！",
@@ -699,31 +729,6 @@
         "narration_line_5": {
           "speaker": "旁白",
           "text": "过了好一阵，胖哥布林的抽搐才逐渐缓和。他仍然虚弱得说不出话，主角也不敢再让他碰那杯饮料。",
-          "next": ""
-        }
-      }
-    },
-    "day1.s06.help_and_rest": {
-      "start": "line_1",
-      "lines": {
-        "line_1": {
-          "speaker": "主角·内心",
-          "text": "……这下麻烦大了。",
-          "next": "line_2"
-        },
-        "line_2": {
-          "speaker": "主角·内心",
-          "text": "这玩意儿根本不是什么普通的食品原料。",
-          "next": "line_3"
-        },
-        "line_3": {
-          "speaker": "主角·内心",
-          "text": "可问题是——为什么他们会把这种东西当成圣物？",
-          "next": "narration_line_3"
-        },
-        "narration_line_3": {
-          "speaker": "旁白",
-          "text": "胖哥布林望着剩下的格里芬之血，眼中第一次出现了恐惧。他一直相信，只要得到格里芬的庇护，自己就能过上好日子。可刚才发生的一切，让他连这份信仰都开始动摇了。",
           "next": ""
         }
       }

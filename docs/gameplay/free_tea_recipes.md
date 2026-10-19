@@ -66,7 +66,7 @@
 
 `TaskDelivery.try_submit(order_id, target_object_id, drink_id = "")` 可指定持有饮品；未指定时自动选择第一种符合要求的饮品，扣一杯。`deliver_to(target)` 沿用同一规则。动态订单的 `get_requirement()` 返回空字典，它只供静态物品需求使用；展示动态需求读取订单的 `drink`，或使用 `DrinkFormula.requirement_text()`。
 
-自由饮品订单默认收入为该饮品售价；显式 `rewards.money` 覆盖此价格，包含显式零，不重复叠加。GameState 与钱包事务一次提交扣杯、奖励、完成事实、回执、批次及交付计数。错误对象、要求不符、未接取、重复交付、余额或奖励容量溢出均整体失败。当前正式任务数据未增加自由订单或新对白，没有柜台直接售卖入口。
+自由饮品订单默认收入为该饮品售价；显式 `rewards.money` 覆盖此价格，包含显式零，不重复叠加。GameState 与钱包事务一次提交扣杯、奖励、完成事实、回执、批次及交付计数。错误对象、要求不符、未接取、重复交付、余额或奖励容量溢出均整体失败。第二天正式发布可选“辛辣奶茶试饮”，以植脂末奶茶底为基底并带辛辣风味，交给散客 C，按已确认售价结算；未接取不影响关店，接取后可取消。它使用既有交付事务，不增加柜台直接售卖入口。
 
 ## 快照与迁移
 
@@ -97,10 +97,10 @@ economy:
 
 自动化入口：`godot --headless --path . --script res://tests/verify_free_recipes.gd`。测试覆盖计算、数量与容量、重入及请求重放、完整存储往返、旧快照、订单要求和收入、真实制作与图鉴 UI、场景重建。图形截图可去掉 `--headless` 并增加 `-- --capture`，输出 `.godot/free_recipes/`。
 
-1. F6 `src/core/main.tscn`（正式 Day 1）或 `src/debug/story/legacy_shop.tscn`（教学宿主）；取得允许自由配方的原料后，在制作台按 E，先切外层“自由调配”，再切内层同名“自由调配”页（另一页为“已知配方”）。原料不会为了试玩自动入库；自动化测试自行准备库存。
+1. F6 `src/core/main.tscn`（正式 Day 1）或 `src/debug/story/legacy_shop.tscn`（教学宿主）；取得允许自由配方的原料后，在制作台按 E，直接选择“自由实验”页；另两个入口是“订单制作”和“已知配方”。原料不会为了试玩自动入库；自动化测试自行准备库存。
 2. 选择基底和两份相同辅料，在独立冰块选项选择“加冰”，检查预览名称的“冰”在饮品后缀前，制作一杯。观察三个原料按次减少、冰块库存不变、动态饮品入库，教学订单和余额不变。
 3. Esc 关闭，打开手册“饮品图鉴”，检查六项数值和库存；点击“放入制作台”，回到制作台应显示同一配方及“加冰”选择。
-4. 普通场景切换保留成品、图鉴和开封次数；“新游戏”整体清空。通用自由订单的出售路径由测试配置验证，正式剧情未发布此类订单。
+4. 普通场景切换保留成品、图鉴和开封次数；“新游戏”整体清空。通用自由订单的出售路径由测试配置验证，正式第二天的可选试饮覆盖同一条出售路径。
 
 Godot 4.7 的关键依据：[Resource](https://docs.godotengine.org/en/4.7/classes/class_resource.html) 与 [Dictionary.duplicate](https://docs.godotengine.org/en/4.7/classes/class_dictionary.html#class-dictionary-method-duplicate) 用于隔离配置、结果和快照；[TabContainer](https://docs.godotengine.org/en/4.7/classes/class_tabcontainer.html) 管理制作与手册页签；[ScrollContainer.follow_focus](https://docs.godotengine.org/en/4.7/classes/class_scrollcontainer.html#class-scrollcontainer-property-follow-focus) 保证小窗口内滚动内容的键盘焦点可达；[OptionButton.select](https://docs.godotengine.org/en/4.7/classes/class_optionbutton.html#class-optionbutton-method-select) 用于重做回填，不依赖程序选择触发用户输入信号。
 

@@ -10,9 +10,13 @@ var _materials: HBoxContainer
 var _inventory: WarehouseInventory
 var _list: ItemList
 var _details: Label
+var _detail: Control
 var _remake: Button
 var _feedback: Label
 var _selected_id := ""
+## The pane only turns when a different drink is opened; a stock refresh of the
+## drink already on screen must leave the words still.
+var _shown_id := ""
 
 func _ready() -> void:
 	var row := HBoxContainer.new()
@@ -42,6 +46,7 @@ func _ready() -> void:
 	_details.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	details_column.add_child(_details)
+	_detail = details_column
 	_feedback = Label.new()
 	_feedback.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(_feedback)
@@ -79,6 +84,7 @@ func refresh() -> void:
 		Artwork.show_materials(_materials, _inventory, [])
 		_selected_id = ""
 		_details.text = "尚未发现自由饮品。到制作台选择基底和辅料，制作后会自动记入图鉴。"
+		_open_detail()
 		return
 	selected = maxi(selected, 0)
 	_list.select(selected)
@@ -93,6 +99,15 @@ func _select(index: int) -> void:
 	var historical_ice: bool = DrinkFormula.ICE_ID in record.ingredients
 	_remake.disabled = historical_ice or record.ingredients.size() > _inventory.get_recipe_slots()
 	_feedback.text = "冰块现为独立选项，此历史原料配方仅供查看。" if historical_ice else "当前槽位不足以重做此历史配方。" if _remake.disabled else ""
+	_open_detail()
+
+## The pane opens on the new drink instead of swapping the words in place.
+## Alpha and scale only, so the split layout never reflows.
+func _open_detail() -> void:
+	var changed := _selected_id != _shown_id
+	_shown_id = _selected_id
+	if changed and _detail != null:
+		UIFlourish.reveal(_detail, 0.99)
 
 func show_remake_result(ok: bool) -> void:
 	_feedback.text = "配方已放入制作台，前往制作台即可制作。" if ok else "当前无法重做此配方。"

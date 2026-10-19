@@ -10,6 +10,7 @@ extends VBoxContainer
 @onready var _title: Label = %Title
 @onready var _text: RichTextLabel = %Text
 @onready var _summary: Label = %Summary
+@onready var _detail: Control = %Detail
 
 var _journal: TaskJournal
 var _orders: OrderBoardModel
@@ -215,6 +216,10 @@ func _set_detail(content: String) -> void:
 	if _text.text != content or not same_task:
 		_text.text = content
 		_text.get_v_scroll_bar().set_deferred("value", scroll)
+	# Another task opens instead of swapping the words under the eye; a journal
+	# refresh of the task already on screen leaves it still.
+	if not same_task:
+		UIFlourish.reveal(_detail, 0.99)
 	_displayed_id = _selected_id
 
 func _select(index: int) -> void:

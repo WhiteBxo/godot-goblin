@@ -25,19 +25,47 @@
 
 ## 验证
 
+## 第二批：任务日志、背包、饮品图鉴
+
+首批只补了见闻录与人物记录，很快发现同一套“左列表 + 右详情”的页面还剩三个，每天翻得更多：
+
+- `task_panel.gd` 的 `_set_detail()` 本来就分得清“是不是同一条任务”（`_displayed_id`），现在只在切换任务时 `UIFlourish.reveal(%Detail, 0.99)`；同一条任务的进度刷新（`2 / 3` → `3 / 3`）保持文字静止，也不会把玩家正在读的段落抖一下。
+- `warehouse_panel.gd` 把填充详情拆成 `_fill_detail()`，外面套 `_open_detail()` 记录 `_shown_id`；空列表占位（“暂无已发现物品”）走同一条路径。
+- `drink_encyclopedia_panel.gd` 同样拆出 `_open_detail()`。它原来是 `_select()` 里连续赋值图片、材料行、正文、重做按钮，现在只有换了饮品才落定。
+
+三个页面都只动 `alpha` 与 `scale`，列表选中、滚动位置和焦点完全不动；`_list.clear()` 重建后仍会重新选中同一项，不会因此误播。
+
+## 章末回顾
+
+`chapter_recap.gd` 的 `present()` 只写 `Summary.text`，加上弹窗本身的淡入，整段总结是“跟着弹窗一起出现”的。现在 `UIFlourish.reveal(summary, 0.98)`：弹窗先到，结算文本再落定，第一章的收尾有了一个明确的落点。
+
+## 经营菜单
+
+- `chapter_actions_hud.set_navigation_access()` 记录上一次的可用状态，只有 `false → true` 的那一次才 `settle(0.92)`：刚解锁的入口会自己弹一下，而不是只从灰变亮。
+- `set_overview()` 的目标文案变化时 `settle(0.97)`，切章节后“当前行程”换掉时不再硬换。
+
+## 验证
+
 | 检查 | 结果 |
 | --- | --- |
 | `verify_feedback_iteration.gd` | 77 项通过（新增：第一帧只接一张；队列排空后落在“进行中”） |
 | `verify_handbook.gd` | 49 项通过（新增：选条目时详情 `alpha < 1`；24 帧后回到单位变换） |
+| `verify_task_panel.gd` | 88 项通过（新增：切换任务时详情 `alpha < 1`；20 帧后回到全不透明） |
 | `verify_order_board.gd` | 116 项通过 |
 | `verify_order_ui.gd` | 45 项通过 |
 | `verify_day1_playability.gd` | 108 项通过 |
+| `verify_gameplay_bridge.gd` | 249 项通过 |
 | `verify_gathering.gd` | 107 项通过 |
 | `verify_business_session.gd` | 48 项通过 |
 | `verify_dialogue.gd` | 243 项通过 |
+| `verify_inventory_screen.gd` | 36 项 3 失败（“列表应有 6 种原料”等，要求列表恰好 6 项）。**把本轮改动 stash 掉后同样失败**：另一路改了原料数据，条数不再是 6，与翻页无关 |
 
 ## 试玩步骤
 
 1. 打开手册切到“异闻录”，用方向键上下换条目：详情列淡入落定，列表与焦点不动。
 2. 切到“人物记录”，同样换人：详情列每次换人都重新落定。
 3. 柜台把订单板切到“可接取”，按“一键接单”：列表一行一行消失，按钮计数递减，最后一拍落到“进行中”。
+4. 按 J 打开任务日志，方向键上下换任务：右侧整列淡入落定；等任务进度自己变化（不换条目），文字不再重播。
+5. 按 B 打开背包，上下换物品；手册里切到“哥布林饮品图鉴”换饮品：详情同样翻页。
+6. 走完第一天触发章末回顾：弹窗先到，结算文本随后落定。
+7. 解锁新页面后按 Esc 打开经营菜单：刚可用的那项入口自己弹一下。

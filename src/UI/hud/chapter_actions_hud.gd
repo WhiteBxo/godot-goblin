@@ -6,6 +6,10 @@ signal navigation_requested(id: StringName)
 
 var _page: Control
 var _navigation: Dictionary = {}
+## Last known availability per menu entry. A false → true flip is the moment a
+## new option appears, and the only moment worth nudging.
+var _access: Dictionary = {}
+var _access_known := false
 
 func _ready() -> void:
 	_page = $ModalShell.get_content()
@@ -23,12 +27,25 @@ func _ready() -> void:
 
 func set_navigation_access(access: Dictionary) -> void:
 	for id: StringName in _navigation:
-		_navigation[id].disabled = not access.get(id, false)
+		var available: bool = access.get(id, false)
+		_navigation[id].disabled = not available
+		# An entry that just became available gets one nudge: the new option is
+		# noticed instead of merely being no longer grey.
+		if _access_known and available and not bool(_access.get(id, false)):
+			UIFlourish.settle(_navigation[id], 0.92)
+		_access[id] = available
+	_access_known = true
 
 func set_overview(title: String, objective: String, balance: String, saved: String) -> void:
 	_page.get_node("Status").text = "钱包 " + balance + "  ·  " + saved
 	_page.get_node("Scroll/Content/ObjectiveTitle").text = title if not title.is_empty() else "当前行程"
-	_page.get_node("Scroll/Content/Objective").text = objective if not objective.is_empty() else "暂时没有待办目标，可以自由探索。"
+	var objective_label: Control = _page.get_node("Scroll/Content/Objective")
+	var text := objective if not objective.is_empty() else "暂时没有待办目标，可以自由探索。"
+	var changed: bool = objective_label.text != text
+	objective_label.text = text
+	# A changed objective lands instead of being swapped in place.
+	if changed:
+		UIFlourish.settle(objective_label, 0.97)
 
 func show_actions(actions: Array[Dictionary], notice: String, enabled: bool) -> void:
 	_page.get_node("Scroll/Content/Notice").text = notice

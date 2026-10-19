@@ -15,7 +15,12 @@ func bind_ui(manager: UIManager, id: StringName) -> void:
 	_id = id
 
 func present(summary: String) -> void:
-	$ModalShell.get_content().get_node("Summary").text = summary
+	var content: Control = $ModalShell.get_content()
+	var summary_label: Control = content.get_node("Summary")
+	summary_label.text = summary
+	# The tally arrives a beat after the shell, so the chapter closes on the
+	# result landing rather than on a page that was already complete.
+	UIFlourish.reveal(summary_label, 0.98)
 
 func get_default_focus() -> Control:
 	return $ModalShell.get_close_button()

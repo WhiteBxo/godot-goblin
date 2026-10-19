@@ -29,6 +29,23 @@
 [ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_030_00.png" id="gather_atlas"]
 [ext_resource type="Script" path="res://src/gameplay/story_interaction/signature_discovery_point.gd" id="signature"]
 
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_warehouse_sentry.tscn" id="warehouse_sentry"]
+
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_prayer_man.tscn" id="prayer_man"]
+
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_prayer_woman.tscn" id="prayer_woman"]
+
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_prayer_elder.tscn" id="prayer_elder"]
+
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_tavern_drunk.tscn" id="tavern_drunk"]
+
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_goblin_boy.tscn" id="goblin_boy"]
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_goblin_girl.tscn" id="goblin_girl"]
+
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/scorch_tongue_pepper.png" id="gather_pepper"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/honey_amber_crystal.png" id="gather_honey"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/insomnia_mushroom.png" id="gather_insomnia"]
+
 [sub_resource type="AtlasTexture" id="moss_art"]
 atlas = ExtResource("gather_atlas")
 region = Rect2(1392, 288, 48, 48)
@@ -322,7 +339,7 @@ display_name = "酒馆外的哥布林哲人"
 story_role = "S08：与醉鬼争论格里芬、感官认知与幻觉。"
 active_phase = "always"
 
-[node name="Drunk" parent="Characters" instance=ExtResource("goblin")]
+[node name="Drunk" parent="Characters" instance=ExtResource("tavern_drunk")]
 position = Vector2(1560, 1896)
 actor_id = &"signature_drunk"
 display_name = "酒馆外的醉鬼"
@@ -395,7 +412,7 @@ guards = Array[NodePath]([NodePath("Entrance"), NodePath("Lure"), NodePath("Gate
 objective_names = {"day1.s05.document_read": "书房文书", "day1.s05.blood_acquired": "右室血液"}
 approach_hint = "先到西侧找醉卫交涉（10G），再回宅门前，在双卫之间按 E 支付 10G。投币只能引开守卫。"
 escape_hint = "拿齐文书和血液，沿原路回到北侧观察位撤离。"
-controls_hint = "鼠标瞄落点 · 侧边可绕 · 别停在扇区里"
+controls_hint = "Ctrl 潜行更安静 · 绕开扇区 · 失败或金币不足可按 R 重试"
 checkpoint = NodePath("../StoryPositions/day1_checkpoint")
 escape_zone = NodePath("../EscapeZone")
 required_flags = Array[StringName](["day1.s05.blood_acquired", "day1.s05.document_read"])
@@ -408,11 +425,11 @@ actor = NodePath("../../Characters/EntranceGuard")
 role = 0
 clearance_flag = &""
 encounter_event_id = ""
-sight_range = 168.0
-sight_half_angle = 55.0
+sight_range = 120.0
+sight_half_angle = 40.0
 hearing_range = 156.0
-discovery_seconds = 0.9
-distraction_seconds = 3.0
+discovery_seconds = 2.0
+distraction_seconds = 5.0
 patrol_offsets = Array[Vector2]([Vector2(-48, 0), Vector2(48, 0)])
 
 hear_footsteps = true
@@ -424,9 +441,9 @@ role = 1
 clearance_flag = &"day1.s05.guard_payment_completed"
 encounter_event_id = ""
 sight_range = 96.0
-sight_half_angle = 55.0
+sight_half_angle = 40.0
 hearing_range = 132.0
-discovery_seconds = 1.0
+discovery_seconds = 1.8
 distraction_seconds = 2.5
 
 hear_footsteps = true
@@ -438,9 +455,9 @@ role = 2
 clearance_flag = &"day1.s05.guard_payment_completed"
 encounter_event_id = ""
 sight_range = 120.0
-sight_half_angle = 55.0
+sight_half_angle = 40.0
 hearing_range = 132.0
-discovery_seconds = 1.0
+discovery_seconds = 1.8
 distraction_seconds = 2.5
 
 hear_footsteps = true
@@ -452,7 +469,7 @@ role = 3
 clearance_flag = &"day1.s05.drunken_paid"
 encounter_event_id = "day1.s05.drunken_guard"
 sight_range = 96.0
-sight_half_angle = 55.0
+sight_half_angle = 40.0
 hearing_range = 120.0
 discovery_seconds = 1.2
 distraction_seconds = 2.0
@@ -487,6 +504,7 @@ description = "从覆苔岩块上收集苔痕青。"
 feedback_rect = Rect2(-24, -40, 48, 48)
 show_world_marker = true
 item_id = "moss_green"
+success_description = "得到了从潮湿苔地采集的苔痕青。"
 amount = 2
 refresh_mode = "daily"
 required_flag = "world.phase.night"
@@ -508,6 +526,7 @@ description = "路边的材料袋里装着窟窟糖芋。"
 feedback_rect = Rect2(-24, -40, 48, 48)
 show_world_marker = true
 item_id = "sugar_yam"
+success_description = "得到了从田里挖出的宠宠糖芋。"
 amount = 2
 refresh_mode = "daily"
 required_flag = "world.phase.night"
@@ -529,6 +548,7 @@ description = "路边生长着一簇萤火伞。"
 feedback_rect = Rect2(-24, -40, 48, 48)
 show_world_marker = true
 item_id = "firefly_cap"
+success_description = "得到了从树下采摘的荧火伞。"
 amount = 2
 refresh_mode = "daily"
 required_flag = "world.phase.night"
@@ -624,11 +644,11 @@ initial_facing = 2
 script = ExtResource("response")
 actor = NodePath("../../Characters/StreetWatchA")
 role = 4
-sight_range = 168.0
-sight_half_angle = 55.0
-hearing_range = 264.0
+sight_range = 120.0
+sight_half_angle = 40.0
+hearing_range = 120.0
 hear_footsteps = true
-discovery_seconds = 1.3
+discovery_seconds = 2.0
 patrol_offsets = Array[Vector2]([Vector2(-48, 0), Vector2(48, 0)])
 patrol_speed = 32.0
 
@@ -644,10 +664,126 @@ initial_facing = 3
 script = ExtResource("response")
 actor = NodePath("../../Characters/StreetWatchB")
 role = 4
-sight_range = 168.0
-sight_half_angle = 55.0
-hearing_range = 264.0
+sight_range = 120.0
+sight_half_angle = 40.0
+hearing_range = 120.0
 hear_footsteps = true
-discovery_seconds = 1.3
+discovery_seconds = 2.0
 patrol_offsets = Array[Vector2]([Vector2(-48, 0), Vector2(48, 0)])
 patrol_speed = 32.0
+
+[node name="PrayerMan" parent="Characters" instance=ExtResource("prayer_man")]
+position = Vector2(1104, 336)
+actor_id = &"prayer_man"
+display_name = "祈祷者"
+active_phase = "always"
+
+[node name="PrayerWoman" parent="Characters" instance=ExtResource("prayer_woman")]
+position = Vector2(1200, 336)
+actor_id = &"prayer_woman"
+display_name = "同伴"
+active_phase = "always"
+
+[node name="PrayerElder" parent="Characters" instance=ExtResource("prayer_elder")]
+position = Vector2(1344, 240)
+actor_id = &"prayer_elder"
+display_name = "年迈祈祷者"
+active_phase = "always"
+
+[node name="WarehouseGuard1" parent="Characters" instance=ExtResource("warehouse_sentry")]
+position = Vector2(456, 648)
+actor_id = &"warehouse_guard_1"
+display_name = "仓库守卫1"
+active_phase = "always"
+
+[node name="WarehouseGuard2" parent="Characters" instance=ExtResource("warehouse_sentry")]
+position = Vector2(552, 648)
+actor_id = &"warehouse_guard_2"
+display_name = "仓库守卫2"
+active_phase = "always"
+
+[node name="Vendor1" parent="Characters" instance=ExtResource("goblin")]
+position = Vector2(1272, 2328)
+actor_id = &"market_vendor_1"
+display_name = "小贩一"
+active_phase = "always"
+
+[node name="Vendor2" parent="Characters" instance=ExtResource("goblin")]
+position = Vector2(1416, 2328)
+actor_id = &"market_vendor_2"
+display_name = "小贩二"
+active_phase = "always"
+
+[node name="Vendor3" parent="Characters" instance=ExtResource("goblin")]
+position = Vector2(1560, 2376)
+actor_id = &"market_vendor_3"
+display_name = "小贩三"
+active_phase = "always"
+
+[node name="BarracksSoldier" parent="Characters" instance=ExtResource("guard")]
+position = Vector2(1944, 984)
+actor_id = &"barracks_soldier"
+display_name = "哥布林军人"
+active_phase = "always"
+
+[node name="MarketMother" parent="Characters" instance=ExtResource("prayer_woman")]
+position = Vector2(1224, 2424)
+actor_id = &"market_mother"
+display_name = "哥布林母亲"
+story_role = "带孩子逛集市的母亲；独立角色，复用成年女哥布林美术。"
+active_phase = "always"
+
+[node name="MarketBoy" parent="Characters" instance=ExtResource("goblin_boy")]
+position = Vector2(1272, 2424)
+actor_id = &"market_boy"
+active_phase = "always"
+
+[node name="VillageChild" parent="Characters" instance=ExtResource("goblin_girl")]
+position = Vector2(2040, 1656)
+actor_id = &"village_child"
+active_phase = "always"
+
+[node name="NightGather3" parent="GatherPoints" instance=ExtResource("point")]
+position = Vector2(840, 2088)
+script = ExtResource("gather")
+interaction_id = &"night_gather_3"
+display_name = "野外采集 · 炽舌椒"
+item_id = "scorch_tongue_pepper"
+amount = 1
+refresh_mode = "daily"
+success_description = "得到了从石缝中采集的炽石枯辛辣。"
+show_world_marker = true
+
+[node name="HarvestVisual" type="Sprite2D" parent="GatherPoints/NightGather3"]
+position = Vector2(0, -16)
+texture = ExtResource("gather_pepper")
+
+[node name="NightGather4" parent="GatherPoints" instance=ExtResource("point")]
+position = Vector2(840, 1992)
+script = ExtResource("gather")
+interaction_id = &"night_gather_4"
+display_name = "野外采集 · 蜜珀晶"
+item_id = "honey_amber_crystal"
+amount = 1
+refresh_mode = "daily"
+success_description = "得到了从树上摘下的蜜珀晶蛙。"
+show_world_marker = true
+
+[node name="HarvestVisual" type="Sprite2D" parent="GatherPoints/NightGather4"]
+position = Vector2(0, -16)
+texture = ExtResource("gather_honey")
+
+[node name="NightGather5" parent="GatherPoints" instance=ExtResource("point")]
+position = Vector2(1128, 2088)
+script = ExtResource("gather")
+interaction_id = &"night_gather_5"
+display_name = "野外采集 · 醒神菇"
+item_id = "insomnia_mushroom"
+amount = 1
+refresh_mode = "daily"
+success_description = "得到了从路边采摘的醒神菇。"
+show_world_marker = true
+
+[node name="HarvestVisual" type="Sprite2D" parent="GatherPoints/NightGather5"]
+position = Vector2(0, -16)
+texture = ExtResource("gather_insomnia")

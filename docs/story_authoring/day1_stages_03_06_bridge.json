@@ -70,9 +70,37 @@
       "mode": "自动演出",
       "event": "day1.s04.after_order",
       "start": 0,
-      "count": 19,
+      "count": 11,
       "dialogues": [
         "day1.s04.first_taste",
+        "day1.s04.offer_ingredients",
+        "day1.s04.wait_taste"
+      ]
+    },
+    {
+      "id": "day1_bridge_trial_taste",
+      "mode": "玩家操作",
+      "phase": {
+        "id": "day1.bridge.trial_taste",
+        "after_event": "day1.s04.after_order",
+        "stage": "day1.s04.wait_taste",
+        "completion": {
+          "flag": "day1.s04.taste_delivered",
+          "allow_existing": true
+        },
+        "completion_flag": "day1.bridge.trial_taste.completed",
+        "next_event": "day1.s04.after_taste"
+      }
+    },
+    {
+      "id": "s04_after_trial_taste",
+      "mode": "自动演出",
+      "event": "day1.s04.after_taste",
+      "start": 0,
+      "count": 16,
+      "dialogues": [
+        "day1.s04.taste_reaction",
+        "day1.s04.after_taste",
         "day1.s04.griffin_faith",
         "day1.s04.griffin_blood",
         "day1.s04.map_handover"
@@ -83,7 +111,7 @@
       "mode": "玩家操作",
       "phase": {
         "id": "day1.bridge.map",
-        "after_event": "day1.s04.after_order",
+        "after_event": "day1.s04.after_taste",
         "stage": "day1.s04.wait_map",
         "completion": {
           "flag": "day1.s04.map_closed",
@@ -191,9 +219,169 @@
         "day1.s06.reaction_shock",
         "day1.s06.help_and_rest"
       ]
+    },
+    {
+      "id": "supplement_poet_casino_poet",
+      "mode": "自动演出",
+      "event": "supplement.poet.casino_poet",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.poet"
+      ]
+    },
+    {
+      "id": "supplement_drinker_signature_heartbroken_drinker",
+      "mode": "自动演出",
+      "event": "supplement.drinker.signature_heartbroken_drinker",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.drinker"
+      ]
+    },
+    {
+      "id": "supplement_philosopher_signature_philosopher",
+      "mode": "自动演出",
+      "event": "supplement.philosopher.signature_philosopher",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.philosopher"
+      ]
+    },
+    {
+      "id": "supplement_philosopher_signature_drunk",
+      "mode": "自动演出",
+      "event": "supplement.philosopher.signature_drunk",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.philosopher"
+      ]
+    },
+    {
+      "id": "supplement_prayer_prayer_man",
+      "mode": "自动演出",
+      "event": "supplement.prayer.prayer_man",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.prayer"
+      ]
+    },
+    {
+      "id": "supplement_prayer_prayer_woman",
+      "mode": "自动演出",
+      "event": "supplement.prayer.prayer_woman",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.prayer"
+      ]
+    },
+    {
+      "id": "supplement_warehouse_warehouse_guard_1",
+      "mode": "自动演出",
+      "event": "supplement.warehouse.warehouse_guard_1",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.warehouse"
+      ]
+    },
+    {
+      "id": "supplement_warehouse_warehouse_guard_2",
+      "mode": "自动演出",
+      "event": "supplement.warehouse.warehouse_guard_2",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.warehouse"
+      ]
+    },
+    {
+      "id": "supplement_soldier_barracks_soldier",
+      "mode": "自动演出",
+      "event": "supplement.soldier.barracks_soldier",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.soldier"
+      ]
+    },
+    {
+      "id": "supplement_casino_sentry",
+      "mode": "自动演出",
+      "event": "supplement.casino_sentry",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.casino_sentry"
+      ]
+    },
+    {
+      "id": "supplement_vendor_1",
+      "mode": "自动演出",
+      "event": "supplement.vendor_1",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.vendor_1"
+      ]
+    },
+    {
+      "id": "supplement_vendor_2",
+      "mode": "自动演出",
+      "event": "supplement.vendor_2",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.vendor_2"
+      ]
+    },
+    {
+      "id": "supplement_vendor_3",
+      "mode": "自动演出",
+      "event": "supplement.vendor_3",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.vendor_3"
+      ]
+    },
+    {
+      "id": "supplement_family_market_mother",
+      "mode": "自动演出",
+      "event": "supplement.family.market_mother",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.family"
+      ]
+    },
+    {
+      "id": "supplement_family_market_boy",
+      "mode": "自动演出",
+      "event": "supplement.family.market_boy",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.family"
+      ]
+    },
+    {
+      "id": "supplement_child_village_child",
+      "mode": "自动演出",
+      "event": "supplement.child.village_child",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.child"
+      ]
     }
   ],
   "authoring_project": "res://docs/story_authoring/day1_stages_03_06_project.json",
-  "authoring_sha256": "57a59dd9200b12b1fd4e52478cc4f241ec2dc2d7c4e1688be4ebb0a28f3151d6",
+  "authoring_sha256": "cfa97af404242a397d3d0ef2d3783856d8bf7a318191bc474092b2d1e7c4d0f1",
   "verification": "res://tests/verify_two_day_flow.gd"
 }

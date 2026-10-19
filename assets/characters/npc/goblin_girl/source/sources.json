@@ -1,0 +1,32 @@
+[
+  {
+    "archive": "女孩.zip",
+    "entry": "女孩/走路.png",
+    "path": "assets/characters/npc/goblin_girl/source/run_right.png",
+    "sha256": "0ddc5b8cdbc6c2b31116f227e3480df55b19c188808abc84976dc3c0767d5bb6"
+  },
+  {
+    "archive": "女孩.zip",
+    "entry": "女孩/女孩.png",
+    "path": "assets/characters/npc/goblin_girl/source/portrait.png",
+    "sha256": "c841eb95f9f5aebf292aa8214f33f6610259856092c79285ef5c0f37147b6fec",
+    "portrait_crop": [
+      0,
+      0,
+      754,
+      1024
+    ]
+  },
+  {
+    "archive": "女孩.zip",
+    "entry": "女孩/待机1.png",
+    "path": "assets/characters/npc/goblin_girl/source/idle_right.png",
+    "sha256": "e6c7ce1f08f3effd0f79c1330aaba9705668fbe6bc8de1c32f674ec1a65f0ec7"
+  },
+  {
+    "archive": "女孩.zip",
+    "entry": "女孩/待机2.png",
+    "path": "assets/characters/npc/goblin_girl/source/unused_03.png",
+    "sha256": "f91ef2b81149b5b584d200fb5ec0d2f0118ed15320ca6924c6ddd9715386cc33"
+  }
+]

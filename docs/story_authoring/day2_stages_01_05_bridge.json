@@ -352,10 +352,180 @@
       "dialogues": [
         "day2.s05.unsolved"
       ]
+    },
+    {
+      "id": "day2_procurement_recipe",
+      "mode": "自动演出",
+      "event": "day2.procurement.recipe",
+      "start": 0,
+      "count": 2,
+      "dialogues": [
+        "day2.procurement.recipe"
+      ]
+    },
+    {
+      "id": "supplement_poet_casino_poet",
+      "mode": "自动演出",
+      "event": "supplement.poet.casino_poet",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.poet"
+      ]
+    },
+    {
+      "id": "supplement_drinker_signature_heartbroken_drinker",
+      "mode": "自动演出",
+      "event": "supplement.drinker.signature_heartbroken_drinker",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.drinker"
+      ]
+    },
+    {
+      "id": "supplement_philosopher_signature_philosopher",
+      "mode": "自动演出",
+      "event": "supplement.philosopher.signature_philosopher",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.philosopher"
+      ]
+    },
+    {
+      "id": "supplement_philosopher_signature_drunk",
+      "mode": "自动演出",
+      "event": "supplement.philosopher.signature_drunk",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.philosopher"
+      ]
+    },
+    {
+      "id": "supplement_prayer_prayer_man",
+      "mode": "自动演出",
+      "event": "supplement.prayer.prayer_man",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.prayer"
+      ]
+    },
+    {
+      "id": "supplement_prayer_prayer_woman",
+      "mode": "自动演出",
+      "event": "supplement.prayer.prayer_woman",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.prayer"
+      ]
+    },
+    {
+      "id": "supplement_warehouse_warehouse_guard_1",
+      "mode": "自动演出",
+      "event": "supplement.warehouse.warehouse_guard_1",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.warehouse"
+      ]
+    },
+    {
+      "id": "supplement_warehouse_warehouse_guard_2",
+      "mode": "自动演出",
+      "event": "supplement.warehouse.warehouse_guard_2",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.warehouse"
+      ]
+    },
+    {
+      "id": "supplement_soldier_barracks_soldier",
+      "mode": "自动演出",
+      "event": "supplement.soldier.barracks_soldier",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.soldier"
+      ]
+    },
+    {
+      "id": "supplement_casino_sentry",
+      "mode": "自动演出",
+      "event": "supplement.casino_sentry",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.casino_sentry"
+      ]
+    },
+    {
+      "id": "supplement_vendor_1",
+      "mode": "自动演出",
+      "event": "supplement.vendor_1",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.vendor_1"
+      ]
+    },
+    {
+      "id": "supplement_vendor_2",
+      "mode": "自动演出",
+      "event": "supplement.vendor_2",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.vendor_2"
+      ]
+    },
+    {
+      "id": "supplement_vendor_3",
+      "mode": "自动演出",
+      "event": "supplement.vendor_3",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.vendor_3"
+      ]
+    },
+    {
+      "id": "supplement_family_market_mother",
+      "mode": "自动演出",
+      "event": "supplement.family.market_mother",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.family"
+      ]
+    },
+    {
+      "id": "supplement_family_market_boy",
+      "mode": "自动演出",
+      "event": "supplement.family.market_boy",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.family"
+      ]
+    },
+    {
+      "id": "supplement_child_village_child",
+      "mode": "自动演出",
+      "event": "supplement.child.village_child",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "supplement.child"
+      ]
     }
   ],
   "authoring_project": "res://docs/story_authoring/day2_stages_01_05_project.json",
-  "authoring_sha256": "0ac2cd7dedfdc8e77dc07eab1ad738807f8706cfcd9636a74effe18e2e17903c",
+  "authoring_sha256": "b2092d436ca486f1b5a8853ebad6b87fd4b071e7d766c16931c1077b09be9e3d",
   "verification": {
     "entry": "res://tests/verify_two_day_flow.gd",
     "scope": "标题开始、真实旅行和交付；代购及存档另测"

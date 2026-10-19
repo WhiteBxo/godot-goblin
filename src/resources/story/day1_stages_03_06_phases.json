@@ -13,8 +13,19 @@
       "next_event": "day1.s04.after_order"
     },
     {
-      "id": "day1.bridge.map",
+      "id": "day1.bridge.trial_taste",
       "after_event": "day1.s04.after_order",
+      "stage": "day1.s04.wait_taste",
+      "completion": {
+        "flag": "day1.s04.taste_delivered",
+        "allow_existing": true
+      },
+      "completion_flag": "day1.bridge.trial_taste.completed",
+      "next_event": "day1.s04.after_taste"
+    },
+    {
+      "id": "day1.bridge.map",
+      "after_event": "day1.s04.after_taste",
       "stage": "day1.s04.wait_map",
       "completion": {
         "flag": "day1.s04.map_closed",

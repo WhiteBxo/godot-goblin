@@ -1,0 +1,56 @@
+[
+  {
+    "archive": "祈祷者(1).zip",
+    "entry": "祈祷者/女/待机👉.png",
+    "path": "assets/characters/npc/prayer_woman/source/idle_right.png",
+    "sha256": "13a765bc4b17cded7d32f5ddc8713f7e0ff217462a954eb4ccf6db791d0bad77"
+  },
+  {
+    "archive": "祈祷者(1).zip",
+    "entry": "祈祷者/女/待机.png",
+    "path": "assets/characters/npc/prayer_woman/source/idle_down.png",
+    "sha256": "a6fe0095ac7b2472ab33686b15f91f7d33c5815fa76fba81a84d4f6dea897a1f"
+  },
+  {
+    "archive": "祈祷者(1).zip",
+    "entry": "祈祷者/女/走路.png",
+    "path": "assets/characters/npc/prayer_woman/source/run_up.png",
+    "sha256": "ba1563fb6d33326d403423477beaf824ddf88bfb1b55c4dd034b0db4ac1c4678"
+  },
+  {
+    "archive": "祈祷者(1).zip",
+    "entry": "祈祷者/女/走路2.png",
+    "path": "assets/characters/npc/prayer_woman/source/unused_03.png",
+    "sha256": "851ad62fffac0e8c5e517c7ecdfd3bf5b60e80a69bcf7868dab5c74d686021b7"
+  },
+  {
+    "archive": "祈祷者(1).zip",
+    "entry": "祈祷者/女/走路3.png",
+    "path": "assets/characters/npc/prayer_woman/source/run_right.png",
+    "sha256": "8cd9f747cc6734d022a1f8ac875f0d42aebf18c3e3175f0d1bce7e1b47303dc5"
+  },
+  {
+    "archive": "祈祷者(1).zip",
+    "entry": "祈祷者/女/🚺.png",
+    "path": "assets/characters/npc/prayer_woman/source/portrait.png",
+    "sha256": "a137540a69d57f854fd6f608c29f0a449b5f182ff84d924593e3f7e6a84beb77",
+    "portrait_crop": [
+      95,
+      27,
+      1024,
+      1023
+    ]
+  },
+  {
+    "archive": "祈祷者(1).zip",
+    "entry": "祈祷者/女/待机2.png",
+    "path": "assets/characters/npc/prayer_woman/source/idle_up.png",
+    "sha256": "0350e1f461a6bce8c806cc58c076991560e74df6a84d96541f4f9182ac7430df"
+  },
+  {
+    "archive": "祈祷者(1).zip",
+    "entry": "祈祷者/女/待机3.png",
+    "path": "assets/characters/npc/prayer_woman/source/run_down.png",
+    "sha256": "0208d4e0e32510b807b781d311f399913e50851c29448d3f8a0542f712d24ec3"
+  }
+]

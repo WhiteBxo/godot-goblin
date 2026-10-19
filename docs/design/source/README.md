@@ -36,3 +36,7 @@
 | [settlement_dialogue_supplement_2026_10_19.docx](settlement_dialogue_supplement_2026_10_19.docx) | `补充(5).docx` | [正文](../settlement_dialogue_supplement_revised.md) | `06476ca5b490abf93650df2f25427a6f03528835606c519f09add71155bd8287` |
 
 第一天 DOCX 内嵌的 `Workbook1.xlsx` 为 7 行、4 列的六阶段简表，已与正文现有简表核对一致；原始内嵌表仍保留在 DOCX 内。第二天 PDF 第 2–3 页图片表与第 9–10 页新增彩色文字已结合页面图像核对。
+
+## 2026-10-20 试玩反馈
+
+[原始反馈表](playtest_feedback_2026_10_20.xlsx)逐字节归档，用户文件名为 `时间第一次出奶茶店 地点哥布林世界 问题意义不明的路标.xlsx`。SHA-256：`47d180002806d547de78569da9b5f3d2b3250a70a73228897fa8a0e0d720bcf0`。处理结果见[实施记录](../../development/story_supplement_2026_10_20.md)。

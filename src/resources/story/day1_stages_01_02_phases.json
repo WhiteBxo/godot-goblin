@@ -28,7 +28,40 @@
       "after_event": "day1.group_arrival",
       "stage": "day1.wait_group",
       "completion": {
-        "flag": "day1.group_settled",
+        "flag": "day1.group_a_settled",
+        "allow_existing": true
+      },
+      "completion_flag": "day1.group_a_done",
+      "next_event": "day1.customer_c"
+    },
+    {
+      "id": "day1.customer_c.order",
+      "after_event": "day1.customer_c",
+      "stage": "day1.wait_group_c",
+      "completion": {
+        "flag": "day1.group_c_settled",
+        "allow_existing": true
+      },
+      "completion_flag": "day1.group_c_done",
+      "next_event": "day1.customer_d"
+    },
+    {
+      "id": "day1.customer_d.order",
+      "after_event": "day1.customer_d",
+      "stage": "day1.wait_group_d",
+      "completion": {
+        "flag": "day1.group_d_settled",
+        "allow_existing": true
+      },
+      "completion_flag": "day1.group_d_done",
+      "next_event": "day1.customer_e"
+    },
+    {
+      "id": "day1.customer_e.order",
+      "after_event": "day1.customer_e",
+      "stage": "day1.wait_group_e",
+      "completion": {
+        "flag": "day1.group_e_settled",
         "allow_existing": true
       },
       "completion_flag": "day1.group_done",

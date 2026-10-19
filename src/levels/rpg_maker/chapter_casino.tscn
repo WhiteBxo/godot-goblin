@@ -19,6 +19,8 @@
 
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_casino_sentry.tscn" id="sentry"]
 
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_common_goblin.tscn" id="poet"]
+
 [node name="RpgMakerMap005" instance=ExtResource("base")]
 
 script = ExtResource("map")
@@ -111,4 +113,10 @@ show_world_marker = true
 
 [node name="Sentry" parent="Characters" instance=ExtResource("sentry")]
 position = Vector2(120, 552)
+active_phase = "always"
+
+[node name="Poet" parent="Characters" instance=ExtResource("poet")]
+position = Vector2(360, 552)
+actor_id = &"casino_poet"
+display_name = "哥布林诗人"
 active_phase = "always"

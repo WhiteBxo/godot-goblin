@@ -118,11 +118,9 @@ func _verify_map(index: int) -> void:
 	if setup != null:
 		_check(setup.throw_range == 230.0 and setup.effect_scale == 0.5, "RPG throw range and effect distances are halved")
 		for guard: Day1GuardResponse in setup.guards:
-			var old_ranges := {Day1GuardResponse.Role.ENTRANCE: 84.0, Day1GuardResponse.Role.MANSION_LURE: 48.0, Day1GuardResponse.Role.MANSION_GATE: 60.0, Day1GuardResponse.Role.DRUNKEN: 48.0}
-			if old_ranges.has(guard.role):
-				_check(guard.sight_range >= float(old_ranges[guard.role]) * 2.0, "Published guard sight radius is at least doubled")
+			_check(guard.sight_range >= 96.0 and guard.sight_range <= 120.0, "Published guard sight leaves space to pass beside the native lanes")
 			_check(guard.hear_footsteps and guard.hearing_range > 0, "Published guards can hear footsteps")
-			_check(guard.sight_half_angle == 55.0, "Published guard sight uses the widened forward cone")
+			_check(guard.sight_half_angle == 40.0, "Published guard sight uses the playable forward cone")
 			if guard.role in [Day1GuardResponse.Role.MANSION_LURE, Day1GuardResponse.Role.MANSION_GATE]:
 				_check(guard.patrol_offsets.is_empty(), "Mansion door guards keep their posts")
 			else:
@@ -172,12 +170,12 @@ func _verify_north_guidance(map: RpgChapterMap) -> void:
 	# Isolate the sight lane from the authored patrol: the watch stands still here.
 	var patrol := watch.patrol_offsets.duplicate()
 	watch.patrol_offsets = []
-	for x: float in [1128.0, 1176.0, 1224.0]:
+	for x: float in [1176.0]:
 		watch.reset_response()
 		player.teleport_to(Vector2(x, 504))
 		await physics_frame
-		_check(watch.advance(1.0, player, space), "Forward watch covers native street lane: " + str(x))
-	for x: float in [1104.0, 1248.0]:
+		_check(watch.advance(watch.discovery_seconds, player, space), "Forward watch covers native street lane after its grace period: " + str(x))
+	for x: float in [1104.0, 1128.0, 1224.0, 1248.0]:
 		watch.reset_response()
 		player.teleport_to(Vector2(x, 504))
 		await physics_frame

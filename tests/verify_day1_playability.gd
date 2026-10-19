@@ -45,7 +45,9 @@ func _run() -> void:
 	await wait_event("day1.first_goblin")
 	await make_order("day1_goblin", "goblin_customer")
 	await wait_event("day1.group_arrival")
-	for id: String in ["a", "b", "c", "d", "e"]:
+	for id: String in ["a", "c", "d", "e"]:
+		if id != "a":
+			await wait_event("day1.customer_" + id)
 		await make_order("day1_group_" + id, "goblin_" + id)
 	await wait_event("day1.ending")
 	await wait_event("day1.s03.coin_inspect")
@@ -60,7 +62,7 @@ func _run() -> void:
 	for id: String in ["a", "b", "c"]:
 		var actor := game.get_actor_director().get_actor(StringName("goblin_" + id))
 		check(actor != null and actor.is_visible_in_tree(), "Returning goblin is visible in the daytime exterior: " + id)
-		check(map.can_stand_at(actor.global_position, Vector2(17, 10)), "Returning goblin stands on walkable floor: " + id)
+		check(map.can_stand_at(actor.global_position, Vector2(7, 4)), "Returning goblin stands on walkable floor with its RPG footprint: " + id)
 	var payment: InteractionPoint = map.get_node("Interactions/MansionPayment")
 	check(payment.required_actors.size() == 2, "Shared guard point keeps both actor references after reparenting")
 	# Range alone cannot make a hidden actor's point selectable.
@@ -83,6 +85,10 @@ func _run() -> void:
 		await await_travel()
 		check(state.get_flag("day1.s03.returned_shop"), "Walking home and E finish exploration through real travel")
 		await wait_event("day1.s04.commission")
+		await make_order("day1_s04_fat", "fat_goblin")
+		await wait_event("day1.s04.after_order")
+		await make_order("day1_s04_taste", "fat_goblin")
+		await wait_event("day1.s04.after_taste")
 	game.queue_free()
 	await frames(10)
 	finish()

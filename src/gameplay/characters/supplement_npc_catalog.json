@@ -1,0 +1,1230 @@
+[
+  {
+    "id": "warehouse_sentry",
+    "display_name": "仓库守卫",
+    "role": "仓库前的守卫。",
+    "active_archive": "侍卫3(1).zip",
+    "side_faces_left": false,
+    "animations": {
+      "idle_down": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            2,
+            2,
+            63,
+            61
+          ],
+          "scale": 0.9830508474576272
+        }
+      },
+      "idle_up": {
+        "source": "idle_up",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            1,
+            1,
+            61,
+            57
+          ],
+          "scale": 1.0
+        }
+      },
+      "idle_right": {
+        "source": "idle_right",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            2,
+            4,
+            61,
+            57
+          ],
+          "scale": 1.0169491525423728
+        }
+      },
+      "run_down": {
+        "source": "run_down",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 13,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            1,
+            2,
+            62,
+            57
+          ],
+          "scale": 0.9836065573770492
+        }
+      },
+      "run_right": {
+        "source": "run_right",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            0,
+            0,
+            64,
+            64
+          ],
+          "scale": 0.90625
+        }
+      },
+      "run_up": {
+        "source": "run_up",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 13,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            1,
+            3,
+            64,
+            59
+          ],
+          "scale": 0.9523809523809523
+        }
+      },
+      "fall": {
+        "source": "fall",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            0,
+            2,
+            64,
+            62
+          ],
+          "scale": 0.9375
+        }
+      },
+      "idle_left": {
+        "source": "idle_right",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            2,
+            4,
+            61,
+            57
+          ],
+          "scale": 1.0169491525423728
+        }
+      },
+      "run_left": {
+        "source": "run_right",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            0,
+            0,
+            64,
+            64
+          ],
+          "scale": 0.90625
+        }
+      }
+    }
+  },
+  {
+    "id": "prayer_man",
+    "display_name": "祈祷者",
+    "role": "祭坛前的祈祷者。",
+    "active_archive": "祈祷者(1).zip",
+    "side_faces_left": false,
+    "animations": {
+      "idle_down": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            8,
+            0,
+            56,
+            63
+          ],
+          "scale": 0.9206349206349206
+        }
+      },
+      "idle_up": {
+        "source": "idle_up",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            8,
+            0,
+            56,
+            63
+          ],
+          "scale": 0.9206349206349206
+        }
+      },
+      "idle_right": {
+        "source": "idle_right",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            9,
+            1,
+            55,
+            63
+          ],
+          "scale": 0.9354838709677419
+        }
+      },
+      "run_down": {
+        "source": "run_down",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 10,
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            42,
+            30,
+            86,
+            98
+          ],
+          "scale": 0.8529411764705882
+        }
+      },
+      "run_right": {
+        "source": "run_right",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 12,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            6,
+            0,
+            54,
+            63
+          ],
+          "scale": 0.9206349206349206
+        }
+      },
+      "run_up": {
+        "source": "run_up",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 10,
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            42,
+            29,
+            86,
+            97
+          ],
+          "scale": 0.8529411764705882
+        }
+      },
+      "idle_left": {
+        "source": "idle_right",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            9,
+            1,
+            55,
+            63
+          ],
+          "scale": 0.9354838709677419
+        }
+      },
+      "run_left": {
+        "source": "run_right",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 12,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            6,
+            0,
+            54,
+            63
+          ],
+          "scale": 0.9206349206349206
+        }
+      }
+    }
+  },
+  {
+    "id": "prayer_woman",
+    "display_name": "同伴",
+    "role": "祭坛前与祈祷者交谈的同伴。",
+    "active_archive": "祈祷者(1).zip",
+    "side_faces_left": false,
+    "animations": {
+      "idle_down": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            9,
+            1,
+            55,
+            62
+          ],
+          "scale": 0.9508196721311475
+        }
+      },
+      "idle_up": {
+        "source": "idle_up",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            37,
+            30,
+            91,
+            96
+          ],
+          "scale": 0.8787878787878788
+        }
+      },
+      "idle_right": {
+        "source": "idle_right",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            8,
+            3,
+            56,
+            60
+          ],
+          "scale": 1.0175438596491229
+        }
+      },
+      "run_down": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            9,
+            1,
+            55,
+            62
+          ],
+          "scale": 0.9508196721311475
+        }
+      },
+      "run_right": {
+        "source": "run_right",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 7,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            7,
+            1,
+            55,
+            62
+          ],
+          "scale": 0.9508196721311475
+        }
+      },
+      "run_up": {
+        "source": "run_up",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 9,
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            34,
+            31,
+            95,
+            96
+          ],
+          "scale": 0.8923076923076924
+        }
+      },
+      "idle_left": {
+        "source": "idle_right",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            8,
+            3,
+            56,
+            60
+          ],
+          "scale": 1.0175438596491229
+        }
+      },
+      "run_left": {
+        "source": "run_right",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 7,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            7,
+            1,
+            55,
+            62
+          ],
+          "scale": 0.9508196721311475
+        }
+      }
+    }
+  },
+  {
+    "id": "prayer_elder",
+    "display_name": "年迈祈祷者",
+    "role": "祭坛旁静坐的年迈祈祷者。",
+    "active_archive": "祈祷者(1).zip",
+    "side_faces_left": false,
+    "animations": {
+      "idle_down": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            8,
+            9,
+            56,
+            54
+          ],
+          "scale": 1.25
+        }
+      },
+      "run_down": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            8,
+            9,
+            56,
+            54
+          ],
+          "scale": 1.25
+        }
+      },
+      "idle_up": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            8,
+            9,
+            56,
+            54
+          ],
+          "scale": 1.25
+        }
+      },
+      "run_up": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            8,
+            9,
+            56,
+            54
+          ],
+          "scale": 1.25
+        }
+      },
+      "idle_right": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            8,
+            9,
+            56,
+            54
+          ],
+          "scale": 1.25
+        }
+      },
+      "run_right": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            8,
+            9,
+            56,
+            54
+          ],
+          "scale": 1.25
+        }
+      },
+      "idle_left": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            8,
+            9,
+            56,
+            54
+          ],
+          "scale": 1.25
+        }
+      },
+      "run_left": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            8,
+            9,
+            56,
+            54
+          ],
+          "scale": 1.25
+        }
+      }
+    }
+  },
+  {
+    "id": "tavern_drunk",
+    "display_name": "醉鬼",
+    "role": "酒馆外与哲人争论的醉鬼。",
+    "active_archive": "酒鬼（改后(1).zip",
+    "side_faces_left": false,
+    "animations": {
+      "idle_down": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            0,
+            0,
+            64,
+            61
+          ],
+          "scale": 0.9375
+        }
+      },
+      "run_down": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            0,
+            0,
+            64,
+            61
+          ],
+          "scale": 0.9375
+        }
+      },
+      "idle_up": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            0,
+            0,
+            64,
+            61
+          ],
+          "scale": 0.9375
+        }
+      },
+      "run_up": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            0,
+            0,
+            64,
+            61
+          ],
+          "scale": 0.9375
+        }
+      },
+      "idle_right": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            0,
+            0,
+            64,
+            61
+          ],
+          "scale": 0.9375
+        }
+      },
+      "run_right": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            0,
+            0,
+            64,
+            61
+          ],
+          "scale": 0.9375
+        }
+      },
+      "idle_left": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            0,
+            0,
+            64,
+            61
+          ],
+          "scale": 0.9375
+        }
+      },
+      "run_left": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            0,
+            0,
+            64,
+            61
+          ],
+          "scale": 0.9375
+        }
+      }
+    }
+  },
+  {
+    "id": "tavern_drinker",
+    "display_name": "买醉者",
+    "role": "酒馆内独自买醉的客人。",
+    "active_archive": "酒鬼（改后(1).zip",
+    "side_faces_left": false,
+    "animations": {
+      "idle_down": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            2,
+            1,
+            63,
+            62
+          ],
+          "scale": 0.9508196721311475
+        }
+      },
+      "run_down": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            2,
+            1,
+            63,
+            62
+          ],
+          "scale": 0.9508196721311475
+        }
+      },
+      "idle_up": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            2,
+            1,
+            63,
+            62
+          ],
+          "scale": 0.9508196721311475
+        }
+      },
+      "run_up": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            2,
+            1,
+            63,
+            62
+          ],
+          "scale": 0.9508196721311475
+        }
+      },
+      "idle_right": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            2,
+            1,
+            63,
+            62
+          ],
+          "scale": 0.9508196721311475
+        }
+      },
+      "run_right": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            2,
+            1,
+            63,
+            62
+          ],
+          "scale": 0.9508196721311475
+        }
+      },
+      "idle_left": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            2,
+            1,
+            63,
+            62
+          ],
+          "scale": 0.9508196721311475
+        }
+      },
+      "run_left": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            2,
+            1,
+            63,
+            62
+          ],
+          "scale": 0.9508196721311475
+        }
+      }
+    }
+  },
+  {
+    "id": "goblin_boy",
+    "display_name": "哥布林小男孩",
+    "role": "集市上和母亲一起的哥布林小男孩。",
+    "active_archive": "小男孩.zip",
+    "side_faces_left": false,
+    "animations": {
+      "idle_down": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 15,
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            22,
+            24,
+            103,
+            96
+          ],
+          "scale": 0.6111111111111112
+        }
+      },
+      "idle_up": {
+        "source": "idle_up",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 6,
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            30,
+            34,
+            97,
+            96
+          ],
+          "scale": 0.7096774193548387
+        }
+      },
+      "run_down": {
+        "source": "run_down",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 10,
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            30,
+            29,
+            95,
+            99
+          ],
+          "scale": 0.6285714285714286
+        }
+      },
+      "run_right": {
+        "source": "run_right",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 15,
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            20,
+            29,
+            95,
+            99
+          ],
+          "scale": 0.6285714285714286
+        }
+      },
+      "run_up": {
+        "source": "run_up",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 10,
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            32,
+            29,
+            94,
+            100
+          ],
+          "scale": 0.6197183098591549
+        }
+      },
+      "emote_sit": {
+        "source": "emote_sit",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            0,
+            0,
+            64,
+            62
+          ],
+          "scale": 0.7096774193548387
+        }
+      },
+      "emote_slingshot": {
+        "source": "emote_slingshot",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            4,
+            3,
+            59,
+            60
+          ],
+          "scale": 0.7719298245614035
+        }
+      },
+      "emote_stones": {
+        "source": "emote_stones",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 11,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            5,
+            4,
+            60,
+            61
+          ],
+          "scale": 0.7719298245614035
+        }
+      },
+      "idle_right": {
+        "source": "run_right",
+        "fps": 8,
+        "first_only": true,
+        "frame_count": 15,
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            20,
+            29,
+            95,
+            99
+          ],
+          "scale": 0.6285714285714286
+        }
+      },
+      "idle_left": {
+        "source": "run_right",
+        "fps": 8,
+        "first_only": true,
+        "frame_count": 15,
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            20,
+            29,
+            95,
+            99
+          ],
+          "scale": 0.6285714285714286
+        }
+      },
+      "run_left": {
+        "source": "run_right",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 15,
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            20,
+            29,
+            95,
+            99
+          ],
+          "scale": 0.6285714285714286
+        }
+      }
+    }
+  },
+  {
+    "id": "goblin_girl",
+    "display_name": "哥布林小孩",
+    "role": "村庄里谈论茱丽叶骑士的哥布林小孩。",
+    "active_archive": "女孩.zip",
+    "side_faces_left": true,
+    "animations": {
+      "idle_down": {
+        "source": "idle_down",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 3,
+        "source_frame_size": 150,
+        "transform": {
+          "grid": [
+            4,
+            2
+          ],
+          "source_indices": [
+            3,
+            6,
+            7
+          ],
+          "crop": [
+            46,
+            9,
+            118,
+            140
+          ],
+          "scale": 0.3816793893129771
+        }
+      },
+      "idle_up": {
+        "source": "idle_up",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 3,
+        "source_frame_size": 150,
+        "transform": {
+          "grid": [
+            4,
+            2
+          ],
+          "source_indices": [
+            0,
+            1,
+            4
+          ],
+          "crop": [
+            38,
+            13,
+            105,
+            141
+          ],
+          "scale": 0.390625
+        }
+      },
+      "idle_right": {
+        "source": "idle_right",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 2,
+        "source_frame_size": 150,
+        "transform": {
+          "grid": [
+            4,
+            2
+          ],
+          "source_indices": [
+            2,
+            5
+          ],
+          "crop": [
+            47,
+            16,
+            101,
+            140
+          ],
+          "scale": 0.4032258064516129
+        }
+      },
+      "run_down": {
+        "source": "run_down",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 3,
+        "source_frame_size": 137,
+        "transform": {
+          "grid": [
+            4,
+            2
+          ],
+          "source_indices": [
+            3,
+            6,
+            7
+          ],
+          "crop": [
+            38,
+            0,
+            110,
+            135
+          ],
+          "scale": 0.37037037037037035
+        }
+      },
+      "run_up": {
+        "source": "run_up",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 3,
+        "source_frame_size": 137,
+        "transform": {
+          "grid": [
+            4,
+            2
+          ],
+          "source_indices": [
+            0,
+            1,
+            4
+          ],
+          "crop": [
+            0,
+            2,
+            69,
+            137
+          ],
+          "scale": 0.37037037037037035
+        }
+      },
+      "run_right": {
+        "source": "run_right",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 2,
+        "source_frame_size": 137,
+        "transform": {
+          "grid": [
+            4,
+            2
+          ],
+          "source_indices": [
+            2,
+            5
+          ],
+          "crop": [
+            24,
+            5,
+            89,
+            129
+          ],
+          "scale": 0.4032258064516129
+        }
+      },
+      "idle_left": {
+        "source": "idle_right",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 2,
+        "source_frame_size": 150,
+        "transform": {
+          "grid": [
+            4,
+            2
+          ],
+          "source_indices": [
+            2,
+            5
+          ],
+          "crop": [
+            47,
+            16,
+            101,
+            140
+          ],
+          "scale": 0.4032258064516129
+        }
+      },
+      "run_left": {
+        "source": "run_right",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 2,
+        "source_frame_size": 137,
+        "transform": {
+          "grid": [
+            4,
+            2
+          ],
+          "source_indices": [
+            2,
+            5
+          ],
+          "crop": [
+            24,
+            5,
+            89,
+            129
+          ],
+          "scale": 0.4032258064516129
+        }
+      }
+    }
+  }
+]

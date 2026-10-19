@@ -1,0 +1,20 @@
+[
+  {
+    "archive": "祈祷者(1).zip",
+    "entry": "祈祷者/老头/魔了.png",
+    "path": "assets/characters/npc/prayer_elder/source/portrait.png",
+    "sha256": "f03f03314d883d5509c435503333edac833dce490de78617c2e97cf077462ff4",
+    "portrait_crop": [
+      149,
+      153,
+      1024,
+      1024
+    ]
+  },
+  {
+    "archive": "祈祷者(1).zip",
+    "entry": "祈祷者/老头/待机.png",
+    "path": "assets/characters/npc/prayer_elder/source/idle_down.png",
+    "sha256": "51aa6bb07af4656f898d9f36a611a2b5f6b779d896d83ffe0ccaf4e84b6f4f4a"
+  }
+]

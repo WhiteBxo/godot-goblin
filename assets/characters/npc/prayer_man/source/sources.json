@@ -1,0 +1,50 @@
+[
+  {
+    "archive": "祈祷者(1).zip",
+    "entry": "祈祷者/男/待机.png",
+    "path": "assets/characters/npc/prayer_man/source/idle_down.png",
+    "sha256": "396deba23c90e4e2769e46b7b3f43ddaf9f5c03ad5f4ada49c4b68840c1e4d77"
+  },
+  {
+    "archive": "祈祷者(1).zip",
+    "entry": "祈祷者/男/走3.png",
+    "path": "assets/characters/npc/prayer_man/source/run_up.png",
+    "sha256": "5b5bb2c6547ccd6291c840492d519a51f9a57b2e616829215439990afa1f221e"
+  },
+  {
+    "archive": "祈祷者(1).zip",
+    "entry": "祈祷者/男/走2.png",
+    "path": "assets/characters/npc/prayer_man/source/run_right.png",
+    "sha256": "460b1f91d8c689b9c9470b4822aa0aae673629dded1fef1ab3ed3f070435569d"
+  },
+  {
+    "archive": "祈祷者(1).zip",
+    "entry": "祈祷者/男/走.png",
+    "path": "assets/characters/npc/prayer_man/source/run_down.png",
+    "sha256": "072e421a6ed491b9f4d7e56412c7f56cf6aee8664008ae221e238175f0a934ee"
+  },
+  {
+    "archive": "祈祷者(1).zip",
+    "entry": "祈祷者/男/待机2.png",
+    "path": "assets/characters/npc/prayer_man/source/idle_up.png",
+    "sha256": "89db4419f73e8e2dad67cc0056de7f6e695c1da93643d3e7d5e50ae2911e11bb"
+  },
+  {
+    "archive": "祈祷者(1).zip",
+    "entry": "祈祷者/男/🚹.png",
+    "path": "assets/characters/npc/prayer_man/source/portrait.png",
+    "sha256": "65c089195775f3811f62732b641f0410b1473a29aceb972de35b546e0e02fac4",
+    "portrait_crop": [
+      177,
+      29,
+      936,
+      992
+    ]
+  },
+  {
+    "archive": "祈祷者(1).zip",
+    "entry": "祈祷者/男/待机3.png",
+    "path": "assets/characters/npc/prayer_man/source/idle_right.png",
+    "sha256": "06ad33b0e30c38e04de360c0ec6ff439a55f37bfbc0aa784f293ed29f189c2bf"
+  }
+]

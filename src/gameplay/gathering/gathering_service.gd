@@ -141,7 +141,10 @@ func harvest(id: StringName) -> Dictionary:
 	harvested.emit(point, item_id, amount, stock)
 	_committing = false
 	_state.end_business_transaction()
-	return {"ok": true, "message": "采集成功：%s × %d（现有 %d）。" % [_display_name(item_id), amount, stock],
+	var message := "采集成功：%s × %d（现有 %d）。" % [_display_name(item_id), amount, stock]
+	if not point.success_description.is_empty():
+		message = point.success_description + "\n" + message
+	return {"ok": true, "message": message,
 		"item_id": item_id, "amount": amount, "stock": stock}
 
 

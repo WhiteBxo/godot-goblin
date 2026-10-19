@@ -10,7 +10,7 @@ var _navigation: Dictionary = {}
 func _ready() -> void:
 	_page = $ModalShell.get_content()
 	$ModalShell.close_requested.connect(close_requested.emit)
-	var titles := {ScreenIds.ORDER_HISTORY: "奶茶订单", ScreenIds.HIRING: "雇佣系统 · 暂未开放", ScreenIds.TASKS: "任务日志 [J]", ScreenIds.CHRONICLE: "异闻录", ScreenIds.DRINKS: "哥布林饮品图鉴", ScreenIds.CHARACTERS: "人物记录", ScreenIds.INVENTORY: "背包 [B]", ScreenIds.MAP: "地图 [M]", ScreenIds.SETTINGS: "设置"}
+	var titles := {ScreenIds.ORDER_HISTORY: "奶茶订单", ScreenIds.HIRING: "雇佣系统", ScreenIds.TASKS: "任务日志 [J]", ScreenIds.CHRONICLE: "异闻录", ScreenIds.DRINKS: "哥布林饮品图鉴", ScreenIds.CHARACTERS: "人物记录", ScreenIds.INVENTORY: "背包 [B]", ScreenIds.MAP: "地图 [M]", ScreenIds.SETTINGS: "设置"}
 	for id: StringName in titles:
 		var button := Button.new()
 		button.text = titles[id]

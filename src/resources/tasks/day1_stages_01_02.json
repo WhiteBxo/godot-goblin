@@ -146,11 +146,11 @@
       "description": "查看订单板接单，在制作台制作后交给指定顾客。",
       "reveal_when": {
         "type": "flag",
-        "key": "day1.group_open"
+        "key": "day1.group_b_open"
       },
       "activate_when": {
         "type": "flag",
-        "key": "day1.group_open"
+        "key": "day1.group_b_open"
       },
       "complete_when": {
         "type": "flag",
@@ -192,11 +192,11 @@
       "description": "查看订单板接单，在制作台制作后交给指定顾客。",
       "reveal_when": {
         "type": "flag",
-        "key": "day1.group_open"
+        "key": "day1.group_c_open"
       },
       "activate_when": {
         "type": "flag",
-        "key": "day1.group_open"
+        "key": "day1.group_c_open"
       },
       "complete_when": {
         "type": "flag",
@@ -238,11 +238,11 @@
       "description": "查看订单板接单，在制作台制作后交给指定顾客。",
       "reveal_when": {
         "type": "flag",
-        "key": "day1.group_open"
+        "key": "day1.group_d_open"
       },
       "activate_when": {
         "type": "flag",
-        "key": "day1.group_open"
+        "key": "day1.group_d_open"
       },
       "complete_when": {
         "type": "flag",
@@ -284,11 +284,11 @@
       "description": "查看订单板接单，在制作台制作后交给指定顾客。",
       "reveal_when": {
         "type": "flag",
-        "key": "day1.group_open"
+        "key": "day1.group_e_open"
       },
       "activate_when": {
         "type": "flag",
-        "key": "day1.group_open"
+        "key": "day1.group_e_open"
       },
       "complete_when": {
         "type": "flag",

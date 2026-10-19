@@ -66,6 +66,26 @@
     {
       "id": "day2.s05.unsolved",
       "host": "shop"
+    },
+    {
+      "id": "day2.procurement.recipe",
+      "host": "shop"
+    },
+    {
+      "id": "day2.procurement.recipe",
+      "host": "settlement"
+    },
+    {
+      "id": "day2.procurement.recipe",
+      "host": "tavern"
+    },
+    {
+      "id": "day2.procurement.recipe",
+      "host": "casino"
+    },
+    {
+      "id": "day2.procurement.recipe",
+      "host": "elder_house"
     }
   ],
   "derived_facts": [],

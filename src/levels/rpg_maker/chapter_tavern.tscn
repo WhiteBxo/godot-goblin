@@ -16,7 +16,7 @@
 
 [ext_resource type="Script" path="res://src/gameplay/interaction/chapter_service_point.gd" id="service"]
 [ext_resource type="Script" path="res://src/gameplay/story_interaction/signature_discovery_point.gd" id="signature"]
-[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_common_goblin.tscn" id="drinker"]
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_tavern_drinker.tscn" id="drinker"]
 
 [sub_resource type="RectangleShape2D" id="counter_reach"]
 size = Vector2(96, 192)

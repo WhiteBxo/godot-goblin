@@ -181,33 +181,7 @@
         },
         "line_2": {
           "speaker": "主角·内心",
-          "text": "嘴上嫌贵，喝起来倒是一点也不含糊。",
-          "next": "line_3"
-        },
-        "line_3": {
-          "speaker": "胖哥布林",
-          "text": "对了对了！你们格里芬使者是不是经常去别的地方？还有没有什么新鲜吃食？最好是能吃的、稀奇的、以前没见过的！",
-          "next": "line_4"
-        },
-        "line_4": {
-          "speaker": "主角·内心",
-          "text": "……这家伙果然满脑子都是吃的。",
-          "next": "line_5"
-        },
-        "line_5": {
-          "speaker": "主角",
-          "text": "你这么喜欢新鲜东西，平时应该很关注这些吧？",
-          "next": "line_6"
-        },
-        "line_6": {
-          "speaker": "胖哥布林",
-          "text": "那当然！吃可是头等大事啊！",
-          "next": "line_7"
-        },
-        "line_7": {
-          "speaker": "主角",
-          "text": "那我倒有些事情想问问你。比如，你刚才说的格里芬，还有你们这里的长老……",
-          "next": ""
+          "text": "嘴上嫌贵，喝起来倒是一点也不含糊。"
         }
       }
     },
@@ -751,6 +725,957 @@
               "next": ""
             }
           ]
+        }
+      }
+    },
+    "day1.s04.after_taste": {
+      "start": "line_3",
+      "lines": {
+        "line_3": {
+          "speaker": "胖哥布林",
+          "text": "对了对了！你们格里芬使者是不是经常去别的地方？还有没有什么新鲜吃食？最好是能吃的、稀奇的、以前没见过的！",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角·内心",
+          "text": "……这家伙果然满脑子都是吃的。",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "主角",
+          "text": "你这么喜欢新鲜东西，平时应该很关注这些吧？",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "胖哥布林",
+          "text": "那当然！吃可是头等大事啊！",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "主角",
+          "text": "那我倒有些事情想问问你。比如，你刚才说的格里芬，还有你们这里的长老……",
+          "next": ""
+        }
+      }
+    },
+    "day1.s04.offer_ingredients": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "胖哥布林",
+          "text": "对了！老板，你要不要试试我们哥布林的食材？",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "胖哥布林",
+          "text": "这些可都是我们平时吃的东西！不知道格里芬使者您变出什么样的花样来！",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "胖哥布林",
+          "text": "来来来，这些送给你！不用客气！要是能做出好吃的东西，我可要第一个尝鲜啊！"
+        }
+      }
+    },
+    "day1.s04.wait_taste": {
+      "start": "gift_notice",
+      "lines": {
+        "line_1": {
+          "speaker": "主角·内心",
+          "text": "这食材怎么奇形怪状的？",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "胖哥布林",
+          "text": "怎么样？是不是很特别？要是能做成你刚才那样的饮品，不知道得有多美味！",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角",
+          "text": "我试试看吧。",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "胖哥布林",
+          "text": "哎呀呀！那我可就等着啦！"
+        },
+        "gift_notice": {
+          "speaker": "系统",
+          "text": "获得哥布林食材——萤火伞（T3）、纯正哥布林老火烧（T2）。",
+          "next": "line_1"
+        }
+      }
+    },
+    "day1.s04.taste_reaction": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "胖哥布林",
+          "text": "哦哦哦！这么快就做好啦？我尝尝！",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "胖哥布林",
+          "text": "唔哦哦哦！！好喝！这也太好喝了吧！！",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "胖哥布林",
+          "text": "老板，你到底是怎么做到的？明明是我们平时吃的东西，怎么到你手里就变得这么好吃了？！",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "胖哥布林",
+          "text": "格里芬使者果然名不虚传！我就知道，把这些东西交给你准没错！",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "主角·内心",
+          "text": "……不就是一杯奶茶的事，这么夸张？",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "胖哥布林",
+          "text": "老板！以后你要是还需要这些食材，尽管跟我说！我那里还有不少呢！",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "胖哥布林",
+          "text": "只要能吃到这么好喝的东西，送你一点食材算什么！哈哈哈哈！"
+        }
+      }
+    },
+    "supplement.poet": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "诗人",
+          "text": "啊！黄金！黄金！人世间最璀璨，也最恶毒的太阳！",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "诗人",
+          "text": "你照亮贪婪者的眼睛，却将他们的灵魂拖入永夜！瞧瞧这些人吧——他们向命运献上钱币，向偶然跪地祈祷，竟将骰子的滚动，当作诸神的启示！",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角",
+          "text": "那个，请问——",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "诗人",
+          "text": "昔日的英雄曾为荣耀拔剑，昔日的圣徒曾为信仰赴死！而今呢？人们围坐于这黄金的牢笼，为几枚冰冷的圆币欢呼、诅咒、争斗！哦，何等壮丽的堕落！何等可悲的伟大！",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "主角·内心",
+          "text": "（……他是在骂赌场，还是在骂这里所有的人？）",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "主角",
+          "text": "不好意思，我想打听一下——",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "诗人",
+          "text": "我曾见那赌徒赢得满桌黄金，我曾见那得意者高举双手。可黎明终将降临，狂欢终将散场——昨日的赢家，明日亦可能沦为乞者！世人不知浮世如梦，荣华似露！",
+          "next": "line_8"
+        },
+        "line_8": {
+          "speaker": "主角",
+          "text": "那，那个，格里芬——",
+          "next": "line_9"
+        },
+        "line_9": {
+          "speaker": "诗人",
+          "text": "格里芬！",
+          "next": "line_10"
+        },
+        "line_10": {
+          "speaker": "诗人",
+          "text": "啊！终于！终于有人提起了那不朽的名讳！",
+          "next": "line_11"
+        },
+        "line_11": {
+          "speaker": "诗人",
+          "text": "你可曾见过圣火在祭坛之上燃烧？那火焰不为黄金而舞，它自远古燃至今日，照耀着虔诚者的道路，也审视着每一颗摇摆不定的心！",
+          "next": "line_12"
+        },
+        "line_12": {
+          "speaker": "主角",
+          "text": "我真的只想问——",
+          "next": "line_13"
+        },
+        "line_13": {
+          "speaker": "诗人",
+          "text": "格里芬的使者啊，请踏过黄金铺就的泥沼，莫为浮世的幻光停留；",
+          "next": "line_14"
+        },
+        "line_14": {
+          "speaker": "主角·内心",
+          "text": "（他甚至不打算听我说话……）",
+          "next": "line_15"
+        },
+        "line_15": {
+          "speaker": "诗人",
+          "text": "莫将不朽的灵魂——",
+          "next": "line_16"
+        },
+        "line_16": {
+          "speaker": "诗人",
+          "text": "——典当于命运的赌桌！",
+          "next": "line_17"
+        },
+        "line_17": {
+          "speaker": "诗人",
+          "text": "啊！妙极！简直妙极！这最后一句，当传颂于后世！"
+        }
+      }
+    },
+    "supplement.drinker": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "男人",
+          "text": "唉……再来一杯。",
+          "next": "line_2",
+          "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+        },
+        "line_2": {
+          "speaker": "主角",
+          "text": "你已经喝了不少了。",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "主角",
+          "text": "发生什么事了？",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "男人",
+          "text": "……",
+          "next": "line_5",
+          "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+        },
+        "line_5": {
+          "speaker": "男人",
+          "text": "她不喜欢孩子。我一直想要一个孩子，你知道吗？我想过家里有个小家伙，会跑，会闹腾，会把屋子弄得乱七八糟……",
+          "next": "line_6",
+          "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+        },
+        "line_6": {
+          "speaker": "男人",
+          "text": "她却总说，光是照顾好我们自己就已经够累了。",
+          "next": "line_7",
+          "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+        },
+        "line_7": {
+          "speaker": "男人",
+          "text": "现在想想，也没什么好争的。",
+          "next": "line_8",
+          "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+        },
+        "line_8": {
+          "speaker": "主角",
+          "text": "只是因为这个？",
+          "next": "line_9"
+        },
+        "line_9": {
+          "speaker": "男人",
+          "text": "……",
+          "next": "line_10",
+          "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+        },
+        "line_10": {
+          "speaker": "男人",
+          "text": "我总忘记买她交代的东西。明明出门前还记得，走到店里就忘了。",
+          "next": "line_11",
+          "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+        },
+        "line_11": {
+          "speaker": "男人",
+          "text": "我总觉得这算不上什么大事……可她每次都很失望。",
+          "next": "line_12",
+          "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+        },
+        "line_12": {
+          "speaker": "男人",
+          "text": "后来她变得越来越较真，连我周末能不能去钓鱼，我的靴子怎么放，都要管得严严实实。",
+          "next": "line_13",
+          "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+        },
+        "line_13": {
+          "speaker": "主角",
+          "text": "……",
+          "next": "line_14"
+        },
+        "line_14": {
+          "speaker": "男人",
+          "text": "奇怪。",
+          "next": "line_15",
+          "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+        },
+        "line_15": {
+          "speaker": "男人",
+          "text": "我怎么记得这么多？",
+          "next": "line_16",
+          "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+        },
+        "line_16": {
+          "speaker": "男人",
+          "text": "明明都是些没什么意思的小事……房子、家务、饭菜，还有那些说过就忘的话。",
+          "next": "line_17",
+          "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+        },
+        "line_17": {
+          "speaker": "男人",
+          "text": "怎么会变成这样呢？",
+          "next": "line_18",
+          "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+        },
+        "line_18": {
+          "speaker": "男人",
+          "text": "我们以前明明……不是这样的。",
+          "next": "line_19",
+          "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+        },
+        "line_19": {
+          "speaker": "男人",
+          "text": "刚认识的时候，我为了送她一份礼物，能努力攒下几个月的工钱。她也会为了见我一面，在黄昏时偷偷绕过一整座村子。",
+          "next": "line_20",
+          "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+        },
+        "line_20": {
+          "speaker": "男人",
+          "text": "我们没有谁突然变成了坏人，但是事情就这样发生了。",
+          "next": "line_21",
+          "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+        },
+        "line_21": {
+          "speaker": "男人",
+          "text": "……抱歉。",
+          "next": "line_22",
+          "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+        },
+        "line_22": {
+          "speaker": "主角",
+          "text": "嗯？",
+          "next": "line_23"
+        },
+        "line_23": {
+          "speaker": "男人",
+          "text": "我今天喝多了，对你说这些乱七八糟的东西。",
+          "next": "line_24",
+          "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+        },
+        "line_24": {
+          "speaker": "主角",
+          "text": "我很遗憾。",
+          "next": "line_25"
+        },
+        "line_25": {
+          "speaker": "男人",
+          "text": "……",
+          "next": "line_26",
+          "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+        },
+        "line_26": {
+          "speaker": "男人",
+          "text": "我很想念我们曾经拥有过，又无可奈何失去的一切。",
+          "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+        }
+      }
+    },
+    "supplement.philosopher": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "哥布林哲人",
+          "text": "格里芬是什么？",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "哥布林哲人",
+          "text": "格里芬是一种客观可触的实体，还是我们哥布林借由想象与理性围筑起的概念高墙？",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "醉鬼",
+          "text": "格里芬在这酒瓶子里。",
+          "next": "line_4",
+          "portrait": "res://assets/characters/npc/tavern_drunk/portrait.png"
+        },
+        "line_4": {
+          "speaker": "哥布林哲人",
+          "text": "但是，我们真的能用有限的语词指涉格里芬吗？",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "哥布林哲人",
+          "text": "还是说，我们只能通过否定，通过它之所不是，来接近格里芬的本质？",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "哥布林哲人",
+          "text": "我们是否试图用无力的理智，去理解某种超越认知边界的存在？",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "醉鬼",
+          "text": "所以别高谈阔论了，来喝酒吧！把格里芬从酒瓶子里解放出来！",
+          "next": "line_8",
+          "portrait": "res://assets/characters/npc/tavern_drunk/portrait.png"
+        },
+        "line_8": {
+          "speaker": "醉鬼",
+          "text": "哎呀呀！我眼前怎么有这么多人在跳舞？一切都在旋转、飞舞，至死方休！啊！这是格里芬的凝视！",
+          "next": "line_9",
+          "portrait": "res://assets/characters/npc/tavern_drunk/portrait.png"
+        },
+        "line_9": {
+          "speaker": "主角",
+          "text": "你真的见到了格里芬？",
+          "next": "line_10"
+        },
+        "line_10": {
+          "speaker": "哥布林哲人",
+          "text": "格里芬只会在沉思中，而非迷狂之中显现自身。",
+          "next": "line_11"
+        },
+        "line_11": {
+          "speaker": "醉鬼",
+          "text": "我家的狗叫施里芬，你说它和格里芬是什么关系？",
+          "next": "line_12",
+          "portrait": "res://assets/characters/npc/tavern_drunk/portrait.png"
+        },
+        "line_12": {
+          "speaker": "哥布林哲人",
+          "text": "等你酒醒后，你会为你的鲁莽感到羞愧。"
+        }
+      }
+    },
+    "supplement.prayer": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "祈祷者",
+          "text": "……",
+          "next": "line_2",
+          "portrait": "res://assets/characters/npc/prayer_man/portrait.png"
+        },
+        "line_2": {
+          "speaker": "祈祷者",
+          "text": "有件事，我已经想了很久了。其实，我喜欢的哥布林一直是你。",
+          "next": "line_3",
+          "portrait": "res://assets/characters/npc/prayer_man/portrait.png"
+        },
+        "line_3": {
+          "speaker": "同伴",
+          "text": "无论你说多少次，我的回答都不会变。我已经结婚了。",
+          "next": "line_4",
+          "portrait": "res://assets/characters/npc/prayer_woman/portrait.png"
+        },
+        "line_4": {
+          "speaker": "祈祷者",
+          "text": "我又能怎么办呢？我这苦命的哥布林啊，生来就是为了爱上别人的妻子……",
+          "next": "line_5",
+          "portrait": "res://assets/characters/npc/prayer_man/portrait.png"
+        },
+        "line_5": {
+          "speaker": "同伴",
+          "text": "愿格里芬垂怜你……天哪，你为什么偏偏要在祭坛前说这种话？难道你的心，拥有了对格里芬的虔诚还不够吗？",
+          "next": "line_6",
+          "portrait": "res://assets/characters/npc/prayer_woman/portrait.png"
+        },
+        "line_6": {
+          "speaker": "祈祷者",
+          "text": "……你知道吗？三其实是一个很神圣的数字。",
+          "next": "line_7",
+          "portrait": "res://assets/characters/npc/prayer_man/portrait.png"
+        },
+        "line_7": {
+          "speaker": "祈祷者",
+          "text": "据说，今年的格里芬使者只用三种原料，就能变幻出无穷的美味。我一直在想……三，能够生发万物……",
+          "next": "line_8",
+          "portrait": "res://assets/characters/npc/prayer_man/portrait.png"
+        },
+        "line_8": {
+          "speaker": "同伴",
+          "text": "如果你想加入我的家庭，恕我拒绝。",
+          "next": "line_9",
+          "portrait": "res://assets/characters/npc/prayer_woman/portrait.png"
+        },
+        "line_9": {
+          "speaker": "祈祷者",
+          "text": "据野史记载，格里芬是圣尊、圣子、圣灵三位一体……",
+          "next": "line_10",
+          "portrait": "res://assets/characters/npc/prayer_man/portrait.png"
+        },
+        "line_10": {
+          "speaker": "同伴",
+          "text": "小声点！别在格里芬的祭坛前说这些冲撞神明的话！",
+          "portrait": "res://assets/characters/npc/prayer_woman/portrait.png"
+        }
+      }
+    },
+    "supplement.warehouse": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "守卫1",
+          "text": "听说七日祭这几天，仓库存了一批供奉给格里芬的好东西，要不，咱们进去拿一点尝尝？",
+          "next": "line_2",
+          "portrait": "res://assets/characters/npc/warehouse_sentry/portrait.png"
+        },
+        "line_2": {
+          "speaker": "守卫2",
+          "text": "这不好吧。",
+          "next": "line_3",
+          "portrait": "res://assets/characters/npc/warehouse_sentry/portrait.png"
+        },
+        "line_3": {
+          "speaker": "守卫1",
+          "text": "你想想，长老不是说过，格里芬饮食圣餐，圣饼化作皮肉，酒水化作圣血。咱们喝一口酒，不就喝了格里芬之血吗？",
+          "next": "line_4",
+          "portrait": "res://assets/characters/npc/warehouse_sentry/portrait.png"
+        },
+        "line_4": {
+          "speaker": "守卫2",
+          "text": "这、这……",
+          "next": "line_5",
+          "portrait": "res://assets/characters/npc/warehouse_sentry/portrait.png"
+        },
+        "line_5": {
+          "speaker": "守卫1",
+          "text": "一点，就一点。你不说，我不说，谁知道？",
+          "next": "line_6",
+          "portrait": "res://assets/characters/npc/warehouse_sentry/portrait.png"
+        },
+        "line_6": {
+          "speaker": "守卫2",
+          "text": "好…好吧。",
+          "next": "line_7",
+          "portrait": "res://assets/characters/npc/warehouse_sentry/portrait.png"
+        },
+        "line_7": {
+          "speaker": "守卫2",
+          "text": "等一下！有人在偷听！",
+          "next": "line_8",
+          "portrait": "res://assets/characters/npc/warehouse_sentry/portrait.png"
+        },
+        "line_8": {
+          "speaker": "守卫1",
+          "text": "什么人？！",
+          "next": "line_9",
+          "portrait": "res://assets/characters/npc/warehouse_sentry/portrait.png"
+        },
+        "line_9": {
+          "speaker": "守卫1",
+          "text": "啊…是那位格里菲使者……",
+          "next": "line_10",
+          "portrait": "res://assets/characters/npc/warehouse_sentry/portrait.png"
+        },
+        "line_10": {
+          "speaker": "守卫1",
+          "text": "不好，怎么是格里芬使者？！",
+          "next": "line_11",
+          "portrait": "res://assets/characters/npc/warehouse_sentry/portrait.png"
+        },
+        "line_11": {
+          "speaker": "守卫2",
+          "text": "怎么办？！要杀人灭口吗？",
+          "next": "line_12",
+          "portrait": "res://assets/characters/npc/warehouse_sentry/portrait.png"
+        },
+        "line_12": {
+          "speaker": "守卫1",
+          "text": "这、这不好吧……",
+          "next": "line_13",
+          "portrait": "res://assets/characters/npc/warehouse_sentry/portrait.png"
+        },
+        "line_13": {
+          "speaker": "守卫2",
+          "text": "看！那位格里芬使者逃跑了！",
+          "next": "line_14",
+          "portrait": "res://assets/characters/npc/warehouse_sentry/portrait.png"
+        },
+        "line_14": {
+          "speaker": "守卫2",
+          "text": "看来我们没有堕落的天赋，还是把你的手脚放干净点吧。",
+          "portrait": "res://assets/characters/npc/warehouse_sentry/portrait.png"
+        }
+      }
+    },
+    "supplement.soldier": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "军人",
+          "text": "犯我格里芬者，虽远必诛！",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角",
+          "text": "诛什么？",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "军人",
+          "text": "诛！诛！诛！",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "主角",
+          "text": "（内心）这个地方真是什么怪人都有。"
+        }
+      }
+    },
+    "supplement.casino_sentry": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "护卫",
+          "text": "……",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角",
+          "text": "......",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "护卫",
+          "text": "……",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "护卫",
+          "text": "……",
+          "next": "line_5"
+        },
+        "line_5": {
+          "speaker": "护卫",
+          "text": "东张西望什么？老实点！",
+          "next": "choice"
+        },
+        "choice": {
+          "speaker": "主角",
+          "text": "",
+          "choices": [
+            {
+              "id": "branch_0",
+              "text": "我只是随便看看。",
+              "next": "branch_0_0"
+            },
+            {
+              "id": "branch_1",
+              "text": "你干吗这么凶？",
+              "next": "branch_1_0"
+            },
+            {
+              "id": "branch_2",
+              "text": "这里有什么不能看的？",
+              "next": "branch_2_0"
+            }
+          ]
+        },
+        "branch_0_0": {
+          "speaker": "主角",
+          "text": "我只是随便看看而已。",
+          "next": "branch_0_1"
+        },
+        "branch_0_1": {
+          "speaker": "护卫",
+          "text": "我会盯着你的。",
+          "next": "branch_0_2"
+        },
+        "branch_0_2": {
+          "speaker": "主角·内心",
+          "text": "怎么感觉被当成可疑人物了。",
+          "next": "ending_0"
+        },
+        "branch_1_0": {
+          "speaker": "主角",
+          "text": "你干吗这么凶啊？",
+          "next": "branch_1_1"
+        },
+        "branch_1_1": {
+          "speaker": "护卫",
+          "text": "你说什么？",
+          "next": "branch_1_2"
+        },
+        "branch_1_2": {
+          "speaker": "主角·内心",
+          "text": "（好奇怪，我是不是不该这么说……）",
+          "next": "ending_0"
+        },
+        "branch_2_0": {
+          "speaker": "主角",
+          "text": "这里有什么不能看的？",
+          "next": "branch_2_1"
+        },
+        "branch_2_1": {
+          "speaker": "护卫",
+          "text": "你想看不该看的东西？！",
+          "next": "branch_2_2"
+        },
+        "branch_2_2": {
+          "speaker": "主角·内心",
+          "text": "（嘶……感觉要出事。）",
+          "next": "ending_0"
+        },
+        "ending_0": {
+          "speaker": "护卫",
+          "text": "……",
+          "next": "ending_1"
+        },
+        "ending_1": {
+          "speaker": "护卫",
+          "text": "喂，你是对我有意思，还是挑衅我打上一架？",
+          "next": "ending_2"
+        },
+        "ending_2": {
+          "speaker": "主角",
+          "text": "没、没有！我马上走！",
+          "next": "ending_3"
+        },
+        "ending_3": {
+          "speaker": "护卫",
+          "text": "滚远点！"
+        }
+      }
+    },
+    "supplement.vendor_1": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "小贩1",
+          "text": "哎！客人，看看这个！炽舌椒！烟熏味浓，嚼起来又有劲！拿来做吃的，绝对够味！买点回去试试，保准不亏！",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "小贩1",
+          "text": "嘿嘿，这个可就厉害了！蜜珀晶，甜滋滋的，里面还带着颗粒！咬下去嘎吱嘎吱的，多有意思！不管你打算怎么做，都值得试试！",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "小贩1",
+          "text": "瞧瞧这伞面，多漂亮！这可是萤火伞！味道甜，口感还滑溜溜的。要我说啊，这种好东西就该拿来做点精细的吃食！客人，来一点？"
+        }
+      }
+    },
+    "supplement.vendor_2": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "小贩2",
+          "text": "苔痕青。酸味重，还带点发酵的味道，质地也稠。口味比较特别，没试过就别一次买太多。不过，要是做对了，倒也不赖。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "小贩2",
+          "text": "窟窟糖芋，甜口的，软糯又顺滑。喜欢甜食的不会讨厌它。这个价钱买不了吃亏，买回去慢慢琢磨吧。",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "小贩2",
+          "text": "醒神菇。苦，草木味也重，不过汁水足。别光听名字就觉得它没用，怎么处理才是关键。你要是真会做，买回去研究研究。"
+        }
+      }
+    },
+    "supplement.vendor_3": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "小贩3",
+          "text": "炽石枯辛辣……闻见那股烟熏味了吗？越是耐嚼的东西，越值得花时间琢磨。买回去吧，说不定能做出些意想不到的东西。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "小贩3",
+          "text": "蜜珀晶。甜味藏在那些小颗粒里，嚼开了才有意思。你要是只想喝点普通的东西，那可就浪费它了。",
+          "next": "line_3"
+        },
+        "line_3": {
+          "speaker": "小贩3",
+          "text": "醒神菇……苦味、草木气，还有满满的汁水。有人嫌它难吃，有人却离不开它。至于你能拿它做出什么，就看你的本事了。"
+        }
+      }
+    },
+    "supplement.family": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "哥布林小男孩",
+          "text": "妈妈妈妈！你看那个人！长得好奇怪哦！",
+          "next": "line_2",
+          "portrait": "res://assets/characters/npc/goblin_boy/portrait.png"
+        },
+        "line_2": {
+          "speaker": "哥布林母亲",
+          "text": "嘘！不许这么盯着人家看！那可是格里芬使者，很没礼貌的！",
+          "next": "line_3",
+          "portrait": "res://assets/characters/npc/prayer_woman/portrait.png"
+        },
+        "line_3": {
+          "speaker": "哥布林小男孩",
+          "text": "哦……不可以盯着格里芬使者看……",
+          "next": "line_4",
+          "portrait": "res://assets/characters/npc/goblin_boy/portrait.png"
+        },
+        "line_4": {
+          "speaker": "主角·内心",
+          "text": "……我听得见啊。",
+          "next": "line_5",
+          "portrait": "res://assets/characters/apron_man/player_neutral_portrait.png"
+        },
+        "line_5": {
+          "speaker": "哥布林母亲",
+          "text": "哎呀，实在抱歉！这孩子还小，不懂事，您千万别介意！",
+          "next": "line_6",
+          "portrait": "res://assets/characters/npc/prayer_woman/portrait.png"
+        },
+        "line_6": {
+          "speaker": "主角",
+          "text": "没关系，小孩子好奇很正常。",
+          "next": "line_7",
+          "portrait": "res://assets/characters/apron_man/player_neutral_portrait.png"
+        },
+        "line_7": {
+          "speaker": "哥布林小男孩",
+          "text": "没关系，小孩子好奇很正常！",
+          "next": "line_8",
+          "portrait": "res://assets/characters/npc/goblin_boy/portrait.png"
+        },
+        "line_8": {
+          "speaker": "哥布林母亲",
+          "text": "你这孩子，怎么还学起大人说话来了！",
+          "next": "line_9",
+          "portrait": "res://assets/characters/npc/prayer_woman/portrait.png"
+        },
+        "line_9": {
+          "speaker": "旁白",
+          "text": "（小男孩对你做了个鬼脸）",
+          "next": "line_10"
+        },
+        "line_10": {
+          "speaker": "主角·内心",
+          "text": "噗……这孩子还挺有意思的。",
+          "next": "line_11",
+          "portrait": "res://assets/characters/apron_man/player_neutral_portrait.png"
+        },
+        "line_11": {
+          "speaker": "哥布林母亲",
+          "text": "说起来，您是第一次来集市吧？最近这里可热闹了，七日祭快到了，大家都在忙着准备呢。",
+          "next": "line_12",
+          "portrait": "res://assets/characters/npc/prayer_woman/portrait.png"
+        },
+        "line_12": {
+          "speaker": "哥布林小男孩",
+          "text": "七日祭！七日祭！",
+          "next": "line_13",
+          "portrait": "res://assets/characters/npc/goblin_boy/portrait.png"
+        },
+        "line_13": {
+          "speaker": "哥布林母亲",
+          "text": "没想到这么快就到今年的祭典了，愿格里芬护佑，大家明年也要平平安安......",
+          "next": "line_14",
+          "portrait": "res://assets/characters/npc/prayer_woman/portrait.png"
+        },
+        "line_14": {
+          "speaker": "哥布林小男孩",
+          "text": "还要等多久呀……",
+          "next": "line_15",
+          "portrait": "res://assets/characters/npc/goblin_boy/portrait.png"
+        },
+        "line_15": {
+          "speaker": "主角·内心",
+          "text": "七日祭……看来值得留意一下。",
+          "next": "line_16",
+          "portrait": "res://assets/characters/apron_man/player_neutral_portrait.png"
+        },
+        "line_16": {
+          "speaker": "哥布林母亲",
+          "text": "那我们就不打扰您了，使者大人，再见！",
+          "next": "line_17",
+          "portrait": "res://assets/characters/npc/prayer_woman/portrait.png"
+        },
+        "line_17": {
+          "speaker": "哥布林小男孩",
+          "text": "使者大人再见！……妈妈，他真的长得好特别哦。",
+          "next": "line_18",
+          "portrait": "res://assets/characters/npc/goblin_boy/portrait.png"
+        },
+        "line_18": {
+          "speaker": "哥布林母亲",
+          "text": "嘘！不是说了不可以这样吗！",
+          "next": "line_19",
+          "portrait": "res://assets/characters/npc/prayer_woman/portrait.png"
+        },
+        "line_19": {
+          "speaker": "主角·内心",
+          "text": "……我真的听得见啊。",
+          "portrait": "res://assets/characters/apron_man/player_neutral_portrait.png"
+        }
+      }
+    },
+    "supplement.child": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "哥布林小孩",
+          "text": "长耳朵，高鼻梁，两条腿儿细又长！光秃无毛真奇怪！",
+          "next": "line_2",
+          "portrait": "res://assets/characters/npc/goblin_girl/portrait.png"
+        },
+        "line_2": {
+          "speaker": "主角",
+          "text": "很抱歉我的长相冒犯了你。",
+          "next": "line_3",
+          "portrait": "res://assets/characters/apron_man/player_neutral_portrait.png"
+        },
+        "line_3": {
+          "speaker": "哥布林小孩",
+          "text": "格里芬使者对我说话了！回答我，格里芬使者！你从哪里来？海的哪边，山的哪边？你来这的路上，见过伟大的茱丽叶骑士吗？",
+          "next": "line_4",
+          "portrait": "res://assets/characters/npc/goblin_girl/portrait.png"
+        },
+        "line_4": {
+          "speaker": "主角",
+          "text": "我见过。她长着三只眼睛、八条手，和人对视时，像凭空降下霹雳。",
+          "next": "line_5",
+          "portrait": "res://assets/characters/apron_man/player_neutral_portrait.png"
+        },
+        "line_5": {
+          "speaker": "主角",
+          "text": "最重要的是，她说会把那些没有家教、用愚蠢童谣嘲笑别人的小孩揍得圆圆滚滚的。",
+          "next": "line_6",
+          "portrait": "res://assets/characters/apron_man/player_neutral_portrait.png"
+        },
+        "line_6": {
+          "speaker": "哥布林小孩",
+          "text": "你这格里芬使者虽然长得丑，但还真有点本事！",
+          "next": "line_7",
+          "portrait": "res://assets/characters/npc/goblin_girl/portrait.png"
+        },
+        "line_7": {
+          "speaker": "主角",
+          "text": "那么，茱丽叶骑士是谁？",
+          "next": "line_8",
+          "portrait": "res://assets/characters/apron_man/player_neutral_portrait.png"
+        },
+        "line_8": {
+          "speaker": "哥布林小孩",
+          "text": "是我的小说主角。",
+          "next": "line_9",
+          "portrait": "res://assets/characters/npc/goblin_girl/portrait.png"
+        },
+        "line_9": {
+          "speaker": "哥布林小孩",
+          "text": "茱丽叶骑士说，她会一直等我。直到有一天，我成为最勇敢的哥布林。",
+          "portrait": "res://assets/characters/npc/goblin_girl/portrait.png"
         }
       }
     }

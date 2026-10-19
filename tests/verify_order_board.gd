@@ -37,6 +37,9 @@ func _run() -> void:
 	board.set_target_names({"goblin_a": "哥布林甲", "goblin_b": "哥布林乙", "goblin_c": "哥布林丙"})
 	check(board.get_entries().is_empty(), "Unrevealed story orders stay hidden")
 	state.set_flag("day1.group_open")
+	# Explicit multi-order fixture; the formal story opens these one at a time.
+	for id: String in ["b", "c", "d", "e"]:
+		state.set_flag("day1.group_" + id + "_open")
 	check(board.get_entries().size() == 5, "All five varied group orders appear")
 	check(board.get_entry("day1_group_c").status == "available", "Chapter activation is not order acceptance")
 	check(board.get_interaction_priority(&"goblin_c") < board.get_interaction_priority(&"orders"), "Unaccepted customers defer to the counter")

@@ -9,6 +9,8 @@ extends InteractionPoint
 @export_enum("once", "daily") var refresh_mode: String = "daily"
 ## Empty means always available. Night points use world.phase.night.
 @export var required_flag: String = ""
+## Authored acquisition text, displayed only after the inventory commit succeeds.
+@export_multiline var success_description := ""
 ## Only configured RPG points show a distant clue and their harvestable artwork.
 @export var show_world_marker := false
 

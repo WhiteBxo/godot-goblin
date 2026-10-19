@@ -189,12 +189,19 @@ func _run() -> void:
 	await make_order("day1_goblin", "goblin_customer")
 	await wait_event("day1.group_arrival")
 	await capture("day1_03_group")
-	for id: String in ["a", "b", "c", "d", "e"]:
+	for id: String in ["a", "c", "d", "e"]:
+		if id != "a":
+			await wait_event("day1.customer_" + id)
+		var visible_customers := 0
+		for actor_id: String in ["goblin_customer", "goblin_a", "goblin_b", "goblin_c", "goblin_d", "goblin_e"]:
+			visible_customers += 1 if game.get_actor_director().get_actor(StringName(actor_id)).visible else 0
+		check(visible_customers == 1, "Only the current customer occupies the shop")
+		await capture("day1_03_customer_" + id)
 		await make_order("day1_group_" + id, "goblin_" + id)
 	await wait_event("day1.ending")
 	await wait_event("day1.s03.coin_inspect")
 	await capture("day1_04_coin")
-	check(state.get_transactions().get_balance() == 21, "Seven varied cups pay 21G")
+	check(state.get_transactions().get_balance() == 18, "One human and five goblins pay 18G")
 	check(state.get_warehouse_inventory().get_stock("strange_coin") == 0, "No duplicate coin inventory")
 	await travel("shop_exit")
 	await wait_event("day1.s03.street_gone")
@@ -221,14 +228,19 @@ func _run() -> void:
 	await capture("day1_06_commission")
 	await make_order("day1_s04_fat", "fat_goblin")
 	await wait_event("day1.s04.after_order")
+	check(state.story_stage == "day1.s04.wait_taste", "The new gift dialogue returns control for real trial crafting")
+	check(not state.is_event_completed("day1.s04.after_taste"), "Dialogue alone does not complete the trial")
+	await capture("day1_06_trial_taste")
+	await make_order("day1_s04_taste", "fat_goblin")
+	await wait_event("day1.s04.after_taste")
 	check(game.open_map() == OK, "Player opens map in shop")
 	game.get_ui_manager().close_screen(ScreenIds.MAP)
 	await wait_event("day1.s04.commission_choice")
 	await capture("day1_07_before_stealth")
-	check(state.get_transactions().get_balance() == 74, "Eight cups and once-only 50G funding")
+	check(state.get_transactions().get_balance() == 71, "Seven paid cups and once-only 50G funding")
 	var gameplay: ChapterGameplay = game.get("_chapter_gameplay")
-	check(gameplay.execute("day1.s04.funding").ok and state.get_transactions().get_balance() == 74, "Funding replay pays no duplicate")
-	check(state.get_warehouse_inventory().get_uses("firefly_cap") == 2 and state.get_warehouse_inventory().get_uses("goblin_firebrew") == 2, "Gift grants two uses each")
+	check(gameplay.execute("day1.s04.funding").ok and state.get_transactions().get_balance() == 71, "Funding replay pays no duplicate")
+	check(state.get_warehouse_inventory().get_uses("firefly_cap") == 1 and state.get_warehouse_inventory().get_uses("goblin_firebrew") == 1, "Trial consumes one use of each gift")
 	await travel("shop_exit")
 	check(not (game.get_active_level() as RpgChapterMap).market_only, "Accepted commission removes first-visit movement restrictions")
 	check(game.get_gathering_service().is_harvestable(game.get_gathering_service().get_point(&"night_gather_0")), "Accepted commission opens real gathering")
@@ -241,7 +253,7 @@ func _run() -> void:
 	await wait_event("day1.s05.drunken_guard")
 	check(game.get_story_director().request_interaction("mansion_payment") == OK, "Player pays mansion pair")
 	await wait_event("day1.s05.mansion_payment")
-	check(state.get_transactions().get_balance() == 24, "First night spends full 50G")
+	check(state.get_transactions().get_balance() == 21, "First night spends full 50G")
 	await travel("elder_enter")
 	var blood: StoryInteractionPoint
 	var document: StoryInteractionPoint
@@ -290,10 +302,10 @@ func _run() -> void:
 	check(game.get_task_delivery().try_submit("day1_s06_blood_drink", "fat_goblin").ok, "Blood drink pays its task")
 	await wait_event("day1.s06.reaction")
 	check(state.current_day == 2 and state.story_stage == "day2.s01", "Automatic Day2 morning")
-	check(state.get_transactions().get_balance() == 64, "Blood task pays total 40G once")
+	check(state.get_transactions().get_balance() == 61, "Blood task pays total 40G once")
 	check(state.get_warehouse_inventory().get_uses("day1_griffin_blood") == 2, "Blood remains two uses")
 	await wait_event("day2.s01.morning")
-	check(state.get_transactions().get_balance() == 64, "35G procurement escrow never credits the wallet")
+	check(state.get_transactions().get_balance() == 61, "35G procurement escrow never credits the wallet")
 	check(game.get_chapter_gameplay().get_procurement().get_status().escrow == 35, "Dedicated procurement escrow holds 35G")
 	for group: String in ["festival", "elder", "emissary", "rumor"]:
 		await wait_event("day2.s02." + group + "_order")
@@ -304,7 +316,7 @@ func _run() -> void:
 		for i in range(count):
 			await make_order("day2_s02_%s_%d" % [group, i], "day2_%s_%d" % [group, i])
 		await wait_event("day2.s02." + group + "_after")
-	check(state.get_transactions().get_balance() == 79, "Mandatory path has 79G before wine")
+	check(state.get_transactions().get_balance() == 76, "Mandatory path has 76G before wine")
 	var scheduler := game.get_chapter_gameplay().get_scheduler()
 	var deadline := Time.get_ticks_msec() + 10000
 	while scheduler.get_group("rumor").status != "departed" and Time.get_ticks_msec() < deadline:
@@ -327,7 +339,7 @@ func _run() -> void:
 	await capture("wait_wine")
 	await use_service_point(&"tavern")
 	await wait_event("day2.s03.purchase")
-	check(state.get_transactions().get_balance() == (34 if ordinary_order else 31), "Wine actually costs 48G")
+	check(state.get_transactions().get_balance() == (31 if ordinary_order else 28), "Wine actually costs 48G")
 	check(state.get_warehouse_inventory().get_uses("griffin_amber_wine") == 5, "One purchased portion has five uses")
 	check(not state.is_event_completed("day2.s03.commission_token"), "Commission waits for another counter interaction")
 	await use_service_point(&"tavern")
@@ -374,7 +386,7 @@ func _run() -> void:
 	await capture("wait_guard")
 	check(not game.get_task_delivery().try_submit("day2_guard_special", "casino").ok, "Wrong recipient cannot consume the special")
 	check(game.get_task_delivery().try_submit("day2_guard_special", "drunken_guard").ok, "Real guard receives the special")
-	check(state.get_transactions().get_balance() == (34 if ordinary_order else 31), "Guard hospitality pays zero G")
+	check(state.get_transactions().get_balance() == (31 if ordinary_order else 28), "Guard hospitality pays zero G")
 	await wait_event("day2.s05.guard_after")
 	await capture("delivered_guard")
 	await travel("shop_enter")

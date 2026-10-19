@@ -598,7 +598,7 @@
       "id": "day3.procurement",
       "type": "commission",
       "title": "把醒神菇交给胖哥布林",
-      "description": "把醒神菇交给胖哥布林",
+      "description": "自行到市场用专款购买，或雇佣普通顾客代购醒神菇。在第三天结束前交给胖哥布林一次用量；第二天购得还可发现醒菇薄荷特调。",
       "reveal_when": {
         "type": "flag",
         "key": "day3.procurement.returned"
@@ -623,10 +623,10 @@
       ],
       "delivery": {
         "order_id": "day3_procurement",
-        "items": {
+        "target_object_id": "fat_goblin",
+        "uses": {
           "insomnia_mushroom": 1
-        },
-        "target_object_id": "fat_goblin"
+        }
       },
       "rewards": {
         "money": 0,
@@ -773,17 +773,42 @@
       "title": "散客 C · 辛辣奶茶试饮（可选）",
       "allow_cancel": true,
       "description": "试饮需求：奶茶基底，带辛辣风味。到制作台自由实验，可用昨日得到的老火烧；确认报价、制作后带给散客 C。未接取时不影响关店。",
-      "reveal_when": {"type": "flag", "key": "day2.s02.open"},
-      "activate_when": {"type": "flag", "key": "day2.s02.open"},
-      "complete_when": {"type": "flag", "key": "day2.taste.delivered"},
-      "objectives": [{"id": "taste", "text": "自由调一杯带辛辣风味的奶茶，确认报价后交给散客 C", "complete_when": {"type": "flag", "key": "day2.taste.delivered"}}],
+      "reveal_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day2.taste.delivered"
+      },
+      "objectives": [
+        {
+          "id": "taste",
+          "text": "自由调一杯带辛辣风味的奶茶，确认报价后交给散客 C",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.taste.delivered"
+          }
+        }
+      ],
       "delivery": {
         "order_id": "day2_taste",
-        "drink": {"base_id": "creamer_milk_tea_base", "flavors": ["辛辣"]},
+        "drink": {
+          "base_id": "creamer_milk_tea_base",
+          "flavors": [
+            "辛辣"
+          ]
+        },
         "target_object_id": "day2_ordinary_c",
         "accepted_flag": "task.day2_taste.accepted"
       },
-      "rewards": {"text": "按已确认配方售价结算 · 留下饮品图鉴"}
+      "rewards": {
+        "text": "按已确认配方售价结算 · 留下饮品图鉴"
+      }
     }
   ]
 }

@@ -59,6 +59,9 @@ func _orders_and_menu() -> void:
 	for id: String in ["day1.opening", "day1.first_goblin", "day1.group_arrival"]:
 		state.complete_event(id)
 	state.set_flag("day1.group_open")
+	# This register fixture deliberately opens five slips together.
+	for id: String in ["b", "c", "d", "e"]:
+		state.set_flag("day1.group_" + id + "_open")
 	game = load("res://src/core/main.tscn").instantiate()
 	root.add_child(game)
 	current_scene = game

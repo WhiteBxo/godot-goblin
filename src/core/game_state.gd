@@ -105,7 +105,7 @@ func can_discover_signature(id: String) -> bool:
 	if _economy.is_signature_discovered(id):
 		return true
 	if id == "S06":
-		return get_flag("signature.S06.rescued_in_time")
+		return _current_day == 2 and get_flag("day2.procurement.purchased")
 	if id == "S08":
 		return get_flag("day2.s04.casino_reward_received") and get_warehouse_inventory().is_discovered("rainbow_cube")
 	return true
@@ -136,10 +136,10 @@ func discover_signature(id: String) -> Dictionary:
 	return {"ok": error == OK, "message": prepared.message if error == OK else "发现未提交，请重试。"}
 
 ## Uses one dose, retaining four doses from a fresh portion for the recipe.
-## The durable receipt records rescue before the day-two cutoff; late inventory
-## and loading a later day cannot retroactively satisfy this qualification.
+## Rescue lasts through Day 3. Recipe discovery follows the separate Day 2
+## purchase receipt, so gathering and late rescue do not backfill it.
 func rescue_signature_patient() -> Error:
-	if _current_day != 2 or get_flag("signature.S06.rescued_in_time"):
+	if _current_day not in [2, 3] or get_flag("signature.S06.rescued_in_time") or get_flag("day3.procurement.delivered"):
 		return ERR_UNAVAILABLE
 	return commit_story_transaction("signature.S06.rescued_in_time", {"insomnia_mushroom": 1}, {}, 0, {}, {"day3.procurement.delivered": true})
 

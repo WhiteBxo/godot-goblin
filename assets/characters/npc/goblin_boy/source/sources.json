@@ -1,0 +1,62 @@
+[
+  {
+    "archive": "小男孩.zip",
+    "entry": "小男孩/打弹弓.png",
+    "path": "assets/characters/npc/goblin_boy/source/emote_slingshot.png",
+    "sha256": "1f6d0892ac76b033487460063be8e93d2ce44d5944de48b3cc2a3b3d50519a8b"
+  },
+  {
+    "archive": "小男孩.zip",
+    "entry": "小男孩/u1278783335_A_stylized_full-body_illustration_in_a_highly_dis_77ae9d3c-74bd-4475-8788-66e8ac01680b_1.png",
+    "path": "assets/characters/npc/goblin_boy/source/portrait.png",
+    "sha256": "bc658cc61fc30353e44cc9d94fafb2ac287efd053c9ed9f6e6b2e56790d00ccf",
+    "portrait_crop": [
+      0,
+      4,
+      1024,
+      1024
+    ]
+  },
+  {
+    "archive": "小男孩.zip",
+    "entry": "小男孩/走路1.png",
+    "path": "assets/characters/npc/goblin_boy/source/run_down.png",
+    "sha256": "5a88d59fdddb98b8c66b3a392024f457fa14b584396b8c63f87efdddc9c30a8b"
+  },
+  {
+    "archive": "小男孩.zip",
+    "entry": "小男孩/坐着抛石子.png",
+    "path": "assets/characters/npc/goblin_boy/source/emote_stones.png",
+    "sha256": "dc40d6a67ac07f180ace5137c8044337dc5e2b909009be82ef4d948a22b53d95"
+  },
+  {
+    "archive": "小男孩.zip",
+    "entry": "小男孩/走路2.png",
+    "path": "assets/characters/npc/goblin_boy/source/run_right.png",
+    "sha256": "a2722af5ba1379c38f83dd65640e07f06c77bd6808b9e5830ff2127b141467e7"
+  },
+  {
+    "archive": "小男孩.zip",
+    "entry": "小男孩/走路3.png",
+    "path": "assets/characters/npc/goblin_boy/source/run_up.png",
+    "sha256": "81a956e54241f7a33b80eba42082367ea342e68e651691de69cecd16ce8c21d9"
+  },
+  {
+    "archive": "小男孩.zip",
+    "entry": "小男孩/待机1.png",
+    "path": "assets/characters/npc/goblin_boy/source/idle_up.png",
+    "sha256": "fdef7ff50fe63c490e4ad3b0cfb23c519b830434f5cff00ede5775f7a05106eb"
+  },
+  {
+    "archive": "小男孩.zip",
+    "entry": "小男孩/待机2.png",
+    "path": "assets/characters/npc/goblin_boy/source/idle_down.png",
+    "sha256": "fba1870b880430a751023366c50021813d60fe270ba32e6ac75f1783fd0ad571"
+  },
+  {
+    "archive": "小男孩.zip",
+    "entry": "小男孩/待机3.png",
+    "path": "assets/characters/npc/goblin_boy/source/emote_sit.png",
+    "sha256": "31cbbdbe033cf19b220939c96dbc6b5f87b13d05e93d8c8df9ceac0d4853ec8f"
+  }
+]

@@ -49,10 +49,14 @@ func _run() -> void:
 	for id: String in ["day1.opening", "day1.first_goblin", "day1.group_arrival"]:
 		state.complete_event(id)
 	state.set_flag("day1.group_open")
+	# Keep shared-stock UI coverage independent of the serial story route.
+	for id: String in ["b", "c", "d", "e"]:
+		state.set_flag("day1.group_" + id + "_open")
 	_game = load("res://src/core/main.tscn").instantiate()
 	root.add_child(_game)
 	current_scene = _game
 	await frames(10)
+	_game.get_gameplay_bridge().stop(true)
 	var ui := _game.get_shop_ui()
 	var board: InteractionPoint
 	var station: InteractionPoint

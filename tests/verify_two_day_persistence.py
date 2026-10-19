@@ -40,6 +40,7 @@ def main():
                 expected = {
                     "day1_01_human", "day1_02_goblin", "day1_03_group", "day1_04_coin",
                     "day1_05_market", "day1_06_commission", "day1_07_before_stealth",
+                    "day1_03_customer_a", "day1_03_customer_c", "day1_03_customer_d", "day1_03_customer_e", "day1_06_trial_taste",
                     "day1_08_blood_recipe", "wait_festival", "wait_elder", "wait_emissary",
                     "wait_rumor", "wait_close", "closed", "tavern_exterior", "wait_wine",
                     "purchased", "casino_exterior", "wait_first", "first_round", "second_round",

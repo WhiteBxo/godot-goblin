@@ -49,6 +49,9 @@ func execute(id: String) -> Dictionary:
 	match action.kind:
 		"procurement_fund":
 			error = _procurement.fund()
+		"signature_discovery":
+			var result: Dictionary = _state.discover_signature(action.signature_id)
+			error = OK if result.get("ok", false) else ERR_UNAVAILABLE
 		"transaction":
 			error = _state.commit_story_transaction(id, _counts(action.get("use_costs", {})), _counts(action.get("use_gains", {})), int(action.get("money", 0)), _counts(action.get("items", {})), action.get("flags", {}), action.get("variables", {}), _counts(action.get("item_costs", {})))
 		"rest":
@@ -218,11 +221,26 @@ func _quiet(allow_menu := false) -> bool:
 
 func get_user_actions() -> Array[Dictionary]:
 	var actions: Array[Dictionary] = []
-	if _state.current_day == 2 and _host == "settlement" and _near_point(&"day1_s03_yard"):
+	if _host == "settlement" and _state.get_flag("day1.s04.commission_accepted"):
+		for vendor: Dictionary in _data.get("market_vendors", []):
+			var actor := _game.get_actor_director().get_actor(StringName(vendor.actor))
+			if actor == null or not actor.visible or actor.global_position.distance_to(_game.get_player().global_position) > 112.0:
+				continue
+			for product: String in vendor.products:
+				var quote: Dictionary = _state.get_transactions().get_product_quote(product)
+				if quote.get("ok", false):
+					actions.append({"id": "market_buy:" + product, "text": "购买 %s · %dG / 份（5次）" % [_state.get_warehouse_inventory().get_definition(quote.item_id).display_name, int(quote.unit_price)], "kind": "market_buy", "product": product})
+	if _state.story_stage == "day1.s04.wait_taste" and _host == "shop":
+		var inventory: WarehouseInventory = _state.get_warehouse_inventory()
+		if inventory.get_stock("day1_trial_milk_tea") == 0 and not inventory.has_uses({"firefly_cap": 1, "goblin_firebrew": 1}):
+			actions.append({"id": "taste_resupply", "text": "向胖哥布林补领缺少的试饮用料", "kind": "taste_resupply"})
+	if _state.current_day in [2, 3] and _host == "settlement" and _near_point(&"day1_s03_yard") and _procurement.get_status().get("status") == "funded":
+		actions.append({"id": "procurement_direct", "text": "用专款购买醒神菇 · 30G，退还委托人5G", "kind": "procurement_direct"})
+	elif _state.current_day == 2 and _host == "settlement" and _near_point(&"day1_s03_yard"):
 		var quote: Dictionary = _state.get_transactions().get_product_quote("market_insomnia_mushroom")
 		if quote.get("ok", false):
 			actions.append({"id": "signature_buy_mushroom", "text": "市场购买醒神菇 · %dG / 份（5次）" % int(quote.unit_price), "kind": "signature_buy_mushroom"})
-	if _state.current_day == 2 and _host == "shop" and not _state.get_flag("signature.S06.rescued_in_time"):
+	if _state.current_day in [2, 3] and _host == "shop" and not _state.get_flag("signature.S06.rescued_in_time") and not _state.get_flag("day3.procurement.delivered"):
 		var patient := _game.get_actor_director().get_actor(&"fat_goblin")
 		if patient != null and patient.visible and patient.global_position.distance_to(_game.get_player().global_position) <= 112.0:
 			actions.append({"id": "signature_rescue", "text": "救治胖哥布林 · 醒神菇1次用量", "kind": "signature_rescue"})
@@ -238,13 +256,13 @@ func get_user_actions() -> Array[Dictionary]:
 		if action.get("kind") == "next_day" and not DayPhase.is_night(_state):
 			continue
 		actions.append(action.duplicate(true))
-	if _state.get_flag("features.hiring_available") and _host == "shop" and _state.current_day in [2, 3] and _procurement.get_status().get("status") == "funded":
+	if _host == "shop" and _state.current_day in [2, 3] and _procurement.get_status().get("status") == "funded":
 		for id: String in Day2Procurement.RUNNERS:
 			if id == "day2_ordinary_c" and _taste_pending():
 				continue
 			var actor := _game.get_actor_director().get_actor(StringName(id))
 			if actor != null and actor.visible:
-				actions.append({"id": "hire:" + id, "text": "雇佣 " + actor.display_name + " · 专款支付30G货款＋5G跑腿费", "kind": "hire", "actor": id})
+				actions.append({"id": "hire:" + id, "text": "临时委托 " + actor.display_name + " · 专款支付30G货款＋5G跑腿费", "kind": "hire", "actor": id})
 	return actions
 
 func _near_point(id: StringName) -> bool:
@@ -268,9 +286,18 @@ func perform_user_action(id: String) -> void:
 			error = _game.get_story_director().request_interaction(action.trigger)
 		else:
 			match action.get("kind"):
+				"market_buy":
+					error = _buy_market_product(action.product)
+				"taste_resupply":
+					var gains := {}
+					for item: String in ["firefly_cap", "goblin_firebrew"]:
+						if _state.get_warehouse_inventory().get_uses(item) == 0:
+							gains[item] = 1
+					error = _state.commit_story_transaction("day1.taste.resupply_%d" % Time.get_ticks_usec(), {}, gains)
+				"procurement_direct":
+					error = _procurement.purchase_direct()
 				"signature_buy_mushroom":
-					var result: Dictionary = _state.get_transactions().purchase("market_insomnia_mushroom", 1, "signature-market-%d" % Time.get_ticks_usec())
-					error = OK if result.get("ok", false) else ERR_UNAVAILABLE
+					error = _buy_market_product("market_insomnia_mushroom")
 				"signature_rescue":
 					error = _state.rescue_signature_patient()
 				"cancel_taste":
@@ -288,6 +315,15 @@ func perform_user_action(id: String) -> void:
 		_game.get_shop_ui().show_feedback("操作已完成。" if error == OK else "暂时无法完成，请先交付已接订单。", error == OK)
 		_schedule_refresh()
 		return
+
+func _buy_market_product(product: String) -> Error:
+	if product == "market_insomnia_mushroom" and _state.current_day == 2:
+		var quote: Dictionary = _state.get_transactions().get_product_quote(product)
+		if not quote.get("ok", false):
+			return ERR_UNAVAILABLE
+		return _state.commit_story_transaction("day2.procurement.personal_%d" % Time.get_ticks_usec(), {}, {}, -int(quote.unit_price), {"insomnia_mushroom": 1}, {"day2.procurement.purchased": true})
+	var result: Dictionary = _state.get_transactions().purchase(product, 1, "market-%d" % Time.get_ticks_usec())
+	return OK if result.get("ok", false) else ERR_UNAVAILABLE
 
 func close_business() -> Error:
 	if not is_instance_valid(_scheduler):

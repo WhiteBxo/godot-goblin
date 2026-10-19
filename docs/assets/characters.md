@@ -138,3 +138,29 @@ F6 打开 `src/debug/characters/character_gallery.tscn`，右下角两位顾客�
 F5 新游戏，第一位人类顾客可出现男或女；同一实例出入场不会变换外观。F6 打开 `src/debug/characters/character_gallery.tscn` 可同时观察两种外观的四向行走和待机。生命周期及随机选择沿用 Godot 4.7 [Node._ready](https://docs.godotengine.org/en/4.7/classes/class_node.html#class-node-private-method-ready) 与 [randf](https://docs.godotengine.org/en/4.7/classes/class_@globalscope.html#class-globalscope-method-randf)。
 
 ![男女人类顾客](captures/human_customer_ratio_2026_10_19.png)
+
+## 2026-10-20 聚落补充角色
+
+六个用户 ZIP 中的 46 张 PNG 保留原始字节，并为八类人物生成基础场景、RPG 半尺寸继承场景及 SpriteFrames。新增集市母亲为成年女哥布林美术的独立实例，不与祭坛同伴共享 Actor；儿童使用新提供的男孩、女孩素材。九组补充对话均已接线，流程与画面见[实施记录](../development/story_supplement_2026_10_20.md)。
+
+| 素材目录 / 场景名 | 来源 | 用法及缺帧边界 |
+| --- | --- | --- |
+| `warehouse_sentry` | `侍卫3(1).zip` | 仓库两卫，四向待机 / 行走与非循环倒地，左右镜像。 |
+| `prayer_man` | `祈祷者(1).zip` 男 | 祭坛祈祷者，四向；左右镜像。 |
+| `prayer_woman` | `祈祷者(1).zip` 女 | 祭坛同伴、独立集市母亲；“待机3”为背向，正面行走退回正面待机，不假作正面走路。 |
+| `prayer_elder` | `祈祷者(1).zip` 老头 | 静坐展示，方向 / 行走接口退回现有待机。 |
+| `tavern_drunk` / `tavern_drinker` | `酒鬼（改后(1).zip` | 正式外景醉鬼 / 室内买醉者均使用修订版；仅静止使用，旧版 `酒鬼.zip` 原图仍保存。 |
+| `goblin_boy` | `小男孩.zip` | 集市小男孩，四向行走；侧面待机用侧走首帧，另保留坐姿、弹弓、抛石子。 |
+| `goblin_girl` | `女孩.zip` | 居民区小孩，原 4×2 混合方向图集按方向分组；侧图朝左，向右镜像。坐姿原图保留，未插入剧情。 |
+
+每个目录的 `source/sources.json` 记录原包条目、原文件路径与 SHA-256；酒鬼新原件位于 `source/revised/`。`supplement_npc_catalog.json` 记录 active_archive、帧数、原帧尺寸、透明包围框、等比倍率及女孩源格索引。原件不被派生图覆盖。附件未附独立许可证，来源记作用户提供供本项目使用。
+
+派生图采用 NEAREST 等比生成 64px 格、88px 步距、6 列图集，脚底 y=62；成年人可见高度不超过 58px，男孩 44px、女孩 50px。基础人物约两倍，`rpg_*.tscn` 还原到地图半尺寸。待机 6 FPS、行走 8 FPS 是接入参数，原包未指定。所有人物缺少的帧均按表内回退，不声称补出了新美术。
+
+复现命令（Python 3 + Pillow，source-dir 同时包含上述六个 ZIP，含旧酒鬼包）：
+
+```powershell
+python tools/characters/import_supplement_npcs.py --source-dir '<用户附件目录>'
+```
+
+Godot 导入后可在编辑器打开各 `rpg_*.tscn` 查看动作。正式 F5 进入游戏并完成胖哥布林委托对话后，分别前往集市、居民区、祭坛、仓库及酒馆 / 赌场按 E 交谈。`verify_supplement_content.gd` 覆盖全部派生动画帧非空、地图真实交互、选项、儿童尺寸 / 通路、修订包选择、采集与实购；本轮最终 1001 项通过。

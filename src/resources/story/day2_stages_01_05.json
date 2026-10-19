@@ -1030,6 +1030,261 @@
           "value": "day3.handoff"
         }
       ]
+    },
+    "day2.procurement.recipe": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "flags": {
+          "day2.procurement.purchased": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.procurement.recipe"
+        },
+        {
+          "command": "chapter_action",
+          "id": "day2.procurement.recipe"
+        }
+      ]
+    },
+    "supplement.poet.casino_poet": {
+      "once": false,
+      "trigger": "casino_poet",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.poet"
+        }
+      ]
+    },
+    "supplement.drinker.signature_heartbroken_drinker": {
+      "once": false,
+      "trigger": "signature_heartbroken_drinker",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.drinker"
+        }
+      ]
+    },
+    "supplement.philosopher.signature_philosopher": {
+      "once": false,
+      "trigger": "signature_philosopher",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.philosopher"
+        }
+      ]
+    },
+    "supplement.philosopher.signature_drunk": {
+      "once": false,
+      "trigger": "signature_drunk",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.philosopher"
+        }
+      ]
+    },
+    "supplement.prayer.prayer_man": {
+      "once": false,
+      "trigger": "prayer_man",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.prayer"
+        }
+      ]
+    },
+    "supplement.prayer.prayer_woman": {
+      "once": false,
+      "trigger": "prayer_woman",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.prayer"
+        }
+      ]
+    },
+    "supplement.warehouse.warehouse_guard_1": {
+      "once": false,
+      "trigger": "warehouse_guard_1",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.warehouse"
+        }
+      ]
+    },
+    "supplement.warehouse.warehouse_guard_2": {
+      "once": false,
+      "trigger": "warehouse_guard_2",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.warehouse"
+        }
+      ]
+    },
+    "supplement.soldier.barracks_soldier": {
+      "once": false,
+      "trigger": "barracks_soldier",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.soldier"
+        }
+      ]
+    },
+    "supplement.casino_sentry": {
+      "once": false,
+      "trigger": "casino_sentry",
+      "conditions": {},
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.casino_sentry"
+        }
+      ]
+    },
+    "supplement.vendor_1": {
+      "once": false,
+      "trigger": "market_vendor_1",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.vendor_1"
+        }
+      ]
+    },
+    "supplement.vendor_2": {
+      "once": false,
+      "trigger": "market_vendor_2",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.vendor_2"
+        }
+      ]
+    },
+    "supplement.vendor_3": {
+      "once": false,
+      "trigger": "market_vendor_3",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.vendor_3"
+        }
+      ]
+    },
+    "supplement.family.market_mother": {
+      "once": false,
+      "trigger": "market_mother",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.family"
+        }
+      ]
+    },
+    "supplement.family.market_boy": {
+      "once": false,
+      "trigger": "market_boy",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.family"
+        }
+      ]
+    },
+    "supplement.child.village_child": {
+      "once": false,
+      "trigger": "village_child",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.child"
+        }
+      ]
     }
   }
 }

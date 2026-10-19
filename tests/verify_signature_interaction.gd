@@ -88,6 +88,18 @@ func verify_rescue_menu(state: Node) -> void:
 	game = load("res://src/core/main.tscn").instantiate()
 	root.add_child(game)
 	await frames(12)
+	for i in range(600):
+		var dialogue := game.get_dialogue_manager()
+		if dialogue.is_active():
+			dialogue.advance()
+			dialogue.select_choice(0)
+		if state.is_event_completed("day2.procurement.recipe"):
+			break
+		await process_frame
+	await frames()
+	check(state.is_event_completed("day2.procurement.recipe") and state.get_transactions().is_signature_discovered("S06"), "Real Day2 purchase automatically plays the shared recipe conversation")
+	check(state.get_transactions().get_balance() == 200, "Recipe discovery pays the existing 150G bounty once")
+	check(game.get_story_director().request_event("day2.procurement.recipe") == ERR_ALREADY_EXISTS and state.get_transactions().get_balance() == 200, "Replaying the purchase dialogue cannot duplicate the recipe bounty")
 	var patient := game.get_actor_director().get_actor(&"fat_goblin")
 	check(patient != null and patient.visible, "Patient remains visible in the real day-two shop")
 	if patient != null:

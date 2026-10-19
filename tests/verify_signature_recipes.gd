@@ -110,20 +110,30 @@ func _test_clues() -> void:
 func _test_rescue() -> void:
 	fresh()
 	state.current_day = 2
-	check(not state.can_discover_signature("S06"), "S06 is locked before rescue")
+	check(not state.can_discover_signature("S06"), "S06 is locked before purchase")
 	state.get_warehouse_inventory().add_ingredient("insomnia_mushroom", 1)
-	check(not state.can_discover_signature("S06"), "Possession does not count as rescue")
+	check(not state.can_discover_signature("S06"), "Gathered possession does not count as purchase")
 	check(state.rescue_signature_patient() == OK, "Day-two rescue spends one mushroom dose")
 	check(state.get_warehouse_inventory().get_uses("insomnia_mushroom") == 4, "Rescue retains the other four doses")
 	check(state.rescue_signature_patient() != OK and state.get_warehouse_inventory().get_uses("insomnia_mushroom") == 4, "Rescue cannot consume twice")
-	check(state.discover_signature("S06").ok, "Rescued patient permits seller clue")
+	check(not state.discover_signature("S06").ok, "Rescue alone does not backfill a purchase clue")
+	var direct := Day2Procurement.new()
+	direct.configure(state)
+	check(direct.fund() == OK and direct.purchase_direct() == OK, "Day-two direct purchase commits the real clue receipt")
+	direct.free()
+	check(state.discover_signature("S06").ok, "Day-two purchase permits the seller clue")
 	state.current_day = 3
 	var saved: Dictionary = state.to_dict()
-	check(state.restore_state(saved) == OK and state.can_discover_signature("S06"), "Timely rescue survives a new day and restore")
+	check(state.restore_state(saved) == OK and state.can_discover_signature("S06"), "Timely purchase survives a new day and restore")
+	fresh()
+	state.current_day = 2
+	state.set_flag("day2.procurement.purchased")
+	state.current_day = 3
+	check(not state.discover_signature("S06").ok, "An unclaimed Day2 recipe cannot be backfilled on Day3 even with a purchase receipt")
 	fresh()
 	state.current_day = 3
 	state.get_warehouse_inventory().add_ingredient("insomnia_mushroom", 2)
-	check(state.rescue_signature_patient() != OK and not state.discover_signature("S06").ok, "Late mushrooms cannot reopen S06")
+	check(state.rescue_signature_patient() == OK and not state.discover_signature("S06").ok, "Day-three rescue is allowed without reopening S06")
 	var procurement := Day2Procurement.new()
 	procurement.configure(state)
 	state.current_day = 2

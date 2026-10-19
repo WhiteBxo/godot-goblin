@@ -220,130 +220,29 @@
         },
         {
           "command": "actor_show",
-          "actor": "goblin_e"
-        },
-        {
-          "command": "actor_show",
-          "actor": "goblin_d"
-        },
-        {
-          "command": "actor_show",
           "actor": "goblin_a"
         },
         {
-          "command": "actor_show",
-          "actor": "goblin_b"
+          "command": "actor_move",
+          "actor": "goblin_a",
+          "target": "day1_aisle",
+          "speed": 240.0
         },
         {
-          "command": "actor_show",
-          "actor": "goblin_c"
+          "command": "actor_move",
+          "actor": "goblin_a",
+          "target": "day1_counter",
+          "speed": 240.0
+        },
+        {
+          "command": "actor_face",
+          "actor": "goblin_a",
+          "direction": "up"
         },
         {
           "command": "camera_focus",
           "target": "day1_counter",
           "duration": 0.6
-        },
-        {
-          "command": "actor_move",
-          "actor": "goblin_a",
-          "target": "day1_aisle",
-          "speed": 240.0,
-          "wait": false
-        },
-        {
-          "command": "actor_move",
-          "actor": "goblin_b",
-          "target": "day1_aisle",
-          "speed": 240.0,
-          "wait": false
-        },
-        {
-          "command": "actor_move",
-          "actor": "goblin_c",
-          "target": "day1_aisle",
-          "speed": 240.0,
-          "wait": true
-        },
-        {
-          "command": "wait",
-          "seconds": 0.2
-        },
-        {
-          "command": "actor_move",
-          "actor": "goblin_a",
-          "target": "day1_group_a",
-          "speed": 240.0,
-          "wait": false
-        },
-        {
-          "command": "actor_move",
-          "actor": "goblin_b",
-          "target": "day1_group_b",
-          "speed": 240.0,
-          "wait": false
-        },
-        {
-          "command": "actor_move",
-          "actor": "goblin_c",
-          "target": "day1_group_c",
-          "speed": 240.0,
-          "wait": true
-        },
-        {
-          "command": "wait",
-          "seconds": 1.7
-        },
-        {
-          "command": "actor_face",
-          "actor": "goblin_a",
-          "direction": "up",
-          "wait": false
-        },
-        {
-          "command": "actor_face",
-          "actor": "goblin_b",
-          "direction": "up",
-          "wait": false
-        },
-        {
-          "command": "actor_face",
-          "actor": "goblin_c",
-          "direction": "up",
-          "wait": true
-        },
-        {
-          "command": "actor_move",
-          "actor": "goblin_d",
-          "target": "day1_aisle",
-          "speed": 240.0
-        },
-        {
-          "command": "actor_move",
-          "actor": "goblin_d",
-          "target": "day1_group_d",
-          "speed": 240.0
-        },
-        {
-          "command": "actor_face",
-          "actor": "goblin_d",
-          "direction": "up"
-        },
-        {
-          "command": "actor_move",
-          "actor": "goblin_e",
-          "target": "day1_aisle",
-          "speed": 240.0
-        },
-        {
-          "command": "actor_move",
-          "actor": "goblin_e",
-          "target": "day1_group_e",
-          "speed": 240.0
-        },
-        {
-          "command": "actor_face",
-          "actor": "goblin_e",
-          "direction": "up"
         },
         {
           "command": "dialogue",
@@ -373,8 +272,8 @@
           "key": "day1.chronicle_unlocked"
         },
         {
-          "command": "dialogue",
-          "id": "day1.new_customer_orders"
+          "command": "set_flag",
+          "key": "day1.group_a_open"
         },
         {
           "command": "set_flag",
@@ -393,100 +292,15 @@
       "once": true,
       "conditions": {
         "day": 1.0,
-        "stage": "day1.wait_group",
+        "stage": "day1.wait_group_e",
         "completed_events": [
-          "day1.group_arrival"
+          "day1.customer_e"
         ],
         "flags": {
           "day1.group_done": true
         }
       },
       "steps": [
-        {
-          "command": "actor_move",
-          "actor": "goblin_a",
-          "target": "day1_aisle",
-          "speed": 240.0,
-          "wait": false
-        },
-        {
-          "command": "actor_move",
-          "actor": "goblin_b",
-          "target": "day1_aisle",
-          "speed": 240.0,
-          "wait": false
-        },
-        {
-          "command": "actor_move",
-          "actor": "goblin_c",
-          "target": "day1_aisle",
-          "speed": 240.0,
-          "wait": true
-        },
-        {
-          "command": "wait",
-          "seconds": 0.9
-        },
-        {
-          "command": "actor_move",
-          "actor": "goblin_a",
-          "target": "day1_door",
-          "speed": 240.0,
-          "wait": false
-        },
-        {
-          "command": "actor_move",
-          "actor": "goblin_b",
-          "target": "day1_door",
-          "speed": 240.0,
-          "wait": false
-        },
-        {
-          "command": "actor_move",
-          "actor": "goblin_c",
-          "target": "day1_door",
-          "speed": 240.0,
-          "wait": true
-        },
-        {
-          "command": "wait",
-          "seconds": 0.8
-        },
-        {
-          "command": "actor_hide",
-          "actor": "goblin_a",
-          "wait": false
-        },
-        {
-          "command": "actor_hide",
-          "actor": "goblin_b",
-          "wait": false
-        },
-        {
-          "command": "actor_hide",
-          "actor": "goblin_c"
-        },
-        {
-          "command": "camera_focus",
-          "actor": "player",
-          "duration": 0.8
-        },
-        {
-          "command": "actor_move",
-          "actor": "goblin_d",
-          "target": "day1_aisle",
-          "speed": 240.0
-        },
-        {
-          "command": "actor_move",
-          "actor": "goblin_d",
-          "target": "day1_door",
-          "speed": 240.0
-        },
-        {
-          "command": "actor_hide",
-          "actor": "goblin_d"
-        },
         {
           "command": "actor_move",
           "actor": "goblin_e",
@@ -504,6 +318,11 @@
           "actor": "goblin_e"
         },
         {
+          "command": "camera_focus",
+          "actor": "player",
+          "duration": 0.8
+        },
+        {
           "command": "dialogue",
           "id": "day1.coins_raise_suspicion"
         },
@@ -514,6 +333,222 @@
         {
           "command": "set_stage",
           "value": "day1.investigate_coins"
+        },
+        {
+          "command": "camera_reset"
+        }
+      ]
+    },
+    "day1.customer_c": {
+      "once": true,
+      "conditions": {
+        "day": 1.0,
+        "stage": "day1.wait_group",
+        "completed_events": [
+          "day1.group_arrival"
+        ],
+        "flags": {
+          "day1.group_a_settled": true
+        }
+      },
+      "steps": [
+        {
+          "command": "actor_move",
+          "actor": "goblin_a",
+          "target": "day1_aisle",
+          "speed": 240.0
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_a",
+          "target": "day1_door",
+          "speed": 240.0
+        },
+        {
+          "command": "actor_hide",
+          "actor": "goblin_a"
+        },
+        {
+          "command": "play_sfx",
+          "id": "shop.door_bell",
+          "wait": false
+        },
+        {
+          "command": "actor_show",
+          "actor": "goblin_c"
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_c",
+          "target": "day1_aisle",
+          "speed": 240.0
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_c",
+          "target": "day1_counter",
+          "speed": 240.0
+        },
+        {
+          "command": "actor_face",
+          "actor": "goblin_c",
+          "direction": "up"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.customer_c"
+        },
+        {
+          "command": "set_flag",
+          "key": "day1.group_c_open"
+        },
+        {
+          "command": "set_stage",
+          "value": "day1.wait_group_c"
+        },
+        {
+          "command": "camera_reset"
+        }
+      ]
+    },
+    "day1.customer_d": {
+      "once": true,
+      "conditions": {
+        "day": 1.0,
+        "stage": "day1.wait_group_c",
+        "completed_events": [
+          "day1.customer_c"
+        ],
+        "flags": {
+          "day1.group_c_settled": true
+        }
+      },
+      "steps": [
+        {
+          "command": "actor_move",
+          "actor": "goblin_c",
+          "target": "day1_aisle",
+          "speed": 240.0
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_c",
+          "target": "day1_door",
+          "speed": 240.0
+        },
+        {
+          "command": "actor_hide",
+          "actor": "goblin_c"
+        },
+        {
+          "command": "play_sfx",
+          "id": "shop.door_bell",
+          "wait": false
+        },
+        {
+          "command": "actor_show",
+          "actor": "goblin_d"
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_d",
+          "target": "day1_aisle",
+          "speed": 240.0
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_d",
+          "target": "day1_counter",
+          "speed": 240.0
+        },
+        {
+          "command": "actor_face",
+          "actor": "goblin_d",
+          "direction": "up"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.customer_d"
+        },
+        {
+          "command": "set_flag",
+          "key": "day1.group_d_open"
+        },
+        {
+          "command": "set_stage",
+          "value": "day1.wait_group_d"
+        },
+        {
+          "command": "camera_reset"
+        }
+      ]
+    },
+    "day1.customer_e": {
+      "once": true,
+      "conditions": {
+        "day": 1.0,
+        "stage": "day1.wait_group_d",
+        "completed_events": [
+          "day1.customer_d"
+        ],
+        "flags": {
+          "day1.group_d_settled": true
+        }
+      },
+      "steps": [
+        {
+          "command": "actor_move",
+          "actor": "goblin_d",
+          "target": "day1_aisle",
+          "speed": 240.0
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_d",
+          "target": "day1_door",
+          "speed": 240.0
+        },
+        {
+          "command": "actor_hide",
+          "actor": "goblin_d"
+        },
+        {
+          "command": "play_sfx",
+          "id": "shop.door_bell",
+          "wait": false
+        },
+        {
+          "command": "actor_show",
+          "actor": "goblin_e"
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_e",
+          "target": "day1_aisle",
+          "speed": 240.0
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_e",
+          "target": "day1_counter",
+          "speed": 240.0
+        },
+        {
+          "command": "actor_face",
+          "actor": "goblin_e",
+          "direction": "up"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.customer_e"
+        },
+        {
+          "command": "set_flag",
+          "key": "day1.group_e_open"
+        },
+        {
+          "command": "set_stage",
+          "value": "day1.wait_group_e"
         },
         {
           "command": "camera_reset"

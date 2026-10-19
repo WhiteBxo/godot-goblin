@@ -37,6 +37,10 @@
     },
     "day2.procurement.fund": {
       "kind": "procurement_fund"
+    },
+    "day2.procurement.recipe": {
+      "kind": "signature_discovery",
+      "signature_id": "S06"
     }
   },
   "inventory_facts": [
@@ -385,6 +389,32 @@
       "host": "shop",
       "stage": "day3.handoff",
       "kind": "next_day"
+    }
+  ],
+  "market_vendors": [
+    {
+      "actor": "market_vendor_1",
+      "products": [
+        "market_scorch_tongue_pepper",
+        "market_honey_amber_crystal",
+        "market_firefly_cap"
+      ]
+    },
+    {
+      "actor": "market_vendor_2",
+      "products": [
+        "market_moss_green",
+        "market_sugar_yam",
+        "market_insomnia_mushroom"
+      ]
+    },
+    {
+      "actor": "market_vendor_3",
+      "products": [
+        "market_scorch_tongue_pepper",
+        "market_honey_amber_crystal",
+        "market_insomnia_mushroom"
+      ]
     }
   ]
 }

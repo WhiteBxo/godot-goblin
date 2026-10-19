@@ -10,6 +10,6 @@ const FEMALE_FRAMES: SpriteFrames = preload("res://src/gameplay/characters/human
 
 func _ready() -> void:
 	if appearance == Appearance.RANDOM:
-		appearance = Appearance.MALE if randf() < 0.5 else Appearance.FEMALE
+		appearance = Appearance.MALE + CharacterAppearance.choose(self, actor_id, "human", 2)
 	animated_sprite.sprite_frames = MALE_FRAMES if appearance == Appearance.MALE else FEMALE_FRAMES
 	super._ready()

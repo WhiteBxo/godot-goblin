@@ -14,7 +14,7 @@ static var _backpack_frames: SpriteFrames
 
 func _ready() -> void:
 	if appearance == Appearance.RANDOM:
-		appearance = Appearance.WITH_BACKPACK if randf() < 0.5 else Appearance.WITHOUT_BACKPACK
+		appearance = Appearance.WITH_BACKPACK + CharacterAppearance.choose(self, actor_id, "goblin", 2)
 	side_faces_left = appearance == Appearance.WITH_BACKPACK
 	animated_sprite.sprite_frames = _get_backpack_frames() if side_faces_left else _get_unpacked_frames()
 	super._ready()

@@ -64,7 +64,7 @@ func _schedule_refresh() -> void:
 
 func _refresh() -> void:
 	_refresh_pending = false
-	if not is_instance_valid(_state):
+	if not is_inside_tree() or not is_instance_valid(_state):
 		return
 	# Entering the accepted night mission is the formal day -> night boundary.
 	if (_state.get_business_profile() == "day1" and Day1Access.at_stage(_state, "day1.s05")

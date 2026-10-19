@@ -65,7 +65,7 @@ Godot F6 打开 `src/debug/characters/character_gallery.tscn`：同时查看 8 �
 源图不裁剪、不重编码，原附件路径记录在
 `src/gameplay/characters/customer_catalog.json` 的 `source_entry` 中。
 
-`human_customer.tscn` 生成时以 50% 概率选择红衣男顾客或黄裙女顾客，默认 `appearance = RANDOM`，也可在编辑器固定 `MALE` / `FEMALE`。两种外观都沿用 `human_customer` Actor ID、订单与剧情目标；同一实例的移动、转向、待机和显隐不重选。读档或重建场景产生新实例时重新选择，不新增存档字段。这里的 1:1 是概率比例，不保证短序列人数相等。`human_customer_female.tscn` 仍提供固定女顾客独立场景。普通哥布林仍使用自己的素材。
+`human_customer.tscn` 以各 50% 概率选择红衣男顾客或黄裙女顾客，默认 `appearance = RANDOM`，也可在编辑器固定 `MALE` / `FEMALE`。两种外观都沿用 `human_customer` Actor ID、订单与剧情目标；同一实例的移动、转向、待机和显隐不重选。正式游戏由存档内 `visuals.appearance_seed`、素材族、Actor ID 与天数确定外观，读档和重建相同日期的角色保持一致；旧档使用固定兼容值，独立 F6 仍随机预览。这里的 1:1 是概率比例，不保证短序列人数相等。`human_customer_female.tscn` 仍提供固定女顾客独立场景。普通哥布林使用自己的素材，并采用相同的外观持久化规则。
 
 两套资源均提供 `run_*`（8 FPS，现有 NPC 行走接口）和 `idle_*`（6 FPS）四向循环，
 左右共用侧面图，由 `SettlementCharacter` 镜像左向。每格 64×64、步长 88，

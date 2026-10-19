@@ -1,0 +1,55 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="theme"]
+
+[node name="SaveSlotsPage" type="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("theme")
+
+[node name="Modes" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Save" type="Button" parent="Modes"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "保存游戏"
+
+[node name="Load" type="Button" parent="Modes"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "读取存档"
+
+[node name="Slots" type="ItemList" parent="."]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_vertical = 3
+allow_reselect = true
+
+[node name="Message" type="Label" parent="."]
+layout_mode = 2
+theme_type_variation = &"Hint"
+autowrap_mode = 2
+
+[node name="Actions" type="HBoxContainer" parent="."]
+layout_mode = 2
+alignment = 2
+
+[node name="Action" type="Button" parent="Actions"]
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+text = "读取此存档"
+
+[node name="Confirmation" type="HBoxContainer" parent="."]
+visible = false
+layout_mode = 2
+alignment = 2
+
+[node name="Confirm" type="Button" parent="Confirmation"]
+layout_mode = 2
+theme_type_variation = &"DangerButton"
+text = "确认"
+
+[node name="Cancel" type="Button" parent="Confirmation"]
+layout_mode = 2
+text = "取消"

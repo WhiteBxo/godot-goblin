@@ -4,12 +4,13 @@ extends RefCounted
 
 const StateData = preload("res://src/core/game_state.gd")
 const DEFAULT_DIRECTORY := "user://saves"
-const FORMAT_VERSION := 1
+const FORMAT_VERSION := 2
 const MAGIC := "GOBLIN_SAVE\n"
 const MAX_FILE_BYTES := 16 * 1024 * 1024
 var directory: String
 var checkpoints: SaveCheckpoints
 var last_error := ""
+static var _last_order := 0
 
 func _init(path: String = DEFAULT_DIRECTORY, catalog: SaveCheckpoints = null) -> void:
 	directory = path
@@ -18,9 +19,12 @@ func _init(path: String = DEFAULT_DIRECTORY, catalog: SaveCheckpoints = null) ->
 func has_files() -> bool:
 	return FileAccess.file_exists(_path("autosave.dat")) or FileAccess.file_exists(_path("autosave.bak"))
 
-func save(snapshot: Dictionary, checkpoint_id: String, saved_at: int = -1) -> Error:
+func save(snapshot: Dictionary, checkpoint_id: String, saved_at: int = -1, saved_order: int = -1) -> Error:
+	if saved_order < 0:
+		_last_order = maxi(_last_order + 1, int(Time.get_unix_time_from_system() * 1000000.0))
+		saved_order = _last_order
 	var document := {"format_version": FORMAT_VERSION, "game_state": snapshot.duplicate(true),
-		"checkpoint_id": checkpoint_id, "saved_at": int(Time.get_unix_time_from_system()) if saved_at < 0 else saved_at}
+		"checkpoint_id": checkpoint_id, "saved_at": int(Time.get_unix_time_from_system()) if saved_at < 0 else saved_at, "saved_order": saved_order}
 	if validate_document(document) != OK:
 		return _fail(ERR_INVALID_DATA, "当前阶段没有可用的完整存档检查点。")
 	var error := DirAccess.make_dir_recursive_absolute(directory)
@@ -64,9 +68,13 @@ func load_save(preflight: Callable = Callable()) -> Dictionary:
 	return {"error": primary.error if has_files() else ERR_FILE_NOT_FOUND, "data": {}, "used_backup": false}
 
 func validate_document(value: Variant) -> Error:
-	if not value is Dictionary or value.size() != 4 or not value.has_all(["format_version", "game_state", "checkpoint_id", "saved_at"]):
+	if not value is Dictionary or not value.has_all(["format_version", "game_state", "checkpoint_id", "saved_at"]):
 		return ERR_INVALID_DATA
-	if not value.format_version is int or value.format_version != FORMAT_VERSION or not value.game_state is Dictionary or not value.checkpoint_id is String or not value.saved_at is int or value.saved_at < 0:
+	if not value.format_version is int or value.format_version not in [1, FORMAT_VERSION] or not value.game_state is Dictionary or not value.checkpoint_id is String or not value.saved_at is int or value.saved_at < 0:
+		return ERR_INVALID_DATA
+	if value.format_version == 1 and value.size() != 4:
+		return ERR_INVALID_DATA
+	if value.format_version == FORMAT_VERSION and (value.size() != 5 or not value.get("saved_order") is int or value.saved_order < 0):
 		return ERR_INVALID_DATA
 	var candidate := StateData.new()
 	var error: Error = candidate.validate_snapshot(value.game_state)

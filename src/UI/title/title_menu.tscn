@@ -118,6 +118,10 @@ custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 text = "继续游戏"
 
+[node name="LoadGame" type="Button" parent="Center/Panel/Margin/Content"]
+layout_mode = 2
+text = "读取存档"
+
 [node name="NewGame" type="Button" parent="Center/Panel/Margin/Content"]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
@@ -143,7 +147,7 @@ layout_mode = 2
 [node name="Prompt" type="Label" parent="Center/Panel/Margin/Content/Confirmation"]
 custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
-text = "开始新游戏将替换现有存档。"
+text = "开始新游戏将更新自动存档，手动存档会保留。需要保留当前进度时，请先存入手动槽位。"
 autowrap_mode = 2
 horizontal_alignment = 1
 

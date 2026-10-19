@@ -212,6 +212,16 @@ func _create_ui_system() -> void:
 	pause.settings_requested.connect(func() -> void: _ui_manager.open_screen(ScreenIds.SETTINGS))
 	pause.resume_requested.connect(func() -> void: _ui_manager.set_paused(false))
 	pause.title_requested.connect(_return_to_title.bind(pause), CONNECT_DEFERRED)
+	var saves: SaveSlotsPanel = preload("res://src/UI/saves/save_slots_panel.tscn").instantiate()
+	saves.configure(save_manual, can_save_manual)
+	_ui_manager.register_screen(ScreenIds.SAVES, saves, &"pause", true)
+	pause.saves_requested.connect(func(saving: bool) -> void:
+		saves.open_mode(saving)
+		_ui_manager.open_screen(ScreenIds.SAVES))
+	saves.load_requested.connect(func(slot_id: String) -> void:
+		var error := GameEntry.continue_game(get_tree(), slot_id)
+		if error != OK:
+			saves.show_load_error(error), CONNECT_DEFERRED)
 	_ui_manager.modal_changed.connect(_refresh_input_lock)
 	var audio_feedback := UIAudioFeedback.new()
 	audio_feedback.name = "UIAudioFeedback"
@@ -540,6 +550,12 @@ func is_session_initializing() -> bool:
 func get_save_coordinator() -> SaveCoordinator:
 	return _save_coordinator
 
+func can_save_manual() -> bool:
+	return is_instance_valid(_save_coordinator) and _save_coordinator.can_save_manual()
+
+func save_manual(slot_id: String, overwrite: bool = false) -> Error:
+	return _save_coordinator.save_manual(slot_id, overwrite) if is_instance_valid(_save_coordinator) else ERR_UNAVAILABLE
+
 func _create_save_system() -> void:
 	if not GameEntry.is_save_session_active() or not day1_story_enabled:
 		return
@@ -549,7 +565,8 @@ func _create_save_system() -> void:
 	$Systems.add_child(_save_coordinator)
 	_save_coordinator.configure(get_node("/root/GameState"), store,
 		func() -> Dictionary: return store.checkpoints.find_checkpoint(get_node("/root/GameState").to_dict(), scene_file_path),
-		_can_save_checkpoint, _finish_session_initialization if _session_initializing else Callable(), _new_saved_session)
+		_can_save_checkpoint, _finish_session_initialization if _session_initializing else Callable(), _new_saved_session,
+		_can_save_checkpoint.bind(true))
 	_save_status = preload("res://src/UI/hud/save_status.tscn").instantiate()
 	$HudLayer.add_child(_save_status)
 	_save_status.hide()
@@ -580,8 +597,9 @@ func _on_save_status_changed(text: String) -> void:
 	_save_toast.tween_property(_save_status, "modulate:a", 0.0, 0.35)
 	_save_toast.tween_callback(_save_status.hide)
 
-func _can_save_checkpoint() -> bool:
-	if get_tree().paused or _ui_manager.has_modal() or _story_director.is_busy() or _dialogue_manager.is_active():
+func _can_save_checkpoint(allow_pause: bool = false) -> bool:
+	var modal := _ui_manager.has_modal_except([ScreenIds.PAUSE, ScreenIds.SAVES]) if allow_pause else _ui_manager.has_modal()
+	if (get_tree().paused and not allow_pause) or modal or _story_director.is_busy() or _dialogue_manager.is_active():
 		return false
 	if (is_instance_valid(_scene_travel) and _scene_travel.is_busy()) or _shop_player.is_performance_controlled():
 		return false
@@ -1428,7 +1446,7 @@ func get_navigation_hud() -> NavigationHUD:
 	return _navigation_hud
 
 func _refresh_map_access() -> void:
-	if not is_instance_valid(_map_panel):
+	if not is_inside_tree() or not is_instance_valid(_map_panel):
 		return
 	var unlocked: bool = get_node("/root/GameState").get_flag("day1.s04.map_available")
 	if unlocked:

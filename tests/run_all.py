@@ -86,6 +86,9 @@ class Profile:
 
 
 PROFILES: dict[str, Profile] = {
+    # The authored two-day story includes real walks and timed performances.
+    "verify_two_day_flow.gd": Profile(timeout=180),
+    "verify_two_day_persistence.py": Profile(timeout=360),
     # Real-time camera / shop flow asserted against 120 fps.
     "verify_settlement.gd": Profile(args=("--fixed-fps", "120")),
     "verify_milk_tea_shop.gd": Profile(args=("--fixed-fps", "120")),

@@ -21,6 +21,9 @@ func _run() -> void:
 			var actor = load(path).instantiate()
 			actor.appearance = appearance
 			root.add_child(actor)
+			# move_and_slide needs a completed physics tick, even in a fresh process.
+			await physics_frame
+			await physics_frame
 			var sprite: AnimatedSprite2D = actor.animated_sprite
 			var frames := sprite.sprite_frames
 			for direction: int in [PlayerController.Facing.DOWN, PlayerController.Facing.UP]:

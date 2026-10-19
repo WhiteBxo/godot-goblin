@@ -11,10 +11,14 @@ static var _last_saved_at := 0
 static var _startup_previous: Dictionary = {}
 static var _startup_active := false
 static var _startup_saved_at := 0
+static var _startup_paused := false
 static var _notice := ""
 
-static func create_save_store() -> SaveStore:
-	return SaveStore.new(str(ProjectSettings.get_setting("persistence/save_directory", SaveStore.DEFAULT_DIRECTORY)))
+static func create_save_library() -> SaveLibrary:
+	return SaveLibrary.new(str(ProjectSettings.get_setting("persistence/save_directory", SaveStore.DEFAULT_DIRECTORY)))
+
+static func create_save_store(slot_id: String = "auto") -> SaveStore:
+	return create_save_library().get_store(slot_id)
 
 static func is_save_session_active() -> bool:
 	return _save_session_active
@@ -43,15 +47,21 @@ static func preflight_save(document: Dictionary) -> Error:
 	return error
 
 ## Preflight a detached destination while the title and previous session survive.
-static func continue_game(tree: SceneTree) -> Error:
+static func continue_game(tree: SceneTree, slot_id: String = "") -> Error:
 	if tree == null:
 		return ERR_INVALID_PARAMETER
-	if _changing_scene or tree.paused:
+	if _changing_scene:
 		return ERR_BUSY
 	var state := tree.root.get_node_or_null("GameState")
 	if state == null or not state.can_take_snapshot():
 		return ERR_BUSY
-	var store := create_save_store()
+	if slot_id.is_empty():
+		slot_id = create_save_library().newest_valid_id(preflight_save)
+		if slot_id.is_empty():
+			return ERR_FILE_CORRUPT if create_save_library().has_files() else ERR_FILE_NOT_FOUND
+	var store := create_save_store(slot_id)
+	if store == null:
+		return ERR_INVALID_PARAMETER
 	var loaded := store.load_save(preflight_save)
 	if loaded.error != OK:
 		return loaded.error
@@ -83,6 +93,8 @@ static func continue_game(tree: SceneTree) -> Error:
 	if error != OK:
 		destination.free()
 		_rollback_startup(state)
+	else:
+		tree.paused = false
 	return error
 
 static func _reserve_startup(state: Node) -> void:
@@ -90,6 +102,7 @@ static func _reserve_startup(state: Node) -> void:
 	_startup_previous = state.to_dict()
 	_startup_active = _save_session_active
 	_startup_saved_at = _last_saved_at
+	_startup_paused = state.get_tree().paused
 
 static func _rollback_startup(state: Node) -> void:
 	var error: Error = state.restore_state(_startup_previous)
@@ -97,6 +110,7 @@ static func _rollback_startup(state: Node) -> void:
 		push_error("Could not roll back failed save navigation: %s" % error_string(error))
 	_save_session_active = _startup_active
 	_last_saved_at = _startup_saved_at
+	state.get_tree().paused = _startup_paused
 	_startup_previous = {}
 	_changing_scene = false
 
@@ -176,8 +190,16 @@ static func _start_saved_session(tree: SceneTree, scene: PackedScene, state: Nod
 		_startup_previous = {}
 		destination.free()
 		return error
+	# Select the formal business profile before adding session facts. A seed is
+	# already progress to GameState's profile-switch guard.
+	error = state.select_business_profile("day1")
+	if error != OK:
+		destination.free()
+		_rollback_startup(state)
+		return error
 	_save_session_active = true
 	_last_saved_at = 0
+	state.set_variable("visuals.appearance_seed", randi())
 	destination.session_initialized.connect(_on_session_initialized.bind(tree), CONNECT_ONE_SHOT)
 	error = tree.change_scene_to_node(destination)
 	if error != OK:

@@ -12,6 +12,8 @@ var _starting := false
 var _confirming := false
 var _can_continue := false
 var _settings: Control
+var _saves: SaveSlotsPanel
+var _selected_slot := ""
 @onready var _confirmation: VBoxContainer = $Center/Panel/Margin/Content/Confirmation
 
 func _ready() -> void:
@@ -44,9 +46,30 @@ func _ready() -> void:
 	_settings.dismissed.connect(func() -> void:
 		$Center.show()
 		$Center/Panel/Margin/Content/Settings.grab_focus())
+	_saves = preload("res://src/UI/saves/save_slots_panel.tscn").instantiate()
+	add_child(_saves)
+	_saves.hide()
+	$Center/Panel/Margin/Content/LoadGame.pressed.connect(func() -> void:
+		if _starting:
+			return
+		$Center.hide()
+		_saves.open_mode(false)
+		_saves.show()
+		_saves.get_default_focus().grab_focus())
+	_saves.dismissed.connect(func() -> void:
+		$Center.show()
+		$Center/Panel/Margin/Content/LoadGame.grab_focus())
+	_saves.load_requested.connect(func(slot_id: String) -> void:
+		_selected_slot = slot_id
+		_saves.hide()
+		$Center.show()
+		_set_busy(true)
+		_continue_game.call_deferred())
 	_confirmation.get_node("Confirm").pressed.connect(_confirm_new_game)
 	_confirmation.get_node("Cancel").pressed.connect(_cancel_new_game)
-	var store := GameEntry.create_save_store()
+	var library := GameEntry.create_save_library()
+	var newest := library.newest_valid_id(GameEntry.preflight_save)
+	var store := GameEntry.create_save_store(newest if not newest.is_empty() else "auto")
 	var info := store.load_save(GameEntry.preflight_save)
 	_can_continue = info.error == OK
 	_continue.visible = _can_continue
@@ -90,12 +113,13 @@ func _start_presentation() -> void:
 func _request_new_game() -> void:
 	if _starting:
 		return
-	if GameEntry.create_save_store().has_files():
+	if GameEntry.create_save_library().has_files():
 		_confirming = true
 		_continue.hide()
 		_new_game.hide()
 		_quit.hide()
 		$Center/Panel/Margin/Content/Settings.hide()
+		$Center/Panel/Margin/Content/LoadGame.hide()
 		_confirmation.show()
 		_confirmation.get_node("Cancel").grab_focus()
 		return
@@ -115,6 +139,7 @@ func _cancel_new_game() -> void:
 	_new_game.show()
 	_quit.show()
 	$Center/Panel/Margin/Content/Settings.show()
+	$Center/Panel/Margin/Content/LoadGame.show()
 	(_continue if _can_continue else _new_game).grab_focus()
 
 func _unhandled_key_input(event: InputEvent) -> void:
@@ -127,11 +152,12 @@ func _request_continue() -> void:
 		return
 	_set_busy(true)
 	_error.hide()
+	_selected_slot = ""
 	_continue_game.call_deferred()
 
 func _continue_game() -> void:
 	await _music.fade_out()
-	var error := GameEntry.continue_game(get_tree())
+	var error := GameEntry.continue_game(get_tree(), _selected_slot)
 	if error != OK:
 		_navigation_failed(error, true)
 
@@ -168,5 +194,6 @@ func _set_busy(value: bool) -> void:
 	_continue.disabled = value
 	_quit.disabled = value
 	$Center/Panel/Margin/Content/Settings.disabled = value
+	$Center/Panel/Margin/Content/LoadGame.disabled = value
 	_confirmation.get_node("Confirm").disabled = value
 	_confirmation.get_node("Cancel").disabled = value

@@ -49,7 +49,14 @@ func _run() -> void:
 	if args[0].get_file() == "day3_handoff":
 		var actions := game.get_chapter_gameplay()
 		var ids: Array = actions.get_user_actions().map(func(action: Dictionary) -> String: return action.id)
-		check(ids.has("hire:day2_ordinary_a"), "Late hire remains available after closed business is restored")
+		check(not ids.has("hire:day2_ordinary_a"), "Unreleased hiring stays unavailable after restore")
+		actions.perform_user_action("hire:day2_ordinary_a")
+		for frame in range(6):
+			await process_frame
+		check(actions.get_procurement().get_status().status == "funded", "Unavailable hiring cannot mutate the restored escrow")
+		check(state.set_flag("features.hiring_available"), "Explicitly enable the future hiring fixture")
+		ids = actions.get_user_actions().map(func(action: Dictionary) -> String: return action.id)
+		check(ids.has("hire:day2_ordinary_a"), "Enabled late hire is available after restore")
 		actions.perform_user_action("hire:day2_ordinary_a")
 		for frame in range(6):
 			await process_frame

@@ -14,6 +14,7 @@ const LOCATIONS := {
 	"settlement.training": {"name": "军营", "cell": Vector2i(39, 20), "area": Rect2(1728, 576, 576, 480), "ordinal": 8, "kind": "training"},
 	"settlement.warehouse": {"name": "仓库", "cell": Vector2i(10, 12), "area": Rect2(240, 192, 576, 528), "ordinal": 9, "kind": "warehouse"},
 	"settlement.workshop": {"name": "河岸工坊", "cell": Vector2i(6, 29), "area": Rect2(144, 1152, 384, 432), "ordinal": 10, "kind": "workshop"},
+	"settlement.residential": {"name": "东侧居民区", "cell": Vector2i(41, 34), "area": Rect2(1776, 1056, 528, 1344), "ordinal": 11, "kind": "residential"},
 }
 
 ## Schematic connections between exterior areas; the map draws them as paths.
@@ -29,6 +30,8 @@ const LINKS: Array[Array] = [
 	["settlement.ritual", "settlement.warehouse"],
 	["settlement.warehouse", "settlement.workshop"],
 	["settlement.workshop", "settlement.casino"],
+	["settlement.training", "settlement.residential"],
+	["settlement.residential", "settlement.shop"],
 ]
 
 var current_location := "settlement.shop"
@@ -70,4 +73,4 @@ static func describe(known_locations: Array[String]) -> Dictionary:
 	for link: Array in LINKS:
 		if link[0] in known_locations and link[1] in known_locations:
 			links.append({"from": get_entrance_position(link[0]), "to": get_entrance_position(link[1])})
-	return {"bounds": Rect2(0, 0, 2400, 2640), "view": view, "regions": regions, "links": links}
+	return {"bounds": Rect2(0, 0, 2400, 2640), "view": view, "regions": regions, "links": links, "illustrated": true}

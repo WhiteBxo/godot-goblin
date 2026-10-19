@@ -5,8 +5,8 @@ signal accept_requested(order_id: String)
 signal track_requested(order_id: String)
 signal deliver_requested(order_id: String)
 
-const FILTERS: Array[String] = ["active", "available", "completed"]
-const TITLES: Array[String] = ["进行中", "可接取", "已结束"]
+const FILTERS: Array[String] = ["active", "available"]
+const TITLES: Array[String] = ["进行中", "可接取"]
 
 @onready var _tabs: TabBar = %OrderTabs
 @onready var _list: OrderList = %OrderList
@@ -31,6 +31,7 @@ func _ready() -> void:
 			_selected = id
 			refresh())
 	_ticket.primary_pressed.connect(_primary)
+	%AcceptAll.pressed.connect(_accept_all)
 	refresh()
 
 func configure(model: OrderBoardModel) -> void:
@@ -43,7 +44,7 @@ func configure(model: OrderBoardModel) -> void:
 func present() -> void:
 	_filter = "available"
 	for entry: Dictionary in _model.get_entries():
-		if entry.status == "active":
+		if entry.status == "active" and _is_milk_order(entry):
 			_filter = "active"
 			break
 	_sync_tab()
@@ -58,17 +59,21 @@ func refresh() -> void:
 	if is_instance_valid(_model):
 		entries = _model.get_entries()
 	_resolve_pending_accept()
-	var counts := {"active": 0, "available": 0, "completed": 0}
+	var counts := {"active": 0, "available": 0}
 	_ids.clear()
 	var filtered: Array[Dictionary] = []
 	for entry: Dictionary in entries:
-		var bucket: String = entry.status if counts.has(entry.status) else "completed"
+		if not counts.has(entry.status) or not _is_milk_order(entry):
+			continue
+		var bucket: String = entry.status
 		counts[bucket] += 1
 		if bucket == _filter:
 			_ids.append(entry.order_id)
 			filtered.append(entry)
 	for index: int in range(FILTERS.size()):
 		_tabs.set_tab_title(index, "%s %d" % [TITLES[index], counts[FILTERS[index]]])
+	%AcceptAll.text = "一键接单（%d）" % counts.available
+	%AcceptAll.disabled = counts.available == 0
 	var choose_first := _selected not in _ids
 	if choose_first:
 		_selected = _ids[0] if not _ids.is_empty() else ""
@@ -77,6 +82,20 @@ func refresh() -> void:
 	_list.get_v_scroll_bar().set_deferred("value", scroll)
 	_refresh_detail()
 	_refreshing = false
+
+func _accept_all() -> void:
+	var pending: Array[String] = []
+	for entry: Dictionary in _model.get_entries():
+		if entry.status == "available" and _is_milk_order(entry):
+			pending.append(entry.order_id)
+	for id: String in pending:
+		_pending_accept = id
+		accept_requested.emit(id)
+	_filter = "active"
+	refresh()
+
+func _is_milk_order(entry: Dictionary) -> bool:
+	return not str(entry.get("product_id", "")).is_empty() or entry.get("free_formula", false)
 
 ## A successful accept moves the board to 进行中 exactly once, even when the
 ## project refresh arrives from a model change rather than this call stack.
@@ -128,7 +147,7 @@ func _primary() -> void:
 
 func select_order(order_id: String) -> bool:
 	var entry := _model.get_entry(order_id)
-	if entry.is_empty():
+	if entry.is_empty() or entry.status not in FILTERS or not _is_milk_order(entry):
 		return false
 	_filter = entry.status
 	_selected = order_id

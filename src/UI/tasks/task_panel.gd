@@ -1,5 +1,7 @@
 class_name TaskPanel
 extends VBoxContainer
+## Shared read-only projection, configured by the containing handbook page.
+@export_enum("all", "tasks", "milk_orders") var content_filter := "all"
 ## Read-only activity browser page. Facts and reveal rules belong to TaskJournal.
 ## The page owns no chrome: ModalShell provides the shade, panel, header and close button.
 
@@ -113,8 +115,17 @@ func _refresh() -> void:
 	var tasks: Array[Dictionary] = []
 	if is_instance_valid(_journal):
 		tasks = _journal.get_visible_tasks()
+	if content_filter != "all":
+		tasks = tasks.filter(func(task: Dictionary) -> bool:
+			var milk: bool = task.delivery.has("product_id") or task.delivery.has("drink")
+			if content_filter == "tasks":
+				return not milk
+			if not milk:
+				return false
+			var order := _orders.get_task_entry(task.id) if is_instance_valid(_orders) else {}
+			return task.status != "active" or order.get("accepted", false))
 	for task in tasks:
-		var label := ("主线 · " if task.type == "main" else "委托 · ") + String(task.title).replace("\n", " ")
+		var label := ("" if content_filter == "milk_orders" else ("主线 · " if task.type == "main" else "支线 · ")) + String(task.title).replace("\n", " ")
 		if task.status != "active":
 			label = "[" + _status_text(task.status) + "] " + label
 		var index := _list.add_item(label)
@@ -123,11 +134,11 @@ func _refresh() -> void:
 	var choose_first := _selected_id not in _ids
 	if choose_first:
 		_selected_id = _ids[0] if not _ids.is_empty() else ""
-	_summary.text = "任务记录 · %d" % _ids.size()
+	_summary.text = ("奶茶订单 · %d" if content_filter == "milk_orders" else "任务日志 · %d") % _ids.size()
 	if _ids.is_empty():
-		_title.text = "暂无活动任务"
+		_title.text = "暂无奶茶订单记录" if content_filter == "milk_orders" else "暂无任务记录"
 		_title.tooltip_text = ""
-		_set_detail("接取任务后，可在这里查看目标、交付对象和奖励。")
+		_set_detail("已接取与已结束的奶茶订单会保存在这里。" if content_filter == "milk_orders" else "需要完成和已经完成的任务会记录在这里。")
 		return
 	var selected_index := _ids.find(_selected_id)
 	_list.select(selected_index) # select() does not emit item_selected.
@@ -145,6 +156,9 @@ func _show_task(task: Dictionary) -> void:
 	_title.tooltip_text = task.title
 	if task.status in ["completed", "failed", "expired", "cancelled"]:
 		var lines := PackedStringArray([task.description, "", "任务结果：" + _status_text(task.status)])
+		if content_filter == "milk_orders":
+			var entry := _orders.get_task_entry(task.id) if is_instance_valid(_orders) else {}
+			lines = PackedStringArray(["饮品：" + str(entry.get("title", task.title)), "顾客：" + str(entry.get("target_name", "交付对象待确认")), "", "订单状态：" + _status_text(task.status), "报酬：" + str(entry.get("rewards", task.rewards.get("text", "—")))])
 		var result: Dictionary = task.get("result", {})
 		if not result.is_empty():
 			lines.append("结算时间：第 %d 天 · %s" % [result.day, "白天" if result.phase == "day" else "夜晚"])

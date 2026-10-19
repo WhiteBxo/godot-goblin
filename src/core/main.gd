@@ -27,6 +27,7 @@ var _shop_ui: ShopUI
 var _shop_interaction: ShopInteraction
 var _task_journal: TaskJournal
 var _map_panel: SettlementMapPanel
+var _navigation_hud: NavigationHUD
 var _map_button: Button
 var _map_registered := false
 var _map_provider: Object
@@ -260,7 +261,7 @@ func _refresh_game_menu() -> void:
 	var summary := _task_hud.get_objective_summary() if is_instance_valid(_task_hud) else {}
 	_game_menu.set_overview(summary.get("title", ""), summary.get("objective", ""), WalletTransactions.format_money(get_transactions().get_balance()), _saved_status)
 	var pages := _handbook.get_pages()
-	_game_menu.set_navigation_access({ScreenIds.TASKS: not pages.is_tab_hidden(0), ScreenIds.CHRONICLE: not pages.is_tab_hidden(1), ScreenIds.DRINKS: not pages.is_tab_hidden(2), ScreenIds.CHARACTERS: not pages.is_tab_hidden(3), ScreenIds.INVENTORY: true, ScreenIds.MAP: _map_registered, ScreenIds.SETTINGS: true})
+	_game_menu.set_navigation_access({ScreenIds.TASKS: not pages.is_tab_hidden(0), ScreenIds.ORDER_HISTORY: true, ScreenIds.HIRING: false, ScreenIds.CHRONICLE: not pages.is_tab_hidden(1), ScreenIds.DRINKS: not pages.is_tab_hidden(2), ScreenIds.CHARACTERS: not pages.is_tab_hidden(3), ScreenIds.INVENTORY: true, ScreenIds.MAP: _map_registered, ScreenIds.SETTINGS: true})
 
 func _navigate_game_menu(id: StringName) -> void:
 	_ui_manager.close_screen(ScreenIds.CHAPTER_ACTIONS)
@@ -276,7 +277,7 @@ func _navigate_game_menu(id: StringName) -> void:
 		_:
 			error = _open_handbook(id)
 	if error == OK:
-		_menu_destination = ScreenIds.HANDBOOK if id in [ScreenIds.TASKS, ScreenIds.CHRONICLE, ScreenIds.DRINKS, ScreenIds.CHARACTERS] else id
+		_menu_destination = ScreenIds.HANDBOOK if id in [ScreenIds.TASKS, ScreenIds.CHRONICLE, ScreenIds.DRINKS, ScreenIds.CHARACTERS, ScreenIds.ORDER_HISTORY] else id
 	else:
 		open_game_menu.call_deferred()
 
@@ -397,6 +398,7 @@ func _create_handbook() -> void:
 		_handbook.get_drinks_page().show_remake_result(is_instance_valid(_shop_ui) and _shop_ui.select_formula(materials, iced)))
 	_handbook.close_requested.connect(func() -> void: _ui_manager.close_screen(ScreenIds.HANDBOOK))
 	_ui_manager.register_screen_alias(ScreenIds.TASKS, ScreenIds.HANDBOOK, _handbook.select_page.bind(ScreenIds.TASKS))
+	_ui_manager.register_screen_alias(ScreenIds.ORDER_HISTORY, ScreenIds.HANDBOOK, _handbook.select_page.bind(ScreenIds.ORDER_HISTORY))
 	_ui_manager.register_screen_alias(ScreenIds.CHRONICLE, ScreenIds.HANDBOOK, _handbook.select_page.bind(ScreenIds.CHRONICLE))
 	_ui_manager.register_screen_alias(ScreenIds.DRINKS, ScreenIds.HANDBOOK, _handbook.select_page.bind(ScreenIds.DRINKS))
 	_ui_manager.register_screen_alias(ScreenIds.CHARACTERS, ScreenIds.HANDBOOK, _handbook.select_page.bind(ScreenIds.CHARACTERS))
@@ -430,9 +432,7 @@ func _refresh_handbook_access() -> void:
 	var chronicle: bool = state.get_flag("day1.chronicle_unlocked") if day1_story_enabled else not _chronicle_journal.get_entries().is_empty()
 	var drinks: bool = not state.get_warehouse_inventory().get_drinks(true).is_empty()
 	var characters: bool = not _character_journal.get_characters().is_empty()
-	_handbook.refresh_access(tasks, chronicle, drinks, characters)
-	if not tasks and not chronicle and not drinks and not characters:
-		_ui_manager.close_screen(ScreenIds.HANDBOOK)
+	_handbook.refresh_access(true, chronicle, drinks, characters)
 	_handbook_hud.refresh_access(true, _chronicle_journal.get_unread_count() if chronicle else 0, _character_journal.get_unread_count())
 	_refresh_game_menu()
 
@@ -851,6 +851,7 @@ func _create_shop_business(ui: ShopUI) -> void:
 	$Systems.add_child(_order_board)
 	_order_board.configure(_task_catalog, _task_journal, state, _warehouse_inventory, _tea_production, _task_delivery)
 	_handbook.get_tasks_page().bind_orders(_order_board)
+	_handbook.get_order_history_page().bind_orders(_order_board)
 	_task_journal.projection_changed.connect(_refresh_order_requirements.bind(ui))
 	ui.point_opened.connect(_on_shop_point_opened)
 	ui.configure_inventory(_warehouse_inventory)
@@ -985,6 +986,8 @@ func _route_story_interaction(id: StringName) -> Error:
 		var error := _story_director.request_interaction(String(id))
 		if error != ERR_DOES_NOT_EXIST:
 			return error
+	if id == &"orders" and _deliver_ready_orders():
+		return OK
 	if _story_points.has(id):
 		var point := _story_points[id]
 		if not point.is_available():
@@ -1021,6 +1024,26 @@ func _route_story_interaction(id: StringName) -> Error:
 		_shop_ui.show_feedback(delivery_result.message, delivery_result.ok)
 		return OK if delivery_result.ok else ERR_UNAVAILABLE
 	return ERR_DOES_NOT_EXIST
+
+## The register uses the same authoritative per-order settlement as NPC delivery.
+func _deliver_ready_orders() -> bool:
+	if not is_instance_valid(_order_board) or not is_instance_valid(_task_delivery):
+		return false
+	var count := 0
+	var ids: Array[String] = []
+	for entry: Dictionary in _order_board.get_entries():
+		if entry.status == "active" and entry.ready and (not entry.product_id.is_empty() or entry.free_formula):
+			ids.append(entry.order_id)
+	for id: String in ids:
+		var current := _order_board.get_entry(id)
+		if current.get("status") != "active" or not current.get("ready", false):
+			continue
+		var result := _task_delivery.try_submit(id, current.target_id)
+		if result.ok:
+			count += 1
+	if count > 0:
+		_shop_ui.show_feedback("交付成功：已在收银台结算 %d 张奶茶订单。" % count)
+	return count > 0
 
 func _create_world_controller() -> void:
 	_world_controller = Day1WorldController.new()
@@ -1089,7 +1112,7 @@ func _create_dialogue_system() -> void:
 func _create_story_business() -> void:
 	_story_business = StoryBusinessAdapter.new()
 	_story_business.configure(get_node("/root/GameState"), unlock_map,
-		func(location: String) -> bool: return SettlementMap.MAP_LOCATIONS.has(location))
+		func(location: String) -> bool: return RpgWorldMapData.LOCATIONS.has(location) or SettlementMap.MAP_LOCATIONS.has(location))
 	_story_director.set_business_adapter(_story_business)
 	if day1_story_enabled:
 		_chapter_gameplay = ChapterGameplay.new()
@@ -1202,6 +1225,8 @@ func _refresh_input_lock() -> void:
 		_map_button.disabled = should_lock
 	if is_instance_valid(_handbook_hud):
 		_handbook_hud.disabled = should_lock
+	if is_instance_valid(_navigation_hud):
+		_navigation_hud.set_display_enabled(not should_lock)
 	if should_lock == _input_locked:
 		return
 	var player := get_player() as PlayerController
@@ -1362,6 +1387,11 @@ func _create_map_ui() -> void:
 	_map_panel = preload("res://src/UI/map/map_panel.tscn").instantiate()
 	$PopupLayer.add_child(_map_panel)
 	_map_panel.configure(_map_provider, _shop_player, _task_journal, _get_known_map_locations)
+	_navigation_hud = preload("res://src/UI/map/navigation_hud.tscn").instantiate()
+	_ui_manager.register_screen(ScreenIds.NAVIGATION_HUD, _navigation_hud, &"hud", false)
+	_navigation_hud.configure(level, _map_provider, _shop_player, _task_journal, get_node("/root/GameState"), _get_known_map_locations)
+	_ui_manager.open_screen(ScreenIds.NAVIGATION_HUD)
+	_navigation_hud.set_display_enabled(not _input_locked)
 	_map_panel.close_requested.connect(func() -> void: _ui_manager.close_screen(ScreenIds.MAP))
 	_ui_manager.screen_closed.connect(func(id: StringName) -> void:
 		if id != ScreenIds.MAP:
@@ -1380,11 +1410,16 @@ func _get_known_map_locations() -> Array[String]:
 	# Only the shop is initially established. Other areas require explicit knowledge.
 	var known: Array[String] = ["settlement.shop"]
 	var state := get_node("/root/GameState")
+	if state.get_flag("day1.s03.exited_shop"):
+		known.append("settlement.yard")
 	var locations: Array = _map_provider.get_map_location_ids() if is_instance_valid(_map_provider) and _map_provider.has_method("get_map_location_ids") else SettlementMap.MAP_LOCATIONS.keys()
 	for id: String in locations:
 		if state.get_flag("ui.map.known." + id) and id not in known:
 			known.append(id)
 	return known
+
+func get_navigation_hud() -> NavigationHUD:
+	return _navigation_hud
 
 func _refresh_map_access() -> void:
 	if not is_instance_valid(_map_panel):

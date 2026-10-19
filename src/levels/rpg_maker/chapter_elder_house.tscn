@@ -14,6 +14,9 @@
 
 [ext_resource type="Script" path="res://src/gameplay/stealth/day1_stealth_setup.gd" id="stealth"]
 
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_guard.tscn" id="guard"]
+[ext_resource type="Script" path="res://src/gameplay/stealth/day1_guard_response.gd" id="response"]
+
 [node name="RpgMakerMap006" instance=ExtResource("base")]
 
 script = ExtResource("map")
@@ -21,6 +24,8 @@ script = ExtResource("map")
 chapter_host = &"elder_house"
 
 exterior_location = "settlement.elder"
+
+objective_points = {"day1.s05.infiltration:document": "Interactions/day1_elder_document", "day1.s05.infiltration:blood": "Interactions/day1_blood_storage", "day1.s05.infiltration:escape": "Exits/Outside"}
 
 [node name="Entrances" type="Node2D" parent="."]
 
@@ -109,15 +114,58 @@ required_stages = Array[String](["day1.s05"])
 display_name = "右室桌上的封蜡小瓶"
 description = "桌上放着一支封蜡小瓶。标签写着：格里芬之血。"
 
-[node name="StealthSetup" type="Node" parent="."]
+[node name="StealthSetup" type="Node" parent="." node_paths=PackedStringArray("guards")]
 script = ExtResource("stealth")
 wallet_coins = true
 throw_range = 230.0
 effect_scale = 0.5
 interior_only = true
+guards = Array[NodePath]([NodePath("HallWatch"), NodePath("EastWatch")])
 required_flags = Array[StringName](["day1.s05.blood_acquired", "day1.s05.document_read"])
 required_items = {"day1_griffin_blood": 3, "day1_elder_document": 1}
 objective_names = {"day1.s05.document_read": "书房文书", "day1.s05.blood_acquired": "右室血液"}
 approach_hint = "中央书房找纸页，右室找封蜡小瓶，顺序自选。"
 escape_hint = "两件目标已取得。返回下方宅门，向左下回北侧观察位撤离，再返店。"
 controls_hint = "书房取文书 · 右室取血液 · 原路出门"
+
+[node name="Characters" type="Node2D" parent="."]
+
+[node name="HallWatch" parent="Characters" instance=ExtResource("guard")]
+position = Vector2(408, 360)
+actor_id = &"elder_hall_watch"
+display_name = "宅内巡守"
+active_phase = "night"
+facing = 1
+initial_facing = 1
+
+[node name="HallWatch" type="Node2D" parent="StealthSetup" node_paths=PackedStringArray("actor")]
+script = ExtResource("response")
+actor = NodePath("../../Characters/HallWatch")
+role = 4
+sight_range = 144.0
+sight_half_angle = 55.0
+hearing_range = 240.0
+hear_footsteps = true
+discovery_seconds = 1.3
+patrol_offsets = Array[Vector2]([Vector2(0, 0), Vector2(0, 48)])
+patrol_speed = 28.0
+
+[node name="EastWatch" parent="Characters" instance=ExtResource("guard")]
+position = Vector2(600, 456)
+actor_id = &"elder_east_watch"
+display_name = "宅内巡守"
+active_phase = "night"
+facing = 3
+initial_facing = 3
+
+[node name="EastWatch" type="Node2D" parent="StealthSetup" node_paths=PackedStringArray("actor")]
+script = ExtResource("response")
+actor = NodePath("../../Characters/EastWatch")
+role = 4
+sight_range = 144.0
+sight_half_angle = 55.0
+hearing_range = 240.0
+hear_footsteps = true
+discovery_seconds = 1.3
+patrol_offsets = Array[Vector2]([Vector2(0, 0), Vector2(48, 0)])
+patrol_speed = 28.0

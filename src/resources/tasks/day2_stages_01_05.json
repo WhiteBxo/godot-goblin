@@ -104,7 +104,7 @@
         },
         {
           "id": "close",
-          "text": "交清已接散客订单，点击「关店 · 前往酒馆」；可先雇一名散客代购",
+          "text": "交清已接散客订单，点击「关店 · 前往酒馆」",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",

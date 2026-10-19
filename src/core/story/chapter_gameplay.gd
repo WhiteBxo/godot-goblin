@@ -230,7 +230,7 @@ func get_user_actions() -> Array[Dictionary]:
 		if action.get("kind") == "next_day" and not DayPhase.is_night(_state):
 			continue
 		actions.append(action.duplicate(true))
-	if _host == "shop" and _state.current_day in [2, 3] and _procurement.get_status().get("status") == "funded":
+	if _state.get_flag("features.hiring_available") and _host == "shop" and _state.current_day in [2, 3] and _procurement.get_status().get("status") == "funded":
 		for id: String in Day2Procurement.RUNNERS:
 			if id == "day2_ordinary_c" and _taste_pending():
 				continue

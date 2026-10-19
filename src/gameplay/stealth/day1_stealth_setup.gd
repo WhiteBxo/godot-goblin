@@ -30,6 +30,9 @@ extends Node
 func get_issues(inventory: WarehouseInventory, actor_lookup: Callable) -> PackedStringArray:
 	var issues := PackedStringArray()
 	if interior_only and wallet_coins:
+		for guard: Day1GuardResponse in guards:
+			if not is_instance_valid(guard) or not is_instance_valid(guard.actor) or not actor_lookup.is_valid() or actor_lookup.call(guard.actor.actor_id) != guard.actor:
+				issues.append("室内守卫必须绑定实际注册的角色")
 		return issues
 	for item: String in [coin_item_id, torch_item_id]:
 		if wallet_coins:
@@ -55,7 +58,7 @@ func get_issues(inventory: WarehouseInventory, actor_lookup: Callable) -> Packed
 			continue
 		if guard.role not in Day1GuardResponse.Role.values() or guard.actor.accepts_player_input or guard.discovery_seconds <= 0.0 or guard.distraction_seconds <= 0.0 or guard.sight_range <= 0.0:
 			issues.append("守卫职责、角色输入或感知参数无效")
-		if roles.has(guard.role) or actors.has(guard.actor) or guard.actor.actor_id == &"guard_captain" or not actor_lookup.is_valid() or actor_lookup.call(guard.actor.actor_id) != guard.actor:
+		if (roles.has(guard.role) and guard.role != Day1GuardResponse.Role.PATROL) or actors.has(guard.actor) or guard.actor.actor_id == &"guard_captain" or not actor_lookup.is_valid() or actor_lookup.call(guard.actor.actor_id) != guard.actor:
 			issues.append("守卫角色未独立注册，或错误复用了守卫长")
 		roles[guard.role] = true
 		actors[guard.actor] = true
@@ -63,7 +66,7 @@ func get_issues(inventory: WarehouseInventory, actor_lookup: Callable) -> Packed
 			issues.append("守卫放行事实尚未确认（P06）")
 		if guard.role == Day1GuardResponse.Role.DRUNKEN and guard.encounter_event_id.is_empty():
 			issues.append("醉酒守卫事件尚未绑定（P09）")
-	for role: int in Day1GuardResponse.Role.values():
+	for role: int in [Day1GuardResponse.Role.ENTRANCE, Day1GuardResponse.Role.MANSION_LURE, Day1GuardResponse.Role.MANSION_GATE, Day1GuardResponse.Role.DRUNKEN]:
 		if not roles.has(role):
 			issues.append("缺少独立守卫职责：%s（P09）" % Day1GuardResponse.Role.keys()[role])
 	if flammable_targets.is_empty() and not wallet_coins:

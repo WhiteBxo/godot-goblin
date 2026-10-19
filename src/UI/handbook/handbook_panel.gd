@@ -45,6 +45,9 @@ func get_pages() -> TabContainer:
 func get_tasks_page() -> TaskPanel:
 	return _body.get_tasks_page()
 
+func get_order_history_page() -> TaskPanel:
+	return _body.get_order_history_page()
+
 func get_chronicle_page() -> ChroniclePanel:
 	return _body.get_chronicle_page()
 

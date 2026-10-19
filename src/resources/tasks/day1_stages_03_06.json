@@ -21,19 +21,21 @@
       "objectives": [
         {
           "id": "market",
-          "text": "在市场附近看看，无需与小贩交谈",
+          "text": "看看店门口的集市",
           "complete_when": {
             "type": "flag",
             "key": "day1.s03.observed_yard"
-          }
+          },
+          "location_id": "settlement.yard"
         },
         {
           "id": "return",
-          "text": "回奶茶店，和胖哥布林谈谈",
+          "text": "回奶茶店",
           "complete_when": {
             "type": "flag",
             "key": "day1.s03.returned_shop"
-          }
+          },
+          "location_id": "settlement.shop"
         }
       ]
     },
@@ -140,6 +142,35 @@
           "complete_when": {
             "type": "flag",
             "key": "day1.s05.escape_completed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "day1.s05.return_shop",
+      "type": "main",
+      "title": "带着材料回店",
+      "description": "已经安全撤离，带着取得的材料回奶茶店。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day1.s05.escape_completed"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day1.s05.escape_completed"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day1.s05.returned_shop"
+      },
+      "objectives": [
+        {
+          "id": "return",
+          "text": "回奶茶店",
+          "location_id": "settlement.shop",
+          "complete_when": {
+            "type": "flag",
+            "key": "day1.s05.returned_shop"
           }
         }
       ]

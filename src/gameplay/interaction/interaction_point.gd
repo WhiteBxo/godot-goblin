@@ -15,6 +15,7 @@ signal interacted(point: InteractionPoint)
 @export var required_actors: Array[Node2D] = []
 ## Related overlapping targets may use business priority after spatial selection.
 @export var selection_group: StringName
+@export var mouse_interaction_enabled := false
 @export var interaction_enabled := true:
 	set(value):
 		interaction_enabled = value
@@ -26,6 +27,15 @@ func _ready() -> void:
 	$Label.text = display_name
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
+	if mouse_interaction_enabled:
+		# Picking needs a nonzero layer. Layer 8 does not collide with world/player/NPC.
+		set_collision_layer_value(8, true)
+		input_pickable = true
+
+func _input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
+	if mouse_interaction_enabled and event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed and is_available():
+		interact()
+		get_viewport().set_input_as_handled()
 
 func hide_development_markers() -> void:
 	$Marker.hide()

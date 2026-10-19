@@ -111,19 +111,23 @@ func _verify_map(index: int) -> void:
 	for point: GatherPoint in map.get_gather_points():
 		_check(reachable.has(map.world_to_cell(point.global_position)), "Gather object can be approached on native floor: " + point.name)
 	for point: InteractionPoint in map.get_interaction_points() + map.get_scene_exits() + map.get_gather_points():
-		_check(point.get_node("CollisionShape2D").global_scale == Vector2.ONE * 0.5, "All RPG interactions, doors and gathering points use the same reach scale: " + point.name)
+		_check(point.get_node("CollisionShape2D").global_scale == Vector2.ONE * (0.28 if point.is_in_group("wayfinding") else 0.5), "All RPG interactions, doors and gathering points use the same reach scale: " + point.name)
 	if map.chapter_host == &"settlement":
 		_check(map.get_node("DrunkenEncounter/CollisionShape2D").global_scale == Vector2.ONE * 0.5, "NPC encounter trigger follows the half-size character range")
 	var setup := map.get_stealth_setup()
 	if setup != null:
 		_check(setup.throw_range == 230.0 and setup.effect_scale == 0.5, "RPG throw range and effect distances are halved")
 		for guard: Day1GuardResponse in setup.guards:
-			var expected_range: float = {Day1GuardResponse.Role.ENTRANCE: 84.0, Day1GuardResponse.Role.MANSION_LURE: 48.0,
-				Day1GuardResponse.Role.MANSION_GATE: 60.0, Day1GuardResponse.Role.DRUNKEN: 48.0}[guard.role]
-			_check(guard.sight_range == expected_range, "Guard sight reaches one post without covering the street: " + str(guard.role))
-			_check(guard.hearing_range == (156.0 if guard.role == Day1GuardResponse.Role.ENTRANCE else (120.0 if guard.role == Day1GuardResponse.Role.DRUNKEN else 132.0)), "Guard hearing matches the authored observation distance")
-			_check(guard.sight_half_angle == 45.0, "Guard cone is a forward sector, not a half-screen fan")
-			_check(not guard.patrol_offsets.is_empty(), "Guard has an authored patrol beat: " + str(guard.role))
+			var old_ranges := {Day1GuardResponse.Role.ENTRANCE: 84.0, Day1GuardResponse.Role.MANSION_LURE: 48.0, Day1GuardResponse.Role.MANSION_GATE: 60.0, Day1GuardResponse.Role.DRUNKEN: 48.0}
+			if old_ranges.has(guard.role):
+				_check(guard.sight_range >= float(old_ranges[guard.role]) * 2.0, "Published guard sight radius is at least doubled")
+			_check(guard.hear_footsteps and guard.hearing_range > 0, "Published guards can hear footsteps")
+			_check(guard.sight_half_angle == 55.0, "Published guard sight uses the widened forward cone")
+			if guard.role in [Day1GuardResponse.Role.MANSION_LURE, Day1GuardResponse.Role.MANSION_GATE]:
+				_check(guard.patrol_offsets.is_empty(), "Mansion door guards keep their posts")
+			else:
+				_check(not guard.patrol_offsets.is_empty(), "Street and indoor guards have authored patrols")
+
 	var data := map.get_map_data(["settlement.shop", "settlement.elder"])
 	_check(data.regions.size() == 2, "Map exposes only requested known exterior locations")
 	_check(map.get_scene_entrance(&"unknown") == null, "Unknown entrances fail closed")

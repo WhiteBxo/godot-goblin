@@ -5,6 +5,80 @@ extends Control
 var map_data: Dictionary = {}
 var player_position := Vector2.ZERO
 var target: Dictionary = {}
+@export var compact := false
+const OVERVIEW: Texture2D = preload("res://assets/map/cartography/goblin_cavern_overview.png")
+const LANDMARKS := {
+	"settlement.ritual": Vector2(0.49, 0.13), "settlement.elder": Vector2(0.83, 0.17),
+	"settlement.training": Vector2(0.82, 0.33), "settlement.warehouse": Vector2(0.20, 0.21),
+	"settlement.workshop": Vector2(0.13, 0.44), "settlement.hearth": Vector2(0.49, 0.49),
+	"settlement.casino": Vector2(0.255, 0.725), "settlement.tavern": Vector2(0.615, 0.64),
+	"settlement.yard": Vector2(0.49, 0.84), "settlement.shop": Vector2(0.65, 0.88),
+	"settlement.residential": Vector2(0.84, 0.62),
+}
+
+func _art_rect() -> Rect2:
+	var extent := OVERVIEW.get_size()
+	var scale_factor := minf((size.x - 8.0) / extent.x, (size.y - 8.0) / extent.y)
+	return Rect2((size - extent * scale_factor) * 0.5, extent * scale_factor)
+
+## Landmark-calibrated overview coordinates. Actual guidance uses floor navigation.
+func _art_point(world: Vector2) -> Vector2:
+	var normalized := Vector2.ZERO
+	var total := 0.0
+	for id: String in LANDMARKS:
+		var anchor := RpgWorldMapData.get_entrance_position(id)
+		var distance := world.distance_to(anchor)
+		if distance < 1.0:
+			normalized = LANDMARKS[id]
+			total = 1.0
+			break
+		var weight := 1.0 / pow(maxf(64.0, distance), 3.0)
+		normalized += (LANDMARKS[id] + (world - anchor) / Vector2(2400, 2640)) * weight
+		total += weight
+	var rect := _art_rect()
+	return rect.position + (normalized / maxf(total, 0.000000001)).clamp(Vector2.ZERO, Vector2.ONE) * rect.size
+
+func _draw_illustration() -> void:
+	draw_texture_rect(OVERVIEW, _art_rect(), false)
+	var font := get_theme_font("font", "Label")
+	var font_size := get_theme_font_size("font_size", "Label")
+	var occupied: Array[Rect2] = []
+	for region: Dictionary in map_data.regions:
+		var point := _art_point(region.position)
+		var label: String = String(region.name).get_slice(" · ", 0).replace("东侧居民区", "东居民区")
+		var width := font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+		var origin := Vector2.ZERO
+		var box := Rect2()
+		for offset: Vector2 in [Vector2(0, 22), Vector2(24, -10), Vector2(-24, -10), Vector2(48, 22), Vector2(-48, 22), Vector2(0, -22)]:
+			origin = (point + Vector2(-width * 0.5, 0) + offset).clamp(Vector2(6, font_size), size - Vector2(width + 6, 6))
+			box = Rect2(origin + Vector2(-3, -font_size), Vector2(width + 6, font_size + 4))
+			if not occupied.any(func(other: Rect2) -> bool: return other.grow(2).intersects(box)):
+				break
+		occupied.append(box)
+		draw_line(point, box.get_center(), get_theme_color("font_color", "Muted"), 1.0)
+		draw_style_box(get_theme_stylebox("panel", "InsetPanel"), box)
+		draw_string(font, origin, label, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, get_theme_color("font_color", "Label"))
+	if target.has("position"):
+		var point := _art_point(target.position)
+		draw_arc(point, 8.0, 0, TAU, 24, get_theme_color("font_color", "Warning"), 2.0)
+	var player := _art_point(player_position)
+	draw_circle(player, 3.0, get_theme_color("font_color", "Success"))
+	draw_arc(player, 5.0, 0, TAU, 24, get_theme_color("font_color", "Label"), 1.0)
+
+func _draw_local_map() -> void:
+	var floor_color := get_theme_color("font_color", "Muted")
+	for area: Rect2 in map_data.get("floor_cells", []):
+		var rect := Rect2(world_to_map(area.position), world_to_map(area.end) - world_to_map(area.position))
+		draw_rect(rect, floor_color)
+	var edge := Rect2(Vector2(4, 4), size - Vector2(8, 8))
+	if target.has("position"):
+		var point := world_to_map(target.position).clamp(edge.position, edge.end)
+		draw_colored_polygon(PackedVector2Array([point + Vector2(0, -3), point + Vector2(3, 0), point + Vector2(0, 3), point + Vector2(-3, 0)]), get_theme_color("font_color", "Warning"))
+	var player := world_to_map(player_position)
+	draw_circle(player, 2.0, get_theme_color("font_color", "Success"))
+	draw_arc(player, 3.5, 0, TAU, 16, get_theme_color("font_color", "Label"), 1.0)
+	var font := get_theme_font("font", "Label")
+	draw_string(font, Vector2(size.x - 14, 12), "北", HORIZONTAL_ALIGNMENT_LEFT, -1, get_theme_font_size("font_size", "Label"), get_theme_color("font_color", "Label"))
 
 func _ready() -> void:
 	resized.connect(queue_redraw)
@@ -19,12 +93,18 @@ func world_to_map(point: Vector2) -> Vector2:
 	var bounds := _view_rect()
 	if not bounds.has_area():
 		return Vector2.ZERO
-	var available := size - Vector2(24, 24)
+	var available := size - (Vector2(8, 8) if compact else Vector2(24, 24))
 	var ratio := maxf(0.0, minf(available.x / bounds.size.x, available.y / bounds.size.y))
 	return (size - bounds.size * ratio) * 0.5 + (point - bounds.position) * ratio
 
 func _draw() -> void:
 	if map_data.is_empty():
+		return
+	if compact and map_data.has("floor_cells"):
+		_draw_local_map()
+		return
+	if map_data.get("illustrated", false) and not compact:
+		_draw_illustration()
 		return
 	var ink := get_theme_color("font_color", "Label")
 	var muted := get_theme_color("font_color", "Muted")
@@ -48,7 +128,7 @@ func _draw() -> void:
 			label = str(region.name)
 		if font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > rect.size.x - 6.0:
 			label = str(int(region.get("ordinal", 0)))
-		if rect.size.y >= font_size:
+		if not compact and rect.size.y >= font_size:
 			draw_string(font, rect.position + Vector2(4, font_size + 3), label,
 				HORIZONTAL_ALIGNMENT_LEFT, rect.size.x - 6.0, font_size, ink)
 		draw_circle(world_to_map(region.position), 1.5, ink)

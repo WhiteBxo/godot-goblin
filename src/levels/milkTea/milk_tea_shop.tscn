@@ -511,6 +511,8 @@ description = "今日订单 #001
 制作流程：查看订单 → 仓库备料 → 制作台调配。"
 feedback_rect = Rect2(-26, -53, 52, 52)
 
+mouse_interaction_enabled = true
+
 [node name="Marker" parent="InteractionPoints/OrderBoard" index="1"]
 visible = false
 

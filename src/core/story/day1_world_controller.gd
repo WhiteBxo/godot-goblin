@@ -26,6 +26,13 @@ func _physics_process(delta: float) -> void:
 	_boundary_cooldown = maxf(0.0, _boundary_cooldown - delta)
 	if not is_instance_valid(_player) or not _level is RpgChapterMap:
 		return
+	# An older save or an F6 spawn may already be beyond the newly gated market.
+	# Recover to the authored shop entrance rather than trapping every movement axis.
+	if _level.market_only and _level.first_visit_bounds.has_area() and not _level.first_visit_bounds.has_point(_level.to_local(_player.global_position)):
+		var arrival: SceneEntrance = _level.get_scene_entrance(&"shop_door")
+		if arrival != null:
+			_player.teleport_to(arrival.global_position)
+			_on_market_boundary()
 	if not Day1Access.at_stage(_state, "day1.s03.explore"):
 		return
 	if _level.is_observing_market(_player.global_position) and not _state.get_flag("day1.s03.observed_yard"):

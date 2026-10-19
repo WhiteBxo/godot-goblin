@@ -77,7 +77,7 @@
 | [采集点与任务物资提交](gameplay/gathering.md) | `gathering.md` |
 | [2D 交互反馈](gameplay/interaction_feedback.md) | `interaction_feedback.md` |
 | [成品携带与指定 NPC 交付](gameplay/task_delivery.md) | `task_delivery.md` |
-| [委托列表与详情](gameplay/task_panel.md) | `task_panel.md` |
+| [任务日志与奶茶订单](gameplay/task_panel.md) | `task_panel.md` |
 | [任务、委托与订单投影](gameplay/task_system.md) | 当前 Schema、目录分工与历史 P0 验证 |
 | [钱包与原子交易](gameplay/wallet_transactions.md) | `wallet_transactions.md` |
 | [仓库与共享库存（第一阶段）](gameplay/warehouse_inventory.md) | `warehouse_inventory.md` |

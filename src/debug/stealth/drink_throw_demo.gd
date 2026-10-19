@@ -49,13 +49,17 @@ func _ready() -> void:
 	setup.escape_zone.position = Vector2(300, 700)
 	add_child(setup.escape_zone)
 	add_shape(setup.escape_zone, Vector2(80, 80))
+	# This fixture reproduces the four authored posts only; PATROL is used by the
+	# chapter street scene and would need its own label and slot here.
+	var roles := [Day1GuardResponse.Role.ENTRANCE, Day1GuardResponse.Role.MANSION_LURE, Day1GuardResponse.Role.MANSION_GATE, Day1GuardResponse.Role.DRUNKEN]
 	var positions := [Vector2(680, 400), Vector2(1100, 350), Vector2(1180, 350), Vector2(1200, 730)]
-	for role: int in Day1GuardResponse.Role.values():
+	for slot in range(roles.size()):
+		var role: int = roles[slot]
 		var actor: SettlementCharacter = load("res://src/gameplay/characters/guard.tscn").instantiate()
 		actor.actor_id = StringName("fixture_guard_%d" % role)
-		actor.display_name = ["入口守卫", "宅邸诱饵卫", "宅邸第二卫", "醉酒守卫"][role]
+		actor.display_name = ["入口守卫", "宅邸诱饵卫", "宅邸第二卫", "醉酒守卫"][slot]
 		actor.initial_facing = PlayerController.Facing.RIGHT
-		actor.position = positions[role]
+		actor.position = positions[slot]
 		add_child(actor)
 		actors[actor.actor_id] = actor
 		var guard := Day1GuardResponse.new()

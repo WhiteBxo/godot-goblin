@@ -19,6 +19,7 @@ size_flags_vertical = 3
 
 [node name="Tasks" parent="Pages" instance=ExtResource("3")]
 layout_mode = 2
+content_filter = "tasks"
 
 [node name="Chronicle" parent="Pages" instance=ExtResource("4")]
 layout_mode = 2
@@ -28,3 +29,7 @@ layout_mode = 2
 
 [node name="Characters" parent="Pages" instance=ExtResource("6")]
 layout_mode = 2
+
+[node name="Orders" parent="Pages" instance=ExtResource("3")]
+layout_mode = 2
+content_filter = "milk_orders"

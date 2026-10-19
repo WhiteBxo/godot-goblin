@@ -74,7 +74,7 @@ func _fixture() -> void:
 		var actor: SettlementCharacter = load("res://src/gameplay/characters/guard.tscn").instantiate()
 		actor.actor_id = StringName("fixture_guard_%d" % role)
 		actor.initial_facing = PlayerController.Facing.RIGHT
-		actor.position = Vector2([0, 2000, 2080, 4000][role], 0)
+		actor.position = Vector2([0, 2000, 2080, 4000, 6000][role], 0)
 		_world.add_child(actor)
 		_actors[actor.actor_id] = actor
 		var guard := Day1GuardResponse.new()
@@ -345,7 +345,7 @@ func _check_real_host() -> void:
 	for guard: Day1GuardResponse in setup.guards:
 		actors[guard.actor.actor_id] = true
 		roles[guard.role] = true
-	_check(actors.size() == 4 and roles.size() == 4, "Four independently registered guards cover four roles")
+	_check(actors.size() == 6 and roles.size() == 5, "Four specialist guards and two additional street patrols are independently registered")
 	_check(service.status == Day1StealthService.Status.RUNNING, "Formal host starts the whole-attempt checkpoint")
 	var before: Dictionary = _state.to_dict()
 	service.select_throwable(&"coin")

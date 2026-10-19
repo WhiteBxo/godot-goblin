@@ -113,3 +113,15 @@ F6 运行现有 `src/debug/story/day1_world_flow_demo.tscn`，它继承正式 `s
 - 新增主线任务 `day1.s05.infiltration`，目标顺序为醉卫交涉、双卫付款、书房文书、右室血液、回观察位撤离，补齐潜入阶段的 HUD 与地图目标。
 
 验证：`verify_rpg_chapter_maps.gd` 192 项（含视锥边界、巡逻位移、重置回位），`verify_day1_stealth.gd` 105 项，`verify_two_day_flow.gd` 282 项，`verify_day1_world_flow.gd` 48 项。没有发现 TileMap 通行数据中真实存在的不可见碰撞；石墙与宅门附近用路标说明绕行和入口。
+
+## 2026-10-19 听觉、搜索与新增巡逻哨
+
+按“看清、听见、再搜索”的节奏补齐感知层，参考《细胞分裂：黑名单》的视觉／听觉分工：听觉只产生怀疑与调查，不直接等于发现。
+
+- 新增 `Role.PATROL` 与 `State.SEARCHING`。街面与宅内各加两名巡逻哨（`chapter_cave.tscn` 两名、`chapter_elder_house.tscn` 两名），`hear_footsteps = true`，视距与半角比四名专职责守卫更小，用于制造可绕行的压迫感。
+- `hear_noise()` 只在 0.5 秒冷却外响应，半径按 `hearing_range × loudness` 缩放：奔跑 1.0、行走 0.45、潜行 0.1；射线被墙截断时衰减到 20%（硬币砸在墙面上仍算听得见）。听见后转向声源并进入 `SEARCHING` 调查 2 秒，随后回到原位朝向。
+- 已在 `ALERT` 的守卫不会被脚步声打断，只更新最后目击点；离开视线后继续朝最后目击点搜索，暴露值照常衰减，因此“跑动引开—绕后”仍然成立。
+- 投币对 `MANSION_GATE` 与 `DRUNKEN` 改用同一套听觉判定：只转头调查，不离开付款门禁；对普通守卫仍走原有的走向声源分心。
+- 检查点重试会清空搜索倒计时、噪声冷却与最后目击点，与巡逻状态一起回位。
+
+验证：`verify_day1_stealth.gd` 105 项（含四职责加两巡逻的独立注册）、`verify_feedback_iteration.gd` 76 项（含听觉转向、柜后遮挡下仍可潜行）、`verify_rpg_chapter_maps.gd` 216 项。完整回归 99 项中 64 项通过，其余为基线已有失败，未新增回归。

@@ -487,7 +487,8 @@
 							"settlement.ritual",
 							"settlement.training",
 							"settlement.workshop",
-							"settlement.warehouse"
+							"settlement.warehouse",
+							"settlement.residential"
 						]
 					}
 				},

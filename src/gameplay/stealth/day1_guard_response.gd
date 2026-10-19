@@ -2,8 +2,8 @@ class_name Day1GuardResponse
 extends Node2D
 ## A stationary Day 1 watch: sight, timed distraction and an explicit drunken interception.
 
-enum Role { ENTRANCE, MANSION_LURE, MANSION_GATE, DRUNKEN }
-enum State { WATCHING, ALERT, DISTRACTED, CONFUSED, CLEARED, STUNNED }
+enum Role { ENTRANCE, MANSION_LURE, MANSION_GATE, DRUNKEN, PATROL }
+enum State { WATCHING, ALERT, DISTRACTED, CONFUSED, CLEARED, STUNNED, SEARCHING }
 
 @export var role: Role = Role.ENTRANCE
 @export var actor: SettlementCharacter
@@ -23,6 +23,8 @@ enum State { WATCHING, ALERT, DISTRACTED, CONFUSED, CLEARED, STUNNED }
 @export_range(0.1, 2.0, 0.05) var patrol_stall_seconds := 0.3
 ## A distracted guard walks toward the impact before returning to the route.
 @export_range(8.0, 200.0) var distraction_walk_stop := 28.0
+@export var hear_footsteps := false
+@export_range(0.2, 8.0) var search_seconds := 2.0
 
 var state: State = State.WATCHING
 var exposure := 0.0
@@ -41,6 +43,9 @@ var _sight_polygon := PackedVector2Array()
 const FEEDBACK_THEME = preload("res://src/resources/ui/game_theme.tres")
 const ALERT_POP_SECONDS := 0.18
 var _alert_pop := 0.0
+var _search_remaining := 0.0
+var _noise_cooldown := 0.0
+var _last_seen := Vector2.ZERO
 
 func set_feedback_enabled(enabled: bool) -> void:
 	_feedback_enabled = enabled
@@ -60,6 +65,8 @@ func get_feedback_text() -> String:
 			return "已放行"
 		State.STUNNED:
 			return "眩晕 %.1f 秒" % remaining
+		State.SEARCHING:
+			return "？听到动静 · 调查中"
 	return "观察中"
 
 func capture_checkpoint() -> void:
@@ -78,6 +85,9 @@ func reset_response(restore_actor: bool = true) -> void:
 	_patrol_wait = 0.0
 	_patrol_stall = 0.0
 	_distraction_point = Vector2.ZERO
+	_search_remaining = 0.0
+	_noise_cooldown = 0.0
+	_last_seen = Vector2.ZERO
 	if restore_actor and _captured and is_instance_valid(actor) and not actor.is_performance_controlled():
 		actor.teleport_to(_home_position)
 		actor.face_direction(_home_facing)
@@ -94,10 +104,22 @@ func set_cleared(cleared: bool) -> void:
 
 func distract(impact: Vector2, seconds: float = 0.0) -> bool:
 	# A coin never clears the two-guard combination or the mandatory drunken event.
-	if role not in [Role.ENTRANCE, Role.MANSION_LURE] or not _available() or state in [State.CONFUSED, State.CLEARED, State.STUNNED]:
+	if not _available() or state in [State.CONFUSED, State.CLEARED, State.STUNNED]:
 		return false
 	if actor.global_position.distance_to(impact) > hearing_range:
 		return false
+	if hear_footsteps and not _noise_is_audible(impact, 1.0, actor.get_world_2d().direct_space_state):
+		return false
+	if role in [Role.MANSION_GATE, Role.DRUNKEN]:
+		if not hear_footsteps:
+			return false
+		# Special posts acknowledge the noise without abandoning the payment gate.
+		state = State.SEARCHING
+		_search_remaining = search_seconds
+		_distraction_point = impact
+		_face_toward(impact)
+		queue_redraw()
+		return true
 	state = State.DISTRACTED
 	exposure = 0.0
 	remaining = seconds if seconds > 0.0 else distraction_seconds
@@ -142,8 +164,34 @@ func displace(motion: Vector2) -> bool:
 func effective_sight_range() -> float:
 	return 0.0 if state == State.STUNNED else sight_range
 
+## Hearing produces suspicion and a facing/inspection response, never instant discovery.
+func hear_noise(origin: Vector2, loudness: float, space: PhysicsDirectSpaceState2D) -> bool:
+	if not _available() or state in [State.CLEARED, State.STUNNED, State.CONFUSED, State.DISTRACTED] or _noise_cooldown > 0.0:
+		return false
+	if not _noise_is_audible(origin, loudness, space):
+		return false
+	_noise_cooldown = 0.5
+	_search_remaining = search_seconds
+	_distraction_point = origin
+	_face_toward(origin)
+	if state != State.ALERT:
+		state = State.SEARCHING
+	queue_redraw()
+	return true
+
+func _noise_is_audible(origin: Vector2, loudness: float, space: PhysicsDirectSpaceState2D) -> bool:
+	var radius := hearing_range * clampf(loudness, 0.0, 1.0)
+	var ray := PhysicsRayQueryParameters2D.create(actor.global_position, origin, 1)
+	ray.hit_from_inside = true
+	var hit := space.intersect_ray(ray)
+	# A coin striking the visible face of a wall remains audible at the endpoint.
+	if not hit.is_empty() and (hit.position as Vector2).distance_to(origin) > 4.0:
+		radius *= 0.2
+	return actor.global_position.distance_to(origin) <= radius
+
 ## Called only by the service's physics tick. Returns true on actual discovery.
 func advance(delta: float, player: PlayerController, space: PhysicsDirectSpaceState2D) -> bool:
+	_noise_cooldown = maxf(0.0, _noise_cooldown - delta)
 	_update_sight_feedback(player, space)
 	_alert_pop = maxf(0.0, _alert_pop - delta)
 	queue_redraw()
@@ -170,7 +218,17 @@ func advance(delta: float, player: PlayerController, space: PhysicsDirectSpaceSt
 			actor.face_direction(_home_facing)
 		queue_redraw()
 		return false
-	_advance_patrol(delta)
+	var was_searching := state == State.SEARCHING
+	if hear_footsteps and player.velocity.length() > 12.0:
+		var volume := 1.0 if player.locomotion_mode == PlayerController.Locomotion.RUN else (0.1 if player.locomotion_mode == PlayerController.Locomotion.SNEAK else 0.45)
+		hear_noise(player.global_position, volume, space)
+	if _search_remaining > 0.0:
+		_search_remaining = maxf(0.0, _search_remaining - delta)
+		_advance_distraction(delta)
+	elif state == State.ALERT:
+		_stop_walking(delta)
+	else:
+		_advance_patrol(delta)
 	var offset := player.global_position - actor.global_position
 	var seen := offset.length() <= sight_range and (offset.is_zero_approx() or actor.get_facing_vector().dot(offset.normalized()) >= cos(deg_to_rad(sight_half_angle)))
 	if seen and not offset.is_zero_approx():
@@ -178,8 +236,16 @@ func advance(delta: float, player: PlayerController, space: PhysicsDirectSpaceSt
 		query.hit_from_inside = true
 		seen = space.intersect_ray(query).is_empty()
 	var was_watching := exposure <= 0.0
+	if seen:
+		_last_seen = player.global_position
+	elif hear_footsteps and exposure > 0.0:
+		_distraction_point = _last_seen
+		_search_remaining = search_seconds
 	exposure = clampf(exposure + (delta / detection_multiplier if seen else -delta * 2.0), 0.0, discovery_seconds)
-	state = State.ALERT if exposure > 0.0 else State.WATCHING
+	state = State.ALERT if exposure > 0.0 else (State.SEARCHING if _search_remaining > 0.0 else State.WATCHING)
+	if state == State.WATCHING and (was_searching or not _last_seen.is_zero_approx()):
+		_last_seen = Vector2.ZERO
+		actor.face_direction(_home_facing)
 	if was_watching and exposure > 0.0:
 		_alert_pop = ALERT_POP_SECONDS
 	queue_redraw()
@@ -270,14 +336,14 @@ func _update_sight_feedback(player: PlayerController, space: PhysicsDirectSpaceS
 func _draw() -> void:
 	if not _feedback_enabled or not _available():
 		return
-	var colors := [Color("e6c67e"), Color("ffb35c"), Color("8cdbed"), Color("f3a36a"), Color("a8dd9a"), Color("c8a5e8")]
+	var colors := [Color("e6c67e"), Color("ffb35c"), Color("8cdbed"), Color("f3a36a"), Color("a8dd9a"), Color("c8a5e8"), Color("e6c67e")]
 	var alert_ratio := clampf(exposure / maxf(discovery_seconds, 0.001), 0.0, 1.0)
 	var color: Color = colors[state]
 	if state == State.ALERT:
 		# The cone heats up as exposure fills so sight itself carries the warning.
 		var watching: Color = colors[State.WATCHING]
 		color = watching.lerp(Color("ff7a4d"), alert_ratio)
-	if state in [State.WATCHING, State.ALERT] and _sight_polygon.size() > 3:
+	if state in [State.WATCHING, State.ALERT, State.SEARCHING] and _sight_polygon.size() > 3:
 		var fill := 0.10 if state == State.WATCHING else 0.20 + 0.12 * alert_ratio
 		draw_colored_polygon(_sight_polygon, Color(color, fill))
 		draw_polyline(_sight_polygon + PackedVector2Array([_sight_polygon[0]]), Color(color, 0.45), 1.0)

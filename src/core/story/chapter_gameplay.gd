@@ -14,6 +14,8 @@ var _procurement: Day2Procurement
 var _hud: ChapterActionsHUD
 var _hud_signature := ""
 var _services_ready := false
+var _recap: Control
+var _recap_shown := false
 
 func configure(game: MainGame) -> Error:
 	_game = game
@@ -31,6 +33,11 @@ func configure(game: MainGame) -> Error:
 	game.get_ui_manager().register_screen(ScreenIds.CHAPTER_ACTIONS, _hud, &"hud", false)
 	game.get_ui_manager().open_screen(ScreenIds.CHAPTER_ACTIONS)
 	_hud.action_requested.connect(perform_user_action)
+	_recap = preload("res://src/UI/hud/chapter_recap.tscn").instantiate()
+	game.get_ui_manager().register_screen(ScreenIds.CHAPTER_RECAP, _recap, &"popup", true)
+	_recap.dismissed.connect(func() -> void:
+		if _recap_shown:
+			_state.set_flag("ui.two_day_recap_seen"))
 	_state.state_changed.connect(_schedule_refresh)
 	_game.get_tea_production().changed.connect(_schedule_refresh)
 	_schedule_refresh()
@@ -287,6 +294,9 @@ func _process(_delta: float) -> void:
 	if not is_instance_valid(_hud) or not is_instance_valid(_game.get_story_director()):
 		return
 	var actions := get_user_actions()
+	if _host == "shop" and _state.story_stage == "day3.handoff" and _state.get_flag("day2.completed") and not _state.get_flag("ui.two_day_recap_seen") and not _recap_shown and _quiet():
+		_recap.present(get_recap_text())
+		_recap_shown = _game.get_ui_manager().open_screen(ScreenIds.CHAPTER_RECAP) == OK
 	var notice := ""
 	if _state.current_day in [2, 3]:
 		var status := _procurement.get_status()
@@ -313,3 +323,14 @@ func get_optional_summary() -> String:
 		var ready: bool = _state.get_warehouse_inventory().has_materials(requirement)
 		lines.append("七日祭 · " + ("已齐备，第三天交付" if ready else "材料待采集"))
 	return "\n".join(lines)
+
+func get_recap_text() -> String:
+	var orders := 0
+	for task: Dictionary in _game.get_task_catalog().get_tasks():
+		var delivery: Dictionary = task.get("delivery", {})
+		var id: String = delivery.get("order_id", "")
+		if (id.begins_with("day1") or id.begins_with("day2")) and (delivery.has("product_id") or delivery.has("drink")) and _state.get_flag("delivery." + id + ".completed"):
+			orders += 1
+	var recipes: int = _state.get_warehouse_inventory().get_drinks(true).size()
+	var records: Dictionary = _state.get_variable("characters.entries", {})
+	return "营业成果\n交付 %d 张饮品订单 · 当前余额 %s\n\n探索与发现\n记录了 %d 种自创饮品 · %d 位人物\n文书与血液已带回，守卫招待已完成。\n\n未解之谜\n黄金乡、变量，以及格里芬之血的秘密……" % [orders, WalletTransactions.format_money(_state.get_transactions().get_balance()), recipes, records.size()]

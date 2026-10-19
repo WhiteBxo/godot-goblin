@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[node name="ChapterRecapPage" type="VBoxContainer"]
+layout_mode = 2
+
+[node name="Summary" type="Label" parent="."]
+layout_mode = 2
+autowrap_mode = 3
+text = ""
+
+[node name="Next" type="Label" parent="."]
+layout_mode = 2
+autowrap_mode = 3
+theme_type_variation = &"Hint"
+text = "前两天主线已完成。继续后可办理第三天已有委托，后续主线尚未开放。"

@@ -20,3 +20,4 @@ const MAP := &"map"
 const TAVERN_PURCHASE := &"tavern_purchase"
 
 const CHAPTER_ACTIONS := &"chapter_actions"
+const CHAPTER_RECAP := &"chapter_recap"

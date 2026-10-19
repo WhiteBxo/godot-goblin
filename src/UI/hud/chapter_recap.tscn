@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/UI/hud/chapter_recap.gd" id="script"]
+[ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="theme"]
+[ext_resource type="PackedScene" path="res://src/UI/components/modal_shell.tscn" id="shell"]
+[ext_resource type="PackedScene" path="res://src/UI/hud/chapter_recap_page.tscn" id="page"]
+
+[node name="ChapterRecap" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("theme")
+script = ExtResource("script")
+
+[node name="ModalShell" parent="." instance=ExtResource("shell")]
+layout_mode = 1
+title = "前两天 · 旅程回顾"
+hint = "Esc / Enter 继续 · 进度会在下一安全检查点保存"
+content_scene = ExtResource("page")

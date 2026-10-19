@@ -40,6 +40,9 @@ func _run() -> void:
 		root.get_texture().get_image().save_png("res://.godot/two_day_polish/hud.png")
 	hud.free()
 	_test_taste()
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--fixtures="):
+			await _test_live_recap(argument.trim_prefix("--fixtures="))
 	print("TWO_DAY_POLISH: %s (%d checks, %d failures)" % ["PASS" if failures.is_empty() else "FAIL", checks, failures.size()])
 	quit(0 if failures.is_empty() else 1)
 
@@ -81,3 +84,30 @@ func _test_taste() -> void:
 	delivery.free()
 	journal.free()
 	state.free()
+
+func _test_live_recap(directory: String) -> void:
+	var target := OS.get_cache_dir().path_join("goblin_polish_recap_%d" % OS.get_process_id())
+	DirAccess.make_dir_recursive_absolute(target)
+	DirAccess.copy_absolute(directory.path_join("day3_handoff/autosave.dat"), target.path_join("autosave.dat"))
+	ProjectSettings.set_setting("persistence/save_directory", target)
+	ProjectSettings.set_setting("debug/developer_tools/enabled", false)
+	check(GameEntry.continue_game(self) == OK, "Real chapter-end checkpoint resumes")
+	await scene_changed
+	var game := current_scene as MainGame
+	while game.is_session_initializing():
+		await process_frame
+	await frames(20)
+	var state := root.get_node("GameState")
+	var before: Dictionary = state.to_dict()
+	check(game.get_ui_manager().is_open(ScreenIds.CHAPTER_RECAP) and not game.get_player().movement_enabled, "Recap is modal at a completed chapter boundary")
+	var text := game.get_chapter_gameplay().get_recap_text()
+	check("28G" in text and "订单" in text, "Recap projects the actual saved wallet and deliveries")
+	if "--capture" in OS.get_cmdline_user_args() and DisplayServer.get_name() != "headless":
+		await RenderingServer.frame_post_draw
+		root.get_texture().get_image().save_png("res://.godot/two_day_polish/recap.png")
+	game.get_ui_manager().close_screen(ScreenIds.CHAPTER_RECAP)
+	await frames(5)
+	check(state.get_flag("ui.two_day_recap_seen") and game.get_player().movement_enabled, "Closing acknowledges recap and releases player input")
+	before.flags["ui.two_day_recap_seen"] = true
+	check(state.to_dict() == before, "Acknowledging results changes only its presentation flag")
+	game.free()

@@ -16,7 +16,7 @@
 ### 携杯（表现层，库存仍是唯一真相）
 
 - `main.gd` 在三种制作入口成功提交后调用 `_carry_cup()`：已知配方用 `result.product_id`，自由实验/确认配方用 `result.id`；交付后由 `_settle_carried_cup()` 按该杯在库数量决定是否清空，绝不留下一杯已经不存在的奶茶。
-- `HeldItemVisual` 新增 `set_item_texture()`：有产品图就画产品图，自由配方杯用 `custom_drink.svg` 的中性杯，潜入用的火把/硬币仍走原来的绘制。
+- `HeldItemVisual` 新增 `set_item_texture()`：有产品图就画产品图，自由配方杯用 `custom_drink.svg` 的中性杯，潜入用的火把/硬币仍走原来的绘制。杯子画 22×26 世界像素、底下垫一层 40% 的暗色副本——浅色奶茶压在浅色木地板上会丢掉轮廓，暗底副本让它在任何背景上都读得出来。
 - 手持物随移动做 1.5px 起伏（`_process` 按速度判断），停下归位。只改 `position`，手部锚点与 `z_index` 不变。
 
 ### 交付

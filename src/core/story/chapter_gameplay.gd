@@ -209,7 +209,7 @@ func _taste_pending() -> bool:
 
 func _on_optional_delivered(id: String) -> void:
 	if id == "day2_taste":
-		_scheduler.request_departure("ordinary_c")
+		_scheduler.request_departure.call_deferred("ordinary_c")
 		_game.get_shop_ui().show_feedback.call_deferred("试饮评价 · 奶香里带着辛辣，正合口味！配方已留在饮品图鉴。", true)
 
 func _quiet() -> bool:
@@ -300,17 +300,22 @@ func _process(_delta: float) -> void:
 	var notice := ""
 	if _state.current_day in [2, 3]:
 		var status := _procurement.get_status()
-		if not status.is_empty():
+		if not status.is_empty() and status.status not in ["delivered", "expired"]:
 			notice = "代购专款 %dG · %s" % [int(status.escrow), {"funded": "尚未雇人", "hired": "跑腿途中", "returned": "醒神菇已带回，请交给胖哥布林", "delivered": "已向胖哥布林交付", "expired": "已超时"}.get(status.status, "")]
 	var gathering_notice := get_gathering_notice()
 	if not gathering_notice.is_empty():
 		notice += ("\n\n" if not notice.is_empty() else "") + gathering_notice
 	var enabled := _quiet()
 	var summary := get_optional_summary()
-	var signature := JSON.stringify([actions, notice, enabled, summary])
+	var context_details := _host == "tavern"
+	var level := _game.get_active_level()
+	if level.has_method("get_gather_points"):
+		for point: GatherPoint in level.get_gather_points():
+			context_details = context_details or point.is_available()
+	var signature := JSON.stringify([actions, notice, enabled, summary, context_details])
 	if signature != _hud_signature:
 		_hud_signature = signature
-		_hud.show_actions(actions, notice, enabled, summary)
+		_hud.show_actions(actions, notice, enabled, summary, context_details)
 
 func get_optional_summary() -> String:
 	var lines := PackedStringArray()

@@ -196,8 +196,11 @@ func press_chapter_action(id: String) -> void:
 		if action.id == id:
 			label = action.text
 	var hud := game.find_children("*", "ChapterActionsHUD", true, false)[0] as ChapterActionsHUD
+	if id.begins_with("hire:") and not hud.get_node("Scroll/Content/OptionalButtons").visible:
+		hud.get_node("Scroll/Content/Details").grab_focus()
+		await tap(&"ui_accept")
 	var button: Button
-	for child: Node in hud.get_node("Content/Buttons").get_children():
+	for child: Node in hud.get_node("Scroll/Content/Buttons").get_children() + hud.get_node("Scroll/Content/OptionalButtons").get_children():
 		if child is Button and child.text == label:
 			button = child
 	check(button != null and not button.disabled and button.is_visible_in_tree(), "A usable chapter button exists: " + id)

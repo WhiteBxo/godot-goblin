@@ -21,6 +21,10 @@ var _encyclopedia: Dictionary = {}
 var _rules: RecipeRules
 var _economy_rules: EconomyRules
 var _session_locked := false
+var _signature_access: Callable
+
+func set_signature_access(lookup: Callable) -> void:
+	_signature_access = lookup
 
 ## Used by the owning GameState while publishing a complete replacement.
 func set_session_locked(locked: bool) -> void:
@@ -79,7 +83,11 @@ func is_quest_only(id: Variant) -> bool:
 	return _has_id(id) and _definitions[id].economy_scope == "quest"
 
 func calculate_formula(materials: Variant, enforce_slots := true, iced := false) -> Dictionary:
-	return DrinkFormula.evaluate(materials, get_definition, _rules, enforce_slots, iced)
+	return DrinkFormula.evaluate(materials, get_definition, _rules, enforce_slots, iced, _signature_access)
+
+## Static matching for validating saved rewards, independent of current progress.
+func calculate_signature_formula(materials: Array, iced: bool) -> Dictionary:
+	return DrinkFormula.evaluate(materials, get_definition, _rules, false, iced)
 
 func get_formula_choices(base_only := false) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []

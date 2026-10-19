@@ -16,6 +16,8 @@
 
 [ext_resource type="Script" path="res://src/gameplay/interaction/chapter_service_point.gd" id="service"]
 [ext_resource type="PackedScene" path="res://src/levels/rpg_maker/wayfinding_sign.tscn" id="sign"]
+[ext_resource type="Script" path="res://src/gameplay/story_interaction/signature_discovery_point.gd" id="signature"]
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_common_goblin.tscn" id="drinker"]
 
 [sub_resource type="RectangleShape2D" id="counter_reach"]
 size = Vector2(96, 192)
@@ -101,3 +103,19 @@ active_phase = "always"
 position = Vector2(264, 552)
 [node name="Text" parent="CounterSign/Panel"]
 text = "↑ 吧台 · 裂牙"
+
+[node name="HeartbrokenDrinker" parent="Characters" instance=ExtResource("drinker")]
+position = Vector2(456, 408)
+actor_id = &"signature_heartbroken_drinker"
+display_name = "独自买醉的哥布林"
+story_role = "S04：怀念妻子与过去生活的男人。"
+active_phase = "always"
+
+[node name="SignatureS04" parent="Interactions" instance=ExtResource("point")]
+position = Vector2(456, 432)
+script = ExtResource("signature")
+interaction_id = &"signature_s04"
+signature_id = "S04"
+display_name = "与独自买醉的哥布林交谈"
+feedback_rect = Rect2(-24, -96, 48, 96)
+show_world_marker = true

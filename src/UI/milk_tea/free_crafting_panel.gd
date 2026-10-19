@@ -164,7 +164,7 @@ func select_formula(materials: Array, iced := false) -> bool:
 func _refresh_preview() -> void:
 	var materials := get_materials()
 	var result := _production.preview_formula(materials, 1, is_iced())
-	var quote := _production.preview_formula_price(materials) if not materials.is_empty() else {}
+	var quote := _production.preview_formula_price(materials, is_iced()) if not materials.is_empty() else {}
 	var priced: bool = bool(quote.get("priced", false))
 	var can_confirm := _production.can_confirm_formula(materials)
 	var pricing_hint := ""

@@ -17,6 +17,7 @@
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_guard.tscn" id="guard"]
 [ext_resource type="Script" path="res://src/gameplay/stealth/day1_guard_response.gd" id="response"]
 [ext_resource type="Texture2D" path="res://assets/story/elder_document.png" id="document_image"]
+[ext_resource type="Script" path="res://src/gameplay/story_interaction/signature_discovery_point.gd" id="signature"]
 
 [node name="RpgMakerMap006" instance=ExtResource("base")]
 
@@ -73,6 +74,15 @@ position = Vector2(744, 264)
 position = Vector2(408, 552)
 
 [node name="Interactions" type="Node2D" parent="."]
+
+[node name="SignatureS10" parent="Interactions" instance=ExtResource("point")]
+position = Vector2(456, 168)
+script = ExtResource("signature")
+interaction_id = &"signature_s10"
+signature_id = "S10"
+display_name = "书柜旧书里夹着的信"
+feedback_rect = Rect2(-48, -144, 96, 144)
+show_world_marker = true
 
 [node name="GatherPoints" type="Node2D" parent="."]
 

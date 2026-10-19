@@ -42,6 +42,7 @@ func _init(menu: TeaMenu = WarehouseInventory.CATALOG) -> void:
 	if menu == null:
 		menu = WarehouseInventory.CATALOG
 	_inventory = WarehouseInventory.new(menu)
+	_inventory.set_signature_access(is_signature_available)
 	_inventory.name = "WarehouseInventory"
 	add_child(_inventory)
 	_inventory.changed.connect(_on_inventory_changed)
@@ -145,10 +146,67 @@ func get_price_record(recipe_id: Variant) -> Dictionary:
 	var record: Variant = _recipe_prices.get(recipe_id)
 	return record.duplicate(true) if record is Dictionary else {}
 
+func is_signature_discovered(id: String) -> bool:
+	return _signature_rewards.has(id)
+
+func is_signature_available(id: String) -> bool:
+	var signature := _inventory.get_recipe_rules().get_signature(id)
+	return signature.get("discovery_kind", "experiment") == "experiment" or is_signature_discovered(id)
+
+## Signature prices apply to the exact serving variant; ordinary ledger records
+## remain intact so old quotes and opposite ice variants never need a re-roll.
+func get_drink_sale_price(drink: Dictionary) -> int:
+	if not drink.get("signature_id", "").is_empty() and int(drink.get("price", 0)) > 0:
+		return int(drink.price)
+	var record := get_formula_price(drink.get("ingredients", []))
+	return int(record.get("selling_price", 0))
+
+## Discovery adds a zero-stock encyclopedia record and pays once. No ingredients
+## are acquired or consumed. GameState owns eligibility and the final commit.
+func prepare_signature_discovery(id: String, day: int, picker: Callable) -> Dictionary:
+	if is_busy() or day < 1:
+		return {"ok": false, "message": "当前无法记录配方。"}
+	var signature := _inventory.get_recipe_rules().get_signature(id)
+	if signature.is_empty() or signature.get("discovery_kind") != "clue":
+		return {"ok": false, "message": "没有可调查的爆品线索。"}
+	if is_signature_discovered(id):
+		return {"ok": true, "replayed": true, "message": "该爆品已记录，赏金已领取。"}
+	var formula := _inventory.calculate_signature_formula(signature.ingredients, signature.iced)
+	if not formula.ok or formula.signature_id != id:
+		return {"ok": false, "message": "爆品配置无效。"}
+	var draft := to_dict()
+	var recipe_id := DrinkFormula.key_for(signature.ingredients)
+	if not draft.recipe_prices.has(recipe_id):
+		var quote := FormulaPricing.quote(signature.ingredients, _inventory.get_definition, _rules, picker)
+		if not quote.ok:
+			return quote
+		draft.recipe_prices[recipe_id] = quote.record
+	var entry := {"ingredients": signature.ingredients.duplicate(), "discovered_day": day, "pricing": "priced"}
+	if signature.iced:
+		entry["iced"] = true
+	if not draft.inventory.encyclopedia.has(formula.id):
+		draft.inventory.encyclopedia[formula.id] = entry
+	WarehouseInventory.mark_priced_snapshot(draft.inventory, recipe_id)
+	var reward := signature_reward_for(id)
+	if reward < 0 or _balance > LIMIT - reward:
+		return {"ok": false, "message": "钱包容量不足，配方与赏金均未提交。"}
+	var receipt := "discover:" + id
+	draft.requests[receipt] = true
+	draft.signature_rewards[id] = {"reward": reward, "claimed": true, "receipt": receipt}
+	draft.balance += reward
+	if validate_state(draft) != OK:
+		return {"ok": false, "message": "发现记录校验失败。"}
+	return {"ok": true, "replayed": false, "draft": draft, "money_delta": reward,
+		"message": "已发现「%s」，解锁赏金 %dG。" % [signature.name, reward]}
+
 ## Read-only projection: fixed price when known, otherwise the tier range only.
 ## Never consumes RNG, never registers a price and never consumes stock.
-func preview_formula_price(materials: Variant) -> Dictionary:
+func preview_formula_price(materials: Variant, iced := false) -> Dictionary:
 	var record := get_formula_price(materials)
+	var formula := _inventory.calculate_formula(materials, true, iced)
+	if formula.get("ok", false) and int(formula.get("price", 0)) > 0:
+		return {"ok": true, "priced": not record.is_empty(), "recipe_id": DrinkFormula.key_for(materials),
+			"selling_price": int(formula.price), "minimum": int(formula.price), "maximum": int(formula.price)}
 	if not record.is_empty():
 		return {"ok": true, "priced": true, "recipe_id": record.recipe_id,
 			"selling_price": int(record.selling_price), "slots": record.slots.duplicate(true)}
@@ -563,7 +621,7 @@ func _signature_recipe(signature: String, inventory: Dictionary) -> String:
 	for entry: Variant in inventory.get("encyclopedia", {}).values():
 		if not entry is Dictionary or not entry.get("ingredients") is Array:
 			continue
-		var formula := _inventory.calculate_formula(entry.ingredients, false, entry.get("iced", false))
+		var formula := _inventory.calculate_signature_formula(entry.ingredients, entry.get("iced", false))
 		if formula.ok and formula.signature_id == signature:
 			return DrinkFormula.key_for(entry.ingredients, false)
 	return ""
@@ -596,7 +654,8 @@ func validate_state(data: Variant) -> Error:
 		var claim: Variant = data.signature_rewards[id]
 		if not _id(id) or not claim is Dictionary or claim.size() != (5 if claim.has("legacy") else 3) or not claim.has_all(["reward", "claimed", "receipt"]):
 			return ERR_INVALID_DATA
-		if not _snapshot_amount(claim.reward) or claim.claimed != true or not _id(claim.receipt) or not data.requests.has(claim.receipt) or (not claim.get("legacy", false) and not data.formula_crafts.has(String(claim.receipt).trim_prefix("craft:"))):
+		var clue: bool = claim.get("receipt") == "discover:" + str(id) and _inventory.get_recipe_rules().get_signature(id).get("discovery_kind") == "clue"
+		if not _snapshot_amount(claim.reward) or claim.claimed != true or not _id(claim.receipt) or not data.requests.has(claim.receipt) or (not clue and not claim.get("legacy", false) and not data.formula_crafts.has(String(claim.receipt).trim_prefix("craft:"))):
 			return ERR_INVALID_DATA
 		if claim.has("legacy") and claim.legacy != true:
 			return ERR_INVALID_DATA
@@ -606,7 +665,7 @@ func validate_state(data: Variant) -> Error:
 		if claim.has("legacy"):
 			if not claim.has("recipe_id") or claim.recipe_id != recipe or not data.claimed.get("signature:" + id, false):
 				return ERR_INVALID_DATA
-		else:
+		elif not clue:
 			var craft: Variant = data.formula_crafts[String(claim.receipt).trim_prefix("craft:")]
 			if not craft is Dictionary or craft.get("recipe_id") != recipe:
 				return ERR_INVALID_DATA

@@ -141,7 +141,7 @@
 | [两天剧情与聚落补充更新记录](design/story_source_update_2026_10_19.md) | 三份附件来源、正文差异、配方奖励时限与救治期限等待确认项。 |
 | [Day 2 五个阶段：剧情演出初稿](design/day_02_stages_01_05_draft.md) | 由 day_02.pdf 逐字整理的 Beat 化初稿。 |
 | [经营与战斗经济规则（10-19）](design/milk_tea_economy_revised.md) | 现行设计：人类 3G、哥布林持久槽位定价、爆品 150G、战斗独立采购及来源冲突。 |
-| [爆品配方配置（开发可视版）](design/signature_recipes_revised.md) | S01–S10 十款完整配方、图鉴与发现原文；专属售价、加冰及领奖时点差异待确认，尚未接入运行时。 |
+| [爆品配方配置（开发可视版）](design/signature_recipes_revised.md) | S01–S10 十款完整配方、图鉴与发现原文；已接入游戏，按新版专属售价、加冰条件和一次性发现奖励执行。 |
 | [新经济实现方案](design/milk_tea_economy_implementation_plan.md) | 经营阶段 1–3 已接通；保留原始差距分析，独立战斗采购待实施。 |
 | [奶茶配方系统 V0.1](design/milk_tea_recipe_system_revised.md) | 保留原文与 12 张表格；售价等冲突规则由 10-19 经济方案替代。 |
 | [22 种原料 2.0 配置](design/recipe_ingredients_revised.md) | 10-19 原料来源，经营等级、价格及用量已导入运行时。 |
@@ -182,6 +182,7 @@ Beat 映射、验证清单及待定项；不供游戏运行时加载。
 | [RPG 角色新尺度下的流程与关卡优化方案（2026-10-19）](development/flow_and_level_review_rpg_scale_2026_10_19.md) | 按 1.0 倍镜头、120 步速与缩小的交互 / 视听范围重审地图、路线与实施优先级，含三张示意图。 |
 | [前两天流程体验与地图关卡审查（2026-10-19 历史基线）](development/flow_and_level_review_2026_10_19.md) | `9337cd2` 的旧参数分析；当前尺度与优化顺序以新版方案为准。 |
 | [两工作树整合（2026-10-19）](development/two_day_integration_2026_10_19.md) | 单一经济账本、两天剧情、RPG Maker 地图、迁移与验证。 |
+| [新版十款爆品接入（2026-10-19）](development/signature_recipes_2026_10_19.md) | 专属售价、加冰匹配、发现奖励、S06 时限、试玩与回归限制。 |
 | [前两天体验打磨（2026-10-19）](development/experience_polish_2026_10_19.md) | 制作与交付反馈、守卫警戒可读性、环境与脚步、截图及实际验证。 |
 | [前两天操作手感与反馈打磨（2026-10-19）](development/feel_polish_2026_10_19.md) | 投掷准星与命中、警戒张力与被发现冲击、交互/弹窗/对白节拍、镜头前瞻与钱包浮字；含实际检查与试玩步骤。 |
 | [首日可玩性修复（2026-10-19）](development/day1_playability_fixes_2026_10_19.md) | 柜台焦点、同款连续制作、说话立绘、出店调查引导与隐藏守卫交互；真实按键和步行验收。 |

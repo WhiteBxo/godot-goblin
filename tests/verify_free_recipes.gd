@@ -110,9 +110,9 @@ func _test_formula() -> void:
 	_check(signature.price == 0, "A signature names a discovery without pricing it")
 	var priced_signature: RecipeRules = RULES.duplicate(true)
 	priced_signature.signatures = [{"id": "test_signature", "name": "测试专属名", "ingredients": reversed_formula, "price": 57}]
-	_check(not DrinkFormula.evaluate(FORMULA, inventory.get_definition, priced_signature).ok, "Signature entries carrying a price are rejected")
+	_check(DrinkFormula.evaluate(FORMULA, inventory.get_definition, priced_signature).price == 57, "Signature exclusive price overrides ordinary pricing")
 	_check(DrinkFormula.evaluate(SWEET, inventory.get_definition, rules).signature_id.is_empty(), "Nearby ingredients never partially match a signature")
-	_check(RULES.signatures.is_empty(), "Production signature data remains empty")
+	_check(RULES.signatures.size() == 10, "Production publishes the ten source-backed signatures")
 	var unknown_cost := DrinkFormula.evaluate(FORMULA, func(id: String) -> IngredientDefinition:
 		var definition := inventory.get_definition(id)
 		if id == BASE:
@@ -185,7 +185,7 @@ func _test_ice() -> void:
 	var rules: RecipeRules = RULES.duplicate(true)
 	rules.signatures = [{"id": "ice_signature", "name": "专属特调", "ingredients": SWEET}]
 	var signature := DrinkFormula.evaluate(SWEET, inventory.get_definition, rules, true, true)
-	_check(signature.name == "专属冰特调" and signature.signature_id == "ice_signature" and signature.price == 0, "Ice preserves signature matching while applying the name suffix")
+	_check(signature.name == "专属特调" and signature.signature_id == "ice_signature" and signature.price == 0, "Signature names retain their authored spelling")
 	state.free()
 
 func _test_crafting() -> void:

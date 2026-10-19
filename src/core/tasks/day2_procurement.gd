@@ -21,8 +21,8 @@ func hire(actor_id: String) -> Error:
 		return ERR_UNAVAILABLE
 	status.status = "hired"
 	status.runner = actor_id
-	status.return_day = 3
-	status.return_phase = "day" if _state.current_day == 2 else "night"
+	status.return_day = _state.current_day
+	status.return_phase = "night"
 	return _state.commit_story_transaction("day2.procurement.hired", {}, {}, 0, {}, {"day2.s02.errand_runner_hired": true}, {KEY: status})
 
 func refresh() -> void:
@@ -65,7 +65,9 @@ static func valid_status(value: Variant) -> bool:
 		return false
 	if value.runner == "":
 		return value.status in ["funded", "expired"] and value.purchase == 0 and value.fee == 0 and value.return_day == 0 and value.return_phase == "" and value.escrow == (35 if value.status == "funded" else 0)
-	if value.runner not in RUNNERS or value.return_day != 3 or value.return_phase not in ["day", "night"]:
+	# Accept the old third-day return in saves, but new day-two hires return that
+	# night so S06's source-authored rescue cutoff can actually be met.
+	if value.runner not in RUNNERS or value.return_day not in [2, 3] or value.return_phase not in ["day", "night"]:
 		return false
 	if value.status == "hired":
 		return value.escrow == 35 and value.purchase == 0 and value.fee == 0 and value.refund == 0

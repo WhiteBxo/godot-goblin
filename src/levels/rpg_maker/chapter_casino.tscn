@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_casino.tscn" id="npc"]
 
 [ext_resource type="Script" path="res://src/gameplay/interaction/chapter_service_point.gd" id="service"]
+[ext_resource type="Script" path="res://src/gameplay/story_interaction/signature_discovery_point.gd" id="signature"]
 
 [node name="RpgMakerMap005" instance=ExtResource("base")]
 
@@ -96,3 +97,12 @@ actor_id = &"casino"
 display_name = "赌场老板 · 黑齿"
 visible = true
 active_phase = "always"
+
+[node name="SignatureS07" parent="Interactions" instance=ExtResource("point")]
+position = Vector2(360, 408)
+script = ExtResource("signature")
+interaction_id = &"signature_s07"
+signature_id = "S07"
+display_name = "赌桌上的烈酒与酒渍纸条"
+feedback_rect = Rect2(-96, -120, 72, 96)
+show_world_marker = true

@@ -218,6 +218,14 @@ func _quiet(allow_menu := false) -> bool:
 
 func get_user_actions() -> Array[Dictionary]:
 	var actions: Array[Dictionary] = []
+	if _state.current_day == 2 and _host == "settlement" and _near_point(&"day1_s03_yard"):
+		var quote: Dictionary = _state.get_transactions().get_product_quote("market_insomnia_mushroom")
+		if quote.get("ok", false):
+			actions.append({"id": "signature_buy_mushroom", "text": "市场购买醒神菇 · %dG / 份（5次）" % int(quote.unit_price), "kind": "signature_buy_mushroom"})
+	if _state.current_day == 2 and _host == "shop" and not _state.get_flag("signature.S06.rescued_in_time"):
+		var patient := _game.get_actor_director().get_actor(&"fat_goblin")
+		if patient != null and patient.visible and patient.global_position.distance_to(_game.get_player().global_position) <= 112.0:
+			actions.append({"id": "signature_rescue", "text": "救治胖哥布林 · 醒神菇1次用量", "kind": "signature_rescue"})
 	if _host == "shop" and _taste_pending():
 		actions.append({"id": "cancel_taste", "text": "取消可选试饮", "kind": "cancel_taste"})
 	for action: Dictionary in _data.get("user_actions", []):
@@ -239,6 +247,15 @@ func get_user_actions() -> Array[Dictionary]:
 				actions.append({"id": "hire:" + id, "text": "雇佣 " + actor.display_name + " · 专款支付30G货款＋5G跑腿费", "kind": "hire", "actor": id})
 	return actions
 
+func _near_point(id: StringName) -> bool:
+	var level := _game.get_active_level()
+	if not level.has_method("get_interaction_points"):
+		return false
+	for point: InteractionPoint in level.get_interaction_points():
+		if point.interaction_id == id:
+			return point.global_position.distance_to(_game.get_player().global_position) <= 112.0
+	return false
+
 func perform_user_action(id: String) -> void:
 	if not _quiet(true):
 		return
@@ -251,6 +268,11 @@ func perform_user_action(id: String) -> void:
 			error = _game.get_story_director().request_interaction(action.trigger)
 		else:
 			match action.get("kind"):
+				"signature_buy_mushroom":
+					var result: Dictionary = _state.get_transactions().purchase("market_insomnia_mushroom", 1, "signature-market-%d" % Time.get_ticks_usec())
+					error = OK if result.get("ok", false) else ERR_UNAVAILABLE
+				"signature_rescue":
+					error = _state.rescue_signature_patient()
 				"cancel_taste":
 					error = _state.settle_task_result("day2.orders.taste", "cancelled", "主动取消试饮")
 					if error == OK and is_instance_valid(_scheduler):

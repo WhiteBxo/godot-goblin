@@ -28,6 +28,7 @@
 [ext_resource type="Script" path="res://src/levels/rpg_maker/chapter_wayfinding.gd" id="sign_visibility"]
 [ext_resource type="Script" path="res://src/gameplay/characters/ambient_wander.gd" id="wander"]
 [ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_030_00.png" id="gather_atlas"]
+[ext_resource type="Script" path="res://src/gameplay/story_interaction/signature_discovery_point.gd" id="signature"]
 
 [sub_resource type="AtlasTexture" id="moss_art"]
 atlas = ExtResource("gather_atlas")
@@ -319,6 +320,37 @@ success_flags = Array[StringName](["day1.s03.observed_path"])
 [node name="GatherPoints" type="Node2D" parent="."]
 
 [node name="Characters" type="Node2D" parent="."]
+
+[node name="Philosopher" parent="Characters" instance=ExtResource("goblin")]
+position = Vector2(1464, 1896)
+actor_id = &"signature_philosopher"
+display_name = "酒馆外的哥布林哲人"
+story_role = "S08：与醉鬼争论格里芬、感官认知与幻觉。"
+active_phase = "always"
+
+[node name="Drunk" parent="Characters" instance=ExtResource("goblin")]
+position = Vector2(1560, 1896)
+actor_id = &"signature_drunk"
+display_name = "酒馆外的醉鬼"
+story_role = "S08：相信格里芬就在酒瓶中。"
+active_phase = "always"
+
+[node name="SignatureS08" parent="Interactions" instance=ExtResource("point")]
+position = Vector2(1560, 1944)
+script = ExtResource("signature")
+interaction_id = &"signature_s08"
+signature_id = "S08"
+display_name = "与哲人和醉鬼谈谈幻彩小方"
+feedback_rect = Rect2(-72, -120, 144, 96)
+show_world_marker = true
+
+[node name="SignatureS06" parent="Interactions" instance=ExtResource("point")]
+position = Vector2(1320, 2376)
+script = ExtResource("signature")
+interaction_id = &"signature_s06"
+signature_id = "S06"
+display_name = "向市场卖家询问醒神菇搭配"
+show_world_marker = true
 
 [node name="EntranceGuard" parent="Characters" instance=ExtResource("guard")]
 position = Vector2(1176, 456)

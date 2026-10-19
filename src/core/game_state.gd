@@ -96,6 +96,53 @@ func get_tea_production() -> TeaProduction:
 	_ensure_business()
 	return _tea_production
 
+## Authored clue discovery is separate from manufacture. The wallet draft owns
+## the zero-stock encyclopedia entry, underlying quote and one-time 150G reward.
+func can_discover_signature(id: String) -> bool:
+	var signature := _warehouse_signature(id)
+	if signature.is_empty() or signature.get("discovery_kind") != "clue":
+		return false
+	if _economy.is_signature_discovered(id):
+		return true
+	if id == "S06":
+		return get_flag("signature.S06.rescued_in_time")
+	if id == "S08":
+		return get_flag("day2.s04.casino_reward_received") and get_warehouse_inventory().is_discovered("rainbow_cube")
+	return true
+
+func _warehouse_signature(id: String) -> Dictionary:
+	_ensure_business()
+	return _warehouse_inventory.get_recipe_rules().get_signature(id)
+
+func discover_signature(id: String) -> Dictionary:
+	if _session_busy() or not can_discover_signature(id):
+		return {"ok": false, "message": "尚未满足这款爆品的发现条件。"}
+	var picker := func(low: int, high: int) -> int: return _pricing_rng.randi_range(low, high)
+	var prepared := _economy.prepare_signature_discovery(id, _current_day, picker)
+	if not prepared.get("ok", false) or prepared.get("replayed", false):
+		return prepared
+	var before := _economy.to_dict()
+	_business_transaction = true
+	_replacing = true
+	var error := _economy._replace(prepared.draft)
+	if error == OK:
+		_flags["signature." + id + ".discovered"] = true
+		_warehouse_inventory.set_session_locked(true)
+		_notify_state_changed()
+		_economy.publish_restored(before)
+		_warehouse_inventory.set_session_locked(false)
+	_replacing = false
+	_business_transaction = false
+	return {"ok": error == OK, "message": prepared.message if error == OK else "发现未提交，请重试。"}
+
+## Uses one dose, retaining four doses from a fresh portion for the recipe.
+## The durable receipt records rescue before the day-two cutoff; late inventory
+## and loading a later day cannot retroactively satisfy this qualification.
+func rescue_signature_patient() -> Error:
+	if _current_day != 2 or get_flag("signature.S06.rescued_in_time"):
+		return ERR_UNAVAILABLE
+	return commit_story_transaction("signature.S06.rescued_in_time", {"insomnia_mushroom": 1}, {}, 0, {}, {"day3.procurement.delivered": true})
+
 
 ## Tests inject a fixed seed/picker; production randomizes once per session and
 ## then stores the actual price, never the seed.
@@ -163,8 +210,8 @@ func commit_formula_craft(materials: Array, quantity: int, request_id: String, i
 	result["money_delta"] = int(prepared.money_delta)
 	result["first_signature"] = bool(prepared.first_signature)
 	result["first_discovery"] = bool(prepared.get("first_discovery", false))
-	result["selling_price"] = int(prepared.record.selling_price)
-	result["price"] = int(prepared.record.selling_price)
+	result["selling_price"] = _economy.get_drink_sale_price(prepared.formula)
+	result["price"] = result.selling_price
 	result["priced"] = true
 	result["message"] = "%s ×%d 已入库。" % [result.name, quantity]
 	if int(prepared.money_delta) > 0:

@@ -99,7 +99,7 @@ func preview_formula(materials: Array, quantity: int = 1, iced := false) -> Dict
 	var result := _inventory.preview_formula(materials, quantity, iced)
 	if not result.ok:
 		return result
-	var quote := preview_formula_price(materials)
+	var quote := preview_formula_price(materials, iced)
 	if quote.get("ok", false):
 		result["priced"] = bool(quote.get("priced", false))
 		result["price_min"] = int(quote.get("minimum", quote.get("selling_price", 0)))
@@ -111,10 +111,10 @@ func preview_formula(materials: Array, quantity: int = 1, iced := false) -> Dict
 	return result
 
 ## Read-only price projection from the wallet ledger. Never registers a price.
-func preview_formula_price(materials: Array) -> Dictionary:
+func preview_formula_price(materials: Array, iced := false) -> Dictionary:
 	if not is_instance_valid(_state) or not _state.has_method("get_transactions"):
 		return {"ok": false, "code": "busy", "message": "经济系统尚未就绪。"}
-	return _state.get_transactions().preview_formula_price(materials)
+	return _state.get_transactions().preview_formula_price(materials, iced)
 
 ## Explicit first confirmation; the ledger keeps the record across saves.
 func record_formula_request(request_id: String) -> void:

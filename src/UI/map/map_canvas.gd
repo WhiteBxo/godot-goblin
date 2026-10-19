@@ -1,42 +1,24 @@
 class_name SettlementMapCanvas
 extends Control
-## Schematic of known exterior footprints, using saved scene geometry.
+## Exterior overview and local floor map, using native world coordinates.
 
 var map_data: Dictionary = {}
 var player_position := Vector2.ZERO
 var target: Dictionary = {}
 @export var compact := false
-const OVERVIEW: Texture2D = preload("res://assets/map/cartography/goblin_cavern_overview.png")
-const LANDMARKS := {
-	"settlement.ritual": Vector2(0.49, 0.13), "settlement.elder": Vector2(0.83, 0.17),
-	"settlement.training": Vector2(0.82, 0.33), "settlement.warehouse": Vector2(0.20, 0.21),
-	"settlement.workshop": Vector2(0.13, 0.44), "settlement.hearth": Vector2(0.49, 0.49),
-	"settlement.casino": Vector2(0.255, 0.725), "settlement.tavern": Vector2(0.615, 0.64),
-	"settlement.yard": Vector2(0.49, 0.84), "settlement.shop": Vector2(0.65, 0.88),
-	"settlement.residential": Vector2(0.84, 0.62),
-}
+const OVERVIEW: Texture2D = preload("res://assets/map/cartography/cavern_floor_overview.png")
 
 func _art_rect() -> Rect2:
 	var extent := OVERVIEW.get_size()
 	var scale_factor := minf((size.x - 8.0) / extent.x, (size.y - 8.0) / extent.y)
 	return Rect2((size - extent * scale_factor) * 0.5, extent * scale_factor)
 
-## Landmark-calibrated overview coordinates. Actual guidance uses floor navigation.
+## The supplied image is the full 2400 x 2640 exterior at half resolution.
 func _art_point(world: Vector2) -> Vector2:
-	var normalized := Vector2.ZERO
-	var total := 0.0
-	for id: String in LANDMARKS:
-		var anchor := RpgWorldMapData.get_entrance_position(id)
-		var distance := world.distance_to(anchor)
-		if distance < 1.0:
-			normalized = LANDMARKS[id]
-			total = 1.0
-			break
-		var weight := 1.0 / pow(maxf(64.0, distance), 3.0)
-		normalized += (LANDMARKS[id] + (world - anchor) / Vector2(2400, 2640)) * weight
-		total += weight
+	var bounds: Rect2 = map_data.get("bounds", Rect2(0, 0, 2400, 2640))
+	var normalized := (world - bounds.position) / bounds.size
 	var rect := _art_rect()
-	return rect.position + (normalized / maxf(total, 0.000000001)).clamp(Vector2.ZERO, Vector2.ONE) * rect.size
+	return rect.position + normalized.clamp(Vector2.ZERO, Vector2.ONE) * rect.size
 
 func _draw_illustration() -> void:
 	draw_texture_rect(OVERVIEW, _art_rect(), false)
@@ -44,7 +26,7 @@ func _draw_illustration() -> void:
 	var font_size := get_theme_font_size("font_size", "Label")
 	var occupied: Array[Rect2] = []
 	for region: Dictionary in map_data.regions:
-		var point := _art_point(region.position)
+		var point := _art_point((region.bounds as Rect2).get_center())
 		var label: String = String(region.name).get_slice(" · ", 0).replace("东侧居民区", "东居民区")
 		var width := font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
 		var origin := Vector2.ZERO

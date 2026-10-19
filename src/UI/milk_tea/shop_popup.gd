@@ -13,6 +13,7 @@ signal confirm_formula_requested(materials: Array[String])
 
 var _page: ShopPage
 var _note: RichTextLabel
+var _document_image: TextureRect
 var _story_note := false
 
 func _ready() -> void:
@@ -41,8 +42,19 @@ func present(point: InteractionPoint) -> void:
 	# shop counter: hide the shop page and show the authored prose alone.
 	_story_note = point is StoryInteractionPoint
 	_shell.set_title(point.display_name if not point.display_name.is_empty() else "调查")
+	if is_instance_valid(_document_image):
+		_document_image.hide()
 	if _story_note:
 		_page.hide()
+		var document := point as StoryInteractionPoint
+		if document.kind == StoryInteractionPoint.Kind.DOCUMENT and document.document_texture != null:
+			if is_instance_valid(_note):
+				_note.hide()
+			var illustration := _ensure_document_image()
+			illustration.texture = document.document_texture
+			illustration.tooltip_text = point.description
+			illustration.show()
+			return
 		var note := _ensure_note()
 		note.text = point.description
 		note.show()
@@ -53,6 +65,18 @@ func present(point: InteractionPoint) -> void:
 	_page.show()
 	_shell.set_title("今日订单" if point.interaction_id == &"orders" else point.display_name)
 	_page.present(point)
+
+func _ensure_document_image() -> TextureRect:
+	if is_instance_valid(_document_image):
+		return _document_image
+	_document_image = TextureRect.new()
+	_document_image.name = "DocumentImage"
+	_document_image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_document_image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_document_image.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_document_image.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_page.get_parent().add_child(_document_image)
+	return _document_image
 
 func _ensure_note() -> RichTextLabel:
 	if is_instance_valid(_note):

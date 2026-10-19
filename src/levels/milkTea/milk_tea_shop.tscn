@@ -63,7 +63,7 @@ size = Vector2(65.99997, 104)
 size = Vector2(12, 104)
 
 [sub_resource type="RectangleShape2D" id="Shape_BathroomNorthWall"]
-size = Vector2(170, 19)
+size = Vector2(170, 112)
 
 [sub_resource type="RectangleShape2D" id="Shape_BathroomEastWall"]
 size = Vector2(35, 113)
@@ -109,6 +109,9 @@ size = Vector2(43, 31)
 
 [sub_resource type="RectangleShape2D" id="Shape_BathroomSink"]
 size = Vector2(45, 48)
+
+[sub_resource type="RectangleShape2D" id="Shape_BathroomShower"]
+size = Vector2(52, 40)
 
 [sub_resource type="RectangleShape2D" id="Shape_BathroomToilet"]
 size = Vector2(60, 57)
@@ -235,7 +238,7 @@ position = Vector2(460, 402)
 shape = SubResource("Shape_HallPanelEast")
 
 [node name="BathroomNorthWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1229471626]
-position = Vector2(223, 441.5)
+position = Vector2(223, 488)
 shape = SubResource("Shape_BathroomNorthWall")
 
 [node name="BathroomEastWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1417433548]
@@ -298,6 +301,10 @@ shape = SubResource("Shape_StorageBox")
 [node name="BathroomSink" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=507683032]
 position = Vector2(254.5, 555)
 shape = SubResource("Shape_BathroomSink")
+
+[node name="BathroomShower" type="CollisionShape2D" parent="WallsAndFurniture"]
+position = Vector2(176, 563)
+shape = SubResource("Shape_BathroomShower")
 
 [node name="BathroomToilet" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1864126032]
 position = Vector2(181, 630.5)
@@ -637,3 +644,6 @@ position = Vector2(1030, 550)
 
 [node name="day1_group_e" type="Marker2D" parent="StoryPositions"]
 position = Vector2(1120, 550)
+
+[node name="day2_bedroom_rest" type="Marker2D" parent="StoryPositions"]
+position = Vector2(285, 350)

@@ -125,7 +125,7 @@ godot --path . --log-file .godot/ui-visual.log --script res://tests/verify_ui_ma
 
 `SettlementMap.get_map_data(known_locations)` 只返回世界边界、保存场景中的区域 footprint 和真实外部入口位置的值副本；不返回节点、内部贴图、文书、血液、书柜、隐藏石盖或路线。`SettlementMap.MAP_LOCATIONS` 是唯一的 `location_id → zone_id → *_entrance` 映射：`settlement.shop/muster/vestibule/training/lodging/kitchen/tavern/casino/dining/ritual/elder/growing/warehouse/yard/hearth/workshop`。`RpgWorldMapData.LOCATIONS` 在聚落章节图里补充 `settlement.residential`（东侧居民区），并作为 `references.locations` 的校验来源之一。
 
-正式展示使用一张手工绘制的洞窟总览图 `assets/map/cartography/goblin_cavern_overview.png` 作为底图（分区草图来源，保留中央公共区、西侧商业区与东侧居民区），区域名称、玩家圆点与目标圆环全部由 `SettlementMapCanvas` 实时绘制，底图不含文字与标记。世界坐标按 `LANDMARKS` 标定到图面归一化坐标，未知区域不画标签；`map_data.illustrated` 为假时才回退到原先的编号轮廓图。玩家实际位置、任务目标与地名不会烧进美术图，因此引导位置与行走关卡一致。打开面板标题为“哥布林洞窟地图”。
+正式展示使用用户提供的实际洞窟全图 `assets/map/cartography/cavern_floor_overview.png`（1200 × 1320）作为底图。世界范围 2400 × 2640 与图片等比对应，区域名称、玩家圆点与目标圆环由 `SettlementMapCanvas` 实时绘制；地名落在区域中心，玩家和目标使用实际外景位置。未知区域不画标签；`map_data.illustrated` 为假时回退到编号轮廓图。打开面板标题为“哥布林洞窟地图”。
 
 奶茶店是当前唯一默认已知地点。其他地点须由剧情或真实探索业务写入 `ui.map.known.<location_id>`（例如 `ui.map.known.settlement.elder`）；地图不擅自推断认知，也不写探索完成事实。即使取得长老住处知识，也只显示建筑轮廓和外部入口。当前尚无正式 S04 知识发布及查看完成条件接线，不能将地图能力视为 P14 整项完成。
 

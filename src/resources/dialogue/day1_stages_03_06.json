@@ -732,6 +732,27 @@
           "next": ""
         }
       }
+    },
+    "day1.s05.mansion_bribe": {
+      "start": "choice",
+      "lines": {
+        "choice": {
+          "speaker": "",
+          "text": "宅邸双卫把守着入口。是否支付 10G 贿赂守卫？",
+          "choices": [
+            {
+              "id": "pay",
+              "text": "贿赂守卫（支付 10G）",
+              "next": ""
+            },
+            {
+              "id": "leave",
+              "text": "暂时离开",
+              "next": ""
+            }
+          ]
+        }
+      }
     }
   }
 }

@@ -13,6 +13,9 @@ const STAR := 16
 @export var map_title: String = ""
 @export var map_size: Vector2i = Vector2i(1, 1)
 @export_range(1, 512, 1) var tile_size: int = 48
+## Map-local corrections for walls and furniture whose source passage flags are open.
+## Coordinates are native cells; saved tiles and shared TileSets stay authoritative for art.
+@export var solid_regions: Array[Rect2i] = []
 
 var _ground_layers: Array[TileMapLayer] = []
 ## Set bits indicate permitted movement, using RPG Maker's down/left/right/up bits.
@@ -104,6 +107,9 @@ func rebuild_passability() -> void:
 	_build_vertical_edges()
 
 func _read_cell_directions(cell: Vector2i) -> int:
+	for region: Rect2i in solid_regions:
+		if region.has_point(cell):
+			return 0
 	for index in range(3, -1, -1):
 		var data: TileData = _ground_layers[index].get_cell_tile_data(cell)
 		if data == null:

@@ -1,7 +1,7 @@
 {
 	"version": 1.0,
 	"format": "goblin_story_project",
-	"next_step_id": 10080.0,
+	"next_step_id": 10081.0,
 	"manifest": {
 		"version": 1.0,
 		"source": "res://docs/design/day_01_stages_03_06_draft.md",
@@ -90,7 +90,7 @@
 			"trigger": "day1_drunken_encounter"
 		},
 		"day1.s05.mansion_payment": {
-			"once": true,
+			"once": false,
 			"conditions": {
 				"day": 1.0,
 				"stage": "day1.s05.ready",
@@ -657,13 +657,6 @@
 			"event": "day1.s05.mansion_payment",
 			"steps": [
 				{
-					"id": "step_10034",
-					"data": {
-						"command": "chapter_action",
-						"id": "day1.s05.pay_pair"
-					}
-				},
-				{
 					"id": "step_10078",
 					"data": {
 						"command": "camera_focus",
@@ -672,12 +665,40 @@
 					}
 				},
 				{
+					"id": "step_10080",
+					"data": {
+						"command": "dialogue",
+						"id": "day1.s05.mansion_bribe"
+					}
+				},
+				{
+					"id": "step_10034",
+					"data": {
+						"command": "chapter_action",
+						"id": "day1.s05.pay_pair",
+						"when": {
+							"choice": {
+								"dialogue": "day1.s05.mansion_bribe",
+								"line": "choice",
+								"id": "pay"
+							}
+						}
+					}
+				},
+				{
 					"id": "step_10077",
 					"data": {
 						"command": "title_card",
 						"text": "宅邸双卫放行",
 						"subtitle": "沿宅前道路向东，走上门前台阶按 E 进入长老居所",
-						"seconds": 1.2
+						"seconds": 1.2,
+						"when": {
+							"choice": {
+								"dialogue": "day1.s05.mansion_bribe",
+								"line": "choice",
+								"id": "pay"
+							}
+						}
 					}
 				},
 				{
@@ -1620,6 +1641,27 @@
 					"speaker": "旁白",
 					"text": "过了好一阵，胖哥布林的抽搐才逐渐缓和。他仍然虚弱得说不出话，主角也不敢再让他碰那杯饮料。",
 					"next": ""
+				}
+			}
+		},
+		"day1.s05.mansion_bribe": {
+			"start": "choice",
+			"lines": {
+				"choice": {
+					"speaker": "",
+					"text": "宅邸双卫把守着入口。是否支付 10G 贿赂守卫？",
+					"choices": [
+						{
+							"id": "pay",
+							"text": "贿赂守卫（支付 10G）",
+							"next": ""
+						},
+						{
+							"id": "leave",
+							"text": "暂时离开",
+							"next": ""
+						}
+					]
 				}
 			}
 		}

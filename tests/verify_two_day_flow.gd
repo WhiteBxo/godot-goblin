@@ -55,7 +55,7 @@ func attach() -> void:
 func wait_event(id: String) -> bool:
 	var deadline := Time.get_ticks_msec() + 30000
 	var captured_dialogue := false
-	while not state.is_event_completed(id) and Time.get_ticks_msec() < deadline and event_errors.is_empty():
+	while not event_completed(id) and Time.get_ticks_msec() < deadline and event_errors.is_empty():
 		var dialogue := game.get_dialogue_manager()
 		if dialogue.is_active():
 			if not captured_dialogue:
@@ -67,8 +67,8 @@ func wait_event(id: String) -> bool:
 			dialogue.advance()
 			dialogue.select_choice(0)
 		await process_frame
-	check(state.is_event_completed(id), "Completes " + id + " at " + state.story_stage)
-	if not state.is_event_completed(id):
+	check(event_completed(id), "Completes " + id + " at " + state.story_stage)
+	if not event_completed(id):
 		print("FLOW_ABORT ", event_errors, " director=", game.get_story_director().last_error, " chapter=", game.get_chapter_controller().last_error, " bridge=", game.get_gameplay_bridge().get_runtime_status())
 		quit(1)
 		return false
@@ -77,6 +77,12 @@ func wait_event(id: String) -> bool:
 	await frames()
 	await picture(id)
 	return true
+
+func event_completed(id: String) -> bool:
+	# Negotiation may be revisited after leaving; only the actual payment is durable.
+	if id == "day1.s05.mansion_payment":
+		return state.get_flag("day1.s05.guard_payment_completed") and not game.get_story_director().is_busy()
+	return state.is_event_completed(id)
 
 func make_order(order: String, target: String, accept := true) -> void:
 	var delivery := game.get_task_delivery()

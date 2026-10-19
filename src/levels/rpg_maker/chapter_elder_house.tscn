@@ -16,6 +16,7 @@
 
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_guard.tscn" id="guard"]
 [ext_resource type="Script" path="res://src/gameplay/stealth/day1_guard_response.gd" id="response"]
+[ext_resource type="Texture2D" path="res://assets/story/elder_document.png" id="document_image"]
 
 [node name="RpgMakerMap006" instance=ExtResource("base")]
 
@@ -82,6 +83,7 @@ collision_layer = 0
 collision_mask = 2
 script = ExtResource("story")
 kind = 1
+document_texture = ExtResource("document_image")
 interaction_id = &"day1_elder_document"
 success_sound = "story.page_turn"
 sound_bus = "SFX"
@@ -147,11 +149,11 @@ sight_half_angle = 55.0
 hearing_range = 240.0
 hear_footsteps = true
 discovery_seconds = 1.3
-patrol_offsets = Array[Vector2]([Vector2(0, 0), Vector2(0, 48)])
+patrol_offsets = Array[Vector2]([Vector2(0, 0), Vector2(0, -48)])
 patrol_speed = 28.0
 
 [node name="EastWatch" parent="Characters" instance=ExtResource("guard")]
-position = Vector2(600, 456)
+position = Vector2(600, 312)
 actor_id = &"elder_east_watch"
 display_name = "宅内巡守"
 active_phase = "night"
@@ -167,5 +169,5 @@ sight_half_angle = 55.0
 hearing_range = 240.0
 hear_footsteps = true
 discovery_seconds = 1.3
-patrol_offsets = Array[Vector2]([Vector2(0, 0), Vector2(48, 0)])
+patrol_offsets = Array[Vector2]([Vector2(0, 0), Vector2(0, 48)])
 patrol_speed = 28.0

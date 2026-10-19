@@ -1,25 +1,26 @@
-[gd_resource type="TileSet" format=3]
+[gd_resource type="TileSet" format=3 uid="uid://cqs6g7v5flxyn"]
 
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_028_00.png" id="1_s10br"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_028_01.png" id="2_g3v68"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/casino_refresh/sprites/gambling_table.png" id="3_81vud"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_028_02.png" id="3_nwsxw"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_028_03.png" id="4_35wn6"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/casino_refresh/sprites/round_stool.png" id="4_imglj"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_028_04.png" id="5_5ry14"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/casino_refresh/sprites/dice_cup.png" id="5_ngits"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/casino_refresh/sprites/die_d4.png" id="6_1j6hr"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_028_05.png" id="6_pv5uv"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_028_06.png" id="7_g7njg"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/casino_refresh/sprites/die_d6.png" id="7_sck8f"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/casino_refresh/sprites/die_d12.png" id="8_weop3"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/casino_refresh/sprites/chips.png" id="9_fnqon"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/casino_refresh/sprites/clay_cup_upright.png" id="10_7vo0y"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/casino_refresh/sprites/clay_cup_tilt_a.png" id="11_gjtj5"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/casino_refresh/sprites/clay_cup_tilt_b.png" id="12_i5d3t"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/casino_refresh/sprites/wall_oil_lamp.png" id="13_5npq2"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/casino_refresh/sprites/boss_desk.png" id="14_sp3s2"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/casino_refresh/sprites/ledger.png" id="15_i17xx"]
+[ext_resource type="Texture2D" uid="uid://bqg6h5s8770pq" path="res://assets/map/rpg_maker/tileset_028_00.png" id="1_s10br"]
+[ext_resource type="Texture2D" uid="uid://bfewn8a707hhs" path="res://assets/map/rpg_maker/tileset_028_01.png" id="2_g3v68"]
+[ext_resource type="Texture2D" uid="uid://clvwrcxtq7n4m" path="res://assets/map/rpg_maker/casino_refresh/sprites/gambling_table.png" id="3_81vud"]
+[ext_resource type="Texture2D" uid="uid://cbhyq7yewdn8d" path="res://assets/map/rpg_maker/tileset_028_02.png" id="3_nwsxw"]
+[ext_resource type="Texture2D" uid="uid://fcw4egk0eqmy" path="res://assets/map/rpg_maker/tileset_028_03.png" id="4_35wn6"]
+[ext_resource type="Texture2D" uid="uid://bwbt68hycio0t" path="res://assets/map/rpg_maker/casino_refresh/sprites/round_stool.png" id="4_imglj"]
+[ext_resource type="Texture2D" uid="uid://ugk7h5vllw0m" path="res://assets/map/rpg_maker/tileset_028_04.png" id="5_5ry14"]
+[ext_resource type="Texture2D" uid="uid://cucaonm5jas75" path="res://assets/map/rpg_maker/casino_refresh/sprites/dice_cup.png" id="5_ngits"]
+[ext_resource type="Texture2D" uid="uid://cijhv7t1pcl5y" path="res://assets/map/rpg_maker/casino_refresh/sprites/die_d4.png" id="6_1j6hr"]
+[ext_resource type="Texture2D" uid="uid://c2gxn68jbe2hd" path="res://assets/map/rpg_maker/tileset_028_05.png" id="6_pv5uv"]
+[ext_resource type="Texture2D" uid="uid://dc1c1ohn3d1rf" path="res://assets/map/rpg_maker/tileset_028_06.png" id="7_g7njg"]
+[ext_resource type="Texture2D" uid="uid://y6ouujyhc502" path="res://assets/map/rpg_maker/casino_refresh/sprites/die_d6.png" id="7_sck8f"]
+[ext_resource type="Texture2D" uid="uid://cb72i7ojn00ja" path="res://assets/map/rpg_maker/casino_refresh/sprites/die_d12.png" id="8_weop3"]
+[ext_resource type="Texture2D" uid="uid://siyfiagy7ci3" path="res://assets/map/rpg_maker/casino_refresh/sprites/chips.png" id="9_fnqon"]
+[ext_resource type="Texture2D" uid="uid://dfv3bowci7yyv" path="res://assets/map/rpg_maker/casino_refresh/sprites/clay_cup_upright.png" id="10_7vo0y"]
+[ext_resource type="Texture2D" uid="uid://bxdx4hroyqsol" path="res://assets/map/rpg_maker/casino_refresh/sprites/clay_cup_tilt_a.png" id="11_gjtj5"]
+[ext_resource type="Texture2D" uid="uid://th41ljplng7l" path="res://assets/map/rpg_maker/casino_refresh/sprites/clay_cup_tilt_b.png" id="12_i5d3t"]
+[ext_resource type="Texture2D" uid="uid://djko4pl1uxxin" path="res://assets/map/rpg_maker/casino_refresh/sprites/wall_oil_lamp.png" id="13_5npq2"]
+[ext_resource type="Texture2D" uid="uid://b25465r8nvk27" path="res://assets/map/rpg_maker/casino_refresh/sprites/boss_desk.png" id="14_sp3s2"]
+[ext_resource type="Texture2D" uid="uid://ded513iq874fm" path="res://assets/map/rpg_maker/casino_refresh/sprites/ledger.png" id="15_i17xx"]
+[ext_resource type="TileSetAtlasSource" path="res://src/resources/tilesets/rpg_maker/goblin_wine_atlas.tres" id="goblin_wines"]
 
 [sub_resource type="TileMapPattern" id="TileMapPattern_cwbjg"]
 resource_name = "破旧赌桌"
@@ -17330,6 +17331,7 @@ sources/109 = SubResource("TileSetAtlasSource_wkg8e")
 sources/110 = SubResource("TileSetAtlasSource_53qdx")
 sources/111 = SubResource("TileSetAtlasSource_iisb5")
 sources/112 = SubResource("TileSetAtlasSource_6m37r")
+sources/200 = ExtResource("goblin_wines")
 pattern_0 = SubResource("TileMapPattern_cwbjg")
 pattern_1 = SubResource("TileMapPattern_0m311")
 pattern_2 = SubResource("TileMapPattern_pofbf")

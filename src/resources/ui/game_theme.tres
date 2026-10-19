@@ -1,6 +1,6 @@
-[gd_resource type="Theme" format=3]
+[gd_resource type="Theme" format=3 uid="uid://cntssiqb4lrip"]
 
-[ext_resource type="FontFile" path="res://assets/fonts/fusion_pixel/fusion-pixel-12px-monospaced-zh_hans.otf.woff2" id="2_font"]
+[ext_resource type="FontFile" uid="uid://dd7qp4r25o424" path="res://assets/fonts/fusion_pixel/fusion-pixel-12px-monospaced-zh_hans.otf.woff2" id="2_font"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xkobi"]
 content_margin_left = 4.0

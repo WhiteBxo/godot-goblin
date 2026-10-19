@@ -1,8 +1,8 @@
-[gd_resource type="SpriteFrames" format=3]
+[gd_resource type="SpriteFrames" format=3 uid="uid://ba67nrhsu3xfy"]
 
-[ext_resource type="Texture2D" path="res://assets/characters/npc/common_goblin/idle_generated/backpack_idle_up.png" id="backpack_idle_up"]
-[ext_resource type="Texture2D" path="res://assets/characters/npc/common_goblin/idle_generated/unpacked_idle_down.png" id="unpacked_idle_down"]
-[ext_resource type="Texture2D" path="res://assets/characters/npc/common_goblin/idle_generated/unpacked_idle_up.png" id="unpacked_idle_up"]
+[ext_resource type="Texture2D" uid="uid://djbnyv0qfyf4m" path="res://assets/characters/npc/common_goblin/idle_generated/backpack_idle_up.png" id="backpack_idle_up"]
+[ext_resource type="Texture2D" uid="uid://d3d607rejcyae" path="res://assets/characters/npc/common_goblin/idle_generated/unpacked_idle_down.png" id="unpacked_idle_down"]
+[ext_resource type="Texture2D" uid="uid://bhp7s1fvewqhr" path="res://assets/characters/npc/common_goblin/idle_generated/unpacked_idle_up.png" id="unpacked_idle_up"]
 
 [sub_resource type="AtlasTexture" id="backpack_idle_up_0"]
 atlas = ExtResource("backpack_idle_up")
@@ -125,8 +125,91 @@ region = Rect2(192, 64, 64, 64)
 filter_clip = true
 
 [resource]
-animations = [
-{"frames": [{"duration": 1.0, "texture": SubResource("backpack_idle_up_0")}, {"duration": 1.0, "texture": SubResource("backpack_idle_up_1")}, {"duration": 1.0, "texture": SubResource("backpack_idle_up_2")}, {"duration": 1.0, "texture": SubResource("backpack_idle_up_3")}, {"duration": 1.0, "texture": SubResource("backpack_idle_up_4")}, {"duration": 1.0, "texture": SubResource("backpack_idle_up_5")}, {"duration": 1.0, "texture": SubResource("backpack_idle_up_6")}, {"duration": 1.0, "texture": SubResource("backpack_idle_up_7")}], "loop": 1, "name": &"backpack_idle_up", "speed": 6.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("unpacked_idle_down_0")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_down_1")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_down_2")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_down_3")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_down_4")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_down_5")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_down_6")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_down_7")}], "loop": 1, "name": &"unpacked_idle_down", "speed": 6.0},
-{"frames": [{"duration": 1.0, "texture": SubResource("unpacked_idle_up_0")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_up_1")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_up_2")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_up_3")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_up_4")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_up_5")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_up_6")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_up_7")}], "loop": 1, "name": &"unpacked_idle_up", "speed": 6.0},
-]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("backpack_idle_up_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("backpack_idle_up_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("backpack_idle_up_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("backpack_idle_up_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("backpack_idle_up_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("backpack_idle_up_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("backpack_idle_up_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("backpack_idle_up_7")
+}],
+"loop": 1,
+"name": &"backpack_idle_up",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("unpacked_idle_down_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("unpacked_idle_down_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("unpacked_idle_down_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("unpacked_idle_down_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("unpacked_idle_down_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("unpacked_idle_down_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("unpacked_idle_down_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("unpacked_idle_down_7")
+}],
+"loop": 1,
+"name": &"unpacked_idle_down",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("unpacked_idle_up_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("unpacked_idle_up_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("unpacked_idle_up_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("unpacked_idle_up_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("unpacked_idle_up_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("unpacked_idle_up_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("unpacked_idle_up_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("unpacked_idle_up_7")
+}],
+"loop": 1,
+"name": &"unpacked_idle_up",
+"speed": 6.0
+}]

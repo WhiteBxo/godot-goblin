@@ -1,16 +1,156 @@
-[gd_resource type="SpriteFrames" format=3]
+[gd_resource type="SpriteFrames" format=3 uid="uid://bqimff26k721k"]
 
-[ext_resource type="Texture2D" path="res://assets/characters/goblin_actions/goblin_walk_down.png" id="walk_down"]
+[ext_resource type="Texture2D" uid="uid://chw5c6ic01311" path="res://assets/characters/goblin_actions/goblin_attack_down.png" id="attack_down"]
+[ext_resource type="Texture2D" uid="uid://cnf37730chskj" path="res://assets/characters/goblin_actions/goblin_attack_side.png" id="attack_side"]
+[ext_resource type="Texture2D" uid="uid://bnrurnoo5jer2" path="res://assets/characters/goblin_actions/goblin_attack_up.png" id="attack_up"]
+[ext_resource type="Texture2D" uid="uid://b5e0t3xvc4nb7" path="res://assets/characters/goblin_actions/goblin_walk_down.png" id="walk_down"]
+[ext_resource type="Texture2D" uid="uid://xg5m41bb6xbj" path="res://assets/characters/goblin_actions/goblin_walk_side.png" id="walk_side"]
+[ext_resource type="Texture2D" uid="uid://bwl2vwtg2cllr" path="res://assets/characters/goblin_actions/goblin_walk_up.png" id="walk_up"]
 
-[ext_resource type="Texture2D" path="res://assets/characters/goblin_actions/goblin_walk_side.png" id="walk_side"]
+[sub_resource type="AtlasTexture" id="attack_down_00"]
+atlas = ExtResource("attack_down")
+region = Rect2(0, 0, 64, 64)
+filter_clip = true
 
-[ext_resource type="Texture2D" path="res://assets/characters/goblin_actions/goblin_walk_up.png" id="walk_up"]
+[sub_resource type="AtlasTexture" id="attack_down_01"]
+atlas = ExtResource("attack_down")
+region = Rect2(88, 0, 64, 64)
+filter_clip = true
 
-[ext_resource type="Texture2D" path="res://assets/characters/goblin_actions/goblin_attack_side.png" id="attack_side"]
+[sub_resource type="AtlasTexture" id="attack_down_02"]
+atlas = ExtResource("attack_down")
+region = Rect2(176, 0, 64, 64)
+filter_clip = true
 
-[ext_resource type="Texture2D" path="res://assets/characters/goblin_actions/goblin_attack_up.png" id="attack_up"]
+[sub_resource type="AtlasTexture" id="attack_down_03"]
+atlas = ExtResource("attack_down")
+region = Rect2(264, 0, 64, 64)
+filter_clip = true
 
-[ext_resource type="Texture2D" path="res://assets/characters/goblin_actions/goblin_attack_down.png" id="attack_down"]
+[sub_resource type="AtlasTexture" id="attack_down_04"]
+atlas = ExtResource("attack_down")
+region = Rect2(352, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_down_05"]
+atlas = ExtResource("attack_down")
+region = Rect2(440, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_down_06"]
+atlas = ExtResource("attack_down")
+region = Rect2(0, 88, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_down_07"]
+atlas = ExtResource("attack_down")
+region = Rect2(88, 88, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_down_08"]
+atlas = ExtResource("attack_down")
+region = Rect2(176, 88, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_side_00"]
+atlas = ExtResource("attack_side")
+region = Rect2(0, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_side_01"]
+atlas = ExtResource("attack_side")
+region = Rect2(88, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_side_02"]
+atlas = ExtResource("attack_side")
+region = Rect2(176, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_side_03"]
+atlas = ExtResource("attack_side")
+region = Rect2(264, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_side_04"]
+atlas = ExtResource("attack_side")
+region = Rect2(352, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_side_05"]
+atlas = ExtResource("attack_side")
+region = Rect2(440, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_side_06"]
+atlas = ExtResource("attack_side")
+region = Rect2(0, 88, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_side_07"]
+atlas = ExtResource("attack_side")
+region = Rect2(88, 88, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_side_08"]
+atlas = ExtResource("attack_side")
+region = Rect2(176, 88, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_side_09"]
+atlas = ExtResource("attack_side")
+region = Rect2(264, 88, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_side_10"]
+atlas = ExtResource("attack_side")
+region = Rect2(352, 88, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_side_11"]
+atlas = ExtResource("attack_side")
+region = Rect2(440, 88, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_up_00"]
+atlas = ExtResource("attack_up")
+region = Rect2(0, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_up_01"]
+atlas = ExtResource("attack_up")
+region = Rect2(88, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_up_02"]
+atlas = ExtResource("attack_up")
+region = Rect2(176, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_up_03"]
+atlas = ExtResource("attack_up")
+region = Rect2(264, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_up_04"]
+atlas = ExtResource("attack_up")
+region = Rect2(352, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_up_05"]
+atlas = ExtResource("attack_up")
+region = Rect2(440, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_up_06"]
+atlas = ExtResource("attack_up")
+region = Rect2(0, 88, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_up_07"]
+atlas = ExtResource("attack_up")
+region = Rect2(88, 88, 64, 64)
+filter_clip = true
 
 [sub_resource type="AtlasTexture" id="walk_down_00"]
 atlas = ExtResource("walk_down")
@@ -207,247 +347,239 @@ atlas = ExtResource("walk_up")
 region = Rect2(176, 176, 64, 64)
 filter_clip = true
 
-[sub_resource type="AtlasTexture" id="attack_side_00"]
-atlas = ExtResource("attack_side")
-region = Rect2(0, 0, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_side_01"]
-atlas = ExtResource("attack_side")
-region = Rect2(88, 0, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_side_02"]
-atlas = ExtResource("attack_side")
-region = Rect2(176, 0, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_side_03"]
-atlas = ExtResource("attack_side")
-region = Rect2(264, 0, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_side_04"]
-atlas = ExtResource("attack_side")
-region = Rect2(352, 0, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_side_05"]
-atlas = ExtResource("attack_side")
-region = Rect2(440, 0, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_side_06"]
-atlas = ExtResource("attack_side")
-region = Rect2(0, 88, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_side_07"]
-atlas = ExtResource("attack_side")
-region = Rect2(88, 88, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_side_08"]
-atlas = ExtResource("attack_side")
-region = Rect2(176, 88, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_side_09"]
-atlas = ExtResource("attack_side")
-region = Rect2(264, 88, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_side_10"]
-atlas = ExtResource("attack_side")
-region = Rect2(352, 88, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_side_11"]
-atlas = ExtResource("attack_side")
-region = Rect2(440, 88, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_up_00"]
-atlas = ExtResource("attack_up")
-region = Rect2(0, 0, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_up_01"]
-atlas = ExtResource("attack_up")
-region = Rect2(88, 0, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_up_02"]
-atlas = ExtResource("attack_up")
-region = Rect2(176, 0, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_up_03"]
-atlas = ExtResource("attack_up")
-region = Rect2(264, 0, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_up_04"]
-atlas = ExtResource("attack_up")
-region = Rect2(352, 0, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_up_05"]
-atlas = ExtResource("attack_up")
-region = Rect2(440, 0, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_up_06"]
-atlas = ExtResource("attack_up")
-region = Rect2(0, 88, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_up_07"]
-atlas = ExtResource("attack_up")
-region = Rect2(88, 88, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_down_00"]
-atlas = ExtResource("attack_down")
-region = Rect2(0, 0, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_down_01"]
-atlas = ExtResource("attack_down")
-region = Rect2(88, 0, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_down_02"]
-atlas = ExtResource("attack_down")
-region = Rect2(176, 0, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_down_03"]
-atlas = ExtResource("attack_down")
-region = Rect2(264, 0, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_down_04"]
-atlas = ExtResource("attack_down")
-region = Rect2(352, 0, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_down_05"]
-atlas = ExtResource("attack_down")
-region = Rect2(440, 0, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_down_06"]
-atlas = ExtResource("attack_down")
-region = Rect2(0, 88, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_down_07"]
-atlas = ExtResource("attack_down")
-region = Rect2(88, 88, 64, 64)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="attack_down_08"]
-atlas = ExtResource("attack_down")
-region = Rect2(176, 88, 64, 64)
-filter_clip = true
-
 [resource]
 animations = [{
-"frames": [{"duration": 1.0, "texture": SubResource("walk_down_00")},
-{"duration": 1.0, "texture": SubResource("walk_down_01")},
-{"duration": 1.0, "texture": SubResource("walk_down_02")},
-{"duration": 1.0, "texture": SubResource("walk_down_03")},
-{"duration": 1.0, "texture": SubResource("walk_down_04")},
-{"duration": 1.0, "texture": SubResource("walk_down_05")},
-{"duration": 1.0, "texture": SubResource("walk_down_06")},
-{"duration": 1.0, "texture": SubResource("walk_down_07")},
-{"duration": 1.0, "texture": SubResource("walk_down_08")}],
-"loop": true,
-"name": &"walk_down",
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("attack_down_00")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_down_01")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_down_02")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_down_03")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_down_04")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_down_05")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_down_06")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_down_07")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_down_08")
+}],
+"loop": 0,
+"name": &"attack_down",
 "speed": 12.0
-},
-{
-"frames": [{"duration": 1.0, "texture": SubResource("walk_side_00")},
-{"duration": 1.0, "texture": SubResource("walk_side_01")},
-{"duration": 1.0, "texture": SubResource("walk_side_02")},
-{"duration": 1.0, "texture": SubResource("walk_side_03")},
-{"duration": 1.0, "texture": SubResource("walk_side_04")},
-{"duration": 1.0, "texture": SubResource("walk_side_05")},
-{"duration": 1.0, "texture": SubResource("walk_side_06")},
-{"duration": 1.0, "texture": SubResource("walk_side_07")},
-{"duration": 1.0, "texture": SubResource("walk_side_08")},
-{"duration": 1.0, "texture": SubResource("walk_side_09")},
-{"duration": 1.0, "texture": SubResource("walk_side_10")},
-{"duration": 1.0, "texture": SubResource("walk_side_11")},
-{"duration": 1.0, "texture": SubResource("walk_side_12")},
-{"duration": 1.0, "texture": SubResource("walk_side_13")},
-{"duration": 1.0, "texture": SubResource("walk_side_14")}],
-"loop": true,
-"name": &"walk_side",
-"speed": 12.0
-},
-{
-"frames": [{"duration": 1.0, "texture": SubResource("walk_up_00")},
-{"duration": 1.0, "texture": SubResource("walk_up_01")},
-{"duration": 1.0, "texture": SubResource("walk_up_02")},
-{"duration": 1.0, "texture": SubResource("walk_up_03")},
-{"duration": 1.0, "texture": SubResource("walk_up_04")},
-{"duration": 1.0, "texture": SubResource("walk_up_05")},
-{"duration": 1.0, "texture": SubResource("walk_up_06")},
-{"duration": 1.0, "texture": SubResource("walk_up_07")},
-{"duration": 1.0, "texture": SubResource("walk_up_08")},
-{"duration": 1.0, "texture": SubResource("walk_up_09")},
-{"duration": 1.0, "texture": SubResource("walk_up_10")},
-{"duration": 1.0, "texture": SubResource("walk_up_11")},
-{"duration": 1.0, "texture": SubResource("walk_up_12")},
-{"duration": 1.0, "texture": SubResource("walk_up_13")},
-{"duration": 1.0, "texture": SubResource("walk_up_14")}],
-"loop": true,
-"name": &"walk_up",
-"speed": 12.0
-},
-{
-"frames": [{"duration": 1.0, "texture": SubResource("attack_side_00")},
-{"duration": 1.0, "texture": SubResource("attack_side_01")},
-{"duration": 1.0, "texture": SubResource("attack_side_02")},
-{"duration": 1.0, "texture": SubResource("attack_side_03")},
-{"duration": 1.0, "texture": SubResource("attack_side_04")},
-{"duration": 1.0, "texture": SubResource("attack_side_05")},
-{"duration": 1.0, "texture": SubResource("attack_side_06")},
-{"duration": 1.0, "texture": SubResource("attack_side_07")},
-{"duration": 1.0, "texture": SubResource("attack_side_08")},
-{"duration": 1.0, "texture": SubResource("attack_side_09")},
-{"duration": 1.0, "texture": SubResource("attack_side_10")},
-{"duration": 1.0, "texture": SubResource("attack_side_11")}],
-"loop": false,
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("attack_side_00")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_side_01")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_side_02")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_side_03")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_side_04")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_side_05")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_side_06")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_side_07")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_side_08")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_side_09")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_side_10")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_side_11")
+}],
+"loop": 0,
 "name": &"attack_side",
 "speed": 12.0
-},
-{
-"frames": [{"duration": 1.0, "texture": SubResource("attack_up_00")},
-{"duration": 1.0, "texture": SubResource("attack_up_01")},
-{"duration": 1.0, "texture": SubResource("attack_up_02")},
-{"duration": 1.0, "texture": SubResource("attack_up_03")},
-{"duration": 1.0, "texture": SubResource("attack_up_04")},
-{"duration": 1.0, "texture": SubResource("attack_up_05")},
-{"duration": 1.0, "texture": SubResource("attack_up_06")},
-{"duration": 1.0, "texture": SubResource("attack_up_07")}],
-"loop": false,
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("attack_up_00")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_up_01")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_up_02")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_up_03")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_up_04")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_up_05")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_up_06")
+}, {
+"duration": 1.0,
+"texture": SubResource("attack_up_07")
+}],
+"loop": 0,
 "name": &"attack_up",
 "speed": 12.0
-},
-{
-"frames": [{"duration": 1.0, "texture": SubResource("attack_down_00")},
-{"duration": 1.0, "texture": SubResource("attack_down_01")},
-{"duration": 1.0, "texture": SubResource("attack_down_02")},
-{"duration": 1.0, "texture": SubResource("attack_down_03")},
-{"duration": 1.0, "texture": SubResource("attack_down_04")},
-{"duration": 1.0, "texture": SubResource("attack_down_05")},
-{"duration": 1.0, "texture": SubResource("attack_down_06")},
-{"duration": 1.0, "texture": SubResource("attack_down_07")},
-{"duration": 1.0, "texture": SubResource("attack_down_08")}],
-"loop": false,
-"name": &"attack_down",
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("walk_down_00")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_down_01")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_down_02")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_down_03")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_down_04")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_down_05")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_down_06")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_down_07")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_down_08")
+}],
+"loop": 1,
+"name": &"walk_down",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("walk_side_00")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_side_01")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_side_02")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_side_03")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_side_04")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_side_05")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_side_06")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_side_07")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_side_08")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_side_09")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_side_10")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_side_11")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_side_12")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_side_13")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_side_14")
+}],
+"loop": 1,
+"name": &"walk_side",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("walk_up_00")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_up_01")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_up_02")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_up_03")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_up_04")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_up_05")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_up_06")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_up_07")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_up_08")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_up_09")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_up_10")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_up_11")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_up_12")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_up_13")
+}, {
+"duration": 1.0,
+"texture": SubResource("walk_up_14")
+}],
+"loop": 1,
+"name": &"walk_up",
 "speed": 12.0
 }]

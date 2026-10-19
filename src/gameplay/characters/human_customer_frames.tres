@@ -1,16 +1,11 @@
-[gd_resource type="SpriteFrames" format=3]
+[gd_resource type="SpriteFrames" format=3 uid="uid://pylccqp1nr6o"]
 
-[ext_resource type="Texture2D" path="res://assets/characters/npc/human_customer/idle_down.png" id="0"]
-
-[ext_resource type="Texture2D" path="res://assets/characters/npc/human_customer/idle_right.png" id="1"]
-
-[ext_resource type="Texture2D" path="res://assets/characters/npc/human_customer/idle_up.png" id="2"]
-
-[ext_resource type="Texture2D" path="res://assets/characters/npc/human_customer/run_down.png" id="3"]
-
-[ext_resource type="Texture2D" path="res://assets/characters/npc/human_customer/run_right.png" id="4"]
-
-[ext_resource type="Texture2D" path="res://assets/characters/npc/human_customer/run_up.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://dqqvy7n4yn0kn" path="res://assets/characters/npc/human_customer/idle_down.png" id="0"]
+[ext_resource type="Texture2D" uid="uid://cd518b13qib2i" path="res://assets/characters/npc/human_customer/idle_right.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://ede7x3iq5bw0" path="res://assets/characters/npc/human_customer/idle_up.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://ccm4qcgpgwuye" path="res://assets/characters/npc/human_customer/run_down.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://cx4tu0njjuwl5" path="res://assets/characters/npc/human_customer/run_right.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://c7rm5vick3eh5" path="res://assets/characters/npc/human_customer/run_up.png" id="5"]
 
 [sub_resource type="AtlasTexture" id="0_0"]
 atlas = ExtResource("0")
@@ -283,53 +278,260 @@ region = Rect2(440, 88, 64, 64)
 filter_clip = true
 
 [resource]
-animations = [
-{
-"frames": [{"duration": 1.0, "texture": SubResource("5_0")}, {"duration": 1.0, "texture": SubResource("5_1")}, {"duration": 1.0, "texture": SubResource("5_2")}, {"duration": 1.0, "texture": SubResource("5_3")}, {"duration": 1.0, "texture": SubResource("5_4")}, {"duration": 1.0, "texture": SubResource("5_5")}, {"duration": 1.0, "texture": SubResource("5_6")}, {"duration": 1.0, "texture": SubResource("5_7")}, {"duration": 1.0, "texture": SubResource("5_8")}, {"duration": 1.0, "texture": SubResource("5_9")}, {"duration": 1.0, "texture": SubResource("5_10")}, {"duration": 1.0, "texture": SubResource("5_11")}],
-"loop": true,
-"name": &"run_up",
-"speed": 8.0
-},
-{
-"frames": [{"duration": 1.0, "texture": SubResource("3_0")}, {"duration": 1.0, "texture": SubResource("3_1")}, {"duration": 1.0, "texture": SubResource("3_2")}, {"duration": 1.0, "texture": SubResource("3_3")}, {"duration": 1.0, "texture": SubResource("3_4")}, {"duration": 1.0, "texture": SubResource("3_5")}, {"duration": 1.0, "texture": SubResource("3_6")}, {"duration": 1.0, "texture": SubResource("3_7")}],
-"loop": true,
-"name": &"run_down",
-"speed": 8.0
-},
-{
-"frames": [{"duration": 1.0, "texture": SubResource("4_0")}, {"duration": 1.0, "texture": SubResource("4_1")}, {"duration": 1.0, "texture": SubResource("4_2")}, {"duration": 1.0, "texture": SubResource("4_3")}, {"duration": 1.0, "texture": SubResource("4_4")}, {"duration": 1.0, "texture": SubResource("4_5")}, {"duration": 1.0, "texture": SubResource("4_6")}, {"duration": 1.0, "texture": SubResource("4_7")}, {"duration": 1.0, "texture": SubResource("4_8")}, {"duration": 1.0, "texture": SubResource("4_9")}, {"duration": 1.0, "texture": SubResource("4_10")}],
-"loop": true,
-"name": &"run_right",
-"speed": 8.0
-},
-{
-"frames": [{"duration": 1.0, "texture": SubResource("0_0")}, {"duration": 1.0, "texture": SubResource("0_1")}, {"duration": 1.0, "texture": SubResource("0_2")}, {"duration": 1.0, "texture": SubResource("0_3")}, {"duration": 1.0, "texture": SubResource("0_4")}, {"duration": 1.0, "texture": SubResource("0_5")}, {"duration": 1.0, "texture": SubResource("0_6")}],
-"loop": true,
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("0_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("0_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("0_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("0_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("0_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("0_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("0_6")
+}],
+"loop": 1,
 "name": &"idle_down",
 "speed": 6.0
-},
-{
-"frames": [{"duration": 1.0, "texture": SubResource("1_0")}, {"duration": 1.0, "texture": SubResource("1_1")}, {"duration": 1.0, "texture": SubResource("1_2")}, {"duration": 1.0, "texture": SubResource("1_3")}, {"duration": 1.0, "texture": SubResource("1_4")}, {"duration": 1.0, "texture": SubResource("1_5")}, {"duration": 1.0, "texture": SubResource("1_6")}],
-"loop": true,
-"name": &"idle_right",
-"speed": 6.0
-},
-{
-"frames": [{"duration": 1.0, "texture": SubResource("2_0")}, {"duration": 1.0, "texture": SubResource("2_1")}, {"duration": 1.0, "texture": SubResource("2_2")}, {"duration": 1.0, "texture": SubResource("2_3")}, {"duration": 1.0, "texture": SubResource("2_4")}, {"duration": 1.0, "texture": SubResource("2_5")}, {"duration": 1.0, "texture": SubResource("2_6")}, {"duration": 1.0, "texture": SubResource("2_7")}, {"duration": 1.0, "texture": SubResource("2_8")}],
-"loop": true,
-"name": &"idle_up",
-"speed": 6.0
-},
-{
-"frames": [{"duration": 1.0, "texture": SubResource("4_0")}, {"duration": 1.0, "texture": SubResource("4_1")}, {"duration": 1.0, "texture": SubResource("4_2")}, {"duration": 1.0, "texture": SubResource("4_3")}, {"duration": 1.0, "texture": SubResource("4_4")}, {"duration": 1.0, "texture": SubResource("4_5")}, {"duration": 1.0, "texture": SubResource("4_6")}, {"duration": 1.0, "texture": SubResource("4_7")}, {"duration": 1.0, "texture": SubResource("4_8")}, {"duration": 1.0, "texture": SubResource("4_9")}, {"duration": 1.0, "texture": SubResource("4_10")}],
-"loop": true,
-"name": &"run_left",
-"speed": 8.0
-},
-{
-"frames": [{"duration": 1.0, "texture": SubResource("1_0")}, {"duration": 1.0, "texture": SubResource("1_1")}, {"duration": 1.0, "texture": SubResource("1_2")}, {"duration": 1.0, "texture": SubResource("1_3")}, {"duration": 1.0, "texture": SubResource("1_4")}, {"duration": 1.0, "texture": SubResource("1_5")}, {"duration": 1.0, "texture": SubResource("1_6")}],
-"loop": true,
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("1_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("1_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("1_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("1_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("1_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("1_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("1_6")
+}],
+"loop": 1,
 "name": &"idle_left",
 "speed": 6.0
-},
-]
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("1_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("1_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("1_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("1_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("1_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("1_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("1_6")
+}],
+"loop": 1,
+"name": &"idle_right",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("2_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("2_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("2_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("2_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("2_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("2_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("2_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("2_7")
+}, {
+"duration": 1.0,
+"texture": SubResource("2_8")
+}],
+"loop": 1,
+"name": &"idle_up",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("3_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("3_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("3_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("3_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("3_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("3_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("3_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("3_7")
+}],
+"loop": 1,
+"name": &"run_down",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("4_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("4_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("4_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("4_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("4_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("4_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("4_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("4_7")
+}, {
+"duration": 1.0,
+"texture": SubResource("4_8")
+}, {
+"duration": 1.0,
+"texture": SubResource("4_9")
+}, {
+"duration": 1.0,
+"texture": SubResource("4_10")
+}],
+"loop": 1,
+"name": &"run_left",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("4_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("4_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("4_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("4_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("4_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("4_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("4_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("4_7")
+}, {
+"duration": 1.0,
+"texture": SubResource("4_8")
+}, {
+"duration": 1.0,
+"texture": SubResource("4_9")
+}, {
+"duration": 1.0,
+"texture": SubResource("4_10")
+}],
+"loop": 1,
+"name": &"run_right",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("5_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("5_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("5_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("5_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("5_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("5_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("5_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("5_7")
+}, {
+"duration": 1.0,
+"texture": SubResource("5_8")
+}, {
+"duration": 1.0,
+"texture": SubResource("5_9")
+}, {
+"duration": 1.0,
+"texture": SubResource("5_10")
+}, {
+"duration": 1.0,
+"texture": SubResource("5_11")
+}],
+"loop": 1,
+"name": &"run_up",
+"speed": 8.0
+}]

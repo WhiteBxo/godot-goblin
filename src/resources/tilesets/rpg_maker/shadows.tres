@@ -1,6 +1,6 @@
-[gd_resource type="TileSet" format=3]
+[gd_resource type="TileSet" format=3 uid="uid://jba132e3lb0g"]
 
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/shadow_tiles.png" id="1_gho2i"]
+[ext_resource type="Texture2D" uid="uid://dsaicym462we2" path="res://assets/map/rpg_maker/shadow_tiles.png" id="1_gho2i"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_s3u85"]
 texture = ExtResource("1_gho2i")

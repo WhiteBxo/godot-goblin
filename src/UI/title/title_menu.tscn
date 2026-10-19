@@ -1,9 +1,22 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://src/UI/title/title_menu.gd" id="script"]
 [ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="theme"]
 [ext_resource type="Script" path="res://src/UI/title/title_music.gd" id="music_script"]
 [ext_resource type="AudioStream" path="res://assets/audio/music/start.ogg" id="music"]
+[ext_resource type="Texture2D" path="res://assets/map/milkTea/shop_interior_open.png" id="backdrop"]
+
+[sub_resource type="Gradient" id="Gradient_vignette"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(0.043, 0.027, 0.02, 0, 0.043, 0.027, 0.02, 0.28, 0.043, 0.027, 0.02, 0.94)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_vignette"]
+gradient = SubResource("Gradient_vignette")
+width = 256
+height = 256
+fill = 1
+fill_from = Vector2(0.5, 0.44)
+fill_to = Vector2(1.08, 0.44)
 
 [node name="TitleMenu" type="Control"]
 process_mode = 3
@@ -27,13 +40,39 @@ wait_time = 15.0
 one_shot = true
 ignore_time_scale = true
 
+[node name="Backdrop" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("backdrop")
+expand_mode = 1
+stretch_mode = 6
+modulate = Color(0.82, 0.74, 0.66, 1)
+scale = Vector2(1.12, 1.12)
+
+[node name="Vignette" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("GradientTexture2D_vignette")
+expand_mode = 1
+stretch_mode = 0
+
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-color = Color(0.055, 0.035, 0.025, 1)
+color = Color(0.055, 0.035, 0.025, 0.26)
 
 [node name="Center" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -43,45 +82,58 @@ anchor_bottom = 1.0
 mouse_filter = 2
 
 [node name="Panel" type="PanelContainer" parent="Center"]
-custom_minimum_size = Vector2(288, 0)
+custom_minimum_size = Vector2(328, 0)
 layout_mode = 2
+theme_type_variation = &"InsetPanel"
 
 [node name="Margin" type="MarginContainer" parent="Center/Panel"]
 layout_mode = 2
-theme_override_constants/margin_left = 24
-theme_override_constants/margin_top = 24
-theme_override_constants/margin_right = 24
-theme_override_constants/margin_bottom = 24
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 20
 
 [node name="Content" type="VBoxContainer" parent="Center/Panel/Margin"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 8
 
 [node name="Title" type="Label" parent="Center/Panel/Margin/Content"]
 layout_mode = 2
-theme_type_variation = &"Title"
+theme_type_variation = &"HeroTitle"
 text = "Godot Goblin"
 horizontal_alignment = 1
 
+[node name="Subtitle" type="Label" parent="Center/Panel/Margin/Content"]
+layout_mode = 2
+theme_type_variation = &"Hint"
+text = "洞窟深处的奶茶店 · 第一天"
+horizontal_alignment = 1
+
+[node name="Rule" type="HSeparator" parent="Center/Panel/Margin/Content"]
+layout_mode = 2
+
 [node name="Continue" type="Button" parent="Center/Panel/Margin/Content"]
 visible = false
-custom_minimum_size = Vector2(0, 36)
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 text = "继续游戏"
 
 [node name="NewGame" type="Button" parent="Center/Panel/Margin/Content"]
-custom_minimum_size = Vector2(0, 36)
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 text = "新游戏"
 
 [node name="Quit" type="Button" parent="Center/Panel/Margin/Content"]
 metadata/ui_press_sound = "ui.cancel"
-custom_minimum_size = Vector2(0, 36)
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
+theme_type_variation = &"GhostButton"
 text = "退出游戏"
 
 [node name="Settings" type="Button" parent="Center/Panel/Margin/Content"]
+custom_minimum_size = Vector2(0, 26)
 layout_mode = 2
+theme_type_variation = &"GhostButton"
 text = "设置"
 
 [node name="Confirmation" type="VBoxContainer" parent="Center/Panel/Margin/Content"]
@@ -96,14 +148,14 @@ autowrap_mode = 2
 horizontal_alignment = 1
 
 [node name="Confirm" type="Button" parent="Center/Panel/Margin/Content/Confirmation"]
-custom_minimum_size = Vector2(0, 36)
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 theme_type_variation = &"DangerButton"
 text = "开始新游戏"
 
 [node name="Cancel" type="Button" parent="Center/Panel/Margin/Content/Confirmation"]
 metadata/ui_press_sound = "ui.cancel"
-custom_minimum_size = Vector2(0, 36)
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 text = "返回"
 
@@ -114,3 +166,9 @@ custom_minimum_size = Vector2(240, 0)
 text = ""
 horizontal_alignment = 1
 autowrap_mode = 2
+
+[node name="Keys" type="Label" parent="Center/Panel/Margin/Content"]
+layout_mode = 2
+theme_type_variation = &"Hint"
+text = "Tab 切换 · Enter 确认"
+horizontal_alignment = 1

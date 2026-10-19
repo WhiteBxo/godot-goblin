@@ -24,7 +24,10 @@ const SUCCESS := Color("bdd9a5")
 const WARNING := Color("ffd08c")
 const DANGER := Color("e08a72")
 const PRIMARY_TEXT := Color("241710")
-const SHADOW := Color(0, 0, 0, 0.35)
+const SHADOW := Color(0, 0, 0, 0.42)
+## HUD panels sit on busy pixel art; the extra shade keeps text readable.
+const SHADOW_SOFT := Color(0, 0, 0, 0.28)
+const TEXT_SHADOW := Color(0, 0, 0, 0.45)
 
 # Order slips: the paper surface owns a separate, readable ink palette.
 const PAPER := Color("ead7ad")

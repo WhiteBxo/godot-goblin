@@ -31,7 +31,7 @@ func _initialize() -> void:
 
 func _flat(bg: Color, border: Color = Color.TRANSPARENT, width: int = 0, radius: int = 0,
 		ml: float = 0.0, mt: float = 0.0, mr: float = 0.0, mb: float = 0.0,
-		shadow: bool = false) -> StyleBoxFlat:
+		shadow: bool = false, shadow_size: int = 2) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
 	style.bg_color = bg
 	if width > 0:
@@ -45,7 +45,7 @@ func _flat(bg: Color, border: Color = Color.TRANSPARENT, width: int = 0, radius:
 	style.content_margin_bottom = mb
 	if shadow:
 		style.shadow_color = T.SHADOW
-		style.shadow_size = 2
+		style.shadow_size = shadow_size
 		style.shadow_offset = Vector2(0, 2)
 	return style
 
@@ -65,12 +65,22 @@ func _empty(mt: float = 0.0) -> StyleBoxEmpty:
 
 
 func _build_containers(theme: Theme) -> void:
-	var panel := _flat(T.PANEL, T.BORDER, T.BORDER_PANEL, T.RADIUS_PANEL, 0, 0, 0, 0, true)
+	# Quiet frame: HUD and dialogue text do the talking, the outline only holds them.
+	var panel := _flat(Color(T.PANEL, 0.96), T.BORDER_SOFT, 1, T.RADIUS_PANEL, 0, 0, 0, 0, true, 3)
 	theme.set_stylebox("panel", "Panel", panel)
 	theme.set_stylebox("panel", "PanelContainer", panel)
+	# The modal is the one hero surface: gold hairline and a deeper drop.
+	var inset := _flat(T.PANEL, T.BORDER, 1, T.RADIUS_PANEL, T.SPACE_3, T.SPACE_3, T.SPACE_3, T.SPACE_3, true, 5)
 	theme.set_type_variation("InsetPanel", "PanelContainer")
-	theme.set_stylebox("panel", "InsetPanel",
-		_flat(T.PANEL, T.BORDER, T.BORDER_PANEL, T.RADIUS_PANEL, T.SPACE_3, T.SPACE_3, T.SPACE_3, T.SPACE_3, true))
+	theme.set_stylebox("panel", "InsetPanel", inset)
+	# HUD card: one brass rail on the leading edge, hairline elsewhere.
+	var hud := _flat(Color(T.PANEL, 0.97), T.BORDER, 1, T.RADIUS_BUTTON, 0, 0, 0, 0, true, 3)
+	hud.border_width_left = 3
+	theme.set_type_variation("HudPanel", "PanelContainer")
+	theme.set_stylebox("panel", "HudPanel", hud)
+	var coin := _flat(T.RAISED, T.BORDER_SOFT, 1, 10, T.SPACE_2, 2, T.SPACE_2, 2, true, 2)
+	theme.set_type_variation("CoinPanel", "PanelContainer")
+	theme.set_stylebox("panel", "CoinPanel", coin)
 	theme.set_type_variation("CardPanel", "PanelContainer")
 	theme.set_stylebox("panel", "CardPanel",
 		_flat(T.RAISED, T.BORDER_SOFT, 1, T.RADIUS_BUTTON, T.SPACE_2, T.SPACE_2, T.SPACE_2, T.SPACE_2))
@@ -96,6 +106,11 @@ func _build_labels(theme: Theme) -> void:
 	theme.set_color("font_color", "Label", T.TEXT)
 	theme.set_constant("line_spacing", "Label", T.LINE_SEPARATION)
 	theme.set_constant("outline_size", "Label", 0)
+	# One pixel of shade keeps HUD copy legible over bright floorboards.
+	theme.set_color("font_shadow_color", "Label", T.TEXT_SHADOW)
+	theme.set_constant("shadow_offset_x", "Label", 1)
+	theme.set_constant("shadow_offset_y", "Label", 1)
+	theme.set_constant("shadow_outline_size", "Label", 0)
 
 	_label_variation(theme, "Title", T.ACCENT, T.FONT_TITLE)
 	_label_variation(theme, "HeroTitle", T.ACCENT, T.FONT_HERO)
@@ -133,8 +148,9 @@ func _label_variation(theme: Theme, name: StringName, color: Color, size: int) -
 
 func _build_buttons(theme: Theme) -> void:
 	var normal := _flat(T.RAISED, T.BORDER_SOFT, 1, T.RADIUS_BUTTON, T.SPACE_3, T.SPACE_1, T.SPACE_3, T.SPACE_1)
-	var hover := _flat(T.RAISED_HOVER, T.BORDER, 1, T.RADIUS_BUTTON, T.SPACE_3, T.SPACE_1, T.SPACE_3, T.SPACE_1)
-	var pressed := _flat(T.PRESSED, T.BORDER_SOFT, 1, T.RADIUS_BUTTON, T.SPACE_3, T.SPACE_1, T.SPACE_3, T.SPACE_1)
+	var hover := _flat(T.RAISED_HOVER, T.BORDER, 1, T.RADIUS_BUTTON, T.SPACE_3, T.SPACE_1, T.SPACE_3, T.SPACE_1, true, 2)
+	# Pressed sinks the label by one pixel; the box keeps its height so nothing reflows.
+	var pressed := _flat(T.PRESSED, T.BORDER_SOFT, 1, T.RADIUS_BUTTON, T.SPACE_3, T.SPACE_1 + 1, T.SPACE_3, T.SPACE_1 - 1)
 	var disabled := _flat(T.SUNKEN, T.LINE, 1, T.RADIUS_BUTTON, T.SPACE_3, T.SPACE_1, T.SPACE_3, T.SPACE_1)
 	var focus := _flat(Color.TRANSPARENT, T.ACCENT, 1, T.RADIUS_BUTTON, 0, 0, 0, 0)
 	focus.expand_margin_left = T.FOCUS_EXPAND
@@ -166,14 +182,20 @@ func _build_buttons(theme: Theme) -> void:
 
 	theme.set_type_variation("PrimaryButton", "Button")
 	theme.set_stylebox("normal", "PrimaryButton",
-		_flat(T.ACCENT, T.ACCENT_STRONG, 1, T.RADIUS_BUTTON, T.SPACE_3, T.SPACE_1, T.SPACE_3, T.SPACE_1))
+		_flat(T.ACCENT, T.ACCENT_STRONG, 1, T.RADIUS_BUTTON, T.SPACE_3, T.SPACE_1, T.SPACE_3, T.SPACE_1, true, 3))
 	theme.set_stylebox("hover", "PrimaryButton",
-		_flat(T.ACCENT_STRONG, T.ACCENT_STRONG, 1, T.RADIUS_BUTTON, T.SPACE_3, T.SPACE_1, T.SPACE_3, T.SPACE_1))
+		_flat(T.ACCENT_STRONG, T.ACCENT_STRONG, 1, T.RADIUS_BUTTON, T.SPACE_3, T.SPACE_1, T.SPACE_3, T.SPACE_1, true, 4))
 	theme.set_stylebox("pressed", "PrimaryButton",
-		_flat(Color("e0b25f"), T.BORDER, 1, T.RADIUS_BUTTON, T.SPACE_3, T.SPACE_1, T.SPACE_3, T.SPACE_1))
+		_flat(Color("e0b25f"), T.BORDER, 1, T.RADIUS_BUTTON, T.SPACE_3, T.SPACE_1 + 1, T.SPACE_3, T.SPACE_1 - 1))
 	theme.set_stylebox("disabled", "PrimaryButton",
 		_flat(T.SUNKEN, T.LINE, 1, T.RADIUS_BUTTON, T.SPACE_3, T.SPACE_1, T.SPACE_3, T.SPACE_1))
-	theme.set_stylebox("focus", "PrimaryButton", focus)
+	# A gold fill needs a dark ring; the shared gold focus box would vanish on it.
+	var primary_focus := _flat(Color.TRANSPARENT, T.PRIMARY_TEXT, 2, T.RADIUS_BUTTON, 0, 0, 0, 0)
+	primary_focus.expand_margin_left = T.FOCUS_EXPAND
+	primary_focus.expand_margin_top = T.FOCUS_EXPAND
+	primary_focus.expand_margin_right = T.FOCUS_EXPAND
+	primary_focus.expand_margin_bottom = T.FOCUS_EXPAND
+	theme.set_stylebox("focus", "PrimaryButton", primary_focus)
 	theme.set_color("font_color", "PrimaryButton", T.PRIMARY_TEXT)
 	theme.set_color("font_hover_color", "PrimaryButton", T.PRIMARY_TEXT)
 	theme.set_color("font_pressed_color", "PrimaryButton", T.PRIMARY_TEXT)
@@ -229,6 +251,23 @@ func _build_buttons(theme: Theme) -> void:
 	theme.set_color("font_pressed_color", "IconButton", T.ACCENT)
 	theme.set_color("font_focus_color", "IconButton", T.TEXT_DIM)
 	theme.set_color("font_disabled_color", "IconButton", T.TEXT_MUTED)
+
+	# Compact HUD entry: solid enough to find over bright pixel art, still quiet.
+	theme.set_type_variation("ChipButton", "Button")
+	theme.set_stylebox("normal", "ChipButton",
+		_flat(Color(T.PANEL, 0.92), T.BORDER_SOFT, 1, T.RADIUS_BUTTON, T.SPACE_2, 1, T.SPACE_2, 1, true, 2))
+	theme.set_stylebox("hover", "ChipButton",
+		_flat(T.RAISED, T.BORDER, 1, T.RADIUS_BUTTON, T.SPACE_2, 1, T.SPACE_2, 1, true, 3))
+	theme.set_stylebox("pressed", "ChipButton",
+		_flat(T.PRESSED, T.BORDER_SOFT, 1, T.RADIUS_BUTTON, T.SPACE_2, 2, T.SPACE_2, 0))
+	theme.set_stylebox("disabled", "ChipButton",
+		_flat(Color(T.PANEL, 0.6), T.LINE, 1, T.RADIUS_BUTTON, T.SPACE_2, 1, T.SPACE_2, 1))
+	theme.set_stylebox("focus", "ChipButton", focus)
+	theme.set_color("font_color", "ChipButton", T.TEXT_DIM)
+	theme.set_color("font_hover_color", "ChipButton", T.ACCENT_STRONG)
+	theme.set_color("font_pressed_color", "ChipButton", T.ACCENT)
+	theme.set_color("font_focus_color", "ChipButton", T.ACCENT_STRONG)
+	theme.set_color("font_disabled_color", "ChipButton", T.TEXT_MUTED)
 
 
 func _build_item_list(theme: Theme) -> void:

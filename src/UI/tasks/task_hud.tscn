@@ -17,12 +17,14 @@ script = ExtResource("1")
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 1
+theme_type_variation = &"HudPanel"
 
 [node name="OpenTasks" type="Button" parent="TaskCard"]
 layout_mode = 2
 tooltip_text = "查看当前任务日志 [J]"
 theme_type_variation = &"GhostButton"
 mouse_default_cursor_shape = 2
+metadata/ui_motion = false
 
 [node name="Margin" type="MarginContainer" parent="TaskCard"]
 layout_mode = 2
@@ -50,10 +52,11 @@ mouse_filter = 2
 autowrap_mode = 3
 
 [node name="Wallet" type="PanelContainer" parent="."]
-custom_minimum_size = Vector2(80, 0)
+custom_minimum_size = Vector2(76, 0)
 layout_mode = 2
 size_flags_vertical = 0
 mouse_filter = 2
+theme_type_variation = &"CoinPanel"
 
 [node name="Content" type="VBoxContainer" parent="Wallet"]
 layout_mode = 2
@@ -63,7 +66,7 @@ mouse_filter = 2
 layout_mode = 2
 mouse_filter = 2
 theme_type_variation = &"Hint"
-text = "金币余额"
+text = "金币"
 horizontal_alignment = 1
 
 [node name="Balance" type="Label" parent="Wallet/Content"]

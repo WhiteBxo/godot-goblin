@@ -217,6 +217,10 @@ func _create_ui_system() -> void:
 	audio_feedback.name = "UIAudioFeedback"
 	$Systems.add_child(audio_feedback)
 	audio_feedback.configure(_interaction_audio.play_sound, [$HudLayer, $PopupLayer, $PauseLayer], _ui_manager)
+	var button_motion := UIButtonMotion.new()
+	button_motion.name = "UIButtonMotion"
+	$Systems.add_child(button_motion)
+	button_motion.configure([$HudLayer, $PopupLayer, $PauseLayer])
 
 func _return_to_title(pause: PauseMenu) -> void:
 	var error := ERR_BUSY if is_instance_valid(_scene_travel) and _scene_travel.is_busy() else GameEntry.return_to_title(get_tree())

@@ -24,7 +24,8 @@ UI 使用 Godot 原生 Control、Container、Theme。总体接口见 [UI 系统]
 
 静态样式只来自 `src/resources/ui/game_theme.tres`，数值来源是 `src/resources/ui/ui_tokens.gd`；改 tokens 后运行 `godot --headless --path . --script res://tools/ui/build_theme.gd` 重建，不手改生成结果。正式 UI 根显式引用主题，不使用项目级全局主题。
 
-- 场景和脚本用 `theme_type_variation` 表达 Title / H2 / Hint / Muted / Success / Warning / Danger / Badge / Keycap / PrimaryButton / GhostButton / IconButton / InsetPanel 等语义，不写 per-node 颜色、字号或 `ListStyle` 覆盖。
+- 场景和脚本用 `theme_type_variation` 表达 Title / H2 / Hint / Muted / Success / Warning / Danger / Badge / Keycap / PrimaryButton / GhostButton / ChipButton / IconButton / InsetPanel / HudPanel / CoinPanel / CardPanel / SunkenPanel 等语义，不写 per-node 颜色、字号或 `ListStyle` 覆盖。
+- 悬停与按下的缩放反馈由 `components/ui_button_motion.gd` 统一注入，按钮不需要自带动画脚本；需要退出该反馈的整块热区在场景里写 `metadata/ui_motion = false`。
 - 模态界面组合 `components/modal_shell.tscn`，内容页只做列表、详情与输入，不复制遮罩、Panel 边框、页脚或关闭按钮；新 screen 继承 `management/ui_screen.gd`，ID 使用 `ScreenIds` 常量。
 - 新增控件类型必须补主题条目，并通过 `tests/verify_ui_theme.gd` 的类型、字号与 raw Color 审计。
 - `src/debug/ui/ui_kit.tscn` 是 F6 主题画廊；新增可复用控件先在画廊展示，再接入正式界面。

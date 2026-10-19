@@ -15,6 +15,7 @@ signal close_requested
 @onready var _body: VBoxContainer = %Body
 @onready var _footer: Label = %Footer
 @onready var _panel: PanelContainer = %Panel
+@onready var _dim: Panel = %Dim
 
 var _content: Control
 var _open_tween: Tween
@@ -46,10 +47,12 @@ func _play_open() -> void:
 		_finish_open()
 		return
 	_panel.modulate.a = 0.0
-	_panel.scale = Vector2(0.985, 0.985)
+	_panel.scale = Vector2(0.94, 0.94)
+	_dim.modulate.a = 0.0
 	_open_tween = create_tween().set_parallel(true)
 	_open_tween.tween_property(_panel, "modulate:a", 1.0, open_seconds)
-	_open_tween.tween_property(_panel, "scale", Vector2.ONE, open_seconds * 1.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_open_tween.tween_property(_panel, "scale", Vector2.ONE, open_seconds * 1.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_open_tween.tween_property(_dim, "modulate:a", 1.0, open_seconds)
 
 func _finish_open() -> void:
 	if _open_tween != null:
@@ -57,6 +60,7 @@ func _finish_open() -> void:
 		_open_tween = null
 	_panel.modulate.a = 1.0
 	_panel.scale = Vector2.ONE
+	_dim.modulate.a = 1.0
 
 func _center_pivot() -> void:
 	_panel.pivot_offset = _panel.size * 0.5

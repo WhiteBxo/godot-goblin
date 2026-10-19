@@ -65,7 +65,11 @@ UIManager 在 Systems 下使用 Always；World 和其他普通 Systems 保持 Pa
 godot --headless --path . --script res://tools/ui/build_theme.gd
 ```
 
-主题覆盖 Button、Label、Panel/PanelContainer、ItemList、TabContainer/TabBar、LineEdit、SpinBox、VScrollBar/HScrollBar、PopupMenu、Tooltip、CheckBox、ProgressBar、HSeparator、RichTextLabel 和容器间距。正文 12px，弹窗标题 24px，标题画面 36px，不使用 14/18。静态样式全部来自主题，场景和脚本用 `theme_type_variation`（Title/H2/Speaker/Hint/Muted/Subtitle/Value/Success/Warning/Danger/Badge/Keycap/PrimaryButton/GhostButton/DangerButton/IconButton/InsetPanel/CardPanel/SunkenPanel/ShadePanel/SuccessBar）表达语义，不写 per-node 颜色或字号覆盖。
+主题覆盖 Button、Label、Panel/PanelContainer、ItemList、TabContainer/TabBar、LineEdit、SpinBox、VScrollBar/HScrollBar、PopupMenu、Tooltip、CheckBox、ProgressBar、HSeparator、RichTextLabel 和容器间距。正文 12px，弹窗标题 24px，标题画面 36px，不使用 14/18。静态样式全部来自主题，场景和脚本用 `theme_type_variation`（Title/H2/Speaker/Hint/Muted/Subtitle/Value/Success/Warning/Danger/Badge/Keycap/PrimaryButton/GhostButton/ChipButton/DangerButton/IconButton/InsetPanel/HudPanel/CoinPanel/CardPanel/SunkenPanel/ShadePanel/SuccessBar）表达语义，不写 per-node 颜色或字号覆盖。
+
+视觉层级按“表面”分工：普通 Panel 只留 1px 暗边和投影，用于 HUD 与对白；`InsetPanel` 是弹窗唯一的金色细边表面；`HudPanel` 用左侧 3px 铜色导轨强调当前目标；`CoinPanel` 是圆角金币药丸；`ChipButton` 用于“菜单”这类需要在小地图/场景上保持可发现的入口。正文 Label 带 1px 暗色投影，纸色订单笺的墨色文字则关闭投影。
+
+`UIButtonMotion`（`src/UI/components/ui_button_motion.gd`）与 `UIAudioFeedback` 并列挂在宿主 Systems 下，扫过 Hud/Popup/Pause 层内的按钮：悬停轻微放大、按下回缩、松开回弹、键盘焦点微抬。它只改 `scale` 与 `pivot_offset`，不动布局、焦点和按钮信号；覆盖整张卡片的透明热区用 `metadata/ui_motion = false` 退出，避免悬停底框溢出卡片。弹窗打开、交互提示出现、任务目标/余额变化与标题画面另有各自的一次性缓动，全部由对应脚本在展示层完成。
 
 `src/debug/ui/ui_kit.tscn` 是主题画廊，F6 检查字体层级、按钮状态、面板、ItemList 选中、页签、输入框、进度条与长文本。`tests/verify_ui_theme.gd` 审计场景使用的控件类型、字号范围和 UI 脚本中的 raw Color；`tests/verify_ui_kit.gd` 冒烟加载画廊并输出截图。
 

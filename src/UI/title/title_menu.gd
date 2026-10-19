@@ -6,6 +6,8 @@ extends Control
 @onready var _quit: Button = $Center/Panel/Margin/Content/Quit
 @onready var _error: Label = $Center/Panel/Margin/Content/Error
 @onready var _music: TitleMusic = $TitleMusic
+@onready var _panel: PanelContainer = $Center/Panel
+@onready var _backdrop: TextureRect = $Backdrop
 var _starting := false
 var _confirming := false
 var _can_continue := false
@@ -23,6 +25,10 @@ func _ready() -> void:
 	var feedback := UIAudioFeedback.new()
 	add_child(feedback)
 	feedback.configure(sounds.play_sound, [self])
+	var motion := UIButtonMotion.new()
+	motion.name = "UIButtonMotion"
+	add_child(motion)
+	motion.configure([self])
 	_new_game.pressed.connect(_request_new_game)
 	_continue.pressed.connect(_request_continue)
 	_quit.pressed.connect(_request_quit)
@@ -50,7 +56,36 @@ func _ready() -> void:
 	if not notice.is_empty():
 		_error.text = notice
 		_error.show()
+	_apply_primary()
 	(_continue if _can_continue else _new_game).grab_focus()
+	_start_presentation()
+	get_viewport().size_changed.connect(_recenter_pivot)
+
+func _recenter_pivot() -> void:
+	_backdrop.pivot_offset = _backdrop.size * 0.5
+	if _panel.size != Vector2.ZERO:
+		_panel.pivot_offset = _panel.size * 0.5
+
+## Exactly one gold button: the action a returning player wants first.
+func _apply_primary() -> void:
+	_continue.theme_type_variation = &"PrimaryButton" if _can_continue else &""
+	_new_game.theme_type_variation = &"" if _can_continue else &"PrimaryButton"
+
+## The menu settles in over a slowly breathing shop; nothing pops in hard.
+func _start_presentation() -> void:
+	_panel.modulate.a = 0.0
+	_panel.scale = Vector2(0.96, 0.96)
+	await get_tree().process_frame
+	if not is_inside_tree():
+		return
+	_panel.pivot_offset = _panel.size * 0.5
+	_backdrop.pivot_offset = _backdrop.size * 0.5
+	var enter := create_tween().set_parallel(true)
+	enter.tween_property(_panel, "modulate:a", 1.0, 0.22).set_delay(0.05)
+	enter.tween_property(_panel, "scale", Vector2.ONE, 0.34).set_delay(0.05).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	var drift := create_tween().set_loops()
+	drift.tween_property(_backdrop, "scale", Vector2(1.15, 1.15), 16.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	drift.tween_property(_backdrop, "scale", Vector2(1.12, 1.12), 16.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 func _request_new_game() -> void:
 	if _starting:

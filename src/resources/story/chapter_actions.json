@@ -373,27 +373,6 @@
       "kind": "close"
     },
     {
-      "id": "day2.buy",
-      "text": "购买琥珀酒 · 60G × 80% = 48G（一份）",
-      "host": "tavern",
-      "stage": "day2.s03.wait_purchase",
-      "trigger": "tavern_buy"
-    },
-    {
-      "id": "day2.round1",
-      "text": "开始第一局",
-      "host": "casino",
-      "stage": "day2.s04.wait_first",
-      "trigger": "casino_round1"
-    },
-    {
-      "id": "day2.round2",
-      "text": "开始第二局",
-      "host": "casino",
-      "stage": "day2.s04.wait_second",
-      "trigger": "casino_round2"
-    },
-    {
       "id": "day3.wait",
       "text": "等待至第三天傍晚",
       "host": "shop",

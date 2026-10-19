@@ -133,7 +133,7 @@
         },
         {
           "id": "buy",
-          "text": "听完老板介绍后，点击左侧购买按钮，以 48G 购买一份琥珀酒",
+          "text": "入门后向北找到吧台，按 E 与裂牙交谈；再次按 E 以 48G 购酒",
           "complete_when": {
             "type": "flag",
             "key": "day2.s03.amber_wine_bought"
@@ -141,7 +141,7 @@
         },
         {
           "id": "commission",
-          "text": "听取七日祭食材委托和格里芬令牌的线索",
+          "text": "购酒后在吧台再按 E，听取七日祭委托与令牌线索",
           "complete_when": {
             "type": "flag",
             "key": "day2.s03.festival_accepted"
@@ -177,7 +177,7 @@
         },
         {
           "id": "first",
-          "text": "听完规则后，点击左侧「开始第一局」",
+          "text": "在入口上方的赌桌按 E 入座；听完规则后，再按 E 确认第一局",
           "complete_when": {
             "type": "flag",
             "key": "day2.s04.first_loss"
@@ -185,7 +185,7 @@
         },
         {
           "id": "second",
-          "text": "点击左侧「开始第二局」，取得幻金菇并听完结算",
+          "text": "在同一赌桌再次按 E 确认第二局，取得幻金菇并听完结算",
           "complete_when": {
             "type": "flag",
             "key": "day2.s04.casino_reward_received"

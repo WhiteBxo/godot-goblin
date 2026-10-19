@@ -14,6 +14,12 @@
 
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_tavern.tscn" id="npc"]
 
+[ext_resource type="Script" path="res://src/gameplay/interaction/chapter_service_point.gd" id="service"]
+[ext_resource type="PackedScene" path="res://src/levels/rpg_maker/wayfinding_sign.tscn" id="sign"]
+
+[sub_resource type="RectangleShape2D" id="counter_reach"]
+size = Vector2(96, 192)
+
 [node name="RpgMakerMap004" instance=ExtResource("base")]
 
 script = ExtResource("map")
@@ -56,7 +62,7 @@ destination_entrance = &"tavern_door"
 
 [node name="tavern_bartender" type="Marker2D" parent="StoryPositions"]
 
-position = Vector2(456, 216)
+position = Vector2(216, 312)
 
 [node name="tavern_customer" type="Marker2D" parent="StoryPositions"]
 
@@ -68,13 +74,30 @@ position = Vector2(216, 648)
 
 [node name="Interactions" type="Node2D" parent="."]
 
+[node name="Counter" parent="Interactions" node_paths=PackedStringArray("required_actors") instance=ExtResource("point")]
+position = Vector2(336, 264)
+script = ExtResource("service")
+interaction_id = &"tavern"
+required_actors = Array[NodePath]([NodePath("../../Characters/Owner")])
+display_name = "吧台 · 裂牙"
+feedback_rect = Rect2(-144, -48, 96, 144)
+stage_prompts = {"day2.s03.travel_tavern": "吧台 · 与裂牙交谈", "day2.s03.wait_purchase": "吧台 · 购买琥珀酒 48G", "day2.s03.commission": "吧台 · 听取七日祭委托", "day3.handoff": "吧台 · 交付七日祭食材"}
+
+[node name="CollisionShape2D" parent="Interactions/Counter"]
+shape = SubResource("counter_reach")
+
 [node name="GatherPoints" type="Node2D" parent="."]
 
 [node name="Characters" type="Node2D" parent="."]
 
 [node name="Owner" parent="Characters" instance=ExtResource("npc")]
-position = Vector2(456, 216)
+position = Vector2(216, 312)
 actor_id = &"tavern"
 display_name = "酒馆老板 · 裂牙"
 visible = true
 active_phase = "always"
+
+[node name="CounterSign" parent="." instance=ExtResource("sign")]
+position = Vector2(264, 552)
+[node name="Text" parent="CounterSign/Panel"]
+text = "↑ 吧台 · 裂牙"

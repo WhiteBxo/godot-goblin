@@ -1,5 +1,7 @@
 # 2D 交互反馈
 
+RPG 商业服务使用 ChapterServicePoint 配置“精确阶段 → 提示名称”，沿用原 Area2D、ShopInteraction 与 StoryDirector 路由，不自行运行剧情。酒馆矩形服务区放在吧台外侧，反馈指向老板和柜台；它与老板复用 tavern ID，因此第三天仍可在柜台前提交真实食材。赌场赌桌使用独立 casino_table trigger。当前站位与图形验证见[流程优化 A–C](../development/flow_optimization_abc_2026_10_19.md)。
+
 ## 现有调用链与接入
 
 `InteractionPoint` 仍用原 Area2D 的 player body 进出记录判定范围，`ShopInteraction` 是唯一目标选择与 dispatch 入口；没有增加检测 Area、全局交互管理器或新的玩法。订单板、仓库、制作台仍走原 StoryDirector 路由，未匹配的路由打开原 ShopUI，Esc 关闭并恢复移动。

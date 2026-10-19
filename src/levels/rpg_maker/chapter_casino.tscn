@@ -14,6 +14,8 @@
 
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_casino.tscn" id="npc"]
 
+[ext_resource type="Script" path="res://src/gameplay/interaction/chapter_service_point.gd" id="service"]
+
 [node name="RpgMakerMap005" instance=ExtResource("base")]
 
 script = ExtResource("map")
@@ -56,7 +58,7 @@ destination_entrance = &"casino_door"
 
 [node name="casino_boss" type="Marker2D" parent="StoryPositions"]
 
-position = Vector2(600, 360)
+position = Vector2(696, 744)
 
 [node name="casino_customer" type="Marker2D" parent="StoryPositions"]
 
@@ -76,12 +78,20 @@ position = Vector2(1080, 552)
 
 [node name="Interactions" type="Node2D" parent="."]
 
+[node name="Table" parent="Interactions" instance=ExtResource("point")]
+position = Vector2(648, 792)
+script = ExtResource("service")
+interaction_id = &"casino_table"
+display_name = "赌桌 · 黑齿"
+feedback_rect = Rect2(-120, -120, 96, 96)
+stage_prompts = {"day2.s04.travel_casino": "赌桌 · 入座听取规则", "day2.s04.wait_first": "赌桌 · 确认第一局", "day2.s04.wait_second": "赌桌 · 确认第二局"}
+
 [node name="GatherPoints" type="Node2D" parent="."]
 
 [node name="Characters" type="Node2D" parent="."]
 
 [node name="Owner" parent="Characters" instance=ExtResource("npc")]
-position = Vector2(696, 216)
+position = Vector2(696, 744)
 actor_id = &"casino"
 display_name = "赌场老板 · 黑齿"
 visible = true

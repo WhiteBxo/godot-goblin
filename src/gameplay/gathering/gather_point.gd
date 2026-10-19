@@ -9,6 +9,16 @@ extends InteractionPoint
 @export_enum("once", "daily") var refresh_mode: String = "daily"
 ## Empty means always available. Night points use world.phase.night.
 @export var required_flag: String = ""
+## Only configured RPG points show a distant clue and their harvestable artwork.
+@export var show_world_marker := false
+
+func update_presentation(harvestable: bool) -> void:
+	if not show_world_marker:
+		return
+	$Marker.visible = harvestable
+	var visual := get_node_or_null("HarvestVisual") as CanvasItem
+	if visual != null:
+		visual.visible = harvestable
 
 ## Injected by GatheringService. Without it the point fails closed.
 var _harvest_gate: Callable

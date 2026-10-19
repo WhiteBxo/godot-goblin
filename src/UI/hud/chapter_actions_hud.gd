@@ -4,8 +4,8 @@ extends UIScreen
 signal action_requested(id: String)
 
 func show_actions(actions: Array[Dictionary], notice: String, enabled: bool) -> void:
-	$Content/Notice.text = notice
-	$Content/Notice.visible = not notice.is_empty()
+	$Content/NoticePanel/Notice.text = notice
+	$Content/NoticePanel.visible = not notice.is_empty()
 	var buttons: VBoxContainer = $Content/Buttons
 	for child: Node in buttons.get_children():
 		buttons.remove_child(child)

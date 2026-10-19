@@ -237,6 +237,19 @@ func close_business() -> Error:
 			return ERR_UNAVAILABLE
 	return _scheduler.request_close()
 
+func get_gathering_notice() -> String:
+	if not _state.get_flag("day2.s03.festival_accepted") or _state.get_flag("day3.festival.delivered") or _state.current_day not in [2, 3]:
+		return ""
+	var inventory: WarehouseInventory = _state.get_warehouse_inventory()
+	var requirement := _game.get_task_delivery().get_requirement("day3_festival")
+	var lines := PackedStringArray(["七日祭食材 · 可顺路采集"])
+	for id: String in requirement:
+		var owned: int = inventory.get_stock(id)
+		var needed: int = requirement[id]
+		lines.append("%s %d/%d · 缺%d" % [inventory.get_definition(id).display_name, owned, needed, maxi(0, needed - owned)])
+	lines.append("已齐备，第三天到酒馆交付。" if inventory.has_materials(requirement) else "集市往商业街途中，寻找路边材料。")
+	return "\n".join(lines)
+
 func _process(_delta: float) -> void:
 	if not is_instance_valid(_hud) or not is_instance_valid(_game.get_story_director()):
 		return
@@ -246,6 +259,9 @@ func _process(_delta: float) -> void:
 		var status := _procurement.get_status()
 		if not status.is_empty():
 			notice = "代购专款 %dG · %s" % [int(status.escrow), {"funded": "尚未雇人", "hired": "跑腿途中", "returned": "醒神菇已带回，请交给胖哥布林", "delivered": "已向胖哥布林交付", "expired": "已超时"}.get(status.status, "")]
+	var gathering_notice := get_gathering_notice()
+	if not gathering_notice.is_empty():
+		notice += ("\n\n" if not notice.is_empty() else "") + gathering_notice
 	var enabled := _quiet()
 	var signature := JSON.stringify([actions, notice, enabled])
 	if signature != _hud_signature:

@@ -45,6 +45,15 @@ func _run() -> void:
 	check(delivery.accept_order("day1_group_c") == ERR_ALREADY_EXISTS, "Repeated acceptance is a no-op")
 	state.set_variable(OrderBoardModel.TRACKED_KEY, "day1_group_c")
 	check(board.get_tracked_entry().order_id == "day1_group_c", "Manual tracking takes priority")
+	var batch := board.get_tracked_entry()
+	check(batch.craft_quantity == 3, "Accepted shared demand offers a three-cup batch")
+	var inventory_before := inventory.to_dict()
+	var limited_material: String = batch.recipe_materials[0]
+	inventory.try_spend_uses({limited_material: inventory.get_uses(limited_material) - 2})
+	check(board.get_tracked_entry().craft_quantity == 2 and board.get_tracked_entry().remaining_to_craft == 3, "Partial stock limits the offered batch without hiding the remaining demand")
+	var shortage := state.to_dict()
+	check(not production.craft(batch.recipe_materials, 3).ok and state.to_dict() == shortage, "An oversized batch rejects atomically")
+	inventory.restore_state(inventory_before)
 	for id: String in ["day1_group_c", "day1_group_a", "day1_group_b"]:
 		var entry := board.get_entry(id)
 		check(entry.can_craft, "Any accepted group order can be prepared")

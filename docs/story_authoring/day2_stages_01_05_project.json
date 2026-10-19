@@ -132,7 +132,8 @@
 				"flags": {
 					"day2.travel.tavern_arrived": true
 				}
-			}
+			},
+			"trigger": "tavern"
 		},
 		"day2.s03.purchase": {
 			"once": true,
@@ -140,14 +141,15 @@
 				"day": 2.0,
 				"stage": "day2.s03.wait_purchase"
 			},
-			"trigger": "tavern_buy"
+			"trigger": "tavern"
 		},
 		"day2.s03.commission_token": {
 			"once": true,
 			"conditions": {
 				"day": 2.0,
 				"stage": "day2.s03.commission"
-			}
+			},
+			"trigger": "tavern"
 		},
 		"day2.s04.casino": {
 			"once": true,
@@ -157,7 +159,8 @@
 				"flags": {
 					"day2.travel.casino_arrived": true
 				}
-			}
+			},
+			"trigger": "casino_table"
 		},
 		"day2.s04.first_round": {
 			"once": true,
@@ -165,7 +168,7 @@
 				"day": 2.0,
 				"stage": "day2.s04.wait_first"
 			},
-			"trigger": "casino_round1"
+			"trigger": "casino_table"
 		},
 		"day2.s04.second_round": {
 			"once": true,
@@ -173,7 +176,7 @@
 				"day": 2.0,
 				"stage": "day2.s04.wait_second"
 			},
-			"trigger": "casino_round2"
+			"trigger": "casino_table"
 		},
 		"day2.s05.street": {
 			"once": true,

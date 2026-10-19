@@ -120,6 +120,25 @@ func throw_coin() -> void:
 	check(state.get_transactions().get_balance() == before - 10, "Animation release spends exactly 10G")
 	await frames(10)
 
+func use_service_point(id: StringName) -> void:
+	var point: InteractionPoint
+	for candidate: InteractionPoint in game.get_active_level().get_interaction_points():
+		if candidate.interaction_id == id:
+			point = candidate
+	check(point != null, "Authored service object exists: " + String(id))
+	if point == null:
+		return
+	game.get_player().teleport_to(point.global_position + (Vector2(24, 0) if id == &"tavern" else Vector2.ZERO))
+	for tick in range(5):
+		await physics_frame
+	check(point.is_available(), "Service object is physically available in this stage")
+	for pressed: bool in [true, false]:
+		var event := InputEventAction.new()
+		event.action = &"interact"
+		event.pressed = pressed
+		Input.parse_input_event(event)
+		await frames(2)
+
 func _run() -> void:
 	Engine.time_scale = 6.0
 	for argument: String in OS.get_cmdline_user_args():
@@ -128,7 +147,7 @@ func _run() -> void:
 		if argument.begins_with("--captures="):
 			screenshots = argument.trim_prefix("--captures=")
 		ordinary_order = ordinary_order or argument == "--ordinary-order"
-	ProjectSettings.set_setting("persistence/save_directory", "/tmp/goblin_two_day_acceptance_%d" % OS.get_process_id())
+	ProjectSettings.set_setting("persistence/save_directory", "user://verification/two_day_%d" % OS.get_process_id())
 	state = root.get_node("GameState")
 	check(change_scene_to_file(GameEntry.TITLE_SCENE) == OK, "Loads title")
 	await scene_changed
@@ -253,26 +272,35 @@ func _run() -> void:
 	await travel("shop_exit")
 	await capture("tavern_exterior")
 	await travel("tavern_enter")
+	await frames(30)
+	check(not game.get_story_director().is_busy() and not state.is_event_completed("day2.s03.amber_wine"), "Tavern arrival leaves observation and movement to the player")
+	await use_service_point(&"tavern")
 	await wait_event("day2.s03.amber_wine")
 	await capture("wait_wine")
-	check(game.get_story_director().request_interaction("tavern_buy") == OK, "Player chooses the discounted purchase")
+	await use_service_point(&"tavern")
 	await wait_event("day2.s03.purchase")
 	check(state.get_transactions().get_balance() == (28 if ordinary_order else 25), "Wine actually costs 48G")
 	check(state.get_warehouse_inventory().get_uses("griffin_amber_wine") == 5, "One purchased portion has five uses")
+	check(not state.is_event_completed("day2.s03.commission_token"), "Commission waits for another counter interaction")
+	await use_service_point(&"tavern")
 	await wait_event("day2.s03.commission_token")
+	check("苔痕青" in game.get_chapter_gameplay().get_gathering_notice(), "Accepted commission shows the real material shortfall")
 	await capture("purchased")
 	await travel("tavern_exit")
 	await capture("casino_exterior")
 	await travel("casino_enter")
+	await frames(30)
+	check(not game.get_story_director().is_busy() and not state.is_event_completed("day2.s04.casino"), "Casino arrival does not consume the table interaction")
+	await use_service_point(&"casino_table")
 	await wait_event("day2.s04.casino")
 	await capture("wait_first")
 	check(not state.get_flag("day2.s04.first_loss"), "First round waits for a player click")
-	check(game.get_story_director().request_interaction("casino_round1") == OK, "Player starts first round")
+	await use_service_point(&"casino_table")
 	await wait_event("day2.s04.first_round")
 	await capture("first_round")
 	check(state.get_flag("day2.casino.debt.active") and state.get_task_result("day2.casino.debt").is_empty(), "First loss creates a real unsettled ten-cup debt")
 	check(not state.get_flag("day2.s04.casino_reward_received"), "Second round waits for another click")
-	check(game.get_story_director().request_interaction("casino_round2") == OK, "Player starts second round")
+	await use_service_point(&"casino_table")
 	await wait_event("day2.s04.second_round")
 	await capture("second_round")
 	check(state.get_task_result("day2.casino.debt").get("status") == "cancelled", "Second round really cancels the debt")

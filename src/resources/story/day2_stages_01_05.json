@@ -408,6 +408,7 @@
           "day2.travel.tavern_arrived": true
         }
       },
+      "trigger": "tavern",
       "steps": [
         {
           "command": "dialogue",
@@ -430,7 +431,7 @@
         "day": 2.0,
         "stage": "day2.s03.wait_purchase"
       },
-      "trigger": "tavern_buy",
+      "trigger": "tavern",
       "steps": [
         {
           "command": "tavern_purchase",
@@ -454,6 +455,7 @@
         "day": 2.0,
         "stage": "day2.s03.commission"
       },
+      "trigger": "tavern",
       "steps": [
         {
           "command": "dialogue",
@@ -535,6 +537,7 @@
           "day2.travel.casino_arrived": true
         }
       },
+      "trigger": "casino_table",
       "steps": [
         {
           "command": "dialogue",
@@ -564,7 +567,7 @@
         "day": 2.0,
         "stage": "day2.s04.wait_first"
       },
-      "trigger": "casino_round1",
+      "trigger": "casino_table",
       "steps": [
         {
           "command": "casino_settle",
@@ -590,7 +593,7 @@
         "day": 2.0,
         "stage": "day2.s04.wait_second"
       },
-      "trigger": "casino_round2",
+      "trigger": "casino_table",
       "steps": [
         {
           "command": "casino_settle",

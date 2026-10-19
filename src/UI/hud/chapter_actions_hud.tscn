@@ -19,7 +19,11 @@ offset_top = 120.0
 offset_right = -16.0
 grow_horizontal = 0
 mouse_filter = 2
-[node name="Notice" type="Label" parent="Content"]
+[node name="NoticePanel" type="PanelContainer" parent="Content"]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"InsetPanel"
+[node name="Notice" type="Label" parent="Content/NoticePanel"]
 layout_mode = 2
 mouse_filter = 2
 autowrap_mode = 3

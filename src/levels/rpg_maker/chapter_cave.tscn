@@ -26,12 +26,25 @@
 
 [ext_resource type="PackedScene" path="res://src/levels/rpg_maker/wayfinding_sign.tscn" id="sign"]
 [ext_resource type="Script" path="res://src/levels/rpg_maker/chapter_wayfinding.gd" id="sign_visibility"]
+[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_030_00.png" id="gather_atlas"]
+
+[sub_resource type="AtlasTexture" id="moss_art"]
+atlas = ExtResource("gather_atlas")
+region = Rect2(1392, 288, 48, 48)
+
+[sub_resource type="AtlasTexture" id="yam_art"]
+atlas = ExtResource("gather_atlas")
+region = Rect2(960, 288, 48, 48)
+
+[sub_resource type="AtlasTexture" id="mushroom_art"]
+atlas = ExtResource("gather_atlas")
+region = Rect2(144, 336, 48, 48)
 
 [sub_resource type="RectangleShape2D" id="escape_shape"]
 size = Vector2(240, 144)
 
 [sub_resource type="RectangleShape2D" id="encounter_shape"]
-size = Vector2(192, 144)
+size = Vector2(192, 240)
 
 [node name="RpgMakerMap001" instance=ExtResource("base")]
 
@@ -157,7 +170,7 @@ destination_entrance = &"exterior_door"
 
 allowed_stages = Array[String](["day1.s05"])
 required_flags = Array[StringName](["day1.s05.drunken_paid", "day1.s05.guard_payment_completed"])
-unavailable_message = "宅门由两名守卫把守。沿门前道路向左，在双卫之间按 E 交涉（10G）；还需先处理更西边的醉酒守卫。侧路可以抵达这里，进门仍须取得双方放行。"
+unavailable_message = "长老居所仅在受托夜访时开放，进门需要醉卫与宅邸双卫的放行。未交涉时，沿门前道路向左，在双卫之间按 E 支付10G；醉酒守卫在更西侧。侧路同样遵守放行条件。"
 
 [node name="CollisionShape2D" parent="Exits/ShopDoor"]
 position = Vector2(0, 12)
@@ -395,7 +408,7 @@ trigger_id = &"day1_drunken_encounter"
 required_stages = Array[String](["day1.s05"])
 
 [node name="CollisionShape2D" parent="DrunkenEncounter"]
-position = Vector2(0, 72)
+position = Vector2(0, 48)
 shape = SubResource("encounter_shape")
 
 [node name="MansionPayment" parent="Interactions" node_paths=PackedStringArray("required_actors") instance=ExtResource("point")]
@@ -411,30 +424,63 @@ position = Vector2(1128, 2136)
 script = ExtResource("gather")
 interaction_id = &"night_gather_0"
 display_name = "夜间采集 · 苔痕青"
+description = "从覆苔岩块上收集苔痕青。"
+feedback_rect = Rect2(-24, -40, 48, 48)
+show_world_marker = true
 item_id = "moss_green"
 amount = 2
 refresh_mode = "daily"
 required_flag = "world.phase.night"
+
+[node name="HarvestVisual" type="Sprite2D" parent="GatherPoints/NightGather0"]
+position = Vector2(0, -16)
+texture = SubResource("moss_art")
+
+[node name="Marker" parent="GatherPoints/NightGather0"]
+position = Vector2(0, -44)
+z_index = 20
 
 [node name="NightGather1" parent="GatherPoints" instance=ExtResource("point")]
 position = Vector2(840, 2136)
 script = ExtResource("gather")
 interaction_id = &"night_gather_1"
 display_name = "夜间采集 · 窟窟糖芋"
+description = "路边的材料袋里装着窟窟糖芋。"
+feedback_rect = Rect2(-24, -40, 48, 48)
+show_world_marker = true
 item_id = "sugar_yam"
 amount = 2
 refresh_mode = "daily"
 required_flag = "world.phase.night"
 
+[node name="HarvestVisual" type="Sprite2D" parent="GatherPoints/NightGather1"]
+position = Vector2(0, -16)
+texture = SubResource("yam_art")
+
+[node name="Marker" parent="GatherPoints/NightGather1"]
+position = Vector2(0, -44)
+z_index = 20
+
 [node name="NightGather2" parent="GatherPoints" instance=ExtResource("point")]
-position = Vector2(888, 1896)
+position = Vector2(888, 1944)
 script = ExtResource("gather")
 interaction_id = &"night_gather_2"
 display_name = "夜间采集 · 萤火伞"
+description = "路边生长着一簇萤火伞。"
+feedback_rect = Rect2(-24, -40, 48, 48)
+show_world_marker = true
 item_id = "firefly_cap"
 amount = 2
 refresh_mode = "daily"
 required_flag = "world.phase.night"
+
+[node name="HarvestVisual" type="Sprite2D" parent="GatherPoints/NightGather2"]
+position = Vector2(0, -16)
+texture = SubResource("mushroom_art")
+
+[node name="Marker" parent="GatherPoints/NightGather2"]
+position = Vector2(0, -44)
+z_index = 20
 
 [node name="InfiltrationStart" type="Marker2D" parent="Entrances"]
 position = Vector2(1176, 648)

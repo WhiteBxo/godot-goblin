@@ -15,7 +15,7 @@ func _run() -> void:
 		push_error("Provide --from-save=<real wait_festival fixture directory>")
 		quit(2)
 		return
-	var directory := "/tmp/goblin_day2_playability_%d" % OS.get_process_id()
+	var directory := OS.get_cache_dir().path_join("goblin_day2_playability_%d" % OS.get_process_id())
 	DirAccess.make_dir_recursive_absolute(directory)
 	check(DirAccess.copy_absolute(source.path_join("autosave.dat"), directory.path_join("autosave.dat")) == OK, "Copy a real save into an isolated test directory")
 	ProjectSettings.set_setting("persistence/save_directory", directory)
@@ -62,25 +62,46 @@ func _run() -> void:
 	assert_main("day2.main.tavern", "arrive")
 	await use_door("shop_exit")
 	await picture("day2_tavern_objective")
+	if not await harvest_commercial_route():
+		finish()
+		return
 	await use_door("tavern_enter")
+	await frames(20)
+	check(not game.get_story_director().is_busy() and game.get_player().movement_enabled, "Entering tavern preserves free observation")
+	if not await walk_to_service(&"tavern"):
+		finish()
+		return
+	await tap(&"interact")
 	await wait_event("day2.s03.amber_wine")
 	assert_main("day2.main.tavern", "buy")
 	var balance: int = game.get_transactions().get_balance()
-	await press_chapter_action("day2.buy")
+	await tap(&"interact")
 	await wait_event("day2.s03.purchase")
+	check(not state.is_event_completed("day2.s03.commission_token"), "Purchase returns control before the commission")
+	var commission_dialogues: Array[String] = []
+	game.get_dialogue_manager().dialogue_started.connect(func(id: String) -> void: commission_dialogues.append(id))
+	await tap(&"interact")
 	await wait_event("day2.s03.commission_token")
+	check("day2.s03.tavern_commission_gathered" in commission_dialogues and "day2.s03.tavern_commission_not_gathered" not in commission_dialogues, "The real commission acknowledges gathering done along the route")
+	check("已齐备" in game.get_chapter_gameplay().get_gathering_notice(), "Accepted commission reads the already collected stock")
 	check(game.get_transactions().get_balance() == balance - 48, "The purchase button pays the real discounted price")
 	check(game.get_warehouse_inventory().get_uses("griffin_amber_wine") == 5, "The UI purchase grants exactly five uses")
 	assert_main("day2.main.casino", "arrive")
 	await use_door("tavern_exit")
 	await use_door("casino_enter")
+	await frames(20)
+	check(not game.get_story_director().is_busy(), "Casino entrance gives time to recognize the table")
+	if not await walk_to_service(&"casino_table"):
+		finish()
+		return
+	await tap(&"interact")
 	await wait_event("day2.s04.casino")
 	assert_main("day2.main.casino", "first")
 	await picture("day2_casino_objective")
-	await press_chapter_action("day2.round1")
+	await tap(&"interact")
 	await wait_event("day2.s04.first_round")
 	assert_main("day2.main.casino", "second")
-	await press_chapter_action("day2.round2")
+	await tap(&"interact")
 	await wait_event("day2.s04.second_round")
 	check(state.get_task_result("day2.casino.debt").get("status") == "cancelled", "Keyboard round buttons really cancel the ten-cup debt")
 	assert_main("day2.main.guard", "leave")
@@ -112,7 +133,7 @@ func _run() -> void:
 	assert_main("day2.main.guard", "greet")
 	await use_door("shop_exit")
 	var guard := game.get_delivery_point("drunken_guard")
-	await stand_at(guard.global_position + Vector2(0, 48))
+	await stand_at(guard.global_position + Vector2(0, 36))
 	await tap(&"interact")
 	await wait_event("day2.s05.guard_greet")
 	assert_main("day2.main.guard", "deliver")
@@ -199,6 +220,34 @@ func use_door(id: String) -> void:
 	await tap(&"interact")
 	await await_travel()
 	await picture(id)
+
+func walk_to_service(id: StringName) -> bool:
+	var point := shop_point(id)
+	check(point != null, "Formal room exposes the active service object")
+	if point == null:
+		return false
+	var old_scale := Engine.time_scale
+	Engine.time_scale = 1.0
+	var reached := await walk_to(game.get_active_level() as RpgChapterMap, point.global_position)
+	Engine.time_scale = old_scale
+	check(reached and point.is_available(), "Player can walk from the entrance to the service side")
+	await picture(String(id) + "_approach")
+	return reached and point.is_available()
+
+func harvest_commercial_route() -> bool:
+	var previous_scale := Engine.time_scale
+	Engine.time_scale = 1.0
+	for point: GatherPoint in game.get_gathering_service().get_points():
+		if not await walk_to(game.get_active_level() as RpgChapterMap, point.global_position):
+			Engine.time_scale = previous_scale
+			return false
+		await picture(String(point.interaction_id) + "_before")
+		await tap(&"interact")
+		check(game.get_shop_ui().is_open(), "Walking and E open the real harvest result")
+		await tap(&"ui_cancel")
+		check(not point.is_available() and not point.get_node("HarvestVisual").visible, "Harvested artwork is consumed with its target")
+	Engine.time_scale = previous_scale
+	return true
 
 func finish() -> void:
 	print("DAY2_PLAYABILITY: %d checks, %d failures" % [checks, failures.size()])

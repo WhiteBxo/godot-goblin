@@ -1,6 +1,6 @@
 class_name OrderCraftingPage
 extends HBoxContainer
-## One confirmed cup for a freshly validated accepted order; no inventory writes.
+## Confirm the current shared shortfall; the production service commits the batch.
 
 signal craft_requested(materials: Array[String], quantity: int)
 signal track_requested(order_id: String)
@@ -54,6 +54,8 @@ func refresh() -> void:
 func _refresh_detail() -> void:
 	var entry := _model.get_entry(_selected) if is_instance_valid(_model) else {}
 	var action := "制作 1 杯并入库"
+	if int(entry.get("craft_quantity", 0)) > 1:
+		action = "按缺口制作 %d 杯并入库" % int(entry.craft_quantity)
 	if entry.is_empty():
 		entry = {"title": "先接取一张饮品订单", "target_name": "订单板", "status_text": "暂无制作目标",
 			"stage": "empty", "status": "empty", "product_id": "", "items": [], "missing_text": "",
@@ -61,7 +63,8 @@ func _refresh_detail() -> void:
 	elif entry.ready and entry.get("remaining_to_craft", 0) == 0:
 		action = "返回店铺，去交付"
 		entry.hint = "靠近%s，按 E 交付" % entry.target_name
-	_ticket.present(entry, action, bool(entry.get("can_craft", false)) or bool(entry.get("ready", false)))
+	var can_return := bool(entry.get("ready", false)) and int(entry.get("remaining_to_craft", 0)) == 0
+	_ticket.present(entry, action, bool(entry.get("can_craft", false)) or can_return)
 
 func _on_primary_pressed() -> void:
 	var entry := _model.get_entry(_selected) if is_instance_valid(_model) else {}
@@ -79,7 +82,7 @@ func submit() -> Dictionary:
 	_submitting = true
 	var materials: Array[String] = []
 	materials.assign(entry.recipe_materials)
-	craft_requested.emit(materials, 1)
+	craft_requested.emit(materials, int(entry.craft_quantity))
 	_submitting = false
 	return _last_result.duplicate(true)
 

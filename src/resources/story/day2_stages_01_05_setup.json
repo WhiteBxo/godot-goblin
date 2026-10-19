@@ -48,18 +48,6 @@
       "host": "shop"
     },
     {
-      "id": "day2.s03.amber_wine",
-      "host": "tavern"
-    },
-    {
-      "id": "day2.s03.commission_token",
-      "host": "tavern"
-    },
-    {
-      "id": "day2.s04.casino",
-      "host": "casino"
-    },
-    {
       "id": "day2.s05.street",
       "host": "settlement"
     },

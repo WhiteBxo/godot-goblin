@@ -126,6 +126,7 @@ func _project_shared_demand(entries: Array[Dictionary]) -> void:
 			demand[entry.product_id] = int(demand.get(entry.product_id, 0)) + 1
 	for entry: Dictionary in entries:
 		entry.remaining_to_craft = 0
+		entry.craft_quantity = 0
 		if entry.status != "active" or entry.product_id.is_empty():
 			continue
 		var needed: int = demand[entry.product_id]
@@ -134,8 +135,9 @@ func _project_shared_demand(entries: Array[Dictionary]) -> void:
 		if not entry.recipe_materials.is_empty() and entry.remaining_to_craft > 0:
 			var materials: Array[String] = []
 			materials.assign(entry.recipe_materials)
-			var preview := _production.preview_craft(materials)
-			entry.can_craft = preview.code == "ok"
+			entry.craft_quantity = mini(entry.remaining_to_craft, _production.get_max_craftable(materials))
+			var preview := _production.preview_craft(materials, entry.remaining_to_craft)
+			entry.can_craft = entry.craft_quantity > 0
 			entry.missing = preview.missing.duplicate(true)
 			var missing_names := PackedStringArray()
 			for id: String in entry.missing:

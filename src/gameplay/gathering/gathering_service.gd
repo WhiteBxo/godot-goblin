@@ -42,13 +42,27 @@ func configure(state: StateData, inventory: WarehouseInventory, points: Array[Ga
 	for previous: GatherPoint in _order:
 		if is_instance_valid(previous) and registry.get(String(previous.interaction_id)) != previous:
 			previous.bind_gathering(Callable())
+	if is_instance_valid(_state) and _state.state_changed.is_connected(_schedule_presentation):
+		_state.state_changed.disconnect(_schedule_presentation)
 	_state = state
 	_inventory = inventory
 	_points = registry
 	_order = order
 	for point: GatherPoint in _order:
 		point.bind_gathering(is_harvestable)
+	_state.state_changed.connect(_schedule_presentation)
+	_schedule_presentation()
 	return OK
+
+func _schedule_presentation() -> void:
+	_refresh_presentation.call_deferred()
+
+func _refresh_presentation() -> void:
+	if not is_inside_tree():
+		return
+	for point: GatherPoint in _order:
+		if is_instance_valid(point):
+			point.update_presentation(is_harvestable(point))
 
 
 func has_point(id: StringName) -> bool:
@@ -132,6 +146,8 @@ func harvest(id: StringName) -> Dictionary:
 
 
 func _exit_tree() -> void:
+	if is_instance_valid(_state) and _state.state_changed.is_connected(_schedule_presentation):
+		_state.state_changed.disconnect(_schedule_presentation)
 	for point: GatherPoint in _order:
 		if is_instance_valid(point):
 			point.bind_gathering(Callable())

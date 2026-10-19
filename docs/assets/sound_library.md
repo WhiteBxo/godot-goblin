@@ -1,6 +1,6 @@
 # 项目音效库
 
-当前可用库包含 **23 个音效基础 ID、43 个 WAV 变体**，另保留用户提供的 `music.daily_milk_tea`。原有 18 个基础 ID、31 个 WAV 路径与导入 UID 全部保留，内容替换为本次三个素材包的采样与组合；现有调用方无需迁移 ID。新增登记钱币、锁盒解锁、开瓶、碗勺搅拌、翻页 5 类声音。
+当前可用库包含 **24 个音效基础 ID、46 个 WAV 变体**，另保留用户提供的 `music.daily_milk_tea`。原有 18 个基础 ID、31 个 WAV 路径与导入 UID 全部保留，内容替换为本次三个素材包的采样与组合；现有调用方无需迁移 ID。新增登记钱币、锁盒解锁、开瓶、碗勺搅拌、翻页 5 类声音；后续补入 `shop.coins_chain`（金属链短响，收款的入袋收尾）。
 
 ## 原始素材与许可
 
@@ -57,7 +57,7 @@ MainGame 的 `interaction_audio_scene` 默认使用 `src/core/audio/interaction_
 | 打开订单板 / 仓储 / 制作台 | `shop.order_open` / `shop.bottle_open` / `shop.stir` |
 | 制作成功 / 失败 | `shop.sealer` / `ui.failure` |
 | 采集成功 | `ui.confirm` |
-| 交付成功、钱包交易成功 / 失败 | `shop.coins` / `ui.failure` |
+| 交付成功、钱包交易成功 / 失败 | `shop.coins`，收款同时叠 `shop.coins_chain` / `ui.failure` |
 | 接取订单成功 / 失败 | `ui.confirm` / `ui.failure` |
 | 对话换行 / 有效选择 | `ui.dialogue` / `ui.confirm` |
 | 投掷命中 | `story.impact`（`throw_impact` 事件） |

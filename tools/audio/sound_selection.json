@@ -539,6 +539,42 @@
     ]
   },
   {
+    "id": "shop.coins_chain",
+    "label": "金币串落袋",
+    "note": "金属链短响裁剪，收款入袋的收尾声",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "rpg_sfx/chain_01.ogg",
+            "duration": 0.42
+          }
+        ],
+        "seconds": 0.42
+      },
+      {
+        "parts": [
+          {
+            "source": "rpg_sfx/chain_02.ogg",
+            "duration": 0.4
+          }
+        ],
+        "seconds": 0.4
+      },
+      {
+        "parts": [
+          {
+            "source": "rpg_sfx/chain_03.ogg",
+            "start": 0.1,
+            "duration": 0.55
+          }
+        ],
+        "seconds": 0.55
+      }
+    ]
+  },
+  {
     "id": "story.unlock",
     "label": "锁盒解锁",
     "note": "锁盒实际解锁录音",

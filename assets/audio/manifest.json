@@ -739,6 +739,64 @@
     }
   },
   {
+    "id": "shop.coins_chain.01",
+    "path": "assets/audio/shop/coins_chain_01.wav",
+    "loop": false,
+    "seconds": 0.396576,
+    "sha256": "e522816f555fa1b48ddee031fdefe877634363343d7c26fe0f82d30a29ade7f4",
+    "sources": [
+      "assets/audio/source/rpg_sfx/chain_01.ogg"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "rpg_sfx/chain_01.ogg",
+          "duration": 0.42
+        }
+      ],
+      "seconds": 0.42
+    }
+  },
+  {
+    "id": "shop.coins_chain.02",
+    "path": "assets/audio/shop/coins_chain_02.wav",
+    "loop": false,
+    "seconds": 0.366304,
+    "sha256": "5a5617dc897ec4b42ff8648a9c9cac997546d7a5d0cae8c0623026506c155c9c",
+    "sources": [
+      "assets/audio/source/rpg_sfx/chain_02.ogg"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "rpg_sfx/chain_02.ogg",
+          "duration": 0.4
+        }
+      ],
+      "seconds": 0.4
+    }
+  },
+  {
+    "id": "shop.coins_chain.03",
+    "path": "assets/audio/shop/coins_chain_03.wav",
+    "loop": false,
+    "seconds": 0.55,
+    "sha256": "19b9042e90a62de9397976d879ca2184665aab24a29ff9a40f949bb65a9a6700",
+    "sources": [
+      "assets/audio/source/rpg_sfx/chain_03.ogg"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "rpg_sfx/chain_03.ogg",
+          "start": 0.1,
+          "duration": 0.55
+        }
+      ],
+      "seconds": 0.55
+    }
+  },
+  {
     "id": "story.unlock.01",
     "path": "assets/audio/story/unlock_01.wav",
     "loop": false,

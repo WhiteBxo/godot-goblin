@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="SoundLibrary" load_steps=46 format=3]
+[gd_resource type="Resource" script_class="SoundLibrary" load_steps=49 format=3]
 
 [ext_resource type="Script" path="res://src/resources/audio/sound_library.gd" id="1"]
 [ext_resource type="AudioStream" path="res://assets/audio/ui/hover.wav" id="s1"]
@@ -35,15 +35,18 @@
 [ext_resource type="AudioStream" path="res://assets/audio/shop/coins_01.wav" id="s32"]
 [ext_resource type="AudioStream" path="res://assets/audio/shop/coins_02.wav" id="s33"]
 [ext_resource type="AudioStream" path="res://assets/audio/shop/coins_03.wav" id="s34"]
-[ext_resource type="AudioStream" path="res://assets/audio/story/unlock_01.wav" id="s35"]
-[ext_resource type="AudioStream" path="res://assets/audio/story/unlock_02.wav" id="s36"]
-[ext_resource type="AudioStream" path="res://assets/audio/shop/bottle_open_01.wav" id="s37"]
-[ext_resource type="AudioStream" path="res://assets/audio/shop/bottle_open_02.wav" id="s38"]
-[ext_resource type="AudioStream" path="res://assets/audio/shop/stir_01.wav" id="s39"]
-[ext_resource type="AudioStream" path="res://assets/audio/shop/stir_02.wav" id="s40"]
-[ext_resource type="AudioStream" path="res://assets/audio/shop/stir_03.wav" id="s41"]
-[ext_resource type="AudioStream" path="res://assets/audio/story/page_turn_01.wav" id="s42"]
-[ext_resource type="AudioStream" path="res://assets/audio/story/page_turn_02.wav" id="s43"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/coins_chain_01.wav" id="s35"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/coins_chain_02.wav" id="s36"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/coins_chain_03.wav" id="s37"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/unlock_01.wav" id="s38"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/unlock_02.wav" id="s39"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/bottle_open_01.wav" id="s40"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/bottle_open_02.wav" id="s41"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/stir_01.wav" id="s42"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/stir_02.wav" id="s43"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/stir_03.wav" id="s44"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/page_turn_01.wav" id="s45"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/page_turn_02.wav" id="s46"]
 [ext_resource type="AudioStream" path="res://assets/audio/music/daily_milk_tea.ogg" id="music"]
 
 [resource]
@@ -68,9 +71,10 @@ entries = Array[Dictionary]([
 {"id": "ambience.shop", "label": "奶茶店室内循环", "loop": true, "streams": [ExtResource("s30")]},
 {"id": "ambience.cave", "label": "地下洞穴循环", "loop": true, "streams": [ExtResource("s31")]},
 {"id": "shop.coins", "label": "收取钱币", "loop": false, "streams": [ExtResource("s32"), ExtResource("s33"), ExtResource("s34")]},
-{"id": "story.unlock", "label": "锁盒解锁", "loop": false, "streams": [ExtResource("s35"), ExtResource("s36")]},
-{"id": "shop.bottle_open", "label": "打开玻璃瓶", "loop": false, "streams": [ExtResource("s37"), ExtResource("s38")]},
-{"id": "shop.stir", "label": "碗勺搅拌", "loop": false, "streams": [ExtResource("s39"), ExtResource("s40"), ExtResource("s41")]},
-{"id": "story.page_turn", "label": "书页翻动", "loop": false, "streams": [ExtResource("s42"), ExtResource("s43")]},
-{"id": "music.daily_milk_tea", "label": "奶茶店日常 BGM", "loop": true, "loop_offset": 68.279, "streams": [ExtResource("music")]}
+{"id": "shop.coins_chain", "label": "金币串落袋", "loop": false, "streams": [ExtResource("s35"), ExtResource("s36"), ExtResource("s37")]},
+{"id": "story.unlock", "label": "锁盒解锁", "loop": false, "streams": [ExtResource("s38"), ExtResource("s39")]},
+{"id": "shop.bottle_open", "label": "打开玻璃瓶", "loop": false, "streams": [ExtResource("s40"), ExtResource("s41")]},
+{"id": "shop.stir", "label": "碗勺搅拌", "loop": false, "streams": [ExtResource("s42"), ExtResource("s43"), ExtResource("s44")]},
+{"id": "story.page_turn", "label": "书页翻动", "loop": false, "streams": [ExtResource("s45"), ExtResource("s46")]},
+{"id": "music.daily_milk_tea", "label": "奶茶店日常 BGM", "loop": true, "loop_offset": 68.279, "streams": [ExtResource("music")]},
 ])

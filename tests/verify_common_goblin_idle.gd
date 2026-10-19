@@ -15,6 +15,7 @@ func check(ok: bool, message: String) -> void:
 
 func _run() -> void:
 	_test_original_palettes()
+	_test_front_eye_contrast()
 	for path: String in ["res://src/gameplay/characters/common_goblin.tscn", "res://src/gameplay/characters/rpg_common_goblin.tscn"]:
 		for appearance: int in [GOBLIN.Appearance.WITH_BACKPACK, GOBLIN.Appearance.WITHOUT_BACKPACK]:
 			var actor = load(path).instantiate()
@@ -79,3 +80,22 @@ func _test_original_palettes() -> void:
 				if color.a >= 0.5 and not palette.has(color):
 					foreign_colors += 1
 		check(foreign_colors == 0, String(animation) + " uses only exact original walk-sheet RGB colors")
+
+func _test_front_eye_contrast() -> void:
+	for index in GOBLIN.IDLE_FRAMES.get_frame_count(&"unpacked_idle_down"):
+		var image := GOBLIN.IDLE_FRAMES.get_frame_texture(&"unpacked_idle_down", index).get_image()
+		# Frame 4 is the intentional blink; all other frames need two readable eyes
+		# on the native 64px canvas, including the smaller RPG scene's display size.
+		for area: Rect2i in [Rect2i(22, 13, 7, 6), Rect2i(34, 13, 7, 6)]:
+			var eye_whites := 0
+			var dark_details := 0
+			for y in range(area.position.y, area.end.y):
+				for x in range(area.position.x, area.end.x):
+					var color := image.get_pixel(x, y)
+					if color.a < 0.5:
+						continue
+					if color.v >= 0.75:
+						eye_whites += 1
+					elif color.v <= 0.12:
+						dark_details += 1
+			check(eye_whites == 0 if index == 4 else eye_whites >= 2 and dark_details >= 1, "Front idle frame %d keeps visible eyes or the intended blink" % index)

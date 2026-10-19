@@ -37,7 +37,7 @@ func _initialize() -> void:
 			var position := Vector2i(roundi(target.get_center().x - bounds.size.x / 2.0), target.end.y - bounds.size.y)
 			assert(Rect2i(0, 0, 64, 64).encloses(Rect2i(position, bounds.size)), animation + " frame must fit native canvas")
 			packed.blit_rect(cell, bounds, Vector2i(index % 4 * 64, index / 4 * 64) + position)
-		_lock_palette(packed, Image.load_from_file(ProjectSettings.globalize_path(SOURCES[animation])))
+		_lock_palette(packed, Image.load_from_file(ProjectSettings.globalize_path(SOURCES[animation])), animation == "unpacked_idle_down")
 		assert(packed.save_png(DEST + animation + ".png") == OK)
 	# Text serialization keeps rebuilding independent of imported texture caches.
 	var lines := PackedStringArray(['[gd_resource type="SpriteFrames" format=3]', ''])
@@ -62,16 +62,20 @@ func _initialize() -> void:
 	print("Built 3 idle sheets, 24 frames; source front-facing backpack idle is retained.")
 	quit()
 
-func _material(color: Color) -> String:
+func _material(color: Color, preserve_eye_whites: bool) -> String:
 	if color.v < 0.12:
 		return "outline"
+	# Original eye whites are warm cream, while generated whites are neutral.
+	# Match them before hue/saturation grouping so the neutral darks cannot erase eyes.
+	if preserve_eye_whites and color.v >= 0.75 and color.s < 0.4:
+		return "highlight"
 	if color.s < 0.15:
 		return "neutral"
 	if color.h >= 0.12 and color.h < 0.28:
 		return "skin" if color.v >= 0.36 else "pants"
 	return "leather"
 
-func _color_groups(image: Image) -> Dictionary:
+func _color_groups(image: Image, preserve_eye_whites: bool) -> Dictionary:
 	var groups: Dictionary = {}
 	for y in image.get_height():
 		for x in image.get_width():
@@ -79,7 +83,7 @@ func _color_groups(image: Image) -> Dictionary:
 			if color.a < 0.5:
 				continue
 			color.a = 1.0
-			var material := _material(color)
+			var material := _material(color, preserve_eye_whites)
 			if not groups.has(material):
 				groups[material] = {}
 			groups[material][color] = groups[material].get(color, 0) + 1
@@ -103,15 +107,15 @@ func _dominant_color(colors: Dictionary) -> Color:
 			total += colors[color]
 	return Color(sum.x / total, sum.y / total, sum.z / total)
 
-func _lock_palette(image: Image, reference: Image) -> void:
-	var source_groups := _color_groups(reference)
-	var generated_groups := _color_groups(image)
+func _lock_palette(image: Image, reference: Image, preserve_eye_whites: bool) -> void:
+	var source_groups := _color_groups(reference, preserve_eye_whites)
+	var generated_groups := _color_groups(image, preserve_eye_whites)
 	var mapped: Dictionary = {}
 	for material: String in generated_groups:
 		var palette: Dictionary = source_groups.get(material, source_groups["outline"])
 		var offset := _dominant_color(palette) - _dominant_color(generated_groups[material])
 		# Keep black outlines and eye whites at the original value; match material bases.
-		if material in ["outline", "neutral"]:
+		if material in ["outline", "neutral", "highlight"]:
 			offset = Color(0, 0, 0, 0)
 		for color: Color in generated_groups[material]:
 			var target: Color = color + offset

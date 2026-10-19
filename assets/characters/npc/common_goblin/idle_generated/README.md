@@ -14,6 +14,8 @@
 
 颜色锁定同样由派生工具完成：按肤色、裤子、皮革、轮廓与中性色分组，对齐原图的主要色调，再把每个可见像素映射到对应原始走路图集实际存在的 RGB。新动画不引入原调色板之外的颜色。专项测试逐像素核对这个约束，避免生成式配色在待机与行走切换时漂移。
 
+无背包正面额外保留眼白高光：生成图中的中性白与原走路图中的暖米色眼白单独匹配，避免中性白被映射到仅含暗色的中性色组。该处理只作用于无背包正面，不改变肤色、衣服或背面动画。第 5 帧保留闭眼，其余 7 帧在原生 64×64 格内均保留左右眼白与深色细节。
+
 运行时由 [common_goblin.gd](../../../../../src/gameplay/characters/common_goblin.gd) 使用独立 SpriteFrames 覆盖缺失的待机方向。原始资源不被改写；走路与侧面待机沿用现有资源。普通场景与 RPG 缩小版场景共用这套接入。
 
 在项目根目录执行（`godot` 指向 Godot 4.7）：
@@ -29,4 +31,6 @@ godot --headless --path . --script tests/verify_characters.gd
 
 API 核对：[Godot 4.7 SpriteFrames](https://docs.godotengine.org/en/4.7/classes/class_spriteframes.html) 的帧速率与 `LOOP_LINEAR`；[AtlasTexture](https://docs.godotengine.org/en/4.7/classes/class_atlastexture.html) 的 `region` 与 `filter_clip`。每个新图集的 8 个 64×64 区域独立切帧，避免相邻格串色。
 
-本次验证：专项测试 272 项通过；重建三张 PNG 和 SpriteFrames 的 SHA-256 完全一致；Godot Compatibility 渲染预览成功。`verify_characters.gd` 共 12859 项检查，8 项聚落 NPC 注册失败；在独立进程内使用提交前的角色脚本与原测试复现相同 8 项失败（12845 项检查），不属于本次动画改动。编辑器导入成功退出，但仍报告退出时的 495 个 ObjectDB 实例与 10 个资源未释放诊断；专项运行与渲染预览没有这些诊断。本次未运行全项目回归，改动不涉及公共玩法状态或剧情。
+首轮验证：专项测试 272 项通过；重建三张 PNG 和 SpriteFrames 的 SHA-256 完全一致；Godot Compatibility 渲染预览成功。`verify_characters.gd` 共 12859 项检查，8 项聚落 NPC 注册失败；在独立进程内使用提交前的角色脚本与原测试复现相同 8 项失败（12845 项检查），不属于本次动画改动。编辑器导入成功退出，但仍报告退出时的 495 个 ObjectDB 实例与 10 个资源未释放诊断；专项运行与渲染预览没有这些诊断。本次未运行全项目回归，改动不涉及公共玩法状态或剧情。
+
+眼白修复验证：专项测试新增 16 项双眼对比度和眨眼检查，共 288 项通过；Compatibility 实际渲染中可见浅米色眼白。与提交前图集逐像素比较，变化仅限眼白与牙齿高光区域，身体配色未变；旧图集的 14 只睁眼均无法通过新的眼白检查，修复后全部通过。编辑器导入仍有上述既有退出诊断，本次局部修复未重复运行角色模块或全项目回归。

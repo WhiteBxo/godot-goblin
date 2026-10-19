@@ -131,11 +131,14 @@
 | [Day 1 前两个阶段：剧情演出初稿](design/day_01_stages_01_02_draft.md) | 保留来源；现行演出 / 对白以结构化工程为准。 |
 | [Day 1 第三至第六阶段：剧情演出初稿](design/day_01_stages_03_06_draft.md) | S03–S06 Beat 化初稿，对白逐字取自修改版；冲突仍按 pending。 |
 | [第一天:一杯奶茶引发的异世界生](design/day_01_story_flow.md) | 原 PDF 转录稿，保留原文和开发备注。 |
-| [第一天](design/day_01_story_flow_revised.md) | 修改稿；对接约定采用其 S03–S06。 |
+| [第一天](design/day_01_story_flow_revised.md) | 按 10-19 新附件补入赠送食材与试饮；保留已确认的首次出店与返店流程。 |
 | [Gameplay Bridge 独立验收剧情](design/gameplay_bridge_demo.md) | `gameplay_bridge_demo.md` |
 | [系统设计文档:奶茶店系统与异世界见闻录](design/milk_tea_system_and_otherworld_chronicle.md) | `milk_tea_system_and_otherworld_chronicle.md` |
 | [真实订单 Gameplay Bridge 最小示例](design/order_bridge_demo.md) | `order_bridge_demo.md` |
-| [day_02.pdf](design/source/day_02.pdf) | 第二天剧情原始 PDF。 |
+| [day_02.pdf](design/source/day_02.pdf) | 37 页旧剧情 PDF，保留旧 Beat 来源。 |
+| [第二天剧情修改稿](design/day_02_story_flow_revised.md) | 38 页新 PDF 完整转录；新增第二天购买醒神菇对白及配方发现。 |
+| [洞窟聚落对话与原料补充稿](design/settlement_dialogue_supplement_revised.md) | 九组 NPC、三名小贩及六条免费采集原文，尚未编排。 |
+| [两天剧情与聚落补充更新记录](design/story_source_update_2026_10_19.md) | 三份附件来源、正文差异、配方奖励时限与救治期限等待确认项。 |
 | [Day 2 五个阶段：剧情演出初稿](design/day_02_stages_01_05_draft.md) | 由 day_02.pdf 逐字整理的 Beat 化初稿。 |
 | [经营与战斗经济规则（10-19）](design/milk_tea_economy_revised.md) | 现行设计：人类 3G、哥布林持久槽位定价、爆品 150G、战斗独立采购及来源冲突。 |
 | [爆品配方配置（开发可视版）](design/signature_recipes_revised.md) | S01–S10 十款完整配方、图鉴与发现原文；专属售价、加冰及领奖时点差异待确认，尚未接入运行时。 |

@@ -10,7 +10,7 @@
 | [奶茶配方系统 V0.1 DOCX](milk_tea_recipe_system_revised_2026_10_18.docx) | 2026-10-18 新增的配方专项设计；含 12 个内嵌 Excel 表对象。可读转录见[正文](../milk_tea_recipe_system_revised.md)。 |
 | [10-18 原料规则表](recipe_ingredients_revised_2026_10_18.xlsx) | 旧来源原样保留；22 种原料、21 字段。当前运行时导入器仍读取此版本；现行设计表已切到 10-19。 |
 | [食材与酒水旧表](otherworld_ingredients_and_drinks.xlsx) | 2026-10-17 导入的运行时来源基线，保留 W/H 配方和图鉴等互补信息；重叠原料设计以更新表为准。 |
-| [Day 2 剧情 PDF](day_02.pdf) | 剧情原稿，本批未更改。 |
+| [Day 2 旧剧情 PDF](day_02.pdf) | 37 页旧来源，保留原件及旧 Beat 初稿关系；新设计见下方 38 页修改稿。 |
 | [卷轴文书设计稿](scroll_document_mockup_2026_10_18.jpg) | 2026-10-18 的 1329×764 卷轴示意图，正文已烘焙进像素，仅作参考；同批素材归类见[导入记录](../../assets/imports/2026-10-18_story_and_creature_assets.md)。 |
 
 10-18 表 22 种原料的现有导入、自由配方和图鉴分别见[数据层](../../gameplay/milk_tea_recipe_data.md)与[自由配方](../../gameplay/free_tea_recipes.md)。本次爆品新表仅归档与转录，尚未进入运行时；10-18 当时范围保留在[历史更新说明](../milk_tea_recipe_update_2026_10_18.md)。
@@ -24,3 +24,15 @@
 | `milk_tea_economy_revised_2026_10_19.pdf` | `💸奶茶店经济系统与战斗奶茶定价规则.pdf` | `0eec717229865c7fc1c874ae2bd4ee998473d4f3da07c12085e06176bb813b30` |
 
 归档仅规范文件名，内容逐字节保留。PDF 的定价表、固定菜单及 Day 1–4 流程表包含图片表格，已结合页面图像核对，不能仅凭纯文本提取跳过表格。
+
+## 2026-10-19 两天剧情与聚落补充
+
+本批仅归档和更新设计文档，未覆盖正式编排工程。内容变化、此前确认规则与附件差异见[更新记录](../story_source_update_2026_10_19.md)。
+
+| 归档原件 | 用户文件原名 | 可读文档 | SHA-256 |
+| --- | --- | --- | --- |
+| [day_01_story_flow_revised_2026_10_19.docx](day_01_story_flow_revised_2026_10_19.docx) | `第一天 (1)(4).docx` | [正文](../day_01_story_flow_revised.md) | `47a7b84040806ff7ce57296ad2c5d3024d487c1e12a75b5a0a256d058f37f6a9` |
+| [day_02_story_flow_revised_2026_10_19.pdf](day_02_story_flow_revised_2026_10_19.pdf) | `第二天 (1)(2).pdf` | [正文](../day_02_story_flow_revised.md) | `dab578f1a9a00149dfd790736056a4a56e76c55e49ca647cb3ff3730c8edec23` |
+| [settlement_dialogue_supplement_2026_10_19.docx](settlement_dialogue_supplement_2026_10_19.docx) | `补充(5).docx` | [正文](../settlement_dialogue_supplement_revised.md) | `06476ca5b490abf93650df2f25427a6f03528835606c519f09add71155bd8287` |
+
+第一天 DOCX 内嵌的 `Workbook1.xlsx` 为 7 行、4 列的六阶段简表，已与正文现有简表核对一致；原始内嵌表仍保留在 DOCX 内。第二天 PDF 第 2–3 页图片表与第 9–10 页新增彩色文字已结合页面图像核对。

@@ -361,7 +361,7 @@ func _check_real_host() -> void:
 		await RenderingServer.frame_post_draw
 		var hud := host.get_node("HudLayer/Day1StealthHUD") as Control
 		_check(hud.get_global_rect().encloses(hud.get_node("Panel").get_global_rect()), "Stealth HUD fits the formal host viewport")
-		_check(root.get_texture().get_image().save_png("/tmp/day1_stealth_published.png") == OK, "Graphical formal-host capture saved")
+		_check(root.get_texture().get_image().save_png("user://day1_stealth_published.png") == OK, "Graphical formal-host capture saved")
 	current_scene = null
 	host.queue_free()
 	await _frames()

@@ -1,9 +1,26 @@
 class_name Day1StealthHUD
 extends UIScreen
 ## Read-only presentation; buttons submit requests to the gameplay service.
+##
+## Layout rules: one card pinned to the bottom-left. Its first row is the only
+## loud line (state name + objective count), everything below steps down in
+## weight, and the panel height follows its content so short states never leave
+## an empty gap above the buttons.
+
+const PANEL_MARGIN := 16.0
 
 var _service: Day1StealthService
 var _drinks_dirty := true
+var _last_summary := ""
+var _last_status: int = -1
+
+@onready var _panel: PanelContainer = $Panel
+@onready var _status: Label = $Panel/Content/HeadRow/Status
+@onready var _badge: Label = $Panel/Content/HeadRow/Objectives
+@onready var _guards: Label = $Panel/Content/Guards
+@onready var _objectives: Label = $Panel/Content/ObjectiveList
+@onready var _hint: Label = $Panel/Content/Hint
+@onready var _retry_hint: Label = $Panel/Content/RetryHint
 
 func _ready() -> void:
 	$Panel/Content/Actions/Coin.pressed.connect(func() -> void: _service.select_throwable(&"coin"))
@@ -47,38 +64,45 @@ func _refresh_drinks() -> void:
 func _process(_delta: float) -> void:
 	if not is_instance_valid(_service):
 		return
-	$Panel.visible = _service.is_mission_stage()
-	if not $Panel.visible:
+	_panel.visible = _service.is_mission_stage()
+	if not _panel.visible:
 		return
-	$Panel/Content/Status.text = "暂时无法开始潜入，请返回后重试。" if _service.status == Day1StealthService.Status.PENDING else _service.message
-	$Panel/Content/Status.theme_type_variation = &"Warning" if _service.status == Day1StealthService.Status.FAILED else &"Hint"
-	$Panel/Content/Actions/Coin.disabled = not _service.can_accept_input()
-	$Panel/Content/Actions/Torch.disabled = not _service.can_accept_input()
-	$Panel/Content/Drinks.disabled = not _service.can_accept_input()
 	if _drinks_dirty:
 		_refresh_drinks()
 	var setup := _service.get_setup()
 	if not is_instance_valid(setup):
 		return
-	$Panel/Content/Objectives.text = _service.get_objective_summary()
-	$Panel/Content/Objectives.visible = not $Panel/Content/Objectives.text.is_empty()
-	$Panel/Content/Hint.text = setup.controls_hint if not setup.controls_hint.is_empty() else "F 投币引开 · 侧边可绕"
-	if setup.interior_only and _service.status == Day1StealthService.Status.RUNNING:
-		$Panel/Content/Status.text = "长老居所 · 调查与取物"
-	$Panel/Content/Actions/Coin.visible = not setup.interior_only and _service.status == Day1StealthService.Status.RUNNING
-	$Panel/Content/Actions/Torch.visible = not setup.wallet_coins
-	$Panel/Content/Drinks.visible = not setup.wallet_coins
-	var inventory := _service.get_inventory()
-	$Panel/Content/Actions/Coin.text = "古怪金币 %d%s" % [inventory.get_stock(setup.coin_item_id), " · 已选" if _service.selected_kind == &"coin" else ""]
-	if setup.wallet_coins:
-		$Panel/Content/Actions/Coin.text = "投掷金币 · 10G"
-	$Panel/Content/Actions/Torch.text = "火把 %d%s" % [inventory.get_stock(setup.torch_item_id), " · 已选" if _service.selected_kind == &"torch" else ""]
-	$Panel/Content/Actions/Retry.visible = _service.is_blocking()
-	$Panel/Content/Actions/Retry.text = "重新潜入" if setup.wallet_coins else "从检查点重试"
-	$Panel/Content/RetryHint.visible = _service.status in [Day1StealthService.Status.FAILED, Day1StealthService.Status.INTERCEPTED]
-	$Panel/Content/RetryHint.text = "重试会恢复本次潜入前的钱包和物品。" if setup.wallet_coins else "重试返回检查点，已用物品不会补回。"
-	$Panel/Content/Actions/Start.visible = _service.status == Day1StealthService.Status.IDLE
-	$Panel/Content/Hint.visible = _service.status == Day1StealthService.Status.RUNNING
+	_refresh_status()
+	_refresh_objectives()
+	_refresh_guards(setup)
+	_refresh_actions(setup)
+	_fit_panel()
+
+## The status line is the only loud element: state name, danger tint, and the
+## service's own sentence parked in a tooltip instead of a second paragraph.
+func _refresh_status() -> void:
+	var status := _service.status
+	_status.text = _service.get_headline()
+	_status.theme_type_variation = &"Danger" if status in [Day1StealthService.Status.FAILED, Day1StealthService.Status.INTERCEPTED] else &""
+	_status.tooltip_text = _service.message
+	if status != _last_status:
+		_last_status = status
+		if status in [Day1StealthService.Status.FAILED, Day1StealthService.Status.INTERCEPTED]:
+			UIFlourish.refuse(_status)
+
+func _refresh_objectives() -> void:
+	var summary := _service.get_objective_summary()
+	_badge.visible = not summary.is_empty()
+	_badge.text = summary
+	if summary != _last_summary:
+		_last_summary = summary
+		if not summary.is_empty():
+			UIFlourish.stamp(_badge)
+	var progress := _service.get_objective_progress()
+	_objectives.visible = not progress.is_empty() and _service.status != Day1StealthService.Status.ESCAPED
+	_objectives.text = progress
+
+func _refresh_guards(setup: Day1StealthSetup) -> void:
 	var watches := PackedStringArray()
 	var cleared := 0
 	for guard: Variant in setup.guards:
@@ -89,5 +113,40 @@ func _process(_delta: float) -> void:
 				watches.append("%s：%s" % [guard.actor.display_name, guard.get_feedback_text()])
 	if cleared > 0:
 		watches.append("已放行 %d 名" % cleared)
-	$Panel/Content/Guards.text = " · ".join(watches)
-	$Panel/Content/Guards.visible = not watches.is_empty()
+	_guards.text = " · ".join(watches)
+	_guards.visible = not watches.is_empty()
+
+func _refresh_actions(setup: Day1StealthSetup) -> void:
+	var coin: Button = $Panel/Content/Actions/Coin
+	var torch: Button = $Panel/Content/Actions/Torch
+	var retry: Button = $Panel/Content/Actions/Retry
+	var start: Button = $Panel/Content/Actions/Start
+	var drinks: OptionButton = $Panel/Content/Drinks
+	var idle := not _service.can_accept_input()
+	coin.disabled = idle
+	torch.disabled = idle
+	drinks.disabled = idle
+	var running := _service.status == Day1StealthService.Status.RUNNING
+	coin.visible = not setup.interior_only and running
+	torch.visible = not setup.wallet_coins and running
+	drinks.visible = not setup.wallet_coins and running
+	var inventory := _service.get_inventory()
+	coin.text = "古怪金币 %d%s" % [inventory.get_stock(setup.coin_item_id), " · 已选" if _service.selected_kind == &"coin" else ""]
+	if setup.wallet_coins:
+		coin.text = "投掷金币 · 10G"
+	torch.text = "火把 %d%s" % [inventory.get_stock(setup.torch_item_id), " · 已选" if _service.selected_kind == &"torch" else ""]
+	retry.visible = _service.is_blocking()
+	retry.text = "重新潜入" if setup.wallet_coins else "从检查点重试"
+	start.visible = _service.status == Day1StealthService.Status.IDLE
+	_retry_hint.visible = retry.visible
+	_retry_hint.text = "重试会恢复本次潜入前的钱包和物品。" if setup.wallet_coins else "重试返回检查点，已用物品不会补回。"
+	$Panel/Content/Rule.visible = coin.visible or retry.visible or start.visible or drinks.visible
+	_hint.text = setup.controls_hint if not setup.controls_hint.is_empty() else "F 投币 · Ctrl 潜行 · R 重试"
+
+## Anchored to the bottom edge: the card grows upward into empty map instead of
+## hanging off the screen when a wrapped hint adds a line.
+func _fit_panel() -> void:
+	var height := _panel.get_combined_minimum_size().y
+	if is_equal_approx(_panel.offset_top, -PANEL_MARGIN - height):
+		return
+	_panel.offset_top = -PANEL_MARGIN - height

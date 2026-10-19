@@ -88,10 +88,26 @@ func get_alert_ratio() -> float:
 			ratio = maxf(ratio, guard.exposure / maxf(guard.discovery_seconds, 0.001))
 	return clampf(ratio, 0.0, 1.0)
 
+## Short state name for the HUD headline. The long sentence stays in message.
+func get_headline() -> String:
+	match status:
+		Status.RUNNING:
+			return "潜入中"
+		Status.PENDING:
+			return "尚未开始"
+		Status.FAILED:
+			return "已暴露"
+		Status.INTERCEPTED:
+			return "被拦下"
+		Status.ESCAPED:
+			return "已撤离"
+	return "夜间潜入"
+
 func get_objective_progress() -> String:
 	var lines := PackedStringArray()
 	for flag: String in _setup.objective_names:
-		lines.append("%s %s" % ["✓" if _state.get_flag(flag) else "○", _setup.objective_names[flag]])
+		# ● / ○ also appear in the map legend, so the pixel font is known to have them.
+		lines.append("%s %s" % ["●" if _state.get_flag(flag) else "○", _setup.objective_names[flag]])
 	return " · ".join(lines)
 
 ## Compact count for the small HUD; the objective list names the actual items.

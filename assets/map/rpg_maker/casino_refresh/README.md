@@ -75,10 +75,25 @@ python tools/art/imagegen_guarded_cli.py edit `
   --no-augment
 ```
 
+## 在 Godot 中铺图
+
+13 张 PNG 已加入地图现用的 `src/resources/tilesets/rpg_maker/tileset_028.tres`，新增来源 ID 为 100–112，并保存了 13 个完整物件的 TileMapPattern。这个 TileSet 也供酒馆使用；新增笔刷不改变任何已保存的地图格子或原有图块。
+
+1. 切回 Godot，等待外部资源自动重载；若出现资源重载提示，重载 `tileset_028.tres`。
+2. 在赌场场景树选择 `Ground1`，点击底部 `TileMap → 图案`，选择完整赌桌、老板桌或圆凳，即可一次铺整件。也可在“图块”页选新增的“赌场”素材来源，框选整张图后铺放。
+3. 骰子、骰盅、筹码、陶杯和账本放在更高的 `Ground3` 装饰层；壁灯放 `Upper1`。小道具的透明留白包含在笔刷内，保持 48 像素格对齐。
+4. 桌子画布首行按透明装饰处理，其余两行与圆凳阻挡通行。其他小道具与壁灯使用 `star` 标记，保留下层的通行规则。
+
+选中 PNG 时，检查器显示“只读”是 Godot 导入纹理的正常行为。铺图需要选中 TileMapLayer，并使用底部笔刷；不需要解锁或修改 PNG 检查器。
+
+接入工具为 `tools/map/add_casino_tiles.gd`，只用于首次给未接入的原图块集添加来源；检测到 ID 已占用会拒绝覆盖手工修改。笔刷与通行验证：`godot --headless --path . --script tests/verify_casino_tiles.gd`。
+
+Godot 4.7.2 实测 5515 项检查通过，覆盖原有图块标记、完整笔刷铺放、48 像素格、家具阻挡和装饰继承底层通行。接入遵循官方 [TileSetAtlasSource](https://docs.godotengine.org/en/stable/classes/class_tilesetatlassource.html) 和 [TileMapPattern](https://docs.godotengine.org/en/stable/classes/class_tilemappattern.html) API；图案单元显式使用基础替代图块 ID `0`，避免默认 `-1` 导致笔刷擦除而不是绘制。
+
 ## 使用边界
 
 成品 PNG 与 Godot 4.7.2 生成的 `.import` 设置一起保存。`source/`、`prompts/`、`reference/`、`previews/` 通过 `.gdignore` 隔离，避免原稿和审核图作为游戏纹理导入。
 
 已核对 13 张成品的 RGBA、48 像素网格画布、透明边界和轮廓完整性，并在独立临时 Godot 4.7.2 项目中导入通过。
 
-本次仅交付美术素材，未接入关卡，也未配置游戏内碰撞、通行或遮挡。清单中的底中锚点是贴图坐标参考。两张预览均为静态审核图；实际接入时仍需以真实主角在关卡内检查比例、通行空间和遮挡。
+图块与完整物件笔刷已接入共享 TileSet；地图中的实际铺放由编辑者操作。清单中的底中锚点是贴图坐标参考。两张预览均为静态审核图；完成实际铺放后仍需以真实主角在关卡内检查比例、通行空间和遮挡。

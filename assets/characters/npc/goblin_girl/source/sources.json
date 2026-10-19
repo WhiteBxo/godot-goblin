@@ -28,5 +28,35 @@
     "entry": "女孩/待机2.png",
     "path": "assets/characters/npc/goblin_girl/source/unused_03.png",
     "sha256": "f91ef2b81149b5b584d200fb5ec0d2f0118ed15320ca6924c6ddd9715386cc33"
+  },
+  {
+    "archive": "女孩(3).zip",
+    "entry": "女孩/女孩.png",
+    "path": "assets/characters/npc/goblin_girl/source/update_2026_10_20/portrait.png",
+    "sha256": "c841eb95f9f5aebf292aa8214f33f6610259856092c79285ef5c0f37147b6fec"
+  },
+  {
+    "archive": "女孩(3).zip",
+    "entry": "女孩/走路.png",
+    "path": "assets/characters/npc/goblin_girl/source/update_2026_10_20/walk.png",
+    "sha256": "0ddc5b8cdbc6c2b31116f227e3480df55b19c188808abc84976dc3c0767d5bb6"
+  },
+  {
+    "archive": "女孩(3).zip",
+    "entry": "女孩/待机1.png",
+    "path": "assets/characters/npc/goblin_girl/source/update_2026_10_20/idle.png",
+    "sha256": "e6c7ce1f08f3effd0f79c1330aaba9705668fbe6bc8de1c32f674ec1a65f0ec7"
+  },
+  {
+    "archive": "女孩(3).zip",
+    "entry": "女孩/待机2.png",
+    "path": "assets/characters/npc/goblin_girl/source/update_2026_10_20/sweep.png",
+    "sha256": "0252693f21ce14674a67316422ddb279a9a4afa13575223250cb250ab85d5640"
+  },
+  {
+    "archive": "女孩(3).zip",
+    "entry": "女孩/待机3.png",
+    "path": "assets/characters/npc/goblin_girl/source/update_2026_10_20/look.png",
+    "sha256": "f9daafa9c95bd40de4f74d467e3b48b87f3e63b3a70a91a62fb2ccbbf326d094"
   }
 ]

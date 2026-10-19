@@ -164,3 +164,35 @@ python tools/characters/import_supplement_npcs.py --source-dir '<用户附件目
 ```
 
 Godot 导入后可在编辑器打开各 `rpg_*.tscn` 查看动作。正式 F5 进入游戏并完成胖哥布林委托对话后，分别前往集市、居民区、祭坛、仓库及酒馆 / 赌场按 E 交谈。`verify_supplement_content.gd` 覆盖全部派生动画帧非空、地图真实交互、选项、儿童尺寸 / 通路、修订包选择、采集与实购；本轮最终 1001 项通过。
+
+## 妇女与女孩更新（2026-10-20）
+
+本次附件 `妇女(1).zip`、`女孩(3).zip` 更新下列三位角色，覆盖上节对应外观映射。角色身份与对白内容保留；集市母亲现使用独立场景，不再与祭坛同伴共用 SpriteFrames。
+
+| 角色 | 立绘与原图 | 正式动画与回退 |
+| --- | --- | --- |
+| 集市母亲 `market_mother` | 妇女1立绘、待机、走路，共3张 | 侧向待机8帧；背向走路源格 `[0,1,7]`，正面 `[3,4,6]`，侧向 `[2,5]`。侧图统一朝左，源格5镜像；正、背待机使用对应走路首帧。 |
+| 祭坛同伴 `prayer_woman` | 妇女2立绘、两张待机、重复走路，共4张 | 正面挥手与侧向待机各8帧，侧图朝左。背向和移动使用本人待机回退。`妇女2走路.png` 与妇女1走路原件 SHA-256 相同，不用于同伴，避免移动时串角色。 |
+| 居民区小孩 `goblin_girl`，Actor `village_child` | 女孩立绘、走路、三张待机，共5张 | 待机/走路分别取背向 `[0,1,4]`、正面 `[3,6,7]`、侧向 `[2,5]`。待机源格2、走路源格5镜像后统一朝右；修复侧向周期中途翻面。另保留8帧扫地、8帧张望循环，不新增剧情触发。 |
+
+全部12张 PNG 原始字节保存在 `assets/characters/npc/<角色>/source/update_2026_10_20/`，各 `source/sources.json` 记录 ZIP 条目与 SHA-256；旧源图仍保留。新女孩包的部分图片与旧包相同，正式立绘继续复用相同内容。附件未附独立许可证，来源为用户提供。
+
+新动画源图均为无间隔4×2网格。各帧先按实际朝向选取、必要时镜像；原图中单元内位置有明显偏移，派生图按各帧透明包围框居中、脚底对齐 y=62，同一段共用等比倍率并用 NEAREST 采样，消除打包位置造成的漂移。输出仍为64px格、88px步距、6列；成人最高58px，女孩最高50px。catalog 记录源格、镜像格、原始包围框、倍率与对齐规则。基础/RPG场景沿用既有倍率、碰撞和输入隔离，左右由控制器镜像。
+
+母亲在 Day 1 / Day 2 各7句对白中的立绘引用，先修改 `docs/story_authoring/day*_project.json`，再由 StoryProject 生成运行时对白和清单散列。祭坛同伴、女孩沿用原路径加载更新后的立绘。
+
+```powershell
+# 首次从附件导入；后续不带参数即可从仓库保留原图重建这三位角色。
+python tools/characters/update_women_and_girl.py --source-dir '<附件所在目录>'
+python tools/characters/update_women_and_girl.py
+```
+
+若重跑旧版 `import_supplement_npcs.py`，需随后运行上述更新工具以恢复本次外观。Godot重新导入后，F6运行 `src/debug/characters/women_and_girl_preview.tscn`，可比较三张立绘并观察真实 ActorDirector 四向移动与待机循环。正式 F5 接受胖哥布林委托后，到集市母亲、祭坛同伴、居民区小孩处按 E，对话应显示对应立绘；女孩保持比成人矮。同伴移动仍为本人待机，这是附件缺少独立行走图的回退。
+
+Godot 4.7.2 OpenGL 图形运行 `tests/verify_women_and_girl.gd -- --capture`，508项检查通过，覆盖帧边界、非空、脚底、镜像、输入隔离、四向移动、显隐碰撞、正式角色、真实交谈和对白接线。已检查[集市母亲](captures/market_mother_updated_2026_10_20.png)、[祭坛同伴](captures/prayer_woman_updated_2026_10_20.png)、[居民区小孩](captures/village_child_updated_2026_10_20.png)的正式对话画面。两份 StoryProject 生成校验通过；12张原件逐字节校验通过，生成工具仅更新这三位角色，使用保留原图重建得到相同字节。本次不运行全项目回归，未改共享控制器或剧情状态契约。编辑器导入仍出现既有495个 ObjectDB 实例 / 10个资源未清理诊断，与上节历史记录一致。
+
+提交前工作区出现并行的对白标点修改（`......`→`……`），直接 CLI 一致性复检因此报告两份运行时对白与工程不同。该改动保留在工作区，未混入本次提交；已将本次暂存的工程、对白和清单复制到 `.godot/`，使用同一 StoryProject 编译器核对对白、Beat映射和工程散列，两份均通过。
+
+实现核对 Godot 4.7 官方 [SpriteFrames](https://github.com/godotengine/godot/blob/4.7/doc/classes/SpriteFrames.xml) 的帧序列/循环/FPS，以及 [AtlasTexture](https://github.com/godotengine/godot/blob/4.7/doc/classes/AtlasTexture.xml) 的 `region` / `filter_clip`；不改变运行时 API。
+
+![妇女与女孩更新预览](captures/women_and_girl_2026_10_20.png)

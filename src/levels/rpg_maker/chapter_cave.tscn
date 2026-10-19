@@ -35,6 +35,8 @@
 
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_prayer_woman.tscn" id="prayer_woman"]
 
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_market_mother.tscn" id="market_mother"]
+
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_prayer_elder.tscn" id="prayer_elder"]
 
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_tavern_drunk.tscn" id="tavern_drunk"]
@@ -726,11 +728,11 @@ actor_id = &"barracks_soldier"
 display_name = "哥布林军人"
 active_phase = "always"
 
-[node name="MarketMother" parent="Characters" instance=ExtResource("prayer_woman")]
+[node name="MarketMother" parent="Characters" instance=ExtResource("market_mother")]
 position = Vector2(1224, 2424)
 actor_id = &"market_mother"
 display_name = "哥布林母亲"
-story_role = "带孩子逛集市的母亲；独立角色，复用成年女哥布林美术。"
+story_role = "带孩子逛集市的母亲。"
 active_phase = "always"
 
 [node name="MarketBoy" parent="Characters" instance=ExtResource("goblin_boy")]

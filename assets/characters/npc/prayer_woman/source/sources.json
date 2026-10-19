@@ -52,5 +52,29 @@
     "entry": "祈祷者/女/待机3.png",
     "path": "assets/characters/npc/prayer_woman/source/run_down.png",
     "sha256": "0208d4e0e32510b807b781d311f399913e50851c29448d3f8a0542f712d24ec3"
+  },
+  {
+    "archive": "妇女(1).zip",
+    "entry": "妇女/妇女2.png",
+    "path": "assets/characters/npc/prayer_woman/source/update_2026_10_20/portrait.png",
+    "sha256": "c9527e995313c2997b735feca1ca0b585b0a45b49b4d4e9974610b30a3cb5d18"
+  },
+  {
+    "archive": "妇女(1).zip",
+    "entry": "妇女/妇女2走路.png",
+    "path": "assets/characters/npc/prayer_woman/source/update_2026_10_20/walk_duplicate.png",
+    "sha256": "39ff0e17f3dec53a8a260f432ff9bcf455eeb7d4980c6ca3e147da0455903238"
+  },
+  {
+    "archive": "妇女(1).zip",
+    "entry": "妇女/妇女2待机1.png",
+    "path": "assets/characters/npc/prayer_woman/source/update_2026_10_20/wave.png",
+    "sha256": "5dac58fe05c254642e961658a1bb956b569c3b6253dcaaa6a5fe6252ea2f4146"
+  },
+  {
+    "archive": "妇女(1).zip",
+    "entry": "妇女/妇女2待机2.png",
+    "path": "assets/characters/npc/prayer_woman/source/update_2026_10_20/idle.png",
+    "sha256": "d9513812ea1b5ebbab2bded91be6b07fb877553720feb9cb1ade959845c0106a"
   }
 ]

@@ -5149,7 +5149,7 @@
 					"speaker": "哥布林母亲",
 					"text": "嘘！不许这么盯着人家看！那可是格里芬使者，很没礼貌的！",
 					"next": "line_3",
-					"portrait": "res://assets/characters/npc/prayer_woman/portrait.png"
+					"portrait": "res://assets/characters/npc/market_mother/portrait.png"
 				},
 				"line_3": {
 					"speaker": "哥布林小男孩",
@@ -5167,7 +5167,7 @@
 					"speaker": "哥布林母亲",
 					"text": "哎呀，实在抱歉！这孩子还小，不懂事，您千万别介意！",
 					"next": "line_6",
-					"portrait": "res://assets/characters/npc/prayer_woman/portrait.png"
+					"portrait": "res://assets/characters/npc/market_mother/portrait.png"
 				},
 				"line_6": {
 					"speaker": "主角",
@@ -5185,7 +5185,7 @@
 					"speaker": "哥布林母亲",
 					"text": "你这孩子，怎么还学起大人说话来了！",
 					"next": "line_9",
-					"portrait": "res://assets/characters/npc/prayer_woman/portrait.png"
+					"portrait": "res://assets/characters/npc/market_mother/portrait.png"
 				},
 				"line_9": {
 					"speaker": "旁白",
@@ -5202,7 +5202,7 @@
 					"speaker": "哥布林母亲",
 					"text": "说起来，您是第一次来集市吧？最近这里可热闹了，七日祭快到了，大家都在忙着准备呢。",
 					"next": "line_12",
-					"portrait": "res://assets/characters/npc/prayer_woman/portrait.png"
+					"portrait": "res://assets/characters/npc/market_mother/portrait.png"
 				},
 				"line_12": {
 					"speaker": "哥布林小男孩",
@@ -5214,7 +5214,7 @@
 					"speaker": "哥布林母亲",
 					"text": "没想到这么快就到今年的祭典了，愿格里芬护佑，大家明年也要平平安安......",
 					"next": "line_14",
-					"portrait": "res://assets/characters/npc/prayer_woman/portrait.png"
+					"portrait": "res://assets/characters/npc/market_mother/portrait.png"
 				},
 				"line_14": {
 					"speaker": "哥布林小男孩",
@@ -5232,7 +5232,7 @@
 					"speaker": "哥布林母亲",
 					"text": "那我们就不打扰您了，使者大人，再见！",
 					"next": "line_17",
-					"portrait": "res://assets/characters/npc/prayer_woman/portrait.png"
+					"portrait": "res://assets/characters/npc/market_mother/portrait.png"
 				},
 				"line_17": {
 					"speaker": "哥布林小男孩",
@@ -5244,7 +5244,7 @@
 					"speaker": "哥布林母亲",
 					"text": "嘘！不是说了不可以这样吗！",
 					"next": "line_19",
-					"portrait": "res://assets/characters/npc/prayer_woman/portrait.png"
+					"portrait": "res://assets/characters/npc/market_mother/portrait.png"
 				},
 				"line_19": {
 					"speaker": "主角·内心",

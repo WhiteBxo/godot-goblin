@@ -88,9 +88,24 @@ func _event_finished(id: String, ok: bool, reason: String) -> void:
 	if not ok and reason != "Resume checkpoint" and not reason.contains("GameState") and not (_expected_cancellation and reason.ends_with("Player cancellation")):
 		_events_failed.append(id + ": " + reason)
 
+func _await_scene(previous: Node, context: String, seconds: float = 10.0) -> bool:
+	# scene_changed never fires when the reload or travel is rejected, so bound it;
+	# an unbounded await would leave the whole regression hanging.
+	var deadline := Time.get_ticks_msec() + int(seconds * 1000.0)
+	while (current_scene == previous or not current_scene is MainGame) and Time.get_ticks_msec() < deadline:
+		await process_frame
+	if not current_scene is MainGame:
+		var landed := "nothing" if current_scene == null else str(current_scene.scene_file_path)
+		check(false, context + ": landed on " + landed + " instead of MainGame")
+		quit(1)
+		return false
+	return true
+
 func _reload(snapshot: Dictionary) -> void:
+	var previous := current_scene
 	check(reload_current_scene() == OK, "Real scene reload starts")
-	await scene_changed
+	if not await _await_scene(previous, "Real scene reload"):
+		return
 	_game = current_scene as MainGame
 	_attach_observers()
 	await frames(8)
@@ -253,8 +268,10 @@ func _travel_completed_run(snapshot: Dictionary) -> void:
 	var production := _game.get_tea_production()
 	for path: String in ["res://src/core/settlement.tscn", "res://src/core/main.tscn"]:
 		var exit: SceneExit = _game.get_active_level().get_scene_exits()[0]
+		var previous := current_scene
 		check(_game.get_scene_travel().request_exit(exit) == OK, "Completed Day 1 can travel to " + path)
-		await scene_changed
+		if not await _await_scene(previous, "Day 1 travel to " + path):
+			return
 		_game = current_scene as MainGame
 		var deadline := Time.get_ticks_msec() + 5000
 		while _game.get_scene_travel().is_busy() and Time.get_ticks_msec() < deadline:

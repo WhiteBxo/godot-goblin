@@ -22,7 +22,11 @@ func _run() -> void:
 	_check(state.select_business_profile("day1") == OK, "Daily orders run on the Day 1 profile")
 	host.add_child(state)
 	var catalog := TaskCatalog.new()
-	_check(catalog.load_files(Day1ChapterController.TASK_FILES) == OK, "Catalog loads the story files and the daily pool")
+	var loaded := catalog.load_files(Day1ChapterController.TASK_FILES, {"locations": RpgWorldMapData.location_ids()})
+	_check(loaded == OK, "Catalog loads the story files and the daily pool: " + catalog.last_error)
+	if loaded != OK:
+		quit(1)
+		return
 	var journal := TaskJournal.new()
 	host.add_child(journal)
 	_check(journal.configure(catalog, state) == OK, "Journal projects the daily pool")

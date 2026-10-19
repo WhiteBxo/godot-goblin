@@ -17,7 +17,11 @@ func _run() -> void:
 	var state := StateData.new()
 	check(state.select_business_profile("day1") == OK, "Use actual Day 1 session")
 	var catalog := TaskCatalog.new()
-	check(catalog.load_files(Day1ChapterController.TASK_FILES) == OK, "Load formal chapter tasks")
+	var loaded := catalog.load_files(Day1ChapterController.TASK_FILES, {"locations": RpgWorldMapData.location_ids()})
+	check(loaded == OK, "Load formal chapter tasks: " + catalog.last_error)
+	if loaded != OK:
+		quit(1)
+		return
 	var journal := TaskJournal.new()
 	journal.configure(catalog, state)
 	var inventory: WarehouseInventory = state.get_warehouse_inventory()

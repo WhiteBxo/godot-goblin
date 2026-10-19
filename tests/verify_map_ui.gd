@@ -97,6 +97,12 @@ func _run() -> void:
 	await click(button)
 	check(ui.is_open(ScreenIds.MAP) and not player.movement_enabled, "HUD opens managed modal and locks player")
 	check(root.gui_get_focus_owner() == panel.get_default_focus(), "Map gives keyboard focus to close button")
+	if not canvas.map_data.has("regions"):
+		# An opened map must expose regions; without the guard the next line kills
+		# the coroutine and the run would never reach quit().
+		check(false, "Opened map canvas exposes no regions; map_data keys: " + str(canvas.map_data.keys()))
+		quit(1)
+		return
 	check(canvas.map_data.regions.size() == 1 and canvas.map_data.regions[0].location_id == "settlement.shop", "Default knowledge contains only established shop exterior")
 	check(canvas.player_position.is_equal_approx(player.global_position), "Map player matches actual world position")
 	var bounds := level.get_world_bounds()

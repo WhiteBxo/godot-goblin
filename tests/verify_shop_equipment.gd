@@ -50,6 +50,12 @@ func _run() -> void:
 	var interaction: ShopInteraction = main.get_node("Systems/ShopInteraction")
 	var feedback: InteractionFeedback = main.get_node("World/EffectRoot/InteractionFeedback")
 	var ui: ShopUI = main.get_node("HudLayer/ShopUI")
+	if not ui.get_node_or_null("Prompt") is Label:
+		# The prompt is no longer a bare Label; fail fast instead of dying inside
+		# a coroutine that never reaches quit().
+		_check(false, "ShopUI/Prompt is no longer a Label; the prompt text assertions need the new node path")
+		quit(1)
+		return
 	var counter: Node2D = level.get_node("EquipmentForeground/Counter")
 	player.global_position = level.to_global(Vector2(1000, 430))
 	await _frames()

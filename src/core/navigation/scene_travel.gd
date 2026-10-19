@@ -12,6 +12,7 @@ var _can_travel: Callable
 var _busy := false
 var _destination: Node
 var _requested_exit: SceneExit
+var _preloading: Dictionary = {}
 
 func configure(visual: ScreenTransition, can_travel: Callable) -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -54,10 +55,25 @@ func begin_arrival() -> void:
 	_visual.fade_out(0.0)
 	_reveal.call_deferred()
 
+## Warming a destination up on a worker thread keeps the load off the main
+## thread without changing the synchronous commit path: pressing the door still
+## resolves in one frame, it just finds the packed scene already cached.
+func preload_destination(point: SceneExit) -> void:
+	if not is_instance_valid(point):
+		return
+	var path := point.destination_scene
+	if path.is_empty() or _preloading.has(path) or ResourceLoader.has_cached(path):
+		return
+	if not ResourceLoader.exists(path, "PackedScene"):
+		return
+	_preloading[path] = true
+	if ResourceLoader.load_threaded_request(path, "PackedScene") != OK:
+		_preloading.erase(path)
+
 func _depart(path: String, entrance: StringName) -> void:
 	if not is_inside_tree():
 		return
-	var packed := ResourceLoader.load(path, "PackedScene") as PackedScene
+	var packed := _take_packed(path)
 	if packed == null or not packed.can_instantiate():
 		_fail(ERR_CANT_CREATE)
 		return
@@ -92,6 +108,19 @@ func _depart(path: String, entrance: StringName) -> void:
 		_destination = destination
 		_fail(error)
 		return
+
+## Never mixes the synchronous loader with an in-flight worker request: the same
+## resource loaded from both paths deadlocks the main thread. A warm destination
+## (preloaded while the player walked up) returns immediately here.
+func _take_packed(path: String) -> PackedScene:
+	if not _preloading.has(path) and ResourceLoader.has_cached(path):
+		return ResourceLoader.load(path, "PackedScene") as PackedScene
+	if ResourceLoader.load_threaded_request(path, "PackedScene") != OK:
+		return null
+	_preloading[path] = true
+	var packed := ResourceLoader.load_threaded_get(path) as PackedScene
+	_preloading.erase(path)
+	return packed
 
 func _reveal() -> void:
 	var action := _visual.fade_in(fade_seconds)

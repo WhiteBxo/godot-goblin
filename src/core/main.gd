@@ -628,8 +628,10 @@ func _finish_session_initialization(error: Error) -> void:
 	session_initialized.emit(error)
 
 func _create_scene_travel(exits: Array[SceneExit]) -> void:
-	for point in exits:
+	for point: SceneExit in exits:
 		_scene_exits[point.interaction_id] = point
+		# Walking into the door's reach is the earliest honest warm-up point.
+		point.availability_changed.connect(_on_exit_availability_changed)
 	var visual: ScreenTransition = preload("res://src/UI/screen_transition/screen_transition.tscn").instantiate()
 	$TransitionLayer.add_child(visual)
 	_scene_travel = SceneTravel.new()
@@ -642,6 +644,12 @@ func _create_scene_travel(exits: Array[SceneExit]) -> void:
 	if _arrival_entrance != &"":
 		_scene_travel.begin_arrival()
 		_play_door_bell.call_deferred()
+
+## Preloads the destination once the player can actually reach the exit, so the
+## commit stays synchronous while the expensive part runs on a worker thread.
+func _on_exit_availability_changed(point: InteractionPoint, available: bool) -> void:
+	if available and point is SceneExit and is_instance_valid(_scene_travel):
+		_scene_travel.preload_destination(point as SceneExit)
 
 ## Scene travel swaps the whole host, so the bell has to ring on the arriving
 ## side; a deferred call lets the new AudioManager register the library first.

@@ -8,11 +8,17 @@ extends UIScreen
 ## an empty gap above the buttons.
 
 const PANEL_MARGIN := 16.0
+## Guard feedback is formatted to one decimal, so 10 Hz is the natural refresh
+## rate. Repainting every frame rebuilt identical strings and re-shaped the
+## labels for nothing; state changes still land on the frame they happen.
+const REFRESH_SECONDS := 0.1
 
 var _service: Day1StealthService
 var _drinks_dirty := true
 var _last_summary := ""
 var _last_status: int = -1
+var _clock := 0.0
+var _was_visible := false
 
 @onready var _panel: PanelContainer = $Panel
 @onready var _status: Label = $Panel/Content/HeadRow/Status
@@ -21,13 +27,19 @@ var _last_status: int = -1
 @onready var _objectives: Label = $Panel/Content/ObjectiveList
 @onready var _hint: Label = $Panel/Content/Hint
 @onready var _retry_hint: Label = $Panel/Content/RetryHint
+@onready var _coin: Button = $Panel/Content/Actions/Coin
+@onready var _torch: Button = $Panel/Content/Actions/Torch
+@onready var _retry: Button = $Panel/Content/Actions/Retry
+@onready var _start: Button = $Panel/Content/Actions/Start
+@onready var _drinks: OptionButton = $Panel/Content/Drinks
+@onready var _rule: Control = $Panel/Content/Rule
 
 func _ready() -> void:
-	$Panel/Content/Actions/Coin.pressed.connect(func() -> void: _service.select_throwable(&"coin"))
-	$Panel/Content/Actions/Torch.pressed.connect(func() -> void: _service.select_throwable(&"torch"))
-	$Panel/Content/Actions/Retry.pressed.connect(func() -> void: _service.retry_attempt())
-	$Panel/Content/Actions/Start.pressed.connect(func() -> void: _service.begin_attempt())
-	$Panel/Content/Drinks.item_selected.connect(_on_drink_selected)
+	_coin.pressed.connect(func() -> void: _service.select_throwable(&"coin"))
+	_torch.pressed.connect(func() -> void: _service.select_throwable(&"torch"))
+	_retry.pressed.connect(func() -> void: _service.retry_attempt())
+	_start.pressed.connect(func() -> void: _service.begin_attempt())
+	_drinks.item_selected.connect(_on_drink_selected)
 
 func configure(service: Day1StealthService) -> void:
 	_service = service
@@ -40,33 +52,41 @@ func _invalidate_drinks() -> void:
 
 func _on_drink_selected(index: int) -> void:
 	if index > 0:
-		_service.select_drink($Panel/Content/Drinks.get_item_metadata(index))
+		_service.select_drink(_drinks.get_item_metadata(index))
 	_drinks_dirty = true
 
 func _refresh_drinks() -> void:
-	var choices: OptionButton = $Panel/Content/Drinks
-	choices.clear()
-	choices.add_item("选择饮品 · 投掷消耗 1 杯")
-	choices.set_item_disabled(0, true)
-	choices.select(0)
+	_drinks.clear()
+	_drinks.add_item("选择饮品 · 投掷消耗 1 杯")
+	_drinks.set_item_disabled(0, true)
+	_drinks.select(0)
 	for drink: Dictionary in _service.get_inventory().get_drinks():
 		# Historical cups kept for display carry no throw payload.
 		if drink.get("read_only", false) or not drink.get("throw") is Dictionary or drink.throw.is_empty():
 			continue
-		choices.add_item("%s ×%d" % [drink.name, drink.quantity])
-		var index := choices.item_count - 1
-		choices.set_item_metadata(index, drink.id)
-		choices.set_item_tooltip(index, drink.name)
+		_drinks.add_item("%s ×%d" % [drink.name, drink.quantity])
+		var index := _drinks.item_count - 1
+		_drinks.set_item_metadata(index, drink.id)
+		_drinks.set_item_tooltip(index, drink.name)
 		if _service.selected_kind == &"drink" and _service.selected_drink_id == drink.id:
-			choices.select(index)
+			_drinks.select(index)
 	_drinks_dirty = false
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if not is_instance_valid(_service):
 		return
 	_panel.visible = _service.is_mission_stage()
 	if not _panel.visible:
+		_was_visible = false
 		return
+	# A status change must land immediately: the failure tint, the refused
+	# flourish and the retry button all belong to the frame it happens.
+	var urgent := not _was_visible or _drinks_dirty or _service.status != _last_status
+	_was_visible = true
+	_clock -= delta
+	if not urgent and _clock > 0.0:
+		return
+	_clock = REFRESH_SECONDS
 	if _drinks_dirty:
 		_refresh_drinks()
 	var setup := _service.get_setup()
@@ -117,30 +137,25 @@ func _refresh_guards(setup: Day1StealthSetup) -> void:
 	_guards.visible = not watches.is_empty()
 
 func _refresh_actions(setup: Day1StealthSetup) -> void:
-	var coin: Button = $Panel/Content/Actions/Coin
-	var torch: Button = $Panel/Content/Actions/Torch
-	var retry: Button = $Panel/Content/Actions/Retry
-	var start: Button = $Panel/Content/Actions/Start
-	var drinks: OptionButton = $Panel/Content/Drinks
 	var idle := not _service.can_accept_input()
-	coin.disabled = idle
-	torch.disabled = idle
-	drinks.disabled = idle
+	_coin.disabled = idle
+	_torch.disabled = idle
+	_drinks.disabled = idle
 	var running := _service.status == Day1StealthService.Status.RUNNING
-	coin.visible = not setup.interior_only and running
-	torch.visible = not setup.wallet_coins and running
-	drinks.visible = not setup.wallet_coins and running
+	_coin.visible = not setup.interior_only and running
+	_torch.visible = not setup.wallet_coins and running
+	_drinks.visible = not setup.wallet_coins and running
 	var inventory := _service.get_inventory()
-	coin.text = "古怪金币 %d%s" % [inventory.get_stock(setup.coin_item_id), " · 已选" if _service.selected_kind == &"coin" else ""]
+	_coin.text = "古怪金币 %d%s" % [inventory.get_stock(setup.coin_item_id), " · 已选" if _service.selected_kind == &"coin" else ""]
 	if setup.wallet_coins:
-		coin.text = "投掷金币 · 10G"
-	torch.text = "火把 %d%s" % [inventory.get_stock(setup.torch_item_id), " · 已选" if _service.selected_kind == &"torch" else ""]
-	retry.visible = _service.is_blocking()
-	retry.text = "重新潜入" if setup.wallet_coins else "从检查点重试"
-	start.visible = _service.status == Day1StealthService.Status.IDLE
-	_retry_hint.visible = retry.visible
+		_coin.text = "投掷金币 · 10G"
+	_torch.text = "火把 %d%s" % [inventory.get_stock(setup.torch_item_id), " · 已选" if _service.selected_kind == &"torch" else ""]
+	_retry.visible = _service.is_blocking()
+	_retry.text = "重新潜入" if setup.wallet_coins else "从检查点重试"
+	_start.visible = _service.status == Day1StealthService.Status.IDLE
+	_retry_hint.visible = _retry.visible
 	_retry_hint.text = "重试会恢复本次潜入前的钱包和物品。" if setup.wallet_coins else "重试返回检查点，已用物品不会补回。"
-	$Panel/Content/Rule.visible = coin.visible or retry.visible or start.visible or drinks.visible
+	_rule.visible = _coin.visible or _retry.visible or _start.visible or _drinks.visible
 	_hint.text = setup.controls_hint if not setup.controls_hint.is_empty() else "F 投币 · Ctrl 潜行 · R 重试"
 
 ## Anchored to the bottom edge: the card grows upward into empty map instead of

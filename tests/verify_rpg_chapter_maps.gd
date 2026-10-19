@@ -111,7 +111,7 @@ func _verify_map(index: int) -> void:
 	for point: GatherPoint in map.get_gather_points():
 		_check(reachable.has(map.world_to_cell(point.global_position)), "Gather object can be approached on native floor: " + point.name)
 	for point: InteractionPoint in map.get_interaction_points() + map.get_scene_exits() + map.get_gather_points():
-		_check(point.get_node("CollisionShape2D").global_scale == Vector2.ONE * (0.28 if point.is_in_group("wayfinding") else 0.5), "All RPG interactions, doors and gathering points use the same reach scale: " + point.name)
+		_check(point.get_node("CollisionShape2D").global_scale == Vector2.ONE * 0.5, "All RPG interactions, doors and gathering points use the same reach scale: " + point.name)
 	if map.chapter_host == &"settlement":
 		_check(map.get_node("DrunkenEncounter/CollisionShape2D").global_scale == Vector2.ONE * 0.5, "NPC encounter trigger follows the half-size character range")
 	var setup := map.get_stealth_setup()

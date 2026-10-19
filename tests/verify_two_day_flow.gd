@@ -207,21 +207,7 @@ func _run() -> void:
 	check(not market.can_stand_at(Vector2(1176, 2112), Vector2(4, 3)), "Cannot walk north out of market")
 	check(not market.can_stand_at(Vector2(1512, 1896), Vector2(4, 3)), "Cannot walk toward tavern during first visit")
 	check(game.get_shop_ui().get_feedback_text().contains("黑灯瞎火"), "Boundary explains the protagonist's refusal")
-	var signs: Array[InteractionPoint] = []
-	for point: InteractionPoint in market.get_interaction_points():
-		if point.is_in_group("wayfinding"):
-			signs.append(point)
-	check(signs.size() == 6, "Authored road signs join the existing interaction route")
-	var sign_point := market.get_node("Wayfinding/WestSign") as InteractionPoint
-	game.get_player().teleport_to(sign_point.global_position + Vector2(0, 16))
-	for tick in range(5):
-		await physics_frame
-	(sign_point.get_node("Panel/Text") as Button).pressed.emit()
-	check(game.get_shop_ui().is_open(), "Clicking a nearby road sign opens its directions")
-	var sign_text := game.get_shop_ui().get_popup().get_page().get_description_text()
-	check("↑" in sign_text and "↓" in sign_text and "←" in sign_text and "→" in sign_text, "Road sign shows four directions")
-	await picture("market_road_sign")
-	game.get_shop_ui().close()
+	check(get_nodes_in_group("wayfinding").is_empty(), "Removed road signs leave no interactive targets")
 	game.get_player().teleport_to(Vector2(1320, 2424))
 	await frames(30)
 	check(state.get_flag("day1.s03.exploration_completed"), "Walking through market completes observation without interacting")

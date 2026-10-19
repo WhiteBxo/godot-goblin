@@ -15,7 +15,6 @@
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_tavern.tscn" id="npc"]
 
 [ext_resource type="Script" path="res://src/gameplay/interaction/chapter_service_point.gd" id="service"]
-[ext_resource type="PackedScene" path="res://src/levels/rpg_maker/wayfinding_sign.tscn" id="sign"]
 [ext_resource type="Script" path="res://src/gameplay/story_interaction/signature_discovery_point.gd" id="signature"]
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_common_goblin.tscn" id="drinker"]
 
@@ -98,11 +97,6 @@ actor_id = &"tavern"
 display_name = "酒馆老板 · 裂牙"
 visible = true
 active_phase = "always"
-
-[node name="CounterSign" parent="." instance=ExtResource("sign")]
-position = Vector2(264, 552)
-[node name="Text" parent="CounterSign/Panel"]
-text = "↑ 吧台 · 裂牙"
 
 [node name="HeartbrokenDrinker" parent="Characters" instance=ExtResource("drinker")]
 position = Vector2(456, 408)

@@ -24,7 +24,6 @@
 
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_common_goblin.tscn" id="goblin"]
 
-[ext_resource type="PackedScene" path="res://src/levels/rpg_maker/wayfinding_sign.tscn" id="sign"]
 [ext_resource type="Script" path="res://src/levels/rpg_maker/chapter_wayfinding.gd" id="sign_visibility"]
 [ext_resource type="Script" path="res://src/gameplay/characters/ambient_wander.gd" id="wander"]
 [ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_030_00.png" id="gather_atlas"]
@@ -150,11 +149,6 @@ description = "招待完成后可沿熟路直接返店，也可以继续步行�
 destination_scene = "res://src/core/main.tscn"
 destination_entrance = &"street_door"
 allowed_stages = Array[String](["day2.s05.return_final"])
-
-[node name="ReturnSign" parent="Exits/GuardReturn" instance=ExtResource("sign")]
-position = Vector2(0, -40)
-[node name="Text" parent="Exits/GuardReturn/ReturnSign/Panel"]
-text = "直接返店"
 
 [node name="CasinoDoor" parent="Exits" instance=ExtResource("point")]
 
@@ -587,91 +581,6 @@ radius = 32.0
 
 [node name="Wayfinding" type="Node2D" parent="."]
 
-[node name="ShopSign" parent="Wayfinding" instance=ExtResource("sign")]
-position = Vector2(1608, 2496)
-interactive = true
-directions = "↑ 北：集市、公共街道\n↓ 南：奶茶店门口\n← 西：集市摊位\n→ 东：洞窟石壁"
-[node name="Text" parent="Wayfinding/ShopSign/Panel"]
-text = "奶茶店"
-
-[node name="NorthSign" parent="Wayfinding" instance=ExtResource("sign")]
-position = Vector2(1176, 2160)
-interactive = true
-directions = "↑ 北：公共火塘、长老居所\n↓ 南：集市\n← 西：酒馆、赌场\n→ 东：奶茶店"
-[node name="Text" parent="Wayfinding/NorthSign/Panel"]
-text = "↑ 北侧守卫"
-
-[node name="WestSign" parent="Wayfinding" instance=ExtResource("sign")]
-position = Vector2(1104, 2214)
-interactive = true
-directions = "↑ 北：公共火塘、长老居所\n↓ 南：集市\n← 西：酒馆、赌场\n→ 东：奶茶店"
-[node name="Text" parent="Wayfinding/WestSign/Panel"]
-text = "← 酒馆 · 赌场"
-
-[node name="JunctionShopSign" parent="Wayfinding" instance=ExtResource("sign")]
-position = Vector2(1248, 2214)
-interactive = true
-directions = "↑ 北：公共火塘、长老居所\n↓ 南：集市\n← 西：酒馆、赌场\n→ 东：奶茶店"
-[node name="Text" parent="Wayfinding/JunctionShopSign/Panel"]
-text = "奶茶店 ↘"
-
-[node name="ObservationSign" parent="Wayfinding" instance=ExtResource("sign")]
-position = Vector2(1032, 552)
-interactive = true
-directions = "↑ 北：祭坛\n↓ 南：公共街道、集市\n← 西：洞窟石壁\n→ 东：长老居所"
-[node name="Text" parent="Wayfinding/ObservationSign/Panel"]
-text = "观察位 ↘"
-
-[node name="EvacuationSign" parent="Wayfinding" instance=ExtResource("sign")]
-position = Vector2(1032, 624)
-interactive = true
-directions = "↑ 北：祭坛\n↓ 南：公共街道、集市\n← 西：洞窟石壁\n→ 东：长老居所"
-[node name="Text" parent="Wayfinding/EvacuationSign/Panel"]
-text = "撤离点 ↓"
-
-[node name="ElderDoorSign" type="Node2D" parent="Wayfinding"]
-position = Vector2(2040, 448)
-visible = false
-script = ExtResource("sign_visibility")
-required_stages = Array[String](["day1.s05"])
-
-[node name="Sign" parent="Wayfinding/ElderDoorSign" instance=ExtResource("sign")]
-[node name="Text" parent="Wayfinding/ElderDoorSign/Sign/Panel"]
-text = "长老居所 ↑ 进门"
-
-[node name="ReleasedSign" type="Node2D" parent="Wayfinding"]
-position = Vector2(1824, 520)
-visible = false
-script = ExtResource("sign_visibility")
-required_stages = Array[String](["day1.s05"])
-required_flags = Array[StringName](["day1.s05.drunken_paid", "day1.s05.guard_payment_completed"])
-
-[node name="Sign" parent="Wayfinding/ReleasedSign" instance=ExtResource("sign")]
-[node name="Text" parent="Wayfinding/ReleasedSign/Sign/Panel"]
-text = "长老居所 → 东侧"
-
-[node name="DetourSign" type="Node2D" parent="Wayfinding"]
-position = Vector2(1400, 552)
-visible = false
-script = ExtResource("sign_visibility")
-required_stages = Array[String](["day1.s05"])
-required_flags = Array[StringName](["day1.s05.drunken_paid"])
-
-[node name="Sign" parent="Wayfinding/DetourSign" instance=ExtResource("sign")]
-[node name="Text" parent="Wayfinding/DetourSign/Sign/Panel"]
-text = "石墙北侧可绕行"
-
-[node name="EscapeReadySign" type="Node2D" parent="Wayfinding"]
-position = Vector2(1104, 696)
-visible = false
-script = ExtResource("sign_visibility")
-required_stages = Array[String](["day1.s05"])
-required_flags = Array[StringName](["day1.s05.document_read", "day1.s05.blood_acquired"])
-
-[node name="Sign" parent="Wayfinding/EscapeReadySign" instance=ExtResource("sign")]
-[node name="Text" parent="Wayfinding/EscapeReadySign/Sign/Panel"]
-text = "撤离点 → 站上门圈"
-
 [node name="FestivalPreparation" type="Node2D" parent="Wayfinding"]
 position = Vector2(1176, 2136)
 visible = false
@@ -695,24 +604,13 @@ color = Color(0.88, 0.67, 0.29, 1)
 polygon = PackedVector2Array(32, -21, 56, -23, 44, 0)
 color = Color(0.38, 0.57, 0.36, 1)
 
-[node name="Sign" parent="Wayfinding/FestivalPreparation" instance=ExtResource("sign")]
-position = Vector2(0, 18)
-[node name="Text" parent="Wayfinding/FestivalPreparation/Sign/Panel"]
-text = "七日祭 · 筹备中"
-
 [node name="NightGuidance" type="Node2D" parent="Wayfinding"]
 script = ExtResource("sign_visibility")
 required_stages = Array[String](["day1.s05"])
 required_flags = Array[StringName](["day1.s04.commission_accepted"])
 
-[node name="CoinLanding" parent="Wayfinding/NightGuidance" instance=ExtResource("sign")]
+[node name="CoinLanding" type="Marker2D" parent="Wayfinding/NightGuidance"]
 position = Vector2(1272, 504)
-[node name="Text" parent="Wayfinding/NightGuidance/CoinLanding/Panel"]
-text = "↓ 投币落点"
-
-[node name="Landing" type="Polygon2D" parent="Wayfinding/NightGuidance/CoinLanding"]
-polygon = PackedVector2Array(0, -5, 5, 0, 0, 5, -5, 0)
-color = Color(1, 0.82, 0.48, 0.9)
 
 [node name="StreetWatchA" parent="Characters" instance=ExtResource("guard")]
 position = Vector2(1032, 1200)

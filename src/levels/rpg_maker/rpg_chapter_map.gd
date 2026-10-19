@@ -111,9 +111,6 @@ func get_interaction_points() -> Array[InteractionPoint]:
 	for point: Node in get_node("Interactions").get_children():
 		if point is InteractionPoint:
 			points.append(point)
-	for node: Node in find_children("*", "", true, false):
-		if node is InteractionPoint and node not in points and node.is_in_group("wayfinding"):
-			points.append(node)
 	return points
 
 func get_story_positions() -> Array[Marker2D]:

@@ -338,4 +338,8 @@ func get_recap_text() -> String:
 			orders += 1
 	var recipes: int = _state.get_warehouse_inventory().get_drinks(true).size()
 	var records: Dictionary = _state.get_variable("characters.entries", {})
-	return "营业成果\n交付 %d 张饮品订单 · 当前余额 %s\n\n探索与发现\n记录了 %d 种自创饮品 · %d 位人物\n文书与血液已带回，守卫招待已完成。\n\n未解之谜\n黄金乡、变量，以及格里芬之血的秘密……" % [orders, WalletTransactions.format_money(_state.get_transactions().get_balance()), recipes, records.size()]
+	var discoveries := PackedStringArray()
+	for fact: Array in [["day1.s05.document_read", "取得文书"], ["day1.s05.blood_acquired", "取得血液"], ["day2.s05.special_drink_delivered", "完成守卫招待"]]:
+		if _state.get_flag(fact[0]):
+			discoveries.append(fact[1])
+	return "营业成果\n交付 %d 张饮品订单 · 当前余额 %s\n\n探索与发现\n记录了 %d 种自创饮品 · %d 位人物\n%s\n\n未解之谜\n黄金乡、变量，以及格里芬之血的秘密……" % [orders, WalletTransactions.format_money(_state.get_transactions().get_balance()), recipes, records.size(), " · ".join(discoveries)]

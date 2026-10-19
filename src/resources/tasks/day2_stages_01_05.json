@@ -745,8 +745,8 @@
         "money": 0,
         "text": "0G"
       }
-    }
-    ,{
+    },
+    {
       "id": "day2.orders.taste",
       "type": "commission",
       "title": "散客 C · 辛辣奶茶试饮（可选）",

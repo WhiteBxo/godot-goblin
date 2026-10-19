@@ -5,7 +5,7 @@ extends VBoxContainer
 ## Read-only activity browser page. Facts and reveal rules belong to TaskJournal.
 ## The page owns no chrome: ModalShell provides the shade, panel, header and close button.
 
-@onready var _list: ItemList = %Entries
+@onready var _list: TaskList = %Entries
 @onready var _body: BoxContainer = %Body
 @onready var _title: Label = %Title
 @onready var _text: RichTextLabel = %Text
@@ -31,10 +31,6 @@ func _enter_tree() -> void:
 		_refresh()
 
 func _ready() -> void:
-	# A long title must stay one line: wrapping pushed the row over its
-	# neighbour and the tooltip already carries the full text.
-	_list.max_text_lines = 1
-	_list.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_list.item_selected.connect(_select)
 	_list.item_activated.connect(_select)
 	visibility_changed.connect(_on_visibility_changed)
@@ -78,7 +74,7 @@ func uses_native_gui_input() -> bool:
 func get_default_focus() -> Control:
 	return _list if _list.item_count > 0 else null
 
-func get_entries() -> ItemList:
+func get_entries() -> TaskList:
 	return _list
 
 func get_detail_title() -> Label:
@@ -114,6 +110,9 @@ func _on_visibility_changed() -> void:
 func _refresh() -> void:
 	if not is_node_ready():
 		return
+	# The list is rebuilt row by row, so remember which row held the focus and
+	# hand it back afterwards; otherwise a refresh would strand keyboard users.
+	var focused_row := _list.focused_row()
 	var list_scroll := _list.get_v_scroll_bar().value
 	_list.clear()
 	_ids.clear()
@@ -152,6 +151,8 @@ func _refresh() -> void:
 	else:
 		_list.get_v_scroll_bar().set_deferred("value", list_scroll)
 	_show_task(tasks[selected_index])
+	if focused_row >= 0:
+		_list.focus_row(focused_row)
 
 func _number(value: float) -> String:
 	return String.num(value).trim_suffix(".0")
@@ -228,6 +229,10 @@ func _set_detail(content: String) -> void:
 
 func _select(index: int) -> void:
 	if not is_visible_in_tree() or not can_process() or index < 0 or index >= _ids.size():
+		return
+	# Re-selecting the row that is already open must not rebuild the list: the
+	# rows are the focus targets now, and rebuilding would drop the focus.
+	if _ids[index] == _selected_id and _displayed_id == _selected_id:
 		return
 	_selected_id = _ids[index]
 	_refresh()

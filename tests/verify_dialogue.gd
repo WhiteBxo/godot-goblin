@@ -469,7 +469,7 @@ func _test_speaker_portraits() -> void:
 		_check(image.get_pixel(0, 0).a == 0.0 and image.get_pixel(image.get_width() - 1, image.get_height() - 1).a == 0.0, "Portrait background corners are transparent: " + path)
 	# The fat goblin illustration is exclusive to that character; every other
 	# goblin speaker must use their own artwork or omit the illustration.
-	for speaker: String in ["哥布林", "哥布林甲", "哥布林乙", "哥布林丙", "哥布林顾客", "哥布林顾客甲", "哥布林顾客乙", "另一名哥布林", "酒馆老板", "赌场老板"]:
+	for speaker: String in ["哥布林", "赌徒哥布林", "说教的哥布林", "爱收集的哥布林", "胆小的哥布林", "围观的哥布林", "凑热闹的哥布林", "另一名哥布林", "酒馆老板", "赌场老板"]:
 		_check(_manager.speaker_portraits.get(speaker) != _manager.speaker_portraits["胖哥布林"], "The fat goblin portrait stays exclusive to 胖哥布林: " + speaker)
 	_check(_manager.start_dialogue("demo.speaker_portraits") == OK, "Portrait demo starts through the real manager")
 	var portrait: TextureRect = _ui.get_node("Portrait")
@@ -519,7 +519,7 @@ func _test_speaker_portraits() -> void:
 	for example: Array in [
 		["day2.s03.tavern_commission", "酒馆老板", "tavern"],
 		["day2.s04.casino_boss", "赌场老板", "casino"],
-		["day2.s02.emissary_rumor", "哥布林顾客", "common_goblin"],
+		["day2.s02.emissary_rumor", "格里芬使者", "common_goblin"],
 		["day2.s05.deliver_guard", "守卫", "guard"],
 		["day2.s05.deliver_guard_after_delivery", "守卫", "guard"],
 		["day2.s01.fat_goblin_wakes", "胖哥布林", "fat_goblin_sick"],

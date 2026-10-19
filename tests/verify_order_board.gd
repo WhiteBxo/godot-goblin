@@ -34,7 +34,7 @@ func _run() -> void:
 	check(delivery.configure(catalog, journal, state, inventory) == OK, "Configure real delivery")
 	var board := OrderBoardModel.new()
 	board.configure(catalog, journal, state, inventory, production, delivery)
-	board.set_target_names({"goblin_a": "哥布林甲", "goblin_b": "哥布林乙", "goblin_c": "哥布林丙"})
+	board.set_target_names({"goblin_a": "赌徒哥布林", "goblin_b": "说教的哥布林", "goblin_c": "爱收集的哥布林"})
 	check(board.get_entries().is_empty(), "Unrevealed story orders stay hidden")
 	state.set_flag("day1.group_open")
 	# Explicit multi-order fixture; the formal story opens these one at a time.

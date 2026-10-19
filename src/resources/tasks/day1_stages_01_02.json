@@ -44,7 +44,7 @@
       },
       "rewards": {
         "money": 3,
-        "text": "营业收入 3G"
+        "text": "3G"
       }
     },
     {
@@ -90,13 +90,13 @@
       },
       "rewards": {
         "money": 3,
-        "text": "营业收入 3G"
+        "text": "3G"
       }
     },
     {
       "id": "day1.order_group_a",
       "type": "main",
-      "title": "草莓奶绿 → 哥布林甲",
+      "title": "草莓奶绿 → 赌徒哥布林",
       "description": "查看订单板接单，在制作台制作后交给指定顾客。",
       "reveal_when": {
         "type": "flag",
@@ -136,13 +136,13 @@
       },
       "rewards": {
         "money": 3,
-        "text": "营业收入 3G"
+        "text": "3G"
       }
     },
     {
       "id": "day1.order_group_b",
       "type": "main",
-      "title": "草莓奶绿 → 哥布林乙",
+      "title": "草莓奶绿 → 说教的哥布林",
       "description": "查看订单板接单，在制作台制作后交给指定顾客。",
       "reveal_when": {
         "type": "flag",
@@ -182,13 +182,13 @@
       },
       "rewards": {
         "money": 3,
-        "text": "营业收入 3G"
+        "text": "3G"
       }
     },
     {
       "id": "day1.order_group_c",
       "type": "main",
-      "title": "咖啡可可冰奶 → 哥布林丙",
+      "title": "咖啡可可冰奶 → 爱收集的哥布林",
       "description": "查看订单板接单，在制作台制作后交给指定顾客。",
       "reveal_when": {
         "type": "flag",
@@ -228,13 +228,13 @@
       },
       "rewards": {
         "money": 3,
-        "text": "营业收入 3G"
+        "text": "3G"
       }
     },
     {
       "id": "day1.order_group_d",
       "type": "main",
-      "title": "薄荷巧脆奶茶 → 哥布林丁",
+      "title": "薄荷巧脆奶茶 → 领工钱的哥布林",
       "description": "查看订单板接单，在制作台制作后交给指定顾客。",
       "reveal_when": {
         "type": "flag",
@@ -274,13 +274,13 @@
       },
       "rewards": {
         "money": 3,
-        "text": "营业收入 3G"
+        "text": "3G"
       }
     },
     {
       "id": "day1.order_group_e",
       "type": "main",
-      "title": "冰吸薄荷拿铁 → 哥布林戊",
+      "title": "冰吸薄荷拿铁 → 倒霉的哥布林",
       "description": "查看订单板接单，在制作台制作后交给指定顾客。",
       "reveal_when": {
         "type": "flag",
@@ -320,7 +320,7 @@
       },
       "rewards": {
         "money": 3,
-        "text": "营业收入 3G"
+        "text": "3G"
       }
     },
     {

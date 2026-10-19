@@ -147,13 +147,19 @@ func _fill_detail() -> void:
 		lines.append("形态：%s · 加工：%s" % [ingredient.form, _property_text(ingredient.processing_methods)])
 	if int(ingredient.price) > 0:
 		lines.append("标价：%s" % WalletTransactions.format_money(int(ingredient.price)))
-	lines.append("已知风味：%s" % _property_text(ingredient.flavor_tags))
-	lines.append("战斗属性：%s" % _property_text(ingredient.combat_attributes))
-	lines.append("特殊效果：%s" % _property_text(ingredient.special_effects))
-	lines.append("获取方式：%s" % _property_text(ingredient.acquisition_sources))
+	_append_if_any(lines, "已知风味", ingredient.flavor_tags)
+	_append_if_any(lines, "战斗属性", ingredient.combat_attributes)
+	_append_if_any(lines, "特殊效果", ingredient.special_effects)
+	_append_if_any(lines, "获取方式", ingredient.acquisition_sources)
 	if not str(ingredient.description).is_empty():
 		lines.append("\n%s" % ingredient.description)
 	_details.text = "\n".join(lines)
+
+## An empty property is not information; a column of "无" only pushes the real
+## lines off the pane.
+func _append_if_any(lines: PackedStringArray, label: String, values: PackedStringArray) -> void:
+	if not values.is_empty():
+		lines.append("%s：%s" % [label, "、".join(values)])
 
 func _property_text(values: PackedStringArray) -> String:
 	return "、".join(values) if not values.is_empty() else "无"

@@ -290,7 +290,7 @@ func try_submit(order_id: String, target_object_id: String, drink_id: String = "
 		var committed_items := {}
 		var gains := PackedStringArray()
 		if money_delta > 0:
-			gains.append("营业收入 " + WalletTransactions.format_money(money_delta))
+			gains.append("报酬 " + WalletTransactions.format_money(money_delta))
 		for id: String in rewards:
 			var quantity: int = _inventory.get_stock(id) - reward_stock[id] + int(requirement.get(id, 0))
 			committed_items[id] = quantity

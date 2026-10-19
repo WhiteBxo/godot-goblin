@@ -69,7 +69,7 @@ func refresh() -> void:
 			var local_time: int = entry.saved_at + int(Time.get_time_zone_from_system().bias) * 60
 			var date := Time.get_datetime_dict_from_unix_time(local_time)
 			var place: String = {"main": "奶茶店", "settlement": "聚落", "tavern": "酒馆", "casino": "赌场"}.get(String(entry.scene).get_file().get_basename(), "未知地点")
-			detail = "%02d-%02d %02d:%02d · 第%d天 %s · %s%s" % [date.month, date.day, date.hour, date.minute, entry.day, "夜晚" if entry.phase == "night" else "白天", place, " · 使用备份" if entry.used_backup else ""]
+			detail = "%s · 第%d天 %s · %s%s" % [_when(date), entry.day, "夜晚" if entry.phase == "night" else "白天", place, " · 使用备份" if entry.used_backup else ""]
 		elif entry.occupied:
 			detail = "损坏或版本不兼容"
 		_list.add_item(entry.label + "   " + detail)
@@ -81,6 +81,22 @@ func refresh() -> void:
 		_list.select(first)
 	_message.text = "手动存档不会被自动存档覆盖。" if _saving else "自动存档 1 是最新一份，2、3 是更早的记录。读取会放弃尚未保存的进度。"
 	_update_action()
+
+## Recent saves read as "今天 03:12" / "昨天 21:40"; older ones keep the date,
+## because what a player wants to know is how long ago it was.
+func _when(date: Dictionary) -> String:
+	var clock := "%02d:%02d" % [date.hour, date.minute]
+	var days := _days_between(date, Time.get_date_dict_from_system())
+	if days == 0:
+		return "今天 " + clock
+	if days == 1:
+		return "昨天 " + clock
+	return "%02d-%02d %s" % [date.month, date.day, clock]
+
+func _days_between(date: Dictionary, today: Dictionary) -> int:
+	var there := Time.get_unix_time_from_datetime_dict({"year": date.year, "month": date.month, "day": date.day})
+	var here := Time.get_unix_time_from_datetime_dict({"year": today.year, "month": today.month, "day": today.day})
+	return int(round((here - there) / 86400.0))
 
 func _selected() -> Dictionary:
 	var selected := _list.get_selected_items()

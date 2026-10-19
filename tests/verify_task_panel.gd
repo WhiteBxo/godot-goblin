@@ -67,7 +67,7 @@ func _test_projection_and_panel() -> void:
 	root.add_child(panel)
 	panel.show()
 	await frames()
-	var list: ItemList = panel.get_entries()
+	var list: TaskList = panel.get_entries()
 	var title: Label = panel.get_detail_title()
 	var text: RichTextLabel = panel.get_detail_text()
 	var body: BoxContainer = panel.get_body()

@@ -23,9 +23,10 @@ signal line_changed(line_id: String)
 	"护卫": preload("res://assets/characters/npc/casino_sentry/portrait.png"),
 	"酒馆老板": preload("res://assets/characters/dialogue/tavern_portrait.png"),
 	"赌场老板": preload("res://assets/characters/dialogue/casino_portrait.png"),
-	"哥布林顾客": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
-	"哥布林顾客甲": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
-	"哥布林顾客乙": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	"胆小的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	"围观的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	"凑热闹的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	"格里芬使者": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
 }
 
 var last_error: String = ""

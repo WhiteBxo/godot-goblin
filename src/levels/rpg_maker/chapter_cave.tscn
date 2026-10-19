@@ -571,7 +571,7 @@ entrance_id = &"infiltration_start"
 [node name="ReturningGoblinA" parent="Characters" instance=ExtResource("goblin")]
 position = Vector2(1416, 2424)
 actor_id = &"goblin_a"
-display_name = "哥布林甲"
+display_name = "赌徒哥布林"
 active_phase = "day"
 facing = 2
 
@@ -582,7 +582,7 @@ radius = 28.0
 [node name="ReturningGoblinB" parent="Characters" instance=ExtResource("goblin")]
 position = Vector2(1416, 2328)
 actor_id = &"goblin_b"
-display_name = "哥布林乙"
+display_name = "说教的哥布林"
 active_phase = "day"
 facing = 3
 
@@ -593,7 +593,7 @@ radius = 24.0
 [node name="ReturningGoblinC" parent="Characters" instance=ExtResource("goblin")]
 position = Vector2(1272, 2472)
 actor_id = &"goblin_c"
-display_name = "哥布林丙"
+display_name = "爱收集的哥布林"
 active_phase = "day"
 facing = 1
 

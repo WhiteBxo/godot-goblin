@@ -63,7 +63,7 @@ func _order_slip(parent: VBoxContainer) -> void:
 	var ticket: OrderTicket = preload("res://src/UI/components/order_ticket.tscn").instantiate()
 	ticket.custom_minimum_size = Vector2(0, 216)
 	box.add_child(ticket)
-	ticket.present({"title": "珍珠奶茶 ×1", "target_name": "哥布林乙", "status_text": "待制作",
+	ticket.present({"title": "珍珠奶茶 ×1", "target_name": "说教的哥布林", "status_text": "待制作",
 		"stage": "prepare", "status": "active", "product_id": "pearl_milk_tea",
 		"icon": preload("res://assets/ui/milk_tea/products/classic_boba_milk_tea.png"),
 		"items": [{"name": "珍珠奶茶", "owned": 0, "needed": 1}],

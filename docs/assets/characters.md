@@ -26,6 +26,7 @@
 - 只有一侧的素材采用左右镜像；普通哥布林和长老的侧面源图朝左，其他侧面源图按右侧使用。守卫长为接近侧面的斜向图，尚缺真正侧面行走图。
 - 守卫没有独立待机图，各方向取对应行走首帧。其他人物缺失的方向待机同样取行走首帧。
 - 胖哥布林只有待机素材：正面/侧面待机已接入，移动采用对应静帧；背面使用正面 fallback，尚缺四向行走及背面素材。`emote_laugh` 收录第三张表情动画，未自动插入剧情。
+- 第 1 天委托流程另用受难集里三套站姿情绪图集：`mood_pleading_sheet.png`（合十拜托）、`mood_worried_sheet.png`（摸额头苦恼）、`mood_happy_sheet.png`（摸肚子满足），各 12 帧、无朝向；由 `Day1WorldController._fat_goblin_mood()` 按阶段投影到 `PLEADING` / `WORRIED` / `HAPPY`，受难状态（`COLLAPSED`、`RESTING`）优先。详见 `assets/characters/npc/fat_goblin/README.md`。
 - 普通哥布林在生成时独立以 50% 概率选择背包版或无背包版，实例的行走、转向、待机与显隐保持该外观。`common_goblin.tscn` 及其 RPG 继承场景都适用；`appearance` 默认 `RANDOM`，也可在编辑器固定外观。背包版沿用原图集；无背包版复用 `goblin_actions/goblin_frames.tres` 的走路帧，映射为四向 `run_*`（8 FPS）和对应首帧 `idle_*`，侧面源图朝右，向左镜像。无背包版没有独立待机动画。
 - 长老两张待机分别用于正面、侧面；守卫长原待机额外保留 `idle_variant`。所有原图均被引用。
 
@@ -238,3 +239,15 @@ python tools/characters/build_character_frames.py --catalog src/gameplay/charact
 ```
 
 F6 运行 `src/core/casino.tscn` 找诗人、`src/core/settlement.tscn`（集市）找哲人与军人，按 E 触发对话即可看到立绘；三人与普通哥布林的同地线尺寸对比见 `artifacts/talkable_npc_lineup.png`。
+
+## 附件重复素材核对（2026-10-20）
+
+`哥布林npc：有特定对话，不能重复利用的npc(1).zip` 里除本页已记录的接入项外，其余目录
+（哥布林母亲、小男孩、女孩、祈祷者男女、酒鬼两套、仓库侍卫 2/3、小贩之外的部分）与先前
+各自独立 zip 的接入文件**逐字节一致**（比对 `source/sources.json` 的 SHA-256），因此没有重复
+覆盖，也没有新增副本。
+
+唯一例外是 `赌场护卫/守卫长.png` 与 `image-1791819548672-skpfy6dzwtf.png`：前者是 2048×1870
+立绘、后者是 256×256、4×2 共 8 帧（64px 帧）的像素图集。它与现有 `guard_captain`（504×240 待机 + 888×432
+走路 + `goblin_actions/captain_attack_*` 攻击帧）是两套不同设计，且没有四向行走与攻击帧，
+未替换；`guard_captain` 当前在主线未出场，专属剧情仍待设计。

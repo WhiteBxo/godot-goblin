@@ -82,6 +82,7 @@ func _refresh() -> void:
 				actor.visible = Day1Access.at_stage(_state, "day1.s06")
 		if actor is FatGoblin:
 			actor.set_health(_fat_goblin_health())
+			actor.set_mood(_fat_goblin_mood())
 		if _points.has(actor.actor_id):
 			var resting: bool = (_level is MilkTeaShop and actor.actor_id == &"fat_goblin"
 				and (Day1Access.at_stage(_state, "day2") or _state.story_stage == "day3.handoff"))
@@ -104,6 +105,20 @@ func _fat_goblin_health() -> FatGoblin.Health:
 	if _state.current_day >= 2:
 		return FatGoblin.Health.RESTING
 	return FatGoblin.Health.COLLAPSED if _state.get_flag("day1.s06.blood_collapsed") else FatGoblin.Health.NORMAL
+
+## 剧情事实投影（第一天委托流程）：他上门求主角收下哥布林食材时合十拜托，
+## 嘀咕"这食材怎么奇形怪状"时摸额头苦恼，吃完奶茶给出地图时摸着肚子满足。
+## 身体状态非 NORMAL 时情绪不生效，由 FatGoblin 自己保证。
+func _fat_goblin_mood() -> FatGoblin.Mood:
+	if _state.get_business_profile() != "day1" or _state.current_day >= 2:
+		return FatGoblin.Mood.NEUTRAL
+	if Day1Access.at_stage(_state, "day1.s04.wait_map"):
+		return FatGoblin.Mood.HAPPY
+	if Day1Access.at_stage(_state, "day1.s04.wait_taste"):
+		return FatGoblin.Mood.WORRIED
+	if Day1Access.at_stage(_state, "day1.s04"):
+		return FatGoblin.Mood.PLEADING
+	return FatGoblin.Mood.NEUTRAL
 
 func record_shop_arrival() -> void:
 	if _state.get_business_profile() != "day1":

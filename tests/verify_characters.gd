@@ -62,7 +62,7 @@ func _run() -> void:
 		check(move.succeeded and actor.position.distance_to(Vector2(48, 0)) < 0.6, item.id + " actual director movement")
 		actor.queue_free()
 		await process_frame
-	check(used_sources.size() == 43, "All 43 NPC source sheets must be referenced")
+	check(used_sources.size() == 44, "All 43 NPC source sheets plus the backpack rear idle must be referenced")
 	# An empty world isolates the player-versus-NPC body from walls and furniture.
 	var solid_actor: SettlementCharacter = load("res://src/gameplay/characters/common_goblin.tscn").instantiate()
 	solid_actor.position = Vector2(300, 300)
@@ -136,7 +136,10 @@ func _test_common_goblin_appearances() -> void:
 				if not backpack:
 					var original := StringName("walk_%s" % (&"side" if name in [&"left", &"right"] else name))
 					check(frames.get_frame_count(StringName("run_" + name)) == source.get_frame_count(original), "Unpacked walk keeps every source frame")
-					check(frames.get_frame_texture(StringName("idle_" + name), 0) == source.get_frame_texture(original, 0), "Unpacked idle uses matching source direction")
+					if name in [&"left", &"right"]:
+						check(frames.get_frame_texture(StringName("idle_" + name), 0) == source.get_frame_texture(original, 0), "Unpacked side idle uses matching source direction")
+					else:
+						check(frames.get_frame_count(StringName("idle_" + name)) == 8, "Unpacked front/back idle has eight breathing frames")
 			actor.free()
 		check(backpack_count >= 96 and backpack_count <= 160, path + " seeded sample remains near 50/50")
 		print("Common goblin appearances (%s): %d backpack, %d without" % [path, backpack_count, 256 - backpack_count])

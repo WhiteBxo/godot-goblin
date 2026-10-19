@@ -1,0 +1,132 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/characters/npc/common_goblin/idle_generated/backpack_idle_up.png" id="backpack_idle_up"]
+[ext_resource type="Texture2D" path="res://assets/characters/npc/common_goblin/idle_generated/unpacked_idle_down.png" id="unpacked_idle_down"]
+[ext_resource type="Texture2D" path="res://assets/characters/npc/common_goblin/idle_generated/unpacked_idle_up.png" id="unpacked_idle_up"]
+
+[sub_resource type="AtlasTexture" id="backpack_idle_up_0"]
+atlas = ExtResource("backpack_idle_up")
+region = Rect2(0, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="backpack_idle_up_1"]
+atlas = ExtResource("backpack_idle_up")
+region = Rect2(64, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="backpack_idle_up_2"]
+atlas = ExtResource("backpack_idle_up")
+region = Rect2(128, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="backpack_idle_up_3"]
+atlas = ExtResource("backpack_idle_up")
+region = Rect2(192, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="backpack_idle_up_4"]
+atlas = ExtResource("backpack_idle_up")
+region = Rect2(0, 64, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="backpack_idle_up_5"]
+atlas = ExtResource("backpack_idle_up")
+region = Rect2(64, 64, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="backpack_idle_up_6"]
+atlas = ExtResource("backpack_idle_up")
+region = Rect2(128, 64, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="backpack_idle_up_7"]
+atlas = ExtResource("backpack_idle_up")
+region = Rect2(192, 64, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="unpacked_idle_down_0"]
+atlas = ExtResource("unpacked_idle_down")
+region = Rect2(0, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="unpacked_idle_down_1"]
+atlas = ExtResource("unpacked_idle_down")
+region = Rect2(64, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="unpacked_idle_down_2"]
+atlas = ExtResource("unpacked_idle_down")
+region = Rect2(128, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="unpacked_idle_down_3"]
+atlas = ExtResource("unpacked_idle_down")
+region = Rect2(192, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="unpacked_idle_down_4"]
+atlas = ExtResource("unpacked_idle_down")
+region = Rect2(0, 64, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="unpacked_idle_down_5"]
+atlas = ExtResource("unpacked_idle_down")
+region = Rect2(64, 64, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="unpacked_idle_down_6"]
+atlas = ExtResource("unpacked_idle_down")
+region = Rect2(128, 64, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="unpacked_idle_down_7"]
+atlas = ExtResource("unpacked_idle_down")
+region = Rect2(192, 64, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="unpacked_idle_up_0"]
+atlas = ExtResource("unpacked_idle_up")
+region = Rect2(0, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="unpacked_idle_up_1"]
+atlas = ExtResource("unpacked_idle_up")
+region = Rect2(64, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="unpacked_idle_up_2"]
+atlas = ExtResource("unpacked_idle_up")
+region = Rect2(128, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="unpacked_idle_up_3"]
+atlas = ExtResource("unpacked_idle_up")
+region = Rect2(192, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="unpacked_idle_up_4"]
+atlas = ExtResource("unpacked_idle_up")
+region = Rect2(0, 64, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="unpacked_idle_up_5"]
+atlas = ExtResource("unpacked_idle_up")
+region = Rect2(64, 64, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="unpacked_idle_up_6"]
+atlas = ExtResource("unpacked_idle_up")
+region = Rect2(128, 64, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="unpacked_idle_up_7"]
+atlas = ExtResource("unpacked_idle_up")
+region = Rect2(192, 64, 64, 64)
+filter_clip = true
+
+[resource]
+animations = [
+{"frames": [{"duration": 1.0, "texture": SubResource("backpack_idle_up_0")}, {"duration": 1.0, "texture": SubResource("backpack_idle_up_1")}, {"duration": 1.0, "texture": SubResource("backpack_idle_up_2")}, {"duration": 1.0, "texture": SubResource("backpack_idle_up_3")}, {"duration": 1.0, "texture": SubResource("backpack_idle_up_4")}, {"duration": 1.0, "texture": SubResource("backpack_idle_up_5")}, {"duration": 1.0, "texture": SubResource("backpack_idle_up_6")}, {"duration": 1.0, "texture": SubResource("backpack_idle_up_7")}], "loop": 1, "name": &"backpack_idle_up", "speed": 6.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("unpacked_idle_down_0")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_down_1")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_down_2")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_down_3")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_down_4")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_down_5")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_down_6")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_down_7")}], "loop": 1, "name": &"unpacked_idle_down", "speed": 6.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("unpacked_idle_up_0")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_up_1")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_up_2")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_up_3")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_up_4")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_up_5")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_up_6")}, {"duration": 1.0, "texture": SubResource("unpacked_idle_up_7")}], "loop": 1, "name": &"unpacked_idle_up", "speed": 6.0},
+]

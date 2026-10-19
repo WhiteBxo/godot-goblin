@@ -133,6 +133,22 @@ destination_entrance = &"exterior_door"
 allowed_stages = Array[String](["day2", "day3"])
 unavailable_message = "酒馆尚未开放。先完成当前委托，第二天夜晚再来找裂牙。"
 
+[node name="GuardReturn" parent="Exits" instance=ExtResource("point")]
+visible = false
+position = Vector2(1368, 456)
+script = ExtResource("exit")
+interaction_id = &"guard_return"
+display_name = "返店路线 · 直接回奶茶店"
+description = "招待完成后可沿熟路直接返店，也可以继续步行探索。"
+destination_scene = "res://src/core/main.tscn"
+destination_entrance = &"street_door"
+allowed_stages = Array[String](["day2.s05.return_final"])
+
+[node name="ReturnSign" parent="Exits/GuardReturn" instance=ExtResource("sign")]
+position = Vector2(0, -40)
+[node name="Text" parent="Exits/GuardReturn/ReturnSign/Panel"]
+text = "直接返店"
+
 [node name="CasinoDoor" parent="Exits" instance=ExtResource("point")]
 
 position = Vector2(600, 2088)
@@ -524,6 +540,34 @@ text = "↑ 北侧守卫\n← 酒馆 · 赌场\n奶茶店 ↘"
 position = Vector2(1032, 552)
 [node name="Text" parent="Wayfinding/NorthObservation/Panel"]
 text = "观察位 ↘\n撤离点 ↓"
+
+[node name="FestivalPreparation" type="Node2D" parent="Wayfinding"]
+position = Vector2(1176, 2136)
+visible = false
+script = ExtResource("sign_visibility")
+minimum_day = 2
+
+[node name="Rope" type="Line2D" parent="Wayfinding/FestivalPreparation"]
+points = PackedVector2Array(-72, -24, 0, -18, 72, -24)
+width = 2.0
+default_color = Color(0.44, 0.31, 0.18, 1)
+
+[node name="FlagLeft" type="Polygon2D" parent="Wayfinding/FestivalPreparation"]
+polygon = PackedVector2Array(-56, -23, -32, -21, -44, 0)
+color = Color(0.78, 0.31, 0.22, 1)
+
+[node name="FlagMiddle" type="Polygon2D" parent="Wayfinding/FestivalPreparation"]
+polygon = PackedVector2Array(-12, -19, 12, -19, 0, 4)
+color = Color(0.88, 0.67, 0.29, 1)
+
+[node name="FlagRight" type="Polygon2D" parent="Wayfinding/FestivalPreparation"]
+polygon = PackedVector2Array(32, -21, 56, -23, 44, 0)
+color = Color(0.38, 0.57, 0.36, 1)
+
+[node name="Sign" parent="Wayfinding/FestivalPreparation" instance=ExtResource("sign")]
+position = Vector2(0, 18)
+[node name="Text" parent="Wayfinding/FestivalPreparation/Sign/Panel"]
+text = "七日祭 · 筹备中"
 
 [node name="NightGuidance" type="Node2D" parent="Wayfinding"]
 script = ExtResource("sign_visibility")

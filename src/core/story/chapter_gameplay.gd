@@ -108,6 +108,11 @@ func _refresh() -> void:
 		if _state.story_stage == fact.stage and not _state.get_flag(fact.flag) and _state.get_warehouse_inventory().get_stock(fact.item) > 0:
 			_state.set_flag(fact.flag)
 	_game.refresh_day1_access()
+	var level := _game.get_active_level()
+	if level.has_method("get_scene_exits"):
+		for exit: SceneExit in level.get_scene_exits():
+			if exit.interaction_id == &"guard_return":
+				exit.visible = exit.are_conditions_met(_state)
 
 func supply_human_ingredients() -> Dictionary:
 	var items := {}

@@ -7,6 +7,7 @@ signal craft_requested(materials: Array[String], quantity: int)
 signal accept_requested(order_id: String)
 signal track_requested(order_id: String)
 signal deliver_requested(order_id: String)
+signal cancel_requested(order_id: String)
 signal formula_requested(materials: Array[String], iced: bool)
 signal confirm_formula_requested(materials: Array[String])
 signal return_requested
@@ -40,7 +41,7 @@ func _ready() -> void:
 	_board.accept_requested.connect(func(id: String) -> void: accept_requested.emit(id))
 	_board.track_requested.connect(func(id: String) -> void: track_requested.emit(id))
 	_board.deliver_requested.connect(deliver_requested.emit)
-	_order_crafting.deliver_requested.connect(deliver_requested.emit)
+	_board.cancel_requested.connect(func(id: String) -> void: cancel_requested.emit(id))
 	_order_crafting.track_requested.connect(func(id: String) -> void: track_requested.emit(id))
 	_order_crafting.return_requested.connect(return_requested.emit)
 	_order_crafting.craft_requested.connect(func(materials: Array[String], quantity: int) -> void: craft_requested.emit(materials, quantity))
@@ -145,19 +146,7 @@ func present(point: InteractionPoint) -> void:
 	if not is_instance_valid(_production):
 		return
 	if _station and not (is_instance_valid(_tea) and _tea.has_session()):
-		# Story preparation can unlock a recipe before its recipient accepts a
-		# delivery. Keep those cups reachable when there is no accepted order.
-		var has_order := false
-		var has_formula_order := false
-		if is_instance_valid(_orders):
-			for entry: Dictionary in _orders.get_entries():
-				if entry.status == "active" and entry.get("free_formula", false) and not entry.ready:
-					has_formula_order = true
-				if entry.status == "active" and not entry.product_id.is_empty():
-					has_order = true
-		_craft_modes.current_tab = 0 if has_order else (2 if has_formula_order else 1)
-		if not has_order:
-			_making_tabs.current_tab = 1 if has_formula_order else 0
+		_select_craft_mode()
 		_refresh_recipe()
 		if is_instance_valid(_orders):
 			_order_crafting.present()
@@ -172,6 +161,46 @@ func present(point: InteractionPoint) -> void:
 		_refresh_order_board()
 	elif _point_id == &"storage":
 		_warehouse_panel.refresh()
+
+## The tracked order picks the station's first mode: a free-formula job must
+## open 自由实验 instead of a 订单制作 page that only lists it as unknown.
+func _select_craft_mode() -> void:
+	if not is_instance_valid(_making_tabs):
+		return
+	var tracked: Dictionary = _orders.get_tracked_entry() if is_instance_valid(_orders) else {}
+	var tracked_formula: bool = tracked.get("status") == "active" \
+		and bool(tracked.get("free_formula", false)) and not bool(tracked.get("ready", false))
+	var tracked_product: bool = tracked.get("status") == "active" \
+		and not str(tracked.get("product_id", "")).is_empty() and not bool(tracked.get("ready", false))
+	if tracked_formula:
+		_craft_modes.current_tab = 2
+		_making_tabs.current_tab = 1
+		return
+	if tracked_product:
+		_craft_modes.current_tab = 0
+		return
+	# Story preparation can unlock a recipe before its recipient accepts a
+	# delivery. Keep those cups reachable when there is no accepted order.
+	var has_order := false
+	var has_formula_order := false
+	if is_instance_valid(_orders):
+		for entry: Dictionary in _orders.get_entries():
+			if entry.status == "active" and entry.get("free_formula", false) and not entry.ready:
+				has_formula_order = true
+			if entry.status == "active" and not entry.product_id.is_empty():
+				has_order = true
+	_craft_modes.current_tab = 0 if has_order else (2 if has_formula_order else 1)
+	if not has_order:
+		_making_tabs.current_tab = 1 if has_formula_order else 0
+
+## Called by 追踪此单 while the station is already open.
+func focus_tracked_order() -> void:
+	if not _station or not is_instance_valid(_production):
+		return
+	_select_craft_mode()
+	_refresh_recipe()
+	if _making_tabs.is_visible_in_tree() and _making_tabs.current_tab == 1:
+		_formula_panel.get_default_focus().grab_focus()
 
 func configure_inventory(inventory: WarehouseInventory) -> void:
 	if not is_instance_valid(_warehouse_panel):

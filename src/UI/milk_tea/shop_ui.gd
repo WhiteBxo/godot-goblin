@@ -9,6 +9,7 @@ signal craft_requested(materials: Array[String], quantity: int)
 signal accept_requested(order_id: String)
 signal track_requested(order_id: String)
 signal deliver_requested(order_id: String)
+signal cancel_requested(order_id: String)
 signal formula_requested(materials: Array[String], iced: bool)
 signal confirm_formula_requested(materials: Array[String])
 var _production: TeaProduction
@@ -86,6 +87,11 @@ func show_production_result(result: Dictionary) -> void:
 func select_formula(materials: Array, iced := false) -> bool:
 	return is_instance_valid(_popup) and _popup.select_formula(materials, iced)
 
+## The station is already open: land it on the tracked order's own mode.
+func focus_tracked_order() -> void:
+	if is_instance_valid(_popup) and _popup.is_making_station():
+		_popup.get_page().focus_tracked_order()
+
 func show_formula_result(result: Dictionary) -> void:
 	_popup.show_formula_result(result)
 
@@ -114,6 +120,7 @@ func set_popup_layer(layer: CanvasLayer) -> void:
 	_popup.accept_requested.connect(func(id: String) -> void: accept_requested.emit(id))
 	_popup.track_requested.connect(func(id: String) -> void: track_requested.emit(id))
 	_popup.deliver_requested.connect(deliver_requested.emit)
+	_popup.cancel_requested.connect(func(id: String) -> void: cancel_requested.emit(id))
 	_popup.formula_requested.connect(formula_requested.emit)
 	_popup.confirm_formula_requested.connect(confirm_formula_requested.emit)
 	if _inventory != null:

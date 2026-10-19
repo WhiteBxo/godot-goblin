@@ -913,6 +913,11 @@ func _create_shop_business(ui: ShopUI) -> void:
 		elif accepted != ERR_ALREADY_EXISTS:
 			_interaction_audio.play_event("order_failure")
 			ui.show_feedback("暂时无法接取这张订单，请核对当前阶段。", false))
+	ui.cancel_requested.connect(func(id: String) -> void:
+		var cancelled := ERR_UNCONFIGURED
+		if is_instance_valid(_chapter_gameplay):
+			cancelled = _chapter_gameplay.cancel_optional_order(id)
+		ui.show_feedback("已放弃这张订单。" if cancelled == OK else "这张订单现在无法放弃。", cancelled == OK))
 	var task_hud: TaskHUD = preload("res://src/UI/tasks/task_hud.tscn").instantiate()
 	_task_hud = task_hud
 	_ui_manager.register_screen(ScreenIds.TASK_HUD, task_hud, &"hud", false)
@@ -987,6 +992,8 @@ func get_delivery_point(target_id: String) -> InteractionPoint:
 func _track_order(order_id: String) -> void:
 	if _order_board.get_entry(order_id).get("status") == "active":
 		get_node("/root/GameState").set_variable(OrderBoardModel.TRACKED_KEY, order_id)
+		if is_instance_valid(_shop_ui) and _shop_ui.is_open():
+			_shop_ui.focus_tracked_order()
 
 func get_gathering_service() -> GatheringService:
 	return _gathering_service if is_instance_valid(_gathering_service) else null

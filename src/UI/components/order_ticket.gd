@@ -3,6 +3,8 @@ extends PanelContainer
 ## A presentation-only slip shared by the order board and order crafting.
 
 signal primary_pressed
+## Optional second action: an accepted order that may be given up.
+signal secondary_pressed
 
 @onready var _icon: TextureRect = %ProductIcon
 @onready var _title: Label = %ProductTitle
@@ -11,6 +13,7 @@ signal primary_pressed
 @onready var _requirements: Label = %Requirements
 @onready var _hint: Label = %NextStep
 @onready var _primary: Button = %Primary
+@onready var _secondary: Button = %Secondary
 @onready var _feedback: Label = %CraftFeedback
 var _completion_tween: Tween
 var _flash_tween: Tween
@@ -22,8 +25,9 @@ var _shown_status := ""
 
 func _ready() -> void:
 	_primary.pressed.connect(func() -> void: primary_pressed.emit())
+	_secondary.pressed.connect(func() -> void: secondary_pressed.emit())
 
-func present(entry: Dictionary, action: String = "", enabled: bool = false) -> void:
+func present(entry: Dictionary, action: String = "", enabled: bool = false, secondary: String = "") -> void:
 	_clear_result()
 	var order_id := str(entry.get("order_id", ""))
 	var replaced := order_id != _shown_id
@@ -50,6 +54,8 @@ func present(entry: Dictionary, action: String = "", enabled: bool = false) -> v
 	_primary.text = action
 	_primary.visible = not action.is_empty()
 	_primary.disabled = not enabled
+	_secondary.text = secondary
+	_secondary.visible = not secondary.is_empty()
 	if replaced:
 		_play_slip_change()
 	elif status_changed:

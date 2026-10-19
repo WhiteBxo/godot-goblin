@@ -4,6 +4,9 @@ extends VBoxContainer
 signal accept_requested(order_id: String)
 signal track_requested(order_id: String)
 signal deliver_requested(order_id: String)
+## An accepted optional order can be given up: a job the player cannot finish
+## must never block the counter (关店) without a way out.
+signal cancel_requested(order_id: String)
 
 const FILTERS: Array[String] = ["active", "available"]
 const TITLES: Array[String] = ["进行中", "可接取"]
@@ -37,6 +40,7 @@ func _ready() -> void:
 			_selected = id
 			refresh())
 	_ticket.primary_pressed.connect(_primary)
+	_ticket.secondary_pressed.connect(_secondary)
 	%AcceptAll.pressed.connect(_accept_all)
 	refresh()
 
@@ -150,6 +154,7 @@ func _refresh_detail() -> void:
 	var entry := _model.get_entry(_selected) if is_instance_valid(_model) else {}
 	var action := ""
 	var enabled := false
+	var secondary := ""
 	if entry.get("status") == "available":
 		action = "接取订单"
 		enabled = true
@@ -158,7 +163,16 @@ func _refresh_detail() -> void:
 		var current: bool = tracked.get("order_id") == _selected
 		action = "立即交付" if entry.get("ready", false) else ("正在追踪" if current else "追踪此单")
 		enabled = entry.get("ready", false) or not current
-	_ticket.present(entry, action, enabled)
+		# The customer waits on this optional order: offer the way out on the
+		# slip instead of hiding it in the chapter menu.
+		if entry.get("allow_cancel", false) and not entry.get("ready", false):
+			secondary = "放弃此单"
+	_ticket.present(entry, action, enabled, secondary)
+
+func _secondary() -> void:
+	if _selected.is_empty():
+		return
+	cancel_requested.emit(_selected)
 
 func _primary() -> void:
 	var entry := _model.get_entry(_selected)

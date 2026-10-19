@@ -737,7 +737,7 @@
       "description": "招待醉酒守卫 · 0G",
       "reveal_when": {
         "type": "flag",
-        "key": "day1.s05.drunken_paid"
+        "key": "day2.s05.guard_delivery_open"
       },
       "activate_when": {
         "type": "flag",

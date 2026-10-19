@@ -317,7 +317,9 @@ func perform_user_action(id: String) -> void:
 					error = DayPhase.advance_to(_state, 3, "night")
 				"next_day":
 					error = DayPhase.advance_to(_state, 4, "day")
-		_game.get_shop_ui().show_feedback("操作已完成。" if error == OK else "暂时无法完成，请先交付已接订单。", error == OK)
+		_game.get_shop_ui().show_feedback(
+			("操作已完成。" if error == OK else get_close_block_reason() if action.get("kind") == "close"
+				else "暂时无法完成，请先交付已接订单。"), error == OK)
 		_schedule_refresh()
 		return
 
@@ -340,6 +342,32 @@ func close_business() -> Error:
 		if _state.get_flag("task." + id + ".accepted") and not _state.get_flag("delivery." + id + ".completed"):
 			return ERR_UNAVAILABLE
 	return _scheduler.request_close()
+
+## Why the counter cannot close, in the player's words. An optional job the
+## player accepted but cannot finish must say so and point at the way out.
+func get_close_block_reason() -> String:
+	if not is_instance_valid(_scheduler):
+		return "营业会话还没准备好。"
+	if _taste_pending():
+		return "散客还在等那杯带辛辣风味的试饮：做好再去关店，或在订单板放弃这单。"
+	for id: String in Day2Procurement.RUNNERS:
+		if _state.get_flag("task." + id + ".accepted") and not _state.get_flag("delivery." + id + ".completed"):
+			return "还有已接取的跑腿订单没有交付。"
+	var progress: Dictionary = _scheduler.get_progress()
+	if not progress.get("close_ready", false):
+		return "这一天的关店条件还没有配置齐全。"
+	return "还有些客人没有交代完，先把他们招待好。"
+
+## Accepted optional order given up from the order board. Releasing the waiting
+## customer keeps the close path open instead of stranding the day.
+func cancel_optional_order(order_id: String) -> Error:
+	var entry: Dictionary = _game.get_order_board().get_entry(order_id)
+	if entry.is_empty() or entry.get("status") != "active" or not bool(entry.get("allow_cancel", false)):
+		return ERR_UNAVAILABLE
+	var error: Error = _state.settle_task_result(str(entry.task_id), "cancelled", "主动放弃订单")
+	if error == OK and order_id == "day2_taste" and is_instance_valid(_scheduler):
+		_scheduler.request_departure.call_deferred("ordinary_c")
+	return error
 
 func get_gathering_notice() -> String:
 	if not _state.get_flag("day2.s03.festival_accepted") or _state.get_flag("day3.festival.delivered") or _state.current_day not in [2, 3]:

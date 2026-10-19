@@ -30,3 +30,7 @@ autowrap_mode = 3
 [node name="Buttons" type="VBoxContainer" parent="Content"]
 layout_mode = 2
 mouse_filter = 2
+[node name="Details" type="Button" parent="Content"]
+layout_mode = 2
+theme_type_variation = &"GhostButton"
+text = "支线详情"

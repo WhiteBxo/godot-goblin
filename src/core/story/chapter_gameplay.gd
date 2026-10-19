@@ -263,7 +263,20 @@ func _process(_delta: float) -> void:
 	if not gathering_notice.is_empty():
 		notice += ("\n\n" if not notice.is_empty() else "") + gathering_notice
 	var enabled := _quiet()
-	var signature := JSON.stringify([actions, notice, enabled])
+	var summary := get_optional_summary()
+	var signature := JSON.stringify([actions, notice, enabled, summary])
 	if signature != _hud_signature:
 		_hud_signature = signature
-		_hud.show_actions(actions, notice, enabled)
+		_hud.show_actions(actions, notice, enabled, summary)
+
+func get_optional_summary() -> String:
+	var lines := PackedStringArray()
+	if _state.current_day in [2, 3]:
+		var status := _procurement.get_status()
+		if not status.is_empty() and status.status not in ["delivered", "expired"]:
+			lines.append("代购 · " + {"funded": "可雇人", "hired": "跑腿途中", "returned": "待交付"}.get(status.status, ""))
+	if not get_gathering_notice().is_empty():
+		var requirement := _game.get_task_delivery().get_requirement("day3_festival")
+		var ready: bool = _state.get_warehouse_inventory().has_materials(requirement)
+		lines.append("七日祭 · " + ("已齐备，第三天交付" if ready else "材料待采集"))
+	return "\n".join(lines)

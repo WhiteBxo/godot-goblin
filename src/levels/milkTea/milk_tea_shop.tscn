@@ -629,3 +629,9 @@ position = Vector2(1080, 590)
 
 [node name="day2_ordinary_c" type="Marker2D" parent="StoryPositions"]
 position = Vector2(1160, 590)
+
+[node name="day1_group_d" type="Marker2D" parent="StoryPositions"]
+position = Vector2(1030, 550)
+
+[node name="day1_group_e" type="Marker2D" parent="StoryPositions"]
+position = Vector2(1120, 550)

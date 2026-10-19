@@ -6,7 +6,7 @@ var _failures: Array[String] = []
 
 const DAY1_MENU := "res://src/resources/milk_tea/day1_menu.tres"
 const BASIC_MENU := "res://src/resources/milk_tea/basic_menu.tres"
-const BOOK := "res://src/resources/milk_tea/recipe_book.tres"
+const BOOK := "res://src/resources/milk_tea/day1_recipe_book.tres"
 
 ## Mirrors docs/design/otherworld_data_mapping.md. Keep in sync with the spreadsheet.
 ## source_ids holds the spreadsheet row ids so the catalog stays traceable to the draft.
@@ -126,10 +126,11 @@ func _check_catalog() -> void:
 	var products: Array[String] = []
 	for recipe: TeaRecipe in menu.get_recipes():
 		products.append(recipe.product_id)
-	for product: String in ["pearl_milk_tea", "coconut_milk_tea", "plain_milk_tea",
-			"classic_boba_milk_tea", "mint_choc_milk_tea", "coffee_cocoa_ice_milk",
+	for product: String in ["classic_boba_milk_tea", "mint_choc_milk_tea", "coffee_cocoa_ice_milk",
 			"apple_milk_green_tea", "strawberry_milk_green_tea", "iced_mint_latte"]:
 		_check(product in products, "Formal menu crafts %s" % product)
+	for retired: String in ["pearl_milk_tea", "coconut_milk_tea", "plain_milk_tea"]:
+		_check(retired not in products, "Formal menu omits retired teaching recipe: " + retired)
 	var book: TeaRecipeBook = load(BOOK)
 	for row: Dictionary in EXPECTED_RECIPES:
 		var recipe := book.find_by_product(str(row.product_id))

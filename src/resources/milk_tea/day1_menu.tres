@@ -11,7 +11,7 @@
 [ext_resource type="Script" uid="uid://b1nr765u71rxs" path="res://src/resources/milk_tea/ingredient_definition.gd" id="ingredient"]
 
 [ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/strange_coin.svg" id="icon_coin"]
-[ext_resource type="Resource" path="res://src/resources/milk_tea/recipe_book.tres" id="book"]
+[ext_resource type="Resource" path="res://src/resources/milk_tea/day1_recipe_book.tres" id="book"]
 
 [ext_resource type="Texture2D" path="res://assets/ui/milk_tea/products/classic_boba_milk_tea.png" id="icon_art_classic_boba_milk_tea"]
 [ext_resource type="Texture2D" path="res://assets/ui/milk_tea/products/strawberry_milk_green_tea.png" id="icon_art_strawberry_milk_green_tea"]
@@ -935,29 +935,17 @@ script = ExtResource("1")
 ingredients = Array[ExtResource("ingredient")]([SubResource("Ingredient_black_tea"), SubResource("Ingredient_green_tea"), SubResource("Ingredient_creamer"), SubResource("Ingredient_pearl"), SubResource("Ingredient_coconut"), SubResource("Ingredient_syrup"), SubResource("Ingredient_insomnia"), SubResource("Product_pearl"), SubResource("Product_coconut"), SubResource("Product_plain"), SubResource("Item_coin"), SubResource("Ingredient_day1_griffin_blood"), SubResource("Product_day1_blood_milk_tea"), SubResource("Ingredient_creamer_milk_tea_base"), SubResource("Ingredient_industrial_green_tea"), SubResource("Ingredient_mint_syrup"), SubResource("Ingredient_instant_coffee_concentrate"), SubResource("Ingredient_brown_sugar_boba"), SubResource("Ingredient_mint_choc_crisp"), SubResource("Ingredient_ice"), SubResource("Ingredient_cocoa_powder"), SubResource("Ingredient_apple_jam"), SubResource("Ingredient_strawberry_jam"), SubResource("Product_classic_boba"), SubResource("Product_mint_choc"), SubResource("Product_coffee_cocoa"), SubResource("Product_apple_green"), SubResource("Product_strawberry_green"), SubResource("Product_iced_mint_latte"), SubResource("Ingredient_moss_green"), SubResource("Ingredient_sugar_yam"), SubResource("Ingredient_firefly_cap"), SubResource("Ingredient_goblin_firebrew"), SubResource("Ingredient_griffin_amber_wine"), SubResource("Ingredient_red_mottled_wood"), SubResource("Ingredient_honey_amber_crystal"), SubResource("Ingredient_phantom_gold_mushroom"), SubResource("Ingredient_rainbow_cube"), SubResource("Ingredient_scorch_tongue_pepper"), SubResource("Ingredient_sour_moss_ale"), SubResource("Ingredient_brute_lava_firebrew"), SubResource("Ingredient_griffin_sacred_wine"), SubResource("Item_elder_document"), SubResource("Product_day2_guard")])
 initial_stock = {
 "apple_jam": 5,
-"black_tea": 12,
 "brown_sugar_boba": 5,
 "cocoa_powder": 5,
-"coconut": 8,
-"creamer": 12,
 "creamer_milk_tea_base": 5,
-"green_tea": 12,
 "ice": 5,
 "industrial_green_tea": 5,
 "instant_coffee_concentrate": 5,
 "mint_choc_crisp": 5,
 "mint_syrup": 5,
-"pearl": 8,
 "strawberry_jam": 5,
-"syrup": 10
 }
 initial_discovery = {
-"black_tea": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"],
-"coconut": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"],
-"creamer": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"],
-"green_tea": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"],
-"pearl": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"],
-"syrup": ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"]
 }
 products = {
 "supply_creamer_milk_tea_base": {
@@ -1052,5 +1040,5 @@ products = {
 "stock": 1
 }
 }
-orders = Array[Dictionary]([{"id":"day1_human","product_id":"classic_boba_milk_tea","name":"经典珍珠奶茶","accepted_flag":"task.day1.human.active"},{"id":"day1_goblin","product_id":"classic_boba_milk_tea","name":"经典珍珠奶茶","accepted_flag":"task.day1.goblin.active"},{"id":"day1_group_a","product_id":"classic_boba_milk_tea","name":"经典珍珠奶茶","accepted_flag":"task.day1.group_a.active"},{"id":"day1_group_b","product_id":"classic_boba_milk_tea","name":"经典珍珠奶茶","accepted_flag":"task.day1.group_b.active"},{"id":"day1_group_c","product_id":"classic_boba_milk_tea","name":"经典珍珠奶茶","accepted_flag":"task.day1.group_c.active"}])
+orders = Array[Dictionary]([{"id":"day1_human","product_id":"classic_boba_milk_tea","name":"经典珍珠奶茶","accepted_flag":"task.day1.human.active"},{"id":"day1_goblin","product_id":"classic_boba_milk_tea","name":"经典珍珠奶茶","accepted_flag":"task.day1.goblin.active"},{"id":"day1_group_a","product_id":"strawberry_milk_green_tea","name":"草莓奶绿","accepted_flag":"task.day1.group_a.active"},{"id":"day1_group_b","product_id":"strawberry_milk_green_tea","name":"草莓奶绿","accepted_flag":"task.day1.group_b.active"},{"id":"day1_group_c","product_id":"coffee_cocoa_ice_milk","name":"咖啡可可冰奶","accepted_flag":"task.day1.group_c.active"},{"id":"day1_group_d","accepted_flag":"task.day1.group_d.active","product_id":"mint_choc_milk_tea","name":"薄荷巧脆奶茶"},{"id":"day1_group_e","accepted_flag":"task.day1.group_e.active","product_id":"iced_mint_latte","name":"冰吸薄荷拿铁"}])
 recipe_book = ExtResource("book")

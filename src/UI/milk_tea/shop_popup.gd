@@ -5,6 +5,7 @@ extends UIScreen
 signal craft_requested(materials: Array[String], quantity: int)
 signal accept_requested(order_id: String)
 signal track_requested(order_id: String)
+signal deliver_requested(order_id: String)
 signal formula_requested(materials: Array[String], iced: bool)
 signal confirm_formula_requested(materials: Array[String])
 
@@ -21,6 +22,7 @@ func _ready() -> void:
 		func(materials: Array[String], quantity: int) -> void: craft_requested.emit(materials, quantity))
 	_page.accept_requested.connect(func(id: String) -> void: accept_requested.emit(id))
 	_page.track_requested.connect(func(id: String) -> void: track_requested.emit(id))
+	_page.deliver_requested.connect(deliver_requested.emit)
 	_page.formula_requested.connect(formula_requested.emit)
 	_page.confirm_formula_requested.connect(confirm_formula_requested.emit)
 	_page.return_requested.connect(close_requested.emit)

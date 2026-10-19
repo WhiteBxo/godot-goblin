@@ -4,7 +4,9 @@
     "goblin_customer",
     "goblin_a",
     "goblin_b",
-    "goblin_c"
+    "goblin_c",
+    "goblin_d",
+    "goblin_e"
   ],
   "checkpoints": [
     {
@@ -18,7 +20,9 @@
       "actors": {
         "goblin_a": "day1_group_a",
         "goblin_b": "day1_group_b",
-        "goblin_c": "day1_group_c"
+        "goblin_c": "day1_group_c",
+        "goblin_d": "day1_group_d",
+        "goblin_e": "day1_group_e"
       }
     },
     {
@@ -46,7 +50,9 @@
       "orders": [
         "day1_group_a",
         "day1_group_b",
-        "day1_group_c"
+        "day1_group_c",
+        "day1_group_d",
+        "day1_group_e"
       ],
       "completion_flag": "day1.group_settled"
     }

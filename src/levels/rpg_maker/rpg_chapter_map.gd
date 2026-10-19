@@ -5,6 +5,23 @@ extends RpgMakerMap
 
 @export var chapter_host: StringName = &"settlement"
 @export var exterior_location: String = "settlement.shop"
+## Scene-authored first-visit areas, in map coordinates.
+@export var first_visit_bounds := Rect2()
+@export var market_observation_area := Rect2()
+@export_multiline var first_visit_blocked_message := ""
+var market_only := false
+signal market_boundary_reached
+
+func can_stand_at(world_position: Vector2, half_size := Vector2.ZERO) -> bool:
+	if market_only and first_visit_bounds.has_area():
+		var footprint := Rect2(to_local(world_position) - half_size, half_size * 2.0)
+		if not first_visit_bounds.encloses(footprint):
+			market_boundary_reached.emit()
+			return false
+	return super.can_stand_at(world_position, half_size)
+
+func is_observing_market(world_position: Vector2) -> bool:
+	return market_observation_area.has_area() and market_observation_area.has_point(to_local(world_position))
 
 func _ready() -> void:
 	super._ready()
@@ -44,6 +61,9 @@ func get_interaction_points() -> Array[InteractionPoint]:
 	for point: Node in get_node("Interactions").get_children():
 		if point is InteractionPoint:
 			points.append(point)
+	for node: Node in find_children("*", "", true, false):
+		if node is InteractionPoint and node not in points and node.is_in_group("wayfinding"):
+			points.append(node)
 	return points
 
 func get_story_positions() -> Array[Marker2D]:

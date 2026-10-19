@@ -5,7 +5,7 @@
       "id": "day1.s03.explore",
       "type": "main",
       "title": "店门外的陌生世界",
-      "description": "店外灯亮着，去摊位和岔路看看，再回奶茶店。",
+      "description": "先在市场看一圈，再回奶茶店。无需与小贩交谈或接取任务。",
       "reveal_when": {
         "type": "flag",
         "key": "day1.stages_01_02_completed"
@@ -20,35 +20,11 @@
       },
       "objectives": [
         {
-          "id": "exit",
-          "text": "店外好像不太对劲",
-          "complete_when": {
-            "type": "flag",
-            "key": "day1.s03.exited_shop"
-          }
-        },
-        {
-          "id": "yard",
-          "text": "去亮着灯的摊位看看",
+          "id": "market",
+          "text": "在市场附近看看，无需与小贩交谈",
           "complete_when": {
             "type": "flag",
             "key": "day1.s03.observed_yard"
-          }
-        },
-        {
-          "id": "street",
-          "text": "认清主街与岔路的方向",
-          "complete_when": {
-            "type": "flag",
-            "key": "day1.s03.observed_street"
-          }
-        },
-        {
-          "id": "path",
-          "text": "去昏暗的岔路口看看",
-          "complete_when": {
-            "type": "flag",
-            "key": "day1.s03.observed_path"
           }
         },
         {

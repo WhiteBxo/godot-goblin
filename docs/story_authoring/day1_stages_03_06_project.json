@@ -43,7 +43,8 @@
 				"day": 1.0,
 				"stage": "day1.s03.explore",
 				"flags": {
-					"day1.s03.exploration_completed": true
+					"day1.s03.exploration_completed": true,
+					"day1.s03.returned_to_door": true
 				}
 			}
 		},
@@ -221,13 +222,6 @@
 							2184.0
 						],
 						"duration": 1.0
-					}
-				},
-				{
-					"id": "step_10004",
-					"data": {
-						"command": "dialogue",
-						"id": "day1.s03.limited_exploration"
 					}
 				},
 				{
@@ -1046,7 +1040,7 @@
 				},
 				"line_22": {
 					"speaker": "胖哥布林",
-					"text": "就这杯经典珍珠奶茶吧！看着就不错！",
+					"text": "就这个吧！看着就不错！",
 					"next": "line_23"
 				},
 				"line_23": {

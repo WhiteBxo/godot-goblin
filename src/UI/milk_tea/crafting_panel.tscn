@@ -14,6 +14,7 @@ size_flags_vertical = 3
 theme_override_constants/separation = 12
 
 [node name="Left" type="VBoxContainer" parent="Body"]
+visible = false
 custom_minimum_size = Vector2(216, 0)
 layout_mode = 2
 size_flags_vertical = 3
@@ -49,7 +50,7 @@ theme_override_constants/separation = 2
 [node name="RecipeTitle" type="Label" parent="Body/Right"]
 layout_mode = 2
 theme_type_variation = &"H2"
-text = "配方 · 点击自动填料"
+text = "选择已知配方"
 
 [node name="RecipeList" type="ItemList" parent="Body/Right"]
 custom_minimum_size = Vector2(0, 72)
@@ -64,6 +65,7 @@ theme_type_variation = &"Hint"
 autowrap_mode = 2
 
 [node name="SelectedHeader" type="HBoxContainer" parent="Body/Right"]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 6
 
@@ -80,6 +82,7 @@ disabled = true
 text = "清空"
 
 [node name="SelectedScroll" type="ScrollContainer" parent="Body/Right"]
+visible = false
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_vertical = 3

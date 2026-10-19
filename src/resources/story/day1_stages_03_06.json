@@ -69,10 +69,6 @@
           "duration": 1.0
         },
         {
-          "command": "dialogue",
-          "id": "day1.s03.limited_exploration"
-        },
-        {
           "command": "camera_reset"
         },
         {
@@ -87,7 +83,8 @@
         "day": 1.0,
         "stage": "day1.s03.explore",
         "flags": {
-          "day1.s03.exploration_completed": true
+          "day1.s03.exploration_completed": true,
+          "day1.s03.returned_to_door": true
         }
       },
       "steps": [

@@ -8,6 +8,7 @@ signal closed
 signal craft_requested(materials: Array[String], quantity: int)
 signal accept_requested(order_id: String)
 signal track_requested(order_id: String)
+signal deliver_requested(order_id: String)
 signal formula_requested(materials: Array[String], iced: bool)
 signal confirm_formula_requested(materials: Array[String])
 var _production: TeaProduction
@@ -88,6 +89,7 @@ func set_popup_layer(layer: CanvasLayer) -> void:
 	_popup.craft_requested.connect(func(materials: Array[String], quantity: int) -> void: craft_requested.emit(materials, quantity))
 	_popup.accept_requested.connect(func(id: String) -> void: accept_requested.emit(id))
 	_popup.track_requested.connect(func(id: String) -> void: track_requested.emit(id))
+	_popup.deliver_requested.connect(deliver_requested.emit)
 	_popup.formula_requested.connect(formula_requested.emit)
 	_popup.confirm_formula_requested.connect(confirm_formula_requested.emit)
 	if _inventory != null:

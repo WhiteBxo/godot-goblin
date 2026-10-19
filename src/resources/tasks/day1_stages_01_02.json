@@ -96,7 +96,7 @@
     {
       "id": "day1.order_group_a",
       "type": "main",
-      "title": "经典珍珠奶茶 → 哥布林甲",
+      "title": "草莓奶绿 → 哥布林甲",
       "description": "查看订单板接单，在制作台制作后交给指定顾客。",
       "reveal_when": {
         "type": "flag",
@@ -130,7 +130,7 @@
       ],
       "delivery": {
         "order_id": "day1_group_a",
-        "product_id": "classic_boba_milk_tea",
+        "product_id": "strawberry_milk_green_tea",
         "target_object_id": "goblin_a",
         "accepted_flag": "task.day1.group_a.active"
       },
@@ -142,7 +142,7 @@
     {
       "id": "day1.order_group_b",
       "type": "main",
-      "title": "经典珍珠奶茶 → 哥布林乙",
+      "title": "草莓奶绿 → 哥布林乙",
       "description": "查看订单板接单，在制作台制作后交给指定顾客。",
       "reveal_when": {
         "type": "flag",
@@ -176,7 +176,7 @@
       ],
       "delivery": {
         "order_id": "day1_group_b",
-        "product_id": "classic_boba_milk_tea",
+        "product_id": "strawberry_milk_green_tea",
         "target_object_id": "goblin_b",
         "accepted_flag": "task.day1.group_b.active"
       },
@@ -188,7 +188,7 @@
     {
       "id": "day1.order_group_c",
       "type": "main",
-      "title": "经典珍珠奶茶 → 哥布林丙",
+      "title": "咖啡可可冰奶 → 哥布林丙",
       "description": "查看订单板接单，在制作台制作后交给指定顾客。",
       "reveal_when": {
         "type": "flag",
@@ -222,9 +222,101 @@
       ],
       "delivery": {
         "order_id": "day1_group_c",
-        "product_id": "classic_boba_milk_tea",
+        "product_id": "coffee_cocoa_ice_milk",
         "target_object_id": "goblin_c",
         "accepted_flag": "task.day1.group_c.active"
+      },
+      "rewards": {
+        "money": 3,
+        "text": "营业收入 3G"
+      }
+    },
+    {
+      "id": "day1.order_group_d",
+      "type": "main",
+      "title": "薄荷巧脆奶茶 → 哥布林丁",
+      "description": "查看订单板接单，在制作台制作后交给指定顾客。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day1.group_open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day1.group_open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day1.group_d_settled"
+      },
+      "objectives": [
+        {
+          "id": "view",
+          "text": "查看订单并接单",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.day1.group_d.active"
+          }
+        },
+        {
+          "id": "deliver",
+          "text": "交付并收款",
+          "complete_when": {
+            "type": "flag",
+            "key": "day1.group_d_settled"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day1_group_d",
+        "product_id": "mint_choc_milk_tea",
+        "target_object_id": "goblin_d",
+        "accepted_flag": "task.day1.group_d.active"
+      },
+      "rewards": {
+        "money": 3,
+        "text": "营业收入 3G"
+      }
+    },
+    {
+      "id": "day1.order_group_e",
+      "type": "main",
+      "title": "冰吸薄荷拿铁 → 哥布林戊",
+      "description": "查看订单板接单，在制作台制作后交给指定顾客。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day1.group_open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day1.group_open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day1.group_e_settled"
+      },
+      "objectives": [
+        {
+          "id": "view",
+          "text": "查看订单并接单",
+          "complete_when": {
+            "type": "flag",
+            "key": "task.day1.group_e.active"
+          }
+        },
+        {
+          "id": "deliver",
+          "text": "交付并收款",
+          "complete_when": {
+            "type": "flag",
+            "key": "day1.group_e_settled"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day1_group_e",
+        "product_id": "iced_mint_latte",
+        "target_object_id": "goblin_e",
+        "accepted_flag": "task.day1.group_e.active"
       },
       "rewards": {
         "money": 3,

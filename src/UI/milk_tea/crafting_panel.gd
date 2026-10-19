@@ -210,10 +210,10 @@ func selection_rows() -> int:
 
 func grab_default_focus() -> void:
 	if is_inside_tree():
-		_list.grab_focus()
+		_recipe_list.grab_focus()
 
 func get_default_focus() -> Control:
-	return _list
+	return _recipe_list
 
 func uses_native_gui_input() -> bool:
 	var focus := get_viewport().gui_get_focus_owner()
@@ -367,7 +367,7 @@ func _refresh_preview() -> void:
 			_preview.text = "→ %s ×%d%s" % [preview.product_name, int(_quantity.value), "（计入当前订单）" if preview.advances_order else ""]
 			_preview.theme_type_variation = &"Success"
 		"empty":
-			_preview.text = "点击上方配方自动填料，或从左侧选择原料"
+			_preview.text = "选择配方和杯数，即可制作入库"
 			_preview.theme_type_variation = &""
 		_:
 			_preview.text = str(preview.message)

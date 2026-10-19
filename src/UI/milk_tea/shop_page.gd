@@ -6,6 +6,7 @@ extends VBoxContainer
 signal craft_requested(materials: Array[String], quantity: int)
 signal accept_requested(order_id: String)
 signal track_requested(order_id: String)
+signal deliver_requested(order_id: String)
 signal formula_requested(materials: Array[String], iced: bool)
 signal confirm_formula_requested(materials: Array[String])
 signal return_requested
@@ -34,6 +35,8 @@ func _ready() -> void:
 	move_child(_craft_modes, 0)
 	_board.accept_requested.connect(func(id: String) -> void: accept_requested.emit(id))
 	_board.track_requested.connect(func(id: String) -> void: track_requested.emit(id))
+	_board.deliver_requested.connect(deliver_requested.emit)
+	_order_crafting.deliver_requested.connect(deliver_requested.emit)
 	_order_crafting.track_requested.connect(func(id: String) -> void: track_requested.emit(id))
 	_order_crafting.return_requested.connect(return_requested.emit)
 	_order_crafting.craft_requested.connect(func(materials: Array[String], quantity: int) -> void: craft_requested.emit(materials, quantity))
@@ -167,10 +170,9 @@ func configure_production(production: TeaProduction) -> void:
 		_making_tabs.tabs_visible = false
 		_making_tabs.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		_body.add_child(_making_tabs)
-		var teaching_scroll := ScrollContainer.new()
+		var teaching_scroll := VBoxContainer.new()
 		teaching_scroll.name = "Teaching"
-		teaching_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-		teaching_scroll.follow_focus = true
+		teaching_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		_making_tabs.add_child(teaching_scroll)
 		_crafting_panel = preload("res://src/UI/milk_tea/crafting_panel.tscn").instantiate()
 		_crafting_panel.name = "CraftingPanel"

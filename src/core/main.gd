@@ -857,6 +857,12 @@ func _create_shop_business(ui: ShopUI) -> void:
 	ui.configure_production(_tea_production)
 	ui.configure_orders(_order_board)
 	ui.track_requested.connect(_track_order)
+	ui.deliver_requested.connect(func(id: String) -> void:
+		var entry := _order_board.get_entry(id)
+		if entry.get("status") != "active" or not entry.get("ready", false):
+			return
+		var result := _task_delivery.try_submit(id, entry.target_id)
+		ui.show_feedback(result.message, result.ok))
 	ui.accept_requested.connect(func(id: String) -> void:
 		var accepted := _task_delivery.accept_order(id)
 		if accepted == OK:
@@ -1004,6 +1010,12 @@ func _route_story_interaction(id: StringName) -> Error:
 			_shop_ui.show_interaction_result(result.message)
 		return OK if result.ok else ERR_UNAVAILABLE
 	if _npc_points.has(id) and is_instance_valid(_task_delivery):
+		var has_order := false
+		for entry: Dictionary in _order_board.get_entries():
+			has_order = has_order or (entry.status == "active" and entry.target_id == String(id))
+		if not has_order:
+			_shop_ui.show_feedback("对方正忙着自己的事。")
+			return OK
 		var tracked := _order_board.get_tracked_entry()
 		var delivery_result := _task_delivery.deliver_to(String(id), tracked.get("order_id", ""))
 		_shop_ui.show_feedback(delivery_result.message, delivery_result.ok)
@@ -1018,6 +1030,9 @@ func _create_world_controller() -> void:
 		if entity is SettlementCharacter:
 			actors.append(entity)
 	_world_controller.configure(get_node("/root/GameState"), get_active_level(), actors, _npc_points)
+	_world_controller.set_player(_shop_player)
+	_world_controller.boundary_reached.connect(func(message: String) -> void:
+		_shop_ui.show_feedback(message, false))
 	_shop_ui.closed.connect(_complete_story_document)
 	# Only a successfully instantiated destination can publish an arrival fact.
 	if _shop_level != null and _arrival_entrance == &"street_door" and _arrival_records_travel:

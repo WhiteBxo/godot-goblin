@@ -54,6 +54,9 @@ script = ExtResource("map")
 chapter_host = &"settlement"
 
 exterior_location = "settlement.shop"
+first_visit_bounds = Rect2(336, 2184, 1440, 576)
+market_observation_area = Rect2(1200, 2304, 264, 192)
+first_visit_blocked_message = "主角·内心：黑灯瞎火的、谁知道里面有什么？不去。"
 
 [node name="Entrances" type="Node2D" parent="."]
 
@@ -132,7 +135,7 @@ destination_scene = "res://src/core/tavern.tscn"
 destination_entrance = &"exterior_door"
 
 allowed_stages = Array[String](["day2", "day3"])
-unavailable_message = "酒馆尚未开放。先完成当前委托，第二天夜晚再来找裂牙。"
+unavailable_message = "目前暂未开放该区域。"
 
 [node name="GuardReturn" parent="Exits" instance=ExtResource("point")]
 visible = false
@@ -167,7 +170,7 @@ destination_scene = "res://src/core/casino.tscn"
 destination_entrance = &"exterior_door"
 
 allowed_stages = Array[String](["day2.s04", "day2.s05"])
-unavailable_message = "先去居民区右下方的酒馆，听取裂牙的委托，再来赌场。"
+unavailable_message = "目前暂未开放该区域。"
 
 [node name="ElderDoor" parent="Exits" instance=ExtResource("point")]
 
@@ -255,7 +258,7 @@ position = Vector2(1320, 2376)
 script = ExtResource("story")
 
 kind = 1
-show_world_marker = true
+show_world_marker = false
 
 interaction_id = &"day1_s03_yard"
 
@@ -276,7 +279,7 @@ position = Vector2(1176, 2280)
 script = ExtResource("story")
 
 kind = 1
-show_world_marker = true
+show_world_marker = false
 
 interaction_id = &"day1_s03_street"
 
@@ -297,7 +300,7 @@ position = Vector2(1272, 2184)
 script = ExtResource("story")
 
 kind = 1
-show_world_marker = true
+show_world_marker = false
 
 interaction_id = &"day1_s03_path"
 
@@ -546,31 +549,43 @@ radius = 32.0
 
 [node name="ShopSign" parent="Wayfinding" instance=ExtResource("sign")]
 position = Vector2(1608, 2496)
+interactive = true
+directions = "↑ 北：集市、公共街道\n↓ 南：奶茶店门口\n← 西：集市摊位\n→ 东：洞窟石壁"
 [node name="Text" parent="Wayfinding/ShopSign/Panel"]
 text = "奶茶店"
 
 [node name="NorthSign" parent="Wayfinding" instance=ExtResource("sign")]
 position = Vector2(1176, 2160)
+interactive = true
+directions = "↑ 北：公共火塘、长老居所\n↓ 南：集市\n← 西：酒馆、赌场\n→ 东：奶茶店"
 [node name="Text" parent="Wayfinding/NorthSign/Panel"]
 text = "↑ 北侧守卫"
 
 [node name="WestSign" parent="Wayfinding" instance=ExtResource("sign")]
 position = Vector2(1104, 2214)
+interactive = true
+directions = "↑ 北：公共火塘、长老居所\n↓ 南：集市\n← 西：酒馆、赌场\n→ 东：奶茶店"
 [node name="Text" parent="Wayfinding/WestSign/Panel"]
 text = "← 酒馆 · 赌场"
 
 [node name="JunctionShopSign" parent="Wayfinding" instance=ExtResource("sign")]
 position = Vector2(1248, 2214)
+interactive = true
+directions = "↑ 北：公共火塘、长老居所\n↓ 南：集市\n← 西：酒馆、赌场\n→ 东：奶茶店"
 [node name="Text" parent="Wayfinding/JunctionShopSign/Panel"]
 text = "奶茶店 ↘"
 
 [node name="ObservationSign" parent="Wayfinding" instance=ExtResource("sign")]
 position = Vector2(1032, 552)
+interactive = true
+directions = "↑ 北：祭坛\n↓ 南：公共街道、集市\n← 西：洞窟石壁\n→ 东：长老居所"
 [node name="Text" parent="Wayfinding/ObservationSign/Panel"]
 text = "观察位 ↘"
 
 [node name="EvacuationSign" parent="Wayfinding" instance=ExtResource("sign")]
 position = Vector2(1032, 624)
+interactive = true
+directions = "↑ 北：祭坛\n↓ 南：公共街道、集市\n← 西：洞窟石壁\n→ 东：长老居所"
 [node name="Text" parent="Wayfinding/EvacuationSign/Panel"]
 text = "撤离点 ↓"
 

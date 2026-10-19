@@ -3,6 +3,7 @@ extends VBoxContainer
 
 signal accept_requested(order_id: String)
 signal track_requested(order_id: String)
+signal deliver_requested(order_id: String)
 
 const FILTERS: Array[String] = ["active", "available", "completed"]
 const TITLES: Array[String] = ["进行中", "可接取", "已结束"]
@@ -107,8 +108,8 @@ func _refresh_detail() -> void:
 	elif entry.get("status") == "active":
 		var tracked := _model.get_tracked_entry()
 		var current: bool = tracked.get("order_id") == _selected
-		action = "正在追踪" if current else "追踪此单"
-		enabled = not current
+		action = "立即交付" if entry.get("ready", false) else ("正在追踪" if current else "追踪此单")
+		enabled = entry.get("ready", false) or not current
 	_ticket.present(entry, action, enabled)
 
 func _primary() -> void:
@@ -120,7 +121,10 @@ func _primary() -> void:
 		# stays on 可接取 instead of pretending the order moved.
 		refresh()
 	elif entry.get("status") == "active":
-		track_requested.emit(_selected)
+		if entry.get("ready", false):
+			deliver_requested.emit(_selected)
+		else:
+			track_requested.emit(_selected)
 
 func select_order(order_id: String) -> bool:
 	var entry := _model.get_entry(order_id)

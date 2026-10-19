@@ -1,6 +1,6 @@
 extends "res://tests/verify_two_day_flow.gd"
 ## Reproduces the player's counter and exterior interactions, including walking
-## between investigation points. Never calls resolve() to advance exploration.
+## through the market. Never calls resolve() to advance exploration.
 
 func _run() -> void:
 	Engine.time_scale = 4.0
@@ -45,7 +45,7 @@ func _run() -> void:
 	await wait_event("day1.first_goblin")
 	await make_order("day1_goblin", "goblin_customer")
 	await wait_event("day1.group_arrival")
-	for id: String in ["a", "b", "c"]:
+	for id: String in ["a", "b", "c", "d", "e"]:
 		await make_order("day1_group_" + id, "goblin_" + id)
 	await wait_event("day1.ending")
 	await wait_event("day1.s03.coin_inspect")
@@ -70,23 +70,15 @@ func _run() -> void:
 	var task_hud := game.find_children("*", "TaskHUD", true, false)[0] as TaskHUD
 	check(task_hud.is_visible_in_tree(), "Exterior has a visible objective card")
 	await picture("exterior_objective")
-	# Discover the far clue first: soft directions must not impose a hidden order.
-	for id: String in ["path", "yard", "street"]:
-		var point: StoryInteractionPoint = map.get_node("Interactions/day1_s03_" + id)
-		check(point.is_world_marker_visible(), "Unresolved investigation has a world marker: " + id)
-		if not await walk_to(map, point.global_position):
-			finish()
-			return
-		await tap(&"interact")
-		check(game.get_shop_ui().is_open(), "Walking and E open the real investigation: " + id)
-		check(not point.is_resolved(), "Reading alone does not yet commit investigation: " + id)
-		await picture("investigate_" + id)
-		await tap(&"ui_cancel")
-		check(point.is_resolved() and not point.is_world_marker_visible(), "Closing commits investigation and clears its marker: " + id)
-	await wait_event("day1.s03.back_to_door")
-	check(game.get_task_journal().get_current_main_task().current_objective.id == "return", "All three clues clearly direct the player back to the shop")
+	check(map.market_only, "First outing keeps exploration within the market")
+	if not await walk_to(map, Vector2(1320, 2424)):
+		finish()
+		return
+	check(state.get_flag("day1.s03.exploration_completed"), "Real walking observes market without E or NPC tasks")
+	check(game.get_task_journal().get_current_main_task().current_objective.id == "return", "Walking through market directs the player back to the shop")
 	await picture("return_objective")
 	if await walk_to(map, map.get_scene_entrance(&"shop_door").global_position):
+		await wait_event("day1.s03.back_to_door")
 		await tap(&"interact")
 		await await_travel()
 		check(state.get_flag("day1.s03.returned_shop"), "Walking home and E finish exploration through real travel")
@@ -156,6 +148,8 @@ func walk_to(map: RpgChapterMap, destination: Vector2) -> bool:
 		var target := map.cell_to_world(cell)
 		var deadline := Time.get_ticks_msec() + 2500
 		while game.get_player().global_position.distance_to(target) > 5 and Time.get_ticks_msec() < deadline:
+			if game.get_dialogue_manager().is_active():
+				game.get_dialogue_manager().advance()
 			for action: StringName in [&"move_left", &"move_right", &"move_up", &"move_down"]:
 				Input.action_release(action)
 			var offset := target - game.get_player().global_position

@@ -68,6 +68,18 @@ actor_id = &"goblin_c"
 display_name = "哥布林丙"
 
 
+[node name="GoblinD" parent="World/EntityRoot" instance=ExtResource("npc_common")]
+visible = false
+collision_layer = 0
+actor_id = &"goblin_d"
+display_name = "哥布林丁"
+
+[node name="GoblinE" parent="World/EntityRoot" instance=ExtResource("npc_common")]
+visible = false
+collision_layer = 0
+actor_id = &"goblin_e"
+display_name = "哥布林戊"
+
 [node name="Day2Festival0" parent="World/EntityRoot" instance=ExtResource("npc_common")]
 visible = false
 collision_layer = 0

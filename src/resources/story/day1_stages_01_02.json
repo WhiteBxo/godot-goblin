@@ -220,6 +220,14 @@
         },
         {
           "command": "actor_show",
+          "actor": "goblin_e"
+        },
+        {
+          "command": "actor_show",
+          "actor": "goblin_d"
+        },
+        {
+          "command": "actor_show",
           "actor": "goblin_a"
         },
         {
@@ -304,6 +312,40 @@
           "wait": true
         },
         {
+          "command": "actor_move",
+          "actor": "goblin_d",
+          "target": "day1_aisle",
+          "speed": 240.0
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_d",
+          "target": "day1_group_d",
+          "speed": 240.0
+        },
+        {
+          "command": "actor_face",
+          "actor": "goblin_d",
+          "direction": "up"
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_e",
+          "target": "day1_aisle",
+          "speed": 240.0
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_e",
+          "target": "day1_group_e",
+          "speed": 240.0
+        },
+        {
+          "command": "actor_face",
+          "actor": "goblin_e",
+          "direction": "up"
+        },
+        {
           "command": "dialogue",
           "id": "day1.goblin_group_customers"
         },
@@ -329,6 +371,10 @@
         {
           "command": "set_flag",
           "key": "day1.chronicle_unlocked"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.new_customer_orders"
         },
         {
           "command": "set_flag",
@@ -424,6 +470,38 @@
           "command": "camera_focus",
           "actor": "player",
           "duration": 0.8
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_d",
+          "target": "day1_aisle",
+          "speed": 240.0
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_d",
+          "target": "day1_door",
+          "speed": 240.0
+        },
+        {
+          "command": "actor_hide",
+          "actor": "goblin_d"
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_e",
+          "target": "day1_aisle",
+          "speed": 240.0
+        },
+        {
+          "command": "actor_move",
+          "actor": "goblin_e",
+          "target": "day1_door",
+          "speed": 240.0
+        },
+        {
+          "command": "actor_hide",
+          "actor": "goblin_e"
         },
         {
           "command": "dialogue",

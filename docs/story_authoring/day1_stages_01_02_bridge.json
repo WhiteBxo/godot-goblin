@@ -100,7 +100,7 @@
       "mode": "自动演出",
       "event": "day1.group_arrival",
       "start": 5,
-      "count": 17,
+      "count": 25,
       "dialogues": [
         "day1.goblin_group_customers"
       ]
@@ -109,10 +109,11 @@
       "id": "chronicle_unlocked",
       "mode": "自动演出",
       "event": "day1.group_arrival",
-      "start": 22,
-      "count": 8,
+      "start": 30,
+      "count": 9,
       "dialogues": [
-        "day1.chronicle_unlocked"
+        "day1.chronicle_unlocked",
+        "day1.new_customer_orders"
       ]
     },
     {
@@ -135,7 +136,7 @@
       "mode": "自动演出",
       "event": "day1.ending",
       "start": 0,
-      "count": 16,
+      "count": 22,
       "dialogues": [
         "day1.coins_raise_suspicion"
       ]
@@ -150,7 +151,9 @@
     "goblin_customer": "res://src/gameplay/characters/common_goblin.tscn",
     "goblin_a": "res://src/gameplay/characters/common_goblin.tscn",
     "goblin_b": "res://src/gameplay/characters/common_goblin.tscn",
-    "goblin_c": "res://src/gameplay/characters/common_goblin.tscn"
+    "goblin_c": "res://src/gameplay/characters/common_goblin.tscn",
+    "goblin_d": "res://src/gameplay/characters/common_goblin.tscn",
+    "goblin_e": "res://src/gameplay/characters/common_goblin.tscn"
   },
   "markers": {
     "level": "res://src/levels/milkTea/milk_tea_shop.tscn",
@@ -162,7 +165,9 @@
       "day1_counter",
       "day1_group_a",
       "day1_group_b",
-      "day1_group_c"
+      "day1_group_c",
+      "day1_group_d",
+      "day1_group_e"
     ]
   },
   "audio": {
@@ -182,5 +187,5 @@
     "fallback": "Unprovided expressions retain speaker default; unconfirmed fat-goblin portraits are not bound."
   },
   "authoring_project": "res://docs/story_authoring/day1_stages_01_02_project.json",
-  "authoring_sha256": "dd4704e350d2ba07629cae93f1c2671bf48c96c954da71f55134364c84485dfd"
+  "authoring_sha256": "38d2b9be893cb63a483a444212680eb42f87cdf9ad2d6f7b803b925e40988a02"
 }

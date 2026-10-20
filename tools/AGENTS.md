@@ -4,6 +4,7 @@
 
 - 工具按 `art/`、`audio/`、`characters/`、`milk_tea/`、`map/`、`story/` 等现有功能归类，不为一次任务整理无关工具或移动旧脚本。
 - UI 主题生成放 `ui/`，以 `src/resources/ui/ui_tokens.gd` 为唯一数值输入，输出 `game_theme.tres`；生成结果随仓库提交，不把编辑器缓存当作源文件。
+- 导出后的打包与包内抽检放 `build/`：`pck_preflight.py` 解 pck 目录核对关键资源与排除规则，`package_demo.py` 产出对外分发的 zip 与 sha256。产物一律写 `dist/`（已 gitignore），只提交脚本。
 - 明确输入、输出、单位与工作目录，记录可复现命令；生成结果写到任务对应目录，源文件与派生文件分开，不覆盖用户原图或手工布局。
 - 地图 JSON 导入必须显式指定输出并核对影响，通常先生成新场景检查；不能把离线导入自动挂到游戏启动或用旧 JSON 重建保存的 TileMap。相关规则见 [关卡规范](../src/levels/AGENTS.md)。
 - 图片 / 音频处理读 [素材规范](../assets/AGENTS.md)，地图处理加读 [地图素材规范](../assets/map/AGENTS.md)。沿用现有处理链，不额外生成无关变体或提交缓存。

@@ -21,6 +21,10 @@
 
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_casino_poet.tscn" id="poet"]
 
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_common_goblin.tscn" id="goblin"]
+
+[ext_resource type="Script" path="res://src/gameplay/characters/ambient_wander.gd" id="wander"]
+
 [node name="RpgMakerMap005" instance=ExtResource("base")]
 
 script = ExtResource("map")
@@ -120,3 +124,104 @@ position = Vector2(360, 552)
 actor_id = &"casino_poet"
 display_name = "哥布林诗人"
 active_phase = "always"
+
+[node name="CrowdWestNear" parent="Characters" instance=ExtResource("goblin")]
+position = Vector2(552, 792)
+actor_id = &"casino_crowd_w1"
+display_name = "围桌的哥布林"
+active_phase = "always"
+gives_interaction_point = false
+appearance = 1
+initial_facing = 2
+
+[node name="CrowdWestFar" parent="Characters" instance=ExtResource("goblin")]
+position = Vector2(504, 792)
+actor_id = &"casino_crowd_w2"
+display_name = "围桌的哥布林"
+active_phase = "always"
+gives_interaction_point = false
+appearance = 2
+initial_facing = 2
+
+[node name="Wander" type="Node" parent="Characters/CrowdWestFar"]
+script = ExtResource("wander")
+radius = 20.0
+speed = 26.0
+
+[node name="CrowdNorthLeft" parent="Characters" instance=ExtResource("goblin")]
+position = Vector2(648, 648)
+actor_id = &"casino_crowd_n1"
+display_name = "围桌的哥布林"
+active_phase = "always"
+gives_interaction_point = false
+appearance = 1
+initial_facing = 0
+
+[node name="CrowdNorthRight" parent="Characters" instance=ExtResource("goblin")]
+position = Vector2(744, 648)
+actor_id = &"casino_crowd_n2"
+display_name = "围桌的哥布林"
+active_phase = "always"
+gives_interaction_point = false
+appearance = 2
+initial_facing = 0
+
+[node name="Wander" type="Node" parent="Characters/CrowdNorthRight"]
+script = ExtResource("wander")
+radius = 22.0
+speed = 24.0
+
+[node name="CrowdEastNear" parent="Characters" instance=ExtResource("goblin")]
+position = Vector2(744, 792)
+actor_id = &"casino_crowd_e1"
+display_name = "围桌的哥布林"
+active_phase = "always"
+gives_interaction_point = false
+appearance = 1
+initial_facing = 1
+
+[node name="CrowdEastFar" parent="Characters" instance=ExtResource("goblin")]
+position = Vector2(792, 792)
+actor_id = &"casino_crowd_e2"
+display_name = "围桌的哥布林"
+active_phase = "always"
+gives_interaction_point = false
+appearance = 2
+initial_facing = 1
+
+[node name="CrowdSouth" parent="Characters" instance=ExtResource("goblin")]
+position = Vector2(696, 840)
+actor_id = &"casino_crowd_s1"
+display_name = "围桌的哥布林"
+active_phase = "always"
+gives_interaction_point = false
+appearance = 1
+initial_facing = 3
+
+[node name="CrowdOuterWest" parent="Characters" instance=ExtResource("goblin")]
+position = Vector2(456, 792)
+actor_id = &"casino_crowd_o1"
+display_name = "赌客"
+active_phase = "always"
+gives_interaction_point = false
+appearance = 1
+initial_facing = 2
+
+[node name="Wander" type="Node" parent="Characters/CrowdOuterWest"]
+script = ExtResource("wander")
+radius = 24.0
+speed = 28.0
+
+[node name="CrowdOuterEast" parent="Characters" instance=ExtResource("goblin")]
+position = Vector2(840, 792)
+actor_id = &"casino_crowd_o2"
+display_name = "赌客"
+active_phase = "always"
+gives_interaction_point = false
+appearance = 2
+initial_facing = 1
+
+[node name="Wander" type="Node" parent="Characters/CrowdOuterEast"]
+script = ExtResource("wander")
+radius = 24.0
+speed = 28.0

@@ -194,6 +194,10 @@ func _show_task(task: Dictionary) -> void:
 		if objective.target != null:
 			line += "  %s / %s" % [_number(objective.progress), _number(objective.target)]
 		lines.append(line)
+		# 任务指引是“怎么操作”，任务项目是“要做什么”；两者分开写，目标行不混入按键提示。
+		var hint := String(objective.get("hint", ""))
+		if not hint.is_empty():
+			lines.append("　指引：" + hint)
 	if task.current_objective.is_empty():
 		lines.append("目标已达成，等待后续剧情。")
 	if not task.delivery.is_empty():

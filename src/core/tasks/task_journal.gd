@@ -103,6 +103,7 @@ func _project(task: Dictionary) -> Dictionary:
 	for definition: Dictionary in task.objectives:
 		var visible_info := revealed and _revealed(definition)
 		var objective := {"id": definition.id, "text": definition.text if visible_info else "???",
+			"hint": definition.get("hint", "") if visible_info else "",
 			"completed": _matches(definition.complete_when), "required": definition.get("required", true),
 			"revealed": visible_info, "location_id": definition.get("location_id", "") if visible_info else "",
 			"progress": null, "target": null}

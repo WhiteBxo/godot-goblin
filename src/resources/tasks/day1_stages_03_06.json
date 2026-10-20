@@ -129,7 +129,7 @@
       "id": "day1.s05.infiltration",
       "type": "main",
       "title": "夜访长老居所",
-      "description": "先与西侧醉卫交涉，再在宅邸双卫之间支付 10G；进屋取得格里芬之血，顺便逛逛书房，然后直接返回奶茶店。",
+      "description": "先与西侧醉卫交涉，再在宅邸双卫之间支付 10G；进屋取得格里芬之血，顺便探索一下，然后直接返回奶茶店。",
       "reveal_when": {
         "type": "flag",
         "key": "day1.s04.commission_accepted"
@@ -173,7 +173,7 @@
         },
         {
           "id": "blood",
-          "text": "取得侧室小桌上的格里芬之血",
+          "text": "取得格里芬之血",
           "location_id": "settlement.elder",
           "complete_when": {
             "type": "flag",

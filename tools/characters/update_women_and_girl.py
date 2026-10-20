@@ -1,7 +1,10 @@
-"""Update three NPC appearances from retained PNGs or the supplied ZIP directory.
+"""Update the market mother and village girl from retained PNGs or the supplied ZIP directory.
 
 First import: --source-dir <directory containing 妇女(1).zip and 女孩(3).zip>.
 Subsequent runs need only Python + Pillow and the versioned source PNGs.
+祭坛同伴（prayer_woman）不在本工具范围内：2026-10-20 晚按反馈回到 祈祷者/女 的立绘与
+像素小人，统一由 import_supplement_npcs.py --from-retained --only prayer_woman 重建；
+妇女2 的立绘与待机仍保存在其 source/update_2026_10_20/，只作来源记录。
 """
 from __future__ import annotations
 
@@ -23,10 +26,6 @@ DEFINITIONS = {
     "market_mother": ("妇女(1).zip", {
         "portrait": "妇女/妇女1.png", "idle": "妇女/妇女1待机.png",
         "walk": "妇女/妇女1走路.png",
-    }),
-    "prayer_woman": ("妇女(1).zip", {
-        "portrait": "妇女/妇女2.png", "walk_duplicate": "妇女/妇女2走路.png",
-        "wave": "妇女/妇女2待机1.png", "idle": "妇女/妇女2待机2.png",
     }),
     "goblin_girl": ("女孩(3).zip", {
         "portrait": "女孩/女孩.png", "walk": "女孩/走路.png",
@@ -116,19 +115,6 @@ def main(source_dir: Path | None) -> None:
                 animations["idle_" + direction] = {**animations["run_" + direction], "first_only": True}
             side_faces_left = True
             note = "Front/back idle use the first matching walk pose; side source faces left."
-        elif slug == "prayer_woman":
-            animation("idle_down", "wave", list(range(8)))
-            animation("idle_right", "idle", list(range(8)))  # Source faces left.
-            animations["idle_up"] = animations["idle_down"].copy()
-            for direction in ("down", "up", "right"):
-                animations["run_" + direction] = animations["idle_" + direction].copy()
-            side_faces_left = True
-            mother_walk = ROOT / "assets/characters/npc/market_mother/source" / REVISION / "walk.png"
-            if raw["walk_duplicate"] != mother_walk.read_bytes():
-                raise ValueError("Reinspect woman 2 walking sheet: expected the supplied duplicate")
-            note = ("Portrait and idle artwork both use woman 2 (妇女/妇女2.png). "
-                    "Woman 2 walk is byte-identical to woman 1; retain but never display it. "
-                    "Movement uses own idle; back view unavailable.")
         else:
             for kind, source in (("idle", "idle"), ("run", "walk")):
                 animation(kind + "_up", source, [0, 1, 4])

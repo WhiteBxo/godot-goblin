@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c3chkel28sqhd"
-path="res://.godot/imported/run_down.png-d28e5f0e314ca740dbb6cdaf9cfe0ed1.ctex"
+uid="uid://rplclhtik40o"
+path="res://.godot/imported/unused_front_idle.png-dee4c3fa9ff4f396a5f1bc5353dd77e1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/npc/prayer_woman/run_down.png"
-dest_files=["res://.godot/imported/run_down.png-d28e5f0e314ca740dbb6cdaf9cfe0ed1.ctex"]
+source_file="res://assets/characters/npc/prayer_woman/source/unused_front_idle.png"
+dest_files=["res://.godot/imported/unused_front_idle.png-dee4c3fa9ff4f396a5f1bc5353dd77e1.ctex"]
 
 [params]
 

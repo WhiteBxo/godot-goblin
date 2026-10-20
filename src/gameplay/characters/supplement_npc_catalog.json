@@ -293,619 +293,139 @@
     "id": "prayer_woman",
     "display_name": "同伴",
     "role": "祭坛前与祈祷者交谈的同伴。",
-    "active_archive": "妇女(1).zip",
-    "side_faces_left": true,
+    "active_archive": "祈祷者(1).zip",
+    "side_faces_left": false,
     "animations": {
       "idle_down": {
         "source": "idle_down",
-        "source_entry": "妇女/妇女2待机1.png",
         "fps": 6,
         "first_only": false,
-        "frame_count": 8,
+        "frame_count": 16,
+        "source_frame_size": 64,
         "transform": {
-          "grid": [
-            4,
-            2
-          ],
-          "source_indices": [
-            0,
+          "crop": [
+            9,
             1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7
+            55,
+            62
           ],
-          "mirror_indices": [],
-          "source_boxes": [
-            [
-              11,
-              4,
-              53,
-              60
-            ],
-            [
-              16,
-              6,
-              61,
-              60
-            ],
-            [
-              21,
-              7,
-              68,
-              60
-            ],
-            [
-              26,
-              10,
-              76,
-              60
-            ],
-            [
-              7,
-              12,
-              59,
-              61
-            ],
-            [
-              14,
-              17,
-              65,
-              67
-            ],
-            [
-              19,
-              15,
-              66,
-              67
-            ],
-            [
-              29,
-              15,
-              74,
-              69
-            ]
+          "scale": 0.9508196721311475
+        }
+      },
+      "idle_up": {
+        "source": "idle_up",
+        "fps": 6,
+        "first_only": false,
+        "frame_count": 16,
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            37,
+            29,
+            91,
+            96
           ],
-          "alignment": "cell artwork centered, feet at y=62",
-          "scale": 1.0357142857142858
+          "scale": 0.8656716417910447
         }
       },
       "idle_right": {
         "source": "idle_right",
-        "source_entry": "妇女/妇女2待机2.png",
         "fps": 6,
         "first_only": false,
-        "frame_count": 8,
+        "frame_count": 16,
+        "source_frame_size": 64,
         "transform": {
-          "grid": [
-            4,
-            2
-          ],
-          "source_indices": [
-            0,
-            1,
-            2,
+          "crop": [
+            8,
             3,
-            4,
-            5,
-            6,
-            7
+            56,
+            60
           ],
-          "mirror_indices": [],
-          "source_boxes": [
-            [
-              9,
-              7,
-              55,
-              57
-            ],
-            [
-              15,
-              8,
-              61,
-              57
-            ],
-            [
-              21,
-              10,
-              67,
-              57
-            ],
-            [
-              28,
-              11,
-              73,
-              57
-            ],
-            [
-              15,
-              13,
-              60,
-              58
-            ],
-            [
-              25,
-              15,
-              70,
-              60
-            ],
-            [
-              26,
-              18,
-              72,
-              66
-            ],
-            [
-              19,
-              12,
-              65,
-              62
-            ]
-          ],
-          "alignment": "cell artwork centered, feet at y=62",
-          "scale": 1.16
+          "scale": 1.0175438596491229
         }
       },
-      "idle_up": {
-        "source": "idle_down",
-        "source_entry": "妇女/妇女2待机1.png",
-        "fps": 6,
+      "run_up": {
+        "source": "run_up",
+        "fps": 8,
         "first_only": false,
-        "frame_count": 8,
+        "frame_count": 9,
+        "source_frame_size": 128,
         "transform": {
-          "grid": [
-            4,
-            2
+          "crop": [
+            34,
+            31,
+            95,
+            96
           ],
-          "source_indices": [
-            0,
+          "scale": 0.8923076923076924
+        }
+      },
+      "run_right": {
+        "source": "run_right",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 7,
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            7,
             1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7
+            55,
+            62
           ],
-          "mirror_indices": [],
-          "source_boxes": [
-            [
-              11,
-              4,
-              53,
-              60
-            ],
-            [
-              16,
-              6,
-              61,
-              60
-            ],
-            [
-              21,
-              7,
-              68,
-              60
-            ],
-            [
-              26,
-              10,
-              76,
-              60
-            ],
-            [
-              7,
-              12,
-              59,
-              61
-            ],
-            [
-              14,
-              17,
-              65,
-              67
-            ],
-            [
-              19,
-              15,
-              66,
-              67
-            ],
-            [
-              29,
-              15,
-              74,
-              69
-            ]
-          ],
-          "alignment": "cell artwork centered, feet at y=62",
-          "scale": 1.0357142857142858
+          "scale": 0.9508196721311475
         }
       },
       "run_down": {
         "source": "idle_down",
-        "source_entry": "妇女/妇女2待机1.png",
         "fps": 6,
         "first_only": false,
-        "frame_count": 8,
+        "frame_count": 16,
+        "source_frame_size": 64,
         "transform": {
-          "grid": [
-            4,
-            2
-          ],
-          "source_indices": [
-            0,
+          "crop": [
+            9,
             1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7
+            55,
+            62
           ],
-          "mirror_indices": [],
-          "source_boxes": [
-            [
-              11,
-              4,
-              53,
-              60
-            ],
-            [
-              16,
-              6,
-              61,
-              60
-            ],
-            [
-              21,
-              7,
-              68,
-              60
-            ],
-            [
-              26,
-              10,
-              76,
-              60
-            ],
-            [
-              7,
-              12,
-              59,
-              61
-            ],
-            [
-              14,
-              17,
-              65,
-              67
-            ],
-            [
-              19,
-              15,
-              66,
-              67
-            ],
-            [
-              29,
-              15,
-              74,
-              69
-            ]
-          ],
-          "alignment": "cell artwork centered, feet at y=62",
-          "scale": 1.0357142857142858
-        }
-      },
-      "run_up": {
-        "source": "idle_down",
-        "source_entry": "妇女/妇女2待机1.png",
-        "fps": 6,
-        "first_only": false,
-        "frame_count": 8,
-        "transform": {
-          "grid": [
-            4,
-            2
-          ],
-          "source_indices": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7
-          ],
-          "mirror_indices": [],
-          "source_boxes": [
-            [
-              11,
-              4,
-              53,
-              60
-            ],
-            [
-              16,
-              6,
-              61,
-              60
-            ],
-            [
-              21,
-              7,
-              68,
-              60
-            ],
-            [
-              26,
-              10,
-              76,
-              60
-            ],
-            [
-              7,
-              12,
-              59,
-              61
-            ],
-            [
-              14,
-              17,
-              65,
-              67
-            ],
-            [
-              19,
-              15,
-              66,
-              67
-            ],
-            [
-              29,
-              15,
-              74,
-              69
-            ]
-          ],
-          "alignment": "cell artwork centered, feet at y=62",
-          "scale": 1.0357142857142858
-        }
-      },
-      "run_right": {
-        "source": "idle_right",
-        "source_entry": "妇女/妇女2待机2.png",
-        "fps": 6,
-        "first_only": false,
-        "frame_count": 8,
-        "transform": {
-          "grid": [
-            4,
-            2
-          ],
-          "source_indices": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7
-          ],
-          "mirror_indices": [],
-          "source_boxes": [
-            [
-              9,
-              7,
-              55,
-              57
-            ],
-            [
-              15,
-              8,
-              61,
-              57
-            ],
-            [
-              21,
-              10,
-              67,
-              57
-            ],
-            [
-              28,
-              11,
-              73,
-              57
-            ],
-            [
-              15,
-              13,
-              60,
-              58
-            ],
-            [
-              25,
-              15,
-              70,
-              60
-            ],
-            [
-              26,
-              18,
-              72,
-              66
-            ],
-            [
-              19,
-              12,
-              65,
-              62
-            ]
-          ],
-          "alignment": "cell artwork centered, feet at y=62",
-          "scale": 1.16
+          "scale": 0.9508196721311475
         }
       },
       "idle_left": {
         "source": "idle_right",
-        "source_entry": "妇女/妇女2待机2.png",
         "fps": 6,
         "first_only": false,
-        "frame_count": 8,
+        "frame_count": 16,
+        "source_frame_size": 64,
         "transform": {
-          "grid": [
-            4,
-            2
-          ],
-          "source_indices": [
-            0,
-            1,
-            2,
+          "crop": [
+            8,
             3,
-            4,
-            5,
-            6,
-            7
+            56,
+            60
           ],
-          "mirror_indices": [],
-          "source_boxes": [
-            [
-              9,
-              7,
-              55,
-              57
-            ],
-            [
-              15,
-              8,
-              61,
-              57
-            ],
-            [
-              21,
-              10,
-              67,
-              57
-            ],
-            [
-              28,
-              11,
-              73,
-              57
-            ],
-            [
-              15,
-              13,
-              60,
-              58
-            ],
-            [
-              25,
-              15,
-              70,
-              60
-            ],
-            [
-              26,
-              18,
-              72,
-              66
-            ],
-            [
-              19,
-              12,
-              65,
-              62
-            ]
-          ],
-          "alignment": "cell artwork centered, feet at y=62",
-          "scale": 1.16
+          "scale": 1.0175438596491229
         }
       },
       "run_left": {
-        "source": "idle_right",
-        "source_entry": "妇女/妇女2待机2.png",
-        "fps": 6,
+        "source": "run_right",
+        "fps": 8,
         "first_only": false,
-        "frame_count": 8,
+        "frame_count": 7,
+        "source_frame_size": 64,
         "transform": {
-          "grid": [
-            4,
-            2
-          ],
-          "source_indices": [
-            0,
+          "crop": [
+            7,
             1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7
+            55,
+            62
           ],
-          "mirror_indices": [],
-          "source_boxes": [
-            [
-              9,
-              7,
-              55,
-              57
-            ],
-            [
-              15,
-              8,
-              61,
-              57
-            ],
-            [
-              21,
-              10,
-              67,
-              57
-            ],
-            [
-              28,
-              11,
-              73,
-              57
-            ],
-            [
-              15,
-              13,
-              60,
-              58
-            ],
-            [
-              25,
-              15,
-              70,
-              60
-            ],
-            [
-              26,
-              18,
-              72,
-              66
-            ],
-            [
-              19,
-              12,
-              65,
-              62
-            ]
-          ],
-          "alignment": "cell artwork centered, feet at y=62",
-          "scale": 1.16
+          "scale": 0.9508196721311475
         }
       }
     },
-    "appearance_notes": "Portrait and idle artwork both use woman 2 (妇女/妇女2.png). Woman 2 walk is byte-identical to woman 1; retain but never display it. Movement uses own idle; back view unavailable."
+    "appearance_notes": "立绘与像素小人同取 祈祷者/女（🚺、待机、待机3、待机👉、走路、走路3）。待机2 是正面变体、走路2 是另一套背向走路，只归档不显示；本包没有正面走路，down 方向沿用正面待机；侧向原稿朝右。"
   },
   {
     "id": "prayer_elder",

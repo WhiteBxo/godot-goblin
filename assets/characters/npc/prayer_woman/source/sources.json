@@ -44,13 +44,13 @@
   {
     "archive": "祈祷者(1).zip",
     "entry": "祈祷者/女/待机2.png",
-    "path": "assets/characters/npc/prayer_woman/source/idle_up.png",
+    "path": "assets/characters/npc/prayer_woman/source/unused_front_idle.png",
     "sha256": "0350e1f461a6bce8c806cc58c076991560e74df6a84d96541f4f9182ac7430df"
   },
   {
     "archive": "祈祷者(1).zip",
     "entry": "祈祷者/女/待机3.png",
-    "path": "assets/characters/npc/prayer_woman/source/run_down.png",
+    "path": "assets/characters/npc/prayer_woman/source/idle_up.png",
     "sha256": "0208d4e0e32510b807b781d311f399913e50851c29448d3f8a0542f712d24ec3"
   },
   {

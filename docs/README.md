@@ -6,7 +6,7 @@
 
 | 目录 | 内容 |
 | --- | --- |
-| `guides/` | 启动和新游戏、剧情写作、编排工作流与指令参数。 |
+| `guides/` | 启动和新游戏、剧情写作、编排工作流与指令参数、手机打包与触摸操作。 |
 | `systems/` | 状态、对话、剧情调度、角色、镜头、音频、UI 与转场。 |
 | `gameplay/` | 制作、库存、交易、任务、采集、见闻录和交互反馈。 |
 | `levels/` | 奶茶店、聚落和旧洞穴 Demo；截图随对应说明保存。 |
@@ -32,6 +32,7 @@
 | 文档 | 文件 / 说明 |
 | --- | --- |
 | [启动、整局新游戏与返回标题](guides/game_entry.md) | `game_entry.md` |
+| [安卓手机试玩与打包](guides/android_build.md) | 触摸操作、导出预设与移动端配置 |
 | [剧情编排指令速查（v1）](guides/story_authoring_commands.md) | `story_authoring_commands.md` |
 | [剧情编排 Markdown 写作规范（简版）](guides/story_authoring_fields_quick_guide.md) | `story_authoring_fields_quick_guide.md` |
 | [自然语言剧情编排工作流](guides/story_authoring_workflow.md) | `story_authoring_workflow.md` |

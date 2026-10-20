@@ -35,6 +35,8 @@ var _handbook_hud: HandbookHUD
 var _game_menu: ChapterActionsHUD
 var _task_hud: TaskHUD
 var _wallet_hud: WalletHUD
+var _touch_controls: TouchControls
+var _touch_scroll: TouchScroll
 var _payment_fx_orders := 0
 var _payment_fx_pending := false
 var _saved_status := "尚未自动保存"
@@ -233,6 +235,23 @@ func _create_ui_system() -> void:
 	button_motion.name = "UIButtonMotion"
 	$Systems.add_child(button_motion)
 	button_motion.configure([$HudLayer, $PopupLayer, $PauseLayer])
+	_create_touch_support()
+
+## Touch builds get an on-screen stick plus action pads and draggable lists.
+## Keyboard and mouse builds keep the authored HUD untouched.
+func _create_touch_support() -> void:
+	if not MobileSupport.should_show_touch_controls():
+		return
+	_touch_scroll = TouchScroll.new()
+	_touch_scroll.name = "TouchScroll"
+	$Systems.add_child(_touch_scroll)
+	_touch_scroll.configure([$HudLayer, $PopupLayer, $PauseLayer])
+	var controls: TouchControls = preload("res://src/UI/touch/touch_controls.tscn").instantiate()
+	$HudLayer.add_child(controls)
+	# The pads are scenery first: keep them under the authored HUD widgets.
+	$HudLayer.move_child(controls, 0)
+	_touch_controls = controls
+	_sync_touch_controls(_input_locked)
 
 func _return_to_title(pause: PauseMenu) -> void:
 	var error := ERR_BUSY if is_instance_valid(_scene_travel) and _scene_travel.is_busy() else GameEntry.return_to_title(get_tree())
@@ -804,6 +823,9 @@ func _create_stealth_system() -> void:
 	_stealth_service = Day1StealthService.new()
 	_stealth_service.name = "Day1StealthService"
 	$Systems.add_child(_stealth_service)
+	# The stealth chapter is the only place the throw action exists.
+	if is_instance_valid(_touch_controls):
+		_touch_controls.set_action_available(&"throw", true)
 	_stealth_service.changed.connect(_refresh_input_lock)
 	_stealth_service.guard_intercepted.connect(_on_stealth_intercepted)
 	_stealth_service.attempt_failed.connect(_on_stealth_attempt_failed)
@@ -1314,6 +1336,7 @@ func _refresh_input_lock() -> void:
 		_map_button.disabled = should_lock
 	if is_instance_valid(_handbook_hud):
 		_handbook_hud.disabled = should_lock
+	_sync_touch_controls(should_lock)
 	if should_lock == _input_locked:
 		return
 	var player := get_player() as PlayerController
@@ -1330,6 +1353,23 @@ func _refresh_input_lock() -> void:
 		if is_instance_valid(_shop_interaction):
 			_shop_interaction.set_input_enabled(_interaction_before_dialogue)
 	_input_locked = should_lock
+
+## Touch pads follow the same contract as the keyboard: a modal or a scene
+## transfer hides everything, any other lock only takes the movement away.
+## Dialogue is a modal screen but still needs the interact pad to advance.
+func _sync_touch_controls(should_lock: bool) -> void:
+	if not is_instance_valid(_touch_controls):
+		return
+	var dialogue_on_top := (is_instance_valid(_ui_manager)
+		and _ui_manager.get_top_screen_id() == ScreenIds.DIALOGUE)
+	var modal_owns_frame := (is_instance_valid(_ui_manager)
+		and _ui_manager.has_modal() and not dialogue_on_top)
+	var blocked := modal_owns_frame or (is_instance_valid(_scene_travel) and _scene_travel.is_busy())
+	_touch_controls.set_blocked(blocked)
+	_touch_controls.set_movement_available(not should_lock)
+
+func get_touch_controls() -> TouchControls:
+	return _touch_controls
 
 func get_debug_tools() -> DeveloperTools:
 	return _debug_tools
@@ -1484,6 +1524,9 @@ func _create_map_ui() -> void:
 	)
 	_map_button = preload("res://src/UI/map/map_button.tscn").instantiate()
 	$HudLayer.add_child(_map_button)
+	if MobileSupport.is_touch_ui():
+		# No M key to press: the touch HUD has no keyboard hints.
+		_map_button.text = "地图"
 	_map_button.pressed.connect(open_map)
 	get_node("/root/GameState").state_changed.connect(_refresh_map_access)
 	_refresh_map_access()

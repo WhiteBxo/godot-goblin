@@ -17,6 +17,8 @@
 [ext_resource type="Script" path="res://src/gameplay/interaction/chapter_service_point.gd" id="service"]
 [ext_resource type="Script" path="res://src/gameplay/story_interaction/signature_discovery_point.gd" id="signature"]
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_tavern_drinker.tscn" id="drinker"]
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_common_goblin.tscn" id="goblin"]
+[ext_resource type="Script" path="res://src/gameplay/characters/ambient_wander.gd" id="wander"]
 
 [sub_resource type="RectangleShape2D" id="counter_reach"]
 size = Vector2(96, 192)
@@ -104,6 +106,41 @@ actor_id = &"signature_heartbroken_drinker"
 display_name = "独自买醉的哥布林"
 story_role = "S04：怀念妻子与过去生活的男人。"
 active_phase = "always"
+
+[node name="BarRegular" parent="Characters" instance=ExtResource("goblin")]
+position = Vector2(360, 360)
+actor_id = &"tavern_regular_bar"
+display_name = "吧台边的哥布林"
+story_role = "下班后来吧台喝一杯的熟客，只做背景氛围，不参与对白。"
+active_phase = "always"
+gives_interaction_point = false
+appearance = 2
+initial_facing = 1
+
+[node name="TableRegular" parent="Characters" instance=ExtResource("goblin")]
+position = Vector2(600, 216)
+actor_id = &"tavern_regular_table"
+display_name = "靠桌的哥布林"
+story_role = "占着北侧方桌慢慢喝的客人，只做背景氛围，不参与对白。"
+active_phase = "always"
+gives_interaction_point = false
+appearance = 1
+initial_facing = 0
+
+[node name="CornerRegular" parent="Characters" instance=ExtResource("goblin")]
+position = Vector2(408, 552)
+actor_id = &"tavern_regular_corner"
+display_name = "角落里的哥布林"
+story_role = "南侧角落里晃着酒杯的客人，只做背景氛围，不参与对白。"
+active_phase = "always"
+gives_interaction_point = false
+appearance = 2
+initial_facing = 2
+
+[node name="Wander" type="Node" parent="Characters/CornerRegular"]
+script = ExtResource("wander")
+radius = 18.0
+speed = 20.0
 
 [node name="SignatureS04" parent="Interactions" instance=ExtResource("point")]
 position = Vector2(456, 432)

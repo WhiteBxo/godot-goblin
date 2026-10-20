@@ -57,6 +57,17 @@ tutorial 首单配置沿用 `shop.first_order`，完成事实为 `shop.order_001
 | `day2_special_spicy` | 歇脚的散客 | 辛辣 | 老火烧 ＋ 炽舌椒 | 23–28G |
 
 五张单在一个白天里的典型收入是 66–79G（同杯多放哥布林原料还能更高），加上试饮单约 73–88G；普通散客仍是 3G／杯。`tests/verify_day2_special_orders.gd` 覆盖上板、接单、确认报价、制作、交付与到账金额。
+
+原料来源（`uses_per_portion` 都是 5，采一次够五杯）：
+
+| 原料 | 来源 | 份数 | 刷新 |
+| --- | --- | --- | --- |
+| 苔痕青 | 聚落 `night_gather_0`（夜间） | 2 | 每日 |
+| 炽舌椒 | 聚落 `night_gather_3`（昼夜均可） | 1 | 每日 |
+| 醒神菇 | 聚落 `night_gather_5`（昼夜均可）／市场 50G 一整份 | 1 | 每日 |
+| 老火烧 | 首日 S04 胖哥布林赠 2 次用量；不足时章节菜单可补领 1 份 | 2 | 一次性 |
+
+因此这套单子不依赖随机掉落，也不需要额外的采集中间流程：首日夜路顺路就能带走苔痕青与炽舌椒，醒神菇同一个图层的野外点位随时可采。测试里先用 `publish_stage` + `request_arrival` 让顾客真的走进店里，再上板、接单、制作、交付，不需要手工摆 NPC。
 ## 执行流程
 
 1. MainGame 装配 Systems/TaskDelivery，注入原目录、Journal、GameState 和共享库存。打开订单板只查看；每单点击“接取订单”后调用 `accept_order()`，重复接取返回 `ERR_ALREADY_EXISTS`。已有 StoryDirector 路由继续优先。

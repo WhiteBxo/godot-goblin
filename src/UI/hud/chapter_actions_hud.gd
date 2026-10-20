@@ -48,8 +48,12 @@ func set_overview(title: String, objective: String, balance: String, saved: Stri
 		UIFlourish.settle(objective_label, 0.97)
 
 func show_actions(actions: Array[Dictionary], notice: String, enabled: bool) -> void:
-	_page.get_node("Scroll/Content/Notice").text = notice
-	_page.get_node("Scroll/Content/Notice").visible = not notice.is_empty()
+	var notice_label: Control = _page.get_node("Scroll/Content/Notice")
+	notice_label.text = notice
+	notice_label.visible = not notice.is_empty()
+	# The rule keeps a notice from reading as the tail of the current objective.
+	var notice_rule: Control = _page.get_node("Scroll/Content/NoticeRule")
+	notice_rule.visible = not notice.is_empty()
 	var buttons: VBoxContainer = _page.get_node("Scroll/Content/Actions")
 	for child: Node in buttons.get_children():
 		buttons.remove_child(child)

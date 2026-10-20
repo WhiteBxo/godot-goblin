@@ -586,10 +586,13 @@ func _process(_delta: float) -> void:
 		elif not _ending_shown:
 			_open_two_days_end()
 	var notice := ""
-	if _state.current_day in [2, 3]:
+	# The errand line only belongs beside the buttons that act on it: hiring a
+	# runner or buying the mushroom yourself. Shown anywhere else it reads as one
+	# more goal of whatever task is current, which is not what it is.
+	if _state.current_day in [2, 3] and _has_procurement_action(actions):
 		var status := _procurement.get_status()
 		if not status.is_empty() and status.status not in ["delivered", "expired"]:
-			notice = "胖哥布林的代购款 %dG · %s" % [int(status.escrow), {"funded": "尚未雇人", "hired": "跑腿途中", "returned": "醒神菇已带回，请交给胖哥布林", "delivered": "已向胖哥布林交付", "expired": "已超时"}.get(status.status, "")]
+			notice = "委托 · 胖哥布林的代购款 %dG · %s" % [int(status.escrow), {"funded": "尚未雇人", "hired": "跑腿途中", "returned": "醒神菇已带回，请交给胖哥布林", "delivered": "已向胖哥布林交付", "expired": "已超时"}.get(status.status, "")]
 	var gathering_notice := get_gathering_notice()
 	if not gathering_notice.is_empty():
 		notice += ("\n\n" if not notice.is_empty() else "") + gathering_notice
@@ -601,6 +604,13 @@ func _process(_delta: float) -> void:
 	if signature != _hud_signature:
 		_hud_signature = signature
 		_hud.show_actions(actions, notice, enabled)
+
+## True when this menu really offers a way to spend the errand money right now.
+func _has_procurement_action(actions: Array[Dictionary]) -> bool:
+	for action: Dictionary in actions:
+		if action.get("kind") in ["hire", "procurement_direct"]:
+			return true
+	return false
 
 ## An accepted special slip keeps its group at the counter, so the next group never
 ## walks in until it is delivered or given up. Without a word that reads as a stuck

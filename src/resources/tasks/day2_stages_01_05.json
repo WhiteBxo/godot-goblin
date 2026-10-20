@@ -618,11 +618,11 @@
       "description": "自行到市场用专款购买，或雇佣普通顾客代购醒神菇。在第三天结束前交给胖哥布林一次用量；第二天购得还可发现醒菇薄荷特调。",
       "reveal_when": {
         "type": "flag",
-        "key": "day3.procurement.returned"
+        "key": "day2.procurement.funded"
       },
       "activate_when": {
         "type": "flag",
-        "key": "day3.procurement.returned"
+        "key": "day2.procurement.funded"
       },
       "complete_when": {
         "type": "flag",

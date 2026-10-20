@@ -30,7 +30,7 @@ Loader 位于 src/core/tasks/task_catalog.gd。顶层为 version=1 和 tasks 数
 | difficulty | 可选 low / medium / high |
 | delivery | 可选，见下节 |
 | rewards | 可选；text 必填非空，reveal_when 可选；items 为物品正整数表，money 为 0～2147483647 的整数 |
-| Objective | id 为合法 identifier；text、complete_when 必填；required 默认 true，location_id / reveal_when 可选 |
+| Objective | id 为合法 identifier；text、complete_when 必填；required 默认 true，location_id / reveal_when 可选；hint 可选（任务指引：怎么操作，与 text 的任务项目分开，不写进 text） |
 
 Condition 保持三种精确形状，不支持 AND / OR / 任意表达式：
 
@@ -67,7 +67,9 @@ Journal 只展示 rewards.text 和揭示状态，不执行结算。TaskDelivery 
 
 正式新游戏从标题进入 S01–S02；订单由各阶段揭示后逐笔接取。只有打开 orders 成功时写 shop.orders_viewed，查看本身不接单。固定制作只增加成品，指定顾客交付才写任务完成和 delivery.<order_id>.completed。群单按 setup 中明确的订单集合聚合，不能用 shop.orders_completed 总量替代。
 
-Task view 包含 id/type/status/revealed/title/description/location_id/difficulty/rewards/objectives/current_objective，已揭示交付任务还带脱敏 delivery。Objective view 含 completed/required/revealed/location_id/progress/target；隐藏内容不返回真实文本、位置或计数。这是显示边界，不是资源加密。
+Task view 包含 id/type/status/revealed/title/description/location_id/difficulty/rewards/objectives/current_objective，已揭示交付任务还带脱敏 delivery。Objective view 含 completed/required/revealed/location_id/progress/target/hint；隐藏内容不返回真实文本、位置或计数。这是显示边界，不是资源加密。
+
+任务日志的详情把两者分开显示：text 是任务项目（要做什么），hint 是任务指引（按哪个键、找谁、走哪条路）。目标行只写叙事目标，按键步骤不混进 text，避免把设计者视角的操作说明当成任务内容剧透。
 
 ## 验证与试玩
 

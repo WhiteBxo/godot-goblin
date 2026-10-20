@@ -843,3 +843,51 @@ show_world_marker = true
 [node name="HarvestVisual" type="Sprite2D" parent="GatherPoints/NightGather5"]
 position = Vector2(0, -16)
 texture = ExtResource("gather_insomnia")
+
+[node name="NightGather6" parent="GatherPoints" instance=ExtResource("point")]
+position = Vector2(984, 2136)
+script = ExtResource("gather")
+interaction_id = &"night_gather_6"
+display_name = "野外采集 · 苔痕青"
+item_id = "moss_green"
+amount = 1
+refresh_mode = "daily"
+required_flag = "world.phase.night"
+success_description = "得到了从潮湿苔地采集的苔痕青。"
+show_world_marker = true
+
+[node name="HarvestVisual" type="Sprite2D" parent="GatherPoints/NightGather6"]
+position = Vector2(0, -16)
+texture = SubResource("moss_art")
+
+[node name="NightGather7" parent="GatherPoints" instance=ExtResource("point")]
+position = Vector2(984, 2088)
+script = ExtResource("gather")
+interaction_id = &"night_gather_7"
+display_name = "野外采集 · 窟窟糖芋"
+item_id = "sugar_yam"
+amount = 1
+refresh_mode = "daily"
+required_flag = "world.phase.night"
+success_description = "得到了从田里挖出的窟窟糖芋。"
+show_world_marker = true
+
+[node name="HarvestVisual" type="Sprite2D" parent="GatherPoints/NightGather7"]
+position = Vector2(0, -16)
+texture = SubResource("yam_art")
+
+[node name="NightGather8" parent="GatherPoints" instance=ExtResource("point")]
+position = Vector2(936, 1992)
+script = ExtResource("gather")
+interaction_id = &"night_gather_8"
+display_name = "野外采集 · 萤火伞"
+item_id = "firefly_cap"
+amount = 1
+refresh_mode = "daily"
+required_flag = "world.phase.night"
+success_description = "得到了从树下采摘的萤火伞。"
+show_world_marker = true
+
+[node name="HarvestVisual" type="Sprite2D" parent="GatherPoints/NightGather8"]
+position = Vector2(0, -16)
+texture = SubResource("mushroom_art")

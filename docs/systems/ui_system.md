@@ -65,7 +65,7 @@ UIManager 在 Systems 下使用 Always；World 和其他普通 Systems 保持 Pa
 godot --headless --path . --script res://tools/ui/build_theme.gd
 ```
 
-主题覆盖 Button、Label、Panel/PanelContainer、ItemList、TabContainer/TabBar、LineEdit、SpinBox、VScrollBar/HScrollBar、PopupMenu、Tooltip、CheckBox、ProgressBar、HSeparator、RichTextLabel 和容器间距。正文 12px，弹窗标题 24px，标题画面 36px，不使用 14/18。静态样式全部来自主题，场景和脚本用 `theme_type_variation`（Title/H2/Speaker/Hint/Muted/Subtitle/Value/Success/Warning/Danger/Badge/Keycap/PrimaryButton/GhostButton/ChipButton/DangerButton/IconButton/InsetPanel/HudPanel/CoinPanel/CardPanel/SunkenPanel/ShadePanel/SuccessBar）表达语义，不写 per-node 颜色或字号覆盖。
+主题覆盖 Button、Label、Panel/PanelContainer、ItemList、TabContainer/TabBar、LineEdit、SpinBox、VScrollBar/HScrollBar、PopupMenu、Tooltip、CheckBox、ProgressBar、HSeparator、RichTextLabel 和容器间距。正文 12px，弹窗标题 24px，标题画面 36px，不使用 14/18。静态样式全部来自主题，场景和脚本用 `theme_type_variation`（Title/H2/Speaker/Hint/Muted/Subtitle/Value/Success/Warning/Danger/Badge/BadgeMain/BadgeDone/BadgeMuted/Section/Keycap/PrimaryButton/GhostButton/ChipButton/DangerButton/IconButton/InsetPanel/HudPanel/CoinPanel/CardPanel/SunkenPanel/ShadePanel/SuccessBar）表达语义，不写 per-node 颜色或字号覆盖。任务行用 `TaskRowMain/Side/Done` 与各自的 `Selected` 变体区分主线、支线与已结束；订单笺状态用 `TicketStamp`（可交付）、`TicketWarning`（缺料/未解锁/待手调）与 `TicketNote`（进行中）三档墨色；`Section` 是正文级分节标题（任务目标、订单进度、当前行程、结算分节）。
 
 视觉层级按“表面”分工：普通 Panel 只留 1px 暗边和投影，用于 HUD 与对白；`InsetPanel` 是弹窗唯一的金色细边表面；`HudPanel` 用左侧 3px 铜色导轨强调当前目标；`CoinPanel` 是圆角金币药丸；`ChipButton` 用于“菜单”这类需要在小地图/场景上保持可发现的入口。正文 Label 带 1px 暗色投影，纸色订单笺的墨色文字则关闭投影。
 

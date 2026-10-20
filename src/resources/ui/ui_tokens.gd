@@ -28,6 +28,11 @@ const SHADOW := Color(0, 0, 0, 0.42)
 ## HUD panels sit on busy pixel art; the extra shade keeps text readable.
 const SHADOW_SOFT := Color(0, 0, 0, 0.28)
 const TEXT_SHADOW := Color(0, 0, 0, 0.45)
+## Effect tints: the vignette, the refused-action flash and the stamp flash kept
+## their original warm values when they moved out of per-script Color() literals.
+const VIGNETTE := Color("570a0b")
+const REFUSE_TINT := Color("ffb8a8")
+const STAMP_FLASH := Color("fff0ad")
 
 # Order slips: the paper surface owns a separate, readable ink palette.
 const PAPER := Color("ead7ad")

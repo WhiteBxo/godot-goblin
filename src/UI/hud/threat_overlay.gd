@@ -4,7 +4,7 @@ extends Control
 ## changes exposure, detection or any gameplay fact.
 
 @export_range(0.0, 1.0, 0.01) var max_vignette_alpha := 0.42
-@export var vignette_tint := Color(0.34, 0.04, 0.03)
+@export var vignette_tint := UITokens.VIGNETTE
 @export_range(0.05, 1.0, 0.01) var flash_peak := 0.45
 
 var _service: Day1StealthService
@@ -18,7 +18,7 @@ func _ready() -> void:
 	_vignette = $Vignette
 	_flash = $Flash
 	_vignette.texture = _build_vignette_texture()
-	_vignette.modulate = Color(vignette_tint, 0.0)
+	_vignette.modulate = _tinted(0.0)
 
 func configure(service: Day1StealthService) -> void:
 	_service = service
@@ -49,13 +49,19 @@ func _apply() -> void:
 	if not is_node_ready():
 		return
 	_vignette.visible = _alpha > 0.004
-	_vignette.modulate = Color(vignette_tint, _alpha)
+	_vignette.modulate = _tinted(_alpha)
+
+## The vignette texture is drawn white; the tint and the alpha ride on modulate.
+func _tinted(alpha: float) -> Color:
+	var tint := vignette_tint
+	tint.a = alpha
+	return tint
 
 func _build_vignette_texture() -> GradientTexture2D:
 	var gradient := Gradient.new()
-	gradient.set_color(0, Color(1, 1, 1, 0))
-	gradient.set_color(1, Color(1, 1, 1, 1))
-	gradient.add_point(0.58, Color(1, 1, 1, 0))
+	gradient.set_color(0, Color.TRANSPARENT)
+	gradient.set_color(1, Color.WHITE)
+	gradient.add_point(0.58, Color.TRANSPARENT)
 	var texture := GradientTexture2D.new()
 	texture.gradient = gradient
 	texture.fill = GradientTexture2D.FILL_RADIAL

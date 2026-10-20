@@ -21,7 +21,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 [node name="ObjectiveTitle" type="Label" parent="Scroll/Content"]
 layout_mode = 2
-theme_type_variation = &"H2"
+theme_type_variation = &"Section"
 autowrap_mode = 3
 [node name="Objective" type="Label" parent="Scroll/Content"]
 layout_mode = 2

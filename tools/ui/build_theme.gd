@@ -124,6 +124,8 @@ func _build_labels(theme: Theme) -> void:
 	_label_variation(theme, "Warning", T.WARNING, T.FONT_BODY)
 	_label_variation(theme, "Danger", T.DANGER, T.FONT_BODY)
 	_label_variation(theme, "UnreadDot", T.ACCENT, T.FONT_BODY)
+	# 分节标题：任务目标、订单进度、当前行程都靠这一档取色。
+	_label_variation(theme, "Section", T.ACCENT, T.FONT_BODY)
 
 	var badge := _flat(T.RAISED, T.BORDER_SOFT, 1, 3, T.SPACE_1, 1, T.SPACE_1, 1)
 	_label_variation(theme, "Badge", T.TEXT_DIM, T.FONT_BODY)
@@ -490,6 +492,7 @@ func _build_orders(theme: Theme) -> void:
 	_label_variation(theme, "TicketMuted", T.INK_MUTED, T.FONT_BODY)
 	_label_variation(theme, "TicketStamp", T.INK_SUCCESS, T.FONT_BODY)
 	_label_variation(theme, "TicketWarning", T.INK_WARNING, T.FONT_BODY)
+	_label_variation(theme, "TicketNote", T.INK_MUTED, T.FONT_BODY)
 	theme.set_type_variation("TicketSeparator", "HSeparator")
 	theme.set_stylebox("separator", "TicketSeparator", _line(T.PAPER_EDGE))
 	theme.set_type_variation("TicketButton", "Button")

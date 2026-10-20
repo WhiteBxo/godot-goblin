@@ -9,6 +9,7 @@ var _materials: HBoxContainer
 var _inventory: WarehouseInventory
 var _filter: OptionButton
 var _list: ItemList
+var _name: Label
 var _details: Label
 var _detail: Control
 var _selected_id: String = ""
@@ -45,9 +46,16 @@ func _ready() -> void:
 	var details_column := VBoxContainer.new()
 	details_column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(details_column)
-	_image = Artwork.preview()
+	# A fixed preview keeps the pixel art crisp instead of stretching it to the pane.
+	_image = Artwork.preview(88)
 	_image.name = "ItemImage"
+	_image.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	details_column.add_child(_image)
+	_name = Label.new()
+	_name.name = "ItemName"
+	_name.theme_type_variation = &"H2"
+	_name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	details_column.add_child(_name)
 	_materials = HBoxContainer.new()
 	details_column.add_child(_materials)
 	_details = Label.new()
@@ -114,6 +122,7 @@ func refresh() -> void:
 	if _list.item_count == 0:
 		_selected_id = ""
 		_image.texture = null
+		_name.text = ""
 		Artwork.show_materials(_materials, _inventory, [])
 		_details.text = "暂无已发现物品。"
 		_open_detail()
@@ -140,6 +149,7 @@ func _fill_detail() -> void:
 	if not drink.is_empty():
 		_image.texture = Artwork.DRINK_ICON
 		Artwork.show_materials(_materials, _inventory, drink.ingredients)
+		_name.text = str(drink.name)
 		_details.text = DrinkFormula.describe(drink) + "\n库存：%d 杯" % drink.quantity
 		return
 	var ingredient := _inventory.get_ingredient_view(_selected_id)
@@ -148,12 +158,14 @@ func _fill_detail() -> void:
 	if ingredient.category == "story_item":
 		# Each story item carries its own note; never borrow another item's words.
 		var note := str(ingredient.description)
-		_details.text = "%s · %d 枚\n剧情物品" % [ingredient.name, ingredient.quantity]
+		_name.text = str(ingredient.name)
+		_details.text = "剧情物品 · %d 枚" % ingredient.quantity
 		if not note.is_empty():
 			_details.text += "\n" + note
 		return
 	var category: String = {"tea": "茶底", "milk": "奶基底", "syrup": "糖浆", "topping": "小料", "product": "成品", "material": "原料"}.get(ingredient.category, ingredient.category)
-	var lines: PackedStringArray = ["%s · %d 份%s" % [ingredient.name, ingredient.quantity, " · 缺货" if ingredient.quantity == 0 else ""],
+	_name.text = str(ingredient.name)
+	var lines: PackedStringArray = ["数量：%d 份%s" % [ingredient.quantity, " · 缺货" if ingredient.quantity == 0 else ""],
 		"来源：%s · 用途：%s" % ["人类食材" if ingredient.origin == "human" else "异世界食材", category],
 		"稀有度：%s" % ingredient.rarity]
 	if int(ingredient.uses_per_portion) > 1:

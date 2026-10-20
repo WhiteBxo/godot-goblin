@@ -1398,6 +1398,9 @@ func _create_cave_debug_components() -> void:
 func get_business_hud() -> Day1BusinessHUD:
 	return _business_hud
 
+func get_wallet_hud() -> WalletHUD:
+	return _wallet_hud
+
 func get_day1_controller() -> Day1ShopController:
 	return _day1_controller
 

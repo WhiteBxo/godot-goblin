@@ -2,6 +2,9 @@ class_name ChapterGameplay
 extends Node
 ## Scene-local business actions. Authored events decide ordering and boundaries.
 
+## 结算页的分节标题；界面据此上色，文案里不再重复一份。
+const RECAP_SECTIONS := ["营业成果", "探索与发现", "未解之谜", "待续"]
+
 const ACTIONS := "res://src/resources/story/chapter_actions.json"
 ## Optional commissions served beside a group's planned order. They stay outside
 ## the business plan, so the story beat still turns on the planned drink; while one

@@ -7,8 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://dbp37k1arbhna" path="res://assets/map/rpg_maker/tileset_031_04.png" id="5_k71ps"]
 [ext_resource type="Texture2D" uid="uid://070x6ng2xgc5" path="res://assets/map/rpg_maker/tileset_031_05.png" id="6_mgkt5"]
 [ext_resource type="Texture2D" uid="uid://cyq5w2lgmh75s" path="res://assets/map/rpg_maker/tileset_031_06.png" id="7_81pt2"]
-[ext_resource type="TileSetAtlasSource" path="res://src/resources/tilesets/rpg_maker/goblin_wine_atlas.tres" id="goblin_wines"]
 [ext_resource type="TileSetAtlasSource" path="res://src/resources/tilesets/elder_room/elder_room_atlas.tres" id="elder_room"]
+[ext_resource type="TileSetAtlasSource" path="res://src/resources/tilesets/rpg_maker/goblin_wine_atlas.tres" id="goblin_wines"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_gxxi6"]
 texture = ExtResource("1_yryfp")

@@ -852,7 +852,7 @@
       "start": "line_1",
       "lines": {
         "line_1": {
-          "speaker": "男人",
+          "speaker": "买醉的哥布林",
           "text": "唉……再来一杯。",
           "next": "line_2",
           "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
@@ -868,25 +868,25 @@
           "next": "line_4"
         },
         "line_4": {
-          "speaker": "男人",
+          "speaker": "买醉的哥布林",
           "text": "……",
           "next": "line_5",
           "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
         },
         "line_5": {
-          "speaker": "男人",
+          "speaker": "买醉的哥布林",
           "text": "她不喜欢孩子。我一直想要一个孩子，你知道吗？我想过家里有个小家伙，会跑，会闹腾，会把屋子弄得乱七八糟……",
           "next": "line_6",
           "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
         },
         "line_6": {
-          "speaker": "男人",
+          "speaker": "买醉的哥布林",
           "text": "她却总说，光是照顾好我们自己就已经够累了。",
           "next": "line_7",
           "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
         },
         "line_7": {
-          "speaker": "男人",
+          "speaker": "买醉的哥布林",
           "text": "现在想想，也没什么好争的。",
           "next": "line_8",
           "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
@@ -897,25 +897,25 @@
           "next": "line_9"
         },
         "line_9": {
-          "speaker": "男人",
+          "speaker": "买醉的哥布林",
           "text": "……",
           "next": "line_10",
           "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
         },
         "line_10": {
-          "speaker": "男人",
+          "speaker": "买醉的哥布林",
           "text": "我总忘记买她交代的东西。明明出门前还记得，走到店里就忘了。",
           "next": "line_11",
           "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
         },
         "line_11": {
-          "speaker": "男人",
+          "speaker": "买醉的哥布林",
           "text": "我总觉得这算不上什么大事……可她每次都很失望。",
           "next": "line_12",
           "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
         },
         "line_12": {
-          "speaker": "男人",
+          "speaker": "买醉的哥布林",
           "text": "后来她变得越来越较真，连我周末能不能去钓鱼，我的靴子怎么放，都要管得严严实实。",
           "next": "line_13",
           "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
@@ -926,49 +926,49 @@
           "next": "line_14"
         },
         "line_14": {
-          "speaker": "男人",
+          "speaker": "买醉的哥布林",
           "text": "奇怪。",
           "next": "line_15",
           "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
         },
         "line_15": {
-          "speaker": "男人",
+          "speaker": "买醉的哥布林",
           "text": "我怎么记得这么多？",
           "next": "line_16",
           "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
         },
         "line_16": {
-          "speaker": "男人",
+          "speaker": "买醉的哥布林",
           "text": "明明都是些没什么意思的小事……房子、家务、饭菜，还有那些说过就忘的话。",
           "next": "line_17",
           "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
         },
         "line_17": {
-          "speaker": "男人",
+          "speaker": "买醉的哥布林",
           "text": "怎么会变成这样呢？",
           "next": "line_18",
           "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
         },
         "line_18": {
-          "speaker": "男人",
+          "speaker": "买醉的哥布林",
           "text": "我们以前明明……不是这样的。",
           "next": "line_19",
           "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
         },
         "line_19": {
-          "speaker": "男人",
+          "speaker": "买醉的哥布林",
           "text": "刚认识的时候，我为了送她一份礼物，能努力攒下几个月的工钱。她也会为了见我一面，在黄昏时偷偷绕过一整座村子。",
           "next": "line_20",
           "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
         },
         "line_20": {
-          "speaker": "男人",
+          "speaker": "买醉的哥布林",
           "text": "我们没有谁突然变成了坏人，但是事情就这样发生了。",
           "next": "line_21",
           "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
         },
         "line_21": {
-          "speaker": "男人",
+          "speaker": "买醉的哥布林",
           "text": "……抱歉。",
           "next": "line_22",
           "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
@@ -979,7 +979,7 @@
           "next": "line_23"
         },
         "line_23": {
-          "speaker": "男人",
+          "speaker": "买醉的哥布林",
           "text": "我今天喝多了，对你说这些乱七八糟的东西。",
           "next": "line_24",
           "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
@@ -990,13 +990,13 @@
           "next": "line_25"
         },
         "line_25": {
-          "speaker": "男人",
+          "speaker": "买醉的哥布林",
           "text": "……",
           "next": "line_26",
           "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
         },
         "line_26": {
-          "speaker": "男人",
+          "speaker": "买醉的哥布林",
           "text": "我很想念我们曾经拥有过，又无可奈何失去的一切。",
           "portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
         }

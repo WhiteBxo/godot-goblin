@@ -65,14 +65,33 @@ def validate_manifest(manifest: dict) -> list[dict]:
             raise ValueError(f"{identifier}: padding must be 0, 1, or 2 pixels.")
         if asset.get("anchor", "bottom_center") not in ("bottom_center", "center"):
             raise ValueError(f"{identifier}: anchor must be bottom_center or center.")
+        if "atlas_cell" in asset:
+            cell = asset["atlas_cell"]
+            if (not isinstance(cell, list) or len(cell) != 2
+                    or any(type(value) is not int or value < 0 for value in cell)):
+                raise ValueError(f"{identifier}: atlas_cell must contain two non-negative integers.")
     return assets
 
 
 def allocate_rectangles(assets: list[dict]) -> dict[str, tuple[int, int]]:
-    """Stable first-fit rectangles; (0, 0) is an explicit empty brush."""
+    """Reserve explicit rectangles, then first-fit others; (0, 0) stays empty."""
     occupied = {(0, 0)}
     positions = {}
     for asset in assets:
+        if "atlas_cell" not in asset:
+            continue
+        x, y = asset["atlas_cell"]
+        width, height = asset["width"] // 48, asset["height"] // 48
+        if x < 0 or y < 0 or x + width > 16 or y + height > 16:
+            raise ValueError(f"{asset['id']}: explicit atlas rectangle exceeds the 16 x 16 grid.")
+        cells = {(x + dx, y + dy) for dy in range(height) for dx in range(width)}
+        if cells.intersection(occupied):
+            raise ValueError(f"{asset['id']}: explicit atlas rectangle overlaps another tile or empty cell (0, 0).")
+        occupied.update(cells)
+        positions[asset["id"]] = (x, y)
+    for asset in assets:
+        if asset["id"] in positions:
+            continue
         width, height = asset["width"] // 48, asset["height"] // 48
         found = None
         for y in range(17 - height):
@@ -286,12 +305,14 @@ def save_previews(assets: list[dict], images: dict[str, Image.Image], entries: l
                   atlas: Image.Image, output: Path) -> None:
     output.mkdir(parents=True, exist_ok=True)
     scale, columns, gap, title_height = 2, 3, 20, 86
-    cell_width = max(asset["width"] for asset in assets) * scale + 2 * gap
+    title_font, label_font, small_font = font(24), font(17), font(14)
+    label_width = max(label_font.getlength(f"{asset['id'].split('_', 1)[0]}  {asset['name']}")
+                      for asset in assets)
+    cell_width = max(max(asset["width"] for asset in assets) * scale, int(label_width) + 1) + 2 * gap
     row_heights = [max(asset["height"] for asset in assets[start:start + columns]) * scale + 74
                    for start in range(0, len(assets), columns)]
     sheet = Image.new("RGB", (columns * cell_width, title_height + sum(row_heights)), "#20232c")
     draw = ImageDraw.Draw(sheet)
-    title_font, label_font, small_font = font(24), font(17), font(14)
     draw.text((20, 12), "长老房间素材 · 48 × 48 网格", font=title_font, fill="#f6ead8")
     draw.text((20, 48), "所有物件均为 2× 最近邻预览；透明棋盘仅用于检查，不写入素材。",
               font=label_font, fill="#c5c8d0")

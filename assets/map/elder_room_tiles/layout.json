@@ -186,103 +186,87 @@
       "id": "03_ritual_dining_table",
       "name": "长老餐桌组合",
       "status": "ready",
-      "source_image": "source/03_ritual_dining_table.png",
+      "source_image": "source/03_ritual_dining_table_v3.png",
       "atlas_cell": [
         4,
         0
       ],
       "size_in_cells": [
-        4,
-        7
+        2,
+        6
       ],
       "atlas_rect_px": [
         192,
         0,
-        192,
-        336
+        96,
+        288
       ],
       "object_placement_anchor_cell": [
         0,
-        6
+        5
       ],
       "object_texture_origin_px": [
-        -72,
-        144
+        -24,
+        120
       ],
       "object_image": "objects/03_ritual_dining_table.png",
       "processing": {
         "source_size_px": [
-          948,
-          1659
+          724,
+          2172
         ],
         "source_bbox_px": [
-          117,
-          131,
-          832,
-          1527
+          55,
+          60,
+          669,
+          2102
         ],
         "source_bbox_convention": "left, top, right-exclusive, bottom-exclusive",
-        "uniform_scale": 0.24068767908309455,
+        "uniform_scale": 0.14103819784524976,
         "resampled_size_px": [
-          172,
-          336
+          87,
+          288
         ],
         "resampling": "nearest; one aspect-preserving scale with integer size rounding",
         "placement_px": [
-          10,
+          4,
           0
         ],
         "canvas_size_px": [
-          192,
-          336
+          96,
+          288
         ],
         "padding_px": 0,
         "image_anchor": "bottom_center",
         "opaque_bbox_px": [
-          10,
+          4,
           0,
-          182,
-          336
+          91,
+          288
         ],
-        "opaque_palette_colors": 48,
-        "source_sha256": "e02cc217619c6f34ed5c9c13571c313776e6732f9ccc002a45fb9044b201d19a",
+        "opaque_palette_colors": 43,
+        "source_sha256": "e7de938245219872c6d50a7aa181993f7cc7cbc51a2714b3241432f26d613550",
         "chroma": {
           "key": "#ff00ff",
-          "keyed_pixels": 790604,
-          "fringe_pixels_recolored": 293,
-          "fringe_pixels_removed": 1709,
+          "keyed_pixels": 425395,
+          "fringe_pixels_recolored": 38,
+          "fringe_pixels_removed": 1736,
           "hard_alpha": true
         }
       },
       "tiles": [
         "tiles/03_ritual_dining_table_x0_y0.png",
         "tiles/03_ritual_dining_table_x1_y0.png",
-        "tiles/03_ritual_dining_table_x2_y0.png",
-        "tiles/03_ritual_dining_table_x3_y0.png",
         "tiles/03_ritual_dining_table_x0_y1.png",
         "tiles/03_ritual_dining_table_x1_y1.png",
-        "tiles/03_ritual_dining_table_x2_y1.png",
-        "tiles/03_ritual_dining_table_x3_y1.png",
         "tiles/03_ritual_dining_table_x0_y2.png",
         "tiles/03_ritual_dining_table_x1_y2.png",
-        "tiles/03_ritual_dining_table_x2_y2.png",
-        "tiles/03_ritual_dining_table_x3_y2.png",
         "tiles/03_ritual_dining_table_x0_y3.png",
         "tiles/03_ritual_dining_table_x1_y3.png",
-        "tiles/03_ritual_dining_table_x2_y3.png",
-        "tiles/03_ritual_dining_table_x3_y3.png",
         "tiles/03_ritual_dining_table_x0_y4.png",
         "tiles/03_ritual_dining_table_x1_y4.png",
-        "tiles/03_ritual_dining_table_x2_y4.png",
-        "tiles/03_ritual_dining_table_x3_y4.png",
         "tiles/03_ritual_dining_table_x0_y5.png",
-        "tiles/03_ritual_dining_table_x1_y5.png",
-        "tiles/03_ritual_dining_table_x2_y5.png",
-        "tiles/03_ritual_dining_table_x3_y5.png",
-        "tiles/03_ritual_dining_table_x0_y6.png",
-        "tiles/03_ritual_dining_table_x1_y6.png",
-        "tiles/03_ritual_dining_table_x2_y6.png",
-        "tiles/03_ritual_dining_table_x3_y6.png"
+        "tiles/03_ritual_dining_table_x1_y5.png"
       ]
     },
     {
@@ -453,22 +437,22 @@
         0
       ],
       "size_in_cells": [
-        2,
-        2
+        1,
+        1
       ],
       "atlas_rect_px": [
         576,
         0,
-        96,
-        96
+        48,
+        48
       ],
       "object_placement_anchor_cell": [
         0,
-        1
+        0
       ],
       "object_texture_origin_px": [
-        -24,
-        24
+        0,
+        0
       ],
       "object_image": "objects/06_wax_sealed_letter.png",
       "processing": {
@@ -483,29 +467,29 @@
           949
         ],
         "source_bbox_convention": "left, top, right-exclusive, bottom-exclusive",
-        "uniform_scale": 0.08424908424908426,
+        "uniform_scale": 0.040293040293040296,
         "resampled_size_px": [
-          92,
-          49
+          44,
+          23
         ],
         "resampling": "nearest; one aspect-preserving scale with integer size rounding",
         "placement_px": [
           2,
-          45
+          23
         ],
         "canvas_size_px": [
-          96,
-          96
+          48,
+          48
         ],
         "padding_px": 2,
         "image_anchor": "bottom_center",
         "opaque_bbox_px": [
           2,
-          45,
-          94,
-          94
+          23,
+          46,
+          46
         ],
-        "opaque_palette_colors": 47,
+        "opaque_palette_colors": 46,
         "source_sha256": "eba50a4afb468dafbed982b70dc8ec50cb06075cb8d22baa1cf241b8f600dcaf",
         "chroma": {
           "key": "#ff00ff",
@@ -516,10 +500,7 @@
         }
       },
       "tiles": [
-        "tiles/06_wax_sealed_letter_x0_y0.png",
-        "tiles/06_wax_sealed_letter_x1_y0.png",
-        "tiles/06_wax_sealed_letter_x0_y1.png",
-        "tiles/06_wax_sealed_letter_x1_y1.png"
+        "tiles/06_wax_sealed_letter_x0_y0.png"
       ]
     },
     {

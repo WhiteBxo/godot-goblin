@@ -1,1 +1,1 @@
-PASS: 18 objects; exact declared sizes; binary alpha; no saturated magenta key pixels; centered silhouettes and bottom anchors; atlas identity; 66 exact 48x48 slices reconstruct objects byte-for-byte; README links and Python syntax valid.
+PASS: table 96x288, letter 48x48; 47 exact 48x48 tiles reconstruct objects; binary alpha; all 18 atlas coordinates preserved; other 16 object PNGs, their slices/imports and layout metadata unchanged; all atlas pixels outside the two revised regions unchanged.

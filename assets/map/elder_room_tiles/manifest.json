@@ -29,7 +29,11 @@
       "source_image": "source/01_old_candlestick.png",
       "generation_size": "1024x1024",
       "padding": 2,
-      "anchor": "bottom_center"
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        1,
+        0
+      ]
     },
     {
       "id": "02_elder_bookshelf",
@@ -51,14 +55,18 @@
       "source_image": "source/02_elder_bookshelf.png",
       "generation_size": "1024x1536",
       "padding": 2,
-      "anchor": "bottom_center"
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        2,
+        0
+      ]
     },
     {
       "id": "03_ritual_dining_table",
       "name": "长老餐桌组合",
-      "width": 192,
-      "height": 336,
-      "description": "One complete vertically oriented griffin ritual dining-table ensemble. The central table body is 96 pixels wide by 336 pixels long, made from thick dark-brown old wood with worn dark-gold rim and sparse black-iron braces. A burgundy runner bears simple eagle-head and outspread-wing griffin emblems. Exactly eight matching tall-back dark wood and iron chairs are evenly arranged, four down the left long edge and four down the right long edge, facing inward with their backs toward the outside. The short north and south table ends have no chairs. The tabletop is already dressed: exactly eight small griffin candleholders, one opposite each seat, hold used dark-red candles with muted yellow/deep-red flames; add only a few dark-iron goblets, dark-gold bowls and small dark-red ritual foods. Match the overhead orthogonal RPGMaker elder-room map perspective and pixel scale.",
+      "width": 96,
+      "height": 288,
+      "description": "One complete narrow vertical griffin dining table and eight chairs, occupying 96x288 pixels total (2x6 tiles). Preserve dark walnut, aged-gold trim and the flat burgundy runner with simplified griffin embroidery. The tabletop has no loose objects. Four chairs along each long side are pushed nearly entirely under the tabletop, with only narrow outer backrests visible, matching the original RPG Maker Map006 table placement. No chairs on the short ends.",
       "pdf_pages": [
         2,
         3,
@@ -66,18 +74,20 @@
       ],
       "category": "floor_prop",
       "important_constraints": [
-        "Table body is explicitly 96x336 pixels (2x7 tiles); full ensemble width is unspecified in the PDF.",
-        "Provisional full canvas 192x336 pixels (4x7 tiles) reserves one 48-pixel chair column on each side.",
-        "Exactly eight chairs: four left and four right; zero chairs on the short ends.",
-        "Exactly eight tabletop candleholders, each corresponding to one chair.",
-        "Table, chairs and tabletop items must stay in the same complete transparent PNG; no cropping or detached pieces.",
-        "Vertical table, orthogonal overhead view; no isometric projection or perspective convergence.",
-        "Ritual foods remain small and stylized; no realistic gore, room, floor or extra furniture."
+        "Current user revision overrides the original PDF dimensions and dressed tabletop: the entire ensemble is 96x288 pixels, exactly 2x6 tiles.",
+        "Clear all candles, vessels, food, books and other tabletop props; retain only bare wood and the flat cloth runner.",
+        "Exactly eight chairs, four per long side, pushed under the tabletop with seats occluded and slim backs close to the rim; no broad protruding chair columns or gaps.",
+        "Keep the existing griffin furniture style and top-down RPG Maker perspective; the whole table/chair silhouette fits inside the 2x6 canvas."
       ],
-      "source_image": "source/03_ritual_dining_table.png",
+      "source_image": "source/03_ritual_dining_table_v3.png",
       "generation_size": "1024x1536",
       "padding": 0,
-      "anchor": "bottom_center"
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        4,
+        0
+      ],
+      "revision_prompt": "prompts/03_ritual_dining_table_v3.txt"
     },
     {
       "id": "04_griffin_stone_head",
@@ -102,7 +112,11 @@
       "source_image": "source/04_griffin_stone_head.png",
       "generation_size": "1024x1024",
       "padding": 2,
-      "anchor": "center"
+      "anchor": "center",
+      "atlas_cell": [
+        8,
+        0
+      ]
     },
     {
       "id": "05_griffin_blood_reliquary",
@@ -127,21 +141,25 @@
       "generation_size": "1024x1024",
       "padding": 2,
       "anchor": "bottom_center",
-      "revision_prompt": "prompts/05_griffin_blood_reliquary_refine.txt"
+      "revision_prompt": "prompts/05_griffin_blood_reliquary_refine.txt",
+      "atlas_cell": [
+        10,
+        0
+      ]
     },
     {
       "id": "06_wax_sealed_letter",
       "name": "火漆密信",
-      "width": 96,
-      "height": 96,
-      "description": "One old formal secret letter folded into a compact tri-fold or rolled-fold shape, made of aged ochre parchment with slightly curled worn edges and a few dark-brown age marks. A thick irregular burgundy wax seal is the visual focus, bearing a simplified griffin eagle head, feather crown and restrained radiating emblem. Sparse dark-gold or red highlights show hardened wax. Only a few non-readable dark-brown ink strokes may peek from the exposed paper edge. Match the slightly overhead RPGMaker elder-room prop rendering.",
+      "width": 48,
+      "height": 48,
+      "description": "One old formal secret letter folded into a compact tri-fold or rolled-fold shape, made of aged ochre parchment with slightly curled worn edges and a few dark-brown age marks. A thick irregular burgundy wax seal is the visual focus, bearing a simplified griffin eagle head, feather crown and restrained radiating emblem. Sparse dark-gold or red highlights show hardened wax. Only a few non-readable dark-brown ink strokes may peek from the exposed paper edge. Match the slightly overhead RPGMaker elder-room prop rendering. Current user revision: a small one-cell 48x48 map prop, retaining the existing parchment and griffin wax-seal design.",
       "pdf_pages": [
         10,
         11
       ],
       "category": "floor_prop",
       "important_constraints": [
-        "PDF explicitly specifies 96x96 pixels, 2x2 tiles, despite describing a small story prop.",
+        "Current user revision overrides the PDF: exactly 48x48 pixels, 1x1 tile, a small letter prop.",
         "Only one complete letter with attached wax seal; no extra quill, ink, coin, key or candle.",
         "Sealed and carefully preserved, not excessively torn; readable griffin seal rather than full animal illustration.",
         "Transparent background; no readable words, labels, tabletop, hands or magical effects."
@@ -149,7 +167,12 @@
       "source_image": "source/06_wax_sealed_letter.png",
       "generation_size": "1024x1024",
       "padding": 2,
-      "anchor": "bottom_center"
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        12,
+        0
+      ],
+      "revision_note": "Reuse the accepted source artwork and the existing nearest-neighbor extraction at the new 48x48 target; no image-generation call."
     },
     {
       "id": "07_griffin_blood_vial",
@@ -171,7 +194,11 @@
       "source_image": "source/07_griffin_blood_vial.png",
       "generation_size": "1024x1024",
       "padding": 2,
-      "anchor": "bottom_center"
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        14,
+        0
+      ]
     },
     {
       "id": "08_twisted_plant_pedestal",
@@ -194,7 +221,11 @@
       "source_image": "source/08_twisted_plant_pedestal.png",
       "generation_size": "1024x1536",
       "padding": 2,
-      "anchor": "bottom_center"
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        15,
+        0
+      ]
     },
     {
       "id": "09_griffin_bed",
@@ -216,7 +247,11 @@
       "source_image": "source/09_griffin_bed.png",
       "generation_size": "1024x1536",
       "padding": 2,
-      "anchor": "bottom_center"
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        0,
+        1
+      ]
     },
     {
       "id": "10_elder_portrait",
@@ -238,7 +273,11 @@
       "source_image": "source/10_elder_portrait.png",
       "generation_size": "1024x1536",
       "padding": 2,
-      "anchor": "center"
+      "anchor": "center",
+      "atlas_cell": [
+        1,
+        1
+      ]
     },
     {
       "id": "11_griffin_wall_sconce",
@@ -259,7 +298,11 @@
       "source_image": "source/11_griffin_wall_sconce.png",
       "generation_size": "1024x1024",
       "padding": 2,
-      "anchor": "center"
+      "anchor": "center",
+      "atlas_cell": [
+        14,
+        1
+      ]
     },
     {
       "id": "12_bedroom_small_table",
@@ -280,7 +323,11 @@
       "source_image": "source/12_bedroom_small_table.png",
       "generation_size": "1024x1536",
       "padding": 2,
-      "anchor": "bottom_center"
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        8,
+        2
+      ]
     },
     {
       "id": "13_upholstered_bedroom_chair",
@@ -301,7 +348,11 @@
       "source_image": "source/13_upholstered_bedroom_chair.png",
       "generation_size": "1024x1024",
       "padding": 2,
-      "anchor": "bottom_center"
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        9,
+        2
+      ]
     },
     {
       "id": "14_griffin_reading_candle",
@@ -323,7 +374,11 @@
       "source_image": "source/14_griffin_reading_candle.png",
       "generation_size": "1024x1024",
       "padding": 2,
-      "anchor": "bottom_center"
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        10,
+        2
+      ]
     },
     {
       "id": "15_black_iron_griffin_statue",
@@ -345,7 +400,11 @@
       "source_image": "source/15_black_iron_griffin_statue.png",
       "generation_size": "1024x1536",
       "padding": 2,
-      "anchor": "bottom_center"
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        11,
+        2
+      ]
     },
     {
       "id": "16_large_griffin_chest",
@@ -366,7 +425,11 @@
       "source_image": "source/16_large_griffin_chest.png",
       "generation_size": "1024x1536",
       "padding": 2,
-      "anchor": "bottom_center"
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        12,
+        2
+      ]
     },
     {
       "id": "17_small_griffin_chest",
@@ -388,7 +451,11 @@
       "source_image": "source/17_small_griffin_chest.png",
       "generation_size": "1024x1024",
       "padding": 2,
-      "anchor": "bottom_center"
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        13,
+        2
+      ]
     },
     {
       "id": "18_silver_framed_griffin_portrait",
@@ -409,7 +476,11 @@
       "source_image": "source/18_silver_framed_griffin_portrait.png",
       "generation_size": "1024x1024",
       "padding": 2,
-      "anchor": "center"
+      "anchor": "center",
+      "atlas_cell": [
+        14,
+        2
+      ]
     }
   ]
 }

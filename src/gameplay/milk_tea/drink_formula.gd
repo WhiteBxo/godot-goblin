@@ -222,19 +222,29 @@ static func requirement_valid(value: Variant) -> bool:
 				return false
 	return true
 
-static func requirement_text(requirement: Dictionary, names: Dictionary = {}) -> String:
+## 订单要求的一句话摘要。分类词（风味 / 口感 / 特殊效果）由这里补，数据里只存标签本体，
+## 所以同一条要求不会再退化成一串分不清类别的顿号列表。
+## 特殊效果暂不写进摘要；需要完整要求时传 include_effects（例如交付失败的提示）。
+static func requirement_text(requirement: Dictionary, names: Dictionary = {}, include_effects := false) -> String:
 	var parts := PackedStringArray()
 	if requirement.has("formula"):
+		var ingredients := PackedStringArray()
 		for id: String in requirement.formula:
-			parts.append(str(names.get(id, id)))
+			ingredients.append(str(names.get(id, id)))
+		parts.append("配方：" + "、".join(ingredients))
 	elif requirement.has("base_id"):
 		parts.append("基底：" + str(names.get(requirement.base_id, requirement.base_id)))
-	for field: String in TAG_KEYS:
-		for tag: String in requirement.get(field, []):
-			parts.append(tag)
+	for index in range(TAG_KEYS.size()):
+		if TAG_KEYS[index] == "effects" and not include_effects:
+			continue
+		var tags := PackedStringArray()
+		for tag: String in requirement.get(TAG_KEYS[index], []):
+			tags.append(tag)
+		if not tags.is_empty():
+			parts.append("%s：%s" % [["风味", "口感", "特殊效果"][index], "、".join(tags)])
 	for attribute: String in requirement.get("minimum_taste", {}):
 		parts.append("%s ≥ %s" % [TASTE_NAMES.get(attribute, attribute), requirement.minimum_taste[attribute]])
-	return "、".join(parts)
+	return " · ".join(parts)
 
 static func _failure(code: String, message: String) -> Dictionary:
 	return {"ok": false, "code": code, "message": message}

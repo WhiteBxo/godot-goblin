@@ -1,8 +1,12 @@
 class_name Day2Procurement
 extends Node
-## One fixed commission. Escrow is a durable task variable, never wallet income.
+## One fixed commission. The client's 35G is real wallet money: it lands when he
+## hands it over, and the errand spends it (30G goods + 5G to whoever runs it).
+## The escrow variable records how that 35G was used, not a second purse.
 
 const KEY := "day2.procurement"
+const ADVANCE := 35
+const PURCHASE := 30
 const RUNNERS: Array[String] = ["day2_ordinary_a", "day2_ordinary_b", "day2_ordinary_c"]
 var _state: Node
 
@@ -13,8 +17,9 @@ func get_status() -> Dictionary:
 	return _state.get_variable(KEY, {})
 
 func fund() -> Error:
-	return _state.commit_story_transaction("day2.procurement.funded", {}, {}, 0, {}, {}, {KEY: {"status": "funded", "escrow": 35, "purchase": 0, "fee": 0, "refund": 0, "runner": "", "return_day": 0, "return_phase": ""}})
+	return _state.commit_story_transaction("day2.procurement.funded", {}, {}, ADVANCE, {}, {}, {KEY: {"status": "funded", "escrow": 35, "purchase": 0, "fee": 0, "refund": 0, "runner": "", "return_day": 0, "return_phase": ""}})
 
+## The runner carries the whole bag away: 30G for the goods, 5G as his fee.
 func hire(actor_id: String) -> Error:
 	var status := get_status()
 	if actor_id not in RUNNERS or status.get("status") != "funded" or _state.current_day not in [2, 3]:
@@ -23,19 +28,21 @@ func hire(actor_id: String) -> Error:
 	status.runner = actor_id
 	status.return_day = _state.current_day
 	status.return_phase = "night"
-	return _state.commit_story_transaction("day2.procurement.hired", {}, {}, 0, {}, {"day2.s02.errand_runner_hired": true}, {KEY: status})
+	return _state.commit_story_transaction("day2.procurement.hired", {}, {}, -mini(ADVANCE, _state.get_transactions().get_balance()), {}, {"day2.s02.errand_runner_hired": true}, {KEY: status})
 
-## The client pays 30G for the commission offer; the unused 5G returns to them.
-## Keep the existing eight-key escrow format readable by older saves.
+## The protagonist runs the errand: 30G leaves for the mushroom and the spare 5G
+## stays in the purse as the errand fee.
 func purchase_direct() -> Error:
 	var status := get_status()
 	if status.get("status") != "funded" or _state.current_day not in [2, 3]:
+		return ERR_UNAVAILABLE
+	if _state.get_transactions().get_balance() < PURCHASE:
 		return ERR_UNAVAILABLE
 	status.merge({"status": "returned", "escrow": 0, "purchase": 30, "fee": 0, "refund": 5, "runner": "player", "return_day": _state.current_day, "return_phase": "night" if DayPhase.is_night(_state) else "day"}, true)
 	var flags := {"day3.procurement.returned": true}
 	if _state.current_day == 2:
 		flags["day2.procurement.purchased"] = true
-	return _state.commit_story_transaction("day2.procurement.direct", {}, {}, 0, {"insomnia_mushroom": 1}, flags, {KEY: status})
+	return _state.commit_story_transaction("day2.procurement.direct", {}, {}, -PURCHASE, {"insomnia_mushroom": 1}, flags, {KEY: status})
 
 func refresh() -> void:
 	var status := get_status()
@@ -51,7 +58,8 @@ func refresh() -> void:
 		status.status = "expired"
 		status.refund = status.escrow
 		status.escrow = 0
-		_state.commit_story_transaction("day2.procurement.expired", {}, {}, 0, {}, {}, {KEY: status})
+		# Hand the unspent bag back; a purse that cannot cover it gives what it has.
+		_state.commit_story_transaction("day2.procurement.expired", {}, {}, -mini(int(status.refund), _state.get_transactions().get_balance()), {}, {}, {KEY: status})
 	elif status.status == "hired" and (_state.current_day > status.return_day or (_state.current_day == status.return_day and (status.return_phase == "day" or DayPhase.is_night(_state)))):
 		status.status = "returned"
 		status.purchase = 30

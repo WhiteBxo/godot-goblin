@@ -255,7 +255,7 @@ func get_user_actions() -> Array[Dictionary]:
 		if not mixed and not inventory.has_uses({"firefly_cap": 1, "goblin_firebrew": 1}):
 			actions.append({"id": "taste_resupply", "text": "向胖哥布林补领缺少的试饮用料", "kind": "taste_resupply"})
 	if _state.current_day in [2, 3] and _host == "settlement" and _near_point(&"day1_s03_yard") and _procurement.get_status().get("status") == "funded":
-		actions.append({"id": "procurement_direct", "text": "用专款购买醒神菇 · 30G，退还委托人5G", "kind": "procurement_direct"})
+		actions.append({"id": "procurement_direct", "text": "用代购款买醒神菇 · 30G，剩下的5G算你的跑腿费", "kind": "procurement_direct"})
 	elif _state.current_day == 2 and _host == "settlement" and _near_point(&"day1_s03_yard"):
 		var quote: Dictionary = _state.get_transactions().get_product_quote("market_insomnia_mushroom")
 		if quote.get("ok", false):
@@ -286,7 +286,7 @@ func get_user_actions() -> Array[Dictionary]:
 				continue
 			var actor := _game.get_actor_director().get_actor(StringName(id))
 			if actor != null and actor.visible:
-				actions.append({"id": "hire:" + id, "text": "临时委托 " + actor.display_name + " · 专款支付30G货款＋5G跑腿费", "kind": "hire", "actor": id})
+				actions.append({"id": "hire:" + id, "text": "临时委托 " + actor.display_name + " · 代购款付30G货款＋5G跑腿费", "kind": "hire", "actor": id})
 	return actions
 
 ## 已发现、还有余量的哥布林辛辣原料。缺了它自由实验只能显示「缺货」。
@@ -505,7 +505,7 @@ func _process(_delta: float) -> void:
 	if _state.current_day in [2, 3]:
 		var status := _procurement.get_status()
 		if not status.is_empty() and status.status not in ["delivered", "expired"]:
-			notice = "代购专款 %dG · %s" % [int(status.escrow), {"funded": "尚未雇人", "hired": "跑腿途中", "returned": "醒神菇已带回，请交给胖哥布林", "delivered": "已向胖哥布林交付", "expired": "已超时"}.get(status.status, "")]
+			notice = "胖哥布林的代购款 %dG · %s" % [int(status.escrow), {"funded": "尚未雇人", "hired": "跑腿途中", "returned": "醒神菇已带回，请交给胖哥布林", "delivered": "已向胖哥布林交付", "expired": "已超时"}.get(status.status, "")]
 	var gathering_notice := get_gathering_notice()
 	if not gathering_notice.is_empty():
 		notice += ("\n\n" if not notice.is_empty() else "") + gathering_notice

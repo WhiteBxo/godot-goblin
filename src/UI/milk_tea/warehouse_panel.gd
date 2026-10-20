@@ -12,6 +12,8 @@ var _list: ItemList
 var _details: Label
 var _detail: Control
 var _selected_id: String = ""
+## 原料图鉴只收原料：成品杯和调饮基底不进这一页，店里的仓库照旧看全部库存。
+var _ingredients_only := false
 ## The pane only turns when a different item is opened; a stock refresh of the
 ## item already on screen must leave the words still.
 var _shown_id: String = ""
@@ -65,6 +67,18 @@ func configure(inventory: WarehouseInventory) -> void:
 func get_list() -> ItemList:
 	return _list
 
+func set_ingredients_only(value: bool) -> void:
+	if _ingredients_only == value:
+		return
+	_ingredients_only = value
+	if is_node_ready():
+		refresh()
+
+## 成品与调饮基底都不是“原料”，图鉴模式直接不列。
+func _is_encyclopedia_entry(id: String) -> bool:
+	var definition := _inventory.get_definition(id)
+	return definition != null and definition.category != "product" and definition.show_in_encyclopedia
+
 func get_details() -> Label:
 	return _details
 
@@ -79,6 +93,8 @@ func refresh() -> void:
 	_list.clear()
 	var selected := -1
 	for ingredient in _inventory.get_ingredients(origin):
+		if _ingredients_only and not _is_encyclopedia_entry(str(ingredient.id)):
+			continue
 		if (_filter.selected == 3 and ingredient.category != "story_item") or (_filter.selected in [1, 2] and ingredient.category == "story_item"):
 			continue
 		var quantity := "%d" % ingredient.quantity
@@ -88,7 +104,7 @@ func refresh() -> void:
 		_list.set_item_metadata(index, ingredient.id)
 		if ingredient.id == _selected_id:
 			selected = index
-	if _filter.selected == 0:
+	if _filter.selected == 0 and not _ingredients_only:
 		for drink: Dictionary in _inventory.get_drinks():
 			var index := _list.add_item("%s · %d 杯" % [drink.name, drink.quantity], Artwork.DRINK_ICON)
 			_list.set_item_metadata(index, drink.id)

@@ -171,6 +171,23 @@ func _test_projection_and_lifecycle() -> void:
 	journal.get_current_main_task().current_objective.clear()
 	journal.refresh()
 	_check(state.to_dict() == snapshot and journal.get_task("test.progress").objectives[0].text == "查看订单板", "Reads, refreshes and returned data mutations never modify state or projection")
+	# A settled task must expose its real title even when the reveal flag never
+	# flipped: a cancelled or rescued errand otherwise shows up as "??? · 已完成".
+	var settled_catalog := TaskCatalog.new()
+	_check(settled_catalog.load_file(FIXTURE, _references) == OK, "Settled-task catalogue loads")
+	var settled_state := StateData.new()
+	root.add_child(settled_state)
+	var settled_journal := TaskJournal.new()
+	_check(settled_journal.configure(settled_catalog, settled_state) == OK, "Settled-task journal configures")
+	root.add_child(settled_journal)
+	settled_state.set_flag("task.test.active")
+	settled_state.set_flag("task.test.completed")
+	await _frames()
+	var settled_view := settled_journal.get_task("test.progress")
+	_check(settled_view.status == "completed" and settled_view.revealed and settled_view.title == "测试主线",
+		"Settled task reveals its real title instead of ???")
+	settled_journal.queue_free()
+	settled_state.queue_free()
 	catalog.load_json('{"version":1,"tasks":[]}')
 	journal.refresh()
 	_check(not journal.get_active_tasks().is_empty(), "Journal owns a definition snapshot; catalog reload requires explicit reconfigure")

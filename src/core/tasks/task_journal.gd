@@ -88,11 +88,14 @@ func _revealed(data: Dictionary) -> bool:
 	return not data.has("reveal_when") or _matches(data.reveal_when)
 
 func _project(task: Dictionary) -> Dictionary:
-	var revealed := _revealed(task)
 	var status := "inactive"
 	if _matches(task.activate_when):
 		status = "completed" if _matches(task.complete_when) else "active"
 	var result := _state.get_task_result(task.id)
+	# A settled task can never stay masked. The player already lived it, so a
+	# stale reveal flag (or an older save settling it) must not turn its own
+	# history into a "???" row that looks like a broken task.
+	var revealed := _revealed(task) or not result.is_empty()
 	if not result.is_empty():
 		status = result.status
 	# Ambiguous success/failure/deadline facts are pending, never guessed by UI.

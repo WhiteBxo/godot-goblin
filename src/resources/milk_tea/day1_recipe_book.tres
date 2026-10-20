@@ -11,6 +11,7 @@ materials = Array[String](["creamer_milk_tea_base", "day1_griffin_blood"])
 required_flag = "day1.s05.blood_acquired"
 required_flags = Array[String](["day1.s05.returned_shop"])
 required_stages = Array[String](["day1.s06.craft", "day1.s06.wait_craft"])
+experiment_only = true
 
 [sub_resource type="Resource" id="Recipe_h01"]
 script = ExtResource("recipe")

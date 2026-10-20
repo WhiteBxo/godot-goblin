@@ -22,6 +22,8 @@ const REQUIRED_VARIATIONS := [
 	"Success", "Warning", "Danger", "Badge", "BadgeMain", "BadgeDone", "BadgeMuted",
 	"Keycap", "PrimaryButton", "GhostButton", "DangerButton", "IconButton",
 	"InsetPanel", "CardPanel", "SunkenPanel", "ShadePanel", "SuccessBar",
+	"TaskRowMain", "TaskRowMainSelected", "TaskRowSide", "TaskRowSideSelected",
+	"TaskRowDone", "TaskRowDoneSelected",
 ]
 const ALLOWED_FONT_SIZES := [12, 24, 36]
 const THEME_ALLOWLIST := ["res://src/UI/screen_transition/screen_transition.tscn"]

@@ -39,7 +39,7 @@ func present(entry: Dictionary, action: String = "", enabled: bool = false, seco
 	_title.text = entry.get("title", "今天暂时没有订单")
 	_target.text = "交给：" + str(entry.target_name) if not entry.is_empty() else "新的订单会在这里出现"
 	_status.text = status
-	_status.theme_type_variation = &"TicketWarning" if entry.get("stage") in ["missing_materials", "recipe_locked"] else &"TicketStamp"
+	_status.theme_type_variation = &"TicketWarning" if entry.get("stage") in ["missing_materials", "recipe_locked", "experiment"] else &"TicketStamp"
 	var lines := PackedStringArray()
 	if not entry.is_empty():
 		if not str(entry.get("description", "")).is_empty():

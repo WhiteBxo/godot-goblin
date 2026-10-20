@@ -41,6 +41,7 @@ func _ready() -> void:
 	_board.track_requested.connect(func(id: String) -> void: track_requested.emit(id))
 	_board.cancel_requested.connect(func(id: String) -> void: cancel_requested.emit(id))
 	_order_crafting.track_requested.connect(func(id: String) -> void: track_requested.emit(id))
+	_order_crafting.experiment_requested.connect(func(id: String) -> void: open_experiment_for(id))
 	_order_crafting.return_requested.connect(return_requested.emit)
 	_order_crafting.craft_requested.connect(func(materials: Array[String], quantity: int) -> void: craft_requested.emit(materials, quantity))
 	_craft_modes.tab_changed.connect(func(_index: int) -> void: _refresh_recipe())
@@ -93,12 +94,22 @@ func bind_tea_making(tea: TeaMaking) -> void:
 func is_making_station() -> bool:
 	return _station
 
+
+## 待手调的委托特调把「自由实验」这一页点亮，玩家不用自己猜该去哪儿做。
+func _pending_hand_mix() -> bool:
+	var tracked: Dictionary = _orders.get_tracked_entry() if is_instance_valid(_orders) else {}
+	return tracked.get("status") == "active" and str(tracked.get("stage", "")) == "experiment"
+
 func _refresh_recipe() -> void:
 	var demo_recipe := is_instance_valid(_tea) and _tea.has_session()
 	var crafting := _station and not demo_recipe
 	var order_mode := crafting and is_instance_valid(_orders) and _craft_modes.current_tab == 0
 	_board.visible = _point_id == &"orders" and is_instance_valid(_orders)
 	_craft_modes.visible = crafting and is_instance_valid(_orders)
+	if _craft_modes.visible:
+		# A waiting hand-mixed order names its own page, so the player never has to
+		# guess which of the three tabs can actually make it.
+		_craft_modes.set_tab_title(2, "自由实验 · 手调" if _pending_hand_mix() else "自由实验")
 	_order_crafting.visible = order_mode
 	_ingredients.visible = _station and demo_recipe
 	_recipe_status.visible = _station and demo_recipe
@@ -243,6 +254,26 @@ func configure_production(production: TeaProduction) -> void:
 	_crafting_panel.configure(production)
 	_formula_panel.configure(production)
 	_refresh_recipe()
+
+## 委托特调由自由实验承接：切到那一页，把配方填进槽位，并写明这一单的报酬。
+func open_experiment_for(order_id: String) -> bool:
+	if not is_instance_valid(_production) or not is_instance_valid(_formula_panel):
+		return false
+	var entry: Dictionary = _orders.get_entry(order_id) if is_instance_valid(_orders) else {}
+	var recipe := _production.get_recipe_by_product(str(entry.get("product_id", "")))
+	if recipe == null:
+		return false
+	if not select_formula(recipe.materials):
+		_craft_modes.current_tab = 2
+		_making_tabs.current_tab = 1
+		_refresh_recipe()
+	var reward := str(entry.get("rewards", "")).strip_edges()
+	if not reward.is_empty() and reward != "暂无报酬":
+		# 报酬按任务结算，不在制作时计价；写在预览里，玩家知道这杯值多少。
+		_formula_panel.set_mission_hint(reward + " · 交付后结算")
+	if is_visible_in_tree():
+		_formula_panel.get_default_focus().grab_focus()
+	return true
 
 func get_formula_panel() -> FreeCraftingPanel:
 	return _formula_panel

@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/UI/trade/market_vendor_popup.gd" id="1"]
+[ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="2"]
+[ext_resource type="PackedScene" path="res://src/UI/components/modal_shell.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://src/UI/trade/market_vendor_page.tscn" id="4"]
+
+[node name="MarketVendorPopup" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2")
+script = ExtResource("1")
+
+[node name="ModalShell" parent="." instance=ExtResource("3")]
+layout_mode = 1
+title = "集市摊主"
+hint = "点一件商品听摊主怎么说 · Enter 买下 · Esc 离开"
+content_scene = ExtResource("4")

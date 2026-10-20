@@ -331,33 +331,6 @@
 			"trigger": "casino_sentry",
 			"conditions": {}
 		},
-		"supplement.vendor_1": {
-			"once": false,
-			"trigger": "market_vendor_1",
-			"conditions": {
-				"flags": {
-					"day1.s04.commission_accepted": true
-				}
-			}
-		},
-		"supplement.vendor_2": {
-			"once": false,
-			"trigger": "market_vendor_2",
-			"conditions": {
-				"flags": {
-					"day1.s04.commission_accepted": true
-				}
-			}
-		},
-		"supplement.vendor_3": {
-			"once": false,
-			"trigger": "market_vendor_3",
-			"conditions": {
-				"flags": {
-					"day1.s04.commission_accepted": true
-				}
-			}
-		},
 		"supplement.family.market_mother": {
 			"once": false,
 			"trigger": "market_mother",
@@ -489,13 +462,6 @@
 					"data": {
 						"command": "chapter_action",
 						"id": "day2.procurement.fund"
-					}
-				},
-				{
-					"id": "step_24017",
-					"data": {
-						"command": "chapter_action",
-						"id": "day2.s01.pocket_money"
 					}
 				},
 				{
@@ -2103,48 +2069,6 @@
 					"data": {
 						"command": "dialogue",
 						"id": "supplement.casino_sentry"
-					}
-				}
-			]
-		},
-		{
-			"id": "supplement_vendor_1",
-			"mode": "自动演出",
-			"event": "supplement.vendor_1",
-			"steps": [
-				{
-					"id": "step_24011",
-					"data": {
-						"command": "dialogue",
-						"id": "supplement.vendor_1"
-					}
-				}
-			]
-		},
-		{
-			"id": "supplement_vendor_2",
-			"mode": "自动演出",
-			"event": "supplement.vendor_2",
-			"steps": [
-				{
-					"id": "step_24012",
-					"data": {
-						"command": "dialogue",
-						"id": "supplement.vendor_2"
-					}
-				}
-			]
-		},
-		{
-			"id": "supplement_vendor_3",
-			"mode": "自动演出",
-			"event": "supplement.vendor_3",
-			"steps": [
-				{
-					"id": "step_24013",
-					"data": {
-						"command": "dialogue",
-						"id": "supplement.vendor_3"
 					}
 				}
 			]
@@ -5100,63 +5024,6 @@
 				"ending_3": {
 					"speaker": "护卫",
 					"text": "滚远点！"
-				}
-			}
-		},
-		"supplement.vendor_1": {
-			"start": "line_1",
-			"lines": {
-				"line_1": {
-					"speaker": "吆喝的摊主",
-					"text": "哎！客人，看看这个！炽舌椒！烟熏味浓，嚼起来又有劲！拿来做吃的，绝对够味！买点回去试试，保准不亏！",
-					"next": "line_2"
-				},
-				"line_2": {
-					"speaker": "吆喝的摊主",
-					"text": "嘿嘿，这个可就厉害了！蜜珀晶，甜滋滋的，里面还带着颗粒！咬下去嘎吱嘎吱的，多有意思！不管你打算怎么做，都值得试试！",
-					"next": "line_3"
-				},
-				"line_3": {
-					"speaker": "吆喝的摊主",
-					"text": "瞧瞧这伞面，多漂亮！这可是萤火伞！味道甜，口感还滑溜溜的。要我说啊，这种好东西就该拿来做点精细的吃食！客人，来一点？"
-				}
-			}
-		},
-		"supplement.vendor_2": {
-			"start": "line_1",
-			"lines": {
-				"line_1": {
-					"speaker": "懂行的摊主",
-					"text": "苔痕青。酸味重，还带点发酵的味道，质地也稠。口味比较特别，没试过就别一次买太多。不过，要是做对了，倒也不赖。",
-					"next": "line_2"
-				},
-				"line_2": {
-					"speaker": "懂行的摊主",
-					"text": "窟窟糖芋，甜口的，软糯又顺滑。喜欢甜食的不会讨厌它。这个价钱买不了吃亏，买回去慢慢琢磨吧。",
-					"next": "line_3"
-				},
-				"line_3": {
-					"speaker": "懂行的摊主",
-					"text": "醒神菇。苦，草木味也重，不过汁水足。别光听名字就觉得它没用，怎么处理才是关键。你要是真会做，买回去研究研究。"
-				}
-			}
-		},
-		"supplement.vendor_3": {
-			"start": "line_1",
-			"lines": {
-				"line_1": {
-					"speaker": "老练的摊主",
-					"text": "炽石枯辛辣……闻见那股烟熏味了吗？越是耐嚼的东西，越值得花时间琢磨。买回去吧，说不定能做出些意想不到的东西。",
-					"next": "line_2"
-				},
-				"line_2": {
-					"speaker": "老练的摊主",
-					"text": "蜜珀晶。甜味藏在那些小颗粒里，嚼开了才有意思。你要是只想喝点普通的东西，那可就浪费它了。",
-					"next": "line_3"
-				},
-				"line_3": {
-					"speaker": "老练的摊主",
-					"text": "醒神菇……苦味、草木气，还有满满的汁水。有人嫌它难吃，有人却离不开它。至于你能拿它做出什么，就看你的本事了。"
 				}
 			}
 		},

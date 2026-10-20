@@ -10,6 +10,9 @@ var _refresh_pending := false
 var _staging: Callable
 var _player: Node2D
 var _boundary_cooldown := 0.0
+## Stall keepers the chapter data knows about. They keep their goods to
+## themselves on the first day, when the protagonist is still a stranger.
+var _vendor_ids: Dictionary = {}
 ## Authored once per level; the physics step must not walk the entrance list.
 var _shop_door: SceneEntrance
 signal boundary_reached(message: String)
@@ -58,6 +61,14 @@ func set_staging_lookup(lookup: Callable) -> void:
 	_staging = lookup
 	_schedule_refresh()
 
+## Market vendors listed by chapter data. Registered once; the day gate decides
+## whether they are worth talking to.
+func set_vendor_ids(ids: Array) -> void:
+	_vendor_ids.clear()
+	for id: Variant in ids:
+		_vendor_ids[StringName(id)] = true
+	_schedule_refresh()
+
 func _schedule_refresh() -> void:
 	if not _refresh_pending:
 		_refresh_pending = true
@@ -86,7 +97,8 @@ func _refresh() -> void:
 		if _points.has(actor.actor_id):
 			var resting: bool = (_level is MilkTeaShop and actor.actor_id == &"fat_goblin"
 				and (Day1Access.at_stage(_state, "day2") or _state.story_stage == "day3.handoff"))
-			_points[actor.actor_id].interaction_enabled = actor.visible and not resting
+			var trading: bool = not _vendor_ids.has(actor.actor_id) or _state.current_day >= 2
+			_points[actor.actor_id].interaction_enabled = actor.visible and not resting and trading
 	if _level is SettlementMap:
 		_level.set_elder_access(_state.get_business_profile() != "day1" or Day1Access.can_enter_elder(_state))
 	if _level is RpgChapterMap:

@@ -159,7 +159,7 @@ func _run() -> void:
 	check(journal.get_unread_count() == 1, "Another visible tab cannot consume character unread")
 	check(game.open_characters() == OK and ui.is_open(ScreenIds.CHRONICLE) and not player.movement_enabled, "Switching aliases retains one shared modal")
 	list.item_selected.emit(0)
-	check(hud.get_node("Unread").visible and not hud.tooltip_text.contains("人物记录 1") and hud.tooltip_text.contains("见闻录 1"), "Reading a person preserves chronicle unread")
+	check(hud.get_node("Unread").visible and not hud.tooltip_text.contains("人物记录 1") and hud.tooltip_text.contains("异世界见闻录 1"), "Reading a person preserves chronicle unread")
 	journal.unlock_character("test.second", "测试人物（仅预览）")
 	check(journal.get_unread_count() == 1 and list.item_count == 2, "Second person unlocks independently")
 	ui.close_screen(ScreenIds.HANDBOOK)

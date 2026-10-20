@@ -9,13 +9,17 @@
   "publication_status": "published",
   "pending_beat_ids": [],
   "handoff": "res://docs/story_authoring/day_01_02_authoring_handoff.md",
+  "verification": {
+    "entry": "res://tests/verify_two_day_flow.gd",
+    "scope": "标题开始、真实旅行和交付；代购及存档另测"
+  },
   "beats": [
     {
       "id": "day2_s01_morning",
       "mode": "自动演出",
       "event": "day2.s01.morning",
       "start": 0,
-      "count": 17,
+      "count": 16,
       "dialogues": [
         "day2.s01.fat_goblin_wakes",
         "day2.s01.wants_more",
@@ -464,36 +468,6 @@
       ]
     },
     {
-      "id": "supplement_vendor_1",
-      "mode": "自动演出",
-      "event": "supplement.vendor_1",
-      "start": 0,
-      "count": 1,
-      "dialogues": [
-        "supplement.vendor_1"
-      ]
-    },
-    {
-      "id": "supplement_vendor_2",
-      "mode": "自动演出",
-      "event": "supplement.vendor_2",
-      "start": 0,
-      "count": 1,
-      "dialogues": [
-        "supplement.vendor_2"
-      ]
-    },
-    {
-      "id": "supplement_vendor_3",
-      "mode": "自动演出",
-      "event": "supplement.vendor_3",
-      "start": 0,
-      "count": 1,
-      "dialogues": [
-        "supplement.vendor_3"
-      ]
-    },
-    {
       "id": "supplement_family_market_mother",
       "mode": "自动演出",
       "event": "supplement.family.market_mother",
@@ -525,9 +499,5 @@
     }
   ],
   "authoring_project": "res://docs/story_authoring/day2_stages_01_05_project.json",
-  "authoring_sha256": "2ea7099a535676a03dfcd8f1489e3d42f5208d273008fad2d9848f69df79bf38",
-  "verification": {
-    "entry": "res://tests/verify_two_day_flow.gd",
-    "scope": "标题开始、真实旅行和交付；代购及存档另测"
-  }
+  "authoring_sha256": "6f84f006a619682b76acb09477c4abf909032dc75ec55378d08ac452039cc5e8"
 }

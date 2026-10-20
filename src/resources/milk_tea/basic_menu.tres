@@ -151,6 +151,7 @@ icon = ExtResource("icon_art_creamer_milk_tea_base")
 category = "milk"
 description = "米黄色奶茶液体，质地浓稠。"
 ; generated:recipe_ingredients
+show_in_encyclopedia = false
 can_be_base = true
 base_suffix = "奶茶"
 free_recipe_allowed = true
@@ -177,6 +178,7 @@ source_ids = PackedStringArray("C02")
 icon = ExtResource("icon_art_industrial_green_tea")
 description = "淡黄绿色茶汤，质地清透。"
 ; generated:recipe_ingredients
+show_in_encyclopedia = false
 can_be_base = true
 base_suffix = "茶"
 free_recipe_allowed = true

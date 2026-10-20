@@ -4836,80 +4836,88 @@ description = "醉酒的守卫"
 position = Vector2(1710, 4120)
 interaction_id = &"night_gather_0"
 display_name = "夜光菌丛"
-description = "湿润的菌丛在夜色里泛着微光。按 E 采集醒神菇。"
+description = "湿润的菌丛在夜色里泛着微光。这种菇只有熟路的哥布林才采得到。"
 item_id = "insomnia_mushroom"
 refresh_mode = "daily"
 required_flag = "world.phase.night"
+blocked_reason = "这丛醒神菇长在洞窟深处的暗处，路不熟的人摘不到。只能向摊主买，或者雇个熟路的哥布林去采。"
 feedback_rect = Rect2(-28, -28, 56, 56)
 
 [node name="NightGather1" type="Area2D" parent="GatherPoints" instance=ExtResource("24_gather")]
 position = Vector2(1750, 5900)
 interaction_id = &"night_gather_1"
 display_name = "夜光菌丛"
-description = "湿润的菌丛在夜色里泛着微光。按 E 采集醒神菇。"
+description = "湿润的菌丛在夜色里泛着微光。这种菇只有熟路的哥布林才采得到。"
 item_id = "insomnia_mushroom"
 refresh_mode = "daily"
 required_flag = "world.phase.night"
+blocked_reason = "这丛醒神菇长在洞窟深处的暗处，路不熟的人摘不到。只能向摊主买，或者雇个熟路的哥布林去采。"
 feedback_rect = Rect2(-28, -28, 56, 56)
 
 [node name="NightGather2" type="Area2D" parent="GatherPoints" instance=ExtResource("24_gather")]
 position = Vector2(2920, 5520)
 interaction_id = &"night_gather_2"
 display_name = "夜光菌丛"
-description = "湿润的菌丛在夜色里泛着微光。按 E 采集醒神菇。"
+description = "湿润的菌丛在夜色里泛着微光。这种菇只有熟路的哥布林才采得到。"
 item_id = "insomnia_mushroom"
 refresh_mode = "daily"
 required_flag = "world.phase.night"
+blocked_reason = "这丛醒神菇长在洞窟深处的暗处，路不熟的人摘不到。只能向摊主买，或者雇个熟路的哥布林去采。"
 feedback_rect = Rect2(-28, -28, 56, 56)
 
 [node name="NightGather3" type="Area2D" parent="GatherPoints" instance=ExtResource("24_gather")]
 position = Vector2(2990, 3610)
 interaction_id = &"night_gather_3"
 display_name = "夜光菌丛"
-description = "湿润的菌丛在夜色里泛着微光。按 E 采集醒神菇。"
+description = "湿润的菌丛在夜色里泛着微光。这种菇只有熟路的哥布林才采得到。"
 item_id = "insomnia_mushroom"
 refresh_mode = "daily"
 required_flag = "world.phase.night"
+blocked_reason = "这丛醒神菇长在洞窟深处的暗处，路不熟的人摘不到。只能向摊主买，或者雇个熟路的哥布林去采。"
 feedback_rect = Rect2(-28, -28, 56, 56)
 
 [node name="NightGather4" type="Area2D" parent="GatherPoints" instance=ExtResource("24_gather")]
 position = Vector2(7490, 5250)
 interaction_id = &"night_gather_4"
 display_name = "夜光菌丛"
-description = "湿润的菌丛在夜色里泛着微光。按 E 采集醒神菇。"
+description = "湿润的菌丛在夜色里泛着微光。这种菇只有熟路的哥布林才采得到。"
 item_id = "insomnia_mushroom"
 refresh_mode = "daily"
 required_flag = "world.phase.night"
+blocked_reason = "这丛醒神菇长在洞窟深处的暗处，路不熟的人摘不到。只能向摊主买，或者雇个熟路的哥布林去采。"
 feedback_rect = Rect2(-28, -28, 56, 56)
 
 [node name="NightGather5" type="Area2D" parent="GatherPoints" instance=ExtResource("24_gather")]
 position = Vector2(6110, 7070)
 interaction_id = &"night_gather_5"
 display_name = "夜光菌丛"
-description = "湿润的菌丛在夜色里泛着微光。按 E 采集醒神菇。"
+description = "湿润的菌丛在夜色里泛着微光。这种菇只有熟路的哥布林才采得到。"
 item_id = "insomnia_mushroom"
 refresh_mode = "daily"
 required_flag = "world.phase.night"
+blocked_reason = "这丛醒神菇长在洞窟深处的暗处，路不熟的人摘不到。只能向摊主买，或者雇个熟路的哥布林去采。"
 feedback_rect = Rect2(-28, -28, 56, 56)
 
 [node name="NightGather6" type="Area2D" parent="GatherPoints" instance=ExtResource("24_gather")]
 position = Vector2(7520, 1800)
 interaction_id = &"night_gather_6"
 display_name = "夜光菌丛"
-description = "湿润的菌丛在夜色里泛着微光。按 E 采集醒神菇。"
+description = "湿润的菌丛在夜色里泛着微光。这种菇只有熟路的哥布林才采得到。"
 item_id = "insomnia_mushroom"
 refresh_mode = "once"
 required_flag = "world.phase.night"
+blocked_reason = "这丛醒神菇长在洞窟深处的暗处，路不熟的人摘不到。只能向摊主买，或者雇个熟路的哥布林去采。"
 feedback_rect = Rect2(-28, -28, 56, 56)
 
 [node name="NightGather7" type="Area2D" parent="GatherPoints" instance=ExtResource("24_gather")]
 position = Vector2(1160, 7280)
 interaction_id = &"night_gather_7"
 display_name = "夜光菌丛"
-description = "湿润的菌丛在夜色里泛着微光。按 E 采集醒神菇。"
+description = "湿润的菌丛在夜色里泛着微光。这种菇只有熟路的哥布林才采得到。"
 item_id = "insomnia_mushroom"
 refresh_mode = "once"
 required_flag = "world.phase.night"
+blocked_reason = "这丛醒神菇长在洞窟深处的暗处，路不熟的人摘不到。只能向摊主买，或者雇个熟路的哥布林去采。"
 feedback_rect = Rect2(-28, -28, 56, 56)
 
 [node name="StoryAnchors" type="Node2D" parent="." unique_id=469995804]

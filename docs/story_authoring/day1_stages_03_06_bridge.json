@@ -97,12 +97,16 @@
       "mode": "自动演出",
       "event": "day1.s04.after_taste",
       "start": 0,
-      "count": 16,
+      "count": 22,
       "dialogues": [
         "day1.s04.taste_reaction",
         "day1.s04.after_taste",
         "day1.s04.griffin_faith",
+        "day1.s04.chronicle_faith",
+        "day1.s04.griffin_faith_after",
         "day1.s04.griffin_blood",
+        "day1.s04.chronicle_blood",
+        "day1.s04.griffin_blood_after",
         "day1.s04.map_handover"
       ]
     },
@@ -321,36 +325,6 @@
       ]
     },
     {
-      "id": "supplement_vendor_1",
-      "mode": "自动演出",
-      "event": "supplement.vendor_1",
-      "start": 0,
-      "count": 1,
-      "dialogues": [
-        "supplement.vendor_1"
-      ]
-    },
-    {
-      "id": "supplement_vendor_2",
-      "mode": "自动演出",
-      "event": "supplement.vendor_2",
-      "start": 0,
-      "count": 1,
-      "dialogues": [
-        "supplement.vendor_2"
-      ]
-    },
-    {
-      "id": "supplement_vendor_3",
-      "mode": "自动演出",
-      "event": "supplement.vendor_3",
-      "start": 0,
-      "count": 1,
-      "dialogues": [
-        "supplement.vendor_3"
-      ]
-    },
-    {
       "id": "supplement_family_market_mother",
       "mode": "自动演出",
       "event": "supplement.family.market_mother",
@@ -382,6 +356,6 @@
     }
   ],
   "authoring_project": "res://docs/story_authoring/day1_stages_03_06_project.json",
-  "authoring_sha256": "15f21251194653b15704bfd76f86d9c2a8b07c44e809c26205a3da4099263b18",
+  "authoring_sha256": "93f95bcfdea1c83b538084c7fa8f1e449fd45ee23ce6c89cacc96aa77d8991d2",
   "verification": "res://tests/verify_two_day_flow.gd"
 }

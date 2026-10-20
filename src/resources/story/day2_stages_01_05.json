@@ -69,10 +69,6 @@
           "id": "day2.procurement.fund"
         },
         {
-          "command": "chapter_action",
-          "id": "day2.s01.pocket_money"
-        },
-        {
           "command": "dialogue",
           "id": "day2.s01.mushroom_commission_after_funds"
         },
@@ -1208,51 +1204,6 @@
         {
           "command": "dialogue",
           "id": "supplement.casino_sentry"
-        }
-      ]
-    },
-    "supplement.vendor_1": {
-      "once": false,
-      "trigger": "market_vendor_1",
-      "conditions": {
-        "flags": {
-          "day1.s04.commission_accepted": true
-        }
-      },
-      "steps": [
-        {
-          "command": "dialogue",
-          "id": "supplement.vendor_1"
-        }
-      ]
-    },
-    "supplement.vendor_2": {
-      "once": false,
-      "trigger": "market_vendor_2",
-      "conditions": {
-        "flags": {
-          "day1.s04.commission_accepted": true
-        }
-      },
-      "steps": [
-        {
-          "command": "dialogue",
-          "id": "supplement.vendor_2"
-        }
-      ]
-    },
-    "supplement.vendor_3": {
-      "once": false,
-      "trigger": "market_vendor_3",
-      "conditions": {
-        "flags": {
-          "day1.s04.commission_accepted": true
-        }
-      },
-      "steps": [
-        {
-          "command": "dialogue",
-          "id": "supplement.vendor_3"
         }
       ]
     },

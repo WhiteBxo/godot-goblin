@@ -14,7 +14,7 @@ UI 使用 Godot 4.7 原生 Control、Container 和 Theme，不增加 autoload �
 
 UIManager 在 Systems 下使用 Always；World 和其他普通 Systems 保持 Pausable。界面节点由其 CanvasLayer 持有，管理器保存注册和模态栈。店铺 HUD 和弹窗通过独立场景实例化，不再从 HUD 内部 reparent 弹窗。
 
-右上角 `handbook_hud` 现在显示“菜单”及未读圆点，打开 `chapter_actions`（PopupLayer 的按需游戏菜单）。完整目标、钱包、存档时间、支线与经营动作在菜单查看；奶茶订单、雇佣系统（暂未开放）、任务日志、异闻录、饮品图鉴、人物记录、背包、地图和设置从这里进入，子页返回菜单，再返回游戏。原“委托”入口拆为三处：`奶茶订单`（`order_history`，经营订单的进行中／可接取与历史）、`任务日志 [J]`（`tasks`，主线与支线）和置灰的`雇佣系统`（`hiring`）。手册本体仍使用 `handbook`（PopupLayer 的统一模态窗口）。奶茶订单页常驻可打开，任务日志、异闻录与饮品图鉴按解锁隐藏页签；除奶茶订单外全部未解锁时手册不可打开，基础菜单仍可使用。`MainGame.open_handbook()` 选择上次页签，首次优先任务日志；`open_tasks()` / J 键、`open_chronicle()` 与 `open_drinks()` 选择对应页。饮品图鉴首次自由制作后开放。`tasks`、`order_history`、`chronicle`、`drinks` 保留为手册别名，复用弹窗互斥、操作锁、Esc 关闭和 P 暂停；ItemList 使用原生方向键、Enter 和鼠标输入，Tab 继续由原生 Control 导航及管理器焦点约束处理。详见 [见闻录模块](../gameplay/chronicle.md) 与 [奶茶订单](../gameplay/order_system.md)。
+右上角 `handbook_hud` 现在显示“菜单”及未读圆点，打开 `chapter_actions`（PopupLayer 的按需游戏菜单）。完整目标、钱包、存档时间、支线与经营动作在菜单查看；奶茶订单、雇佣系统（暂未开放）、任务日志、异世界见闻录、饮品图鉴、人物记录、原料图鉴、地图和设置从这里进入，子页返回菜单，再返回游戏。原“委托”入口拆为三处：`奶茶订单`（`order_history`，经营订单的进行中／可接取与历史）、`任务日志 [J]`（`tasks`，主线与支线）和置灰的`雇佣系统`（`hiring`）。手册本体仍使用 `handbook`（PopupLayer 的统一模态窗口）。奶茶订单页常驻可打开，任务日志、异闻录与饮品图鉴按解锁隐藏页签；除奶茶订单外全部未解锁时手册不可打开，基础菜单仍可使用。`MainGame.open_handbook()` 选择上次页签，首次优先任务日志；`open_tasks()` / J 键、`open_chronicle()` 与 `open_drinks()` 选择对应页。饮品图鉴首次自由制作后开放。`tasks`、`order_history`、`chronicle`、`drinks` 保留为手册别名，复用弹窗互斥、操作锁、Esc 关闭和 P 暂停；ItemList 使用原生方向键、Enter 和鼠标输入，Tab 继续由原生 Control 导航及管理器焦点约束处理。详见 [见闻录模块](../gameplay/chronicle.md) 与 [奶茶订单](../gameplay/order_system.md)。
 
 ## 接入接口
 

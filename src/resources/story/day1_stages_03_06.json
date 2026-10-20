@@ -522,6 +522,10 @@
           "id": "day1.s04.griffin_faith"
         },
         {
+          "command": "dialogue",
+          "id": "day1.s04.chronicle_faith"
+        },
+        {
           "command": "chronicle_unlock",
           "entry_id": "chronicle.griffin",
           "title": "伟大的格里芬"
@@ -550,12 +554,35 @@
           "content": "据胖哥布林所说，长老将偶尔到来的行脚商称为格里芬派来的使者。使者带来的稀奇商品，被视为格里芬对勤劳、守规矩的哥布林的赏赐。"
         },
         {
+          "command": "dialogue",
+          "id": "day1.s04.griffin_faith_after"
+        },
+        {
           "command": "wait",
           "seconds": 0.25
         },
         {
           "command": "dialogue",
           "id": "day1.s04.griffin_blood"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.s04.chronicle_blood"
+        },
+        {
+          "command": "chronicle_unlock",
+          "entry_id": "chronicle.griffin_blood",
+          "title": "格里芬之血"
+        },
+        {
+          "command": "chronicle_append",
+          "entry_id": "chronicle.griffin_blood",
+          "record_id": "chronicle.griffin_blood.s04_first",
+          "content": "据胖哥布林所说，格里芬之血是长老掌管的珍贵圣物，饮用后可以获得格里芬的庇护。\n真实功效：暂未确认。"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.s04.griffin_blood_after"
         },
         {
           "command": "dialogue",
@@ -727,51 +754,6 @@
         {
           "command": "dialogue",
           "id": "supplement.casino_sentry"
-        }
-      ]
-    },
-    "supplement.vendor_1": {
-      "once": false,
-      "trigger": "market_vendor_1",
-      "conditions": {
-        "flags": {
-          "day1.s04.commission_accepted": true
-        }
-      },
-      "steps": [
-        {
-          "command": "dialogue",
-          "id": "supplement.vendor_1"
-        }
-      ]
-    },
-    "supplement.vendor_2": {
-      "once": false,
-      "trigger": "market_vendor_2",
-      "conditions": {
-        "flags": {
-          "day1.s04.commission_accepted": true
-        }
-      },
-      "steps": [
-        {
-          "command": "dialogue",
-          "id": "supplement.vendor_2"
-        }
-      ]
-    },
-    "supplement.vendor_3": {
-      "once": false,
-      "trigger": "market_vendor_3",
-      "conditions": {
-        "flags": {
-          "day1.s04.commission_accepted": true
-        }
-      },
-      "steps": [
-        {
-          "command": "dialogue",
-          "id": "supplement.vendor_3"
         }
       ]
     },

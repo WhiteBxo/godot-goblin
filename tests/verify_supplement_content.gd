@@ -69,10 +69,17 @@ func run() -> void:
 		state.set_flag("day1.s04.commission_accepted")
 		await frames()
 		var triggers: Array = {
-			"settlement": ["prayer_man","prayer_woman","warehouse_guard_1","warehouse_guard_2","barracks_soldier","signature_philosopher","signature_drunk","market_vendor_1","market_vendor_2","market_vendor_3","market_mother","market_boy","village_child"],
+			"settlement": ["prayer_man","prayer_woman","warehouse_guard_1","warehouse_guard_2","barracks_soldier","signature_philosopher","signature_drunk","market_mother","market_boy","village_child"],
 			"tavern": ["signature_heartbroken_drinker"], "casino": ["casino_poet"]}[host]
 		if day == 1:
 			triggers = ["market_mother","market_boy","village_child"]
+		if host == "settlement":
+			# Stalls are goods, not chatter: no story route may answer for them.
+			var vendor_point := game.get_delivery_point("market_vendor_2")
+			check(vendor_point != null, "Vendor keeps an interaction point")
+			if vendor_point != null and day == 1:
+				check(not vendor_point.interaction_enabled, "Day one vendors are not worth talking to")
+				check(game.get_chapter_gameplay().open_market_vendor(&"market_vendor_2") == ERR_UNAVAILABLE, "Day one stalls refuse to trade")
 		if host == "settlement":
 			var mother := game.get_actor_director().get_actor(&"market_mother")
 			check(mother != game.get_actor_director().get_actor(&"prayer_woman"),"Mother and prayer companion have independent actor identities")
@@ -86,36 +93,48 @@ func run() -> void:
 			for choice in range(3): await conversation("casino_sentry",choice)
 		if host == "settlement" and day == 2:
 			var gather := game.get_gathering_service()
-			check(gather.get_points().size() == 6,"All six source materials have real gather points")
+			check(gather.get_points().size() == 6,"All six source materials keep their patch")
+			var harvested := 0
 			for point: GatherPoint in gather.get_points():
 				game.get_player().teleport_to(point.global_position + Vector2(0,24))
 				await frames()
+				if point.item_id == "insomnia_mushroom":
+					# Story ingredient: only a purchase or a hired runner brings it in.
+					check(not point.is_available(), "醒神菇 是剧情道具，主角自己采不到")
+					var refused := gather.harvest(point.interaction_id)
+					check(not refused.ok and refused.message == point.blocked_reason, "The locked patch explains who can reach it")
+					continue
 				check(point.is_available(), "Physically reach harvest: " + point.item_id)
 				var before: int = state.get_warehouse_inventory().get_stock(point.item_id)
 				var result := gather.harvest(point.interaction_id)
 				check(result.ok and result.message.begins_with(point.success_description),"Source acquisition text follows committed harvest: " + point.item_id)
 				check(state.get_warehouse_inventory().get_stock(point.item_id) == before + point.amount and not gather.harvest(point.interaction_id).ok,"Harvest pays once per day: " + point.item_id)
+				harvested += 1
+			check(harvested == 5,"The other five materials stay harvestable")
 			check(not state.can_discover_signature("S06"),"Free mushroom harvesting never fabricates a Day2 purchase")
 			state.commit_story_transaction("test.market_money",{},{},5000)
+			var chapter := game.get_chapter_gameplay()
+			check(chapter.can_trade_with_vendors(), "Second-day stalls open for trade")
 			for index in range(1,4):
-				var actor := game.get_actor_director().get_actor(StringName("market_vendor_%d" % index))
-				game.get_player().teleport_to(actor.global_position + Vector2(0,28))
+				var vendor_id := StringName("market_vendor_%d" % index)
+				var view := chapter.get_vendor_view(vendor_id)
+				var products: Array = view.get("products", [])
+				check(products.size() == 3, "Each vendor offers its three authored goods")
+				for product: Dictionary in products:
+					check(not str(product.get("pitch", "")).is_empty(), "Every good carries its own line: " + str(product.get("id", "")))
+				if products.is_empty():
+					continue
+				var first: Dictionary = products[0]
+				var quote: Dictionary = state.get_transactions().get_product_quote(str(first.id))
+				var money: int = state.get_transactions().get_balance()
+				var stock: int = state.get_warehouse_inventory().get_stock(str(quote.item_id))
+				var bought: Dictionary = chapter.buy_from_vendor(str(first.id), 1)
+				check(bought.get("ok", false), "Stall purchase settles through the shared wallet: " + str(first.id))
+				check(state.get_transactions().get_balance() == money - int(quote.unit_price) and state.get_warehouse_inventory().get_stock(str(quote.item_id)) == stock + 1,"Stall purchase uses the real quote and inventory: " + str(first.id))
+				# Recipe conversation is covered by verify_signature_interaction.
+				if state.get_flag("day2.procurement.purchased"):
+					state.complete_event("day2.procurement.recipe")
 				await frames()
-				var actions := game.get_chapter_gameplay().get_user_actions()
-				var available := 0
-				for action: Dictionary in actions:
-					if action.get("kind") != "market_buy":continue
-					available += 1
-					var quote: Dictionary = state.get_transactions().get_product_quote(action.product)
-					var money: int = state.get_transactions().get_balance()
-					var stock: int = state.get_warehouse_inventory().get_stock(quote.item_id)
-					game.get_chapter_gameplay().perform_user_action(action.id)
-					check(state.get_transactions().get_balance() == money - int(quote.unit_price) and state.get_warehouse_inventory().get_stock(quote.item_id) == stock + 1,"Nearby vendor uses the existing quote and real inventory: " + action.product)
-					# Recipe conversation is covered by verify_signature_interaction.
-					if state.get_flag("day2.procurement.purchased"):
-						state.complete_event("day2.procurement.recipe")
-					await frames()
-				check(available >= 3,"Each vendor offers its three authored goods")
 		game.free()
 		await frames()
 	print("SUPPLEMENT_CONTENT: %d checks, %d failures" % [checks,failures.size()])

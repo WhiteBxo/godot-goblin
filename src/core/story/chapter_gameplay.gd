@@ -36,6 +36,8 @@ var _recap: Control
 var _recap_shown := false
 var _ending: Control
 var _ending_shown := false
+var _vendor_popup: MarketVendorPopup
+var _vendor_actor: StringName
 
 func configure(game: MainGame) -> Error:
 	_game = game
@@ -59,6 +61,8 @@ func configure(game: MainGame) -> Error:
 	_ending = preload("res://src/UI/hud/two_days_end.tscn").instantiate()
 	game.get_ui_manager().register_screen(ScreenIds.TWO_DAYS_END, _ending, &"popup", true)
 	_ending.finished.connect(_finish_two_days)
+	_vendor_popup = preload("res://src/UI/trade/market_vendor_popup.tscn").instantiate()
+	game.get_ui_manager().register_screen(ScreenIds.MARKET_VENDOR, _vendor_popup, &"popup", true)
 	_state.state_changed.connect(_schedule_refresh)
 	_game.get_tea_production().changed.connect(_schedule_refresh)
 	_schedule_refresh()
@@ -282,21 +286,15 @@ func _quiet(allow_menu := false) -> bool:
 
 func get_user_actions() -> Array[Dictionary]:
 	var actions: Array[Dictionary] = []
-	if _host == "settlement" and _state.get_flag("day1.s04.commission_accepted"):
-		for vendor: Dictionary in _data.get("market_vendors", []):
-			var actor := _game.get_actor_director().get_actor(StringName(vendor.actor))
-			if actor == null or not actor.visible or actor.global_position.distance_to(_game.get_player().global_position) > 112.0:
-				continue
-			for product: String in vendor.products:
-				var quote: Dictionary = _state.get_transactions().get_product_quote(product)
-				if quote.get("ok", false):
-					actions.append({"id": "market_buy:" + product, "text": "购买 %s · %dG / 份（5次）" % [_state.get_warehouse_inventory().get_definition(quote.item_id).display_name, int(quote.unit_price)], "kind": "market_buy", "product": product})
 	if _state.story_stage == "day1.s04.wait_taste" and _host == "shop":
 		var inventory: WarehouseInventory = _state.get_warehouse_inventory()
-		if inventory.get_stock("day1_trial_milk_tea") == 0 and not inventory.has_uses({"firefly_cap": 1, "goblin_firebrew": 1}):
+		# The trial is mixed freely, so the shortfall is the missing ingredient,
+		# not a missing finished cup.
+		var mixed: bool = is_instance_valid(_game.get_task_delivery()) and _game.get_task_delivery().has_matching_drink("day1_s04_taste")
+		if not mixed and not inventory.has_uses({"firefly_cap": 1, "goblin_firebrew": 1}):
 			actions.append({"id": "taste_resupply", "text": "向胖哥布林补领缺少的试饮用料", "kind": "taste_resupply"})
 	if _state.current_day in [2, 3] and _host == "settlement" and _near_point(&"day1_s03_yard") and _procurement.get_status().get("status") == "funded":
-		actions.append({"id": "procurement_direct", "text": "用专款购买醒神菇 · 30G，退还委托人5G", "kind": "procurement_direct"})
+		actions.append({"id": "procurement_direct", "text": "用代购款买醒神菇 · 30G，剩下的5G算你的跑腿费", "kind": "procurement_direct"})
 	elif _state.current_day == 2 and _host == "settlement" and _near_point(&"day1_s03_yard"):
 		var quote: Dictionary = _state.get_transactions().get_product_quote("market_insomnia_mushroom")
 		if quote.get("ok", false):
@@ -327,7 +325,7 @@ func get_user_actions() -> Array[Dictionary]:
 				continue
 			var actor := _game.get_actor_director().get_actor(StringName(id))
 			if actor != null and actor.visible:
-				actions.append({"id": "hire:" + id, "text": "临时委托 " + actor.display_name + " · 专款支付30G货款＋5G跑腿费", "kind": "hire", "actor": id})
+				actions.append({"id": "hire:" + id, "text": "临时委托 " + actor.display_name + " · 代购款付30G货款＋5G跑腿费", "kind": "hire", "actor": id})
 	return actions
 
 ## 已发现、还有余量的哥布林辛辣原料。缺了它自由实验只能显示「缺货」。
@@ -362,8 +360,6 @@ func perform_user_action(id: String) -> void:
 			error = _game.get_story_director().request_interaction(action.trigger)
 		else:
 			match action.get("kind"):
-				"market_buy":
-					error = _buy_market_product(action.product)
 				"taste_resupply":
 					var gains := {}
 					for item: String in ["firefly_cap", "goblin_firebrew"]:
@@ -397,13 +393,88 @@ func perform_user_action(id: String) -> void:
 		_schedule_refresh()
 		return
 
-func _buy_market_product(product: String) -> Error:
-	if product == "market_insomnia_mushroom" and _state.current_day == 2:
+## Market stalls are a conversation, not a menu entry: talking to a vendor opens
+## that vendor's goods. Day one is spent earning the commission, so the grocers
+## wave the newcomer off until the second day.
+func _vendor_config(actor_id: StringName) -> Dictionary:
+	for vendor: Dictionary in _data.get("market_vendors", []):
+		if String(vendor.get("actor", "")) == String(actor_id):
+			return vendor
+	return {}
+
+func is_market_vendor(actor_id: StringName) -> bool:
+	return not _vendor_config(actor_id).is_empty()
+
+func get_vendor_ids() -> Array[StringName]:
+	var ids: Array[StringName] = []
+	for vendor: Dictionary in _data.get("market_vendors", []):
+		ids.append(StringName(vendor.get("actor", "")))
+	return ids
+
+func can_trade_with_vendors() -> bool:
+	return _host == "settlement" and _state.current_day >= 2 and _state.get_flag("day1.s04.commission_accepted")
+
+func open_market_vendor(actor_id: StringName) -> Error:
+	if not is_market_vendor(actor_id):
+		return ERR_DOES_NOT_EXIST
+	if not can_trade_with_vendors():
+		return ERR_UNAVAILABLE
+	var error: Error = _game.get_ui_manager().open_screen(ScreenIds.MARKET_VENDOR)
+	if error != OK:
+		return error
+	_vendor_actor = actor_id
+	_vendor_popup.present(get_vendor_view(actor_id), buy_from_vendor,
+		func() -> Dictionary: return get_vendor_view(_vendor_actor))
+	return OK
+
+## Only goods the shared wallet can quote are listed; each one carries the line
+## that vendor says about that very item, so the goods come before the speech.
+func get_vendor_view(actor_id: StringName) -> Dictionary:
+	var vendor := _vendor_config(actor_id)
+	var inventory: WarehouseInventory = _state.get_warehouse_inventory()
+	var products: Array[Dictionary] = []
+	for entry: Dictionary in vendor.get("products", []):
+		var product := String(entry.get("id", ""))
+		var quote: Dictionary = _state.get_transactions().get_product_quote(product)
+		if not quote.get("ok", false):
+			continue
+		var definition := inventory.get_definition(quote.item_id)
+		products.append({
+			"id": product,
+			"name": definition.display_name if definition != null else String(quote.item_id),
+			"price": int(quote.unit_price),
+			"portion": definition.uses_per_portion if definition != null else 1,
+			"pitch": String(entry.get("pitch", "")),
+		})
+	return {
+		"title": String(vendor.get("title", "摊主")),
+		"hint": "点一件商品听摊主怎么说 · Enter 买下 · Esc 离开",
+		"balance": _state.get_transactions().get_balance(),
+		"products": products,
+	}
+
+## Settled from the stall's own button; the result is the sentence read there.
+func buy_from_vendor(product: String, quantity: int) -> Dictionary:
+	var count: int = maxi(1, quantity)
+	var quote: Dictionary = _state.get_transactions().get_product_quote(product)
+	if not quote.get("ok", false):
+		return {"ok": false, "message": "这件货今天没有。"}
+	var cost := int(quote.unit_price) * count
+	if _state.get_transactions().get_balance() < cost:
+		return {"ok": false, "message": "金币不够：这些要 %dG。" % cost}
+	if _buy_market_product(product, count) != OK:
+		return {"ok": false, "message": "没能买成，金币还在你手里。"}
+	var definition = _state.get_warehouse_inventory().get_definition(quote.item_id)
+	return {"ok": true, "message": "买下 %s ×%d 份（%dG）。" % [
+		definition.display_name if definition != null else String(quote.item_id), count, cost]}
+
+func _buy_market_product(product: String, quantity := 1) -> Error:
+	if product == "market_insomnia_mushroom" and _state.current_day >= 2:
 		var quote: Dictionary = _state.get_transactions().get_product_quote(product)
 		if not quote.get("ok", false):
 			return ERR_UNAVAILABLE
-		return _state.commit_story_transaction("day2.procurement.personal_%d" % Time.get_ticks_usec(), {}, {}, -int(quote.unit_price), {"insomnia_mushroom": 1}, {"day2.procurement.purchased": true})
-	var result: Dictionary = _state.get_transactions().purchase(product, 1, "market-%d" % Time.get_ticks_usec())
+		return _state.commit_story_transaction("day2.procurement.personal_%d" % Time.get_ticks_usec(), {}, {}, -int(quote.unit_price) * quantity, {"insomnia_mushroom": quantity}, {"day2.procurement.purchased": true})
+	var result: Dictionary = _state.get_transactions().purchase(product, quantity, "market-%d" % Time.get_ticks_usec())
 	return OK if result.get("ok", false) else ERR_UNAVAILABLE
 
 func close_business() -> Error:
@@ -474,7 +545,7 @@ func _process(_delta: float) -> void:
 	if _state.current_day in [2, 3]:
 		var status := _procurement.get_status()
 		if not status.is_empty() and status.status not in ["delivered", "expired"]:
-			notice = "代购专款 %dG · %s" % [int(status.escrow), {"funded": "尚未雇人", "hired": "跑腿途中", "returned": "醒神菇已带回，请交给胖哥布林", "delivered": "已向胖哥布林交付", "expired": "已超时"}.get(status.status, "")]
+			notice = "胖哥布林的代购款 %dG · %s" % [int(status.escrow), {"funded": "尚未雇人", "hired": "跑腿途中", "returned": "醒神菇已带回，请交给胖哥布林", "delivered": "已向胖哥布林交付", "expired": "已超时"}.get(status.status, "")]
 	var gathering_notice := get_gathering_notice()
 	if not gathering_notice.is_empty():
 		notice += ("\n\n" if not notice.is_empty() else "") + gathering_notice

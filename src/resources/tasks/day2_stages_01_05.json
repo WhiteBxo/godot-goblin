@@ -79,7 +79,7 @@
         },
         {
           "id": "emissary",
-          "text": "到收银台接待谈论使者的顾客，制作并交付咖啡可可冰奶",
+          "text": "到收银台接待哥布林顾客，制作并交付咖啡可可冰奶",
           "hint": "在收银台按 E 接单，做好后回柜台交付",
           "location_id": "settlement.shop",
           "complete_when": {
@@ -383,8 +383,8 @@
     {
       "id": "day2.orders.emissary_0",
       "type": "commission",
-      "title": "咖啡可可冰奶 → 谈论使者的顾客",
-      "description": "咖啡可可冰奶 → 谈论使者的顾客",
+      "title": "咖啡可可冰奶 → 哥布林顾客",
+      "description": "咖啡可可冰奶 → 哥布林顾客",
       "reveal_when": {
         "type": "flag",
         "key": "day2.s02.emissary.open"
@@ -400,7 +400,7 @@
       "objectives": [
         {
           "id": "deliver",
-          "text": "咖啡可可冰奶 → 谈论使者的顾客",
+          "text": "咖啡可可冰奶 → 哥布林顾客",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.emissary_0.delivered"

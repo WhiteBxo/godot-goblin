@@ -11,6 +11,10 @@ extends InteractionPoint
 @export var required_flag: String = ""
 ## Authored acquisition text, displayed only after the inventory commit succeeds.
 @export_multiline var success_description := ""
+## Non-empty turns the point into scenery the player can never harvest: the text
+## says why (an ingredient only the locals know how to reach). Marker and artwork
+## stay hidden so a locked patch never reads as a target.
+@export_multiline var blocked_reason := ""
 ## Only configured RPG points show a distant clue and their harvestable artwork.
 @export var show_world_marker := false
 

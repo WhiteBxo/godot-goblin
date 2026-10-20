@@ -89,10 +89,21 @@ func make_order(order: String, target: String, accept := true) -> void:
 	if accept:
 		check(delivery.accept_order(order) == OK, "Accepts " + order)
 	var req := delivery.get_requirement(order)
-	var product: String = req.keys()[0]
-	var recipe := game.get_tea_production().get_recipe_by_product(product)
-	var result := game.get_tea_production().craft(recipe.materials)
-	check(result.ok, "Crafts " + product + ": " + result.message)
+	if req.is_empty():
+		# Free-mixing order: no recipe exists, so the cup comes from 自由实验 with
+		# its own confirmed price before it can be sold.
+		var production := game.get_tea_production()
+		var materials: Array[String] = ["creamer_milk_tea_base", "firefly_cap", "goblin_firebrew"]
+		var request := "test-mix-" + order
+		var quote := production.confirm_formula(materials, request)
+		check(quote.get("ok", false), "Free mix is priced before crafting: " + order)
+		var mixed := production.craft_formula(materials, 1, request)
+		check(mixed.get("ok", false), "Free mix crafts the trial cup: " + order)
+	else:
+		var product: String = req.keys()[0]
+		var recipe := game.get_tea_production().get_recipe_by_product(product)
+		var result := game.get_tea_production().craft(recipe.materials)
+		check(result.ok, "Crafts " + product + ": " + result.message)
 	# Exercise the actual button -> page -> modal -> facade -> host -> atomic delivery.
 	var ui := game.get_shop_ui()
 	var point := InteractionPoint.new()
@@ -101,9 +112,12 @@ func make_order(order: String, target: String, accept := true) -> void:
 	point.free()
 	var board := ui.get_popup().get_page().get_order_board_page()
 	check(board.select_order(order), "Selects ready order immediately: " + order)
-	check(board.get_ticket().get_primary_button().text == "立即交付", "Ready order has a delivery action")
+	check(board.get_ticket().get_primary_button().text in ["正在追踪", "追踪此单"], "A ready order only offers tracking: " + order)
 	board.get_ticket().get_primary_button().pressed.emit()
-	check(state.get_flag("delivery." + order + ".completed"), "Button immediately settles " + order + " for " + target)
+	check(not state.get_flag("delivery." + order + ".completed"), "The order board never settles a cup by itself")
+	# Handing the cup over is the counter interaction; it runs the same atomic call.
+	var delivered := delivery.try_submit(order, target)
+	check(delivered.ok and state.get_flag("delivery." + order + ".completed"), "Counter delivery settles " + order + " for " + target)
 	var settled: Dictionary = state.to_dict()
 	check(not delivery.try_submit(order, target).ok and state.to_dict() == settled, "Repeated delivery cannot consume or reward twice")
 	ui.close()
@@ -305,8 +319,8 @@ func _run() -> void:
 	check(state.get_transactions().get_balance() == 61, "Blood task pays total 40G once")
 	check(state.get_warehouse_inventory().get_uses("day1_griffin_blood") == 2, "Blood remains two uses")
 	await wait_event("day2.s01.morning")
-	check(state.get_transactions().get_balance() == 66, "Morning hands over 5G pocket money; the 35G escrow never credits the wallet")
-	check(game.get_chapter_gameplay().get_procurement().get_status().escrow == 35, "Dedicated procurement escrow holds 35G")
+	check(state.get_transactions().get_balance() == 96, "The 35G errand bag lands in the real purse")
+	check(game.get_chapter_gameplay().get_procurement().get_status().escrow == 35, "The errand ledger records the same 35G")
 	for group: String in ["festival", "elder", "emissary", "rumor"]:
 		await wait_event("day2.s02." + group + "_order")
 		if group == "festival":
@@ -316,7 +330,7 @@ func _run() -> void:
 		for i in range(count):
 			await make_order("day2_s02_%s_%d" % [group, i], "day2_%s_%d" % [group, i])
 		await wait_event("day2.s02." + group + "_after")
-	check(state.get_transactions().get_balance() == 81, "Mandatory path has 81G before the 100G wine")
+	check(state.get_transactions().get_balance() == 111, "Mandatory path has 111G before the 100G wine")
 	var scheduler := game.get_chapter_gameplay().get_scheduler()
 	var deadline := Time.get_ticks_msec() + 10000
 	while scheduler.get_group("rumor").status != "departed" and Time.get_ticks_msec() < deadline:
@@ -339,7 +353,7 @@ func _run() -> void:
 	await capture("wait_wine")
 	await use_service_point(&"tavern")
 	await wait_event("day2.s03.purchase")
-	check(state.get_transactions().get_balance() == (4 if ordinary_order else 1), "Wine actually costs the discounted 80G")
+	check(state.get_transactions().get_balance() == (34 if ordinary_order else 31), "Wine actually costs the discounted 80G")
 	check(state.get_warehouse_inventory().get_uses("griffin_amber_wine") == 5, "One purchased portion has five uses")
 	check(not state.is_event_completed("day2.s03.commission_token"), "Commission waits for another counter interaction")
 	await use_service_point(&"tavern")
@@ -387,7 +401,7 @@ func _run() -> void:
 	await capture("wait_guard")
 	check(not game.get_task_delivery().try_submit("day2_guard_special", "casino").ok, "Wrong recipient cannot consume the special")
 	check(game.get_task_delivery().try_submit("day2_guard_special", "drunken_guard").ok, "Real guard receives the special")
-	check(state.get_transactions().get_balance() == (4 if ordinary_order else 1), "Guard hospitality pays zero G")
+	check(state.get_transactions().get_balance() == (34 if ordinary_order else 31), "Guard hospitality pays zero G")
 	await wait_event("day2.s05.guard_after")
 	var journal := game.get_character_journal()
 	var guard_record := journal.get_character("characters.drunken_guard")

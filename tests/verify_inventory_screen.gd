@@ -18,6 +18,13 @@ func _frames(count: int = 2) -> void:
 	for index in range(count):
 		await process_frame
 
+## Every visible row's text, so a test can speak about the whole page.
+func _rows(page: WarehousePanel) -> String:
+	var text := ""
+	for index in range(page.get_list().item_count):
+		text += page.get_list().get_item_text(index) + "\n"
+	return text
+
 func _tap(key: Key) -> void:
 	var event := InputEventKey.new()
 	event.physical_keycode = key
@@ -46,7 +53,10 @@ func _test_screen_composition() -> void:
 	await process_frame
 	var page := screen.get_warehouse_panel()
 	_check(page != null and page is WarehousePanel, "Portable screen hosts the shared warehouse page")
-	_check(page.get_list().item_count == 6, "Portable screen lists the six configured ingredients")
+	var rows := _rows(page)
+	_check(rows.count("\n") > 6 and "红茶" in rows, "Portable screen lists the discovered raw ingredients")
+	_check(not "植脂末奶茶底" in rows and not "工业绿茶清汤" in rows, "Prepared drink bases stay out of the ingredient encyclopedia")
+	_check(not "杯" in rows, "Finished drinks stay out of the ingredient encyclopedia")
 	_check(screen.get_default_focus() == page.get_list(), "Portable screen focuses the item list")
 	_check(screen.uses_native_gui_input(), "List and filter keep native key navigation")
 	_check(inventory.add_ingredient("black_tea", 1) and "红茶  13" in page.get_list().get_item_text(0), "Portable screen refreshes from the shared inventory")
@@ -66,7 +76,7 @@ func _test_portable_session(scene_path: String) -> void:
 	var inventory := main.get_warehouse_inventory()
 	var page := main.get_inventory_panel()
 	var player := main.get_player() as PlayerController
-	_check(page != null and page.get_list().item_count == 6, "Portable warehouse exists in the host: " + scene_path)
+	_check(page != null and page.get_list().item_count > 0, "Portable warehouse exists in the host: " + scene_path)
 	_check(not manager.is_open(ScreenIds.INVENTORY), "Portable warehouse starts closed")
 	_check(main.open_inventory() == OK and manager.is_open(ScreenIds.INVENTORY), "Portable warehouse opens without an interaction point")
 	_check(page.is_visible_in_tree() and not player.movement_enabled, "Open portable warehouse uses the modal and movement lock")

@@ -354,9 +354,10 @@ func _run() -> void:
 	await _snapshot("group_wait")
 	await _restore(_state.to_dict())
 	await _reload(_state.to_dict())
-	check(_game.get_chronicle_journal().get_entries().size() == 3, "Chronicle unlocks exactly three entries")
+	check(_game.get_chronicle_journal().get_entries().size() == 2, "Chronicle opens only the entries the group actually names")
 	for entry in _game.get_chronicle_journal().get_entries():
-		check(entry.records.is_empty(), "New lore entry contains no invented explanation")
+		# 血 is only named by 胖哥布林 in S04, so no entry may open as an empty page.
+		check(not entry.records.is_empty(), "Every unlocked lore entry already reads as something")
 	check(_game.open_chronicle() == OK, "Unlocked chronicle uses real UI")
 	await _snapshot("chronicle")
 	_game.get_ui_manager().close_screen(&"chronicle")

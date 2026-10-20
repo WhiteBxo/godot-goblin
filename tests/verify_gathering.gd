@@ -359,6 +359,14 @@ func _test_host() -> void:
 	await _frames()
 	var before := state.to_dict()
 	for point: GatherPoint in service.get_points():
+		if point.item_id == "insomnia_mushroom":
+			# 醒神菇 is a story ingredient: only a purchase or a hired runner brings it in.
+			_check(not point.is_available() and not point.get_node("Marker").visible and not point.get_node("HarvestVisual").visible, "醒神菇 never reads as a harvest target: " + String(point.name))
+			var locked := state.to_dict()
+			await _move_player(player, point.global_position)
+			await _press_interact()
+			_check(not ui.is_open() and state.to_dict() == locked, "E on the locked mushroom patch gathers nothing")
+			continue
 		_check(point.get_node("Marker").visible and point.get_node("HarvestVisual").visible, "Available material has matching world artwork and marker")
 		_check(level.can_stand_at(point.global_position + Vector2(0, 24), Vector2(8.5, 5)), "Harvest object has a walkable approach: " + String(point.name))
 		var stock := game.get_warehouse_inventory().get_stock(point.item_id)

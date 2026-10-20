@@ -492,8 +492,12 @@ func _test_speaker_portraits() -> void:
 		_ui.reveal_all()
 		await _frames()
 		var panel: Control = _ui.get_node("Panel")
-		_check(is_equal_approx(portrait.get_global_rect().get_center().y, panel.get_global_rect().position.y), "Dialogue panel covers the lower half of the centered portrait")
-		_check(panel.z_index > portrait.z_index and portrait.get_global_rect().end.y <= panel.get_global_rect().end.y, "Portrait is behind the panel with no feet protruding below")
+		var portrait_rect: Rect2 = portrait.get_global_rect()
+		var panel_rect: Rect2 = panel.get_global_rect()
+		var visible_ratio := (panel_rect.position.y - portrait_rect.position.y) / portrait_rect.size.y
+		_check(visible_ratio >= 0.65, "The panel leaves the upper body of the portrait readable")
+		_check(portrait_rect.end.y - panel_rect.position.y <= portrait_rect.size.y * 0.35, "The panel hides only the portrait's lower strip")
+		_check(panel.z_index > portrait.z_index and portrait_rect.end.y <= panel_rect.end.y, "Portrait is behind the panel with no feet protruding below")
 		var on_left := line_id in ["player", "inner", "hidden"]
 		_check((portrait.get_global_rect().get_center().x < root.get_visible_rect().size.x / 2.0) == on_left, "Player is on the left and NPC is on the right: " + line_id)
 		_check(Rect2(Vector2.ZERO, root.get_visible_rect().size).encloses(portrait.get_global_rect()), "Portrait fits the viewport")
@@ -513,7 +517,8 @@ func _test_speaker_portraits() -> void:
 	_check(_manager.start_dialogue("day1.s05.drunken_guard") == OK, "The actual guard interception starts")
 	_check(portrait.visible and portrait.texture == _manager.speaker_portraits["醉酒守卫"] and not portrait.texture is AtlasTexture, "The guard interception shows the supplied guard illustration")
 	_check(portrait.texture_filter == CanvasItem.TEXTURE_FILTER_LINEAR, "Guard illustration uses smooth filtering")
-	_check(_ui.get_node("Portrait").offset_top < -284.0, "Tall guard helmet is raised so the face clears the dialogue panel")
+	var guard_portrait: TextureRect = _ui.get_node("Portrait")
+	_check(guard_portrait.offset_top == DialogueUI.PORTRAIT_TOP and guard_portrait.get_global_rect().position.y >= 0.0, "Tall guard art fits the portrait slot without cutting the helmet")
 	_manager.end_dialogue()
 	_check(_manager.load_dialogues("res://src/resources/dialogue/day2_stages_01_05.json") == OK, "Load the actual Day 2 dialogue illustrations")
 	for example: Array in [

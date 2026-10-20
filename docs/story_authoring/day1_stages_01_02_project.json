@@ -1,7 +1,7 @@
 {
 	"version": 1.0,
 	"format": "goblin_story_project",
-	"next_step_id": 21048.0,
+	"next_step_id": 24030.0,
 	"manifest": {
 		"version": 1.0,
 		"source": "res://docs/design/day_01_stages_01_02_draft.md",
@@ -592,11 +592,12 @@
 					}
 				},
 				{
-					"id": "step_0053",
+					"id": "step_24001",
 					"data": {
-						"command": "chronicle_unlock",
-						"entry_id": "chronicle.griffin_blood",
-						"title": "格里芬之血"
+						"command": "chronicle_append",
+						"entry_id": "chronicle.casino",
+						"record_id": "chronicle.casino.s02_first",
+						"content": "哥布林聚在一起赌钱的场所。赌徒哥布林输光了还想再来一把，只等格里芬再降恩赐；旁边的哥布林提醒他先凑齐这个月的贡品。"
 					}
 				},
 				{
@@ -605,6 +606,15 @@
 						"command": "chronicle_unlock",
 						"entry_id": "chronicle.elder",
 						"title": "长老"
+					}
+				},
+				{
+					"id": "step_24002",
+					"data": {
+						"command": "chronicle_append",
+						"entry_id": "chronicle.elder",
+						"record_id": "chronicle.elder.s02_first",
+						"content": "集市上的哥布林提到，长老会记下不守规矩、没凑齐贡品的人。"
 					}
 				},
 				{
@@ -1192,7 +1202,7 @@
 			"lines": {
 				"line_1": {
 					"speaker": "主角·内心",
-					"text": "……赌场、格里芬、长老，还有什么血？你们这角色扮演的设定还挺全啊？！",
+					"text": "……赌场、格里芬、长老，你们这角色扮演的设定还挺全啊？！",
 					"next": "line_2"
 				},
 				"line_2": {

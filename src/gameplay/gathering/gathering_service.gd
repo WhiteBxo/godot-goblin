@@ -165,6 +165,8 @@ func _unavailable_reason(point: GatherPoint) -> String:
 		return "采集系统正在提交。"
 	if not is_instance_valid(point) or _points.get(String(point.interaction_id)) != point:
 		return "该采集点不存在。"
+	if not point.blocked_reason.is_empty():
+		return point.blocked_reason
 	if Day1Access.is_market_only(_state):
 		return "先在集市附近看看，接下委托后再采集。"
 	if not point.required_flag.is_empty() and not _state.get_flag(point.required_flag):

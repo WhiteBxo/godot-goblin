@@ -1,6 +1,6 @@
 class_name InventoryPanel
 extends UIScreen
-## Portable warehouse: shared modal chrome around the read-only warehouse page.
+## 原料图鉴：共享模态外壳包着只读的原料列表。
 ## It reads the single WarehouseInventory owned by GameState and keeps no stock state.
 
 var _panel: WarehousePanel
@@ -12,6 +12,7 @@ func _ready() -> void:
 	if not is_instance_valid(_panel):
 		push_error("InventoryPanel: content scene must be a WarehousePanel.")
 		return
+	_panel.set_ingredients_only(true)
 	_shell.close_requested.connect(func() -> void: close_requested.emit())
 
 func configure(inventory: WarehouseInventory) -> void:

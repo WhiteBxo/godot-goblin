@@ -42,7 +42,9 @@ game.open_chronicle()
 
 后续 Beat 只需追加另一个稳定 record_id；重播或失败重试不会重复内容。MainGame 已注入服务；自定义宿主将配置好的 journal 传入 `director.set_chronicle_journal(journal)`。缺少服务、未解锁追加或 ID 冲突会让事件失败并报告所在步骤，先前已成功步骤保持原样，沿用原 Director 的非事务语义。
 
-正式编排继续遵循 [剧情编排工作流](../guides/story_authoring_workflow.md)，从实际内容来源取标题与正文（已迁移内容使用结构化工程，未迁移内容使用 Markdown），不把剧情顺序硬编码到 GDScript。当前没有单独预加载的正式条目库；S02 使用 chronicle.casino / griffin_blood / elder 三个空白条目，后续正文由批准剧情发布。旧对接预留的 day1.chronicle.* 不应覆盖这些已发布 ID。测试事件集中在 `src/debug/chronicle/demo_story.json`，可独立替换，不引用正式剧情。
+正式编排继续遵循 [剧情编排工作流](../guides/story_authoring_workflow.md)，从实际内容来源取标题与正文（已迁移内容使用结构化工程，未迁移内容使用 Markdown），不把剧情顺序硬编码到 GDScript。当前没有单独预加载的正式条目库；S02 解锁 `chronicle.casino`「赌场」与 `chronicle.elder`「长老」并同时写入第一条正文，S04 胖哥布林讲完信仰后补充「伟大的格里芬」「长老」「格里芬使者」，讲完格里芬之血后才新增 `chronicle.griffin_blood`「格里芬之血」。解锁即带正文，列表里不再出现「暂时没有记录」的空条目。旧对接预留的 day1.chronicle.* 不应覆盖这些已发布 ID。测试事件集中在 `src/debug/chronicle/demo_story.json`，可独立替换，不引用正式剧情。
+
+「异世界见闻录」是界面上显示的名称，手册页签、总览行、游戏菜单条目与 HUD 提示都用它；代码里的 `chronicle` 标识和 `GameState` 保留键保持不变。
 
 ## UI 行为与 F6 验收
 

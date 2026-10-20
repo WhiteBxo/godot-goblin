@@ -24,6 +24,8 @@ Windows zip 内含同名 exe、pck 和 `试玩说明.txt`，必须整包解压�
 
 实现核对了 Godot 4.7 官方 [Windows 图标格式与六种尺寸](https://docs.godotengine.org/en/4.7/tutorials/export/changing_application_icon_for_windows.html) 和 [安卓图标安全区、签名及环境变量](https://docs.godotengine.org/en/4.7/tutorials/export/exporting_for_android.html)。
 
+图标透明修正（2026-10-20 晚）：本轮包内图标仍是把 RGBA 原画压成 RGB 白底的版本，Windows 任务栏、桌面快捷方式与安卓自适应前景会显示白方块。`prepare_app_icons.py` 已改为保留原画 alpha（PNG 与 ICO 各尺寸逐层透明，自适应前景安全区外透明），图标文件已按新逻辑重新生成；上面两个包要重新导出才会带上修正后的图标。
+
 ## 本次实际验收
 
 | 检查 | 结果 |

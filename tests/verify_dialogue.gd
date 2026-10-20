@@ -524,7 +524,7 @@ func _test_speaker_portraits() -> void:
 	for example: Array in [
 		["day2.s03.tavern_commission", "酒馆老板", "tavern"],
 		["day2.s04.casino_boss", "赌场老板", "casino"],
-		["day2.s02.emissary_rumor", "谈论使者的顾客", "common_goblin"],
+		["day2.s02.emissary_rumor", "哥布林顾客", "common_goblin"],
 		["day2.s05.deliver_guard", "守卫", "guard"],
 		["day2.s05.deliver_guard_after_delivery", "守卫", "guard"],
 		["day2.s01.fat_goblin_wakes", "胖哥布林", "fat_goblin_sick"],

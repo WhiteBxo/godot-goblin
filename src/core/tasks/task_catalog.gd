@@ -210,10 +210,13 @@ func _objectives(value: Variant, context: String, references: Dictionary) -> boo
 		if not objective.get("id") is String or not objective.id.is_valid_identifier() or used.has(objective.id):
 			return _invalid(path + "/id", "Invalid or duplicate objective ID")
 		used[objective.id] = true
-		if not _keys(objective, ["id", "text", "complete_when", "required", "location_id", "reveal_when"], path):
+		if not _keys(objective, ["id", "text", "hint", "complete_when", "required", "location_id", "reveal_when"], path):
 			return false
 		if not _text(objective.get("text")) or not objective.get("required", true) is bool:
 			return _invalid(path, "Expected non-empty text and bool required")
+		# 任务指引是可选的界面提示（怎么操作），和任务项目（做什么）分开存。
+		if objective.has("hint") and not _text(objective.get("hint")):
+			return _invalid(path + "/hint", "Expected a non-empty hint when present")
 		has_required = has_required or objective.get("required", true)
 		if not _condition(objective.get("complete_when"), path + "/complete_when", references) or not _presentation(objective, path, references):
 			return false

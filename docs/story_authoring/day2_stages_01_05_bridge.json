@@ -340,7 +340,7 @@
       "mode": "自动演出",
       "event": "day2.s05.guard_after",
       "start": 0,
-      "count": 11,
+      "count": 13,
       "dialogues": [
         "day2.s05.deliver_guard_after_delivery",
         "day2.s05.deliver_guard_after_reward",
@@ -499,5 +499,5 @@
     }
   ],
   "authoring_project": "res://docs/story_authoring/day2_stages_01_05_project.json",
-  "authoring_sha256": "396c5e2083a74ad9ddaa1b1ef67001a6613638f3b7e8177f9926f63cd5d04a8f"
+  "authoring_sha256": "6f84f006a619682b76acb09477c4abf909032dc75ec55378d08ac452039cc5e8"
 }

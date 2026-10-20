@@ -19,6 +19,8 @@ var _result: Label
 var _craft: Button
 var _confirm: Button
 var _refreshing := false
+## 当前选料命中委托特调，而不是需要报价的普通自由配方。
+var _experiment := false
 
 func _ready() -> void:
 	var scroll := ScrollContainer.new()
@@ -182,7 +184,15 @@ func select_formula(materials: Array, iced := false) -> bool:
 
 func _refresh_preview() -> void:
 	var materials := get_materials()
+	_experiment = false
+	if not materials.is_empty() and is_instance_valid(_production):
+		var special := _production.preview_experiment(materials, 1)
+		if not special.is_empty():
+			_experiment = true
+			_show_experiment_preview(special, materials)
+			return
 	var result := _production.preview_formula(materials, 1, is_iced())
+	_preview.theme_type_variation = &""
 	var quote := _production.preview_formula_price(materials, is_iced()) if not materials.is_empty() else {}
 	var priced: bool = bool(quote.get("priced", false))
 	var can_confirm := _production.can_confirm_formula(materials)
@@ -211,14 +221,39 @@ func _refresh_preview() -> void:
 
 func submit() -> void:
 	if _craft.disabled:
-		_result.text = "请先确认报价，之后才能制作。"
+		_result.text = "这份委托特调不加冰，请把冰块改回「不加冰」。" if _experiment else "请先确认报价，之后才能制作。"
 		return
 	formula_requested.emit(get_materials(), is_iced())
+
+## 委托特调按固定成品结算：配方即报价，制作后进共享库存，不需要单独确认价格。
+func _show_experiment_preview(special: Dictionary, materials: Array[String]) -> void:
+	var product_name := str(special.get("product_name", ""))
+	_confirm.disabled = true
+	_confirm.tooltip_text = "委托特调按配方直接制作，不需要单独报价。"
+	if is_iced():
+		_preview.text = "→ %s ×1\n这份委托特调不加冰，请把冰块改回「不加冰」。" % product_name
+		_preview.theme_type_variation = &"Warning"
+		_craft.disabled = true
+		return
+	if str(special.get("code")) != "ok":
+		_preview.text = str(special.get("message", ""))
+		_preview.theme_type_variation = &"Warning"
+		_craft.disabled = true
+		return
+	_preview.text = "→ %s ×1\n委托特调：%s\n制作后入库，再带去交给委托人。" % [
+		product_name, " + ".join(_production.get_recipe_names(materials))]
+	_preview.theme_type_variation = &"Success"
+	_craft.disabled = false
 
 func show_result(result: Dictionary) -> void:
 	_result.text = str(result.get("message", ""))
 	_result.theme_type_variation = &"Success" if result.get("ok", false) else &"Warning"
-	_refresh_preview()
+	if bool(result.get("ok", false)) and _experiment:
+		# 委托只做一杯，成品入库后清空选料，避免下一帧又显示“仅制作一杯”。
+		_selected.clear()
+		refresh()
+	else:
+		_refresh_preview()
 	if _result.text.is_empty():
 		return
 	if result.get("ok", false):

@@ -59,7 +59,8 @@
       "objectives": [
         {
           "id": "festival",
-          "text": "到收银台按 E 接第一组订单，制作经典珍珠奶茶后交给顾客",
+          "text": "接下第一组订单，制作经典珍珠奶茶并交给顾客",
+          "hint": "在收银台按 E 接单，制作台做好后回柜台交付",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -69,6 +70,7 @@
         {
           "id": "elder",
           "text": "到收银台接待谈论长老的顾客，制作并交付薄荷巧脆奶茶",
+          "hint": "在收银台按 E 接单，做好后回柜台交付",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -78,6 +80,7 @@
         {
           "id": "emissary",
           "text": "到收银台接待谈论使者的顾客，制作并交付咖啡可可冰奶",
+          "hint": "在收银台按 E 接单，做好后回柜台交付",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -87,6 +90,7 @@
         {
           "id": "rumor_first",
           "text": "接取最后一组的两张订单，制作苹果奶绿和草莓奶绿并分别交付",
+          "hint": "在收银台按 E 一次取走两张订单",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -96,6 +100,7 @@
         {
           "id": "rumor_second",
           "text": "将草莓奶绿交给最后一组的另一位顾客",
+          "hint": "回到柜台按 E 交给对应顾客",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -104,7 +109,8 @@
         },
         {
           "id": "close",
-          "text": "交清已接散客订单，点击「关店 · 前往酒馆」",
+          "text": "交清已接散客订单，关店前往酒馆",
+          "hint": "打开右上角菜单，点「关店 · 前往酒馆」",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -133,7 +139,8 @@
       "objectives": [
         {
           "id": "arrive",
-          "text": "出店后前往居民区右下方的酒馆；按 M 查看地图",
+          "text": "前往居民区右下方的酒馆",
+          "hint": "按 M 查看地图定位酒馆",
           "location_id": "settlement.tavern",
           "complete_when": {
             "type": "flag",
@@ -142,7 +149,8 @@
         },
         {
           "id": "buy",
-          "text": "入门后向北找到吧台，按 E 与裂牙交谈；再次按 E 以 48G 购酒",
+          "text": "向酒馆老板购买格里芬琥珀酒",
+          "hint": "进门后向北到吧台与裂牙交谈，八折实付 80G",
           "location_id": "settlement.tavern",
           "complete_when": {
             "type": "flag",
@@ -151,7 +159,8 @@
         },
         {
           "id": "commission",
-          "text": "购酒后在吧台再按 E，听取七日祭委托与令牌线索",
+          "text": "听取酒馆老板的七日祭委托与令牌提醒",
+          "hint": "购酒后回到吧台再与他交谈",
           "location_id": "settlement.tavern",
           "complete_when": {
             "type": "flag",
@@ -180,7 +189,8 @@
       "objectives": [
         {
           "id": "arrive",
-          "text": "离开酒馆，前往聚落西南方的赌场；按 M 查看地图",
+          "text": "离开酒馆，前往聚落西南方的赌场",
+          "hint": "按 M 查看地图定位赌场",
           "location_id": "settlement.casino",
           "complete_when": {
             "type": "flag",
@@ -189,7 +199,8 @@
         },
         {
           "id": "first",
-          "text": "在入口上方的赌桌按 E 入座；听完规则后，再按 E 确认第一局",
+          "text": "与赌场老板黑齿赌第一局",
+          "hint": "在入口上方的赌桌入座，听完规则后确认开局",
           "location_id": "settlement.casino",
           "complete_when": {
             "type": "flag",
@@ -198,7 +209,8 @@
         },
         {
           "id": "second",
-          "text": "在同一赌桌再次按 E 确认第二局，取得幻金菇并听完结算",
+          "text": "再赌一局，赢下幻金菇",
+          "hint": "在同一张赌桌继续确认第二局",
           "location_id": "settlement.casino",
           "complete_when": {
             "type": "flag",
@@ -245,7 +257,8 @@
         },
         {
           "id": "craft",
-          "text": "到制作台按 E，在「已知配方」选择守卫特调并制作一杯",
+          "text": "用植脂末奶茶底、格里芬琥珀酒和幻金菇手调一杯守卫特调",
+          "hint": "在制作台按 E，打开「自由实验」手调",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -254,7 +267,8 @@
         },
         {
           "id": "greet",
-          "text": "带上奶茶出店，前往长老居所支路的醉酒守卫处，按 E 与他交谈",
+          "text": "带着奶茶前往长老居所支路的醉酒守卫处",
+          "hint": "出店后靠近守卫按 E 交谈",
           "location_id": "settlement.elder",
           "complete_when": {
             "type": "flag",

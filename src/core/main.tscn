@@ -108,7 +108,7 @@ display_name = "凑热闹的哥布林"
 visible = false
 collision_layer = 0
 actor_id = &"day2_emissary_0"
-display_name = "谈论使者的顾客"
+display_name = "哥布林顾客"
 
 [node name="Day2Rumor0" parent="World/EntityRoot" instance=ExtResource("npc_common")]
 visible = false

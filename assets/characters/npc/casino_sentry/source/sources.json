@@ -7,9 +7,10 @@
       "sha256": "2408f51ac6649e29bdd928f8d310a3ad7b1daf607108ceb5c21a904271467d86"
     },
     {
-      "source_entry": "侍卫2/侍卫2.png",
+      "source_entry": "哥布林npc：有特定对话，不能重复利用的npc/其他可对话npc/赌场护卫/守卫长.png",
       "path": "assets/characters/npc/casino_sentry/source/portrait.png",
-      "sha256": "2a34f5886d7db6e5b209b22d7c14ac7e60a49bc159a8687a73aa1962b305c97f"
+      "sha256": "64b7af94512957db2153170b35299ed6b35838417b1b96e7c7bc2d2438e76dd5",
+      "note": "2026-10-20 用户指定：赌场护卫立绘改用守卫长原图，不再使用侍卫2.png"
     },
     {
       "source_entry": "侍卫2/合并图片 2.png",
@@ -23,9 +24,10 @@
     }
   ],
   "portrait_crop": [
-    317,
     0,
-    1564,
-    1640
-  ]
+    9,
+    1713,
+    1715
+  ],
+  "portrait_archive": "哥布林npc：有特定对话，不能重复利用的npc(1).zip"
 }

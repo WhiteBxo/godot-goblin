@@ -178,6 +178,44 @@ func get_available_recipes() -> Array[TeaRecipe]:
 		return result
 	return _menu.recipe_book.get_recipes_for(_state)
 
+## 「已知配方」只列固定菜单。实验配方交给自由实验，由玩家自己选出同样的原料。
+func get_known_recipes() -> Array[TeaRecipe]:
+	var result: Array[TeaRecipe] = []
+	for recipe: TeaRecipe in get_available_recipes():
+		if not recipe.experiment_only:
+			result.append(recipe)
+	return result
+
+## 当前可手调、但成品尚未入库的实验配方；制作台据此先打开自由实验。
+func has_pending_experiment() -> bool:
+	for recipe: TeaRecipe in get_available_recipes():
+		if recipe.experiment_only and get_stock(recipe.product_id) <= 0:
+			return true
+	return false
+
+## 原料组合命中实验配方时返回该配方，否则为空。
+func find_experiment_recipe(materials: Array) -> TeaRecipe:
+	var recipe := _recipe_for_key(TeaRecipe.key_for(materials))
+	if recipe == null or not recipe.experiment_only:
+		return null
+	return recipe
+
+## 自由实验的只读预览：命中实验配方时给出固定成品，不写入任何状态。
+func preview_experiment(materials: Array, quantity: int = 1) -> Dictionary:
+	var recipe := find_experiment_recipe(materials)
+	if recipe == null:
+		return {}
+	# 固定成品按配方自身原料结算，不读取自由槽位或加冰选项。
+	return preview_craft(recipe.materials, quantity)
+
+## 自由实验的唯一提交入口：实验配方走固定成品事务，其余仍是动态配方制作。
+func craft_free(materials: Array, quantity: int = 1, iced: bool = false, request_id: String = "") -> Dictionary:
+	if find_experiment_recipe(materials) != null:
+		if iced:
+			return {"ok": false, "code": "ice_option", "message": "这份委托特调不加冰，请把冰块改回「不加冰」。未消耗库存。"}
+		return craft(materials, quantity)
+	return craft_formula(materials, quantity, request_id, iced)
+
 func get_recipe_by_product(product_id: String) -> TeaRecipe:
 	var recipe: TeaRecipe = _by_product.get(product_id)
 	return recipe.duplicate(true) as TeaRecipe if recipe != null else null

@@ -39,7 +39,7 @@ StoryLibrary 严格校验以下同步指令；保留现有 `when` 条件，不�
 
 标题、身份、特征、已知交集及主角判断均由剧情提供纯文本，不根据 Actor 注册、地图出生或未来剧情自动推断。后续更新使用新的稳定记录 ID，保留先前认识。结构化剧情工程沿用现有 StoryLibrary 校验，无需第二种编排格式。
 
-Day 2 正式运行时事件目前仍为空，`s05_useful_guard` 的正式发布受原有剧情接线约束。本模块已提供可用指令与独立预览；后续在正式结构化工程中把人物解锁和情报追加放在对应「人物记录更新」提示附近，再生成运行时产物。本次未修改其他工作中的剧情工程或替它发布 pending 内容。
+Day 2 正式运行时已在 `day2.s05.guard_after`（交付特殊奶茶、`day2.s05.useful_guard` 演出之后）解锁两名人物：`characters.drunken_guard` 先追加 `day2.guard.hospitality`，紧接着 `characters.fat_goblin` 以「胖哥布林」为题追加 `day2.fat_goblin.greedy_chatter`（正文「有点话多、贪吃的哥布林。」），因此手册「人物记录」首次开放即为两条，顺序与解锁顺序一致。同一 Beat 的系统提示同步为「【人物记录更新】醉酒守卫、胖哥布林」。该 Beat 共 13 步，工程散列与新步骤 ID 记录在 [day2_stages_01_05_bridge.json](../../docs/story_authoring/day2_stages_01_05_bridge.json)。
 
 ## 查看与试玩
 

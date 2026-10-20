@@ -67,6 +67,7 @@ product_id = "day2_guard_milk_tea"
 materials = Array[String](["creamer_milk_tea_base", "griffin_amber_wine", "phantom_gold_mushroom"])
 required_flag = "day2.s05.special_recipe_available"
 required_stages = Array[String](["day2.s05.wait_special_drink"])
+experiment_only = true
 
 [resource]
 script = ExtResource("book")

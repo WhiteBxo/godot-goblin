@@ -19,13 +19,13 @@ zip 内结构：
   试玩说明.txt
 ```
 
-sha256：`286289382388ed586dd5710dcf96956dd182797675be6f83fc8086095b16ab5c`
+sha256：`fbc508b96748db207b36e83d16bc35ec0b7e315b2ba588f2930548d2c854e87f`
 
 ## 版本对应
 
-- 源码 `a1fdd20c`（工作树干净时导出），引擎 Godot 4.7.2 stable，release 模板，x86_64。
+- 源码 `e52a67ef`（工作树干净时导出），引擎 Godot 4.7.2 stable，release 模板，x86_64。
 - 工程 `config/name="洞窟深处的奶茶店"`、`config/version="0.1.0"`。
-- 源构建目录 `dist/godot-goblin-release-20261020-1526-a1fdd20c/`，构建详情见同级 `-build_info.json`。
+- 源构建目录 `dist/godot-goblin-release-20261020-1612-e52a67ef/`；上一版 `…-1526-a1fdd20c/` 是群客改动前的构建，已被本版取代。
 
 ## 内容范围
 

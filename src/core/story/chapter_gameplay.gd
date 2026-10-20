@@ -3,6 +3,24 @@ extends Node
 ## Scene-local business actions. Authored events decide ordering and boundaries.
 
 const ACTIONS := "res://src/resources/story/chapter_actions.json"
+## Optional commissions served beside a group's planned order. They stay outside
+## the business plan, so the story beat still turns on the planned drink; while one
+## is accepted its host group waits instead of leaving, which is what makes a
+## greedy experiment safe to accept.
+const OPTIONAL_ORDERS := {
+	"day2_taste": {"task": "day2.orders.taste", "group": "ordinary_c", "actor": &"day2_ordinary_c",
+		"feedback": "试饮评价 · 奶香里带着辛辣，正合口味！配方已留在饮品图鉴。"},
+	"day2_special_sour": {"task": "day2.orders.special_sour", "group": "festival", "actor": &"day2_festival_1",
+		"feedback": "围观者甲吮了一口就皱眉又笑：这酸味够劲。售价已按确认配方结算。"},
+	"day2_special_herbal": {"task": "day2.orders.special_herbal", "group": "elder", "actor": &"day2_elder_1",
+		"feedback": "草木味在舌根停了一会儿，顾客乙点头收下。售价已按确认配方结算。"},
+	"day2_special_wine": {"task": "day2.orders.special_wine", "group": "emissary", "actor": &"day2_emissary_0",
+		"feedback": "使者闻了闻杯口：这才像招待。售价已按确认配方结算。"},
+	"day2_special_smoky": {"task": "day2.orders.special_smoky", "group": "rumor", "actor": &"day2_rumor_1",
+		"feedback": "烟熏味让顾客乙眯起眼，说像火塘边的味道。售价已按确认配方结算。"},
+	"day2_special_spicy": {"task": "day2.orders.special_spicy", "group": "ordinary_b", "actor": &"day2_ordinary_b",
+		"feedback": "散客被辣得直吸气，还是把杯子推了回来要续。售价已按确认配方结算。"},
+}
 var last_error := ""
 var _state: Node
 var _game: MainGame
@@ -216,24 +234,45 @@ func _configure_day2() -> void:
 				last_error = id + ": " + reason
 				push_error(last_error))
 	_game.get_task_delivery().set_order_availability(["day3_festival"], func(_id: String) -> bool: return _state.current_day == 3)
-	_game.get_task_delivery().set_order_availability(["day2_taste"], _taste_available)
+	var optional_ids: Array[String] = []
+	optional_ids.assign(OPTIONAL_ORDERS.keys())
+	_game.get_task_delivery().set_order_availability(optional_ids, _optional_available)
 	_game.get_task_delivery().delivered.connect(_on_optional_delivered)
 	_services_ready = true
 
-func _taste_available(_id: String) -> bool:
-	var actor := _game.get_actor_director().get_actor(&"day2_ordinary_c")
-	return _host == "shop" and _state.current_day == 2 and is_instance_valid(_scheduler) and _scheduler.get_group("ordinary_c").get("status") == "waiting" and not _state.get_flag("day2.s02.closed") and actor != null and actor.visible
+## Optional slips only answer while their customer actually stands in the shop, so
+## a customer who already left cannot leave a dead order on the board.
+func _optional_available(order_id: String) -> bool:
+	var info: Dictionary = OPTIONAL_ORDERS.get(order_id, {})
+	if info.is_empty() or _host != "shop" or _state.current_day != 2 or _state.get_flag("day2.s02.closed"):
+		return false
+	var actor := _game.get_actor_director().get_actor(info.actor)
+	return actor != null and actor.visible
 
 func _can_depart(group: String) -> bool:
-	return group != "ordinary_c" or not _taste_pending()
+	for order_id: String in OPTIONAL_ORDERS:
+		if OPTIONAL_ORDERS[order_id].group == group and _optional_pending(order_id):
+			return false
+	return true
+
+func _optional_pending(order_id: String) -> bool:
+	var info: Dictionary = OPTIONAL_ORDERS.get(order_id, {})
+	return (not info.is_empty()
+		and _state.get_flag("task.%s.accepted" % order_id)
+		and _state.get_task_result(info.task).is_empty()
+		and not _state.get_flag("delivery.%s.completed" % order_id))
 
 func _taste_pending() -> bool:
-	return _state.get_flag("task.day2_taste.accepted") and _state.get_task_result("day2.orders.taste").is_empty() and not _state.get_flag("delivery.day2_taste.completed")
+	return _optional_pending("day2_taste")
 
 func _on_optional_delivered(id: String) -> void:
-	if id == "day2_taste":
-		_scheduler.request_departure.call_deferred("ordinary_c")
-		_game.get_shop_ui().show_feedback.call_deferred("试饮评价 · 奶香里带着辛辣，正合口味！配方已留在饮品图鉴。", true)
+	var info: Dictionary = OPTIONAL_ORDERS.get(id, {})
+	if info.is_empty() or not is_instance_valid(_scheduler):
+		return
+	# Only releases a group that is otherwise served; the planned drink still owns
+	# the story beat when it has not been delivered yet.
+	_scheduler.request_departure.call_deferred(info.group)
+	_game.get_shop_ui().show_feedback.call_deferred(info.feedback, true)
 
 func _quiet(allow_menu := false) -> bool:
 	var travel := _game.get_scene_travel()
@@ -383,8 +422,9 @@ func close_business() -> Error:
 func get_close_block_reason() -> String:
 	if not is_instance_valid(_scheduler):
 		return "营业会话还没准备好。"
-	if _taste_pending():
-		return "散客还在等那杯带辛辣风味的试饮：做好再去关店，或在订单板放弃这单。"
+	for order_id: String in OPTIONAL_ORDERS:
+		if _optional_pending(order_id):
+			return "还有客人点的特调没有交付：做好再去关店，或在订单板放弃这一单。"
 	for id: String in Day2Procurement.RUNNERS:
 		if _state.get_flag("task." + id + ".accepted") and not _state.get_flag("delivery." + id + ".completed"):
 			return "还有已接取的跑腿订单没有交付。"
@@ -400,8 +440,8 @@ func cancel_optional_order(order_id: String) -> Error:
 	if entry.is_empty() or entry.get("status") != "active" or not bool(entry.get("allow_cancel", false)):
 		return ERR_UNAVAILABLE
 	var error: Error = _state.settle_task_result(str(entry.task_id), "cancelled", "主动放弃订单")
-	if error == OK and order_id == "day2_taste" and is_instance_valid(_scheduler):
-		_scheduler.request_departure.call_deferred("ordinary_c")
+	if error == OK and OPTIONAL_ORDERS.has(order_id) and is_instance_valid(_scheduler):
+		_scheduler.request_departure.call_deferred(OPTIONAL_ORDERS[order_id].group)
 	return error
 
 func get_gathering_notice() -> String:

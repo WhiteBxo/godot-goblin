@@ -43,6 +43,20 @@ tutorial 首单配置沿用 `shop.first_order`，完成事实为 `shop.order_001
 正式散客在 `src/resources/tasks/day2_stages_01_05.json`：第二天三名普通客各可点一杯 H01，3G／杯，经 `BusinessScheduler` 和 `CustomerVisit` 入店、等待与离店。它们复用 `accept_order`、`try_submit` 和稳定交付回执；四组剧情客完成后可直接关店，已接普通单必须先交付。普通客也可雇一人执行专款代购，与饮品交付分别结算。`verify_two_day_flow.gd -- --ordinary-order` 覆盖接普通单后无法关店、交付后可以关店的真实分支。
 
 两套数据都是一次性任务，当前未提供每日无限刷新。
+
+### 第二天的特调订单
+
+`day2_stages_01_05.json` 里另有五张可选特调单（`day2.orders.special_*`）。它们**不进营业计划**，因此不参与剧情客组的交单判定，也不会挡住关店；只有在对应顾客站在店里时才出现在订单板（`ChapterGameplay.OPTIONAL_ORDERS` 一处配置顾客、客组与到账反馈）。接单后该客组会等这杯特调，交付或从订单板「放弃此单」后才离店——和既有的辛辣试饮单同一套机制。金额按已确认配方售价结算，不写死 3G。
+
+| 单据 | 顾客 | 需求 | 常见做法 | 售价 |
+| --- | --- | --- | --- | --- |
+| `day2_special_sour` | 围观者甲 | 发酵味 | 奶茶底 ＋ 苔痕青 | 4G |
+| `day2_special_herbal` | 议论长老的顾客乙 | 草木气息 | 奶茶底 ＋ 醒神菇 | 16–19G |
+| `day2_special_wine` | 格里芬使者 | 酒香 | 奶茶底 ＋ 老火烧 | 7–9G |
+| `day2_special_smoky` | 打听酒馆的顾客乙 | 烟熏味 | 奶茶底 ＋ 炽舌椒 | 16–19G |
+| `day2_special_spicy` | 歇脚的散客 | 辛辣 | 老火烧 ＋ 炽舌椒 | 23–28G |
+
+五张单在一个白天里的典型收入是 66–79G（同杯多放哥布林原料还能更高），加上试饮单约 73–88G；普通散客仍是 3G／杯。`tests/verify_day2_special_orders.gd` 覆盖上板、接单、确认报价、制作、交付与到账金额。
 ## 执行流程
 
 1. MainGame 装配 Systems/TaskDelivery，注入原目录、Journal、GameState 和共享库存。打开订单板只查看；每单点击“接取订单”后调用 `accept_order()`，重复接取返回 `ERR_ALREADY_EXISTS`。已有 StoryDirector 路由继续优先。

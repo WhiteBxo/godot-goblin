@@ -38,6 +38,10 @@
     "day2.procurement.fund": {
       "kind": "procurement_fund"
     },
+    "day2.s01.pocket_money": {
+      "kind": "transaction",
+      "money": 5
+    },
     "day2.procurement.recipe": {
       "kind": "signature_discovery",
       "signature_id": "S06"
@@ -324,8 +328,8 @@
     "tavern_offers": {
       "day2_amber_wine": {
         "item_id": "griffin_amber_wine",
-        "price": 60,
-        "discounted_price": 48,
+        "price": 100,
+        "discounted_price": 80,
         "discount_flag": "day2.s03.discount",
         "stock": 1
       }

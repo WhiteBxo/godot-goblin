@@ -627,7 +627,7 @@ origin = "otherworld"
 category = "material"
 rarity = "史诗"
 form = "液体"
-price = 60
+price = 100
 description = "以格里芬纹章为标志的高档酒品，常出现在富裕哥布林的宴席与重要社交场合。民间流传着饮用此酒便能得到格里芬庇佑的说法，但这种传闻从未得到证实。"
 ; generated:recipe_ingredients
 can_be_base = true
@@ -880,9 +880,9 @@ recipe_book = ExtResource("book")
 products = {
 "day2_amber_wine": {
 "discount_flag": "day2.s03.discount",
-"discounted_price": 48,
+"discounted_price": 80,
 "item_id": "griffin_amber_wine",
-"price": 60,
+"price": 100,
 "stock": 1
 },
 "market_firefly_cap": {

@@ -809,6 +809,216 @@
       "rewards": {
         "text": "按已确认配方售价结算 · 留下饮品图鉴"
       }
+    },
+    {
+      "id": "day2.orders.special_sour",
+      "type": "commission",
+      "title": "围观者甲 · 带酸的发酵特调",
+      "allow_cancel": true,
+      "description": "围观者甲想喝点带发酵酸味的特调。挑一款基底、加一份带酸味的哥布林原料，到制作台自由实验，确认报价后交给他。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day2.special_sour.delivered"
+      },
+      "objectives": [
+        {
+          "id": "deliver",
+          "text": "自由调一杯带发酵味的特调，确认报价后交给围观者甲",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.special_sour.delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day2_special_sour",
+        "drink": {
+          "flavors": [
+            "发酵味"
+          ]
+        },
+        "target_object_id": "day2_festival_1",
+        "accepted_flag": "task.day2_special_sour.accepted"
+      },
+      "rewards": {
+        "text": "按已确认配方售价结算 · 留下饮品图鉴"
+      }
+    },
+    {
+      "id": "day2.orders.special_herbal",
+      "type": "commission",
+      "title": "议论长老的顾客乙 · 草木苦特调",
+      "allow_cancel": true,
+      "description": "议论长老的顾客乙要点带草木气息的苦味特调。苔痕之外的草木原料都行，确认报价后带给他。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day2.special_herbal.delivered"
+      },
+      "objectives": [
+        {
+          "id": "deliver",
+          "text": "自由调一杯带草木气息的特调，确认报价后交给顾客乙",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.special_herbal.delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day2_special_herbal",
+        "drink": {
+          "flavors": [
+            "草木气息"
+          ]
+        },
+        "target_object_id": "day2_elder_1",
+        "accepted_flag": "task.day2_special_herbal.accepted"
+      },
+      "rewards": {
+        "text": "按已确认配方售价结算 · 留下饮品图鉴"
+      }
+    },
+    {
+      "id": "day2.orders.special_wine",
+      "type": "commission",
+      "title": "格里芬使者 · 酒香特调",
+      "allow_cancel": true,
+      "description": "使者说没有酒香就不算招待。用带酒香的哥布林原料调一杯，确认报价后交给他。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day2.special_wine.delivered"
+      },
+      "objectives": [
+        {
+          "id": "deliver",
+          "text": "自由调一杯带酒香的特调，确认报价后交给格里芬使者",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.special_wine.delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day2_special_wine",
+        "drink": {
+          "flavors": [
+            "酒香"
+          ]
+        },
+        "target_object_id": "day2_emissary_0",
+        "accepted_flag": "task.day2_special_wine.accepted"
+      },
+      "rewards": {
+        "text": "按已确认配方售价结算 · 留下饮品图鉴"
+      }
+    },
+    {
+      "id": "day2.orders.special_smoky",
+      "type": "commission",
+      "title": "打听酒馆的顾客乙 · 烟熏特调",
+      "allow_cancel": true,
+      "description": "这位顾客要的是烟熏味：火塘边长的东西才够味。确认报价后带给他。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day2.special_smoky.delivered"
+      },
+      "objectives": [
+        {
+          "id": "deliver",
+          "text": "自由调一杯带烟熏味的特调，确认报价后交给顾客乙",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.special_smoky.delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day2_special_smoky",
+        "drink": {
+          "flavors": [
+            "烟熏味"
+          ]
+        },
+        "target_object_id": "day2_rumor_1",
+        "accepted_flag": "task.day2_special_smoky.accepted"
+      },
+      "rewards": {
+        "text": "按已确认配方售价结算 · 留下饮品图鉴"
+      }
+    },
+    {
+      "id": "day2.orders.special_spicy",
+      "type": "commission",
+      "title": "歇脚的散客 · 够辣特调",
+      "allow_cancel": true,
+      "description": "歇脚的散客想被辣醒。用带辛辣的哥布林原料调一杯，确认报价后交给他。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day2.special_spicy.delivered"
+      },
+      "objectives": [
+        {
+          "id": "deliver",
+          "text": "自由调一杯带辛辣味的特调，确认报价后交给歇脚的散客",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.special_spicy.delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day2_special_spicy",
+        "drink": {
+          "flavors": [
+            "辛辣"
+          ]
+        },
+        "target_object_id": "day2_ordinary_b",
+        "accepted_flag": "task.day2_special_spicy.accepted"
+      },
+      "rewards": {
+        "text": "按已确认配方售价结算 · 留下饮品图鉴"
+      }
     }
   ]
 }

@@ -17,5 +17,19 @@
       1232
     ],
     "derive": "checkerboard matte + 4px trim"
+  },
+  {
+    "archive": "用户附件 2026-10-20（剪贴板）",
+    "entry": "clipboard-2026-10-20T05-27-18-280Z-6a593119.jpg",
+    "path": "assets/characters/npc/signature_philosopher/source/portrait_2026_10_20.jpg",
+    "sha256": "1001b29cbf7c622517d0eb5833a8a382dec3fe2dacfb71aab917a8717a17c350",
+    "portrait_crop": [
+      0,
+      0,
+      923,
+      1224
+    ],
+    "derive": "white-background flood cut + 1px rim trim + 4px margin",
+    "replaces": "source/portrait.png（棋盘抠图，眼睛被当背景扣掉）"
   }
 ]

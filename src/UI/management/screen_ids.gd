@@ -22,7 +22,6 @@ const BUSINESS_HUD := &"business_hud"
 const TASK_HUD := &"task_hud"
 const STEALTH_HUD := &"stealth_hud"
 const MAP := &"map"
-const NAVIGATION_HUD := &"navigation_hud"
 const TAVERN_PURCHASE := &"tavern_purchase"
 ## Market stall goods, opened by talking to a vendor from the second day on.
 const MARKET_VENDOR := &"market_vendor"

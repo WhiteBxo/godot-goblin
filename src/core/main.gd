@@ -27,7 +27,6 @@ var _shop_ui: ShopUI
 var _shop_interaction: ShopInteraction
 var _task_journal: TaskJournal
 var _map_panel: SettlementMapPanel
-var _navigation_hud: NavigationHUD
 var _map_button: Button
 var _map_registered := false
 var _map_provider: Object
@@ -797,6 +796,10 @@ func get_tea_production() -> TeaProduction:
 func get_stealth_service() -> Day1StealthService:
 	return _stealth_service
 
+## The selector that decides which prompt the player currently answers.
+func get_shop_interaction() -> ShopInteraction:
+	return _shop_interaction
+
 func _create_stealth_system() -> void:
 	_stealth_service = Day1StealthService.new()
 	_stealth_service.name = "Day1StealthService"
@@ -1006,7 +1009,7 @@ func _create_gathering(points: Array[GatherPoint]) -> void:
 
 func _with_npc_points(points: Array[InteractionPoint]) -> Array[InteractionPoint]:
 	for entity in $World/EntityRoot.get_children():
-		if not entity is SettlementCharacter:
+		if not entity is SettlementCharacter or not entity.gives_interaction_point:
 			continue
 		var point_scene: PackedScene = preload("res://src/gameplay/interaction/rpg_interaction_point.tscn") if get_active_level() is RpgMakerMap else preload("res://src/gameplay/interaction/interaction_point.tscn")
 		var point: InteractionPoint = point_scene.instantiate()
@@ -1311,8 +1314,6 @@ func _refresh_input_lock() -> void:
 		_map_button.disabled = should_lock
 	if is_instance_valid(_handbook_hud):
 		_handbook_hud.disabled = should_lock
-	if is_instance_valid(_navigation_hud):
-		_navigation_hud.set_display_enabled(not should_lock)
 	if should_lock == _input_locked:
 		return
 	var player := get_player() as PlayerController
@@ -1473,11 +1474,6 @@ func _create_map_ui() -> void:
 	_map_panel = preload("res://src/UI/map/map_panel.tscn").instantiate()
 	$PopupLayer.add_child(_map_panel)
 	_map_panel.configure(_map_provider, _shop_player, _task_journal, _get_known_map_locations)
-	_navigation_hud = preload("res://src/UI/map/navigation_hud.tscn").instantiate()
-	_ui_manager.register_screen(ScreenIds.NAVIGATION_HUD, _navigation_hud, &"hud", false)
-	_navigation_hud.configure(level, _map_provider, _shop_player, _task_journal, get_node("/root/GameState"), _get_known_map_locations)
-	_ui_manager.open_screen(ScreenIds.NAVIGATION_HUD)
-	_navigation_hud.set_display_enabled(not _input_locked)
 	_map_panel.close_requested.connect(func() -> void: _ui_manager.close_screen(ScreenIds.MAP))
 	_ui_manager.screen_closed.connect(func(id: StringName) -> void:
 		if id != ScreenIds.MAP:
@@ -1503,9 +1499,6 @@ func _get_known_map_locations() -> Array[String]:
 		if state.get_flag("ui.map.known." + id) and id not in known:
 			known.append(id)
 	return known
-
-func get_navigation_hud() -> NavigationHUD:
-	return _navigation_hud
 
 func _refresh_map_access() -> void:
 	if not is_inside_tree() or not is_instance_valid(_map_panel):

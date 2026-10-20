@@ -86,16 +86,23 @@ func _run() -> void:
 	current_scene = main
 	await physics_frame
 	await physics_frame
-	for item: Dictionary in catalog:
-		var actor := main.get_actor_director().get_actor(StringName(item.id))
-		check(actor != null, item.id + " settlement registered")
-		if actor == null:
+	# The catalog lists reusable templates; the street places its own cast. Every
+	# actor the scene actually places must be registered and stand on clear ground.
+	var placed: Array[SettlementCharacter] = []
+	for child in main.get_node("World/EntityRoot").get_children():
+		if child is SettlementCharacter:
+			placed.append(child)
+	check(placed.size() >= 20, "Settlement places its street cast (%d actors)" % placed.size())
+	for actor: SettlementCharacter in placed:
+		var registered := main.get_actor_director().get_actor(actor.actor_id)
+		check(registered == actor, String(actor.actor_id) + " settlement registered")
+		if registered != actor:
 			continue
 		var query := PhysicsShapeQueryParameters2D.new()
 		query.shape = actor.get_node("CollisionShape2D").shape
 		query.transform = actor.get_node("CollisionShape2D").global_transform
 		query.collision_mask = 1
-		check(actor.get_world_2d().direct_space_state.intersect_shape(query).is_empty(), item.id + " spawn must not overlap walls/furniture")
+		check(actor.get_world_2d().direct_space_state.intersect_shape(query).is_empty(), String(actor.actor_id) + " spawn must not overlap walls/furniture")
 	var player := main.get_player() as PlayerController
 	check(player.get_collision_mask_value(PlayerController.NPC_LAYER), "Player body reacts to NPC actors")
 	main.queue_free()

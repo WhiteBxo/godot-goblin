@@ -9,6 +9,10 @@
   "publication_status": "published",
   "pending_beat_ids": [],
   "handoff": "res://docs/story_authoring/day_01_02_authoring_handoff.md",
+  "verification": {
+    "entry": "res://tests/verify_two_day_flow.gd",
+    "scope": "标题开始、真实旅行和交付；代购及存档另测"
+  },
   "beats": [
     {
       "id": "day2_s01_morning",
@@ -495,9 +499,5 @@
     }
   ],
   "authoring_project": "res://docs/story_authoring/day2_stages_01_05_project.json",
-  "authoring_sha256": "d05e5b9985b8d85b3b695401d24ed9aebf7b5e0ea647c0262cbec8c33f623053",
-  "verification": {
-    "entry": "res://tests/verify_two_day_flow.gd",
-    "scope": "标题开始、真实旅行和交付；代购及存档另测"
-  }
+  "authoring_sha256": "396c5e2083a74ad9ddaa1b1ef67001a6613638f3b7e8177f9926f63cd5d04a8f"
 }

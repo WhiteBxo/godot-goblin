@@ -69,6 +69,10 @@
           "id": "day2.procurement.fund"
         },
         {
+          "command": "chapter_action",
+          "id": "day2.s01.pocket_money"
+        },
+        {
           "command": "dialogue",
           "id": "day2.s01.mushroom_commission_after_funds"
         },

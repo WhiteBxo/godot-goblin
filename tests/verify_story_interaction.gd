@@ -68,7 +68,10 @@ func _run() -> void:
 	bad.item_id = "day1_griffin_blood"
 	_check(bad.resolve().ok, "Failed pickup can be retried after configuration is repaired")
 	var full := _point(StoryInteractionPoint.Kind.PICKUP, &"full_pickup")
-	_check(inventory.add_ingredient("day1_griffin_blood", WarehouseInventory.MAX_QUANTITY - 2), "Prepare a full inventory entry")
+	# Earlier pickups already raised the stock, so fill by the remaining room
+	# instead of a fixed amount: the entry must sit exactly at capacity.
+	var room: int = WarehouseInventory.MAX_QUANTITY - inventory.get_stock("day1_griffin_blood")
+	_check(inventory.add_ingredient("day1_griffin_blood", room), "Prepare a full inventory entry")
 	before = _state.to_dict()
 	_check(not full.resolve().ok and _state.to_dict() == before, "Capacity failure grants nothing and records no receipt")
 	full.queue_free()

@@ -22,7 +22,7 @@ const EXPECTED: Array[Dictionary] = [
 	{"sources": ["F05", "W02"], "id": "goblin_firebrew", "name": "纯正哥布林老火烧", "rarity": "优秀", "form": "液体",
 		"processing": ["免加工"], "price": 4},
 	{"sources": ["F06", "W04"], "id": "griffin_amber_wine", "name": "格里芬琥珀酒", "rarity": "史诗", "form": "液体",
-		"processing": ["免加工"], "price": 60},
+		"processing": ["免加工"], "price": 100},
 	{"sources": ["F07"], "id": "red_mottled_wood", "name": "红斑咬木", "rarity": "优秀", "form": "固体",
 		"processing": ["切丁", "免加工"], "price": 0},
 	{"sources": ["F08"], "id": "honey_amber_crystal", "name": "蜜珀晶", "rarity": "优秀", "form": "固体",

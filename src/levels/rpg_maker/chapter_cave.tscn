@@ -401,6 +401,7 @@ display_name = "宅邸左卫"
 visible = false
 active_phase = "night"
 facing = 1
+gives_interaction_point = false
 
 [node name="MansionGate" parent="Characters" instance=ExtResource("guard")]
 position = Vector2(1800, 456)
@@ -409,6 +410,7 @@ display_name = "宅邸右卫"
 visible = false
 active_phase = "night"
 facing = 1
+gives_interaction_point = false
 
 [node name="EscapeZone" type="Area2D" parent="."]
 position = Vector2(1176, 648)
@@ -427,7 +429,7 @@ guards = Array[NodePath]([NodePath("Entrance"), NodePath("Lure"), NodePath("Gate
 objective_names = {"day1.s05.document_read": "书房文书", "day1.s05.blood_acquired": "右室血液"}
 approach_hint = "先到西侧找醉卫交涉（10G），再回宅门前，在双卫之间按 E 支付 10G。投币只能引开守卫。"
 escape_hint = "拿齐文书和血液，沿原路回到北侧观察位撤离。"
-controls_hint = "Ctrl 潜行 · 绕开扇区 · R 重试"
+controls_hint = "鼠标瞄准落点 · F 投掷 · Ctrl 潜行 · 失败后点「重新潜入」"
 checkpoint = NodePath("../StoryPositions/day1_checkpoint")
 escape_zone = NodePath("../EscapeZone")
 required_flags = Array[StringName](["day1.s05.blood_acquired", "day1.s05.document_read"])
@@ -509,6 +511,9 @@ feedback_rect = Rect2(-64, -112, 128, 112)
 interaction_id = &"mansion_payment"
 display_name = "宅邸双卫 · 10G"
 description = "先与西侧醉酒守卫完成交涉，再在这里支付10G给两名守卫；放行后沿道路向东进入长老居所。"
+
+[node name="CollisionShape2D" parent="Interactions/MansionPayment"]
+scale = Vector2(1.6, 1.6)
 
 [node name="NightGather0" parent="GatherPoints" instance=ExtResource("point")]
 position = Vector2(1128, 2136)

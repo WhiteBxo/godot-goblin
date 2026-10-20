@@ -101,6 +101,23 @@ python tests/verify_two_day_persistence.py --godot "<Godot>" --fixtures-director
 # 4. 冒烟：新游戏 → 第二天结束 → 回顾 → 结尾卡 → 返回标题；读档、设置、退出各走一遍
 ```
 
+### 导出转换会丢掉数组字段（2026-10-20）
+
+玩家端「奶茶制作台」整列显示「无特殊风味」，同一份代码在编辑器里风味齐全，而存档里根本不存原料目录——问题在包里的原料目录本身。
+
+- 定位：把 `.pck` 拆开，取出 `basic_menu` 那份二进制 `.res`，发现 `recipe_flavors`、`recipe_textures`、`recipe_effects`、`source_ids` 全为空，其余字段（`display_name`、`can_be_base`、`sweetness`……）都在。用 GDScript 对同一份 `.tres` 直接 `ResourceSaver.save` 成 `.res` 却是完整的，所以丢字段发生在导出时的「文本资源转二进制」这一步，与缓存新旧无关（删掉 `.godot/exported` 重导，产物仍是空的）。
+- 处理：`project.godot` 关掉该转换，导出直接把 `.tres` 打进包里。
+
+  ```ini
+  [editor]
+
+  export/convert_text_resources_to_binary=false
+  ```
+
+- 验收：导出后解包比字符串，`奶香`／`可可香`／`果香`／`提神` 应各至少出现一次。包的体积基本不变（176.48 MB → 176.36 MB）。
+
+拆包方法：`.pck` 头是 `GDPC`，偏移 32 处是目录偏移（`u64`），目录以 `u32` 文件数开头，每项为「路径长 + 路径 + 偏移 + 大小 + md5 + 标志」。
+
 逐条核对：
 
 - [ ] 窗口标题是《洞窟深处的奶茶店》，exe 名与发布说明一致

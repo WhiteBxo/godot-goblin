@@ -1,0 +1,1 @@
+PASS: table 96x288, letter 48x48; 47 exact 48x48 tiles reconstruct objects; binary alpha; all 18 atlas coordinates preserved; other 16 object PNGs, their slices/imports and layout metadata unchanged; all atlas pixels outside the two revised regions unchanged.

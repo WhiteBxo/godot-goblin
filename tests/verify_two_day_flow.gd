@@ -319,7 +319,7 @@ func _run() -> void:
 	check(state.get_transactions().get_balance() == 61, "Blood task pays total 40G once")
 	check(state.get_warehouse_inventory().get_uses("day1_griffin_blood") == 2, "Blood remains two uses")
 	await wait_event("day2.s01.morning")
-	check(state.get_transactions().get_balance() == 61, "35G procurement escrow never credits the wallet")
+	check(state.get_transactions().get_balance() == 66, "Morning hands over 5G pocket money; the 35G escrow never credits the wallet")
 	check(game.get_chapter_gameplay().get_procurement().get_status().escrow == 35, "Dedicated procurement escrow holds 35G")
 	for group: String in ["festival", "elder", "emissary", "rumor"]:
 		await wait_event("day2.s02." + group + "_order")
@@ -330,7 +330,7 @@ func _run() -> void:
 		for i in range(count):
 			await make_order("day2_s02_%s_%d" % [group, i], "day2_%s_%d" % [group, i])
 		await wait_event("day2.s02." + group + "_after")
-	check(state.get_transactions().get_balance() == 76, "Mandatory path has 76G before wine")
+	check(state.get_transactions().get_balance() == 81, "Mandatory path has 81G before the 100G wine")
 	var scheduler := game.get_chapter_gameplay().get_scheduler()
 	var deadline := Time.get_ticks_msec() + 10000
 	while scheduler.get_group("rumor").status != "departed" and Time.get_ticks_msec() < deadline:
@@ -353,7 +353,7 @@ func _run() -> void:
 	await capture("wait_wine")
 	await use_service_point(&"tavern")
 	await wait_event("day2.s03.purchase")
-	check(state.get_transactions().get_balance() == (31 if ordinary_order else 28), "Wine actually costs 48G")
+	check(state.get_transactions().get_balance() == (4 if ordinary_order else 1), "Wine actually costs the discounted 80G")
 	check(state.get_warehouse_inventory().get_uses("griffin_amber_wine") == 5, "One purchased portion has five uses")
 	check(not state.is_event_completed("day2.s03.commission_token"), "Commission waits for another counter interaction")
 	await use_service_point(&"tavern")
@@ -400,7 +400,7 @@ func _run() -> void:
 	await capture("wait_guard")
 	check(not game.get_task_delivery().try_submit("day2_guard_special", "casino").ok, "Wrong recipient cannot consume the special")
 	check(game.get_task_delivery().try_submit("day2_guard_special", "drunken_guard").ok, "Real guard receives the special")
-	check(state.get_transactions().get_balance() == (31 if ordinary_order else 28), "Guard hospitality pays zero G")
+	check(state.get_transactions().get_balance() == (4 if ordinary_order else 1), "Guard hospitality pays zero G")
 	await wait_event("day2.s05.guard_after")
 	await capture("delivered_guard")
 	await travel("shop_enter")

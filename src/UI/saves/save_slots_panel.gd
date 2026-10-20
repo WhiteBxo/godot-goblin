@@ -32,10 +32,12 @@ func _ready() -> void:
 	_confirmation.get_node("Confirm").pressed.connect(_confirm_action)
 	_confirmation.get_node("Cancel").pressed.connect(_cancel_confirmation)
 	$ModalShell.close_requested.connect(_close)
+	# The manager hides this screen right after adding it, so a refresh here would
+	# preflight every save while the panel is still unreachable. Showing it (or
+	# open_mode) fills the list instead.
 	visibility_changed.connect(func() -> void:
 		if is_visible_in_tree():
 			refresh())
-	refresh()
 
 func configure(save: Callable, can_save: Callable) -> void:
 	_save = save
@@ -50,7 +52,10 @@ func open_mode(saving: bool) -> void:
 	refresh()
 
 func refresh() -> void:
-	if not is_node_ready():
+	# Listing every slot preflights each save by instantiating its checkpoint
+	# scene, so a hidden panel must not do it on every host boot; visibility_changed
+	# runs it the moment the player actually opens the screen.
+	if not is_node_ready() or not is_visible_in_tree():
 		return
 	_busy = false
 	_pending = ""

@@ -96,7 +96,11 @@ func get_formula_choices(base_only := false) -> Array[Dictionary]:
 		# Additive choices include ordinary ingredients with either base eligibility.
 		if id != DrinkFormula.ICE_ID and is_discovered(id) and definition.free_recipe_allowed and (not base_only or definition.can_be_base):
 			var flavors := definition.recipe_flavors.duplicate()
-			result.append({"id": id, "name": definition.display_name, "flavors": flavors, "uses": get_uses(id)})
+			# Only the authored flavor tags; texture and effect ride along so the
+			# selection UI can describe the ingredient without reopening the sheet.
+			result.append({"id": id, "name": definition.display_name, "flavors": flavors,
+				"textures": definition.recipe_textures.duplicate(), "effects": definition.recipe_effects.duplicate(),
+				"uses": get_uses(id)})
 	return result
 
 func get_drink_stock(id: Variant) -> int:

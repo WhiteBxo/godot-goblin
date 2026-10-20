@@ -463,6 +463,13 @@ func _test_ui() -> void:
 			_check(not "未知风味" in option.get_item_text(index), "Ingredient choices disclose their authored flavors before property discovery")
 			_check(option.get_item_metadata(index) != "day1_griffin_blood", "Story-only blood never enters the free-form selection UI")
 			_check(option.get_item_metadata(index) != "ice", "Ice never occupies one of the three ingredient options")
+	var additive := panel.get_slots()[1]
+	var mint_reads_sheet := false
+	for index in range(additive.item_count):
+		_check(not "无特殊风味" in additive.get_item_text(index), "Every listed ingredient names the flavor authored in the 2.0 sheet")
+		if str(additive.get_item_metadata(index)) == "mint_syrup":
+			mint_reads_sheet = "薄荷" in additive.get_item_text(index) and "强烈清凉感" in additive.get_popup().get_item_tooltip(index)
+	_check(mint_reads_sheet, "Mint syrup shows its sheet flavor and keeps texture and effect in the tooltip")
 	_check(not panel.is_iced() and panel.get_ice_option().get_item_text(0) == "不加冰" and panel.get_ice_option().get_item_text(1) == "加冰", "Ice is a separate binary option with no ice selected by default")
 	panel.get_ice_option().select(1)
 	panel.get_ice_option().item_selected.emit(1)

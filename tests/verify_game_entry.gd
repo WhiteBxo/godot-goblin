@@ -97,10 +97,11 @@ func _run() -> void:
 	if not OS.has_feature("debug"):
 		var probe := root.get_node_or_null("MCPRuntimeProbe")
 		_check(probe == null or not probe.is_processing(), "Release title stops runtime probe polling")
-	await _key(KEY_TAB)
-	_check(root.gui_get_focus_owner() == _button(title, "Quit"), "Native Tab reaches quit")
+	# 退出游戏被刻意放到最下面（097a422b），Tab 顺序跟随场景树：新游戏 → 设置 → 退出 → 读档。
 	await _key(KEY_TAB)
 	_check(root.gui_get_focus_owner() == _button(title, "Settings"), "Native Tab reaches settings")
+	await _key(KEY_TAB)
+	_check(root.gui_get_focus_owner() == _button(title, "Quit"), "Native Tab reaches quit last")
 	await _key(KEY_TAB)
 	_check(root.gui_get_focus_owner() == _button(title, "LoadGame"), "Native Tab reaches the save browser")
 	await _key(KEY_TAB)

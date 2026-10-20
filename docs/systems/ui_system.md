@@ -139,16 +139,16 @@ godot --path . --log-file .godot/ui-visual.log --script res://tests/verify_ui_ma
 
 `SettlementMapCanvas.world_to_map()` 统一处理世界原点、等比缩放和居中。打开时读取最新地图/玩家/投影；打开期间只逐帧检查玩家位置，任务与知识变化按信号刷新。隐藏时停止处理，暂停覆盖时由管理器禁用处理。
 
-## 小地图与目标箭头
+## 章节图导航
 
-`src/UI/map/navigation_hud.tscn`（`NavigationHUD`，注册为 `navigation_hud` 的 HUD 屏，不进入模态栈）在聚落章节图右上角显示小地图与目标箭头。它在 `day1` 业务档案、已出店（或后续阶段／第二天起）且宿主为 `RpgChapterMap` 时出现；打开弹窗、演出、潜行拦截等输入锁期间隐藏，`set_display_enabled` 由 MainGame 的输入锁统一驱动。
+聚落章节图不再显示小地图与目标箭头：`NavigationHUD` 及其 `ObjectiveNavigation` 投影已删除，`screen_ids.gd` 不再有 `navigation_hud`。右上角目标文字一并移除，当前主线目标只在任务 HUD 与任务页签查看。
 
-`ObjectiveNavigation.resolve()` 与大地图共用同一份只读投影：只取 `TaskJournal.get_current_main_task()` 中已揭示的 `current_objective`，`RpgChapterMap.objective_points` 把 `task_id:objective_id` 映射到章节场景里的真实锚点（`get_objective_position`）；室外坐标不会被当成室内目标。没有目标时显示“自由探索”，不画箭头。
-
-小地图以 48px 格读取玩家周围 ±7 格的可走格绘制局部平面图，随所在房间与走廊变化，附玩家圆点、目标菱形与“北”字；每 0.2 秒刷新一次。箭头画在可见屏幕坐标上，并按 `get_emote_offset()` 抬高退出角色头部范围，方向优先沿 `RpgChapterMap.get_navigation_path()` 的实际可通行格搜索（`can_cross_edge`，跳过角色占位格），找不到路线时退回直指目标，保证不会穿墙指路。该 HUD 只读章节状态，不写任何事实。
+`RpgChapterMap.objective_points`（`task_id:objective_id → 章节场景锚点`，经 `get_objective_position` 读取）与 `get_navigation_path()` 仍保留：前者是章节场景的既有配置数据，后者继续服务路线校验测试与寻路能力，不再有常驻 HUD 消费它们。
 
 本次最低模块验证：`verify_map_ui.gd`、`verify_ui_manager.gd`、`verify_ui_theme.gd`、`verify_task_panel.gd`、`verify_main_game.gd` 及 `verify_settlement.gd`。窗口专项使用 `-- --capture` 在真实 `src/core/settlement.tscn` 且关闭开发工具的宿主执行键鼠、移动、暂停与知识/目标隔离夹具，截图输出到 `.godot/map_ui/`。不代表完整 S04 剧情或真实 Release 导出验收。
 
-2026-10-19 图形专项由 `tests/verify_feedback_iteration.gd` 覆盖（76 项通过）：菜单拆分与入口、奶茶订单归档、一键接单后收银台结算不重复发钱、旧存档角色越界后回到店门口、小地图与箭头、长老宅双卫的警戒与听觉。截图输出到 `.godot/feedback_navigation/captures/`。完整回归 99 项中 64 项通过，28 个失败与 1 个挂起均为 HEAD 基线已有项（多次在全量回归和隔离基线复现），新增项无回归。
+2026-10-19 图形专项由 `tests/verify_feedback_iteration.gd` 覆盖（76 项通过）：菜单拆分与入口、奶茶订单归档、一键接单后收银台结算不重复发钱、旧存档角色越界后回到店门口、出店观察后的返店路线、长老宅双卫的警戒与听觉。截图输出到 `.godot/feedback_navigation/captures/`。完整回归 99 项中 64 项通过，28 个失败与 1 个挂起均为 HEAD 基线已有项（多次在全量回归和隔离基线复现），新增项无回归。
+
+2026-10-20 删除章节图右上角的小地图与目标箭头 HUD。`main.gd` 不再实例化或注册该屏，输入锁不再联动它，`get_navigation_hud()` 一并移除；`verify_feedback_iteration.gd` 去掉 HUD 可见性与目标文案断言，保留真实可走返店路线检查，截图改名为 `market_return_route`。
 
 2026-10-18 验收结果（Godot 4.7.2，macOS / Apple M1）：地图专项 headless 初版 55 项通过，最终 Metal 窗口版 59 项通过（含重复解锁、按键无冲突与真实窗口尺寸断言）；UIManager 47、Theme 167、TaskPanel 92、MainGame 73、DebugBuild 97 项均通过。聚落检查通过 48,623 个物理采样点及 16 区域、锚点、桥、实际移动与碰撞。已人工检查 `.godot/map_ui/known_shop_640.png`、`settlement_640.png`、`settlement_1280.png`，全地点截图的知识和目标来自隔离夹具。headless 有 macOS 系统证书诊断，无脚本错误；导入阶段另有沙箱中编辑器设置写入和退出资源诊断，不计为玩法检查。未扩大到完整剧情回归或 Release 导出，因为没有修改剧情内容、任务业务或地图通行布局。

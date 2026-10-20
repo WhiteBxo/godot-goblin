@@ -47,9 +47,21 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 8
 
-[node name="Title" type="Label" parent="Body/Detail"]
+[node name="TitleRow" type="HBoxContainer" parent="Body/Detail"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Kind" type="Label" parent="Body/Detail/TitleRow"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"BadgeMain"
+text = "主线"
+
+[node name="Title" type="Label" parent="Body/Detail/TitleRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 theme_type_variation = &"H2"
 text_overrun_behavior = 3
 
@@ -57,6 +69,6 @@ text_overrun_behavior = 3
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-bbcode_enabled = false
+bbcode_enabled = true
 selection_enabled = true
 focus_mode = 2

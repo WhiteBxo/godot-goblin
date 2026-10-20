@@ -91,7 +91,41 @@ func get_recipe_slots() -> int:
 	return _inventory.get_recipe_slots() if is_instance_valid(_inventory) else 0
 
 func get_formula_choices(base_only := false) -> Array[Dictionary]:
-	return _inventory.get_formula_choices(base_only) if is_instance_valid(_inventory) else []
+	if not is_instance_valid(_inventory):
+		return []
+	var choices := _inventory.get_formula_choices(base_only)
+	_offer_experiment_materials(choices, base_only)
+	return choices
+
+## 委托特调的原料可以不受普通自由配方白名单限制：它们只出现在自由实验的
+## 选料里，且只有命中实验配方才能成杯，普通配方仍由 DrinkFormula 拒绝。
+func _offer_experiment_materials(choices: Array[Dictionary], base_only: bool) -> void:
+	if base_only:
+		return
+	var known: Dictionary = {}
+	for choice: Dictionary in choices:
+		known[choice.id] = true
+	for recipe: TeaRecipe in _available_recipes_including_experiments():
+		if not recipe.experiment_only:
+			continue
+		for id: String in recipe.materials:
+			if known.has(id) or not _inventory.is_discovered(id):
+				continue
+			var definition := _inventory.get_definition(id)
+			if definition == null:
+				continue
+			known[id] = true
+			choices.append({"id": id, "name": definition.display_name,
+				"flavors": definition.recipe_flavors.duplicate(),
+				"textures": definition.recipe_textures.duplicate(),
+				"effects": definition.recipe_effects.duplicate(),
+				"uses": _inventory.get_uses(id)})
+
+func _available_recipes_including_experiments() -> Array[TeaRecipe]:
+	var result: Array[TeaRecipe] = []
+	if _menu.recipe_book == null:
+		return result
+	return _menu.recipe_book.get_recipes_for(_state)
 
 func preview_formula(materials: Array, quantity: int = 1, iced := false) -> Dictionary:
 	if not is_instance_valid(_inventory):

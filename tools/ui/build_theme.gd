@@ -501,3 +501,44 @@ func _build_orders(theme: Theme) -> void:
 	for state: String in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color", "font_focus_color"]:
 		theme.set_color(state, "TicketButton", T.PAPER)
 	theme.set_color("font_disabled_color", "TicketButton", T.INK_MUTED)
+	_build_task_rows(theme)
+
+
+## 任务行：主线带一条金色书脊，支线安静，已结束的整行降温并换成完成色。
+func _build_task_rows(theme: Theme) -> void:
+	var focus := _flat(Color.TRANSPARENT, T.ACCENT, 1, T.RADIUS_BUTTON, 0, 0, 0, 0)
+	focus.expand_margin_left = T.FOCUS_EXPAND
+	focus.expand_margin_top = T.FOCUS_EXPAND
+	focus.expand_margin_right = T.FOCUS_EXPAND
+	focus.expand_margin_bottom = T.FOCUS_EXPAND
+	for kind: String in ["Main", "Side", "Done"]:
+		var rail := Color.TRANSPARENT
+		var font := T.TEXT_DIM
+		if kind == "Main":
+			rail = T.BORDER
+			font = T.TEXT
+		elif kind == "Done":
+			rail = T.SUCCESS
+			font = T.TEXT_MUTED
+		for selected: bool in [false, true]:
+			var type := StringName("TaskRow" + kind + ("Selected" if selected else ""))
+			theme.set_type_variation(type, "Button")
+			# 选中的行有一块实底，未选中的行只靠书脊和字色区分。
+			var normal := _flat(T.RAISED if selected else Color.TRANSPARENT,
+				T.BORDER_SOFT if selected else Color.TRANSPARENT, 1 if selected else 0, 3, 6, 2, 6, 2)
+			var hover := _flat(T.RAISED_HOVER, T.BORDER_SOFT, 1 if selected else 0, 3, 6, 2, 6, 2)
+			var pressed := _flat(T.PRESSED, T.BORDER, 1 if selected else 0, 3, 6, 2, 6, 2)
+			if not selected and rail != Color.TRANSPARENT:
+				for style: StyleBoxFlat in [normal, hover, pressed]:
+					style.border_width_left = 2
+					style.border_color = rail
+			theme.set_stylebox("normal", type, normal)
+			theme.set_stylebox("hover", type, hover)
+			theme.set_stylebox("pressed", type, pressed)
+			theme.set_stylebox("focus", type, focus)
+			theme.set_color("font_color", type, T.ACCENT_STRONG if selected and kind == "Main" else font)
+			theme.set_color("font_hover_color", type, T.ACCENT_STRONG)
+			theme.set_color("font_pressed_color", type, T.ACCENT)
+			theme.set_color("font_focus_color", type, T.ACCENT_STRONG if selected and kind == "Main" else font)
+			theme.set_color("font_hover_pressed_color", type, T.ACCENT_STRONG)
+			theme.set_color("font_disabled_color", type, T.TEXT_MUTED)

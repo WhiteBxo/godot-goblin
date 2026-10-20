@@ -204,6 +204,13 @@ func _project(task: Dictionary, view: Dictionary, accepted: bool, done: bool) ->
 			stage = "recipe_locked"
 			label = "配方未解锁"
 			hint = "已有成品也可交付；配方尚未解锁"
+		elif recipe.experiment_only:
+			# 委托特调只能手调：制作台不再给出一键成品，由自由实验承接。
+			var experiment := _production.preview_craft(recipe.materials)
+			missing = experiment.missing.duplicate(true)
+			stage = "experiment"
+			label = "缺料" if not missing.is_empty() else "待自由实验手调"
+			hint = "制作台 → 自由实验：按配方手调，制成后交给%s" % target_name
 		else:
 			recipe_materials.assign(recipe.materials)
 			var preview := _production.preview_craft(recipe_materials)

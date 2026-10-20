@@ -84,7 +84,7 @@ show_world_marker = true
 [node name="GatherPoints" type="Node2D" parent="."]
 
 [node name="day1_elder_document" parent="Interactions" instance=ExtResource("point")]
-position = Vector2(456, 264)
+position = Vector2(504, 348)
 feedback_rect = Rect2(24, -24, 48, 48)
 collision_layer = 0
 collision_mask = 2

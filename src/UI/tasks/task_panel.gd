@@ -7,6 +7,7 @@ extends VBoxContainer
 
 @onready var _list: TaskList = %Entries
 @onready var _body: BoxContainer = %Body
+@onready var _kind: Label = %Kind
 @onready var _title: Label = %Title
 @onready var _text: RichTextLabel = %Text
 @onready var _summary: Label = %Summary
@@ -130,9 +131,12 @@ func _refresh() -> void:
 			return task.status != "active" or order.get("accepted", false))
 	for task in tasks:
 		var label := ("" if content_filter == "milk_orders" else ("主线 · " if task.type == "main" else "支线 · ")) + String(task.title).replace("\n", " ")
+		# 主线、支线与已结束的任务用不同的行色，扫一眼就能分出轻重。
+		var kind := "main" if task.type == "main" else "side"
 		if task.status != "active":
 			label = "[" + _status_text(task.status) + "] " + label
-		var index := _list.add_item(label)
+			kind = "done"
+		var index := _list.add_item(label, kind)
 		_list.set_item_tooltip(index, label if task.status != "active" else task.title)
 		_ids.append(task.id)
 	var choose_first := _selected_id not in _ids
@@ -142,6 +146,7 @@ func _refresh() -> void:
 	if _ids.is_empty():
 		_title.text = "暂无奶茶订单记录" if content_filter == "milk_orders" else "暂无任务记录"
 		_title.tooltip_text = ""
+		_kind.visible = false
 		_set_detail("已接取与已结束的奶茶订单会保存在这里。" if content_filter == "milk_orders" else "需要完成和已经完成的任务会记录在这里。")
 		return
 	var selected_index := _ids.find(_selected_id)
@@ -160,64 +165,113 @@ func _number(value: float) -> String:
 func _show_task(task: Dictionary) -> void:
 	_title.text = task.title
 	_title.tooltip_text = task.title
+	_show_kind(task)
 	if task.status in ["completed", "failed", "expired", "cancelled"]:
-		var lines := PackedStringArray([task.description, "", "任务结果：" + _status_text(task.status)])
-		if content_filter == "milk_orders":
-			var entry := _orders.get_task_entry(task.id) if is_instance_valid(_orders) else {}
-			lines = PackedStringArray(["饮品：" + str(entry.get("title", task.title)), "顾客：" + str(entry.get("target_name", "未知顾客")), "", "订单状态：" + _status_text(task.status), "报酬：" + str(entry.get("rewards", task.rewards.get("text", "—")))])
-		var result: Dictionary = task.get("result", {})
-		if not result.is_empty():
-			lines.append("结算时间：第 %d 天 · %s" % [result.day, "白天" if result.phase == "day" else "夜晚"])
-			if not result.reason.is_empty():
-				lines.append("原因：" + result.reason)
-		_set_detail("\n".join(lines))
+		_set_detail(_terminal_text(task))
 		return
 	var order := _orders.get_task_entry(task.id) if is_instance_valid(_orders) else {}
 	if not order.is_empty():
-		var ready: bool = order.ready or order.status == "completed"
-		var lines := PackedStringArray([task.description, "", "订单进度",
-			("[已完成] " if order.accepted or order.status == "completed" else "[未完成] ") + "接取订单",
-			("[已完成] " if ready else "[未完成] ") + "备齐所需物品",
-			("[已完成] " if order.status == "completed" else "[未完成] ") + "交付并结算", ""])
-		for item: Dictionary in order.items:
-			lines.append("%s%s  %d / %d" % ["交付成品：" if not order.product_id.is_empty() else "交付物资：", item.name, item.owned, item.needed])
-		lines.append("\n交付对象：" + order.target_name)
-		lines.append("下一步：" + order.hint)
-		lines.append("\n奖励：" + order.rewards)
-		_set_detail("\n".join(lines))
+		_set_detail(_order_text(task, order))
 		return
-	var lines := PackedStringArray([task.description, "", "目标"])
-	for objective: Dictionary in task.objectives:
-		var line := ("[已完成] " if objective.completed else "[未完成] ") + String(objective.text)
-		if not objective.required:
-			line += "（可选）"
+	_set_detail(_objective_text(task))
+
+## 标题前的类型徽标：主线用金色、支线用暗色，奶茶订单页没有这一栏。
+func _show_kind(task: Dictionary) -> void:
+	var main: bool = task.type == "main"
+	_kind.visible = content_filter != "milk_orders"
+	_kind.text = "主线" if main else "支线"
+	_kind.theme_type_variation = &"BadgeMain" if main else &"BadgeMuted"
+
+## 已结束的任务只留结论、时间与原因，过程目标不再重复一遍。
+func _terminal_text(task: Dictionary) -> String:
+	var lines := PackedStringArray()
+	if content_filter == "milk_orders":
+		var entry := _orders.get_task_entry(task.id) if is_instance_valid(_orders) else {}
+		lines.append(TaskText.field("饮品", str(entry.get("title", task.title))))
+		lines.append(TaskText.field("顾客", str(entry.get("target_name", "未知顾客"))))
+		lines.append("")
+		lines.append(TaskText.field("订单状态", _status_text(task.status)))
+		lines.append(TaskText.field("报酬", str(entry.get("rewards", task.rewards.get("text", "—"))), true))
+	else:
+		lines.append(TaskText.paint(String(task.description), TaskText.Tokens.TEXT_DIM))
+		lines.append("")
+		lines.append(TaskText.verdict("任务结果：已完成" if task.status == "completed" else "任务结果：" + _status_text(task.status)))
+	var result: Dictionary = task.get("result", {})
+	if not result.is_empty():
+		lines.append(TaskText.field("结算时间", "第 %d 天 · %s" % [result.day, "白天" if result.phase == "day" else "夜晚"]))
+		if not result.reason.is_empty():
+			lines.append(TaskText.field("原因", result.reason))
+	return "\n".join(lines)
+
+## 交付型任务先看订单走到哪一步，再看还差什么。
+func _order_text(task: Dictionary, order: Dictionary) -> String:
+	var ready: bool = order.ready or order.status == "completed"
+	var lines := PackedStringArray()
+	lines.append(TaskText.paint(String(task.description), TaskText.Tokens.TEXT_DIM))
+	lines.append("")
+	lines.append(TaskText.section("订单进度"))
+	lines.append(TaskText.objective(order.accepted or order.status == "completed", "接取订单"))
+	lines.append(TaskText.objective(ready, "备齐所需物品"))
+	lines.append(TaskText.objective(order.status == "completed", "交付并结算"))
+	lines.append("")
+	for item: Dictionary in order.items:
+		lines.append(TaskText.field("交付成品" if not order.product_id.is_empty() else "交付物资",
+			"%s  %d / %d" % [item.name, item.owned, item.needed]))
+	lines.append(TaskText.field("交付对象", str(order.target_name)))
+	lines.append(TaskText.field("下一步", str(order.hint)))
+	var rewards := str(order.get("rewards", ""))
+	if not rewards.is_empty():
+		lines.append("")
+		lines.append(TaskText.field("奖励", rewards, true))
+	return "\n".join(lines)
+
+## 普通任务：目标逐条列出，完成与未完成各有各的颜色，可选目标带标注。
+func _objective_text(task: Dictionary) -> String:
+	var lines := PackedStringArray()
+	lines.append(TaskText.paint(String(task.description), TaskText.Tokens.TEXT_DIM))
+	lines.append("")
+	var objectives: Array = task.objectives
+	var completed := 0
+	for objective: Dictionary in objectives:
+		if objective.completed:
+			completed += 1
+	lines.append(TaskText.section("目标", "已完成 %d / %d" % [completed, objectives.size()]))
+	for objective: Dictionary in objectives:
+		var progress := ""
 		if objective.target != null:
-			line += "  %s / %s" % [_number(objective.progress), _number(objective.target)]
-		lines.append(line)
+			progress = "%s / %s" % [_number(objective.progress), _number(objective.target)]
+		lines.append(TaskText.objective(bool(objective.completed), String(objective.text), not bool(objective.required), progress))
 		# 任务指引是“怎么操作”，任务项目是“要做什么”；两者分开写，目标行不混入按键提示。
 		var hint := String(objective.get("hint", ""))
 		if not hint.is_empty():
-			lines.append("　指引：" + hint)
+			lines.append(TaskText.hint(hint))
 	if task.current_objective.is_empty():
-		lines.append("目标已达成，等待后续剧情。")
+		lines.append(TaskText.paint("目标已达成，等待后续剧情。", TaskText.Tokens.ACCENT))
+	var fields := PackedStringArray()
 	if not task.delivery.is_empty():
-		lines.append("\n交付对象：" + String(_target_names.get(task.delivery.target_object_id, "未知")))
+		fields.append(TaskText.field("交付对象", String(_target_names.get(task.delivery.target_object_id, "未知"))))
 		if task.delivery.has("uses"):
 			var uses := PackedStringArray()
 			for id: String in task.delivery.uses:
 				uses.append("%s × %s 次" % [_product_names.get(id, "未知物资"), _number(task.delivery.uses[id])])
-			lines.append("使用物资：" + "、".join(uses))
+			fields.append(TaskText.field("使用物资", "、".join(uses)))
 		elif task.delivery.has("items"):
 			var materials := PackedStringArray()
 			for id: String in task.delivery.items:
 				materials.append("%s × %s" % [_product_names.get(id, "未知物资"), _number(task.delivery.items[id])])
-			lines.append("交付物资：" + "、".join(materials))
+			fields.append(TaskText.field("交付物资", "、".join(materials)))
 		elif task.delivery.has("drink"):
-			lines.append("交付饮品：" + DrinkFormula.requirement_text(task.delivery.drink, _product_names))
+			fields.append(TaskText.field("交付饮品", DrinkFormula.requirement_text(task.delivery.drink, _product_names)))
 		else:
-			lines.append("交付成品：" + String(_product_names.get(task.delivery.product_id, "未知成品")))
-	lines.append("\n奖励：" + String(task.rewards.get("text", "暂无奖励说明")))
-	_set_detail("\n".join(lines))
+			fields.append(TaskText.field("交付成品", String(_product_names.get(task.delivery.product_id, "未知成品"))))
+	# 没有配置奖励的任务不写奖励行，也不拿占位文案凑数。
+	var reward_text := String(task.rewards.get("text", ""))
+	if not reward_text.is_empty():
+		fields.append(TaskText.field("奖励", reward_text, true))
+	if not fields.is_empty():
+		lines.append("")
+		lines.append_array(fields)
+	return "\n".join(lines)
 
 func _set_detail(content: String) -> void:
 	var same_task := _displayed_id == _selected_id

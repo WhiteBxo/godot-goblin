@@ -10,6 +10,12 @@ signal item_selected(index: int)
 signal item_activated(index: int)
 
 const ROW_MIN_HEIGHT := 26
+## 主线、支线与已结束的行各有自己的底样式，列表本身就是一张优先级表。
+const ROW_VARIATIONS: Dictionary = {
+	"main": &"TaskRowMain",
+	"side": &"TaskRowSide",
+	"done": &"TaskRowDone",
+}
 
 var _selected := -1
 var _silent_focus := false
@@ -24,7 +30,7 @@ func clear() -> void:
 		child.queue_free()
 	_selected = -1
 
-func add_item(text: String) -> int:
+func add_item(text: String, kind := "side") -> int:
 	var button := Button.new()
 	# Stable name so focus paths survive a refresh that rebuilds every row.
 	button.name = "Row%d" % _rows().get_child_count()
@@ -34,7 +40,8 @@ func add_item(text: String) -> int:
 	button.custom_minimum_size = Vector2(0, ROW_MIN_HEIGHT)
 	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	button.focus_mode = Control.FOCUS_ALL
-	button.theme_type_variation = &"OrderRow"
+	button.set_meta(&"row_variation", ROW_VARIATIONS.get(kind, ROW_VARIATIONS.side))
+	button.theme_type_variation = _variation(button, false)
 	button.set_meta(&"task_row", true)
 	button.pressed.connect(func() -> void:
 		item_selected.emit(button.get_index()))
@@ -121,7 +128,11 @@ func select(index: int) -> void:
 	for position: int in range(item_count):
 		var button := _row(position)
 		if button != null:
-			button.theme_type_variation = &"OrderRowSelected" if position == index else &"OrderRow"
+			button.theme_type_variation = _variation(button, position == index)
+
+func _variation(button: Button, selected: bool) -> StringName:
+	var base: StringName = button.get_meta(&"row_variation", ROW_VARIATIONS.side)
+	return StringName(String(base) + "Selected") if selected else base
 
 func is_selected(index: int) -> bool:
 	return index == _selected and index >= 0 and index < item_count

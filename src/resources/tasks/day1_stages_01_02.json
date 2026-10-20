@@ -356,8 +356,8 @@
         "target_object_id": "fat_goblin"
       },
       "rewards": {
-        "money": 40,
-        "text": "委托报酬 40G"
+        "money": 100,
+        "text": "委托报酬 100G"
       }
     }
   ]

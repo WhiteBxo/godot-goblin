@@ -132,10 +132,6 @@ func _refresh() -> void:
 		if not _services_ready:
 			_configure_day2()
 		_procurement.refresh()
-		# Purchase creates a real recovery obligation; a finished cup still has
-		# to reach the patient before the authored end-of-day event may run.
-		if _state.current_day == 2 and _state.story_stage == "day2.s05.return_final":
-			_state.set_flag("day2.procurement.rest_ready", not _recovery_pending())
 		if _state.current_day == 3 and _state.get_flag("day2.s03.festival_accepted") and not _state.get_flag("day3.festival.available"):
 			_state.set_flag("day3.festival.available")
 		if _host == "shop" and _state.current_day >= 3:

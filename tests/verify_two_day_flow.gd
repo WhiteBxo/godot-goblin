@@ -443,6 +443,33 @@ func _run() -> void:
 	check(fat_records.size() == 1 and fat_records[0].content == "有点话多、贪吃的哥布林。", "Fat goblin entry carries its description")
 	await capture("delivered_guard")
 	await travel("shop_enter")
+	await frames(12)
+	check(state.current_day == 2 and not state.get_flag("day2.completed"), "Final return waits for the patient's last cup even without a purchase")
+	await travel("shop_exit")
+	check(game.get_chapter_gameplay().get_procurement().purchase_direct() == OK, "The final errand buys a real mushroom before the ending")
+	await wait_event("day2.procurement.recipe")
+	await travel("shop_enter")
+	await wait_event("day2.procurement.before_rest")
+	game.get_chapter_gameplay().perform_user_action("recovery_resupply")
+	await frames()
+	var recovery_recipe: Array[String] = ["insomnia_mushroom", "mint_syrup", "red_mottled_wood"]
+	check(game.get_tea_production().craft_free(recovery_recipe, 1, true).ok, "Craft the final iced cup for the patient")
+	await frames()
+	check(not state.get_flag("day2.completed"), "Making the final cup alone cannot finish the second day")
+	var patient := game.get_actor_director().get_actor(&"fat_goblin")
+	game.get_player().teleport_to(patient.global_position + Vector2(0, 40))
+	for tick in range(6):
+		await physics_frame
+	check(game.get_shop_interaction().get_target() == game.get_delivery_point("fat_goblin"), "Final cup focuses the resting patient")
+	var handoff := InputEventAction.new()
+	handoff.action = &"interact"
+	handoff.pressed = true
+	Input.parse_input_event(handoff)
+	await frames(2)
+	handoff = InputEventAction.new()
+	handoff.action = &"interact"
+	Input.parse_input_event(handoff)
+	check(state.get_flag("day3.procurement.delivered"), "World interaction gives the last cup to the patient")
 	await wait_event("day2.s05.unsolved")
 	check(state.current_day == 3 and state.story_stage == "day3.handoff", "Real return to shop ends chapter at Day3 handoff")
 	await frames()
@@ -465,7 +492,7 @@ func _run() -> void:
 	check(DayPhase.advance_to(state, 3, "night") == OK, "Wait through the allowed third evening")
 	check(DayPhase.advance_to(state, 4, "day") == OK, "End the permitted handoff period")
 	await frames(12)
-	check(game.get_chapter_gameplay().get_procurement().get_status().status == "expired", "Unserved procurement expires on Day4")
+	check(game.get_chapter_gameplay().get_procurement().get_status().status == "delivered", "The final cup keeps the fulfilled errand complete on Day4")
 	await capture("day4_expired")
 	var entries: Dictionary = state.get_variable("chronicle.entries", {})
 	check(entries.has_all(["chronicle.tavern", "chronicle.griffin_festival", "chronicle.griffin_token"]), "Original Day2 journal entries are actually unlocked")

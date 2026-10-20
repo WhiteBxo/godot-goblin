@@ -286,7 +286,7 @@
         },
         {
           "id": "return",
-          "text": "送达后实际返回奶茶店，结束第二天",
+          "text": "送达后返回奶茶店，准备给胖哥布林的最后一杯奶茶",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -295,7 +295,7 @@
         },
         {
           "id": "rest",
-          "text": "若已购得醒神菇，先制作加冰特调并交给胖哥布林，再休息",
+          "text": "先购得醒神菇，制作加冰特调并交给胖哥布林，结束第二天",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",

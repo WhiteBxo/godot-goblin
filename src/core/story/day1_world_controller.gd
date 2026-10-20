@@ -95,10 +95,10 @@ func _refresh() -> void:
 			actor.set_health(_fat_goblin_health())
 			actor.set_mood(_fat_goblin_mood())
 		if _points.has(actor.actor_id):
-			var resting: bool = (_level is MilkTeaShop and actor.actor_id == &"fat_goblin"
-				and (Day1Access.at_stage(_state, "day2") or _state.story_stage == "day3.handoff"))
 			var trading: bool = not _vendor_ids.has(actor.actor_id) or _state.current_day >= 2
-			_points[actor.actor_id].interaction_enabled = actor.visible and not resting and trading
+			# Resting changes the patient's pose, not his ability to receive a cup.
+			# The story route and TaskDelivery still validate the actual handoff.
+			_points[actor.actor_id].interaction_enabled = actor.visible and trading
 	if _level is SettlementMap:
 		_level.set_elder_access(_state.get_business_profile() != "day1" or Day1Access.can_enter_elder(_state))
 	if _level is RpgChapterMap:

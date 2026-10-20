@@ -230,6 +230,10 @@ func _check_recovery() -> void:
 		return
 	var chapter := game.get_chapter_gameplay()
 	var procurement := chapter.get_procurement()
+	state.set_flag("day2.travel.final_shop_returned")
+	state.set_flag("day2.procurement.rest_ready")
+	await frames(12)
+	check(state.current_day == 2 and not state.get_flag("day2.completed"), "Even an old rest-ready flag cannot skip the last cup before purchase")
 	check(procurement.fund() == OK and procurement.purchase_direct() == OK, "A real direct purchase creates the recovery obligation")
 	state.set_flag("day2.travel.final_shop_returned")
 	var inventory := state.get_warehouse_inventory() as WarehouseInventory
@@ -271,16 +275,19 @@ func _check_recovery() -> void:
 	await frames()
 	check(not _has_action("recovery_resupply"), "A carried correct cup suppresses supply even when all ingredients are spent")
 	check(state.current_day == 2 and not state.get_flag("day2.completed"), "The chapter still waits after manufacture")
-	if capture_enabled:
-		var patient := game.get_actor_director().get_actor(&"fat_goblin")
-		if patient != null:
-			game.get_player().teleport_to(patient.global_position + Vector2(0, 30))
-		await frames()
-		check(game.open_game_menu() == OK, "Open the handoff menu for rendered verification")
-		await frames(3)
-		await _capture("recovery_handoff_menu")
-		game.get_ui_manager().close_screen(ScreenIds.CHAPTER_ACTIONS)
-		await frames(3)
+	var patient := game.get_actor_director().get_actor(&"fat_goblin")
+	game.get_player().teleport_to(patient.global_position + Vector2(0, 40))
+	await frames()
+	# Reproduce the ordering after a saved waiting state is restored: both world
+	# and chapter projections must leave the patient's real Area2D usable.
+	var waiting: Dictionary = state.to_dict()
+	check(state.restore_state(waiting) == OK, "Restore the final-cup waiting state")
+	await frames()
+	var interaction := game.get_shop_interaction()
+	var point := game.get_delivery_point("fat_goblin")
+	check(point.is_available(), "The resting patient's real interaction area is available")
+	check(interaction.get_target() == point, "The patient is selected from reachable bedroom floor")
+	await _capture("recovery_handoff_prompt")
 	before = inventory.to_dict()
 	check(not delivery.try_submit("day2_recovery_drink", "casino").ok and inventory.to_dict() == before, "The wrong recipient cannot consume the recovery cup")
 	var observations: Array[bool] = []
@@ -288,9 +295,17 @@ func _check_recovery() -> void:
 		if state.get_flag("day3.procurement.delivered"):
 			observations.append(state.get_flag("signature.S06.rescued_in_time") and inventory.get_drink_stock(cold.id) == 0)
 	state.state_changed.connect(observe)
-	var result := delivery.deliver_to("fat_goblin", "day3_procurement")
+	var press := InputEventAction.new()
+	press.action = &"interact"
+	press.pressed = true
+	Input.parse_input_event(press)
+	await frames(1)
+	var release := InputEventAction.new()
+	release.action = &"interact"
+	Input.parse_input_event(release)
+	await frames(1)
 	state.state_changed.disconnect(observe)
-	check(result.ok, "NPC delivery bypasses the unavailable raw order and hands over the real cup")
+	check(state.get_flag("day3.procurement.delivered"), "The real interaction action hands the cup to the resting patient")
 	check(not observations.is_empty() and observations.all(func(value: bool) -> bool: return value), "Delivery, patient recovery and cup deduction publish atomically")
 	check(state.get_flag("signature.S06.rescued_in_time") and inventory.get_drink_stock(cold.id) == 0, "Exactly one correct cup treats the patient")
 	before = inventory.to_dict()

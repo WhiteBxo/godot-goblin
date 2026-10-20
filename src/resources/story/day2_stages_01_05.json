@@ -995,7 +995,7 @@
         "stage": "day2.s05.return_final",
         "flags": {
           "day2.travel.final_shop_returned": true,
-          "day2.procurement.rest_ready": true
+          "day3.procurement.delivered": true
         }
       },
       "steps": [

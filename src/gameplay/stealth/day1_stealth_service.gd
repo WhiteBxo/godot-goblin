@@ -9,9 +9,16 @@ signal escaped
 signal throw_resolved(kind: StringName, affected: bool)
 ## Emitted once per released throw, after the item has been consumed.
 signal throw_released(kind: StringName)
+## A throw was asked for and refused. The HUD shows the reason on the panel:
+## a refused throw otherwise looks exactly like a key that does nothing.
+signal input_refused(reason: String)
 signal retry_travel_requested
 
 enum Status { IDLE, PENDING, RUNNING, FAILED, INTERCEPTED, ESCAPED }
+
+## Share of the throw range used when the pointer gives no usable landing point.
+## Far enough to reach a guard in front, short enough to stay inside the ring.
+const FALLBACK_AIM_RATIO := 0.6
 
 var status: Status = Status.IDLE
 ## Forwarded from the player's held slot; this scene never keeps its own copy.
@@ -133,6 +140,38 @@ func is_mission_stage() -> bool:
 func can_accept_input() -> bool:
 	return status == Status.RUNNING and _external_control_available() and _player.movement_enabled and not _player.is_performance_controlled()
 
+## Player-facing reason why a throw cannot start right now; empty while it can.
+func get_block_reason() -> String:
+	if status == Status.ESCAPED:
+		return "已经撤离，不用再投掷"
+	if status != Status.RUNNING:
+		return message if not message.is_empty() else "潜入尚未开始"
+	if get_tree().paused:
+		return "游戏已暂停，暂时不能投掷"
+	if not is_instance_valid(_player) or not is_instance_valid(_effects):
+		return "潜入场景尚未接通，暂时不能投掷"
+	if _player.is_performance_controlled() or not _player.movement_enabled:
+		return "角色被对白或演出接管，暂时不能投掷"
+	if not _external_control_available():
+		return "界面或场景切换中，暂时不能投掷"
+	return ""
+
+## Wallet coins are spent per throw, so the panel must know the real balance.
+func get_coin_balance() -> int:
+	if not is_instance_valid(_state) or _state.get_transactions() == null:
+		return 0
+	return _state.get_transactions().get_balance()
+
+func can_afford_coin() -> bool:
+	return not (is_instance_valid(_setup) and _setup.wallet_coins) or get_coin_balance() >= WalletTransactions.COIN_FACE_VALUE
+
+## Refusals also leave a sentence in message; the HUD mirrors it as a visible line.
+func _refuse(reason: String) -> void:
+	var text := reason if not reason.is_empty() else "暂时不能投掷"
+	message = text
+	input_refused.emit(text)
+	changed.emit()
+
 func select_throwable(kind: StringName) -> Error:
 	if kind not in [&"coin", &"torch"]:
 		return ERR_INVALID_PARAMETER
@@ -171,6 +210,37 @@ func request_throw(target: Vector2) -> Error:
 	var accepted := _player.request_action(&"throw")
 	_target_override = null
 	return OK if accepted else ERR_BUSY
+
+## Where the pointer currently lands. A keyboard player's mouse usually rests
+## over the HUD panel, so this is rarely a legal landing point.
+func get_aim_target() -> Vector2:
+	return _effects.get_global_mouse_position() if is_instance_valid(_effects) else get_fallback_target()
+
+## Landing point used when the pointer is not legal: straight ahead of the body.
+## The design allows "固定落点或简单瞄准一次"; refusing outright is what made
+## F look broken while the mouse sat anywhere outside the ring.
+func get_fallback_target() -> Vector2:
+	if not is_instance_valid(_player) or not is_instance_valid(_setup):
+		return Vector2.ZERO
+	var reach := maxf(_setup.throw_range * FALLBACK_AIM_RATIO, 32.0)
+	return _player.global_position + _player.get_facing_vector() * reach
+
+## Facing-direction landing point for the HUD button: the pointer is on the
+## button itself when this is called, so an out-of-range aim uses the body.
+func throw_at_aim() -> Error:
+	var target := get_aim_target()
+	if not _valid_target(target):
+		target = get_fallback_target()
+	if not _valid_target(target):
+		_refuse("这里没法投掷")
+		return ERR_UNAVAILABLE
+	return request_throw(target)
+
+## Same resolution the release uses, so the reticle can never promise a landing
+## the service would refuse.
+func resolve_aim() -> Vector2:
+	var target := get_aim_target()
+	return target if _valid_target(target) else get_fallback_target()
 
 func begin_attempt() -> Error:
 	if status in [Status.RUNNING, Status.FAILED, Status.INTERCEPTED, Status.ESCAPED] or _releasing or not _external_control_available():
@@ -313,16 +383,19 @@ func _guard_cleared(guard: Day1GuardResponse) -> bool:
 		and (guard.role != Day1GuardResponse.Role.DRUNKEN or _state.is_event_completed(guard.encounter_event_id)))
 
 func _on_action_started(action: StringName, _direction: Vector2) -> void:
-	if action != &"throw" or not can_accept_input() or _releasing:
+	if action != &"throw" or _releasing:
+		return
+	# The body already started its throw pose, so every refusal below has to say
+	# why: a silent return reads as "F does nothing" during play.
+	if not can_accept_input():
+		_refuse(get_block_reason())
 		return
 	if not _player.has_held():
-		message = "没有手持物品"
-		changed.emit()
+		_refuse("没有手持物品，先在面板里选一个投掷物")
 		return
-	var target: Vector2 = _target_override if _target_override is Vector2 else _effects.get_global_mouse_position()
+	var target: Vector2 = _target_override if _target_override is Vector2 else resolve_aim()
 	if not _valid_target(target):
-		message = "落点超出投掷范围"
-		changed.emit()
+		_refuse("这里没法投掷：换个位置再试")
 		return
 	_pending_throw = {"kind": selected_kind, "target": target}
 	if selected_kind == &"drink":
@@ -330,14 +403,17 @@ func _on_action_started(action: StringName, _direction: Vector2) -> void:
 		var payload: Variant = record.get("throw", {})
 		if record.is_empty() or record.get("read_only", false) or not payload is Dictionary or payload.is_empty():
 			_pending_throw.clear()
-			message = "这杯饮品无法投掷"
-			changed.emit()
+			_refuse("这杯饮品无法投掷")
 			return
 		_pending_throw["drink_id"] = selected_drink_id
 		_pending_throw["payload"] = payload.duplicate(true)
 
 func _on_action_triggered(action: StringName, _direction: Vector2) -> void:
-	if action != &"throw" or _pending_throw.is_empty() or not can_accept_input() or _releasing:
+	if action != &"throw" or _pending_throw.is_empty() or _releasing:
+		return
+	if not can_accept_input():
+		_pending_throw.clear()
+		_refuse(get_block_reason())
 		return
 	var pending := _pending_throw
 	_pending_throw = {}
@@ -347,15 +423,16 @@ func _on_action_triggered(action: StringName, _direction: Vector2) -> void:
 	var consumed := _consume_throwable(pending)
 	_releasing = false
 	if not consumed:
-		message = "没有可用的投掷物品"
-		changed.emit()
+		if pending.kind == &"coin" and _setup.wallet_coins and not can_afford_coin():
+			_refuse("金币不足 %dG，投不出去" % WalletTransactions.COIN_FACE_VALUE)
+		else:
+			_refuse("没有可用的投掷物品")
 		return
 	if generation != _generation or not can_accept_input():
 		# The attempt ended while the item was being deducted. Give inventory
 		# items back instead of dropping them with the cancelled projectile.
 		var refunded := _refund_throwable(pending)
-		message = "投掷被打断，物品已退回" if refunded else "投掷被打断"
-		changed.emit()
+		_refuse("投掷被打断，物品已退回" if refunded else "投掷被打断")
 		return
 	var projectile := Day1ThrowProjectile.new()
 	projectile.speed *= _setup.effect_scale
@@ -403,7 +480,7 @@ func _update_aim() -> void:
 	if not can_accept_input() or not _player.has_held() or not _player.is_visible_in_tree():
 		_aim.present(Vector2.ZERO, false, false)
 		return
-	var target: Vector2 = _target_override if _target_override is Vector2 else _effects.get_global_mouse_position()
+	var target: Vector2 = _target_override if _target_override is Vector2 else resolve_aim()
 	_aim.present(target, _valid_target(target), true)
 
 func _resolve_impact(result: Dictionary) -> void:

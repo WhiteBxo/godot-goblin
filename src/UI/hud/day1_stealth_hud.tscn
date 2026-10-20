@@ -116,6 +116,14 @@ size_flags_horizontal = 3
 theme_type_variation = &"PrimaryButton"
 text = "开始潜入"
 
+[node name="Feedback" type="Label" parent="Panel/Content"]
+visible = false
+layout_mode = 2
+mouse_filter = 2
+clip_text = true
+text_overrun_behavior = 3
+theme_type_variation = &"Danger"
+
 [node name="RetryHint" type="Label" parent="Panel/Content"]
 visible = false
 layout_mode = 2
@@ -130,4 +138,4 @@ mouse_filter = 2
 clip_text = true
 text_overrun_behavior = 3
 theme_type_variation = &"Muted"
-text = "F 投币 · Ctrl 潜行 · R 重试"
+text = "鼠标瞄准落点 · F 投掷 · Ctrl 潜行"

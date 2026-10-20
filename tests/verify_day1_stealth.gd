@@ -156,6 +156,21 @@ func _run() -> void:
 	_check(not _service.get_configuration_issues().is_empty(), "Guard captain cannot become a mansion guard")
 	original_actor.actor_id = &"fixture_guard_2"
 	_check(_service.request_throw(Vector2(INF, 0)) == ERR_UNAVAILABLE and _service.request_throw(Vector2(5000, 0)) == ERR_UNAVAILABLE, "Invalid or out-of-range targets cannot start a throw")
+	# A throw that the body already started must name its refusal: the same
+	# silence used to read as "F does nothing" in play.
+	var refusals: Array[String] = []
+	_service.input_refused.connect(func(reason: String) -> void: refusals.append(reason))
+	_external_lock = true
+	_player.request_action(&"throw")
+	await _frames(2)
+	_check(refusals.size() == 1 and refusals[0].contains("暂时不能投掷"), "A refused throw reports its reason to the panel")
+	await _until(func() -> bool: return _player.get_active_action().is_empty(), "Refused throw pose finishes")
+	_external_lock = false
+	# The pointer usually rests over the HUD panel, so an unusable aim must still
+	# resolve to a legal landing point instead of cancelling the throw.
+	var fallback := _service.get_fallback_target()
+	_check(_service._valid_target(fallback) and fallback.distance_to(_player.global_position) > 1.0, "An unusable pointer still yields a legal landing point in front of the body")
+	_check(_service.resolve_aim().is_finite(), "Aim resolution never returns a broken point")
 	var entry := _setup.guards[0]
 	var target := _setup.flammable_targets[0]
 	var coins := _inventory.get_stock("strange_coin")

@@ -21,7 +21,7 @@ extends Node
 @export_multiline var approach_hint := ""
 @export_multiline var escape_hint := ""
 ## One-line reminder shown during the attempt; full rules stay in approach_hint.
-@export_multiline var controls_hint := "鼠标瞄落点 · 侧边可绕 · 别停在扇区里"
+@export_multiline var controls_hint := "鼠标瞄准落点 · F 投掷 · 侧边可绕 · 别停在扇区里"
 @export var confusion_required := false
 @export_range(1.0, 1200.0) var throw_range := 460.0
 ## World-space scale for projectile speed/art and recipe effect distances; time is unchanged.

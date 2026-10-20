@@ -354,6 +354,13 @@ display_name = "酒馆外的醉鬼"
 story_role = "S08：相信格里芬就在酒瓶中。"
 active_phase = "always"
 
+[node name="Wander" type="Node" parent="Characters/Drunk"]
+script = ExtResource("wander")
+radius = 20.0
+speed = 22.0
+minimum_pause = 2.0
+maximum_pause = 4.5
+
 [node name="SignatureS08" parent="Interactions" instance=ExtResource("point")]
 position = Vector2(1560, 1944)
 script = ExtResource("signature")
@@ -686,11 +693,21 @@ actor_id = &"prayer_man"
 display_name = "祈祷者"
 active_phase = "always"
 
+[node name="Wander" type="Node" parent="Characters/PrayerMan"]
+script = ExtResource("wander")
+radius = 16.0
+speed = 26.0
+
 [node name="PrayerWoman" parent="Characters" instance=ExtResource("prayer_woman")]
 position = Vector2(1200, 336)
 actor_id = &"prayer_woman"
 display_name = "同伴"
 active_phase = "always"
+
+[node name="Wander" type="Node" parent="Characters/PrayerWoman"]
+script = ExtResource("wander")
+radius = 16.0
+speed = 26.0
 
 [node name="PrayerElder" parent="Characters" instance=ExtResource("prayer_elder")]
 position = Vector2(1344, 240)
@@ -704,11 +721,21 @@ actor_id = &"warehouse_guard_1"
 display_name = "嘴馋的守卫"
 active_phase = "always"
 
+[node name="Wander" type="Node" parent="Characters/WarehouseGuard1"]
+script = ExtResource("wander")
+radius = 20.0
+speed = 28.0
+
 [node name="WarehouseGuard2" parent="Characters" instance=ExtResource("warehouse_sentry")]
 position = Vector2(552, 648)
 actor_id = &"warehouse_guard_2"
 display_name = "心虚的守卫"
 active_phase = "always"
+
+[node name="Wander" type="Node" parent="Characters/WarehouseGuard2"]
+script = ExtResource("wander")
+radius = 20.0
+speed = 28.0
 
 [node name="Vendor1" parent="Characters" instance=ExtResource("vendor_1")]
 position = Vector2(1272, 2328)
@@ -746,10 +773,24 @@ position = Vector2(1272, 2424)
 actor_id = &"market_boy"
 active_phase = "always"
 
+[node name="Wander" type="Node" parent="Characters/MarketBoy"]
+script = ExtResource("wander")
+radius = 28.0
+speed = 40.0
+minimum_pause = 0.8
+maximum_pause = 2.0
+
 [node name="VillageChild" parent="Characters" instance=ExtResource("goblin_girl")]
 position = Vector2(2040, 1656)
 actor_id = &"village_child"
 active_phase = "always"
+
+[node name="Wander" type="Node" parent="Characters/VillageChild"]
+script = ExtResource("wander")
+radius = 30.0
+speed = 40.0
+minimum_pause = 0.8
+maximum_pause = 2.2
 
 [node name="NightGather3" parent="GatherPoints" instance=ExtResource("point")]
 position = Vector2(840, 2088)

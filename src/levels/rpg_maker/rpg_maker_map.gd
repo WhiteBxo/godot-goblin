@@ -71,6 +71,11 @@ func can_cross_edge(cell: Vector2i, direction: Vector2i) -> bool:
 ## The floor query excludes solid cells and map edges. Directional edge collisions
 ## are enforced by the derived world-layer StaticBody2D, preserving partial tiles.
 func can_stand_at(world_position: Vector2, half_size: Vector2) -> bool:
+	return is_walkable_at(world_position, half_size)
+
+## Side-effect-free floor query for actors that only plan a step. Subclasses own
+## the player-facing variant, which may report the rejected position to the HUD.
+func is_walkable_at(world_position: Vector2, half_size: Vector2) -> bool:
 	var minimum := Vector2i(2147483647, 2147483647)
 	var maximum := Vector2i(-2147483648, -2147483648)
 	for corner: Vector2 in [Vector2(-half_size.x, -half_size.y), Vector2(half_size.x, -half_size.y), Vector2(-half_size.x, half_size.y), half_size]:

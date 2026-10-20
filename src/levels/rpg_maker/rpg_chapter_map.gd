@@ -15,12 +15,23 @@ var market_only := false
 signal market_boundary_reached
 
 func can_stand_at(world_position: Vector2, half_size := Vector2.ZERO) -> bool:
-	if market_only and first_visit_bounds.has_area():
-		var footprint := Rect2(to_local(world_position) - half_size, half_size * 2.0)
-		if not first_visit_bounds.encloses(footprint):
-			market_boundary_reached.emit()
-			return false
+	if _blocks_market(world_position, half_size):
+		market_boundary_reached.emit()
+		return false
 	return super.can_stand_at(world_position, half_size)
+
+## Ambient actors probe candidate steps with this variant: the market gate still
+## rejects the position, but a townsfolk detour never tells the player they left.
+func is_walkable_at(world_position: Vector2, half_size := Vector2.ZERO) -> bool:
+	if _blocks_market(world_position, half_size):
+		return false
+	return super.is_walkable_at(world_position, half_size)
+
+func _blocks_market(world_position: Vector2, half_size: Vector2) -> bool:
+	if not market_only or not first_visit_bounds.has_area():
+		return false
+	var footprint := Rect2(to_local(world_position) - half_size, half_size * 2.0)
+	return not first_visit_bounds.encloses(footprint)
 
 func is_observing_market(world_position: Vector2) -> bool:
 	return market_observation_area.has_area() and market_observation_area.has_point(to_local(world_position))

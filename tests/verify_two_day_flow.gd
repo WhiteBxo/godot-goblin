@@ -256,7 +256,7 @@ func _run() -> void:
 	check(state.get_transactions().get_balance() == 71, "Seven paid cups and once-only 50G funding")
 	var gameplay: ChapterGameplay = game.get("_chapter_gameplay")
 	check(gameplay.execute("day1.s04.funding").ok and state.get_transactions().get_balance() == 71, "Funding replay pays no duplicate")
-	check(state.get_warehouse_inventory().get_uses("firefly_cap") == 1 and state.get_warehouse_inventory().get_uses("goblin_firebrew") == 1, "Trial consumes one use of each gift")
+	check(state.get_warehouse_inventory().get_uses("firefly_cap") == 1 and state.get_warehouse_inventory().get_uses("goblin_firebrew") == 4, "Trial consumes one use from the five-use firebrew gift")
 	await travel("shop_exit")
 	check(not (game.get_active_level() as RpgChapterMap).market_only, "Accepted commission removes first-visit movement restrictions")
 	check(game.get_gathering_service().is_harvestable(game.get_gathering_service().get_point(&"night_gather_0")), "Accepted commission opens real gathering")

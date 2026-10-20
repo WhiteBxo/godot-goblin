@@ -4,6 +4,7 @@
     {
       "id": "day1.daily.tea_a",
       "type": "commission",
+      "allow_cancel": true,
       "title": "散客 · 珍珠奶茶",
       "description": "柜台前的散客点了一杯珍珠奶茶。接单、做好、当场交付收款。",
       "reveal_when": {
@@ -50,6 +51,7 @@
     {
       "id": "day1.daily.tea_b",
       "type": "commission",
+      "allow_cancel": true,
       "title": "散客 · 椰果茉莉奶茶",
       "description": "柜台前的散客点了一杯椰果茉莉奶茶。接单、做好、当场交付收款。",
       "reveal_when": {
@@ -96,6 +98,7 @@
     {
       "id": "day1.daily.tea_c",
       "type": "commission",
+      "allow_cancel": true,
       "title": "散客 · 原味奶茶",
       "description": "柜台前的散客点了一杯原味奶茶。接单、做好、当场交付收款。",
       "reveal_when": {

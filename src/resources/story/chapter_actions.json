@@ -5,7 +5,7 @@
       "kind": "transaction",
       "use_gains": {
         "firefly_cap": 2,
-        "goblin_firebrew": 2
+        "goblin_firebrew": 5
       }
     },
     "day1.s04.funding": {

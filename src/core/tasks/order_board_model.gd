@@ -247,5 +247,5 @@ func _project(task: Dictionary, view: Dictionary, accepted: bool, done: bool) ->
 		"target_id": target_id, "target_name": target_name, "items": items, "icon": icon,
 		"product_id": product_id, "recipe_materials": recipe_materials, "can_craft": can_craft and not done,
 		"free_formula": task.delivery.has("drink"), "drink_requirement": task.delivery.get("drink", {}).duplicate(true),
-		"allow_cancel": bool(task.get("allow_cancel", false)) and accepted and not done,
+		"allow_cancel": bool(task.get("allow_cancel", false)) and status == "active",
 		"missing": missing, "missing_text": "、".join(missing_names), "hint": hint, "rewards": rewards}

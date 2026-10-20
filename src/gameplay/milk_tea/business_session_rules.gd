@@ -71,14 +71,14 @@ static func valid_snapshot(value: Variant, definition: Dictionary = {}) -> bool:
 				return false
 	return true
 
-static func group_served(group: Dictionary, flags: Dictionary) -> bool:
+static func group_served(group: Dictionary, flags: Dictionary, cancelled_orders: Dictionary = {}) -> bool:
 	for id: String in group.order_ids:
-		if not flags.get("delivery." + id + ".completed", false):
+		if not flags.get("delivery." + id + ".completed", false) and not (group.kind == "ordinary" and cancelled_orders.get(id, false)):
 			return false
 	return true
 
 ## One stage publication or one real arrival/departure per commit. Never rewind.
-static func valid_transition(before: Dictionary, next: Dictionary, definition: Dictionary, flags: Dictionary) -> bool:
+static func valid_transition(before: Dictionary, next: Dictionary, definition: Dictionary, flags: Dictionary, cancelled_orders: Dictionary = {}) -> bool:
 	if before.closed or next.closed or not valid_snapshot(next, definition):
 		return false
 	if next.published_stages != before.published_stages:
@@ -108,10 +108,10 @@ static func valid_transition(before: Dictionary, next: Dictionary, definition: D
 				if status != "waiting":
 					return false
 			"waiting":
-				if not group_served(group, flags) or (status != "leaving" and not (status == "departed" and group.kind == "ordinary")):
+				if not group_served(group, flags, cancelled_orders) or (status != "leaving" and not (status == "departed" and group.kind == "ordinary")):
 					return false
 			"leaving":
-				if status != "departed" or not group_served(group, flags):
+				if status != "departed" or not group_served(group, flags, cancelled_orders):
 					return false
 			_:
 				return false
@@ -148,18 +148,18 @@ static func parse_close_rule(value: Dictionary, definition: Dictionary) -> Dicti
 		return {}
 	return rule
 
-static func can_close(snapshot: Dictionary, definition: Dictionary, rule: Dictionary, flags: Dictionary) -> bool:
-	return close_requirements_met(snapshot, definition, rule, flags) and not flags.get(rule.completed_flag, false)
+static func can_close(snapshot: Dictionary, definition: Dictionary, rule: Dictionary, flags: Dictionary, cancelled_orders: Dictionary = {}) -> bool:
+	return close_requirements_met(snapshot, definition, rule, flags, true, cancelled_orders) and not flags.get(rule.completed_flag, false)
 
-static func close_requirements_met(snapshot: Dictionary, definition: Dictionary, rule: Dictionary, flags: Dictionary, check_flags := true) -> bool:
+static func close_requirements_met(snapshot: Dictionary, definition: Dictionary, rule: Dictionary, flags: Dictionary, check_flags := true, cancelled_orders: Dictionary = {}) -> bool:
 	for stage: String in rule.required_stages:
 		if stage not in snapshot.published_stages:
 			return false
 	for id: String in rule.served_groups:
-		if not snapshot.groups.has(id) or not group_served(definition.groups[id], flags):
+		if not snapshot.groups.has(id) or not group_served(definition.groups[id], flags, cancelled_orders):
 			return false
 	for id: String in rule.departed_groups:
-		if snapshot.groups.get(id) != "departed" or not group_served(definition.groups[id], flags):
+		if snapshot.groups.get(id) != "departed" or not group_served(definition.groups[id], flags, cancelled_orders):
 			return false
 	if check_flags:
 		for flag: String in rule.required_flags:

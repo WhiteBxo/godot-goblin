@@ -520,7 +520,7 @@ func cancel_optional_order(order_id: String) -> Error:
 	var entry: Dictionary = _game.get_order_board().get_entry(order_id)
 	if entry.is_empty() or entry.get("status") != "active" or not bool(entry.get("allow_cancel", false)):
 		return ERR_UNAVAILABLE
-	var error: Error = _state.settle_task_result(str(entry.task_id), "cancelled", "主动放弃订单")
+	var error := _game.get_task_delivery().cancel_order(order_id)
 	if error == OK and OPTIONAL_ORDERS.has(order_id):
 		# The group's guard is now clear; a story group leaves in its own beat.
 		_release_group(OPTIONAL_ORDERS[order_id].group)

@@ -940,10 +940,12 @@ func _create_shop_business(ui: ShopUI) -> void:
 			_interaction_audio.play_event("order_failure")
 			ui.show_feedback("暂时无法接取这张订单，请核对当前阶段。", false))
 	ui.cancel_requested.connect(func(id: String) -> void:
-		var cancelled := ERR_UNCONFIGURED
+		var cancelled: Error
 		if is_instance_valid(_chapter_gameplay):
 			cancelled = _chapter_gameplay.cancel_optional_order(id)
-		ui.show_feedback("已放弃这张订单。" if cancelled == OK else "这张订单现在无法放弃。", cancelled == OK))
+		else:
+			cancelled = _task_delivery.cancel_order(id)
+		ui.show_feedback("订单已取消，已有成品和材料保留。" if cancelled == OK else "这张订单现在无法取消。", cancelled == OK))
 	var task_hud: TaskHUD = preload("res://src/UI/tasks/task_hud.tscn").instantiate()
 	_task_hud = task_hud
 	_ui_manager.register_screen(ScreenIds.TASK_HUD, task_hud, &"hud", false)

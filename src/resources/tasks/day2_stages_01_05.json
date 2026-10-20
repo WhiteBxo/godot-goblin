@@ -497,6 +497,7 @@
     {
       "id": "day2.orders.ordinary_a",
       "type": "commission",
+      "allow_cancel": true,
       "title": "散客 A · 冰吸薄荷拿铁",
       "description": "散客 A · 冰吸薄荷拿铁",
       "reveal_when": {
@@ -535,6 +536,7 @@
     {
       "id": "day2.orders.ordinary_b",
       "type": "commission",
+      "allow_cancel": true,
       "title": "散客 B · 薄荷巧脆奶茶",
       "description": "散客 B · 薄荷巧脆奶茶",
       "reveal_when": {
@@ -573,6 +575,7 @@
     {
       "id": "day2.orders.ordinary_c",
       "type": "commission",
+      "allow_cancel": true,
       "title": "散客 C · 苹果奶绿",
       "description": "散客 C · 苹果奶绿",
       "reveal_when": {

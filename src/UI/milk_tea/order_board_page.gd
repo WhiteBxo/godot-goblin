@@ -166,8 +166,8 @@ func _refresh_detail() -> void:
 		enabled = not current
 		# The customer waits on this optional order: offer the way out on the
 		# slip instead of hiding it in the chapter menu.
-		if entry.get("allow_cancel", false) and not entry.get("ready", false):
-			secondary = "放弃此单"
+		if entry.get("allow_cancel", false):
+			secondary = "取消订单"
 	_ticket.present(entry, action, enabled, secondary)
 
 func _secondary() -> void:

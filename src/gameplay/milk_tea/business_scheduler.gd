@@ -102,6 +102,8 @@ func _connect_sources() -> void:
 				event.connect(_on_replaced)
 	if is_instance_valid(_delivery) and not _delivery.delivered.is_connected(_on_delivered):
 		_delivery.delivered.connect(_on_delivered)
+	if is_instance_valid(_delivery) and not _delivery.order_cancelled.is_connected(_on_delivered):
+		_delivery.order_cancelled.connect(_on_delivered)
 
 func _disconnect_sources() -> void:
 	if is_instance_valid(_state):
@@ -112,6 +114,8 @@ func _disconnect_sources() -> void:
 				event.disconnect(_on_replaced)
 	if is_instance_valid(_delivery) and _delivery.delivered.is_connected(_on_delivered):
 		_delivery.delivered.disconnect(_on_delivered)
+	if is_instance_valid(_delivery) and _delivery.order_cancelled.is_connected(_on_delivered):
+		_delivery.order_cancelled.disconnect(_on_delivered)
 
 ## Pure projection, including restore/reset. Never republishes arrival or completion.
 func refresh() -> void:
@@ -154,7 +158,8 @@ func is_group_served(group_id: String) -> bool:
 	if not _groups.has(group_id) or not is_instance_valid(_state):
 		return false
 	for id: String in _groups[group_id].order_ids:
-		if not _state.get_flag("delivery." + id + ".completed"):
+		var cancelled: bool = _groups[group_id].kind == "ordinary" and _delivery.is_order_cancelled(id)
+		if not _state.get_flag("delivery." + id + ".completed") and not cancelled:
 			return false
 	return not _departure_guard.is_valid() or bool(_departure_guard.call(group_id))
 

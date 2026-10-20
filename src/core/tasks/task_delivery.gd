@@ -3,6 +3,7 @@ extends Node
 ## Session coordinator. GameState owns task facts/receipts; WarehouseInventory owns items.
 
 signal delivered(order_id: String)
+signal order_cancelled(order_id: String)
 ## 失败也发信号：调试日志需要真实原因；返回值与调用方行为保持不变。
 signal delivery_failed(order_id: String, reason: String)
 signal availability_changed
@@ -138,6 +139,25 @@ func is_order_accepted(order_id: String) -> bool:
 	if task.delivery.has("accepted_flag"):
 		return _state.get_flag(task.delivery.accepted_flag) and _journal.get_task(task.id).get("status") == "active"
 	return _journal.get_task(task.id).get("status") == "active"
+
+## Cancellation settles only the task. Prepared cups and materials remain owned;
+## no delivery receipt, completion count or reward is created.
+func cancel_order(order_id: String) -> Error:
+	if _committing or not _ready_for_delivery() or not _orders.has(order_id):
+		return ERR_UNAVAILABLE
+	var task: Dictionary = _orders[order_id]
+	if not task.get("allow_cancel", false) or not is_order_accepted(order_id):
+		return ERR_UNAVAILABLE
+	_committing = true
+	var error := _state.settle_task_result(task.id, "cancelled", "主动取消订单")
+	if error == OK:
+		order_cancelled.emit(order_id)
+	_committing = false
+	return error
+
+func is_order_cancelled(order_id: String) -> bool:
+	return (_orders.has(order_id) and is_instance_valid(_state)
+		and _state.get_task_result(_orders[order_id].id).get("status") == "cancelled")
 
 func can_accept_order(order_id: String) -> bool:
 	if not _orders.has(order_id) or not is_instance_valid(_state) or not is_order_available(order_id):

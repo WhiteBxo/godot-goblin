@@ -4,6 +4,8 @@
 
 正式 TeaProduction 的制作与交付分开。F5 进入标题菜单并开始 Day 1；F6 `src/core/main.tscn` 或 `src/core/settlement.tscn` 可独立运行宿主。当前订单板、制作和 HUD 操作见[订单系统](order_system.md)。
 
+`TaskDelivery.cancel_order(order_id)` 取消已接取且配置 `allow_cancel: true` 的订单，经 GameState 持久记录 `cancelled` 终态；不改库存、余额、交付回执或完成计数，拒绝重复取消、交付和重新接取。成功后发送 `order_cancelled`；BusinessScheduler 仅允许普通散客以取消替代交付完成离店，剧情客组仍遵守原来的交付条件。`is_order_cancelled(order_id)` 只读查询持久结果，读档后不重放取消信号。订单板开放第二天三张普通散客单及可选特调，独立教学的三张散客单也允许取消。
+
 ## 数据与复用
 
 任务继续使用 TaskCatalog / TaskJournal，状态仍来自 GameState 的激活与完成条件。交付任务支持四种互斥需求，`product_id`、`items`、`uses` 与 `drink` 必须恰好出现一个。`uses` 明确按次扣料，仅接受共享会话库存，由 `get_use_requirement()` 查询；份数仍用 `items`。下面列静态成品与物资示例；自由饮品的要求、价格及原子结算见[第二期自由调配](free_tea_recipes.md#通用订单)：

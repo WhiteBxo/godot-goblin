@@ -463,7 +463,7 @@ func bind_business_session(plan: Dictionary, close_rule: Dictionary = {}) -> Err
 	var id: String = plan.session_id
 	var key: String = BUSINESS_SESSIONS.PREFIX + id
 	if _variables.has(key):
-		if not _valid_business_snapshot(_variables[key], binding, _flags, _current_day, DayPhase.get_phase(self)):
+		if not _valid_business_snapshot(_variables[key], binding, _flags, _current_day, DayPhase.get_phase(self), _task_results):
 			return ERR_INVALID_DATA
 		if _business_sessions.has(id) and not _same_value(_business_sessions[id], binding):
 			return ERR_ALREADY_EXISTS
@@ -482,7 +482,7 @@ func commit_business_session(session_id: String, expected: Dictionary, next: Dic
 		return error
 	if _same_value(expected, next):
 		return OK
-	if not BUSINESS_SESSIONS.valid_transition(expected, next, _business_sessions[session_id].definition, _flags):
+	if not BUSINESS_SESSIONS.valid_transition(expected, next, _business_sessions[session_id].definition, _flags, _cancelled_business_orders(_task_results)):
 		return ERR_UNAVAILABLE
 	_publish_business_session(session_id, next)
 	return OK
@@ -503,7 +503,7 @@ func close_business_session(session_id: String, expected: Dictionary, next: Dict
 	closed.closed = true
 	if not _same_value(closed, next) or _current_day != rule.from.day or DayPhase.get_phase(self) != rule.from.phase:
 		return ERR_UNAVAILABLE
-	if not BUSINESS_SESSIONS.can_close(expected, binding.definition, rule, _flags):
+	if not BUSINESS_SESSIONS.can_close(expected, binding.definition, rule, _flags, _cancelled_business_orders(_task_results)):
 		return ERR_UNAVAILABLE
 	_publish_business_session(session_id, next, rule)
 	return OK
@@ -536,14 +536,26 @@ func _publish_business_session(session_id: String, next: Dictionary, close_rule:
 	_warehouse_inventory.set_session_locked(locked)
 	_replacing = false
 
-func _valid_business_snapshot(value: Variant, binding: Dictionary, flags: Dictionary, day: int, phase: String) -> bool:
+## Derived from authoritative task results, including the snapshot being restored.
+## Only explicitly cancellable orders can replace a sale for ordinary departure.
+func _cancelled_business_orders(results: Dictionary) -> Dictionary:
+	var orders := {}
+	for task: Dictionary in _task_definitions:
+		var result: Variant = results.get(task.id, {})
+		if (task.has("delivery") and task.get("allow_cancel", false)
+			and result is Dictionary and result.get("status") == "cancelled"):
+			orders[task.delivery.order_id] = true
+	return orders
+
+func _valid_business_snapshot(value: Variant, binding: Dictionary, flags: Dictionary, day: int, phase: String, task_results: Dictionary) -> bool:
 	var definition: Dictionary = binding.get("definition", {})
 	if not BUSINESS_SESSIONS.valid_snapshot(value, definition):
 		return false
 	if definition.is_empty():
 		return true
+	var cancelled_orders := _cancelled_business_orders(task_results)
 	for id: String in value.groups:
-		if value.groups[id] in ["leaving", "departed"] and not BUSINESS_SESSIONS.group_served(definition.groups[id], flags):
+		if value.groups[id] in ["leaving", "departed"] and not BUSINESS_SESSIONS.group_served(definition.groups[id], flags, cancelled_orders):
 			return false
 	var rule: Dictionary = binding.get("close_rule", {})
 	if rule.is_empty():
@@ -554,7 +566,7 @@ func _valid_business_snapshot(value: Variant, binding: Dictionary, flags: Dictio
 		return true
 	var boundary := {"day": rule.to.day, "phase": rule.to.phase, "boundary": "at"}
 	# Story permission can be revoked later; the committed closure remains final.
-	return BUSINESS_SESSIONS.close_requirements_met(value, definition, rule, flags, false) and DayPhase.is_deadline_reached_at(day, phase, boundary)
+	return BUSINESS_SESSIONS.close_requirements_met(value, definition, rule, flags, false, cancelled_orders) and DayPhase.is_deadline_reached_at(day, phase, boundary)
 
 
 ## Delivery holds this through all synchronous notifications, including receipts.
@@ -872,6 +884,8 @@ func _is_valid_snapshot(data: Dictionary) -> bool:
 		return false
 	if not data["flags"] is Dictionary or not data["variables"] is Dictionary or not data["completed_events"] is Array:
 		return false
+	if not _valid_task_results(data.task_results):
+		return false
 	for key: Variant in data["flags"]:
 		if not key is String or not _is_namespaced_key(key) or not data["flags"][key] is bool:
 			return false
@@ -880,10 +894,8 @@ func _is_valid_snapshot(data: Dictionary) -> bool:
 			return false
 		if key.begins_with(BUSINESS_SESSIONS.PREFIX):
 			var id: String = key.trim_prefix(BUSINESS_SESSIONS.PREFIX)
-			if not BUSINESS_SESSIONS.valid_session_id(id) or not _valid_business_snapshot(data.variables[key], _business_sessions.get(id, {}), data.flags, data.current_day, DayPhase.phase_from_facts(data.variables, data.flags)):
+			if not BUSINESS_SESSIONS.valid_session_id(id) or not _valid_business_snapshot(data.variables[key], _business_sessions.get(id, {}), data.flags, data.current_day, DayPhase.phase_from_facts(data.variables, data.flags), data.task_results):
 				return false
-	if not _valid_task_results(data.task_results):
-		return false
 	if data.variables.has(Day2Procurement.KEY) and not Day2Procurement.valid_status(data.variables[Day2Procurement.KEY]):
 		return false
 	var seen_events: Dictionary[String, bool] = {}

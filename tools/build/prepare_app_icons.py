@@ -11,9 +11,9 @@ from PIL import Image, ImageOps
 
 def main() -> None:
     target = Path(__file__).resolve().parents[2] / "assets/ui/app_icon"
-    with Image.open(target / "source/app_icon.jpg") as original:
+    with Image.open(target / "source/app_icon.png") as original:
         artwork = ImageOps.exif_transpose(original).convert("RGB")
-    icon = ImageOps.pad(artwork, (512, 512), Image.Resampling.LANCZOS, color="black")
+    icon = ImageOps.pad(artwork, (512, 512), Image.Resampling.LANCZOS, color="white")
     icon.save(target / "app_icon.png")
     icon.save(
         target / "app_icon.ico",
@@ -24,7 +24,7 @@ def main() -> None:
     safe_artwork = ImageOps.contain(artwork, (264, 264), Image.Resampling.LANCZOS)
     foreground.paste(safe_artwork, ((432 - safe_artwork.width) // 2, (432 - safe_artwork.height) // 2))
     foreground.save(target / "adaptive_foreground.png")
-    Image.new("RGB", (432, 432), "black").save(target / "adaptive_background.png")
+    Image.new("RGB", (432, 432), "white").save(target / "adaptive_background.png")
     print(f"Icons written to {target}")
 
 

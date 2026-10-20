@@ -465,13 +465,6 @@
 					}
 				},
 				{
-					"id": "step_24017",
-					"data": {
-						"command": "chapter_action",
-						"id": "day2.s01.pocket_money"
-					}
-				},
-				{
 					"id": "step_20007",
 					"data": {
 						"command": "dialogue",

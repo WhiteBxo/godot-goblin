@@ -38,10 +38,6 @@
     "day2.procurement.fund": {
       "kind": "procurement_fund"
     },
-    "day2.s01.pocket_money": {
-      "kind": "transaction",
-      "money": 5
-    },
     "day2.procurement.recipe": {
       "kind": "signature_discovery",
       "signature_id": "S06"

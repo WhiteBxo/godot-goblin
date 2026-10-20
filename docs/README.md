@@ -6,7 +6,7 @@
 
 | 目录 | 内容 |
 | --- | --- |
-| `guides/` | 启动和新游戏、剧情写作、编排工作流与指令参数、手机打包与触摸操作。 |
+| `guides/` | 启动和新游戏、剧情写作、编排工作流与指令参数、手机 / macOS 打包与触摸操作。 |
 | `systems/` | 状态、对话、剧情调度、角色、镜头、音频、UI 与转场。 |
 | `gameplay/` | 制作、库存、交易、任务、采集、见闻录和交互反馈。 |
 | `levels/` | 奶茶店、聚落和旧洞穴 Demo；截图随对应说明保存。 |
@@ -33,6 +33,7 @@
 | --- | --- |
 | [启动、整局新游戏与返回标题](guides/game_entry.md) | `game_entry.md` |
 | [安卓手机试玩与打包](guides/android_build.md) | 触摸操作、导出预设与移动端配置 |
+| [macOS 安装包与打包](guides/macos_build.md) | 导出模板、universal 与 ad-hoc 签名、dmg 组装与验收 |
 | [剧情编排指令速查（v1）](guides/story_authoring_commands.md) | `story_authoring_commands.md` |
 | [剧情编排 Markdown 写作规范（简版）](guides/story_authoring_fields_quick_guide.md) | `story_authoring_fields_quick_guide.md` |
 | [自然语言剧情编排工作流](guides/story_authoring_workflow.md) | `story_authoring_workflow.md` |
@@ -197,6 +198,7 @@ Beat 映射、验证清单及待定项；不供游戏运行时加载。
 | [两天版发布前置清单（2026-10-20）](development/release_two_day_preflight_2026_10_20.md) | 只发前两天还缺什么：结尾、应用身份与图标、导出筛选、立绘缺口、待判定的测试与发布动作。 |
 | [v0.1.0 两日试玩版发布说明（2026-10-20）](development/demo_release_v0_1_0_2026_10_20.md) | 对外分发物的构成与 sha256、打包与抽检工具、解压后启动实测、分发前必须告知的三件事、阻塞项与未做清单。 |
 | [最终 Demo：Windows 与安卓（2026-10-20）](development/final_demo_release_2026_10_20.md) | 新名称《我的奶茶店连通异世界》、用户提供的应用图标、双平台构建与实际验收记录。 |
+| [macOS 两日试玩版（2026-10-20）](development/mac_demo_release_2026_10_20.md) | universal dmg 的构成与 sha256、ad-hoc 签名、包体与启动验收、未做公证与 Intel 实机未验。 |
 | [第一天第二次来客改成三只哥布林（2026-10-20）](development/day1_group_customers_2026_10_20.md) | 群客 beat 的三锚点站位、为什么不能先挤过道、点单者与交付目标统一、检查点与场景初始位置的配套改动。 |
 | [两天新稿、素材与反馈修复（2026-10-20）](development/story_supplement_2026_10_20.md) | 五位哥布林逐位接待、赠料试饮、第二天购菇配方、九组 NPC、儿童与修订酒鬼，以及潜行实走 / 耗尽重试。 |
 | [首日可玩性修复（2026-10-19）](development/day1_playability_fixes_2026_10_19.md) | 柜台焦点、同款连续制作、说话立绘、出店调查引导与隐藏守卫交互；真实按键和步行验收。 |

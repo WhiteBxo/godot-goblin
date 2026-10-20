@@ -156,8 +156,10 @@
       "mode": "自动演出",
       "event": "day1.s06.pondering",
       "start": 0,
-      "count": 1,
-      "dialogues": []
+      "count": 2,
+      "dialogues": [
+        "day1.s06.pondering"
+      ]
     },
     {
       "id": "day1_bridge_blood_craft",
@@ -179,8 +181,10 @@
       "mode": "自动演出",
       "event": "day1.s06.customer",
       "start": 0,
-      "count": 2,
-      "dialogues": []
+      "count": 3,
+      "dialogues": [
+        "day1.s06.customer"
+      ]
     },
     {
       "id": "day1_bridge_blood_drink",
@@ -341,6 +345,6 @@
     }
   ],
   "authoring_project": "res://docs/story_authoring/day1_stages_03_06_project.json",
-  "authoring_sha256": "b306a7bae2c0d2f4488b09910b676b8db7a81865c53e0eb2bbb0335323ce2572",
+  "authoring_sha256": "60181e7989f96693240ff6c00be3e6247cba59e02c8a2a2c2910f695723de1d3",
   "verification": "res://tests/verify_two_day_flow.gd"
 }

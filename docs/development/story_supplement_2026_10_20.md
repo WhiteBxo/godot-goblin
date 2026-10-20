@@ -48,6 +48,18 @@
 
 试玩时按住 Ctrl 绕视锥，鼠标瞄落点、F 投币；到醉卫及双卫处完成交涉，宅内按 E 调查。失败或用光金币时按 R，观察余额与任务状态回到本次潜入起点。
 
+## 第六阶段叙述接入流程
+
+[修改版第六阶段](../design/day_01_story_flow_revised.md)开头三处叙述原先只停在源稿与工程的 `source_markdown`，没有进入可播步骤：主角带血返回后的琢磨、胖哥布林到店取货、递交与闻味期待。本轮按原文逐字补为旁白文本框，接入既有事件，不新增台词、动作、坐标或音效：
+
+- `s06_pondering`：新增对白 `day1.s06.pondering`（两个旁白节点），在 `set_stage day1.s06.wait_craft` 之前播放。
+- `s06_customer_arrives`：`actor_show fat_goblin` 之后新增对白 `day1.s06.customer`（一个旁白节点），再进入 `day1.s06.wait_delivery`。
+- `s06_reaction`：对白 `day1.s06.reaction` 前置旁白节点「主角将刚做好的特调递给他……满脸期待。」，接原有胖哥布林台词。
+
+第六阶段的异常表现、帮助休息与章节结束仍按 [P10](../story_authoring/day_01_integration_pending.md#p10) 开放；`day1.s06.completed` 与换天步骤未改动。工程、运行时 Story / Dialogue 与 [Beat 清单](../story_authoring/day1_stages_03_06_bridge.json)区间同步更新，工程散列刷新为 `60181e7989f96693240ff6c00be3e6247cba59e02c8a2a2c2910f695723de1d3`。
+
+本机没有 Godot 可执行文件，`validate_story.gd` 与 `verify_two_day_flow.gd` 本轮未执行。已按 `StoryProject.compile()` 的规则重放编译，核对编译产物与工程一致、旁白 `start` / `next` 有效、Story 引用的对白全部存在、Beat 区间连续覆盖；引擎侧校验待有 Godot 环境时补做。
+
 ## 实际验证
 
 以下各批独立计数，不相加。日志及真实检查点位于 `.godot/supplement_*`，不入库。

@@ -1,7 +1,7 @@
 {
 	"version": 1.0,
 	"format": "goblin_story_project",
-	"next_step_id": 24030.0,
+	"next_step_id": 24033.0,
 	"manifest": {
 		"version": 1.0,
 		"source": "res://docs/design/day_01_stages_03_06_draft.md",
@@ -957,6 +957,13 @@
 			"event": "day1.s06.pondering",
 			"steps": [
 				{
+					"id": "step_24030",
+					"data": {
+						"command": "dialogue",
+						"id": "day1.s06.pondering"
+					}
+				},
+				{
 					"id": "step_10036",
 					"data": {
 						"command": "set_stage",
@@ -990,6 +997,13 @@
 					"data": {
 						"command": "actor_show",
 						"actor": "fat_goblin"
+					}
+				},
+				{
+					"id": "step_24031",
+					"data": {
+						"command": "dialogue",
+						"id": "day1.s06.customer"
 					}
 				},
 				{
@@ -1785,9 +1799,39 @@
 				}
 			}
 		},
-		"day1.s06.reaction": {
-			"start": "line_1",
+		"day1.s06.pondering": {
+			"start": "narration_line_1",
 			"lines": {
+				"narration_line_1": {
+					"speaker": "旁白",
+					"text": "主角带着格里芬之血返回奶茶店，终于完成了胖哥布林委托的第一步。",
+					"next": "narration_line_2"
+				},
+				"narration_line_2": {
+					"speaker": "旁白",
+					"text": "他看着手里的材料，开始琢磨该怎么把它做成一杯能卖上价钱的特调。主角既没有相关知识，也不了解格里芬之血的真正性质，只觉得这东西既然如此珍贵，加入得越多，做出来的饮料应该就越特别。",
+					"next": ""
+				}
+			}
+		},
+		"day1.s06.customer": {
+			"start": "narration_line_1",
+			"lines": {
+				"narration_line_1": {
+					"speaker": "旁白",
+					"text": "胖哥布林一直惦记着这杯饮料，很快便来到店里取货。",
+					"next": ""
+				}
+			}
+		},
+		"day1.s06.reaction": {
+			"start": "narration_line_1",
+			"lines": {
+				"narration_line_1": {
+					"speaker": "旁白",
+					"text": "主角将刚做好的特调递给他。胖哥布林迫不及待地接过饮料，闻了闻，满脸期待。",
+					"next": "line_1"
+				},
 				"line_1": {
 					"speaker": "胖哥布林",
 					"text": "这就是格里芬之血做的？看起来就不一般！我早就想尝尝了！",

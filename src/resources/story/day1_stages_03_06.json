@@ -373,6 +373,10 @@
       },
       "steps": [
         {
+          "command": "dialogue",
+          "id": "day1.s06.pondering"
+        },
+        {
           "command": "set_stage",
           "value": "day1.s06.wait_craft"
         }
@@ -391,6 +395,10 @@
         {
           "command": "actor_show",
           "actor": "fat_goblin"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.s06.customer"
         },
         {
           "command": "set_stage",

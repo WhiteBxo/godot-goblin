@@ -120,7 +120,7 @@ godot --headless --path . --script res://tests/verify_sound_library.gd
 
 2026-10-20 替换奶茶店与结尾曲，新增洞穴、赌场、酒馆、长老居所、集市五首。原始文件保存于 `assets/audio/source/music/`；处理配方、原始名称、SHA-256、交叉淡化与响度指标见 [音乐说明](../../assets/audio/music/README.md) 和 `processing_manifest.json`。标题曲 `music/start.ogg` 继续由标题界面单独引用。
 
-宿主在 Inspector 的 `scene_music_id` 配置默认曲，`market_music_id` 配置集市曲；MainGame 将地图公开的 `is_observing_market` 查询注入 SceneSoundscape。进入区域稳定 0.75 秒后才切换，淡出/淡入各 0.8 秒；相同区域不重启音乐。显式剧情音乐或停止优先于区域切换，结尾调用 `stop_ambience` 后停止区域音乐更新。试听时将六首循环曲定位到末尾，确认回接；结尾曲应自然结束。
+宿主在 Inspector 的 `scene_music_id` 配置默认曲，`market_music_id` 配置集市曲；MainGame 将地图公开的 `is_in_market` 查询注入 SceneSoundscape，使用独立的 `market_music_area` 覆盖整个集市及店门口，不借用较小的剧情观察区。集市内停止洞窟环境循环，走出集市后恢复洞窟音乐与环境声。进入区域稳定 0.75 秒后才切换，淡出/淡入各 0.8 秒；相同区域不重启音乐。显式剧情音乐或停止优先于区域切换，结尾调用 `stop_ambience` 后停止区域音乐更新。试听时将六首循环曲定位到末尾，确认回接；结尾曲应自然结束。
 
 ## 2026-10-18 验证记录
 

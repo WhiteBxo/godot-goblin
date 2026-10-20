@@ -8,6 +8,8 @@ extends RpgMakerMap
 ## Scene-authored first-visit areas, in map coordinates.
 @export var first_visit_bounds := Rect2()
 @export var market_observation_area := Rect2()
+## Music covers the whole market, including the shop frontage; observation is a smaller story zone.
+@export var market_music_area := Rect2()
 @export_multiline var first_visit_blocked_message := ""
 ## Task/objective -> authored scene node. Scene-local anchors do not expose hierarchy.
 @export var objective_points: Dictionary = {}
@@ -35,6 +37,9 @@ func _blocks_market(world_position: Vector2, half_size: Vector2) -> bool:
 
 func is_observing_market(world_position: Vector2) -> bool:
 	return market_observation_area.has_area() and market_observation_area.has_point(to_local(world_position))
+
+func is_in_market(world_position: Vector2) -> bool:
+	return market_music_area.has_area() and market_music_area.has_point(to_local(world_position))
 
 func get_objective_position(task_id: String, objective_id: String) -> Variant:
 	var key := task_id + ":" + objective_id

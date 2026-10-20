@@ -453,6 +453,21 @@ func _test_ui() -> void:
 	_check(panel.select_formula([BASE]) and panel.get_slots()[1].get_parent().get_node("IngredientImage").texture == null, "Clearing an additive removes its old artwork")
 	inventory.add_ingredient("instant_coffee_concentrate", 1)
 	inventory.add_ingredient("creamer_milk_tea_base", 1)
+	inventory.add_ingredient("firefly_cap", 1)
+	panel.set_order_requirement({"base_id": "creamer_milk_tea_base", "flavors": ["辛辣"], "effects": ["发光"]})
+	panel.select_formula([])
+	var trial: Array[String] = ["creamer_milk_tea_base", "firefly_cap", "goblin_firebrew"]
+	# Player feedback specifically reported choosing both additives before the base.
+	for slot_index: int in [1, 2, 0]:
+		var option := panel.get_slots()[slot_index]
+		for item_index: int in range(option.item_count):
+			if option.get_item_metadata(item_index) == trial[slot_index]:
+				option.select(item_index)
+				option.item_selected.emit(item_index)
+				break
+	_check(panel.get_materials() == trial and "符合当前订单" in panel.get_preview().text, "Additives-first selection retains both ingredients and matches the trial requirement")
+	_check(panel.select_formula(["goblin_firebrew", "firefly_cap", "creamer_milk_tea_base"]) and "尚不符合" in panel.get_preview().text and "植脂末奶茶底" in panel.get_preview().text, "Wrong base is explained before crafting instead of only failing at delivery")
+	panel.set_order_requirement({})
 	_check(panel.select_formula(["instant_coffee_concentrate", "creamer_milk_tea_base"]) and panel.get_materials() == ["instant_coffee_concentrate", "creamer_milk_tea_base"] and "咖啡\n" in panel.get_preview().text, "Real UI accepts creamer in an additive slot and previews a coffee name")
 	_check(panel.select_formula(["creamer_milk_tea_base", "instant_coffee_concentrate"]) and "奶茶\n" in panel.get_preview().text, "Real UI can exchange the base and additive without excluding either ingredient")
 	_check(panel.get_confirm_button().disabled and "已知配方" in panel.get_preview().text and "哥布林原料" in panel.get_preview().text and not "请先确认报价" in panel.get_preview().text, "A human-only experiment explains the fixed menu route instead of demanding an impossible quotation")

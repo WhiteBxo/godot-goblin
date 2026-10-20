@@ -81,9 +81,10 @@ chapter_host = &"settlement"
 exterior_location = "settlement.shop"
 first_visit_bounds = Rect2(336, 2184, 1440, 576)
 market_observation_area = Rect2(336, 2304, 1128, 336)
+market_music_area = Rect2(336, 2184, 1440, 576)
 first_visit_blocked_message = "主角·内心：黑灯瞎火的、谁知道里面有什么？不去。"
 
-objective_points = {"day1.s03.explore:market": "Interactions/day1_s03_yard", "day1.s03.explore:return": "Exits/ShopDoor", "day1.s05.infiltration:approach": "StoryPositions/drunken_guard", "day1.s05.infiltration:pair": "Interactions/MansionPayment", "day1.s05.infiltration:document": "Exits/ElderDoor", "day1.s05.infiltration:blood": "Exits/ElderDoor", "day1.s05.infiltration:escape": "StoryPositions/day1_observation"}
+objective_points = {"day1.s03.explore:market": "Interactions/day1_s03_yard", "day1.s03.explore:return": "Exits/ShopDoor", "day1.s05.infiltration:approach": "StoryPositions/drunken_guard", "day1.s05.infiltration:pair": "Interactions/MansionPayment", "day1.s05.infiltration:document": "Exits/ElderDoor", "day1.s05.infiltration:blood": "Exits/ElderDoor", "day1.s05.infiltration:escape": "Exits/ShopDoor"}
 
 [node name="Entrances" type="Node2D" parent="."]
 
@@ -426,7 +427,7 @@ wallet_coins = true
 throw_range = 230.0
 effect_scale = 0.5
 guards = Array[NodePath]([NodePath("Entrance"), NodePath("Lure"), NodePath("Gate"), NodePath("Drunken"), NodePath("StreetWatchA"), NodePath("StreetWatchB")])
-objective_names = {"day1.s05.document_read": "书房文书", "day1.s05.blood_acquired": "右室血液"}
+objective_names = {"day1.s05.document_read": "书房文书", "day1.s05.blood_acquired": "侧室小桌血液"}
 approach_hint = "先到西侧找醉卫交涉（10G），再回宅门前，在双卫之间按 E 支付 10G。投币只能引开守卫。"
 escape_hint = "拿齐文书和血液后，直接返回奶茶店。"
 controls_hint = "鼠标瞄准落点 · F 投掷 · Ctrl 潜行 · 失败后点「重新潜入」"

@@ -82,7 +82,7 @@
       "id": "day1.s04.taste",
       "type": "main",
       "title": "哥布林食材试饮 → 胖哥布林",
-      "description": "制作台 → 自由实验：先选奶茶基底，再加入萤火伞与哥布林老火烧，确认报价后制作，交给胖哥布林。这两样食材没有现成配方，只能自己调。",
+      "description": "制作台 → 自由实验：基底槽选植脂末奶茶底，再加入萤火伞与哥布林老火烧，确认报价后制作，交给胖哥布林。这两样食材没有现成配方，只能自己调。",
       "reveal_when": {
         "type": "flag",
         "key": "day1.s04.taste_open"
@@ -116,7 +116,7 @@
       "objectives": [
         {
           "id": "deliver",
-          "text": "在自由实验里调一杯基底＋萤火伞＋老火烧的饮品，确认报价后交给胖哥布林",
+          "text": "在自由实验里调一杯植脂末奶茶底（基底槽）＋萤火伞＋老火烧的饮品，确认报价后交给胖哥布林",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -173,7 +173,7 @@
         },
         {
           "id": "blood",
-          "text": "取得右室格里芬之血",
+          "text": "取得侧室小桌上的格里芬之血",
           "location_id": "settlement.elder",
           "complete_when": {
             "type": "flag",

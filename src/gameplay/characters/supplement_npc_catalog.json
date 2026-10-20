@@ -905,7 +905,7 @@
         }
       }
     },
-    "appearance_notes": "Portrait stays the prayer-woman original (祈祷者/女/🚺.png), not woman 2. Woman 2 walk is byte-identical to woman 1; retain but never display it. Movement uses own idle; back view unavailable."
+    "appearance_notes": "Portrait and idle artwork both use woman 2 (妇女/妇女2.png). Woman 2 walk is byte-identical to woman 1; retain but never display it. Movement uses own idle; back view unavailable."
   },
   {
     "id": "prayer_elder",

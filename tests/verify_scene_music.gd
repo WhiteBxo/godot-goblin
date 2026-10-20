@@ -24,6 +24,8 @@ func _run() -> void:
 		# Prevent chapter events from racing the music checks; scene configuration
 		# and all map/audio/player assembly remain the production versions.
 		game.day1_story_enabled = false
+		if entry[0] == "settlement":
+			check(game.prepare_scene_arrival(&"shop_door") == OK, "Prepare actual shop-front arrival")
 		root.add_child(game)
 		await process_frame
 		await process_frame
@@ -35,7 +37,10 @@ func _run() -> void:
 			continue
 		var player := game.get_player() as Node2D
 		if entry[0] == "settlement":
-			# Spawn is beside the market; explicitly start in the public cave.
+			check(game.get_active_level().is_in_market(player.global_position), "Shop frontage belongs to market music zone")
+			check(audio.get_bgm_state().id == "music.market", "Leaving shop starts market music immediately")
+			check(soundscape._ambient_handle == AudioManager.INVALID_HANDLE, "Cave ambience does not overlap market music")
+			# Move into the public cave after checking the real arrival.
 			player.global_position = Vector2(1100, 1200)
 			await create_timer(2.5).timeout
 		check(audio.get_bgm_state().id == entry[1] and audio.get_bgm_state().playing, "Host plays configured music: " + entry[0])
@@ -48,6 +53,7 @@ func _run() -> void:
 			player.global_position = Vector2(1000, 2450)
 			await create_timer(2.5).timeout
 			check(audio.get_bgm_state().id == "music.market", "Entering authored market switches cue")
+			check(soundscape._ambient_handle == AudioManager.INVALID_HANDLE, "Returning to market releases the cave ambient voice")
 			player.global_position = Vector2(1100, 1200)
 			await create_timer(2.5).timeout
 			check(audio.get_bgm_state().id == "music.cave", "Leaving market restores cave cue")

@@ -423,7 +423,7 @@ func _test_ui_unavailable() -> void:
 
 func _test_portrait_facing() -> void:
 	var portrait: TextureRect = _ui.get_node("Portrait")
-	_check(_ui.right_facing_portraits.size() == 4, "All four audited right-facing NPC illustrations are configured")
+	_check(_ui.right_facing_portraits.size() == 7, "All seven audited right-facing NPC illustrations are configured")
 	for texture: Texture2D in _ui.right_facing_portraits:
 		_check(_ui.present_line("NPC", "朝向", texture, []) == OK and portrait.flip_h, "Right-facing NPC looks inward from the right: " + texture.resource_path)
 		_ui.reveal_all()

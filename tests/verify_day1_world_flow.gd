@@ -82,6 +82,9 @@ func _run() -> void:
 		points[point.interaction_id] = point
 	var blood: StoryInteractionPoint = points[&"day1_blood_storage"]
 	var document: StoryInteractionPoint = points[&"day1_elder_document"]
+	_check((document.global_position + document.feedback_rect.position) == Vector2(490, 246), "Document bracket aligns with the visible paper on the desk")
+	_check((blood.global_position + blood.feedback_rect.position) == Vector2(206, 336), "Blood bracket aligns with the visible small vial")
+	_check(map.can_stand_at(blood.global_position, Vector2(8.5, 5)), "Blood interaction stands on reachable floor beside its actual table")
 	var before: Dictionary = _state.to_dict()
 	_check(not blood.conditions_met() and not document.conditions_met(), "Daytime exploration cannot investigate either night objective")
 	_check(_game.call("_route_story_interaction", document.interaction_id) == ERR_UNAVAILABLE and not blood.resolve().ok and _state.to_dict() == before, "Unavailable investigation leaves inventory and story unchanged")

@@ -19,6 +19,7 @@ func _run() -> void:
 	_test_schema()
 	_test_transaction()
 	_test_multiple_orders()
+	_test_day1_trial()
 	await _test_host("res://src/debug/story/legacy_shop.tscn")
 	await _test_host("res://src/core/main.tscn")
 	print("TASK_DELIVERY: %s (%d checks, %d failures)" % ["PASS" if _failures.is_empty() else "FAIL", _checks, _failures.size()])
@@ -235,3 +236,36 @@ func _test_host(path: String) -> void:
 	game.free()
 	await _frames()
 	state.reset_state()
+
+## Same recipe works with either additive order, with ice, and after restoring stock.
+func _test_day1_trial() -> void:
+	var catalog := TaskCatalog.new()
+	_check(catalog.load_file("res://src/resources/tasks/day1_stages_03_06.json", {"locations": RpgWorldMapData.location_ids()}) == OK, "Formal trial task catalog loads")
+	for arrangement: Array in [["creamer_milk_tea_base", "firefly_cap", "goblin_firebrew"], ["creamer_milk_tea_base", "goblin_firebrew", "firefly_cap"], ["goblin_firebrew", "firefly_cap", "creamer_milk_tea_base"]]:
+		for iced: bool in [false, true]:
+			var state := StateData.new()
+			state.select_business_profile("day1")
+			state.set_story_stage("day1.s04.wait_taste")
+			state.set_flag("day1.s04.taste_open")
+			var inventory := state.get_warehouse_inventory()
+			for id: String in ["creamer_milk_tea_base", "firefly_cap", "goblin_firebrew"]:
+				inventory.add_ingredient(id, 2)
+			var materials: Array[String] = []
+			materials.assign(arrangement)
+			var production := state.get_tea_production()
+			_check(production.confirm_formula(materials, "trial.price").get("ok", false), "Trial quotation succeeds")
+			_check(production.craft_formula(materials, 1, "trial.craft", iced).get("ok", false), "Trial crafting succeeds for both additive orders and ice states")
+			var journal := TaskJournal.new()
+			_check(journal.configure(catalog, state) == OK, "Trial journal binds")
+			var delivery := TaskDelivery.new()
+			_check(delivery.configure(catalog, journal, state, inventory) == OK and delivery.accept_order("day1_s04_taste") == OK, "Trial delivery binds and accepts")
+			var snapshot := state.to_dict()
+			_check(state.restore_state(snapshot) == OK, "Trial cup and accepted order survive restore")
+			var result := delivery.deliver_to("fat_goblin", "day1_s04_taste")
+			if materials[0] == "creamer_milk_tea_base":
+				_check(result.ok, "Correct trial cup delivers after restore")
+			else:
+				_check(not result.ok and "植脂末奶茶底" in result.message and state.to_dict() == snapshot, "Wrong base explains the required milk base and never consumes stock")
+			delivery.free()
+			journal.free()
+			state.free()

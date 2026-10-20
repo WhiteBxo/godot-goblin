@@ -24,6 +24,7 @@ var _refreshing := false
 var _experiment := false
 ## 这一杯所属委托的报酬说明；宿主在跳转过来时填入，只出现在特调预览里。
 var _mission_hint := ""
+var _order_requirement: Dictionary = {}
 
 func _ready() -> void:
 	var scroll := ScrollContainer.new()
@@ -229,6 +230,21 @@ func _refresh_preview() -> void:
 		_preview.text += "\n" + pricing_hint
 	elif result.ok and not priced:
 		_preview.text += "\n请先确认报价，之后才能制作。"
+	if not _order_requirement.is_empty():
+		var names := {}
+		for id: String in [str(_order_requirement.get("base_id", ""))]:
+			names[id] = _production.get_inventory().get_ingredient_view(id).get("name", id)
+		_preview.text += "\n当前订单：" + DrinkFormula.requirement_text(_order_requirement, names)
+		if result.ok:
+			_preview.text += "\n这杯符合当前订单，制作后可交付。" if DrinkFormula.matches(result, _order_requirement) else "\n这杯尚不符合当前订单，请核对基底、风味和效果。"
+
+## The tracked order remains visible while freely choosing ingredients.
+func set_order_requirement(requirement: Dictionary) -> void:
+	if _order_requirement == requirement:
+		return
+	_order_requirement = requirement.duplicate(true)
+	if is_node_ready() and is_instance_valid(_production):
+		_refresh_preview()
 
 func submit() -> void:
 	if _craft.disabled:

@@ -119,3 +119,5 @@ Godot 4.7.2 的 tests/verify_day1_world_flow.gd 使用真实聚落与店铺宿�
 复现时在仓库根目录用本机 Godot 执行 `--headless --path . --script res://tests/verify_day1_chapter_systems.gd`；普通试玩 F5 从标题菜单新游戏，S01–S02 完成后停在古怪金币调查边界。独立世界业务可 F6 运行 `src/debug/story/day1_world_flow_demo.tscn`，按上节路线调查、取血、返店、制作并交付；不代表空骨架中的后四阶段剧情已发布。
 
 本轮尝试访问 [Object.call_deferred](https://docs.godotengine.org/en/4.7/classes/class_object.html#class-object-method-call-deferred)、[AnimatedSprite2D.animation_finished](https://docs.godotengine.org/en/4.7/classes/class_animatedsprite2d.html#class-animatedsprite2d-signal-animation-finished) 和 [Area2D.body_entered](https://docs.godotengine.org/en/4.7/classes/class_area2d.html#class-area2d-signal-body-entered) 的 4.7 官方在线文档均返回 HTTP 403；改用本机引擎导出的 API 元数据核对方法 / 信号，并用上述实际运行检查其生命周期行为，未声称在线正文核验通过。
+
+长老宅当前物品反馈按实际地图对齐：古文书框位于书桌上的纸页，取血点位于侧室小桌的小瓶前，书柜线索框覆盖对应书柜。交互范围与物品高亮范围分别配置，不能用玩家站立位置代替物品图像范围。

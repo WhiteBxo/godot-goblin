@@ -64,7 +64,7 @@ position = Vector2(456, 264)
 
 [node name="elder_blood_storage" type="Marker2D" parent="StoryPositions"]
 
-position = Vector2(744, 264)
+position = Vector2(216, 408)
 
 [node name="day1_player" type="Marker2D" parent="StoryPositions"]
 
@@ -78,14 +78,14 @@ script = ExtResource("signature")
 interaction_id = &"signature_s10"
 signature_id = "S10"
 display_name = "书柜旧书里夹着的信"
-feedback_rect = Rect2(-48, -144, 96, 144)
+feedback_rect = Rect2(-12, -120, 72, 144)
 show_world_marker = true
 
 [node name="GatherPoints" type="Node2D" parent="."]
 
 [node name="day1_elder_document" parent="Interactions" instance=ExtResource("point")]
 position = Vector2(504, 348)
-feedback_rect = Rect2(24, -24, 48, 48)
+feedback_rect = Rect2(-14, -102, 28, 38)
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("story")
@@ -104,8 +104,8 @@ item_id = "day1_elder_document"
 
 
 [node name="day1_blood_storage" parent="Interactions" instance=ExtResource("point")]
-position = Vector2(744, 264)
-feedback_rect = Rect2(-72, -24, 48, 48)
+position = Vector2(216, 408)
+feedback_rect = Rect2(-10, -72, 20, 34)
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("story")
@@ -120,7 +120,7 @@ amount = 3
 amount_is_uses = true
 required_flags = Array[StringName](["world.phase.night", "day1.s04.commission_accepted"])
 required_stages = Array[String](["day1.s05"])
-display_name = "右室桌上的封蜡小瓶"
+display_name = "侧室小桌上的封蜡小瓶"
 description = "桌上放着一支封蜡小瓶。标签写着：格里芬之血。"
 
 [node name="Characters" type="Node2D" parent="."]

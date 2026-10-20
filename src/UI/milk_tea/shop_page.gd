@@ -110,6 +110,9 @@ func _refresh_recipe() -> void:
 		# A waiting hand-mixed order names its own page, so the player never has to
 		# guess which of the three tabs can actually make it.
 		_craft_modes.set_tab_title(2, "自由实验 · 手调" if _pending_hand_mix() else "自由实验")
+	if is_instance_valid(_formula_panel):
+		var tracked: Dictionary = _orders.get_tracked_entry() if is_instance_valid(_orders) else {}
+		_formula_panel.set_order_requirement(tracked.get("drink_requirement", {}) if tracked.get("status") == "active" else {})
 	_order_crafting.visible = order_mode
 	_ingredients.visible = _station and demo_recipe
 	_recipe_status.visible = _station and demo_recipe

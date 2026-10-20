@@ -243,7 +243,7 @@ func try_submit(order_id: String, target_object_id: String, drink_id: String = "
 	if task.delivery.has("drink"):
 		var drink := _matching_drink(task.delivery.drink, drink_id)
 		if drink.is_empty():
-			return _failure("没有符合订单要求的饮品。未消耗库存。", order_id)
+			return _failure("没有符合订单要求的饮品。这单要求：%s。请核对基底槽与辅料；未消耗库存。" % DrinkFormula.requirement_text(task.delivery.drink, _ingredient_names()), order_id)
 		if not drink.get("priced", false):
 			return _failure("该饮品尚未确认售价，不能作为普通订单出售。", order_id)
 		var record: Dictionary = _state.get_transactions().get_formula_price(drink.ingredients)

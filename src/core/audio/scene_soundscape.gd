@@ -43,6 +43,7 @@ func configure_music(scene_id: String, market_id: String = "", market_query: Cal
 	_requested_music = _desired_music()
 	_candidate_music = _requested_music
 	_candidate_seconds = 0.0
+	_sync_regional_ambience()
 	# Shop restoration or a story cue may already own the player at startup.
 	if _audio.get_bgm_state().id.is_empty():
 		_audio.play_bgm(_requested_music, 1.0, -12.0)
@@ -66,6 +67,7 @@ func _update_music(delta: float) -> void:
 	if _audio.get_bgm_state().id != _requested_music:
 		return
 	_requested_music = desired
+	_sync_regional_ambience()
 	_audio.play_bgm(desired, 0.8, -12.0)
 
 func configure(audio: AudioManager, player: PlayerController, state: Node, library: SoundLibrary, profile: String) -> void:
@@ -85,7 +87,23 @@ func configure(audio: AudioManager, player: PlayerController, state: Node, libra
 	set_physics_process(true)
 	_start_ambience()
 
+## The market has its own music; the cave bed belongs outside its boundary.
+func _is_market() -> bool:
+	return not _market_music.is_empty() and _market_query.is_valid() and _market_query.call(_player.global_position)
+
+func _sync_regional_ambience() -> void:
+	if _profile.get("ambience", "") != "ambience.cave":
+		return
+	if _is_market():
+		var old_handle := _ambient_handle
+		_ambient_handle = AudioManager.INVALID_HANDLE
+		_audio.stop_sound(old_handle)
+	elif _ambient_handle == AudioManager.INVALID_HANDLE:
+		_start_ambience()
+
 func _start_ambience() -> void:
+	if _profile.get("ambience", "") == "ambience.cave" and _is_market():
+		return
 	if _ambient_stopped or _profile.is_empty() or not is_instance_valid(_audio) or not _audio.is_inside_tree():
 		return
 	var volume: float = _profile.volume - (4.0 if _night else 0.0)

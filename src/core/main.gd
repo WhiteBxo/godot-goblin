@@ -200,8 +200,8 @@ func _create_soundscape() -> void:
 	soundscape.configure(_audio_manager, _shop_player, get_node("/root/GameState"), _interaction_audio.library, soundscape_profile)
 	var market_query := Callable()
 	var level := get_active_level()
-	if not market_music_id.is_empty() and level.has_method("is_observing_market"):
-		market_query = Callable(level, "is_observing_market")
+	if not market_music_id.is_empty() and level.has_method("is_in_market"):
+		market_query = Callable(level, "is_in_market")
 	soundscape.configure_music(scene_music_id, market_music_id, market_query)
 
 func get_ui_manager() -> UIManager:

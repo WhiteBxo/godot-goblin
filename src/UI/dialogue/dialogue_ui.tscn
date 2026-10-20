@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://src/UI/dialogue/dialogue_ui.gd" id="1"]
 [ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="theme"]
@@ -7,6 +7,10 @@
 [ext_resource type="Texture2D" path="res://assets/characters/npc/casino_sentry/portrait.png" id="sentry_art"]
 [ext_resource type="Texture2D" path="res://assets/characters/npc/market_mother/portrait.png" id="mother_art"]
 [ext_resource type="Texture2D" path="res://assets/characters/npc/goblin_girl/portrait.png" id="girl_art"]
+
+[ext_resource type="Texture2D" path="res://assets/characters/npc/prayer_elder/portrait.png" id="prayer_elder_art"]
+[ext_resource type="Texture2D" path="res://assets/characters/npc/market_vendor_1/portrait.png" id="vendor1_art"]
+[ext_resource type="Texture2D" path="res://assets/characters/npc/market_vendor_2/portrait.png" id="vendor2_art"]
 
 [sub_resource type="StyleBoxEmpty" id="EmptyStyle"]
 
@@ -21,7 +25,7 @@ grow_vertical = 2
 theme = ExtResource("theme")
 script = ExtResource("1")
 portrait_vertical_offsets = Dictionary[Texture2D, float]({})
-right_facing_portraits = Array[Texture2D]([ExtResource("guard_art"), ExtResource("sentry_art"), ExtResource("mother_art"), ExtResource("girl_art")])
+right_facing_portraits = Array[Texture2D]([ExtResource("guard_art"), ExtResource("sentry_art"), ExtResource("mother_art"), ExtResource("girl_art"), ExtResource("prayer_elder_art"), ExtResource("vendor1_art"), ExtResource("vendor2_art")])
 
 [node name="Shade" type="ColorRect" parent="."]
 layout_mode = 1

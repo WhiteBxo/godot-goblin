@@ -39,7 +39,7 @@ var plan := {
 | `confirm_arrival(group_id)` | 由表现适配器在实际到达后从 entering 转 waiting；等待状态才允许接单、制作订单和交付 |
 | `is_group_served(group_id)` | 该组全部订单的 `delivery.<order_id>.completed` 回执均已提交才为 true；不以制作完成或任务展示状态替代 |
 | `group_served(group_id)` | 真实交付后延迟到原子事务结束再通知。恢复不重发；等待方必须先查询，再订阅信号，不能只 await 一个可能已经发生的事件 |
-| `request_departure(group_id)` | 全部交付后请求 leaving。普通组自动调用；固定组由剧情显式调用，可在交付后继续对白 |
+| `request_departure(group_id)` | 全部交付后请求 leaving。普通组自动调用；固定组由剧情显式调用，可在交付后继续对白。已在 leaving／departed 的组再次请求按重放返回成功，避免可选订单释放与剧情离场步骤互相打断 |
 | `confirm_departure(group_id)` | 实际离场隐藏后记 departed。重建不会再次出场 |
 | `get_group(group_id)` | 返回配置、kind、stage_id、status、served 的独立副本 |
 | `get_progress()` / `changed` | 返回订单已交付／总数、顾客组已服务／总数／已离场、已发布阶段／总数、closed 和持久／关店接口就绪状态。进度是配置内的范围，不代表正式一天的客流定额 |

@@ -98,6 +98,8 @@ PROFILES: dict[str, Profile] = {
     "verify_cave_editor.gd": Profile(requires="需要编辑器实例中的 EditorScript"),
     # Waits on authored story events; a drifted event costs 35 s before it gives up.
     "verify_day1_stages_01_02.gd": Profile(timeout=120),
+    # Walks a real Day 2 customer in, then waits on the authored follow-up beat.
+    "verify_day2_business_abandon.gd": Profile(timeout=120),
 }
 
 GODOT_CANDIDATES = (

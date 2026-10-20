@@ -220,9 +220,16 @@ func confirm_arrival(group_id: String) -> Error:
 	return _transition(before, group_id, "waiting")
 
 ## Fixed story customers stay until the story coordinator explicitly releases them.
+## A group that is already walking out satisfies the same request: the optional-slip
+## release and the authored departure step may both ask for it.
 func request_departure(group_id: String) -> Error:
 	var before := _snapshot()
-	if before.is_empty() or before.groups.get(group_id) != "waiting" or not is_group_served(group_id):
+	if before.is_empty():
+		return ERR_UNAVAILABLE
+	var status: String = before.groups.get(group_id, "")
+	if status in ["leaving", "departed"]:
+		return OK
+	if status != "waiting" or not is_group_served(group_id):
 		return ERR_UNAVAILABLE
 	return _transition(before, group_id, "leaving")
 

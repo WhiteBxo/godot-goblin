@@ -275,8 +275,15 @@ func _on_optional_delivered(id: String) -> void:
 		return
 	# Only releases a group that is otherwise served; the planned drink still owns
 	# the story beat when it has not been delivered yet.
-	_scheduler.request_departure.call_deferred(info.group)
+	_release_group(info.group)
 	_game.get_shop_ui().show_feedback.call_deferred(info.feedback, true)
+
+## An ordinary group has no authored beat, so its release happens here. A story
+## group is released by its own *_after departure step instead: departing it now
+## would make that step fail on a group that is already walking out.
+func _release_group(group_id: String) -> void:
+	if is_instance_valid(_scheduler) and _scheduler.get_group(group_id).get("kind") == "ordinary":
+		_scheduler.request_departure.call_deferred(group_id)
 
 func _quiet(allow_menu := false) -> bool:
 	var travel := _game.get_scene_travel()
@@ -511,8 +518,9 @@ func cancel_optional_order(order_id: String) -> Error:
 	if entry.is_empty() or entry.get("status") != "active" or not bool(entry.get("allow_cancel", false)):
 		return ERR_UNAVAILABLE
 	var error: Error = _state.settle_task_result(str(entry.task_id), "cancelled", "主动放弃订单")
-	if error == OK and OPTIONAL_ORDERS.has(order_id) and is_instance_valid(_scheduler):
-		_scheduler.request_departure.call_deferred(OPTIONAL_ORDERS[order_id].group)
+	if error == OK and OPTIONAL_ORDERS.has(order_id):
+		# The group's guard is now clear; a story group leaves in its own beat.
+		_release_group(OPTIONAL_ORDERS[order_id].group)
 	return error
 
 func get_gathering_notice() -> String:
@@ -549,11 +557,26 @@ func _process(_delta: float) -> void:
 	var gathering_notice := get_gathering_notice()
 	if not gathering_notice.is_empty():
 		notice += ("\n\n" if not notice.is_empty() else "") + gathering_notice
+	var slip_notice := get_slip_notice()
+	if not slip_notice.is_empty():
+		notice += ("\n\n" if not notice.is_empty() else "") + slip_notice
 	var enabled := _quiet(true)
 	var signature := JSON.stringify([actions, notice, enabled])
 	if signature != _hud_signature:
 		_hud_signature = signature
 		_hud.show_actions(actions, notice, enabled)
+
+## An accepted special slip keeps its group at the counter, so the next group never
+## walks in until it is delivered or given up. Without a word that reads as a stuck
+## day; name the hold and the way out.
+func get_slip_notice() -> String:
+	var waiting := PackedStringArray()
+	for id: String in OPTIONAL_ORDERS:
+		if _optional_pending(id):
+			waiting.append(String(_game.get_order_board().get_entry(id).get("target_name", "客人")))
+	if waiting.is_empty():
+		return ""
+	return "特殊订单待交付：%s · 交付或放弃后才会换下一组客人。" % "、".join(waiting)
 
 func get_optional_summary() -> String:
 	var lines := PackedStringArray()

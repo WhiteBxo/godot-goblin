@@ -524,18 +524,18 @@ func _buy_market_product(product: String, quantity := 1) -> Error:
 	var result: Dictionary = _state.get_transactions().purchase(product, quantity, "market-%d" % Time.get_ticks_usec())
 	return OK if result.get("ok", false) else ERR_UNAVAILABLE
 
+## Closing is the business session's decision, and only its. The close rule
+## already treats a cancelled errand as settled, and the departure guard this
+## controller injects keeps a customer from leaving while their optional slip is
+## still pending. A local copy of either rule drifts the moment one side learns
+## about a new end state — the old accepted/completed copy kept a cancelled
+## errand blocking the counter forever.
 func close_business() -> Error:
-	if not is_instance_valid(_scheduler):
-		return ERR_UNCONFIGURED
-	if _taste_pending():
-		return ERR_UNAVAILABLE
-	# Ordinary errands are judged by the scheduler alone: it already treats a
-	# cancelled order as settled. A second accepted/completed check here ignored
-	# that result and left a cancelled errand blocking the counter forever.
-	return _scheduler.request_close()
+	return _scheduler.request_close() if is_instance_valid(_scheduler) else ERR_UNCONFIGURED
 
-## Why the counter cannot close, in the player's words. An optional job the
-## player accepted but cannot finish must say so and point at the way out.
+## Explains a refusal that already happened; it never decides one. Keep it a
+## superset of the close rule's reasons, most specific first, and always name
+## the way out.
 func get_close_block_reason() -> String:
 	if not is_instance_valid(_scheduler):
 		return "营业会话还没准备好。"

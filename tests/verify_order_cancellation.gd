@@ -109,6 +109,16 @@ func _run() -> void:
 	# blocker is the guests still waiting, not the order the player gave up.
 	var reason: String = _game.get_chapter_gameplay().get_close_block_reason()
 	check(reason.contains("招待好") and not reason.contains("没有交付"), "Cancelled errand no longer blocks the counter: " + reason)
+	# day2_taste is not part of any close rule order set; it gates the day through
+	# the departure guard. The counter no longer checks it locally, so prove the
+	# guard still holds a customer with a pending slip.
+	check(await wait_group(scheduler, "ordinary_c", "waiting"), "Ordinary customer C is waiting")
+	check(delivery.accept_order("day2_ordinary_c") == OK and delivery.cancel_order("day2_ordinary_c") == OK,
+		"Settle C's own cup so only the optional tasting remains")
+	check(delivery.accept_order("day2_taste") == OK, "Accept the optional tasting")
+	check(scheduler.request_departure("ordinary_c") != OK, "A pending tasting keeps its customer from leaving")
+	check(delivery.cancel_order("day2_taste") == OK, "Cancel the optional tasting")
+	check(scheduler.request_departure("ordinary_c") == OK, "Cancelled tasting releases the customer")
 	var saved: Dictionary = _state.to_dict()
 	var invalid := saved.duplicate(true)
 	invalid.task_results = []

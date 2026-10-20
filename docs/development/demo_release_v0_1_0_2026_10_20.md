@@ -88,11 +88,12 @@ WARNING: Image format RGB8 not supported by hardware, converting to RGBA8.
 
 ## 还没做（不影响本版发包）
 
-- **立绘仍缺独立稿**。诗人 22 句、哥布林哲人 14 句、集市三个摊主各 6 句、军人 4 句的立绘
-  **早已接上**（`speaker_portraits` 有绑定，本文件早前版本按旧的发布前置清单误列为缺口，
-  已更正）。现在真正没有独立立绘的是第一天五位哥布林顾客、跑腿的哥布林和第一场的泛称「哥布林」：
-  他们暂时统一用 `common_goblin_portrait.png`，因为素材里只有这一张普通哥布林立绘。
-  补画后在 `speaker_portraits` 改对应键即可，剧情数据不用动。
+- **哥布林顾客的立绘是调色派生的**。诗人、哥布林哲人、集市三个摊主、军人的立绘早已接上
+  （`speaker_portraits` 有绑定，本文件早前版本按旧的发布前置清单误列为缺口，已更正）。
+  第一天五位哥布林顾客 + 跑腿的 + 泛称「哥布林」原先没有立绘，素材里普通哥布林只有一张原画，
+  现在用 `tools/art/tint_goblin_portraits.py` 只换上衣与包袱配色派生出五个变体
+  （赌徒保留原画）。脸是同一张，靠衣服颜色区分；补画独立立绘后改 `speaker_portraits` 的键即可。
+  详见 [改动记录](day1_group_customers_2026_10_20.md#立绘)。
 
 - **`verify_day1_stages_01_02` 16 项失败未判定**：失败集中在制作台 submit 与靠近顾客按 E 交付。同一条路径另有 `verify_day1_playability` 121 项、`verify_two_day_flow` 379 项全绿（本轮 headless 实测），倾向交互几何/断言过期，但结论没坐实。其中 `Actual reach and focus select goblin_b` 是因为该测试仍按「三只各交付一杯、共 5 单」的旧设计写，与当前五位逐位接待的产物不一致。
 

@@ -60,9 +60,25 @@
 ## 立绘
 
 五个哥布林顾客说话人（赌徒 / 说教的 / 爱收集的 / 领工钱的 / 倒霉的）、跑腿的哥布林，
-以及第一场里的泛称「哥布林」，在 `DialogueManager.speaker_portraits` 里补上了绑定，
-统一指向 `common_goblin_portrait.png`——现有素材只有这一张普通哥布林立绘。
-等作者补画独立立绘后改对应键即可，剧情数据不用动。
+以及第一场里的泛称「哥布林」，原先没有任何立绘。素材包里普通哥布林只有一张原画，
+所以用 `tools/art/tint_goblin_portraits.py` 从它派生出五个变体：**只换上衣与包袱的配色**，
+皮肤、裤子、描边、木桶、纸牌、鞋都不动，不是重绘也不覆盖原图。
+
+| 说话人 | 立绘 | 布料 |
+| --- | --- | --- |
+| 赌徒哥布林 | `common_goblin_portrait.png`（原画） | 棕——他手里那叠牌正好对上身份 |
+| 胆小的哥布林 / 泛称「哥布林」 | `goblin_timid_portrait.png` | 冷蓝灰 |
+| 说教的哥布林 | `goblin_preacher_portrait.png` | 暗紫 |
+| 爱收集的哥布林 | `goblin_collector_portrait.png` | 酒红 |
+| 领工钱的哥布林 | `goblin_worker_portrait.png` | 赭黄 |
+| 倒霉的哥布林 | `goblin_unlucky_portrait.png` | 原色带褪成脏灰 |
+| 跑腿的哥布林 | `goblin_runner_portrait.png` | 深青 |
+
+判定布料用的是「R − G > 16」（皮肤的 R≈G、裤子只差 9、描边是黑），
+再加一条 `y ≥ 1080` 的分界把裤子和手里提的东西整段排除。
+七个并排见 [立绘变体对照](../../assets/captures/goblin_portrait_variants.png)，
+按 240×272 立绘框缩放后的效果见 [对话尺寸对照](../../assets/captures/goblin_portrait_dialogue_size.png)。
+补画独立立绘后改 `speaker_portraits` 的键即可，剧情数据不用动。
 
 ## 验证
 
@@ -71,6 +87,7 @@
 | `verify_two_day_flow` | 379 项 0 失败（改动前 379 项 0 失败） |
 | `verify_day1_stages_01_02` | 16 项失败，与改动前逐条一致（基线对照跑过 stash 前后各一次） |
 | `verify_two_day_persistence` | 33 个检查点 0 失败 |
+| `verify_dialogue` | 271 项 1 失败，与改动前逐条一致（既有 `Missing or suppressed portrait clears the previous speaker: common`，与本次无关） |
 | 画面 | `.godot/day1_group_wait.png`：三只并排站在柜台前，任务提示仍是「草莓奶绿 → 赌徒哥布林」 |
 
 `tests/verify_two_day_flow.gd` 里「Only the current customer occupies the shop」

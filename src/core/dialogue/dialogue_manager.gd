@@ -31,19 +31,20 @@ signal line_changed(line_id: String)
 	"诗人": preload("res://assets/characters/npc/casino_poet/portrait.png"),
 	"哥布林哲人": preload("res://assets/characters/npc/signature_philosopher/portrait.png"),
 	"军人": preload("res://assets/characters/npc/barracks_soldier/portrait.png"),
-	"胆小的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
 	"围观的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
 	"凑热闹的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
 	"哥布林顾客": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
-	# 第一天逐位接待的五位顾客与跑腿哥布林暂无独立立绘，共用普通哥布林那张；
-	# 素材只提供了一张普通哥布林立绘，等美术给独立稿再逐个替换。
-	"哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	# 第一天逐位接待的顾客：素材只有一张普通哥布林立绘，其余个体由
+	# tools/art/tint_goblin_portraits.py 只换上衣与包袱的配色派生（皮肤/裤子/道具不重绘），
+	# 赌徒保留原图——他手里那叠牌正好对上身份。
+	"哥布林": preload("res://assets/characters/dialogue/goblin_timid_portrait.png"),
+	"胆小的哥布林": preload("res://assets/characters/dialogue/goblin_timid_portrait.png"),
 	"赌徒哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
-	"说教的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
-	"爱收集的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
-	"领工钱的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
-	"倒霉的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
-	"跑腿的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	"说教的哥布林": preload("res://assets/characters/dialogue/goblin_preacher_portrait.png"),
+	"爱收集的哥布林": preload("res://assets/characters/dialogue/goblin_collector_portrait.png"),
+	"领工钱的哥布林": preload("res://assets/characters/dialogue/goblin_worker_portrait.png"),
+	"倒霉的哥布林": preload("res://assets/characters/dialogue/goblin_unlucky_portrait.png"),
+	"跑腿的哥布林": preload("res://assets/characters/dialogue/goblin_runner_portrait.png"),
 }
 
 var last_error: String = ""

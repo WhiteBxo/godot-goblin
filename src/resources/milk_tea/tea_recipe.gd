@@ -16,6 +16,9 @@ extends Resource
 @export var required_flag: String = ""
 @export var required_flags: Array[String] = []
 @export var required_stages: Array[String] = []
+## 只在「自由实验」手调的委托特调：不进已知配方列表，由玩家自行选出同样的原料。
+## 命中后仍按本配方的固定成品提交，名称、任务标记与交付都不变。
+@export var experiment_only: bool = false
 
 ## Availability is a reading of session facts; the recipe never stores progress.
 func is_available(state: Node) -> bool:

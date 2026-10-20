@@ -940,7 +940,7 @@ func _create_shop_business(ui: ShopUI) -> void:
 		_interaction_audio.play_event("craft_success" if result.ok else "craft_failure")
 		ui.show_production_result(result))
 	ui.formula_requested.connect(func(materials: Array[String], iced: bool) -> void:
-		var result := _tea_production.craft_formula(materials, 1, "", iced)
+		var result := _tea_production.craft_free(materials, 1, iced)
 		_interaction_audio.play_event("craft_success" if result.ok else "craft_failure")
 		ui.show_formula_result(result))
 	ui.confirm_formula_requested.connect(func(materials: Array[String]) -> void:

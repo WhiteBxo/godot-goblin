@@ -245,7 +245,7 @@
         },
         {
           "id": "craft",
-          "text": "到制作台按 E，在「已知配方」选择守卫特调并制作一杯",
+          "text": "到制作台按 E，在「自由实验」用植脂末奶茶底、格里芬琥珀酒和幻金菇手调一杯守卫特调",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",

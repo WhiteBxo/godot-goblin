@@ -101,6 +101,13 @@ func run() -> void:
 	check(state.get_flag("day1.s05.drunken_paid"),"Physical approach triggers and pays the drunken guard")
 	if not await walk_to(Vector2(1752,504)):
 		quit(1);return
+	await frames(4)
+	var gate_ids := PackedStringArray()
+	for point: InteractionPoint in game.get_active_level().get_interaction_points():
+		gate_ids.append(String(point.interaction_id))
+	check(not "mansion_lure" in gate_ids and not "mansion_gate" in gate_ids, "The two mansion guards keep no talk points of their own")
+	var gate_target := game.get_shop_interaction().get_target()
+	check(gate_target != null and String(gate_target.interaction_id) == "mansion_payment", "Standing between the two guards selects the bribe point, not a guard")
 	check(game.get_story_director().request_interaction("mansion_payment") == OK,"Reach the real pair payment position")
 	await wait_quiet()
 	check(state.get_flag("day1.s05.guard_payment_completed"),"Pair accepts the real 10G payment")

@@ -116,11 +116,11 @@ func refresh() -> void:
 		option.set_item_metadata(0, "")
 		var selected := 0
 		for choice: Dictionary in _production.get_formula_choices(index == 0):
-			var flavors := "、".join(choice.flavors) if not choice.flavors.is_empty() else "无特殊风味"
-			var line := "%s · %s%s" % [choice.name, flavors, "（缺货）" if choice.uses == 0 else ""]
+			var line := "%s · %s%s" % [choice.name, _choice_flavors(choice), "（缺货）" if choice.uses == 0 else ""]
 			option.add_item(line)
 			var item := option.item_count - 1
 			option.set_item_metadata(item, choice.id)
+			option.get_popup().set_item_tooltip(item, _choice_tooltip(choice))
 			if choice.id == _selected[index]:
 				selected = item
 		option.select(selected)
@@ -128,6 +128,25 @@ func refresh() -> void:
 		_refresh_slot_image(index)
 	_refreshing = false
 	_refresh_preview()
+
+## The authored flavor tags lead; texture stands in only when a material has no
+## taste of its own, so a listed ingredient never reads as "no flavor at all".
+func _choice_flavors(choice: Dictionary) -> String:
+	var flavors := "、".join(choice.get("flavors", PackedStringArray()))
+	if not flavors.is_empty():
+		return flavors
+	var textures := "、".join(choice.get("textures", PackedStringArray()))
+	return textures if not textures.is_empty() else "无特殊风味"
+
+## Flavor, mouthfeel and effect of the sheet row, for the hover tooltip.
+func _choice_tooltip(choice: Dictionary) -> String:
+	var lines := PackedStringArray()
+	for pair: Array in [["风味", choice.get("flavors", PackedStringArray())], ["口感", choice.get("textures", PackedStringArray())],
+			["特殊效果", choice.get("effects", PackedStringArray())]]:
+		var tags: PackedStringArray = pair[1]
+		if not tags.is_empty():
+			lines.append("%s：%s" % [pair[0], "、".join(tags)])
+	return "\n".join(lines)
 
 func _on_slot_selected(item: int, slot: int) -> void:
 	_selected[slot] = str(_options[slot].get_item_metadata(item))

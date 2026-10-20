@@ -401,6 +401,7 @@ display_name = "宅邸左卫"
 visible = false
 active_phase = "night"
 facing = 1
+gives_interaction_point = false
 
 [node name="MansionGate" parent="Characters" instance=ExtResource("guard")]
 position = Vector2(1800, 456)
@@ -409,6 +410,7 @@ display_name = "宅邸右卫"
 visible = false
 active_phase = "night"
 facing = 1
+gives_interaction_point = false
 
 [node name="EscapeZone" type="Area2D" parent="."]
 position = Vector2(1176, 648)
@@ -509,6 +511,9 @@ feedback_rect = Rect2(-64, -112, 128, 112)
 interaction_id = &"mansion_payment"
 display_name = "宅邸双卫 · 10G"
 description = "先与西侧醉酒守卫完成交涉，再在这里支付10G给两名守卫；放行后沿道路向东进入长老居所。"
+
+[node name="CollisionShape2D" parent="Interactions/MansionPayment"]
+scale = Vector2(1.6, 1.6)
 
 [node name="NightGather0" parent="GatherPoints" instance=ExtResource("point")]
 position = Vector2(1128, 2136)

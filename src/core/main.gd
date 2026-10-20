@@ -797,6 +797,10 @@ func get_tea_production() -> TeaProduction:
 func get_stealth_service() -> Day1StealthService:
 	return _stealth_service
 
+## The selector that decides which prompt the player currently answers.
+func get_shop_interaction() -> ShopInteraction:
+	return _shop_interaction
+
 func _create_stealth_system() -> void:
 	_stealth_service = Day1StealthService.new()
 	_stealth_service.name = "Day1StealthService"
@@ -1012,7 +1016,7 @@ func _create_gathering(points: Array[GatherPoint]) -> void:
 
 func _with_npc_points(points: Array[InteractionPoint]) -> Array[InteractionPoint]:
 	for entity in $World/EntityRoot.get_children():
-		if not entity is SettlementCharacter:
+		if not entity is SettlementCharacter or not entity.gives_interaction_point:
 			continue
 		var point_scene: PackedScene = preload("res://src/gameplay/interaction/rpg_interaction_point.tscn") if get_active_level() is RpgMakerMap else preload("res://src/gameplay/interaction/interaction_point.tscn")
 		var point: InteractionPoint = point_scene.instantiate()

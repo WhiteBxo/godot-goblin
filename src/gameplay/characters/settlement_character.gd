@@ -7,6 +7,9 @@ extends PlayerController
 @export_multiline var story_role := ""
 @export var side_faces_left := false
 @export_enum("always", "day", "night") var active_phase := "always"
+## Off for actors whose business is served by a shared point instead, e.g. the
+## mansion pair: two bodies at one door would otherwise compete with the bribe.
+@export var gives_interaction_point := true
 
 ## Bounds in character-local space, including the scene's visual scale and feet offset.
 func get_interaction_feedback_rect() -> Rect2:

@@ -4,6 +4,34 @@
   "phases": "res://src/resources/story/day2_stages_01_05_phases.json",
   "auto_events": [
     {
+      "id": "day2.procurement.recipe",
+      "host": "shop"
+    },
+    {
+      "id": "day2.procurement.recipe",
+      "host": "settlement"
+    },
+    {
+      "id": "day2.procurement.recipe",
+      "host": "tavern"
+    },
+    {
+      "id": "day2.procurement.recipe",
+      "host": "casino"
+    },
+    {
+      "id": "day2.procurement.recipe",
+      "host": "elder_house"
+    },
+    {
+      "id": "day2.procurement.recipe.market_vendor_2",
+      "host": "settlement"
+    },
+    {
+      "id": "day2.procurement.recipe.market_vendor_3",
+      "host": "settlement"
+    },
+    {
       "id": "day2.s01.morning",
       "host": "shop"
     },
@@ -64,28 +92,12 @@
       "host": "settlement"
     },
     {
+      "id": "day2.procurement.before_rest",
+      "host": "shop"
+    },
+    {
       "id": "day2.s05.unsolved",
       "host": "shop"
-    },
-    {
-      "id": "day2.procurement.recipe",
-      "host": "shop"
-    },
-    {
-      "id": "day2.procurement.recipe",
-      "host": "settlement"
-    },
-    {
-      "id": "day2.procurement.recipe",
-      "host": "tavern"
-    },
-    {
-      "id": "day2.procurement.recipe",
-      "host": "casino"
-    },
-    {
-      "id": "day2.procurement.recipe",
-      "host": "elder_house"
     }
   ],
   "derived_facts": [],

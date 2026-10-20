@@ -295,7 +295,7 @@
         },
         {
           "id": "rest",
-          "text": "听完返店后的章末独白，休息进入次日",
+          "text": "若已购得醒神菇，先制作加冰特调并交给胖哥布林，再休息",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -612,10 +612,54 @@
       }
     },
     {
+      "id": "day2.procurement.recovery_drink",
+      "type": "commission",
+      "title": "给胖哥布林做醒神菇薄荷特调",
+      "description": "到制作台按配方制作醒神菇＋荧绿薄荷糖浆＋红斑咬木，勾选加冰，再把成品交给店里休养的胖哥布林。缺红斑咬木可向市场右边的摊主购买；救治用料不足可在店内菜单补齐。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "signature.S06.discovered"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "signature.S06.discovered"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day3.procurement.delivered"
+      },
+      "objectives": [
+        {
+          "id": "deliver",
+          "text": "制作加冰特调，并将成品交给胖哥布林",
+          "complete_when": {
+            "type": "flag",
+            "key": "day3.procurement.delivered"
+          }
+        }
+      ],
+      "delivery": {
+        "order_id": "day2_recovery_drink",
+        "target_object_id": "fat_goblin",
+        "drink": {
+          "formula": [
+            "insomnia_mushroom",
+            "mint_syrup",
+            "red_mottled_wood"
+          ],
+          "iced": true
+        }
+      },
+      "rewards": {
+        "money": 0,
+        "text": "照料胖哥布林"
+      }
+    },
+    {
       "id": "day3.procurement",
       "type": "commission",
       "title": "把醒神菇交给胖哥布林",
-      "description": "自行到市场用专款购买，或雇佣普通顾客代购醒神菇。在第三天结束前交给胖哥布林一次用量；第二天购得还可发现醒菇薄荷特调。",
+      "description": "自行到市场购买，或雇佣普通顾客代购醒神菇。第二天购得后，按发现的配方制成加冰特调交给胖哥布林；未发现配方的迟到代购仍可在第三天结束前交付原料。",
       "reveal_when": {
         "type": "flag",
         "key": "day2.procurement.funded"

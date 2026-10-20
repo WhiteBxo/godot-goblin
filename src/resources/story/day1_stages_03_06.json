@@ -130,6 +130,17 @@
           "id": "day1.s04.fat_goblin_arrives"
         },
         {
+          "command": "character_unlock",
+          "character_id": "characters.fat_goblin",
+          "name": "胖哥布林"
+        },
+        {
+          "command": "character_append",
+          "character_id": "characters.fat_goblin",
+          "record_id": "day2.fat_goblin.greedy_chatter",
+          "content": "有点话多、贪吃的哥布林。"
+        },
+        {
           "command": "camera_reset"
         },
         {
@@ -382,7 +393,7 @@
         },
         {
           "command": "grant_money",
-          "amount": 100,
+          "amount": 100.0,
           "receipt": "day1.s06.reward_paid"
         },
         {

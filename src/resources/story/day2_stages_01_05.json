@@ -983,17 +983,6 @@
           "content": "这家伙虽然整天醉醺醺的，倒也不是完全没用。至少得先弄清楚，他到底是单纯的酒鬼，还是有别的本事。"
         },
         {
-          "command": "character_unlock",
-          "character_id": "characters.fat_goblin",
-          "name": "胖哥布林"
-        },
-        {
-          "command": "character_append",
-          "character_id": "characters.fat_goblin",
-          "record_id": "day2.fat_goblin.greedy_chatter",
-          "content": "有点话多、贪吃的哥布林。"
-        },
-        {
           "command": "set_stage",
           "value": "day2.s05.return_final"
         }
@@ -1005,7 +994,8 @@
         "day": 2.0,
         "stage": "day2.s05.return_final",
         "flags": {
-          "day2.travel.final_shop_returned": true
+          "day2.travel.final_shop_returned": true,
+          "day2.procurement.rest_ready": true
         }
       },
       "steps": [
@@ -1053,11 +1043,55 @@
       "steps": [
         {
           "command": "dialogue",
-          "id": "day2.procurement.recipe"
+          "id": "day2.procurement.recipe",
+          "when": {
+            "flags": {
+              "day2.procurement.seller.market_vendor_2": false,
+              "day2.procurement.seller.market_vendor_3": false
+            }
+          }
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.procurement.recipe.vendor_2",
+          "when": {
+            "flags": {
+              "day2.procurement.seller.market_vendor_2": true
+            }
+          }
+        },
+        {
+          "command": "dialogue",
+          "id": "day2.procurement.recipe.vendor_3",
+          "when": {
+            "flags": {
+              "day2.procurement.seller.market_vendor_3": true
+            }
+          }
         },
         {
           "command": "chapter_action",
           "id": "day2.procurement.recipe"
+        },
+        {
+          "command": "set_flag",
+          "key": "day2.procurement.market_vendor_2.heard",
+          "value": true,
+          "when": {
+            "flags": {
+              "day2.procurement.seller.market_vendor_2": true
+            }
+          }
+        },
+        {
+          "command": "set_flag",
+          "key": "day2.procurement.market_vendor_3.heard",
+          "value": true,
+          "when": {
+            "flags": {
+              "day2.procurement.seller.market_vendor_3": true
+            }
+          }
         }
       ]
     },
@@ -1249,6 +1283,69 @@
         {
           "command": "dialogue",
           "id": "supplement.child"
+        }
+      ]
+    },
+    "day2.procurement.recipe.market_vendor_2": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "flags": {
+          "day2.procurement.seller.market_vendor_2": true,
+          "signature.S06.discovered": true,
+          "day2.procurement.market_vendor_2.heard": false
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.procurement.recipe.vendor_2"
+        },
+        {
+          "command": "set_flag",
+          "key": "day2.procurement.market_vendor_2.heard",
+          "value": true
+        }
+      ]
+    },
+    "day2.procurement.recipe.market_vendor_3": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "flags": {
+          "day2.procurement.seller.market_vendor_3": true,
+          "signature.S06.discovered": true,
+          "day2.procurement.market_vendor_3.heard": false
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.procurement.recipe.vendor_3"
+        },
+        {
+          "command": "set_flag",
+          "key": "day2.procurement.market_vendor_3.heard",
+          "value": true
+        }
+      ]
+    },
+    "day2.procurement.before_rest": {
+      "once": true,
+      "conditions": {
+        "day": 2.0,
+        "stage": "day2.s05.return_final",
+        "flags": {
+          "day2.travel.final_shop_returned": true,
+          "day2.procurement.purchased": true,
+          "day3.procurement.delivered": false,
+          "signature.S06.discovered": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "day2.procurement.before_rest"
         }
       ]
     }

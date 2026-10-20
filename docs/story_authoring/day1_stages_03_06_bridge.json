@@ -1,7 +1,7 @@
 {
   "version": 1,
   "source": "res://docs/design/day_01_stages_03_06_draft.md",
-  "source_sha256": "4c84ce99fe5048372d65efe106aab72ff15a5d6135b939502033b9453dec376c",
+  "source_sha256": "2f5365b226e1cce76e166058b0dcb3eb4855e79d20297b0045432e1f309c9b96",
   "scene": "res://src/core/main.tscn",
   "story": "res://src/resources/story/day1_stages_03_06.json",
   "dialogue": "res://src/resources/dialogue/day1_stages_03_06.json",
@@ -45,7 +45,7 @@
       "mode": "自动演出",
       "event": "day1.s04.commission",
       "start": 0,
-      "count": 6,
+      "count": 8,
       "dialogues": [
         "day1.s04.fat_goblin_arrives"
       ]
@@ -344,6 +344,6 @@
     }
   ],
   "authoring_project": "res://docs/story_authoring/day1_stages_03_06_project.json",
-  "authoring_sha256": "73cece0c8c875a59c7380b1f0206f6219e4b7076a918b2ec73ff7f09810c9017",
+  "authoring_sha256": "c9aad7c7f4cd5ac897aae39f88e77883a027dd0c473f5f24c5022e65be822dc5",
   "verification": "res://tests/verify_two_day_flow.gd"
 }

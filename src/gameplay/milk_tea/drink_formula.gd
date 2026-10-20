@@ -182,6 +182,8 @@ static func matches(drink: Dictionary, requirement: Dictionary) -> bool:
 		return false
 	if requirement.has("formula") and key_for(requirement.formula) != key_for(drink.ingredients):
 		return false
+	if requirement.has("iced") and (not requirement.iced is bool or requirement.iced != drink.get("iced", false)):
+		return false
 	if requirement.has("base_id") and requirement.base_id != drink.base_id:
 		return false
 	for field: String in TAG_KEYS:
@@ -197,8 +199,10 @@ static func requirement_valid(value: Variant) -> bool:
 	if not value is Dictionary or value.is_empty():
 		return false
 	for field: Variant in value:
-		if field not in ["formula", "base_id", "flavors", "textures", "effects", "minimum_taste"]:
+		if field not in ["formula", "base_id", "flavors", "textures", "effects", "minimum_taste", "iced"]:
 			return false
+	if value.has("iced") and not value.iced is bool:
+		return false
 	if value.has("formula") and (key_for(value.formula).is_empty() or value.formula.size() > 64):
 		return false
 	if value.has("base_id") and (not value.base_id is String or not value.base_id.is_valid_identifier()):
@@ -234,6 +238,8 @@ static func requirement_text(requirement: Dictionary, names: Dictionary = {}, in
 		parts.append("配方：" + "、".join(ingredients))
 	elif requirement.has("base_id"):
 		parts.append("基底：" + str(names.get(requirement.base_id, requirement.base_id)))
+	if requirement.has("iced"):
+		parts.append("冰块：" + ("加冰" if requirement.iced else "不加冰"))
 	for index in range(TAG_KEYS.size()):
 		if TAG_KEYS[index] == "effects" and not include_effects:
 			continue

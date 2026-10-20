@@ -132,6 +132,10 @@ func _refresh() -> void:
 		if not _services_ready:
 			_configure_day2()
 		_procurement.refresh()
+		# Purchase creates a real recovery obligation; a finished cup still has
+		# to reach the patient before the authored end-of-day event may run.
+		if _state.current_day == 2 and _state.story_stage == "day2.s05.return_final":
+			_state.set_flag("day2.procurement.rest_ready", not _recovery_pending())
 		if _state.current_day == 3 and _state.get_flag("day2.s03.festival_accepted") and not _state.get_flag("day3.festival.available"):
 			_state.set_flag("day3.festival.available")
 		if _host == "shop" and _state.current_day >= 3:
@@ -242,6 +246,10 @@ func _configure_day2() -> void:
 				last_error = id + ": " + reason
 				push_error(last_error))
 	_game.get_task_delivery().set_order_availability(["day3_festival"], func(_id: String) -> bool: return _state.current_day == 3)
+	_game.get_task_delivery().set_order_availability(["day3_procurement"], func(_id: String) -> bool:
+		return not _recovery_pending() and not _state.get_flag("signature.S06.discovered"))
+	_game.get_task_delivery().set_order_availability(["day2_recovery_drink"], func(_id: String) -> bool:
+		return _host == "shop" and _state.current_day in [2, 3])
 	var optional_ids: Array[String] = []
 	optional_ids.assign(OPTIONAL_ORDERS.keys())
 	_game.get_task_delivery().set_order_availability(optional_ids, _optional_available)
@@ -313,7 +321,10 @@ func get_user_actions() -> Array[Dictionary]:
 	if _state.current_day in [2, 3] and _host == "shop" and not _state.get_flag("signature.S06.rescued_in_time") and not _state.get_flag("day3.procurement.delivered"):
 		var patient := _game.get_actor_director().get_actor(&"fat_goblin")
 		if patient != null and patient.visible and patient.global_position.distance_to(_game.get_player().global_position) <= 112.0:
-			actions.append({"id": "signature_rescue", "text": "救治胖哥布林 · 醒神菇1次用量", "kind": "signature_rescue"})
+			var treatment := "交付醒神菇薄荷特调 · 加冰" if _recovery_pending() else "救治胖哥布林 · 醒神菇1次用量"
+			actions.append({"id": "signature_rescue", "text": treatment, "kind": "signature_rescue"})
+	if _host == "shop" and _recovery_pending() and not _recovery_shortfall().is_empty():
+		actions.append({"id": "recovery_resupply", "text": "补齐救治用料 · 缺少的原料各补到1次用量", "kind": "recovery_resupply"})
 	if _host == "shop" and _taste_pending():
 		actions.append({"id": "cancel_taste", "text": "取消可选试饮", "kind": "cancel_taste"})
 		# 自由实验只能显示「缺货」时这单就没法做，关店也会被它挡住：
@@ -338,6 +349,20 @@ func get_user_actions() -> Array[Dictionary]:
 			if actor != null and actor.visible:
 				actions.append({"id": "hire:" + id, "text": "临时委托 " + actor.display_name + " · 代购款付30G货款＋5G跑腿费", "kind": "hire", "actor": id})
 	return actions
+
+func _recovery_pending() -> bool:
+	return (_state.current_day == 2 or _state.get_flag("signature.S06.discovered")) and _state.get_flag("day2.procurement.purchased") and not _state.get_flag("day3.procurement.delivered")
+
+func _recovery_shortfall() -> Dictionary:
+	var delivery := _game.get_task_delivery()
+	if delivery.has_matching_drink("day2_recovery_drink"):
+		return {}
+	var inventory: WarehouseInventory = _state.get_warehouse_inventory()
+	var missing := {}
+	for id: String in inventory.get_recipe_rules().get_signature("S06").get("ingredients", []):
+		if inventory.get_uses(id) == 0:
+			missing[id] = 1
+	return missing
 
 ## 已发现、还有余量的哥布林辛辣原料。缺了它自由实验只能显示「缺货」。
 func _has_spicy_uses() -> bool:
@@ -367,6 +392,7 @@ func perform_user_action(id: String) -> void:
 			continue
 		_game.get_ui_manager().close_screen(ScreenIds.CHAPTER_ACTIONS)
 		var error := ERR_UNAVAILABLE
+		var feedback := ""
 		if action.has("trigger"):
 			error = _game.get_story_director().request_interaction(action.trigger)
 		else:
@@ -385,7 +411,15 @@ func perform_user_action(id: String) -> void:
 				"signature_buy_mushroom":
 					error = _buy_market_product("market_insomnia_mushroom")
 				"signature_rescue":
-					error = _state.rescue_signature_patient()
+					if _recovery_pending():
+						var result := _game.get_task_delivery().try_submit("day2_recovery_drink", "fat_goblin")
+						error = OK if result.ok else ERR_UNAVAILABLE
+						feedback = result.message
+					else:
+						error = _state.rescue_signature_patient()
+				"recovery_resupply":
+					error = _state.commit_story_transaction("day2.recovery.resupply_%d" % Time.get_ticks_usec(), {}, _recovery_shortfall())
+					feedback = "救治用料已补齐。到制作台按醒神菇薄荷特调配方制作，记得加冰，再把成品交给胖哥布林。"
 				"cancel_taste":
 					error = _state.settle_task_result("day2.orders.taste", "cancelled", "主动取消试饮")
 					if error == OK and is_instance_valid(_scheduler):
@@ -399,7 +433,7 @@ func perform_user_action(id: String) -> void:
 				"next_day":
 					error = DayPhase.advance_to(_state, 4, "day")
 		_game.get_shop_ui().show_feedback(
-			("操作已完成。" if error == OK else get_close_block_reason() if action.get("kind") == "close"
+			(feedback if not feedback.is_empty() else "操作已完成。" if error == OK else get_close_block_reason() if action.get("kind") == "close"
 				else "暂时无法完成，请先交付已接订单。"), error == OK)
 		_schedule_refresh()
 		return
@@ -475,7 +509,7 @@ func buy_from_vendor(product: String, quantity: int) -> Dictionary:
 	var cost := int(quote.unit_price) * count
 	if _state.get_transactions().get_balance() < cost:
 		return {"ok": false, "message": "金币不够：这些要 %dG。" % cost}
-	if _buy_market_product(product, count) != OK:
+	if _buy_market_product(product, count, _vendor_actor) != OK:
 		return {"ok": false, "message": "没能买成，金币还在你手里。"}
 	var definition = _state.get_warehouse_inventory().get_definition(quote.item_id)
 	return {"ok": true, "message": "买下 %s ×%d 份（%dG）。" % [
@@ -515,12 +549,20 @@ func _play_vendor_farewell(lines: Array) -> void:
 	if error != OK:
 		last_error = "摊主的成交台词没有播出来：%s" % error_string(error)
 
-func _buy_market_product(product: String, quantity := 1) -> Error:
+func _buy_market_product(product: String, quantity := 1, seller: StringName = &"") -> Error:
 	if product == "market_insomnia_mushroom" and _state.current_day >= 2:
 		var quote: Dictionary = _state.get_transactions().get_product_quote(product)
 		if not quote.get("ok", false):
 			return ERR_UNAVAILABLE
-		return _state.commit_story_transaction("day2.procurement.personal_%d" % Time.get_ticks_usec(), {}, {}, -int(quote.unit_price) * quantity, {"insomnia_mushroom": quantity}, {"day2.procurement.purchased": true})
+		# Keep the actual seller with the purchase receipt. The authored recipe
+		# conversation selects that stall's name and portrait after its farewell.
+		var flags := {}
+		if _state.current_day == 2:
+			flags["day2.procurement.purchased"] = true
+		if _state.current_day == 2 and not seller.is_empty():
+			for vendor: String in ["market_vendor_2", "market_vendor_3"]:
+				flags["day2.procurement.seller." + vendor] = String(seller) == vendor
+		return _state.commit_story_transaction("day2.procurement.personal_%d" % Time.get_ticks_usec(), {}, {}, -int(quote.unit_price) * quantity, {"insomnia_mushroom": quantity}, flags)
 	var result: Dictionary = _state.get_transactions().purchase(product, quantity, "market-%d" % Time.get_ticks_usec())
 	return OK if result.get("ok", false) else ERR_UNAVAILABLE
 
@@ -679,7 +721,7 @@ func _open_handoffs() -> PackedStringArray:
 	var lines := PackedStringArray()
 	if _state.get_flag("day2.s03.festival_accepted") and not _state.get_flag("day3.festival.delivered"):
 		lines.append("七日祭的食材还没送到酒馆")
-	if _state.get_flag("day2.casino.debt.active") and not _state.get_flag("day2.casino.debt.paid"):
+	if _state.get_flag("day2.casino.debt.active") and not _state.get_flag("day2.casino.debt.paid") and _state.get_task_result("day2.casino.debt").is_empty():
 		lines.append("赌场的十杯奶茶还没还")
 	var status: String = _procurement.get_status().get("status", "")
 	if status in ["funded", "hired", "returned"] and not _state.get_flag("day3.procurement.delivered"):

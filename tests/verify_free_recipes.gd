@@ -29,6 +29,7 @@ func _run() -> void:
 	_test_saves()
 	_test_schema()
 	_test_delivery()
+	_test_iced_delivery()
 	await _test_ui()
 	print("FREE_RECIPES: %s (%d checks, %d failures)" % ["PASS" if _failures.is_empty() else "FAIL", _checks, _failures.size()])
 	quit(0 if _failures.is_empty() else 1)
@@ -144,6 +145,9 @@ func _test_ice() -> void:
 		_check(cold.ok and cold.name == plain.name.trim_suffix(definition.base_suffix) + "冰" + definition.base_suffix, "Ice naming supports base suffix: " + definition.base_suffix)
 	_check(iced.id != normal.id and iced.id == DrinkFormula.key_for(SWEET, true), "Iced and non-iced stock retain independent names and stable IDs")
 	_check(DrinkFormula.matches(iced, {"formula": SWEET}) and DrinkFormula.matches(normal, {"formula": SWEET}), "Ice does not change exact ingredient requirements")
+	_check(DrinkFormula.matches(iced, {"formula": SWEET, "iced": true}) and not DrinkFormula.matches(normal, {"formula": SWEET, "iced": true}), "An explicitly iced requirement rejects the same ingredients without ice")
+	_check(DrinkFormula.matches(normal, {"formula": SWEET, "iced": false}) and not DrinkFormula.matches(iced, {"formula": SWEET, "iced": false}), "An explicitly non-iced requirement rejects an iced cup")
+	_check("冰块：加冰" in DrinkFormula.requirement_text({"formula": SWEET, "iced": true}) and "冰块：不加冰" in DrinkFormula.requirement_text({"formula": SWEET, "iced": false}), "Requirement summaries display either explicit ice choice")
 	_check(not inventory.calculate_formula([BASE, "ice"]).ok, "Ice cannot be passed as a new ingredient slot through the service API")
 	inventory.try_consume({"ice": inventory.get_stock("ice")})
 	_check(inventory.get_uses("ice") == 0 and state.get_tea_production().preview_formula(SWEET, 1, true).ok, "Naming-only ice can be selected even with no ice inventory")
@@ -332,6 +336,46 @@ func _test_schema() -> void:
 		_check(catalog.load_json(JSON.stringify(broken)) == ERR_INVALID_DATA and catalog.get_tasks() == valid, "Invalid formula requirement preserves the live task catalog")
 	data.tasks[0].delivery["product_id"] = "pearl_milk_tea"
 	_check(catalog.load_json(JSON.stringify(data)) == ERR_INVALID_DATA, "Static, material and dynamic requirements remain mutually exclusive")
+	for iced: bool in [true, false]:
+		_check(catalog.load_json(JSON.stringify(_task({"formula": SWEET, "iced": iced}))) == OK, "Task schema accepts an explicit boolean ice requirement")
+	valid = catalog.get_tasks()
+	for invalid: Variant in [null, 0, 1, 1.0, "true", "false", [], {}]:
+		_check(catalog.load_json(JSON.stringify(_task({"formula": SWEET, "iced": invalid}))) == ERR_INVALID_DATA and catalog.get_tasks() == valid, "Non-boolean ice requirements reject without replacing the task catalog")
+
+func _test_iced_delivery() -> void:
+	for iced: bool in [true, false]:
+		var state := StateData.new()
+		var inventory := state.get_warehouse_inventory()
+		_stock(inventory)
+		_price(state, SWEET, "iced_delivery.price")
+		var production := state.get_tea_production()
+		var wrong := production.craft_formula(SWEET, 1, "iced_delivery.wrong", not iced)
+		var cup := production.craft_formula(SWEET, 1, "iced_delivery.correct", iced)
+		var data := _task({"formula": SWEET, "iced": iced}, 0)
+		var superseded: Dictionary = data.tasks[0].duplicate(true)
+		superseded.id = "test.superseded_order"
+		superseded.complete_when.key = "test.superseded.done"
+		superseded.objectives[0].complete_when.key = "test.superseded.done"
+		superseded.delivery = {"order_id": "superseded_order", "target_object_id": "fat_goblin", "uses": {"mint_syrup": 1}}
+		data.tasks.push_front(superseded)
+		var catalog := TaskCatalog.new()
+		_check(catalog.load_json(JSON.stringify(data)) == OK, "An ice-specific delivery task loads alongside an earlier ingredient order")
+		var journal := TaskJournal.new()
+		journal.configure(catalog, state)
+		var delivery := TaskDelivery.new()
+		_check(delivery.configure(catalog, journal, state, inventory) == OK, "Coordinator validates the configured formula with its required ice choice")
+		_check(delivery.set_order_availability(["superseded_order"], func(_id: String) -> bool: return false) == OK, "The earlier order becomes unavailable through its public gate")
+		state.set_flag("test.order.active")
+		var uses_before := inventory.get_uses("mint_syrup")
+		var before := state.to_dict()
+		var rejected := delivery.try_submit("free_order", "fat_goblin", wrong.id)
+		_check(not rejected.ok and "冰块：" in rejected.message and state.to_dict() == before, "Wrong ice choice explains the requirement and leaves both cups untouched")
+		var preferred := "superseded_order" if iced else ""
+		_check(delivery.deliver_to("fat_goblin", preferred).ok and inventory.get_drink_stock(cup.id) == 0 and inventory.get_drink_stock(wrong.id) == 1, "Preferred and catalog routing skip the unavailable order and select the cup matching the ice requirement")
+		_check(not state.get_flag("test.superseded.done") and inventory.get_uses("mint_syrup") == uses_before, "Skipping the unavailable ingredient order preserves its stock and completion state")
+		delivery.free()
+		journal.free()
+		state.free()
 
 func _test_delivery() -> void:
 	for price: int in [-1, 0, 37]:

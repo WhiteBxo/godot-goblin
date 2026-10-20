@@ -3085,6 +3085,122 @@
           "portrait": "res://assets/characters/npc/goblin_girl/portrait.png"
         }
       }
+    },
+    "day2.procurement.recipe.vendor_2": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角",
+          "text": "对了，我想打听一下，醒神菇一般怎么吃？我有个朋友最近头晕、呕吐，身体很不舒服。我想弄点东西让他好受些。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "懂行的摊主",
+          "text": "醒神菇啊？这东西汁水倒是不少，就是苦了点，还有股草木味。不过提神倒是挺不错的。",
+          "next": "line_3",
+          "portrait": "res://assets/characters/npc/market_vendor_2/portrait.png"
+        },
+        "line_3": {
+          "speaker": "主角",
+          "text": "那有没有什么适合搭配的东西？",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "懂行的摊主",
+          "text": "你可以试试红斑咬木。赌场里那些家伙，喝饮品的时候总爱嚼上几段，说是能保持精神，还能缓解烦躁。",
+          "next": "line_5",
+          "portrait": "res://assets/characters/npc/market_vendor_2/portrait.png"
+        },
+        "line_5": {
+          "speaker": "主角",
+          "text": "红斑咬木……倒是可以试试。",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "主角·内心",
+          "text": "不过，胖哥布林现在身体虚弱，光是提神恐怕还不够。得想办法让饮品清凉一些……",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "主角·内心",
+          "text": "格里芬之血的事情还没弄清楚。在查明它究竟有什么影响之前，我不能再随便拿它来调制饮品了。",
+          "next": "line_8"
+        },
+        "line_8": {
+          "speaker": "主角·内心",
+          "text": "清凉感……对了，店里还有荧绿薄荷糖浆。再加上冰块，应该能调出一杯足够清凉的特调。",
+          "next": "line_9"
+        },
+        "line_9": {
+          "speaker": "主角",
+          "text": "好，我知道该怎么做了。谢了！"
+        }
+      }
+    },
+    "day2.procurement.recipe.vendor_3": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角",
+          "text": "对了，我想打听一下，醒神菇一般怎么吃？我有个朋友最近头晕、呕吐，身体很不舒服。我想弄点东西让他好受些。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "老练的摊主",
+          "text": "醒神菇啊？这东西汁水倒是不少，就是苦了点，还有股草木味。不过提神倒是挺不错的。",
+          "next": "line_3",
+          "portrait": "res://assets/characters/npc/market_vendor_3/portrait.png"
+        },
+        "line_3": {
+          "speaker": "主角",
+          "text": "那有没有什么适合搭配的东西？",
+          "next": "line_4"
+        },
+        "line_4": {
+          "speaker": "老练的摊主",
+          "text": "你可以试试红斑咬木。赌场里那些家伙，喝饮品的时候总爱嚼上几段，说是能保持精神，还能缓解烦躁。",
+          "next": "line_5",
+          "portrait": "res://assets/characters/npc/market_vendor_3/portrait.png"
+        },
+        "line_5": {
+          "speaker": "主角",
+          "text": "红斑咬木……倒是可以试试。",
+          "next": "line_6"
+        },
+        "line_6": {
+          "speaker": "主角·内心",
+          "text": "不过，胖哥布林现在身体虚弱，光是提神恐怕还不够。得想办法让饮品清凉一些……",
+          "next": "line_7"
+        },
+        "line_7": {
+          "speaker": "主角·内心",
+          "text": "格里芬之血的事情还没弄清楚。在查明它究竟有什么影响之前，我不能再随便拿它来调制饮品了。",
+          "next": "line_8"
+        },
+        "line_8": {
+          "speaker": "主角·内心",
+          "text": "清凉感……对了，店里还有荧绿薄荷糖浆。再加上冰块，应该能调出一杯足够清凉的特调。",
+          "next": "line_9"
+        },
+        "line_9": {
+          "speaker": "主角",
+          "text": "好，我知道该怎么做了。谢了！"
+        }
+      }
+    },
+    "day2.procurement.before_rest": {
+      "start": "line_1",
+      "lines": {
+        "line_1": {
+          "speaker": "主角·内心",
+          "text": "醒神菇已经买回来了，得先给他做杯特调。醒神菇、荧绿薄荷糖浆，再加上红斑咬木……记得加冰。",
+          "next": "line_2"
+        },
+        "line_2": {
+          "speaker": "主角·内心",
+          "text": "做好后把成品交给胖哥布林，等他喝下再休息。缺的原料可以去市场右边的摊位买；救治用料不够，也可以在店里的菜单里补齐。"
+        }
+      }
     }
   }
 }

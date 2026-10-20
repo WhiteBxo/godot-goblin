@@ -340,7 +340,7 @@
       "mode": "自动演出",
       "event": "day2.s05.guard_after",
       "start": 0,
-      "count": 13,
+      "count": 11,
       "dialogues": [
         "day2.s05.deliver_guard_after_delivery",
         "day2.s05.deliver_guard_after_reward",
@@ -362,9 +362,11 @@
       "mode": "自动演出",
       "event": "day2.procurement.recipe",
       "start": 0,
-      "count": 2,
+      "count": 6,
       "dialogues": [
-        "day2.procurement.recipe"
+        "day2.procurement.recipe",
+        "day2.procurement.recipe.vendor_2",
+        "day2.procurement.recipe.vendor_3"
       ]
     },
     {
@@ -496,8 +498,38 @@
       "dialogues": [
         "supplement.child"
       ]
+    },
+    {
+      "id": "day2_procurement_recipe_market_vendor_2",
+      "mode": "自动演出",
+      "event": "day2.procurement.recipe.market_vendor_2",
+      "start": 0,
+      "count": 2,
+      "dialogues": [
+        "day2.procurement.recipe.vendor_2"
+      ]
+    },
+    {
+      "id": "day2_procurement_recipe_market_vendor_3",
+      "mode": "自动演出",
+      "event": "day2.procurement.recipe.market_vendor_3",
+      "start": 0,
+      "count": 2,
+      "dialogues": [
+        "day2.procurement.recipe.vendor_3"
+      ]
+    },
+    {
+      "id": "day2_procurement_before_rest",
+      "mode": "自动演出",
+      "event": "day2.procurement.before_rest",
+      "start": 0,
+      "count": 1,
+      "dialogues": [
+        "day2.procurement.before_rest"
+      ]
     }
   ],
   "authoring_project": "res://docs/story_authoring/day2_stages_01_05_project.json",
-  "authoring_sha256": "6f84f006a619682b76acb09477c4abf909032dc75ec55378d08ac452039cc5e8"
+  "authoring_sha256": "323d3b422d1a174943960e553c199af672a33dcc4a143bd7c4de07296052a3c7"
 }

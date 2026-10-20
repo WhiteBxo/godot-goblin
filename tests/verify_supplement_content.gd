@@ -119,7 +119,9 @@ func run() -> void:
 				var vendor_id := StringName("market_vendor_%d" % index)
 				var view := chapter.get_vendor_view(vendor_id)
 				var products: Array = view.get("products", [])
-				check(products.size() == 3, "Each vendor offers its three authored goods")
+				check(products.size() == (4 if index == 3 else 3), "Each vendor offers its authored goods")
+				if index == 3:
+					check(products.any(func(product: Dictionary) -> bool: return product.id == "market_red_mottled_wood"), "The right stall supplies the recovery recipe's red mottled wood")
 				for product: Dictionary in products:
 					check(not str(product.get("pitch", "")).is_empty(), "Every good carries its own line: " + str(product.get("id", "")))
 				if products.is_empty():

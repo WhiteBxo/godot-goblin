@@ -1,7 +1,7 @@
 {
 	"version": 1.0,
 	"format": "goblin_story_project",
-	"next_step_id": 24037.0,
+	"next_step_id": 24041.0,
 	"manifest": {
 		"version": 1.0,
 		"source": "res://docs/design/day_01_stages_03_06_draft.md",
@@ -419,6 +419,23 @@
 					"data": {
 						"command": "dialogue",
 						"id": "day1.s04.fat_goblin_arrives"
+					}
+				},
+				{
+					"id": "step_24039",
+					"data": {
+						"command": "character_unlock",
+						"character_id": "characters.fat_goblin",
+						"name": "胖哥布林"
+					}
+				},
+				{
+					"id": "step_24040",
+					"data": {
+						"command": "character_append",
+						"character_id": "characters.fat_goblin",
+						"record_id": "day2.fat_goblin.greedy_chatter",
+						"content": "有点话多、贪吃的哥布林。"
 					}
 				},
 				{
@@ -974,7 +991,7 @@
 					"id": "step_24035",
 					"data": {
 						"command": "grant_money",
-						"amount": 100,
+						"amount": 100.0,
 						"receipt": "day1.s06.reward_paid"
 					}
 				},

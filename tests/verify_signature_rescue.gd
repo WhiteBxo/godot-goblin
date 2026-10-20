@@ -88,10 +88,34 @@ func run() -> void:
 	check(game.open_game_menu() == OK, "Player opens the actual rescue menu")
 	await frames()
 	button = game.get_game_menu().get_action_button("signature_rescue")
-	check(button != null and not button.disabled, "Patient proximity offers the rescue button")
+	check(button != null and not button.disabled, "Patient proximity offers the recovery-drink handoff")
 	if button != null:
 		button.pressed.emit()
 	await frames()
-	check(state.get_flag("signature.S06.rescued_in_time") and state.get_warehouse_inventory().get_uses("insomnia_mushroom") == 4, "Actual menu rescues once and keeps four uses")
+	check(not state.get_flag("signature.S06.rescued_in_time") and state.get_warehouse_inventory().get_uses("insomnia_mushroom") == 5, "Raw mushrooms cannot bypass making the recovery drink")
+	check(game.open_game_menu() == OK, "Player opens the menu to replenish missing recovery materials")
+	await frames()
+	button = game.get_game_menu().get_action_button("recovery_resupply")
+	check(button != null and not button.disabled, "Missing recovery materials have a real supply action")
+	if button != null:
+		button.pressed.emit()
+	await frames()
+	var ingredients: Array[String] = ["insomnia_mushroom", "mint_syrup", "red_mottled_wood"]
+	var drink := game.get_tea_production().craft_free(ingredients, 1, true)
+	check(drink.ok and not state.get_flag("day3.procurement.delivered"), "Crafting an iced recovery drink produces a carried cup before handoff")
+	if not drink.ok:
+		print("SIGNATURE_RESCUE: %d checks, %d failures" % [checks, failures])
+		quit(1)
+		return
+	await frames()
+	check(game.open_game_menu() == OK, "Player reopens the actual menu with the finished drink")
+	await frames()
+	button = game.get_game_menu().get_action_button("signature_rescue")
+	check(button != null and not button.disabled, "Patient proximity offers the finished-drink handoff")
+	if button != null:
+		button.pressed.emit()
+	await frames()
+	check(state.get_flag("signature.S06.rescued_in_time") and state.get_flag("day3.procurement.delivered") and state.get_warehouse_inventory().get_drink_stock(drink.id) == 0, "Actual menu hands over the real drink and recovers the patient")
+	check(state.get_warehouse_inventory().get_uses("insomnia_mushroom") == 4, "Making the drink spends one use; handoff never charges another dose")
 	print("SIGNATURE_RESCUE: %d checks, %d failures" % [checks, failures])
 	quit(0 if failures == 0 else 1)

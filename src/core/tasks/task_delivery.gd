@@ -64,7 +64,7 @@ func configure(catalog: TaskCatalog, journal: TaskJournal, state: StateData, inv
 			if inventory != state.get_warehouse_inventory():
 				return ERR_INVALID_DATA
 			if delivery.drink.has("formula"):
-				var formula := inventory.calculate_formula(delivery.drink.formula, false)
+				var formula := inventory.calculate_formula(delivery.drink.formula, false, delivery.drink.get("iced", false))
 				if not formula.ok or not DrinkFormula.matches(formula, delivery.drink):
 					return ERR_INVALID_DATA
 			if delivery.drink.has("base_id"):
@@ -203,7 +203,7 @@ func get_requirements_text(target_names: Dictionary = {}) -> String:
 func deliver_to(target_object_id: String, preferred_order_id: String = "") -> Dictionary:
 	if not _ready_for_delivery():
 		return _failure("交付系统尚未就绪。")
-	if _orders.has(preferred_order_id) and is_order_accepted(preferred_order_id):
+	if _orders.has(preferred_order_id) and is_order_available(preferred_order_id) and is_order_accepted(preferred_order_id):
 		var preferred: Dictionary = _orders[preferred_order_id]
 		if preferred.delivery.target_object_id == target_object_id and _has_requirement(preferred_order_id):
 			return try_submit(preferred_order_id, target_object_id)
@@ -214,7 +214,7 @@ func deliver_to(target_object_id: String, preferred_order_id: String = "") -> Di
 	var active_fallback := ""
 	for order_id: String in _orders:
 		var task: Dictionary = _orders[order_id]
-		if task.delivery.target_object_id != target_object_id:
+		if task.delivery.target_object_id != target_object_id or not is_order_available(order_id):
 			continue
 		fallback = order_id
 		if _state.get_flag(_receipt_key(order_id)) or not is_order_accepted(order_id):

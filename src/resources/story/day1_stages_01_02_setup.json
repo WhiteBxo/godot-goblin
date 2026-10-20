@@ -73,6 +73,12 @@
         "day1_group_e"
       ],
       "completion_flag": "day1.group_settled"
+    },
+    {
+      "orders": [
+        "day2_recovery_drink"
+      ],
+      "completion_flag": "signature.S06.rescued_in_time"
     }
   ],
   "exit_gates": [

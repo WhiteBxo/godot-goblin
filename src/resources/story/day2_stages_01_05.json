@@ -987,6 +987,17 @@
           "content": "这家伙虽然整天醉醺醺的，倒也不是完全没用。至少得先弄清楚，他到底是单纯的酒鬼，还是有别的本事。"
         },
         {
+          "command": "character_unlock",
+          "character_id": "characters.fat_goblin",
+          "name": "胖哥布林"
+        },
+        {
+          "command": "character_append",
+          "character_id": "characters.fat_goblin",
+          "record_id": "day2.fat_goblin.greedy_chatter",
+          "content": "有点话多、贪吃的哥布林。"
+        },
+        {
           "command": "set_stage",
           "value": "day2.s05.return_final"
         }

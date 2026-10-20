@@ -1,7 +1,7 @@
 {
 	"version": 1.0,
 	"format": "goblin_story_project",
-	"next_step_id": 24018.0,
+	"next_step_id": 24020.0,
 	"manifest": {
 		"version": 1.0,
 		"source": "res://docs/design/day_02_stages_01_05_draft.md",
@@ -1859,6 +1859,23 @@
 						"character_id": "characters.drunken_guard",
 						"record_id": "day2.guard.hospitality",
 						"content": "这家伙虽然整天醉醺醺的，倒也不是完全没用。至少得先弄清楚，他到底是单纯的酒鬼，还是有别的本事。"
+					}
+				},
+				{
+					"id": "step_24018",
+					"data": {
+						"command": "character_unlock",
+						"character_id": "characters.fat_goblin",
+						"name": "胖哥布林"
+					}
+				},
+				{
+					"id": "step_24019",
+					"data": {
+						"command": "character_append",
+						"character_id": "characters.fat_goblin",
+						"record_id": "day2.fat_goblin.greedy_chatter",
+						"content": "有点话多、贪吃的哥布林。"
 					}
 				},
 				{
@@ -4186,7 +4203,7 @@
 				},
 				"line_7": {
 					"speaker": "系统",
-					"text": "【人物记录更新】醉酒守卫",
+					"text": "【人物记录更新】醉酒守卫、胖哥布林",
 					"next": "line_8"
 				},
 				"line_8": {

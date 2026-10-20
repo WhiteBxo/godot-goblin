@@ -105,6 +105,20 @@ func _run() -> void:
 	await process_frame
 	_clear_actions()
 
+	# --- 超宽视口：居中键跟随视口中心，拇指区仍贴物理边 ---
+	controls.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	controls.size = Vector2(800.0, 450.0)
+	await process_frame
+	var pause_center := controls.get_pad_center(TouchControls.PAUSE_ID)
+	check(absf(pause_center.x - 432.0) < 0.5,
+		"Pause pad keeps its offset from the viewport centre (got %.1f)" % pause_center.x)
+	check(controls.get_pad_center(&"interact").x > 700.0,
+		"Action pads stay pinned to the right edge")
+	check(controls.get_stick_center().x < 100.0,
+		"Stick stays pinned to the left edge")
+	controls.size = Vector2(640.0, 360.0)
+	await process_frame
+
 	controls.set_blocked(true)
 	check(not controls.visible, "Blocked touch HUD hides itself")
 	controls.apply_touch(10, controls.get_pad_center(&"interact"), true)

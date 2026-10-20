@@ -14,6 +14,7 @@
 | 任务目录、投影与交付 | [tasks/AGENTS.md](tasks/AGENTS.md) |
 | 钱包与原子交易 | [economy/AGENTS.md](economy/AGENTS.md) |
 | 场景出入口与切换 | [navigation/AGENTS.md](navigation/AGENTS.md) |
+| 分辨率与窗口缩放适配 | [display/display_scaling.gd](display/display_scaling.gd)，规则见[显示适配](../../docs/systems/display_scaling.md) |
 | 见闻录状态 | [chronicle/AGENTS.md](chronicle/AGENTS.md) |
 | 人物解锁、情报记录与查看 | [characters/AGENTS.md](characters/AGENTS.md) |
 | 日程阶段（白天 / 夜晚）与出店门控 | [schedule/AGENTS.md](schedule/AGENTS.md)，接口见[昼夜与准入](../../docs/systems/day_phase.md) |

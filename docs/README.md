@@ -54,6 +54,7 @@
 | [日程推进与任务持久结果](systems/schedule_and_task_results.md) | 营业、代购、赌场接入接口、通知、恢复和 pending |
 | [Gameplay Bridge](systems/gameplay_bridge.md) | `gameplay_bridge.md` |
 | [ScreenTransition](systems/screen_transition.md) | `screen_transition.md` |
+| [分辨率与窗口缩放适配](systems/display_scaling.md) | 整数缩放基准跟随窗口，铺满不留黑边 |
 | [店铺与聚落进出](systems/scene_travel.md) | `scene_travel.md` |
 | [StoryDirector / P0 Cinematic Integration](systems/story_director.md) | `story_director.md` |
 | [项目 UI 系统](systems/ui_system.md) | `ui_system.md` |

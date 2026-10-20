@@ -17,7 +17,8 @@ const STICK_DEAD_ZONE := 0.16
 ## A pad accepts a touch slightly outside its rim so missed taps still land.
 const PAD_HIT_SLOP := 6.0
 ## Top centre: the right edge belongs to the wallet, map and menu buttons, and
-## the business HUD's balance line sits just below them.
+## the business HUD's balance line sits just below them. Kept as a small offset
+## from the viewport centre so it stays centred on wider-than-16:9 screens.
 const PAUSE_ORIGIN := Vector2(352.0, 26.0)
 const PAUSE_RADIUS := 20.0
 const PAUSE_ID := &"pause"
@@ -120,7 +121,7 @@ func get_stick_center() -> Vector2:
 ## Screen-space (control-local) centre of a pad; the pause pad is always there.
 func get_pad_center(id: StringName) -> Vector2:
 	if id == PAUSE_ID:
-		return _place(PAUSE_ORIGIN)
+		return _place_centered(PAUSE_ORIGIN)
 	for pad: Dictionary in ACTION_PADS:
 		if pad.id == id:
 			return _place(_pad_origin(pad))
@@ -160,7 +161,7 @@ func _to_local_point(screen_position: Vector2) -> Vector2:
 
 
 func _press(index: int, position: Vector2) -> void:
-	if position.distance_to(_place(PAUSE_ORIGIN)) <= PAUSE_RADIUS + PAD_HIT_SLOP:
+	if position.distance_to(_place_centered(PAUSE_ORIGIN)) <= PAUSE_RADIUS + PAD_HIT_SLOP:
 		_touches[index] = PAUSE_ID
 		_held_pads[PAUSE_ID] = true
 		_inject_action_key(&"pause_game", true)
@@ -312,6 +313,15 @@ func _place(origin: Vector2) -> Vector2:
 	return origin + offset
 
 
+## Authored position -> current control space, keeping its offset from the
+## viewport centre. `expand` widens the viewport on non-16:9 screens, so a pad
+## authored near the middle must follow the centre instead of the right edge.
+func _place_centered(origin: Vector2) -> Vector2:
+	var placed := _place(origin)
+	placed.x = size.x * 0.5 + (origin.x - REFERENCE_SIZE.x * 0.5)
+	return placed
+
+
 func _is_pad_active(id: StringName) -> bool:
 	if id in LOCOMOTION_PADS:
 		return bool(_toggled.get(id, false))
@@ -332,8 +342,8 @@ func _draw() -> void:
 			continue
 		if not _movement_available and pad.id != &"interact":
 			continue
-		_draw_pad(_pad_origin(pad), pad.radius, pad.label, _is_pad_active(pad.id), font, font_size)
-	_draw_pad(PAUSE_ORIGIN, PAUSE_RADIUS, "暂停", _held_pads.has(PAUSE_ID), font, font_size)
+		_draw_pad(_place(_pad_origin(pad)), pad.radius, pad.label, _is_pad_active(pad.id), font, font_size)
+	_draw_pad(_place_centered(PAUSE_ORIGIN), PAUSE_RADIUS, "暂停", _held_pads.has(PAUSE_ID), font, font_size)
 
 
 func _draw_stick() -> void:
@@ -346,8 +356,7 @@ func _draw_stick() -> void:
 	draw_arc(knob, STICK_KNOB_RADIUS, 0.0, TAU, 28, UITokens.TOUCH_PAD_EDGE, 2.0, true)
 
 
-func _draw_pad(origin: Vector2, radius: float, label: String, active: bool, font: Font, font_size: int) -> void:
-	var center := _place(origin)
+func _draw_pad(center: Vector2, radius: float, label: String, active: bool, font: Font, font_size: int) -> void:
 	draw_circle(center, radius, UITokens.TOUCH_PAD_ACTIVE if active else UITokens.TOUCH_PAD, true, -1.0, true)
 	draw_arc(center, radius, 0.0, TAU, 36, UITokens.TOUCH_PAD_EDGE, 2.0, true)
 	var color := UITokens.TOUCH_PAD_TEXT_ACTIVE if active else UITokens.TOUCH_PAD_TEXT

@@ -21,6 +21,7 @@ config/quit_on_go_back=false
 
 [autoload]
 
+DisplayScaling="*res://src/core/display/display_scaling.gd"
 GameState="*res://src/core/game_state.gd"
 DevLog="*res://src/debug/developer_tools/debug_log.gd"
 MCPRuntimeProbe="*uid://bsg12huaf1u5i"

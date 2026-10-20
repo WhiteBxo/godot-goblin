@@ -70,7 +70,7 @@ func _refresh() -> void:
 			if entry.entry_id == _selected_id:
 				_list.select(index) # Programmatic selection emits no item_selected.
 	_list.get_v_scroll_bar().value = scroll
-	_summary.text = "见闻录 · %d 条 / %d 未读" % [_ids.size(), _journal.get_unread_count() if is_instance_valid(_journal) else 0]
+	_summary.text = "异世界见闻录 · %d 条 / %d 未读" % [_ids.size(), _journal.get_unread_count() if is_instance_valid(_journal) else 0]
 	var selected: Dictionary = _journal.get_entry(_selected_id) if is_instance_valid(_journal) else {}
 	if selected.is_empty():
 		_selected_id = ""

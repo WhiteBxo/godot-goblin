@@ -24,6 +24,8 @@ const STEALTH_HUD := &"stealth_hud"
 const MAP := &"map"
 const NAVIGATION_HUD := &"navigation_hud"
 const TAVERN_PURCHASE := &"tavern_purchase"
+## Market stall goods, opened by talking to a vendor from the second day on.
+const MARKET_VENDOR := &"market_vendor"
 
 const CHAPTER_ACTIONS := &"chapter_actions"
 const CHAPTER_RECAP := &"chapter_recap"

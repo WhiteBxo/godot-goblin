@@ -82,7 +82,7 @@
       "id": "day1.s04.taste",
       "type": "main",
       "title": "哥布林食材试饮 → 胖哥布林",
-      "description": "在制作台用奶茶基底、萤火伞与老火烧各一次用量试做，交给胖哥布林。",
+      "description": "制作台 → 自由实验：先选奶茶基底，再加入萤火伞与哥布林老火烧，确认报价后制作，交给胖哥布林。这两样食材没有现成配方，只能自己调。",
       "reveal_when": {
         "type": "flag",
         "key": "day1.s04.taste_open"
@@ -97,7 +97,15 @@
       },
       "delivery": {
         "order_id": "day1_s04_taste",
-        "product_id": "day1_trial_milk_tea",
+        "drink": {
+          "base_id": "creamer_milk_tea_base",
+          "flavors": [
+            "辛辣"
+          ],
+          "effects": [
+            "发光"
+          ]
+        },
         "target_object_id": "fat_goblin",
         "accepted_flag": "day1.s04.taste_accepted"
       },
@@ -108,7 +116,7 @@
       "objectives": [
         {
           "id": "deliver",
-          "text": "试做并交付",
+          "text": "在自由实验里调一杯基底＋萤火伞＋老火烧的饮品，确认报价后交给胖哥布林",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",

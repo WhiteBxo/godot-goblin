@@ -87,8 +87,13 @@ func _run() -> void:
 		await wait_event("day1.s04.commission")
 		await make_order("day1_s04_fat", "fat_goblin")
 		await wait_event("day1.s04.after_order")
+		check(game.get_tea_production().get_recipe_by_product("day1_trial_milk_tea") == null, "The trial cup has no ready-made recipe to click")
 		await make_order("day1_s04_taste", "fat_goblin")
 		await wait_event("day1.s04.after_taste")
+		# 胖哥布林边讲边补词条：信仰段这三条、格里芬之血讲解后这一条。
+		var journal := game.get_chronicle_journal()
+		for entry_id: String in ["chronicle.griffin", "chronicle.elder", "chronicle.emissary", "chronicle.griffin_blood"]:
+			check(not journal.get_entry(entry_id).get("records", []).is_empty(), "讲解后见闻录有正文: " + entry_id)
 	game.queue_free()
 	await frames(10)
 	finish()

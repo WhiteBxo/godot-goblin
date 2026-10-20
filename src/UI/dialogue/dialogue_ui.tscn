@@ -20,9 +20,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("theme")
 script = ExtResource("1")
-portrait_vertical_offsets = Dictionary[Texture2D, float]({
-ExtResource("guard_art"): -40.0
-})
+portrait_vertical_offsets = Dictionary[Texture2D, float]({})
 right_facing_portraits = Array[Texture2D]([ExtResource("guard_art"), ExtResource("sentry_art"), ExtResource("mother_art"), ExtResource("girl_art")])
 
 [node name="Shade" type="ColorRect" parent="."]
@@ -41,9 +39,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = 28.0
-offset_top = -284.0
+offset_top = -350.0
 offset_right = 268.0
-offset_bottom = -12.0
+offset_bottom = -60.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2

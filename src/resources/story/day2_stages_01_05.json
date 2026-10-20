@@ -1196,51 +1196,6 @@
         }
       ]
     },
-    "supplement.vendor_1": {
-      "once": false,
-      "trigger": "market_vendor_1",
-      "conditions": {
-        "flags": {
-          "day1.s04.commission_accepted": true
-        }
-      },
-      "steps": [
-        {
-          "command": "dialogue",
-          "id": "supplement.vendor_1"
-        }
-      ]
-    },
-    "supplement.vendor_2": {
-      "once": false,
-      "trigger": "market_vendor_2",
-      "conditions": {
-        "flags": {
-          "day1.s04.commission_accepted": true
-        }
-      },
-      "steps": [
-        {
-          "command": "dialogue",
-          "id": "supplement.vendor_2"
-        }
-      ]
-    },
-    "supplement.vendor_3": {
-      "once": false,
-      "trigger": "market_vendor_3",
-      "conditions": {
-        "flags": {
-          "day1.s04.commission_accepted": true
-        }
-      },
-      "steps": [
-        {
-          "command": "dialogue",
-          "id": "supplement.vendor_3"
-        }
-      ]
-    },
     "supplement.family.market_mother": {
       "once": false,
       "trigger": "market_mother",

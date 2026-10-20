@@ -3,7 +3,6 @@ extends VBoxContainer
 
 signal accept_requested(order_id: String)
 signal track_requested(order_id: String)
-signal deliver_requested(order_id: String)
 ## An accepted optional order can be given up: a job the player cannot finish
 ## must never block the counter (关店) without a way out.
 signal cancel_requested(order_id: String)
@@ -161,8 +160,10 @@ func _refresh_detail() -> void:
 	elif entry.get("status") == "active":
 		var tracked := _model.get_tracked_entry()
 		var current: bool = tracked.get("order_id") == _selected
-		action = "立即交付" if entry.get("ready", false) else ("正在追踪" if current else "追踪此单")
-		enabled = entry.get("ready", false) or not current
+		# Done cups are handed over at the counter, so this page only points at
+		# the order; it never settles one from the menu.
+		action = "正在追踪" if current else "追踪此单"
+		enabled = not current
 		# The customer waits on this optional order: offer the way out on the
 		# slip instead of hiding it in the chapter menu.
 		if entry.get("allow_cancel", false) and not entry.get("ready", false):
@@ -183,10 +184,7 @@ func _primary() -> void:
 		# stays on 可接取 instead of pretending the order moved.
 		refresh()
 	elif entry.get("status") == "active":
-		if entry.get("ready", false):
-			deliver_requested.emit(_selected)
-		else:
-			track_requested.emit(_selected)
+		track_requested.emit(_selected)
 
 func select_order(order_id: String) -> bool:
 	var entry := _model.get_entry(order_id)

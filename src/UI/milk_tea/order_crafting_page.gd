@@ -5,7 +5,6 @@ extends HBoxContainer
 signal craft_requested(materials: Array[String], quantity: int)
 signal track_requested(order_id: String)
 signal return_requested
-signal deliver_requested(order_id: String)
 
 @onready var _list: OrderList = %OrderList
 @onready var _ticket: OrderTicket = %Ticket
@@ -62,8 +61,8 @@ func _refresh_detail() -> void:
 			"stage": "empty", "status": "empty", "product_id": "", "items": [], "missing_text": "",
 			"rewards": "—", "hint": "也可以切换到已知配方或自由实验。"}
 	elif entry.ready and entry.get("remaining_to_craft", 0) == 0:
-		action = "立即交付"
-		entry.hint = "成品已齐备，可立即交给%s" % entry.target_name
+		action = "返回店铺，去交付"
+		entry.hint = "靠近%s，按 E 交付" % entry.target_name
 	elif entry.get("stage", "") == "prepare":
 		# This page is the table itself, so the board's "go to the table" would
 		# point the player back at the page they are already looking at.
@@ -75,7 +74,8 @@ func _on_primary_pressed() -> void:
 	var entry := _model.get_entry(_selected) if is_instance_valid(_model) else {}
 	if entry.get("status") == "active" and entry.get("ready", false) and entry.get("remaining_to_craft", 0) == 0:
 		track_requested.emit(_selected)
-		deliver_requested.emit(_selected)
+		# Handing the cup over happens at the counter; the station only closes.
+		return_requested.emit()
 	else:
 		submit()
 

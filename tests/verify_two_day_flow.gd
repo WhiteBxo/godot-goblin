@@ -89,10 +89,21 @@ func make_order(order: String, target: String, accept := true) -> void:
 	if accept:
 		check(delivery.accept_order(order) == OK, "Accepts " + order)
 	var req := delivery.get_requirement(order)
-	var product: String = req.keys()[0]
-	var recipe := game.get_tea_production().get_recipe_by_product(product)
-	var result := game.get_tea_production().craft(recipe.materials)
-	check(result.ok, "Crafts " + product + ": " + result.message)
+	if req.is_empty():
+		# Free-mixing order: no recipe exists, so the cup comes from 自由实验 with
+		# its own confirmed price before it can be sold.
+		var production := game.get_tea_production()
+		var materials: Array[String] = ["creamer_milk_tea_base", "firefly_cap", "goblin_firebrew"]
+		var request := "test-mix-" + order
+		var quote := production.confirm_formula(materials, request)
+		check(quote.get("ok", false), "Free mix is priced before crafting: " + order)
+		var mixed := production.craft_formula(materials, 1, request)
+		check(mixed.get("ok", false), "Free mix crafts the trial cup: " + order)
+	else:
+		var product: String = req.keys()[0]
+		var recipe := game.get_tea_production().get_recipe_by_product(product)
+		var result := game.get_tea_production().craft(recipe.materials)
+		check(result.ok, "Crafts " + product + ": " + result.message)
 	# Exercise the actual button -> page -> modal -> facade -> host -> atomic delivery.
 	var ui := game.get_shop_ui()
 	var point := InteractionPoint.new()
@@ -101,9 +112,12 @@ func make_order(order: String, target: String, accept := true) -> void:
 	point.free()
 	var board := ui.get_popup().get_page().get_order_board_page()
 	check(board.select_order(order), "Selects ready order immediately: " + order)
-	check(board.get_ticket().get_primary_button().text == "立即交付", "Ready order has a delivery action")
+	check(board.get_ticket().get_primary_button().text in ["正在追踪", "追踪此单"], "A ready order only offers tracking: " + order)
 	board.get_ticket().get_primary_button().pressed.emit()
-	check(state.get_flag("delivery." + order + ".completed"), "Button immediately settles " + order + " for " + target)
+	check(not state.get_flag("delivery." + order + ".completed"), "The order board never settles a cup by itself")
+	# Handing the cup over is the counter interaction; it runs the same atomic call.
+	var delivered := delivery.try_submit(order, target)
+	check(delivered.ok and state.get_flag("delivery." + order + ".completed"), "Counter delivery settles " + order + " for " + target)
 	var settled: Dictionary = state.to_dict()
 	check(not delivery.try_submit(order, target).ok and state.to_dict() == settled, "Repeated delivery cannot consume or reward twice")
 	ui.close()

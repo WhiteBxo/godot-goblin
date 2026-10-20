@@ -15,7 +15,12 @@ signal skip_requested
 @export_range(0.0, 0.5, 0.01) var sentence_pause: float = 0.12
 @export_range(0.0, 0.5, 0.01) var ellipsis_pause: float = 0.18
 @export_range(0.0, 0.5, 0.01) var portrait_fade_seconds: float = 0.14
-## Artwork with a tall hat may need raising to keep the face above the panel.
+## The portrait stands on the screen bottom and the panel covers only its lowest
+## strip: an upper body reads at a glance instead of sinking into the textbox.
+const PORTRAIT_BOTTOM := -60.0
+const PORTRAIT_HEIGHT := 290.0
+const PORTRAIT_TOP := PORTRAIT_BOTTOM - PORTRAIT_HEIGHT
+## Artwork with a tall hat may need raising to keep the face clear of the top edge.
 @export var portrait_vertical_offsets: Dictionary[Texture2D, float] = {}
 ## Right-facing NPC artwork is mirrored when shown in the right portrait slot.
 @export var right_facing_portraits: Array[Texture2D] = []
@@ -124,8 +129,8 @@ func set_portrait(portrait: Texture2D) -> void:
 	_portrait.texture = portrait
 	_portrait.flip_h = portrait != null and not _portrait_on_left and portrait in right_facing_portraits
 	var vertical_offset: float = portrait_vertical_offsets.get(portrait, 0.0)
-	_portrait.offset_top = -284.0 + vertical_offset
-	_portrait.offset_bottom = -12.0 + vertical_offset
+	_portrait.offset_top = PORTRAIT_TOP + vertical_offset
+	_portrait.offset_bottom = PORTRAIT_BOTTOM + vertical_offset
 	_portrait.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST if portrait is AtlasTexture else CanvasItem.TEXTURE_FILTER_LINEAR
 	_portrait.visible = portrait != null
 

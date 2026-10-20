@@ -464,36 +464,6 @@
       ]
     },
     {
-      "id": "supplement_vendor_1",
-      "mode": "自动演出",
-      "event": "supplement.vendor_1",
-      "start": 0,
-      "count": 1,
-      "dialogues": [
-        "supplement.vendor_1"
-      ]
-    },
-    {
-      "id": "supplement_vendor_2",
-      "mode": "自动演出",
-      "event": "supplement.vendor_2",
-      "start": 0,
-      "count": 1,
-      "dialogues": [
-        "supplement.vendor_2"
-      ]
-    },
-    {
-      "id": "supplement_vendor_3",
-      "mode": "自动演出",
-      "event": "supplement.vendor_3",
-      "start": 0,
-      "count": 1,
-      "dialogues": [
-        "supplement.vendor_3"
-      ]
-    },
-    {
       "id": "supplement_family_market_mother",
       "mode": "自动演出",
       "event": "supplement.family.market_mother",
@@ -525,7 +495,7 @@
     }
   ],
   "authoring_project": "res://docs/story_authoring/day2_stages_01_05_project.json",
-  "authoring_sha256": "93f5452d4ef4fc624ac7a6dcfe417a8b770578082f510b7fccb0d7bfc9a7b364",
+  "authoring_sha256": "457e987e458db86ebd3dcd52448ecae47ae2767fdcc05efc5a9f04ca84ebc658",
   "verification": {
     "entry": "res://tests/verify_two_day_flow.gd",
     "scope": "标题开始、真实旅行和交付；代购及存档另测"

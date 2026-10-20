@@ -68,14 +68,6 @@ materials = Array[String](["creamer_milk_tea_base", "griffin_amber_wine", "phant
 required_flag = "day2.s05.special_recipe_available"
 required_stages = Array[String](["day2.s05.wait_special_drink"])
 
-[sub_resource type="Resource" id="Recipe_trial"]
-script = ExtResource("recipe")
-id = "day1_trial_recipe"
-product_id = "day1_trial_milk_tea"
-materials = Array[String](["creamer_milk_tea_base", "firefly_cap", "goblin_firebrew"])
-required_flag = "day1.s04.taste_open"
-required_stages = Array[String](["day1.s04.wait_taste"])
-
 [resource]
 script = ExtResource("book")
-recipes = Array[ExtResource("recipe")]([SubResource("Recipe_blood"), SubResource("Recipe_h01"), SubResource("Recipe_h02"), SubResource("Recipe_h03"), SubResource("Recipe_h04"), SubResource("Recipe_h05"), SubResource("Recipe_h06"), SubResource("Recipe_day2_guard"), SubResource("Recipe_trial")])
+recipes = Array[ExtResource("recipe")]([SubResource("Recipe_blood"), SubResource("Recipe_h01"), SubResource("Recipe_h02"), SubResource("Recipe_h03"), SubResource("Recipe_h04"), SubResource("Recipe_h05"), SubResource("Recipe_h06"), SubResource("Recipe_day2_guard")])

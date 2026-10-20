@@ -899,12 +899,6 @@ func _create_shop_business(ui: ShopUI) -> void:
 	ui.configure_production(_tea_production)
 	ui.configure_orders(_order_board)
 	ui.track_requested.connect(_track_order)
-	ui.deliver_requested.connect(func(id: String) -> void:
-		var entry := _order_board.get_entry(id)
-		if entry.get("status") != "active" or not entry.get("ready", false):
-			return
-		var result := _task_delivery.try_submit(id, entry.target_id)
-		ui.show_feedback(result.message, result.ok))
 	ui.accept_requested.connect(func(id: String) -> void:
 		var accepted := _task_delivery.accept_order(id)
 		if accepted == OK:
@@ -1038,6 +1032,9 @@ func _route_story_interaction(id: StringName) -> Error:
 		var error := _story_director.request_interaction(String(id))
 		if error != ERR_DOES_NOT_EXIST:
 			return error
+	# A market stall opens its goods instead of a line of flavour text.
+	if is_instance_valid(_chapter_gameplay) and _chapter_gameplay.is_market_vendor(id):
+		return _chapter_gameplay.open_market_vendor(id)
 	if id == &"orders" and _deliver_ready_orders():
 		return OK
 	if _story_points.has(id):
@@ -1141,6 +1138,8 @@ func _create_world_controller() -> void:
 			actors.append(entity)
 	_world_controller.configure(get_node("/root/GameState"), get_active_level(), actors, _npc_points)
 	_world_controller.set_player(_shop_player)
+	if is_instance_valid(_chapter_gameplay):
+		_world_controller.set_vendor_ids(_chapter_gameplay.get_vendor_ids())
 	_world_controller.boundary_reached.connect(func(message: String) -> void:
 		_shop_ui.show_feedback(message, false))
 	_shop_ui.closed.connect(_complete_story_document)

@@ -34,7 +34,26 @@ static func take_notice() -> String:
 	_notice = ""
 	return text
 
+static var _preflight_results: Dictionary = {}
+
+## Instantiating the checkpoint scene is by far the expensive part, and the same
+## document always yields the same verdict. The save panel asks on every host
+## boot, so without this cache a session with several filled slots re-instantiates
+## the whole game once per slot per scene change.
 static func preflight_save(document: Dictionary) -> Error:
+	var key := _preflight_key(document)
+	if _preflight_results.has(key):
+		return _preflight_results[key]
+	var error := _evaluate_save(document)
+	_preflight_results[key] = error
+	return error
+
+static func _preflight_key(document: Dictionary) -> String:
+	return "%s|%s|%s|%s|%s" % [str(document.get("checkpoint_id", "")), str(document.get("format_version", 0)),
+		str(document.get("saved_at", 0)), str(document.get("saved_order", 0)),
+		JSON.stringify(document.get("game_state", {})).md5_text()]
+
+static func _evaluate_save(document: Dictionary) -> Error:
 	var checkpoint := SaveCheckpoints.new().get_checkpoint(document.checkpoint_id)
 	if checkpoint.is_empty() or not ResourceLoader.exists(checkpoint.scene, "PackedScene"):
 		return ERR_FILE_NOT_FOUND

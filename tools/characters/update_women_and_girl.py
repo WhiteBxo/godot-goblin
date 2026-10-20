@@ -33,6 +33,14 @@ DEFINITIONS = {
         "idle": "女孩/待机1.png", "sweep": "女孩/待机2.png", "look": "女孩/待机3.png",
     }),
 }
+## The altar companion keeps her own prayer-woman portrait; 妇女2 is a reusable
+## commoner, so its portrait is archived only (see PORTRAIT_ARCHIVE_NOTE).
+## The displayed portrait is rebuilt from the retained 祈祷者(1).zip original
+## with the crop recorded in sources.json, which reproduces the pre-update bytes.
+OWN_PORTRAIT_SOURCES = {"prayer_woman": "source/portrait.png"}
+PORTRAIT_ARCHIVE_NOTE = {
+    "prayer_woman": "妇女2立绘原件：可复用的平民妇女素材，仅归档；祭坛同伴使用自己的祈祷者立绘，不由本件生成",
+}
 
 
 def make_sheet(data: bytes, indices: list[int], height: int,
@@ -66,6 +74,16 @@ def make_sheet(data: bytes, indices: list[int], height: int,
                    "alignment": "cell artwork centered, feet at y=62", "scale": factor}
 
 
+def rebuild_own_portrait(directory: Path, source: str) -> None:
+    """Recut the character's own retained portrait using its recorded crop."""
+    manifest = json.loads((directory / "source/sources.json").read_text(encoding="utf-8"))
+    entry = next((item for item in manifest if item["path"].endswith(source)), None)
+    if entry is None or "portrait_crop" not in entry:
+        raise ValueError(f"Missing recorded portrait crop for {directory.name}/{source}")
+    image = Image.open(ROOT / entry["path"]).convert("RGBA")
+    image.crop(tuple(entry["portrait_crop"])).save(directory / "portrait.png")
+
+
 def main(source_dir: Path | None) -> None:
     catalog_path = ROOT / "src/gameplay/characters/supplement_npc_catalog.json"
     catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
@@ -92,10 +110,15 @@ def main(source_dir: Path | None) -> None:
             raw[name] = data
             record = {"archive": archive, "entry": entry,
                       "path": path.relative_to(ROOT).as_posix(), "sha256": hashlib.sha256(data).hexdigest()}
+            if name == "portrait" and slug in PORTRAIT_ARCHIVE_NOTE:
+                record["note"] = PORTRAIT_ARCHIVE_NOTE[slug]
             manifest = [old for old in manifest if old["path"] != record["path"]]
             manifest.append(record)
-        portrait = Image.open(io.BytesIO(raw["portrait"])).convert("RGBA")
-        portrait.save(directory / "portrait.png")
+        if slug in OWN_PORTRAIT_SOURCES:
+            rebuild_own_portrait(directory, OWN_PORTRAIT_SOURCES[slug])
+        else:
+            portrait = Image.open(io.BytesIO(raw["portrait"])).convert("RGBA")
+            portrait.save(directory / "portrait.png")
         save_text(manifest_path, json.dumps(manifest, ensure_ascii=False, indent=2))
         animations = {}
 
@@ -126,7 +149,9 @@ def main(source_dir: Path | None) -> None:
             mother_walk = ROOT / "assets/characters/npc/market_mother/source" / REVISION / "walk.png"
             if raw["walk_duplicate"] != mother_walk.read_bytes():
                 raise ValueError("Reinspect woman 2 walking sheet: expected the supplied duplicate")
-            note = "Woman 2 walk is byte-identical to woman 1; retain but never display it. Movement uses own idle; back view unavailable."
+            note = ("Portrait stays the prayer-woman original (祈祷者/女/🚺.png), not woman 2. "
+                    "Woman 2 walk is byte-identical to woman 1; retain but never display it. "
+                    "Movement uses own idle; back view unavailable.")
         else:
             for kind, source in (("idle", "idle"), ("run", "walk")):
                 animation(kind + "_up", source, [0, 1, 4])

@@ -27,7 +27,7 @@
 | 类别 | ID | 状态 |
 | --- | --- | --- |
 | 角色 | `player`、`fat_goblin`、`common_goblin`、`guard`、`tavern`（显示名「酒馆人物」）、`casino`（「赌场人物」） | 已注册；酒馆老板 / 赌场老板 / 醉酒守卫与这些 Actor 的对应关系待确认（[D07](../story_authoring/day_02_integration_pending.md#d07)–[D09](../story_authoring/day_02_integration_pending.md#d09)）。赌场卫队没有角色资源 |
-| 物品 | `insomnia_mushroom` 醒神菇、`griffin_amber_wine` 格里芬琥珀酒（标价 60）、`phantom_gold_mushroom` 幻金菇、`rainbow_cube` 幻彩小方、`day1_griffin_blood` | 已在目录；取得途径均未接线。幻彩小方「赢得赌局后挑选」只是候选奖励 |
+| 物品 | `insomnia_mushroom` 醒神菇、`griffin_amber_wine` 格里芬琥珀酒（标价 100）、`phantom_gold_mushroom` 幻金菇、`rainbow_cube` 幻彩小方、`day1_griffin_blood` | 已在目录；取得途径均未接线。幻彩小方「赢得赌局后挑选」只是候选奖励 |
 | 见闻录 | 已有 `chronicle.casino`、`chronicle.griffin_blood`、`chronicle.elder`；Day 1 S04 规划 `chronicle.griffin`、`chronicle.emissary` | 本稿新增条目候选 `chronicle.tavern`、`chronicle.griffin_festival`、`chronicle.griffin_token` |
 | 昼夜 | `world.phase` / `world.phase.night`；DayPhase 夜转昼时 `current_day` + 1 | 只有 Day 1 委托会建立夜晚；Day 2 白天→夜晚无入口（D01） |
 | 采集 | GatheringService、`night_gather_0`–`7`、`gather.total.<item>` | 已实现；Story `conditions` 不能直接判断变量阈值 |
@@ -433,7 +433,7 @@
   - 主角：「……啊？打八折？！」
   - 主角·内心：「这地方的哥布林不是一个比一个爱钱吗？怎么还有主动给人打折的？」
   - 主角·内心：「这家伙……到底是单纯会做生意，还是另有所图？」
-- 玩家操作：主角购买格里芬琥珀酒。完成条件：钱包 `purchase` 真实成功，`griffin_amber_wine` × 1 入库（事实候选 `day2.s03.amber_wine_bought`）。目录标价 60，八折为 48 只是推导，未确认（D07）；余额不足时的处理原稿未写。
+- 玩家操作：主角购买格里芬琥珀酒。完成条件：钱包 `purchase` 真实成功，`griffin_amber_wine` × 1 入库（事实候选 `day2.s03.amber_wine_bought`）。标价已定为 100，八折实付 80（D07 已定）；白天收入 15G 加上早晨另给的 5G 现钱，主线到酒馆前有 81G，买完剩 1G。余额不足时的处理原稿未写。
 - 购买后：
   - 系统：「【系统提示：获得格里芬琥珀酒。】」
   - 系统：「【任务更新：收集守卫指定奶茶的材料】」

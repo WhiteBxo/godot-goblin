@@ -74,7 +74,10 @@ func present(point: InteractionPoint) -> void:
 func _refresh_note_hint() -> void:
 	if not _story_note or not is_instance_valid(_note) or not _note.is_visible_in_tree():
 		return
-	_shell.set_hint("滚轮或拖动 · 翻阅全文" if _note.get_content_height() > _note.size.y + 1.0 else "")
+	var scrollable := _note.get_content_height() > _note.size.y + 1.0
+	# 手机没有滚轮，文案跟着输入方式换。
+	var hint := "上下拖动 · 翻阅全文" if MobileSupport.is_touch_ui() else "滚轮或拖动 · 翻阅全文"
+	_shell.set_hint(hint if scrollable else "")
 
 func _ensure_document_image() -> TextureRect:
 	if is_instance_valid(_document_image):

@@ -16,7 +16,7 @@
 | --- | --- |
 | 摇杆、动作按钮、暂停键与绘制 | `touch_controls.gd` / `touch_controls.tscn` |
 | 触屏判定与键位文案降级 | `mobile_support.gd` |
-| 列表触摸拖动滚动 | `../components/touch_scroll.gd`（由宿主对各 UI 层注入） |
+| 列表与长文本的触摸拖动滚动 | `../components/touch_scroll.gd`（由宿主对各 UI 层注入；`ScrollContainer` 与 `scroll_active` 的 `RichTextLabel`） |
 
 ## 布局
 

@@ -1,18 +1,24 @@
 class_name TouchScroll
 extends Node
-## Lets every ScrollContainer under the injected roots be dragged by finger.
+## Lets every ScrollContainer, and every scrollable RichTextLabel, under the
+## injected roots be dragged by finger.
 ##
-## Godot's ScrollContainer reacts to the wheel and to scrollbar drags, so on a
-## phone a long list has no way to scroll. Touch events keep reaching the
-## container after a child button ignores them, which is where this hooks in.
+## Godot's ScrollContainer reacts to the wheel and to scrollbar drags, and
+## RichTextLabel only reacts to the wheel, so on a phone a long list — or a long
+## authored note, which is a RichTextLabel — has no way to scroll. Touch events
+## keep reaching the control after a child button ignores them, which is where
+## this hooks in.
 
 const WATCHED := &"touch_scroll_watched"
 ## A finger that moves less than this is a tap, not a drag.
 const DRAG_THRESHOLD := 8.0
+## Desktop mice get the same drag on RichTextLabel only: lists keep their
+## scrollbar behaviour so a click on the bar is not stolen by a "drag".
+const MOUSE_POINTER := -1
 
 var _roots: Array[Node] = []
-var _container: ScrollContainer
-var _touch_index := -1
+var _target: Control
+var _pointer := -1
 var _origin := Vector2.ZERO
 var _dragged := false
 
@@ -50,41 +56,83 @@ func _watch_deferred(reference: WeakRef) -> void:
 
 
 func _watch_node(node: Node) -> void:
-	if not node is ScrollContainer or not _in_roots(node):
+	if not _in_roots(node):
 		return
-	var scroll := node as ScrollContainer
-	if scroll.has_meta(WATCHED):
+	if node is ScrollContainer:
+		var scroll := node as ScrollContainer
+		if scroll.has_meta(WATCHED):
+			return
+		scroll.set_meta(WATCHED, true)
+		scroll.gui_input.connect(_on_control_gui_input.bind(scroll))
 		return
-	scroll.set_meta(WATCHED, true)
-	scroll.gui_input.connect(_on_scroll_gui_input.bind(scroll))
+	if node is RichTextLabel:
+		var label := node as RichTextLabel
+		# Long authored prose is built at runtime with `scroll_active`; labels
+		# that never scroll must not swallow drags from the world below.
+		if not label.scroll_active or label.has_meta(WATCHED):
+			return
+		label.set_meta(WATCHED, true)
+		label.gui_input.connect(_on_control_gui_input.bind(label))
 
 
-func _on_scroll_gui_input(event: InputEvent, scroll: ScrollContainer) -> void:
-	if not is_instance_valid(scroll):
+func _on_control_gui_input(event: InputEvent, control: Control) -> void:
+	if not is_instance_valid(control):
 		return
 	if event is InputEventScreenTouch:
 		if event.pressed:
-			_container = scroll
-			_touch_index = event.index
-			_origin = event.position
-			_dragged = false
-		elif event.index == _touch_index:
+			_begin(control, event.index, event.position)
+		elif event.index == _pointer:
 			_end_drag()
 		return
-	if not event is InputEventScreenDrag or event.index != _touch_index:
+	if event is InputEventScreenDrag:
+		if event.index != _pointer:
+			return
+		_drag_to(control, event.position, event.relative)
 		return
-	if not is_instance_valid(_container) or _container != scroll:
+	if not control is RichTextLabel:
 		return
-	if not _dragged and event.position.distance_to(_origin) < DRAG_THRESHOLD:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			_begin(control, MOUSE_POINTER, event.position)
+		elif _pointer == MOUSE_POINTER:
+			_end_drag()
+		return
+	if event is InputEventMouseMotion and _pointer == MOUSE_POINTER:
+		if (event.button_mask & MOUSE_BUTTON_MASK_LEFT) == 0:
+			_end_drag()
+			return
+		_drag_to(control, event.position, event.relative)
+
+
+func _begin(control: Control, pointer: int, position: Vector2) -> void:
+	_target = control
+	_pointer = pointer
+	_origin = position
+	_dragged = false
+
+
+func _drag_to(control: Control, position: Vector2, relative: Vector2) -> void:
+	if not is_instance_valid(_target) or _target != control:
+		return
+	if not _dragged and position.distance_to(_origin) < DRAG_THRESHOLD:
 		return
 	_dragged = true
-	scroll.scroll_vertical -= int(event.relative.y)
-	scroll.scroll_horizontal -= int(event.relative.x)
+	_scroll(control, relative)
+
+
+func _scroll(control: Control, delta: Vector2) -> void:
+	if control is ScrollContainer:
+		var scroll := control as ScrollContainer
+		scroll.scroll_vertical -= int(delta.y)
+		scroll.scroll_horizontal -= int(delta.x)
+	elif control is RichTextLabel:
+		var bar := (control as RichTextLabel).get_v_scroll_bar()
+		bar.value -= delta.y
 
 
 func _end_drag() -> void:
-	_container = null
-	_touch_index = -1
+	_target = null
+	_pointer = -1
 	_dragged = false
 
 

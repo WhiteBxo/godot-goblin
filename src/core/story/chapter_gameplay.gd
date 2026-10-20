@@ -604,6 +604,8 @@ func cancel_optional_order(order_id: String) -> Error:
 func get_gathering_notice() -> String:
 	if not _state.get_flag("day2.s03.festival_accepted") or _state.get_flag("day3.festival.delivered") or _state.current_day not in [2, 3]:
 		return ""
+	if not _state.get_flag("day3.festival.available"):
+		return "七日祭委托 · 明天向酒馆老板确认食材清单。"
 	var inventory: WarehouseInventory = _state.get_warehouse_inventory()
 	var requirement := _game.get_task_delivery().get_requirement("day3_festival")
 	var lines := PackedStringArray(["七日祭食材 · 可顺路采集"])
@@ -673,9 +675,12 @@ func get_optional_summary() -> String:
 		if not status.is_empty() and status.status not in ["delivered", "expired"]:
 			lines.append("代购 · " + {"funded": "可雇人", "hired": "跑腿途中", "returned": "待交付"}.get(status.status, ""))
 	if not get_gathering_notice().is_empty():
-		var requirement := _game.get_task_delivery().get_requirement("day3_festival")
-		var ready: bool = _state.get_warehouse_inventory().has_materials(requirement)
-		lines.append("七日祭 · " + ("已齐备，第三天交付" if ready else "材料待采集"))
+		if not _state.get_flag("day3.festival.available"):
+			lines.append("七日祭 · 等待明日确认食材")
+		else:
+			var requirement := _game.get_task_delivery().get_requirement("day3_festival")
+			var ready: bool = _state.get_warehouse_inventory().has_materials(requirement)
+			lines.append("七日祭 · " + ("已齐备，第三天交付" if ready else "材料待采集"))
 	return "\n".join(lines)
 
 func get_recap_text() -> String:

@@ -1,5 +1,21 @@
 # RPG Maker 地图移植与编辑
 
+## 家具遮挡与碰撞修正（2026-10-21）
+
+四张原始地图以 `depth_sorted_regions` 明确配置家具的所属图层、格子范围和共同脚线 `sort_y`。正式宿主与独立预览都调用 `configure_depth_sort()`，人物脚底在家具前方时遮住家具，走到家具后方时被遮挡。跨格桌子、书柜、帐篷和摊位保持整件排序，桌面物件使用同一脚线；未配置的前景仍保持原层级。贴地兽皮与污渍使用 `z_index = -1`，不会盖住人物或生成实体碰撞。
+
+绘制通过 `TileMapLayer` 的运行时 TileData 覆盖，只改 `z_index` 与 `y_sort_origin`，不会在启动时搬动图块或改共享 TileSet。通行查询同时检查足底跨越的方向边界。长老房内补齐书柜、柜子、雕像和餐桌占地，右室餐桌向左移一格，为南侧入口保留通道；书柜信件的交互站位移到柜旁的地板。
+
+赌场四张赌桌各有两名配套侍卫，保留九名赌客。可通过 `src/core/casino.tscn` F6 检查守卫位置、桌凳前后关系和东北兽皮；通过 `src/debug/rpg_maker/rpg_maker_preview.tscn` 的 1–4 切图，检查集市摊位、帐篷、酒馆桌凳以及长老右室入口。相关验证为 `verify_rpg_depth_sort.gd`（真实像素）、`verify_rpg_furniture_collision.gd`（物理和通路）、`verify_casino_layout.gd` 与 `verify_rpg_maker_map.gd --fixture-only`。
+
+同期表格反馈：醒神菇购买后的配方对白跟随实际卖家，姓名与立绘一起切换；第二天七日祭任务仅提示次日再问，具体食材到第三天开放；酒馆外 S08 手记在哲人与醉鬼的相关对话完成后才可见。第二天长老宅仍由既有阶段门控关闭。赌场侍卫三条对话分支结束后均保留角色，未复现反馈中的消失；第一天醉卫收款后的退场属于现有剧情步骤，未删除。
+
+Godot 4.7.2 的定向检查通过：守卫布局 106 项、家具碰撞与通路 36 项、方向边界夹具 20 项、真实像素排序 10 项；集市交易、StoryDirector 和剧情反馈检查也通过。正式宿主截图确认八名守卫、兽皮可站位置、摊位与吧台前方、长老右室通道的角色显示。未执行完整回归或 Release 导出。
+
+两项既有检查未通过，并在未修改的 `c731458a` 复现：`verify_casino_sentry.gd` 的 263 项断言通过，但退出时发生地图资源加载错误；`verify_rpg_chapter_maps.gd` 在 `MansionPayment` 距离倍率断言后超时。这两项不计为本次通过，也未在本次扩大修复范围。
+
+实现依据：[CanvasItem 的 Y 排序](https://docs.godotengine.org/en/4.7/classes/class_canvasitem.html#class-canvasitem-property-y-sort-enabled)、[TileData 的排序原点与相对 Z](https://docs.godotengine.org/en/4.7/classes/class_tiledata.html)、[TileMapLayer 运行时图块覆盖](https://docs.godotengine.org/en/4.7/classes/class_tilemaplayer.html#class-tilemaplayer-private-method-tile-data-runtime-update)。
+
 ## 正式地图接线（2026-10-19）
 
 2026-10-20 更新：长老房内移除 `StealthSetup` 和两名宅内巡守，宿主按既有可选配置逻辑跳过潜入服务、警戒表现及潜行 HUD。房内可正常调查文书、取得血液并出门；室外潜入、付款门禁和撤离条件保留。下文巡守站位与室内重试为历史接线记录。
@@ -79,8 +95,8 @@ F6 打开外景宿主可行走，正式章节门控决定哪些室内开放。S0
 
 直接打开上表的地图场景，选择 TileMapLayer 绘制并保存；再打开试玩宿主 F6 检查。
 
-- `Ground0..3`：源四层中的普通图块。它们均在人物下方。
-- `Upper0..3`：各源层的星号遮挡图块，始终覆盖人物。新绘制的星号格应放在对应 Upper 层；普通格放对应 Ground 层。
+- `Ground0..3`：源四层中的普通图块，默认位于人物下方；配置为家具的格子按共同脚线排序。
+- `Upper0..3`：各源层的星号遮挡图块，默认覆盖人物；配置为家具或贴地装饰的格子按上述规则绘制。新绘制的星号格应放在对应 Upper 层；普通格放对应 Ground 层。
 - 例外：酒馆壁炉的炉口两格（`map_004` 的 (9,2)、(10,2)，图块 `rpg_tile_id` 96 / 97）放在 `Ground2` 而不是 `Upper2`。这两格在源项目里是星号格，但炉口是墙面凹龛，星号层会把人站在壁炉前时从胸口往上整块盖掉（只剩两条腿）。放到 Ground 层后人物画在炉口之前；图块本身仍带 `star`，通行判定照旧跳过它们，可行走格与前后版本一致。同图 `Upper2` 上的其余墙饰（刀剑、木桶等）未改动。[对照图](captures/map_004_hearth_occlusion_2026_10_20.png)
 - `Shadows`：16 种四分格阴影，可独立修改。
 - `TableEdges`：桌子南缘派生的半格图块。更改桌子后使用下方同步工具；不会在启动时自动重画。

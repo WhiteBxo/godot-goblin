@@ -79,11 +79,11 @@ position = Vector2(600, 840)
 
 [node name="casino_guard_a" type="Marker2D" parent="StoryPositions"]
 
-position = Vector2(120, 552)
+position = Vector2(216, 312)
 
 [node name="casino_guard_b" type="Marker2D" parent="StoryPositions"]
 
-position = Vector2(1080, 552)
+position = Vector2(360, 360)
 
 [node name="Interactions" type="Node2D" parent="."]
 
@@ -116,8 +116,65 @@ feedback_rect = Rect2(-96, -120, 72, 96)
 show_world_marker = true
 
 [node name="Sentry" parent="Characters" instance=ExtResource("sentry")]
-position = Vector2(120, 552)
+position = Vector2(216, 312)
 active_phase = "always"
+metadata/gambling_table = "northwest"
+
+[node name="SentryNorthwestRight" parent="Characters" instance=ExtResource("sentry")]
+position = Vector2(360, 360)
+actor_id = &"casino_sentry_nw_right"
+active_phase = "always"
+gives_interaction_point = false
+initial_facing = 1
+metadata/gambling_table = "northwest"
+
+[node name="SentrySouthwestLeft" parent="Characters" instance=ExtResource("sentry")]
+position = Vector2(216, 696)
+actor_id = &"casino_sentry_sw_left"
+active_phase = "always"
+gives_interaction_point = false
+initial_facing = 2
+metadata/gambling_table = "southwest"
+
+[node name="SentrySouthwestRight" parent="Characters" instance=ExtResource("sentry")]
+position = Vector2(360, 744)
+actor_id = &"casino_sentry_sw_right"
+active_phase = "always"
+gives_interaction_point = false
+initial_facing = 1
+metadata/gambling_table = "southwest"
+
+[node name="SentrySouthCenterLeft" parent="Characters" instance=ExtResource("sentry")]
+position = Vector2(504, 696)
+actor_id = &"casino_sentry_sc_left"
+active_phase = "always"
+gives_interaction_point = false
+initial_facing = 2
+metadata/gambling_table = "south_center"
+
+[node name="SentrySouthCenterRight" parent="Characters" instance=ExtResource("sentry")]
+position = Vector2(648, 744)
+actor_id = &"casino_sentry_sc_right"
+active_phase = "always"
+gives_interaction_point = false
+initial_facing = 1
+metadata/gambling_table = "south_center"
+
+[node name="SentrySoutheastLeft" parent="Characters" instance=ExtResource("sentry")]
+position = Vector2(792, 696)
+actor_id = &"casino_sentry_se_left"
+active_phase = "always"
+gives_interaction_point = false
+initial_facing = 2
+metadata/gambling_table = "southeast"
+
+[node name="SentrySoutheastRight" parent="Characters" instance=ExtResource("sentry")]
+position = Vector2(936, 744)
+actor_id = &"casino_sentry_se_right"
+active_phase = "always"
+gives_interaction_point = false
+initial_facing = 1
+metadata/gambling_table = "southeast"
 
 [node name="Poet" parent="Characters" instance=ExtResource("poet")]
 position = Vector2(360, 552)
@@ -158,7 +215,7 @@ appearance = 1
 initial_facing = 0
 
 [node name="CrowdNorthRight" parent="Characters" instance=ExtResource("goblin")]
-position = Vector2(1080, 360)
+position = Vector2(1080, 408)
 actor_id = &"casino_crowd_n2"
 display_name = "赌客"
 active_phase = "always"

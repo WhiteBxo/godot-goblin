@@ -2047,6 +2047,14 @@
 						"command": "dialogue",
 						"id": "supplement.philosopher"
 					}
+				},
+				{
+					"id": "step_24020",
+					"data": {
+						"command": "set_flag",
+						"key": "supplement.philosopher.heard",
+						"value": true
+					}
 				}
 			]
 		},
@@ -2060,6 +2068,14 @@
 					"data": {
 						"command": "dialogue",
 						"id": "supplement.philosopher"
+					}
+				},
+				{
+					"id": "step_24021",
+					"data": {
+						"command": "set_flag",
+						"key": "supplement.philosopher.heard",
+						"value": true
 					}
 				}
 			]

@@ -9,6 +9,25 @@ texture_filter = 1
 script = ExtResource("1_ydrih")
 map_title = "哥布林洞窟"
 map_size = Vector2i(50, 55)
+depth_sorted_regions = Array[Dictionary]([
+{"layer": "Ground2", "rect": Rect2i(14, 46, 3, 3), "sort_y": 2352.0},
+{"layer": "Ground2", "rect": Rect2i(18, 46, 3, 3), "sort_y": 2352.0},
+{"layer": "Ground2", "rect": Rect2i(27, 46, 2, 3), "sort_y": 2352.0},
+{"layer": "Ground2", "rect": Rect2i(30, 46, 3, 3), "sort_y": 2352.0},
+{"layer": "Ground2", "rect": Rect2i(15, 51, 2, 3), "sort_y": 2592.0},
+{"layer": "Ground3", "rect": Rect2i(18, 51, 4, 2), "sort_y": 2544.0},
+{"layer": "Ground2", "rect": Rect2i(28, 51, 3, 3), "sort_y": 2592.0},
+{"layer": "Ground2", "rect": Rect2i(16, 17, 3, 4), "sort_y": 1008.0},
+{"layer": "Ground2", "rect": Rect2i(29, 17, 3, 4), "sort_y": 1008.0},
+{"layer": "Ground2", "rect": Rect2i(16, 25, 3, 4), "sort_y": 1392.0},
+{"layer": "Ground2", "rect": Rect2i(30, 26, 3, 4), "sort_y": 1440.0},
+{"layer": "Ground2", "rect": Rect2i(37, 26, 3, 4), "sort_y": 1440.0},
+{"layer": "Ground2", "rect": Rect2i(45, 26, 3, 4), "sort_y": 1440.0},
+{"layer": "Ground2", "rect": Rect2i(37, 34, 3, 4), "sort_y": 1824.0},
+{"layer": "Ground2", "rect": Rect2i(45, 34, 3, 4), "sort_y": 1824.0},
+{"layer": "Ground2", "rect": Rect2i(37, 42, 3, 4), "sort_y": 2208.0},
+{"layer": "Ground2", "rect": Rect2i(45, 42, 3, 4), "sort_y": 2208.0}
+])
 metadata/source_tileset_id = 30
 metadata/regions = {}
 

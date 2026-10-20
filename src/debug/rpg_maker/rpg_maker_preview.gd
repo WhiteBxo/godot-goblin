@@ -80,6 +80,7 @@ func show_map(id: int) -> void:
 		_level.queue_free()
 	_level = MAP_SCENES[index].instantiate() as RpgMakerMap
 	$World/LevelRoot.add_child(_level)
+	_level.configure_depth_sort($World/EntityRoot)
 	_player.set_floor_query(_level.can_stand_at)
 	_player.teleport_to(_level.get_spawn_position())
 	_player.configure_camera(_level.get_camera_bounds())

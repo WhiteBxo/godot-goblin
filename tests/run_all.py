@@ -94,6 +94,7 @@ PROFILES: dict[str, Profile] = {
     "verify_milk_tea_shop.gd": Profile(args=("--fixed-fps", "120")),
     # Renders 274 frames into a SubViewport and reads the pixels back.
     "verify_player_visuals.gd": Profile(render=True, timeout=120),
+    "verify_rpg_depth_sort.gd": Profile(render=True),
     # Drives an EditorScript, which only an editor instance may instantiate.
     "verify_cave_editor.gd": Profile(requires="需要编辑器实例中的 EditorScript"),
     # Waits on authored story events; a drifted event costs 35 s before it gives up.

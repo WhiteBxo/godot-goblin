@@ -8,6 +8,7 @@ const PASS_RIGHT := 4
 const PASS_UP := 8
 const ALL_DIRECTIONS := 15
 const STAR := 16
+const DEPTH_LAYER_SCRIPT := preload("res://src/levels/rpg_maker/rpg_depth_tile_layer.gd")
 
 @export var map_id: int = 1
 @export var map_title: String = ""
@@ -16,6 +17,11 @@ const STAR := 16
 ## Map-local corrections for walls and furniture whose source passage flags are open.
 ## Coordinates are native cells; saved tiles and shared TileSets stay authoritative for art.
 @export var solid_regions: Array[Rect2i] = []
+## Explicit furniture pieces: {layer: "Upper1", rect: Rect2i(...), sort_y: 384.0}.
+## sort_y is the shared foot line in map-local pixels, including every piece of
+## a tall object. Optional z_index defaults to 0; use -1 for flat floor decor.
+## Tiles outside these regions retain their normal fixed layer.
+@export var depth_sorted_regions: Array[Dictionary] = []
 
 var _ground_layers: Array[TileMapLayer] = []
 ## Set bits indicate permitted movement, using RPG Maker's down/left/right/up bits.
@@ -23,7 +29,54 @@ var _directions: Dictionary[Vector2i, int] = {}
 var _passage_body: StaticBody2D
 
 func _ready() -> void:
+	_configure_depth_layers()
 	rebuild_passability()
+
+## TileData runtime overrides change only rendering, never saved cells, passage
+## metadata, or shared TileSet resources.
+func _configure_depth_layers() -> void:
+	var rules_by_layer: Dictionary = {}
+	for rule: Dictionary in depth_sorted_regions:
+		var layer_name := String(rule.get("layer", ""))
+		var region: Variant = rule.get("rect")
+		var layer := get_node_or_null(NodePath(layer_name)) as TileMapLayer
+		if layer == null or not region is Rect2i or not region.has_area():
+			push_warning("Invalid furniture depth region on %s: %s" % [name, rule])
+			continue
+		if not rules_by_layer.has(layer_name):
+			rules_by_layer[layer_name] = []
+		rules_by_layer[layer_name].append({
+			"rect": region,
+			"sort_y": float(rule.get("sort_y", region.end.y * tile_size)),
+			"z_index": int(rule.get("z_index", 0)),
+		})
+	for layer_name: String in rules_by_layer:
+		var layer := get_node(NodePath(layer_name)) as TileMapLayer
+		layer.set_script(DEPTH_LAYER_SCRIPT)
+		layer.call("configure_depth_rules", rules_by_layer[layer_name])
+
+## The host supplies its entity container; both branches share one nested
+## Y-sort space while actors keep their own visual children together.
+func configure_depth_sort(character_root: Node2D) -> void:
+	var common: Node = self
+	while common != null and common != character_root and not common.is_ancestor_of(character_root):
+		common = common.get_parent()
+	if common == null:
+		return
+	_enable_depth_chain(self, common)
+	_enable_depth_chain(character_root, common)
+	for character: Node in character_root.get_children():
+		if character is Node2D:
+			character.z_index = 0
+
+func _enable_depth_chain(branch: Node, common: Node) -> void:
+	var item := branch
+	while item != null:
+		if item is Node2D:
+			item.y_sort_enabled = true
+		if item == common:
+			break
+		item = item.get_parent()
 
 func get_world_bounds() -> Rect2:
 	return global_transform * Rect2(Vector2.ZERO, Vector2(map_size) * tile_size)
@@ -84,7 +137,12 @@ func is_walkable_at(world_position: Vector2, half_size: Vector2) -> bool:
 		maximum = maximum.max(cell)
 	for y in range(minimum.y, maximum.y + 1):
 		for x in range(minimum.x, maximum.x + 1):
-			if not is_cell_walkable(Vector2i(x, y)):
+			var cell := Vector2i(x, y)
+			if not is_cell_walkable(cell):
+				return false
+			if x < maximum.x and not can_cross_edge(cell, Vector2i.RIGHT):
+				return false
+			if y < maximum.y and not can_cross_edge(cell, Vector2i.DOWN):
 				return false
 	return true
 

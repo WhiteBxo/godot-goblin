@@ -73,12 +73,12 @@ position = Vector2(408, 552)
 [node name="Interactions" type="Node2D" parent="."]
 
 [node name="SignatureS10" parent="Interactions" instance=ExtResource("point")]
-position = Vector2(456, 168)
+position = Vector2(408, 168)
 script = ExtResource("signature")
 interaction_id = &"signature_s10"
 signature_id = "S10"
 display_name = "书柜旧书里夹着的信"
-feedback_rect = Rect2(-12, -120, 72, 144)
+feedback_rect = Rect2(36, -120, 72, 144)
 show_world_marker = true
 
 [node name="GatherPoints" type="Node2D" parent="."]

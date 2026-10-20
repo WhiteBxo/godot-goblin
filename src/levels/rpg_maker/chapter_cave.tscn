@@ -213,7 +213,7 @@ destination_entrance = &"exterior_door"
 
 allowed_stages = Array[String](["day1.s05"])
 required_flags = Array[StringName](["world.phase.night", "day1.s04.commission_accepted", "day1.s05.drunken_paid", "day1.s05.guard_payment_completed"])
-unavailable_message = "长老居所只在受托夜访时开放。先到西侧找醉酒守卫交涉（10G），再回宅门前，在两名宅邸守卫之间按 E 支付 10G；放行后沿道路向东，走上门前台阶按 E 进门。"
+unavailable_message = "长老居所暂不开放。"
 
 [node name="CollisionShape2D" parent="Exits/ShopDoor"]
 position = Vector2(0, 12)
@@ -367,6 +367,7 @@ position = Vector2(1560, 1944)
 script = ExtResource("signature")
 interaction_id = &"signature_s08"
 signature_id = "S08"
+required_flags = Array[StringName](["supplement.philosopher.heard"])
 display_name = "与哲人和醉鬼谈谈幻彩小方"
 feedback_rect = Rect2(-72, -120, 144, 96)
 show_world_marker = true

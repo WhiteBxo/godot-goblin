@@ -394,7 +394,7 @@
       "mode": "自动演出",
       "event": "supplement.philosopher.signature_philosopher",
       "start": 0,
-      "count": 1,
+      "count": 2,
       "dialogues": [
         "supplement.philosopher"
       ]
@@ -404,7 +404,7 @@
       "mode": "自动演出",
       "event": "supplement.philosopher.signature_drunk",
       "start": 0,
-      "count": 1,
+      "count": 2,
       "dialogues": [
         "supplement.philosopher"
       ]
@@ -531,5 +531,5 @@
     }
   ],
   "authoring_project": "res://docs/story_authoring/day2_stages_01_05_project.json",
-  "authoring_sha256": "323d3b422d1a174943960e553c199af672a33dcc4a143bd7c4de07296052a3c7"
+  "authoring_sha256": "3ee85acf30a418a473a5f4e28e73c4f22d45cb31e7516198006ccafbafdcfa62"
 }

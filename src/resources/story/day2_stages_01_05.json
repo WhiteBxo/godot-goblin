@@ -1137,6 +1137,11 @@
         {
           "command": "dialogue",
           "id": "supplement.philosopher"
+        },
+        {
+          "command": "set_flag",
+          "key": "supplement.philosopher.heard",
+          "value": true
         }
       ]
     },
@@ -1152,6 +1157,11 @@
         {
           "command": "dialogue",
           "id": "supplement.philosopher"
+        },
+        {
+          "command": "set_flag",
+          "key": "supplement.philosopher.heard",
+          "value": true
         }
       ]
     },

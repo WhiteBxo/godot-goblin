@@ -706,7 +706,7 @@
       "description": "七日祭：苔痕青、窟窟糖芋、萤火伞各两份",
       "reveal_when": {
         "type": "flag",
-        "key": "day2.s03.festival_accepted"
+        "key": "day3.festival.available"
       },
       "activate_when": {
         "type": "flag",

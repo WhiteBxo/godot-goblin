@@ -83,7 +83,7 @@ func _run() -> void:
 	await tap(&"interact")
 	await wait_event("day2.s03.commission_token")
 	check("day2.s03.tavern_commission_gathered" in commission_dialogues and "day2.s03.tavern_commission_not_gathered" not in commission_dialogues, "The real commission acknowledges gathering done along the route")
-	check("已齐备" in game.get_chapter_gameplay().get_gathering_notice(), "Accepted commission reads the already collected stock")
+	check("明天" in game.get_chapter_gameplay().get_gathering_notice() and not "苔痕青" in game.get_chapter_gameplay().get_gathering_notice(), "Day two commission waits for tomorrow's ingredient list")
 	check(game.get_transactions().get_balance() == balance - 80, "The purchase button pays the real discounted price")
 	check(game.get_warehouse_inventory().get_uses("griffin_amber_wine") == 5, "The UI purchase grants exactly five uses")
 	assert_main("day2.main.casino", "arrive")

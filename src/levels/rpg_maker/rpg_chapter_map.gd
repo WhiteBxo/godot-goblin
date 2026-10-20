@@ -148,12 +148,6 @@ func get_gather_points() -> Array[GatherPoint]:
 				points.append(point)
 	return points
 
-func configure_depth_sort(character_root: Node2D) -> void:
-	character_root.y_sort_enabled = true
-	for character: Node in character_root.get_children():
-		if character is Node2D:
-			character.z_index = 0
-
 func get_map_data(known_locations: Array[String]) -> Dictionary:
 	return RpgWorldMapData.describe(known_locations)
 

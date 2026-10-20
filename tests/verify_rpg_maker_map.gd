@@ -45,16 +45,16 @@ func _make_fixture() -> Node2D:
 		tiles.set_custom_data_layer_name(index, layer[0])
 		tiles.set_custom_data_layer_type(index, layer[1])
 	var atlas := TileSetAtlasSource.new()
-	atlas.texture = ImageTexture.create_from_image(Image.create_empty(240, 48, false, Image.FORMAT_RGBA8))
+	atlas.texture = ImageTexture.create_from_image(Image.create_empty(288, 48, false, Image.FORMAT_RGBA8))
 	atlas.texture_region_size = Vector2i(48, 48)
 	tiles.add_source(atlas, 0)
-	# Open, right blocked, solid, transparent B0, and star-overlaid solid flags.
-	for index in range(5):
+	# Open, right blocked, solid, transparent B0, star, and down blocked.
+	for index in range(6):
 		var coords := Vector2i(index, 0)
 		atlas.create_tile(coords)
 		var data := atlas.get_tile_data(coords, 0)
-		data.set_custom_data("rpg_tile_id", [2048, 2049, 2050, 0, 7][index])
-		data.set_custom_data("passage", [0, 4, 15, 0, 15][index])
+		data.set_custom_data("rpg_tile_id", [2048, 2049, 2050, 0, 7, 2051][index])
+		data.set_custom_data("passage", [0, 4, 15, 0, 15, 1][index])
 		data.set_custom_data("star", index == 4)
 	for index in range(4):
 		var ground := TileMapLayer.new()
@@ -67,6 +67,7 @@ func _make_fixture() -> Node2D:
 		for x in range(5):
 			floor_layer.set_cell(Vector2i(x, y), 0, Vector2i.ZERO)
 	floor_layer.set_cell(Vector2i(3, 1), 0, Vector2i(2, 0))
+	floor_layer.set_cell(Vector2i(3, 2), 0, Vector2i(5, 0))
 	map.get_node("Ground2").set_cell(Vector2i(1, 1), 0, Vector2i(1, 0))
 	map.get_node("Ground3").set_cell(Vector2i(1, 1), 0, Vector2i(3, 0))
 	map.get_node("Ground3").set_cell(Vector2i(2, 1), 0, Vector2i(4, 0))
@@ -89,6 +90,11 @@ func _verify_directional_fixture() -> void:
 	_check(not map.can_cross_edge(Vector2i(2, 1), Vector2i.LEFT), "Neighbor destination passage also rejects entry through its right edge")
 	_check(map.can_cross_edge(Vector2i(1, 1), Vector2i.DOWN), "Other edges of the same partial tile stay open")
 	_check(not map.can_stand_at(Vector2(4, 72), Vector2(17, 10)), "Footprint cannot extend outside the map")
+	_check(not map.is_walkable_at(Vector2(92, 72), Vector2(8.5, 5)), "Feet cannot straddle a closed right edge from its left side")
+	_check(not map.is_walkable_at(Vector2(100, 72), Vector2(8.5, 5)), "Feet cannot straddle the same edge from its right side")
+	_check(not map.is_walkable_at(Vector2(168, 142), Vector2(8.5, 5)), "Feet cannot straddle a closed downward edge")
+	_check(not map.is_walkable_at(Vector2(168, 146), Vector2(8.5, 5)), "Feet cannot straddle the same horizontal edge from below")
+	_check(map.is_walkable_at(Vector2(48, 72), Vector2(8.5, 5)), "Feet may span an open edge between neighboring floor cells")
 	var player := PLAYER_SCENE.instantiate() as FloorAwareShopPlayer
 	root.add_child(player)
 	player.set_floor_query(map.can_stand_at)
@@ -111,6 +117,7 @@ func _verify_directional_fixture() -> void:
 	map.rebuild_passability()
 	await _settle()
 	_check(map.can_cross_edge(Vector2i(1, 1), Vector2i.RIGHT), "Erasing a directional tile and rebuilding removes its edge collision")
+	_check(map.is_walkable_at(Vector2(96, 72), Vector2(8.5, 5)), "Rebuilding also permits feet to span a newly opened edge")
 	player.teleport_to(map.get_spawn_position())
 	await _move(&"move_right", 50)
 	_check(player.global_position.x > 120, "Real movement crosses the edited boundary after rebuild")

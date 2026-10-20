@@ -28,14 +28,25 @@ func _run() -> void:
 	root.add_child(map)
 	await process_frame
 	var cells: Array[Vector2i] = []
+	var guards_by_table: Dictionary = {}
+	var actor_ids: Dictionary = {}
 	for child in map.get_node("Characters").get_children():
 		if not child is SettlementCharacter:
 			continue
 		var cell: Vector2i = map.world_to_cell(child.position)
 		_check(map.is_cell_walkable(cell), "Character stands on walkable floor: %s at %s" % [child.name, cell])
+		_check(not actor_ids.has(child.actor_id), "Casino actors have unique identities: " + String(child.actor_id))
+		actor_ids[child.actor_id] = true
+		if child.has_meta("gambling_table"):
+			var table: String = child.get_meta("gambling_table")
+			guards_by_table[table] = int(guards_by_table.get(table, 0)) + 1
+			_check(child.scene_file_path == "res://src/gameplay/characters/rpg_casino_sentry.tscn", "Table guard uses the matching sentry sprite")
 		if String(child.actor_id).begins_with(CROWD_PREFIX):
 			cells.append(cell)
 	_check(cells.size() == 9, "The casino keeps its nine punters: %d" % cells.size())
+	_check(guards_by_table.size() == 4, "All four gambling tables have guards")
+	for table: String in guards_by_table:
+		_check(guards_by_table[table] == 2, "Each gambling table has two guards: " + table)
 	for index in range(cells.size()):
 		var near_table := (cells[index] - HOTSPOTS[0]).abs()
 		var near_door := (cells[index] - HOTSPOTS[1]).abs()

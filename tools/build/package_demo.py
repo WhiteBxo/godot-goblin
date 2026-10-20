@@ -20,7 +20,7 @@ import shutil
 import zipfile
 from pathlib import Path
 
-GAME_NAME = "洞窟深处的奶茶店"
+GAME_NAME = "我的奶茶店连通异世界"
 PLAY_NOTE_NAME = "试玩说明.txt"
 REQUIRED_SUFFIXES = (".exe", ".pck")
 
@@ -65,7 +65,6 @@ PLAY_NOTE = """{game} — 两日试玩版 v{version}
 
 【已知问题】
 - 设置里只有音乐、音效、对白速度、自动播放，没有全屏和分辨率选项。
-- 全部音乐只有两首循环曲和一首结尾曲。
 - 胖哥布林没有四向行走帧、守卫长没有侧面行走帧，个别 NPC 走动会显得僵。
 - 结尾回顾页的「解锁人物 / 自创饮品」数字取决于玩家是否主动收集，可能偏低。
 - 美术素材尚未定稿。

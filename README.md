@@ -1,8 +1,8 @@
-# Godot Goblin
+# 我的奶茶店连通异世界
 
-Godot 4.7 / GDScript 的奶茶店剧情冒险项目。正式内容已接通 Day 1 六阶段与 Day 2 五阶段：H01 订单、调查、取血、酒馆购买、两局赌场与守卫招待，之后进入第三天任务交接。外景和室内沿用 RPG Maker 地图，奶茶店保留现有场景。
+Godot 4.7 / GDScript 的奶茶店剧情冒险项目（仓库名 Godot Goblin）。Demo 包含 Day 1 六阶段与 Day 2 五阶段：H01 订单、调查、取血、酒馆购买、两局赌场与守卫招待，第二天结束进入回顾页与结尾卡。外景和室内沿用 RPG Maker 地图，奶茶店保留现有场景。
 
-本次范围、验证与限制见 [2026-10-19 两工作树整合记录](docs/development/two_day_integration_2026_10_19.md)，完整资料见 [文档中心](docs/README.md)。
+双平台 Demo 与应用图标见 [最终发包记录](docs/development/final_demo_release_2026_10_20.md)，玩法整合背景见 [2026-10-19 两工作树整合记录](docs/development/two_day_integration_2026_10_19.md)，完整资料见 [文档中心](docs/README.md)。
 
 ## 快速开始
 

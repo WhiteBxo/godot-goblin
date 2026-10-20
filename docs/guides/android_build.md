@@ -33,6 +33,7 @@ godot --headless --path . --export-debug "Android" dist/android/goblin_milk_tea.
 
 - 调试包用编辑器自动生成的调试签名，可直接 `adb install -r dist/android/goblin_milk_tea.apk` 侧载。
 - 正式包在预设里填自己的 keystore 后改用 `--export-release`。
+- 本次双平台 Demo 已使用独立本地密钥导出 Release APK，实际文件、图标与验收见 [最终发包记录](../development/final_demo_release_2026_10_20.md)。
 - `dist/` 与 `/android/` 都在忽略列表内，产物不进版本库。
 
 ## 移动端配置
@@ -57,6 +58,6 @@ godot --headless --path . --export-debug "Android" dist/android/goblin_milk_tea.
 
 ## 已知边界
 
-- 本仓库开发机未安装 Android SDK，导出预设已就位但未在本仓库完成一次真机安装验证；首次打包前请按上面三步补齐环境。
+- 本机已使用 Godot 4.7.2 模板、Android SDK 与本地 Demo release 密钥完成 APK 导出，并在 Android 15 模拟器通过安装、标题与新游戏开场触摸冒烟；实体手机完整通关与性能验收尚未执行。
 - 触摸层只覆盖单人本地玩法，未加虚拟手柄、手柄映射或云端存档相关适配。
 - 覆盖 HUD 的场景（潜行卡片、交互提示）在触摸下会让位，新增常驻 HUD 时同样要避开左下与右下两块拇指区。

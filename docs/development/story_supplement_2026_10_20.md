@@ -68,6 +68,7 @@
 - 新增 Story 指令 `grant_money`（`amount`、`receipt`），经 `StoryBusinessAdapter` 调 `WalletTransactions.add_money`，receipt 同时作为钱包请求号与步骤事实，重放不重复入账。校验在 `story_library.gd`，分发在 `story_director.gd`。
 - 业务顺序：`s06_pondering` 播完「说好的报酬，一分不少！」后执行 `grant_money` 100G（receipt `day1.s06.reward_paid`），再接系统提示与后续对白。任务 `day1_s06_blood_drink` 的 `rewards.money` 由 100 改为 0，订单板文案改为「委托报酬 100G（委托时已预付）」；总收益仍是 121G，只把到账时点提前到委托。
 - 「主角开始做特调、然后把它给胖哥布林」按玩法节拍留在源稿与 Beat 说明，不作为旁白播放，制作与交付仍走原 Bridge 两段。
+- 旁白不以「主角」作主语：开场改为「带着格里芬之血回到了奶茶店时，一直惦记着这件事的胖哥布林立刻凑了过来。」，「拿出格里芬之血。」，reaction 的「赶紧放下手里的东西……」「……也不敢再让他碰那杯饮料。」同步去主语。
 - 测试：`verify_story_business.gd` 增加 `grant_money` 的合法/非法校验、未绑定拒绝、入账与重放幂等；`verify_two_day_flow.gd` 的 121G 断言保留，描述改为预付不重复计酬。
 
 本机没有 Godot 可执行文件，本轮未执行 `validate_story.gd`、`verify_story_business.gd` 与 `verify_two_day_flow.gd`。已按 `StoryProject.compile()` 重放编译并核对：对白 `start`/`next` 有效、Story 引用的对白全部存在、Beat 区间连续覆盖、工程与源稿散列同步（源稿 `53176857…`、工程 `b33eb112…`）。引擎侧与真实付款路径待有 Godot 环境时补验。

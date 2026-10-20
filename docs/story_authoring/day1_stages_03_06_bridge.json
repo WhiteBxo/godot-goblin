@@ -1,7 +1,7 @@
 {
   "version": 1,
   "source": "res://docs/design/day_01_stages_03_06_draft.md",
-  "source_sha256": "53176857ee7a7768955223d6c3d848854abbc23a4849e38afbe202c2fd17ff3e",
+  "source_sha256": "4c84ce99fe5048372d65efe106aab72ff15a5d6135b939502033b9453dec376c",
   "scene": "res://src/core/main.tscn",
   "story": "res://src/resources/story/day1_stages_03_06.json",
   "dialogue": "res://src/resources/dialogue/day1_stages_03_06.json",
@@ -344,6 +344,6 @@
     }
   ],
   "authoring_project": "res://docs/story_authoring/day1_stages_03_06_project.json",
-  "authoring_sha256": "b33eb11208606e8659ae41de3e603ce35ccff8782136781c862ad856d7666032",
+  "authoring_sha256": "f3eb597730e82e29acfef01520e3987ddc0479d7819cbe3364edbc50085d6cb3",
   "verification": "res://tests/verify_two_day_flow.gd"
 }

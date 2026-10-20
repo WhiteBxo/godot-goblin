@@ -429,13 +429,13 @@ effect_scale = 0.5
 guards = Array[NodePath]([NodePath("Entrance"), NodePath("Lure"), NodePath("Gate"), NodePath("Drunken"), NodePath("StreetWatchA"), NodePath("StreetWatchB")])
 objective_names = {"day1.s05.document_read": "书房文书", "day1.s05.blood_acquired": "侧室小桌血液"}
 approach_hint = "先到西侧找醉卫交涉（10G），再回宅门前，在双卫之间按 E 支付 10G。投币只能引开守卫。"
-escape_hint = "拿齐文书和血液后，直接返回奶茶店。"
+escape_hint = "取得血液后，直接返回奶茶店；书房探索可选。"
 controls_hint = "鼠标瞄准落点 · F 投掷 · Ctrl 潜行 · 失败后点「重新潜入」"
 checkpoint = NodePath("../StoryPositions/day1_checkpoint")
 escape_zone = NodePath("../EscapeZone")
-required_flags = Array[StringName](["day1.s05.blood_acquired", "day1.s05.document_read"])
-required_items = {"day1_griffin_blood": 3, "day1_elder_document": 1}
-escape_rules_reference = "docs/design/two_day_flow_integration_plan.md：双物品、文书已读、实际抵达奶茶店门口，无放火；取消北侧观察位撤离要求。"
+required_flags = Array[StringName](["day1.s05.blood_acquired"])
+required_items = {"day1_griffin_blood": 3}
+escape_rules_reference = "取得血液并实际抵达奶茶店门口，无放火；书房探索为可选目标。"
 
 [node name="Entrance" type="Node2D" parent="StealthSetup" node_paths=PackedStringArray("actor")]
 script = ExtResource("response")

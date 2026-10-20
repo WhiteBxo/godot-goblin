@@ -137,5 +137,14 @@ func record_shop_arrival() -> void:
 		return
 	if Day1Access.at_stage(_state, "day1.s04"):
 		_state.set_flag("day1.s03.returned_shop")
+	# Travel may finish before the exterior's next physics tick checks its zone.
+	# A real shop arrival can also finish the return, with the mission goods and
+	# both guard payments intact. Optional documents never gate this fact.
+	if (Day1Access.can_enter_elder(_state)
+		and _state.get_flag("day1.s05.drunken_paid")
+		and _state.get_flag("day1.s05.guard_payment_completed")
+		and _state.get_flag("day1.s05.blood_acquired")
+		and _state.get_warehouse_inventory().has_uses({"day1_griffin_blood": 3})):
+		_state.set_flag("day1.s05.escape_completed")
 	if (Day1Access.at_stage(_state, "day1.s05") or Day1Access.at_stage(_state, "day1.s06")) and _state.get_flag("day1.s05.escape_completed"):
 		_state.set_flag("day1.s05.returned_shop")

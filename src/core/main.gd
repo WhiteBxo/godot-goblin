@@ -1183,7 +1183,9 @@ func _complete_story_document() -> void:
 	var point := _pending_story_document
 	_pending_story_document = null
 	if is_instance_valid(point):
-		point.resolve()
+		var result := point.resolve()
+		if point is SignatureDiscoveryPoint or not result.get("ok", false):
+			_shop_ui.show_feedback(str(result.get("message", "")), result.get("ok", false))
 
 func _create_dialogue_system() -> void:
 	_actor_director = ActorDirector.new()

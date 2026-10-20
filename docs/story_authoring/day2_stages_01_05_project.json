@@ -1,7 +1,7 @@
 {
 	"version": 1.0,
 	"format": "goblin_story_project",
-	"next_step_id": 24017.0,
+	"next_step_id": 24018.0,
 	"manifest": {
 		"version": 1.0,
 		"source": "res://docs/design/day_02_stages_01_05_draft.md",
@@ -489,6 +489,13 @@
 					"data": {
 						"command": "chapter_action",
 						"id": "day2.procurement.fund"
+					}
+				},
+				{
+					"id": "step_24017",
+					"data": {
+						"command": "chapter_action",
+						"id": "day2.s01.pocket_money"
 					}
 				},
 				{

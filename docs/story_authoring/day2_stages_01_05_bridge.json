@@ -15,7 +15,7 @@
       "mode": "自动演出",
       "event": "day2.s01.morning",
       "start": 0,
-      "count": 16,
+      "count": 17,
       "dialogues": [
         "day2.s01.fat_goblin_wakes",
         "day2.s01.wants_more",
@@ -525,7 +525,7 @@
     }
   ],
   "authoring_project": "res://docs/story_authoring/day2_stages_01_05_project.json",
-  "authoring_sha256": "93f5452d4ef4fc624ac7a6dcfe417a8b770578082f510b7fccb0d7bfc9a7b364",
+  "authoring_sha256": "6219c1045b8fd59a4be55a7e88a96c692fc69dfffa7d6ab962de90fb1b78f4ea",
   "verification": {
     "entry": "res://tests/verify_two_day_flow.gd",
     "scope": "标题开始、真实旅行和交付；代购及存档另测"

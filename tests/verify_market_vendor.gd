@@ -53,7 +53,8 @@ func _visit(day: int) -> void:
 		await frames()
 		return
 	check(chapter.can_trade_with_vendors(), "Day two stalls trade")
-	check(chapter.open_market_vendor(vendor_id) == OK, "Talking to the stall opens its goods")
+	# Press E on the stall: the host route must open the goods, not a dialogue.
+	check(game._route_story_interaction(vendor_id) == OK, "Talking to the stall opens its goods")
 	await frames(4)
 	var popup: MarketVendorPopup = game.get_node("PopupLayer/MarketVendorPopup")
 	var offers := popup.get_offers()

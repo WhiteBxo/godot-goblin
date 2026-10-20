@@ -1,6 +1,6 @@
 # 项目音效库
 
-当前可用库包含 **28 个音效基础 ID、57 个 WAV 变体**，另保留用户提供的 `music.daily_milk_tea` 与 `music.two_days_end`。原有 18 个基础 ID、31 个 WAV 路径与导入 UID 全部保留，内容替换为本次三个素材包的采样与组合；现有调用方无需迁移 ID。新增登记钱币、锁盒解锁、开瓶、碗勺搅拌、翻页 5 类声音；后续补入 `shop.coins_chain`（金属链短响，收款的入袋收尾）、`story.coin_drop`（硬币落地）、`gather.plant` / `gather.crystal` / `gather.vial`（按采集材质分派）。
+当前可用库包含 **28 个音效基础 ID、57 个 WAV 变体**，另接入七首用户场景音乐（含奶茶店与结尾替换曲）。原有 18 个基础 ID、31 个 WAV 路径与导入 UID 全部保留，内容替换为本次三个素材包的采样与组合；现有调用方无需迁移 ID。新增登记钱币、锁盒解锁、开瓶、碗勺搅拌、翻页 5 类声音；后续补入 `shop.coins_chain`（金属链短响，收款的入袋收尾）、`story.coin_drop`（硬币落地）、`gather.plant` / `gather.crystal` / `gather.vial`（按采集材质分派）。
 
 ## 原始素材与许可
 
@@ -86,7 +86,7 @@ F5 进入标题，测试悬停和新游戏；F6 运行 `src/debug/story/legacy_s
 
 ## Demo 与试听
 
-F6 运行 `src/debug/audio/sound_library_demo.tscn`：列表包含 43 个音效及 1 首日常音乐；选择分类，双击条目或点「播放」，也可「连续试听」。短音自然结束，循环音连续模式播放 6 秒后换条目；手动循环持续到「停止」。音量默认 -6 dB，可调 -48～0 dB。
+F6 运行 `src/debug/audio/sound_library_demo.tscn`：列表包含 57 个音效及 7 首场景音乐；选择分类，双击条目或点「播放」，也可「连续试听」。短音自然结束，循环音连续模式播放 6 秒后换条目；手动循环持续到「停止」。音量默认 -6 dB，可调 -48～0 dB。
 
 至少听过两次环境循环，确认边界与气流音色；再检查门铃、三连敲、木石脚步区分、封口机的用途适配，以及对白高频重复的舒适度。自动化只验证资源和播放行为，不代替人工耳听。
 
@@ -110,7 +110,7 @@ godot --headless --path . --editor --import --quit
 godot --headless --path . --script res://tests/verify_sound_library.gd
 ```
 
-重建会校验全部原始文件哈希，输出 WAV、保留 UID 的导入配置、集中资源表、逐项文档、成品 manifest 及兼容的 Story Demo 敲击资源，并保留用户日常音乐的资源引用及 68.279 秒循环起点。生成文件与配方一起提交。
+重建会校验全部原始文件哈希，输出 WAV、保留 UID 的导入配置、集中资源表、逐项文档、成品 manifest 及兼容的 Story Demo 敲击资源，并保留全部七首场景音乐的资源引用及各自循环配置（音乐本身由独立处理工具生成）。生成文件与配方一起提交。
 
 本次验证包括 335 个原文件哈希、43 个 PCM 成品逐采样重建、响度/峰值/边缘/循环接缝、兼容敲击内容，以及 Godot 的资源注册、变体选择、实际播放、回收与 Demo 列表。实际命令结果以任务交付为准；未进行人工耳听，不声称主观听感通过。
 
@@ -118,7 +118,9 @@ godot --headless --path . --script res://tests/verify_sound_library.gd
 
 ## 用户提供的音乐
 
-`music/daily_milk_tea.ogg` 与 `music/start.ogg` 均保持原内容，不在三个 CC0 音效包的许可声明内。日常音乐资源表和导入配置保留 `loop=true`、`loop_offset=68.279`、`beat_count=0`：首次从头播放，文件末尾回到 1:08.279。标题音乐继续由标题界面单独引用。
+2026-10-20 替换奶茶店与结尾曲，新增洞穴、赌场、酒馆、长老居所、集市五首。原始文件保存于 `assets/audio/source/music/`；处理配方、原始名称、SHA-256、交叉淡化与响度指标见 [音乐说明](../../assets/audio/music/README.md) 和 `processing_manifest.json`。标题曲 `music/start.ogg` 继续由标题界面单独引用。
+
+宿主在 Inspector 的 `scene_music_id` 配置默认曲，`market_music_id` 配置集市曲；MainGame 将地图公开的 `is_observing_market` 查询注入 SceneSoundscape。进入区域稳定 0.75 秒后才切换，淡出/淡入各 0.8 秒；相同区域不重启音乐。显式剧情音乐或停止优先于区域切换，结尾调用 `stop_ambience` 后停止区域音乐更新。试听时将六首循环曲定位到末尾，确认回接；结尾曲应自然结束。
 
 ## 2026-10-18 验证记录
 

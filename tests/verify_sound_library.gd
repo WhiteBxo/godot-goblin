@@ -38,14 +38,18 @@ func _run() -> void:
 			var id := SoundLibrary.variant_id(entry["id"], index, streams.size())
 			var stream := audio.sounds[id] as AudioStream
 			if stream is AudioStreamOggVorbis:
-				_check(stream.loop and is_equal_approx(stream.loop_offset, 68.279), "Milk tea native loop starts at 68.279 seconds")
-				_check(stream.get_length() > stream.loop_offset and stream.beat_count == 0, "Music loops at EOF after a valid intro")
-				_check(audio.play_bgm(id, 0.0) == OK, "Milk tea BGM plays through service")
-				_check(audio._music.get_playback_position() < 0.2, "Milk tea first playback starts at intro")
+				var offset: float = entry.get("loop_offset", 0.0)
+				_check(stream.loop == entry.loop and is_equal_approx(stream.loop_offset, offset), "Prepared native loop settings: " + id)
+				_check(stream.get_length() > offset and stream.beat_count == 0, "Music uses EOF rather than beat metadata: " + id)
+				_check(audio.play_bgm(id, 0.0) == OK, "Music plays through service: " + id)
+				_check(audio._music.get_playback_position() < 0.2, "First playback starts at opening: " + id)
 				audio._music.seek(stream.get_length() - 0.3)
 				await create_timer(0.8).timeout
 				var loop_position := audio._music.get_playback_position()
-				_check(audio._music.playing and loop_position >= 68.279 and loop_position < 69.5, "Real milk tea decoder wraps from EOF to 68.279 seconds")
+				if entry.loop:
+					_check(audio._music.playing and loop_position >= offset and loop_position < offset + 1.2, "Decoder wraps to prepared loop offset: " + id)
+				else:
+					_check(not audio._music.playing and audio.get_bgm_state().id.is_empty(), "Ending finishes once: " + id)
 				audio.stop_bgm()
 				continue
 			_check(stream != null and stream.get_length() > .02, "WAV loads with duration: " + id)
@@ -57,7 +61,7 @@ func _run() -> void:
 			audio.stop_sound(handle)
 			audio.stop_sound(handle)
 			_check(audio.get_active_sound_count(owner) == 0, "Stop is idempotent: " + id)
-	_check(total == 44, "43 sampled sounds and one preserved music resource")
+	_check(total == 64, "57 sampled sounds and seven scene music resources")
 	var first := audio.play_sfx("player.step_wood", owner)
 	var second := audio.play_sfx("player.step_wood", owner)
 	_check(first > 0 and second != first and audio.get_active_sound_count(owner) == 2, "Repeated overlap")

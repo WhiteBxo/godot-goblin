@@ -17,12 +17,22 @@ ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / 'assets/audio/source'
 RATE = 44100
 PACKS = {'rpg_sfx': '80-CC0-RPG-SFX.zip', 'tinysized': 'tinysized.zip', 'accessory': 'accessory.zip'}
-## Music the user supplied directly. Copied into assets/audio/music unchanged; the
-## generator only re-registers them so a rebuild cannot silently unregister a cue.
+## User music is prepared separately by prepare_music.py; rebuilding SFX must
+## retain every cue and its prepared decoder loop point.
 MUSIC = [
     dict(id='music.daily_milk_tea', label='奶茶店日常 BGM', path='assets/audio/music/daily_milk_tea.ogg',
-         resource_id='music', loop=True, loop_offset='68.279', note='末尾回到 68.279 秒'),
-    dict(id='music.two_days_end', label='两日终曲', path='assets/audio/music/two_days_end.wav',
+         resource_id='music', loop=True, loop_offset='1.5', note='离线交叉淡化；末尾回到 1.5 秒'),
+    dict(id='music.cave', label='洞穴整体音乐', path='assets/audio/music/cave.ogg',
+         resource_id='music_cave', loop=True, loop_offset='3.0', note='洞穴外景；末尾回到 3 秒'),
+    dict(id='music.casino', label='赌场', path='assets/audio/music/casino.ogg',
+         resource_id='music_casino', loop=True, loop_offset='1.0', note='赌场室内；末尾回到 1 秒'),
+    dict(id='music.tavern', label='酒馆', path='assets/audio/music/tavern.ogg',
+         resource_id='music_tavern', loop=True, loop_offset='1.0', note='酒馆室内；末尾回到 1 秒'),
+    dict(id='music.elder_house', label='长老居所', path='assets/audio/music/elder_house.ogg',
+         resource_id='music_elder', loop=True, loop_offset='2.0', note='长老居所；末尾回到 2 秒'),
+    dict(id='music.market', label='集市', path='assets/audio/music/market.ogg',
+         resource_id='music_market', loop=True, loop_offset='1.0', note='集市区域；末尾回到 1 秒'),
+    dict(id='music.two_days_end', label='两日终曲', path='assets/audio/music/two_days_end.ogg',
          resource_id='music_end', loop=False, note='不循环，按原速播放'),
 ]
 
@@ -179,7 +189,7 @@ def main():
             descriptions.append(f'`{variant_id}` → `res://{relative}` ({len(pcm) / RATE:.3f})；' + ', '.join('`' + s.removeprefix('assets/audio/source/') + '`' for s in sources))
         entries.append('{"id": "%s", "label": "%s", "loop": %s, "streams": [%s]}' % (sound_id, label, str(looping).lower(), ', '.join(refs)))
         mapping.append(f'| `{sound_id}` | {label}；{spec["note"]} | ' + '<br>'.join(descriptions) + ' |')
-    # User-provided music is copied as-is and never resampled here. Every entry
+    # User-provided music is not processed by this SFX generator. Every entry
     # must be listed so a rebuild never drops one of them from the library.
     for music in MUSIC:
         ext.append('[ext_resource type="AudioStream" path="res://%s" id="%s"]' % (music['path'], music['resource_id']))

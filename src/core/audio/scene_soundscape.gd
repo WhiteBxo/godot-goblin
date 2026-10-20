@@ -24,6 +24,49 @@ var _previous_step := ""
 var _night := false
 var _retry_seconds := 0.0
 var _ambient_stopped := false
+var _scene_music := ""
+var _market_music := ""
+var _market_query := Callable()
+var _requested_music := ""
+var _candidate_music := ""
+var _candidate_seconds := 0.0
+var _music_enabled := false
+
+## Map queries are injected by the host; this service never inspects map nodes.
+func configure_music(scene_id: String, market_id: String = "", market_query: Callable = Callable()) -> void:
+	_scene_music = scene_id
+	_market_music = market_id
+	_market_query = market_query
+	_music_enabled = not scene_id.is_empty()
+	if not _music_enabled:
+		return
+	_requested_music = _desired_music()
+	_candidate_music = _requested_music
+	_candidate_seconds = 0.0
+	# Shop restoration or a story cue may already own the player at startup.
+	if _audio.get_bgm_state().id.is_empty():
+		_audio.play_bgm(_requested_music, 1.0, -12.0)
+
+func _desired_music() -> String:
+	if not _market_music.is_empty() and _market_query.is_valid() and _market_query.call(_player.global_position):
+		return _market_music
+	return _scene_music
+
+func _update_music(delta: float) -> void:
+	if not _music_enabled:
+		return
+	var desired := _desired_music()
+	if desired != _candidate_music:
+		_candidate_music = desired
+		_candidate_seconds = 0.0
+	_candidate_seconds += delta
+	if desired == _requested_music or _candidate_seconds < 0.75:
+		return
+	# Do not replace story-owned music (or an explicit story stop).
+	if _audio.get_bgm_state().id != _requested_music:
+		return
+	_requested_music = desired
+	_audio.play_bgm(desired, 0.8, -12.0)
 
 func configure(audio: AudioManager, player: PlayerController, state: Node, library: SoundLibrary, profile: String) -> void:
 	_disconnect()
@@ -53,6 +96,7 @@ func _start_ambience() -> void:
 ## so the end card is not fighting a shop loop underneath its music.
 func stop_ambience(fade_seconds: float = 0.6) -> void:
 	_ambient_stopped = true
+	_music_enabled = false
 	var handle := _ambient_handle
 	_ambient_handle = AudioManager.INVALID_HANDLE
 	if handle != AudioManager.INVALID_HANDLE and is_instance_valid(_audio):
@@ -75,6 +119,7 @@ func _on_sound_finished(handle: int, _cancelled: bool) -> void:
 func _physics_process(delta: float) -> void:
 	if _profile.is_empty() or not is_instance_valid(_player):
 		return
+	_update_music(delta)
 	_retry_seconds -= delta
 	if _ambient_handle == AudioManager.INVALID_HANDLE and _retry_seconds <= 0.0:
 		_start_ambience()

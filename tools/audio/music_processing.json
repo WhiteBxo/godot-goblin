@@ -1,0 +1,13 @@
+{
+  "target_rms_db": -22.0,
+  "peak_ceiling_db": -3.0,
+  "tracks": [
+    {"name": "daily_milk_tea", "source_name": "奶茶店.ogg", "end_seconds": 64.0, "crossfade_seconds": 1.5},
+    {"name": "cave", "source_name": "洞穴整体音乐.ogg", "end_seconds": 177.0, "crossfade_seconds": 3.0},
+    {"name": "casino", "source_name": "赌场.ogg", "end_seconds": 29.5, "crossfade_seconds": 1.0},
+    {"name": "tavern", "source_name": "酒馆.ogg", "end_seconds": 29.0, "crossfade_seconds": 1.0},
+    {"name": "elder_house", "source_name": "长老居所.ogg", "end_seconds": 182.5, "crossfade_seconds": 2.0},
+    {"name": "market", "source_name": "集市.ogg", "end_seconds": 50.0, "crossfade_seconds": 1.0},
+    {"name": "two_days_end", "source_name": "end.ogg", "end_seconds": 90.0, "crossfade_seconds": 0.0}
+  ]
+}

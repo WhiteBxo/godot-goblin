@@ -13,6 +13,7 @@ process_mode = 3
 script = ExtResource("1_main")
 day1_story_enabled = true
 soundscape_profile = "shop"
+scene_music_id = "music.daily_milk_tea"
 
 [node name="Systems" type="Node" parent="." unique_id=601625153]
 process_mode = 1

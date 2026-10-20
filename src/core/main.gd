@@ -6,6 +6,8 @@ signal session_initialized(error: Error)
 @export var day1_story_enabled := false
 @export var interaction_audio_scene: PackedScene = preload("res://src/core/audio/interaction_audio.tscn")
 @export_enum("silent", "shop", "cave", "interior") var soundscape_profile := "silent"
+@export var scene_music_id := ""
+@export var market_music_id := ""
 var _interaction_audio: InteractionAudio
 var _day1_controller: Day1ShopController
 var _chapter_controller: Day1ChapterController
@@ -196,6 +198,11 @@ func _create_soundscape() -> void:
 	soundscape.name = "SceneSoundscape"
 	$Systems.add_child(soundscape)
 	soundscape.configure(_audio_manager, _shop_player, get_node("/root/GameState"), _interaction_audio.library, soundscape_profile)
+	var market_query := Callable()
+	var level := get_active_level()
+	if not market_music_id.is_empty() and level.has_method("is_observing_market"):
+		market_query = Callable(level, "is_observing_market")
+	soundscape.configure_music(scene_music_id, market_music_id, market_query)
 
 func get_ui_manager() -> UIManager:
 	return _ui_manager if is_instance_valid(_ui_manager) else null

@@ -32,5 +32,10 @@
 | `shop.bottle_open` | 打开玻璃瓶；圆玻璃瓶拔塞 | `shop.bottle_open.01` → `res://assets/audio/shop/bottle_open_01.wav` (0.212)；`accessory/sfx/vial-glass-round-uncork-01.wav`<br>`shop.bottle_open.02` → `res://assets/audio/shop/bottle_open_02.wav` (0.140)；`accessory/sfx/vial-glass-round-uncork-02.wav` |
 | `shop.stir` | 碗勺搅拌；木碗与木勺录音，适配饮料准备 | `shop.stir.01` → `res://assets/audio/shop/stir_01.wav` (0.434)；`tinysized/sfx-cc0/wood-bowl-spoon-01.wav`<br>`shop.stir.02` → `res://assets/audio/shop/stir_02.wav` (0.314)；`tinysized/sfx-cc0/wood-bowl-spoon-02.wav`<br>`shop.stir.03` → `res://assets/audio/shop/stir_03.wav` (0.303)；`tinysized/sfx-cc0/wood-bowl-spoon-03.wav` |
 | `story.page_turn` | 书页翻动；两种原始翻页声 | `story.page_turn.01` → `res://assets/audio/story/page_turn_01.wav` (1.278)；`tinysized/sfx-cc0/book-page-01.wav`<br>`story.page_turn.02` → `res://assets/audio/story/page_turn_02.wav` (0.643)；`tinysized/sfx-cc0/book-page-02.wav` |
-| `music.daily_milk_tea` | 奶茶店日常 BGM | `res://assets/audio/music/daily_milk_tea.ogg`；末尾回到 68.279 秒 |
-| `music.two_days_end` | 两日终曲 | `res://assets/audio/music/two_days_end.wav`；不循环，按原速播放 |
+| `music.daily_milk_tea` | 奶茶店日常 BGM | `res://assets/audio/music/daily_milk_tea.ogg`；离线交叉淡化；末尾回到 1.5 秒 |
+| `music.cave` | 洞穴整体音乐 | `res://assets/audio/music/cave.ogg`；洞穴外景；末尾回到 3 秒 |
+| `music.casino` | 赌场 | `res://assets/audio/music/casino.ogg`；赌场室内；末尾回到 1 秒 |
+| `music.tavern` | 酒馆 | `res://assets/audio/music/tavern.ogg`；酒馆室内；末尾回到 1 秒 |
+| `music.elder_house` | 长老居所 | `res://assets/audio/music/elder_house.ogg`；长老居所；末尾回到 2 秒 |
+| `music.market` | 集市 | `res://assets/audio/music/market.ogg`；集市区域；末尾回到 1 秒 |
+| `music.two_days_end` | 两日终曲 | `res://assets/audio/music/two_days_end.ogg`；不循环，按原速播放 |

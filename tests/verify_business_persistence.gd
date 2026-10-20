@@ -42,7 +42,7 @@ func _setup() -> void:
 		"deadline": {"day": 1, "phase": "night", "boundary": "at"},
 		"objectives": [{"id": "goal", "text": "测试", "complete_when": {"type": "flag", "key": "business_test.deadline_done"}}]})
 	var catalog := TaskCatalog.new()
-	check(catalog.load_json(JSON.stringify(data)) == OK, "Load full real order catalog plus isolated deadline")
+	check(catalog.load_json(JSON.stringify(data), {"locations": RpgWorldMapData.location_ids()}) == OK, "Load full real order catalog plus isolated deadline")
 	var journal := TaskJournal.new()
 	_host.add_child(journal)
 	check(journal.configure(catalog, _state) == OK, "Bind full task catalog to shared state")

@@ -32,6 +32,22 @@ func _run() -> void:
 			if not location.is_empty() and location not in locations:
 				unknown.append(location)
 	check(unknown.is_empty(), "Every published objective location exists in RpgWorldMapData: " + ", ".join(unknown))
+	# A main objective without a location leaves the map's "当前目标" with text but
+	# no marker, so every formal main objective must name a resolvable region.
+	var missing_locations: Array[String] = []
+	for path: String in Day1ChapterController.TASK_FILES:
+		var file: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+		if not file is Dictionary:
+			missing_locations.append(path + " (unreadable)")
+			continue
+		for task: Dictionary in file.get("tasks", []):
+			if task.get("type") != "main":
+				continue
+			for objective: Dictionary in task.get("objectives", []):
+				var location: String = objective.get("location_id", "")
+				if location.is_empty() or location not in locations:
+					missing_locations.append(task.id + "/" + String(objective.get("id", "?")))
+	check(missing_locations.is_empty(), "Every main objective names a resolvable map region: " + ", ".join(missing_locations))
 	var catalog := TaskCatalog.new()
 	check(catalog.load_file(DAY2_TASKS, {"locations": locations}) == OK, "Catalog accepts the real task file with map references: " + catalog.last_error)
 	var journal := TaskJournal.new()
@@ -60,6 +76,7 @@ func _run() -> void:
 	check(canvas.target.get("name") == "酒馆 · 裂牙", "Map target uses the authored region name")
 	var details: Label = panel.get_node("ModalShell").get_content().get_node("Details/Objective")
 	check("酒馆" in details.text and "位置未标注" not in details.text and "地图上未标注" not in details.text, "Objective text names the mapped region without a missing-location warning")
+	check(details.text.count("酒馆") == 1, "Objective text never repeats a compound region name: " + details.text)
 	# A task without a location keeps its text but draws no target.
 	var no_location := TaskCatalog.new()
 	check(no_location.load_json(JSON.stringify({"version": 1, "tasks": [{

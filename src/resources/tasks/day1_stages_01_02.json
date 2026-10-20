@@ -22,6 +22,7 @@
         {
           "id": "view",
           "text": "查看订单并接单",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "task.day1.human.active"
@@ -30,6 +31,7 @@
         {
           "id": "deliver",
           "text": "交付并收款",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "day1.human_settled"
@@ -68,6 +70,7 @@
         {
           "id": "view",
           "text": "查看订单并接单",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "task.day1.goblin.active"
@@ -76,6 +79,7 @@
         {
           "id": "deliver",
           "text": "交付并收款",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "day1.goblin_settled"
@@ -114,6 +118,7 @@
         {
           "id": "view",
           "text": "查看订单并接单",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "task.day1.group_a.active"
@@ -122,6 +127,7 @@
         {
           "id": "deliver",
           "text": "交付并收款",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "day1.group_a_settled"
@@ -160,6 +166,7 @@
         {
           "id": "view",
           "text": "查看订单并接单",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "task.day1.group_b.active"
@@ -168,6 +175,7 @@
         {
           "id": "deliver",
           "text": "交付并收款",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "day1.group_b_settled"
@@ -206,6 +214,7 @@
         {
           "id": "view",
           "text": "查看订单并接单",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "task.day1.group_c.active"
@@ -214,6 +223,7 @@
         {
           "id": "deliver",
           "text": "交付并收款",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "day1.group_c_settled"
@@ -252,6 +262,7 @@
         {
           "id": "view",
           "text": "查看订单并接单",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "task.day1.group_d.active"
@@ -260,6 +271,7 @@
         {
           "id": "deliver",
           "text": "交付并收款",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "day1.group_d_settled"
@@ -298,6 +310,7 @@
         {
           "id": "view",
           "text": "查看订单并接单",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "task.day1.group_e.active"
@@ -306,6 +319,7 @@
         {
           "id": "deliver",
           "text": "交付并收款",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "day1.group_e_settled"
@@ -344,6 +358,7 @@
         {
           "id": "deliver",
           "text": "制作特调并交付胖哥布林",
+          "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
             "key": "day1.s06.blood_drink_delivered"

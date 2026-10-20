@@ -403,7 +403,7 @@ func _test_formal_orders() -> void:
 	var state := StateData.new()
 	state.select_business_profile("day1")
 	var catalog := TaskCatalog.new()
-	check(catalog.load_file("res://src/resources/tasks/day1_stages_01_02.json") == OK, "Load serial formal Day 1 catalog")
+	check(catalog.load_file("res://src/resources/tasks/day1_stages_01_02.json", {"locations": RpgWorldMapData.location_ids()}) == OK, "Load serial formal Day 1 catalog")
 	var journal := TaskJournal.new()
 	journal.configure(catalog, state)
 	var delivery := TaskDelivery.new()

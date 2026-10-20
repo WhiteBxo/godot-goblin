@@ -162,7 +162,7 @@ func _business_fixture(session_id: String, close_rule: Dictionary) -> BusinessSc
 	_check(state.select_business_profile("day1") == OK, "Business fixture uses the shared profile")
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://src/resources/tasks/day1_stages_01_02.json"))
 	var catalog := TaskCatalog.new()
-	_check(catalog.load_json(JSON.stringify(data)) == OK, "Business fixture loads the real order catalog")
+	_check(catalog.load_json(JSON.stringify(data), {"locations": RpgWorldMapData.location_ids()}) == OK, "Business fixture loads the real order catalog")
 	var journal := TaskJournal.new()
 	host.add_child(journal)
 	_check(journal.configure(catalog, state) == OK, "Business fixture binds the journal")

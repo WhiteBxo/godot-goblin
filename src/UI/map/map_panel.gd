@@ -62,8 +62,11 @@ func refresh() -> void:
 			for region: Dictionary in data.regions:
 				if region.location_id == location:
 					target = {"position": region.position, "name": region.name}
-			if not location.is_empty() and (target.is_empty() or not text.contains(str(target.name))):
-				text += " · " + (str(target.name) if not target.is_empty() else "地图上未标注")
+			# Map labels drop the " · 分店名" tail, so compare the same short name;
+			# otherwise "前往…酒馆" would be followed by "· 酒馆 · 裂牙".
+			var place := str(target.get("name", "")).get_slice(" · ", 0)
+			if not location.is_empty() and (place.is_empty() or not text.contains(place)):
+				text += " · " + (place if not place.is_empty() else "地图上未标注")
 		elif not objective.is_empty():
 			text = "当前目标尚未揭示"
 		else:

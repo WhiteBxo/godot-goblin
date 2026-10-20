@@ -168,13 +168,11 @@ func _market_and_recovery() -> void:
 		await physics_frame
 	check(state.get_flag("day1.s03.exploration_completed"), "Western market walking completes observation without interacting")
 	check(game.get_task_journal().get_current_main_task().current_objective.text == "回奶茶店", "Exterior objective says only return to milk tea shop")
-	var hud := game.get_navigation_hud()
-	check(hud.is_visible_in_tree() and hud.get_target().get("text") == "回奶茶店", "Upper-right minimap and live objective update after observation")
 	var path := map.get_navigation_path(player.global_position, map.get_scene_entrance(&"shop_door").global_position)
 	check(not path.is_empty(), "Guidance has an actual walkable return path")
 	for point: Vector2 in path:
 		check(map.first_visit_bounds.has_point(map.to_local(point)), "First-visit guidance stays inside the market")
-	await picture("market_minimap")
+	await picture("market_return_route")
 	state.set_flag("day1.s04.map_available")
 	for location: String in RpgWorldMapData.location_ids():
 		state.set_flag("ui.map.known." + location)

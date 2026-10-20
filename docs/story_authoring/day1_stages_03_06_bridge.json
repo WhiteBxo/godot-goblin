@@ -1,7 +1,7 @@
 {
   "version": 1,
   "source": "res://docs/design/day_01_stages_03_06_draft.md",
-  "source_sha256": "2f5365b226e1cce76e166058b0dcb3eb4855e79d20297b0045432e1f309c9b96",
+  "source_sha256": "4c84ce99fe5048372d65efe106aab72ff15a5d6135b939502033b9453dec376c",
   "scene": "res://src/core/main.tscn",
   "story": "res://src/resources/story/day1_stages_03_06.json",
   "dialogue": "res://src/resources/dialogue/day1_stages_03_06.json",
@@ -156,8 +156,11 @@
       "mode": "自动演出",
       "event": "day1.s06.pondering",
       "start": 0,
-      "count": 1,
-      "dialogues": []
+      "count": 5,
+      "dialogues": [
+        "day1.s06.pondering",
+        "day1.s06.reward_arrived"
+      ]
     },
     {
       "id": "day1_bridge_blood_craft",
@@ -341,6 +344,6 @@
     }
   ],
   "authoring_project": "res://docs/story_authoring/day1_stages_03_06_project.json",
-  "authoring_sha256": "b306a7bae2c0d2f4488b09910b676b8db7a81865c53e0eb2bbb0335323ce2572",
+  "authoring_sha256": "73cece0c8c875a59c7380b1f0206f6219e4b7076a918b2ec73ff7f09810c9017",
   "verification": "res://tests/verify_two_day_flow.gd"
 }

@@ -102,6 +102,7 @@ Signal 同步调用。收尾期间拒绝递归启动新事件，串联事件请�
 | `unlock_map` | `locations`：命名空间地点 ID 数组，可省略 | 经注入的 `StoryBusinessAdapter` 先写 `ui.map.known.<id>` 再调用宿主 `unlock_map()`；未知地点、状态替换中或装配失败则整段失败 |
 | `tavern_purchase` | `product_id`、`quantity` 正整数、`receipt` 命名空间 flag | 经 `TavernPurchase` 走真实钱包事务；receipt 同时是钱包请求号与持久事实，已结算视为成功且不再扣款 |
 | `casino_settle` | `step`：`first_loss` / `second_win` / `waive`；`waive` 必填 `reason` | 调用 `FixedStoryCasino` 的三个已批准边界；重复或已结算视为成功，奖励与债务终态仍由服务原子提交 |
+| `grant_money` | `amount`：正整数；`receipt`：命名空间 flag | 经 `WalletTransactions.add_money` 入账，receipt 同时是钱包请求号与持久事实；重放或已结算视为成功且不重复入账，钱包忙或余额溢出时整段失败 |
 | `business` | `action`：`publish` / `request_arrival` / `confirm_arrival` / `request_departure` / `confirm_departure` / `close`；`publish` 需 `stage_id`，顾客动作需 `group_id` | 一次步骤只提交一次营业迁移；`close` 依赖 `GameState.close_business_session` 的已配置关店规则，成功后按规则原子写 `to` 的日/阶段与完成 flag；规则缺失时整段失败并保持营业进行中 |
 | `play_sfx` | 非空 `id` 或 `res:// path`，二选一 | 经适配层调用 AudioManager；默认非阻塞，`wait: true` 等自然结束；旧 path 保持兼容；资源/服务缺失或池满发 skipped 并继续 |
 

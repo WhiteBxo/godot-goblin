@@ -45,6 +45,7 @@ func _run() -> void:
 	_test_casino()
 	_test_business()
 	await _test_director()
+	_test_grant_money()
 	_check(_state.restore_state(before) == OK, "Restore the pre-test session")
 	print("STORY_BUSINESS: %s (%d checks, %d failures)" % ["PASS" if _failures.is_empty() else "FAIL", _checks, _failures.size()])
 	quit(0 if _failures.is_empty() else 1)
@@ -62,6 +63,7 @@ func _test_library() -> void:
 		{"command": "unlock_map", "locations": ["settlement.tavern"]},
 		{"command": "unlock_map", "locations": []},
 		{"command": "tavern_purchase", "product_id": "griffin_amber_wine", "quantity": 1, "receipt": "test.lib.buy"},
+		{"command": "grant_money", "amount": 100, "receipt": "test.lib.pay"},
 		{"command": "casino_settle", "step": "first_loss"},
 		{"command": "casino_settle", "step": "waive", "reason": "剧情免除"},
 		{"command": "business", "action": "publish", "stage_id": "s1"},
@@ -74,6 +76,11 @@ func _test_library() -> void:
 		{"command": "tavern_purchase", "product_id": "wine", "quantity": 1.5, "receipt": "test.lib.buy"},
 		{"command": "tavern_purchase", "product_id": "", "quantity": 1, "receipt": "test.lib.buy"},
 		{"command": "tavern_purchase", "product_id": "wine", "quantity": 1, "receipt": "receipt"},
+		{"command": "grant_money", "amount": 0, "receipt": "test.lib.pay"},
+		{"command": "grant_money", "amount": 1.5, "receipt": "test.lib.pay"},
+		{"command": "grant_money", "amount": 100, "receipt": "payment"},
+		{"command": "grant_money", "amount": 100},
+		{"command": "grant_money", "receipt": "test.lib.pay"},
 		{"command": "casino_settle", "step": "first_win"},
 		{"command": "casino_settle", "step": "waive"},
 		{"command": "business", "action": "open"},
@@ -85,8 +92,17 @@ func _test_unconfigured() -> void:
 	var empty := StoryBusinessAdapter.new()
 	_check(not empty.unlock_map([]).ok, "Unbound map service refuses unlocking")
 	_check(not empty.purchase("wine", 1, "test.empty.buy").ok, "Unbound tavern refuses purchases")
+	_check(not empty.grant_money(5, "test.empty.pay").ok, "Unbound wallet refuses payment")
 	_check(not empty.casino("first_loss", "").ok, "Unbound casino refuses settlement")
 	_check(not empty.business("close", "", "").ok, "Unbound scheduler refuses closing")
+
+func _test_grant_money() -> void:
+	var before := _state.get_transactions().get_balance()
+	var paid := _adapter.grant_money(5, "test.money.paid")
+	_check(paid.ok and _state.get_transactions().get_balance() == before + 5, "Payment credits the real wallet")
+	_check(_state.get_flag("test.money.paid"), "Payment projects its receipt fact")
+	var replay := _adapter.grant_money(5, "test.money.paid")
+	_check(replay.ok and _state.get_transactions().get_balance() == before + 5, "Replayed payment never credits twice")
 
 func _test_unlock() -> void:
 	_state.set_flag("day1.s04.map_available", false)

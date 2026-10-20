@@ -26,6 +26,8 @@
 
 母亲使用成年女哥布林美术的独立实例 `market_mother`，与祈祷同伴分别注册；男孩为 `market_boy`，女孩为居民区的 `village_child`。母子位于集市，小孩位于东侧居民区，站位和接近路径已按原地图通行查询核对。
 
+祭坛同伴 `prayer_woman` 的外观当日晚按反馈回退：立绘与像素小人统一回到 `祈祷者(1).zip` 女，up 方向改用背向待机，妇女2 只留作归档。细节与复现命令见[祭坛同伴外观回退](../assets/characters.md#祭坛同伴外观回退2026-10-20-晚)。
+
 三名小贩各有原文三条商品介绍，附近菜单提供对应实购入口，沿用既有报价。六种原料均有免费采集点，采集提交成功后才显示原文获得描述；同日不能重复采集。新增三点使用对应原料图标，原有三点保留。
 
 本轮六个 ZIP 共保留 46 张原 PNG，涵盖八类可复用角色；其中两酒鬼正式显示使用最后提供的 `酒鬼（改后(1).zip`，旧版原图留在 source，修订版位于 source/revised。每个原件的归档条目、路径及 SHA-256 见各角色 `source/sources.json`。附件未附独立许可证，来源记录按用户提供素材保存。
@@ -47,6 +49,31 @@
 71G 开始，只投一枚金币（10G）并支付两笔 10G，撤离后余 41G。重试恢复任务开始时的 71G、守卫和两房间事实；另实投七枚金币耗至 1G，再重试仍恢复 71G。玩家可从失败或资源不足的尝试重新开始。正式流程的整次恢复沿用已有任务快照机制。
 
 试玩时按住 Ctrl 绕视锥，鼠标瞄落点、F 投币；到醉卫及双卫处完成交涉，宅内按 E 调查。失败或用光金币时按 R，观察余额与任务状态回到本次潜入起点。
+
+## 第六阶段叙述接入流程
+
+[修改版第六阶段](../design/day_01_story_flow_revised.md)开头三处叙述原先只停在源稿与工程的 `source_markdown`，没有进入可播步骤：主角带血返回后的琢磨、胖哥布林到店取货、递交与闻味期待。本轮按原文逐字补为旁白文本框，接入既有事件，不新增台词、动作、坐标或音效：
+
+- `s06_pondering`：新增对白 `day1.s06.pondering`（两个旁白节点），在 `set_stage day1.s06.wait_craft` 之前播放。
+- `s06_customer_arrives`：`actor_show fat_goblin` 之后新增对白 `day1.s06.customer`（一个旁白节点），再进入 `day1.s06.wait_delivery`。
+- `s06_reaction`：对白 `day1.s06.reaction` 前置旁白节点「主角将刚做好的特调递给他……满脸期待。」，接原有胖哥布林台词。
+
+第六阶段的异常表现、帮助休息与章节结束仍按 [P10](../story_authoring/day_01_integration_pending.md#p10) 开放；`day1.s06.completed` 与换天步骤未改动。工程、运行时 Story / Dialogue 与 [Beat 清单](../story_authoring/day1_stages_03_06_bridge.json)区间同步更新，工程散列刷新为 `60181e7989f96693240ff6c00be3e6247cba59e02c8a2a2c2910f695723de1d3`。
+
+本机没有 Godot 可执行文件，`validate_story.gd` 与 `verify_two_day_flow.gd` 本轮未执行。已按 `StoryProject.compile()` 的规则重放编译，核对编译产物与工程一致、旁白 `start` / `next` 有效、Story 引用的对白全部存在、Beat 区间连续覆盖；引擎侧校验待有 Godot 环境时补做。
+
+## 第六阶段文案改写与报酬预付
+
+第六阶段开头按新稿改写：主角回到店里时胖哥布林已经在场，两人就路上的醉酒守卫争执一轮，胖哥布林当场把报酬付清，再催主角做特调。原「回店琢磨」「到店取货」「递饮料闻味」三段叙述由新文案取代。
+
+- 对白：`day1.s06.pondering` 扩为 16 个节点（旁白与双方台词交替）；新增 `day1.s06.reward_arrived`（系统提示 + 主角回应 + 胖哥布林催促）。删除 `day1.s06.customer` 与 `day1.s06.reaction` 的前置旁白，`s06_customer_arrives` 只保留 `actor_show` 与 `set_stage`。胖哥布林改在 `s06_pondering` 开场 `actor_show`，与「立刻凑了过来」一致。
+- 新增 Story 指令 `grant_money`（`amount`、`receipt`），经 `StoryBusinessAdapter` 调 `WalletTransactions.add_money`，receipt 同时作为钱包请求号与步骤事实，重放不重复入账。校验在 `story_library.gd`，分发在 `story_director.gd`。
+- 业务顺序：`s06_pondering` 播完「说好的报酬，一分不少！」后执行 `grant_money` 100G（receipt `day1.s06.reward_paid`），再接系统提示与后续对白。任务 `day1_s06_blood_drink` 的 `rewards.money` 由 100 改为 0，订单板文案改为「委托报酬 100G（委托时已预付）」；总收益仍是 121G，只把到账时点提前到委托。
+- 「主角开始做特调、然后把它给胖哥布林」按玩法节拍留在源稿与 Beat 说明，不作为旁白播放，制作与交付仍走原 Bridge 两段。
+- 旁白不以「主角」作主语：开场改为「带着格里芬之血回到了奶茶店时，一直惦记着这件事的胖哥布林立刻凑了过来。」，「拿出格里芬之血。」，reaction 的「赶紧放下手里的东西……」「……也不敢再让他碰那杯饮料。」同步去主语。
+- 测试：`verify_story_business.gd` 增加 `grant_money` 的合法/非法校验、未绑定拒绝、入账与重放幂等；`verify_two_day_flow.gd` 的 121G 断言保留，描述改为预付不重复计酬。
+
+本机没有 Godot 可执行文件，本轮未执行 `validate_story.gd`、`verify_story_business.gd` 与 `verify_two_day_flow.gd`。已按 `StoryProject.compile()` 重放编译并核对：对白 `start`/`next` 有效、Story 引用的对白全部存在、Beat 区间连续覆盖、工程与源稿散列同步（源稿 `53176857…`、工程 `b33eb112…`）。引擎侧与真实付款路径待有 Godot 环境时补验。
 
 ## 实际验证
 

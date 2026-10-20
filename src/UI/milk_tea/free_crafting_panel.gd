@@ -51,16 +51,18 @@ func _ready() -> void:
 	_ice_option.add_item("不加冰")
 	_ice_option.add_item("加冰")
 	_ice_option.item_selected.connect(func(_index: int) -> void:
-		_result.text = ""
+		_clear_result()
 		_refresh_preview())
 	ice_row.add_child(_ice_option)
 	# 制作按钮固定在底部；配方详情与选料一起滚动。
 	_preview = Label.new()
 	_preview.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	content.add_child(_preview)
+	# 制作结果是一次性反馈：放在固定位置，不跟预览一起滚出可视区或被滚动区下沿切断。
 	_result = Label.new()
 	_result.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	content.add_child(_result)
+	_result.visible = false
+	add_child(_result)
 	var actions := HBoxContainer.new()
 	add_child(actions)
 	var clear := Button.new()
@@ -160,7 +162,7 @@ func _choice_tooltip(choice: Dictionary) -> String:
 func _on_slot_selected(item: int, slot: int) -> void:
 	_selected[slot] = str(_options[slot].get_item_metadata(item))
 	_refresh_slot_image(slot)
-	_result.text = ""
+	_clear_result()
 	_refresh_preview()
 
 func _refresh_slot_image(slot: int) -> void:
@@ -187,7 +189,7 @@ func select_formula(materials: Array, iced := false) -> bool:
 	_selected.clear()
 	_selected.assign(materials)
 	_ice_option.select(1 if iced else 0)
-	_result.text = ""
+	_clear_result()
 	refresh()
 	# 带着配方进来时从基底看起，不要让焦点把上一行顶出可视区。
 	if is_instance_valid(_scroll):
@@ -216,27 +218,31 @@ func _refresh_preview() -> void:
 	_craft.disabled = not result.ok or not priced
 	_confirm.disabled = not quote.get("ok", false) or priced or not can_confirm
 	_confirm.tooltip_text = pricing_hint
+	var lines := PackedStringArray()
 	if result.has("name"):
-		_preview.text = DrinkFormula.describe(result, false)
+		lines.append(DrinkFormula.describe(result, false))
 		if priced:
-			_preview.text += "\n售价：%dG（已固定）" % int(quote.get("selling_price", 0))
+			lines.append("售价：%dG（已固定）" % int(quote.get("selling_price", 0)))
 		elif quote.get("ok", false):
-			_preview.text += "\n价格范围：%d–%dG，确认后固定" % [int(quote.get("minimum", 0)), int(quote.get("maximum", 0))]
-	else:
-		_preview.text = str(result.get("message", ""))
+			lines.append("价格范围：%d–%dG，确认后固定" % [int(quote.get("minimum", 0)), int(quote.get("maximum", 0))])
+	elif not (materials.is_empty() and not _result.text.is_empty()):
+		# 刚做完一杯时结果行已经说明了状态，预览不再重复喊“请选择一个基底”。
+		lines.append(str(result.get("message", "")))
 	if not result.ok and result.has("name"):
-		_preview.text += "\n" + str(result.get("message", ""))
+		lines.append(str(result.get("message", "")))
 	if not pricing_hint.is_empty():
-		_preview.text += "\n" + pricing_hint
+		lines.append(pricing_hint)
 	elif result.ok and not priced:
-		_preview.text += "\n请先确认报价，之后才能制作。"
+		lines.append("请先确认报价，之后才能制作。")
 	if not _order_requirement.is_empty():
 		var names := {}
 		for id: String in [str(_order_requirement.get("base_id", ""))]:
 			names[id] = _production.get_inventory().get_ingredient_view(id).get("name", id)
-		_preview.text += "\n当前订单：" + DrinkFormula.requirement_text(_order_requirement, names)
+		lines.append("当前订单 · " + DrinkFormula.requirement_text(_order_requirement, names))
 		if result.ok:
-			_preview.text += "\n这杯符合当前订单，制作后可交付。" if DrinkFormula.matches(result, _order_requirement) else "\n这杯尚不符合当前订单，请核对基底、风味和效果。"
+			lines.append("这杯符合当前订单，制作后可交付。" if DrinkFormula.matches(result, _order_requirement) else "这杯尚不符合当前订单，请核对基底、风味和效果。")
+	_preview.text = "\n".join(lines)
+	_preview.visible = not _preview.text.is_empty()
 
 ## The tracked order remains visible while freely choosing ingredients.
 func set_order_requirement(requirement: Dictionary) -> void:
@@ -248,13 +254,23 @@ func set_order_requirement(requirement: Dictionary) -> void:
 
 func submit() -> void:
 	if _craft.disabled:
-		_result.text = "这份委托特调不加冰，请把冰块改回「不加冰」。" if _experiment else "请先确认报价，之后才能制作。"
+		_show_result_text("这份委托特调不加冰，请把冰块改回「不加冰」。" if _experiment else "请先确认报价，之后才能制作。", false)
 		return
 	formula_requested.emit(get_materials(), is_iced())
+
+## 结果行只在有内容时占位，避免空标签在按钮上方留出一条空行。
+func _show_result_text(text: String, succeeded: bool) -> void:
+	_result.text = text
+	_result.theme_type_variation = &"Success" if succeeded else (&"Warning" if not text.is_empty() else &"")
+	_result.visible = not text.is_empty()
+
+func _clear_result() -> void:
+	_show_result_text("", false)
 
 ## 委托特调按固定成品结算：配方即报价，制作后进共享库存，不需要单独确认价格。
 func _show_experiment_preview(special: Dictionary, materials: Array[String]) -> void:
 	var product_name := str(special.get("product_name", ""))
+	_preview.visible = true
 	_confirm.disabled = true
 	_confirm.tooltip_text = "委托特调按配方直接制作，不需要单独报价。"
 	if is_iced():
@@ -283,8 +299,7 @@ func set_mission_hint(text: String) -> void:
 		_refresh_preview()
 
 func show_result(result: Dictionary) -> void:
-	_result.text = str(result.get("message", ""))
-	_result.theme_type_variation = &"Success" if result.get("ok", false) else &"Warning"
+	_show_result_text(str(result.get("message", "")), bool(result.get("ok", false)))
 	if bool(result.get("ok", false)) and _experiment:
 		# 委托只做一杯，成品入库后清空选料，避免下一帧又显示“仅制作一杯”。
 		_selected.clear()
@@ -313,6 +328,9 @@ func get_ice_option() -> OptionButton:
 
 func get_preview() -> Label:
 	return _preview
+
+func get_result() -> Label:
+	return _result
 
 func get_craft_button() -> Button:
 	return _craft

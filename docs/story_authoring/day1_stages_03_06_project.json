@@ -1,7 +1,7 @@
 {
 	"version": 1.0,
 	"format": "goblin_story_project",
-	"next_step_id": 24030.0,
+	"next_step_id": 24037.0,
 	"manifest": {
 		"version": 1.0,
 		"source": "res://docs/design/day_01_stages_03_06_draft.md",
@@ -957,6 +957,35 @@
 			"event": "day1.s06.pondering",
 			"steps": [
 				{
+					"id": "step_24033",
+					"data": {
+						"command": "actor_show",
+						"actor": "fat_goblin"
+					}
+				},
+				{
+					"id": "step_24034",
+					"data": {
+						"command": "dialogue",
+						"id": "day1.s06.pondering"
+					}
+				},
+				{
+					"id": "step_24035",
+					"data": {
+						"command": "grant_money",
+						"amount": 100,
+						"receipt": "day1.s06.reward_paid"
+					}
+				},
+				{
+					"id": "step_24036",
+					"data": {
+						"command": "dialogue",
+						"id": "day1.s06.reward_arrived"
+					}
+				},
+				{
 					"id": "step_10036",
 					"data": {
 						"command": "set_stage",
@@ -1785,6 +1814,91 @@
 				}
 			}
 		},
+		"day1.s06.pondering": {
+			"start": "line_1",
+			"lines": {
+				"line_1": {
+					"speaker": "旁白",
+					"text": "带着格里芬之血回到了奶茶店时，一直惦记着这件事的胖哥布林立刻凑了过来。",
+					"next": "line_2"
+				},
+				"line_2": {
+					"speaker": "胖哥布林",
+					"text": "怎么样？东西弄到手了吗？",
+					"next": "line_3"
+				},
+				"line_3": {
+					"speaker": "旁白",
+					"text": "拿出格里芬之血。",
+					"next": "line_4"
+				},
+				"line_4": {
+					"speaker": "主角",
+					"text": "弄到了。不过，路上差点出了点麻烦。",
+					"next": "line_5"
+				},
+				"line_5": {
+					"speaker": "胖哥布林",
+					"text": "麻烦？！",
+					"next": "line_6"
+				},
+				"line_6": {
+					"speaker": "主角",
+					"text": "碰上了个喝得醉醺醺的守卫，差点被他拦下来。话说也是奇了，他不想要钱，就想要我给他找点材料配一杯奶茶……",
+					"next": "line_7"
+				},
+				"line_7": {
+					"speaker": "旁白",
+					"text": "胖哥布林一听，顿时瞪大了眼睛。",
+					"next": "line_8"
+				},
+				"line_8": {
+					"speaker": "胖哥布林",
+					"text": "什么？！身为伟大的格里芬守卫者，竟然敢喝酒？简直是玩忽职守！格里芬的威严何在？！",
+					"next": "line_9"
+				},
+				"line_9": {
+					"speaker": "主角",
+					"text": "原来关注点居然在喝醉酒上吗……不过话说你还好意思说？那你让我去偷格里芬之血又算什么？",
+					"next": "line_10"
+				},
+				"line_10": {
+					"speaker": "旁白",
+					"text": "胖哥布林顿时压低声音，紧张地四下张望。",
+					"next": "line_11"
+				},
+				"line_11": {
+					"speaker": "胖哥布林",
+					"text": "嘘！你可别乱说！愿格里芬垂顾你的嘴！",
+					"next": "line_12"
+				},
+				"line_12": {
+					"speaker": "主角",
+					"text": "我说错了吗？",
+					"next": "line_13"
+				},
+				"line_13": {
+					"speaker": "胖哥布林",
+					"text": "胖哥布林的事，能算偷么？这叫……这叫替伟大的格里芬分忧！",
+					"next": "line_14"
+				},
+				"line_14": {
+					"speaker": "主角",
+					"text": "行吧……反正为了帮你，我差点被抓。总得给我点表示吧？",
+					"next": "line_15"
+				},
+				"line_15": {
+					"speaker": "旁白",
+					"text": "胖哥布林连连点头。",
+					"next": "line_16"
+				},
+				"line_16": {
+					"speaker": "胖哥布林",
+					"text": "当然！当然！说好的报酬，一分不少！",
+					"next": ""
+				}
+			}
+		},
 		"day1.s06.reaction": {
 			"start": "line_1",
 			"lines": {
@@ -1850,12 +1964,12 @@
 				},
 				"narration_line_3": {
 					"speaker": "旁白",
-					"text": "胖哥布林倒在地上，四肢仍在抽搐。主角赶紧放下手里的东西，想把他扶起来，却又不知道该从哪里下手。",
+					"text": "胖哥布林倒在地上，四肢仍在抽搐。赶紧放下手里的东西，想把他扶起来，却又不知道该从哪里下手。",
 					"next": "line_4"
 				},
 				"narration_line_5": {
 					"speaker": "旁白",
-					"text": "过了好一阵，胖哥布林的抽搐才逐渐缓和。他仍然虚弱得说不出话，主角也不敢再让他碰那杯饮料。",
+					"text": "过了好一阵，胖哥布林的抽搐才逐渐缓和。他仍然虚弱得说不出话，也不敢再让他碰那杯饮料。",
 					"next": ""
 				}
 			}
@@ -2098,8 +2212,8 @@
 				"line_1": {
 					"speaker": "男人",
 					"text": "唉……再来一杯。",
-					"next": "line_2",
-					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_2"
 				},
 				"line_2": {
 					"speaker": "主角",
@@ -2114,26 +2228,26 @@
 				"line_4": {
 					"speaker": "男人",
 					"text": "……",
-					"next": "line_5",
-					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_5"
 				},
 				"line_5": {
 					"speaker": "男人",
 					"text": "她不喜欢孩子。我一直想要一个孩子，你知道吗？我想过家里有个小家伙，会跑，会闹腾，会把屋子弄得乱七八糟……",
-					"next": "line_6",
-					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_6"
 				},
 				"line_6": {
 					"speaker": "男人",
 					"text": "她却总说，光是照顾好我们自己就已经够累了。",
-					"next": "line_7",
-					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_7"
 				},
 				"line_7": {
 					"speaker": "男人",
 					"text": "现在想想，也没什么好争的。",
-					"next": "line_8",
-					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_8"
 				},
 				"line_8": {
 					"speaker": "主角",
@@ -2143,26 +2257,26 @@
 				"line_9": {
 					"speaker": "男人",
 					"text": "……",
-					"next": "line_10",
-					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_10"
 				},
 				"line_10": {
 					"speaker": "男人",
 					"text": "我总忘记买她交代的东西。明明出门前还记得，走到店里就忘了。",
-					"next": "line_11",
-					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_11"
 				},
 				"line_11": {
 					"speaker": "男人",
 					"text": "我总觉得这算不上什么大事……可她每次都很失望。",
-					"next": "line_12",
-					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_12"
 				},
 				"line_12": {
 					"speaker": "男人",
 					"text": "后来她变得越来越较真，连我周末能不能去钓鱼，我的靴子怎么放，都要管得严严实实。",
-					"next": "line_13",
-					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_13"
 				},
 				"line_13": {
 					"speaker": "主角",
@@ -2172,50 +2286,50 @@
 				"line_14": {
 					"speaker": "男人",
 					"text": "奇怪。",
-					"next": "line_15",
-					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_15"
 				},
 				"line_15": {
 					"speaker": "男人",
 					"text": "我怎么记得这么多？",
-					"next": "line_16",
-					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_16"
 				},
 				"line_16": {
 					"speaker": "男人",
 					"text": "明明都是些没什么意思的小事……房子、家务、饭菜，还有那些说过就忘的话。",
-					"next": "line_17",
-					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_17"
 				},
 				"line_17": {
 					"speaker": "男人",
 					"text": "怎么会变成这样呢？",
-					"next": "line_18",
-					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_18"
 				},
 				"line_18": {
 					"speaker": "男人",
 					"text": "我们以前明明……不是这样的。",
-					"next": "line_19",
-					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_19"
 				},
 				"line_19": {
 					"speaker": "男人",
 					"text": "刚认识的时候，我为了送她一份礼物，能努力攒下几个月的工钱。她也会为了见我一面，在黄昏时偷偷绕过一整座村子。",
-					"next": "line_20",
-					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_20"
 				},
 				"line_20": {
 					"speaker": "男人",
 					"text": "我们没有谁突然变成了坏人，但是事情就这样发生了。",
-					"next": "line_21",
-					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_21"
 				},
 				"line_21": {
 					"speaker": "男人",
 					"text": "……抱歉。",
-					"next": "line_22",
-					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_22"
 				},
 				"line_22": {
 					"speaker": "主角",
@@ -2225,8 +2339,8 @@
 				"line_23": {
 					"speaker": "男人",
 					"text": "我今天喝多了，对你说这些乱七八糟的东西。",
-					"next": "line_24",
-					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_24"
 				},
 				"line_24": {
 					"speaker": "主角",
@@ -2236,13 +2350,93 @@
 				"line_25": {
 					"speaker": "男人",
 					"text": "……",
-					"next": "line_26",
-					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_26"
 				},
 				"line_26": {
 					"speaker": "男人",
 					"text": "我很想念我们曾经拥有过，又无可奈何失去的一切。",
-					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png"
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_27"
+				},
+				"line_27": {
+					"speaker": "主角",
+					"text": "……",
+					"next": "line_28"
+				},
+				"line_28": {
+					"speaker": "主角",
+					"text": "你想来一杯奶茶吗？",
+					"next": "line_29"
+				},
+				"line_29": {
+					"speaker": "男人",
+					"text": "……谢了，我就有酒够了。",
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_30"
+				},
+				"line_30": {
+					"speaker": "主角",
+					"text": "失意的人总喜欢点草莓奶绿，甜味能让人暂时忘掉生活的不幸。",
+					"next": "line_31"
+				},
+				"line_31": {
+					"speaker": "男人",
+					"text": "……",
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_32"
+				},
+				"line_32": {
+					"speaker": "男人",
+					"text": "说到甜的东西……她以前最爱吃蜜珀晶做的甜点了。",
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_33"
+				},
+				"line_33": {
+					"speaker": "男人",
+					"text": "那时候，我攒了好久的钱，才能给她买上一小块。现在我有点钱了，却没有理由这么做了。",
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_34"
+				},
+				"line_34": {
+					"speaker": "主角",
+					"text": "真是酸涩又甜蜜。我帮你做一杯纪念过去的特调，把这两种味道都留下来吧。",
+					"next": "line_35"
+				},
+				"line_35": {
+					"speaker": "男人",
+					"text": "……我倒是想起一样东西。",
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_36"
+				},
+				"line_36": {
+					"speaker": "男人",
+					"text": "苔痕青。石缝里的青苔，带着一点淡淡的酸味。",
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_37"
+				},
+				"line_37": {
+					"speaker": "男人",
+					"text": "她说那道味道古怪得很，可每次还是忍不住去试。",
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_38"
+				},
+				"line_38": {
+					"speaker": "主角",
+					"text": "那就这么定了。草莓果酱、蜜珀晶，再加上一点苔痕青。",
+					"next": "line_39"
+				},
+				"line_39": {
+					"speaker": "男人",
+					"text": "……听起来倒是不错。",
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": "line_40"
+				},
+				"line_40": {
+					"speaker": "男人",
+					"text": "如果真能做出来，麻烦你也让我尝一口吧。",
+					"portrait": "res://assets/characters/npc/tavern_drinker/portrait.png",
+					"next": ""
 				}
 			}
 		},
@@ -2981,6 +3175,31 @@
 				"line_1": {
 					"speaker": "系统",
 					"text": "【异世界见闻录更新】新增：格里芬之血。"
+				}
+			}
+		},
+		"day1.s06.reward_arrived": {
+			"start": "line_1",
+			"lines": {
+				"line_1": {
+					"speaker": "系统提示",
+					"text": "委托报酬 100G 已到账。",
+					"next": "line_2"
+				},
+				"line_2": {
+					"speaker": "主角",
+					"text": "这还差不多。",
+					"next": "line_3"
+				},
+				"line_3": {
+					"speaker": "旁白",
+					"text": "胖哥布林的目光重新落在格里芬之血上，神情又变得期待起来。",
+					"next": "line_4"
+				},
+				"line_4": {
+					"speaker": "胖哥布林",
+					"text": "好了好了，快把它做成特调吧！我早就等不及了！",
+					"next": ""
 				}
 			}
 		}

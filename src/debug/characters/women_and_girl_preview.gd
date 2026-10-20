@@ -27,7 +27,7 @@ func _ready() -> void:
 		_director.actor_register(actor.actor_id, actor)
 		_label(actor.display_name, Vector2(x - 50, 318))
 		_preview(actor)
-	_label("祭坛同伴缺独立走路图，移动沿用本人待机", Vector2(20, 340))
+	_label("祭坛同伴无正面走路图，down 移动沿用本人待机", Vector2(20, 340))
 
 func _label(text: String, at: Vector2) -> void:
 	var label := Label.new()

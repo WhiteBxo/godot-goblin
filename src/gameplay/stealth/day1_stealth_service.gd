@@ -16,6 +16,10 @@ signal retry_travel_requested
 
 enum Status { IDLE, PENDING, RUNNING, FAILED, INTERCEPTED, ESCAPED }
 
+## Share of the throw range used when the pointer gives no usable landing point.
+## Far enough to reach a guard in front, short enough to stay inside the ring.
+const FALLBACK_AIM_RATIO := 0.6
+
 var status: Status = Status.IDLE
 ## Forwarded from the player's held slot; this scene never keeps its own copy.
 var selected_kind: StringName:
@@ -207,6 +211,37 @@ func request_throw(target: Vector2) -> Error:
 	_target_override = null
 	return OK if accepted else ERR_BUSY
 
+## Where the pointer currently lands. A keyboard player's mouse usually rests
+## over the HUD panel, so this is rarely a legal landing point.
+func get_aim_target() -> Vector2:
+	return _effects.get_global_mouse_position() if is_instance_valid(_effects) else get_fallback_target()
+
+## Landing point used when the pointer is not legal: straight ahead of the body.
+## The design allows "固定落点或简单瞄准一次"; refusing outright is what made
+## F look broken while the mouse sat anywhere outside the ring.
+func get_fallback_target() -> Vector2:
+	if not is_instance_valid(_player) or not is_instance_valid(_setup):
+		return Vector2.ZERO
+	var reach := maxf(_setup.throw_range * FALLBACK_AIM_RATIO, 32.0)
+	return _player.global_position + _player.get_facing_vector() * reach
+
+## Facing-direction landing point for the HUD button: the pointer is on the
+## button itself when this is called, so an out-of-range aim uses the body.
+func throw_at_aim() -> Error:
+	var target := get_aim_target()
+	if not _valid_target(target):
+		target = get_fallback_target()
+	if not _valid_target(target):
+		_refuse("这里没法投掷")
+		return ERR_UNAVAILABLE
+	return request_throw(target)
+
+## Same resolution the release uses, so the reticle can never promise a landing
+## the service would refuse.
+func resolve_aim() -> Vector2:
+	var target := get_aim_target()
+	return target if _valid_target(target) else get_fallback_target()
+
 func begin_attempt() -> Error:
 	if status in [Status.RUNNING, Status.FAILED, Status.INTERCEPTED, Status.ESCAPED] or _releasing or not _external_control_available():
 		return ERR_BUSY
@@ -358,9 +393,9 @@ func _on_action_started(action: StringName, _direction: Vector2) -> void:
 	if not _player.has_held():
 		_refuse("没有手持物品，先在面板里选一个投掷物")
 		return
-	var target: Vector2 = _target_override if _target_override is Vector2 else _effects.get_global_mouse_position()
+	var target: Vector2 = _target_override if _target_override is Vector2 else resolve_aim()
 	if not _valid_target(target):
-		_refuse("落点超出投掷范围：鼠标要放进角色 %d 像素内" % int(_setup.throw_range))
+		_refuse("这里没法投掷：换个位置再试")
 		return
 	_pending_throw = {"kind": selected_kind, "target": target}
 	if selected_kind == &"drink":
@@ -445,7 +480,7 @@ func _update_aim() -> void:
 	if not can_accept_input() or not _player.has_held() or not _player.is_visible_in_tree():
 		_aim.present(Vector2.ZERO, false, false)
 		return
-	var target: Vector2 = _target_override if _target_override is Vector2 else _effects.get_global_mouse_position()
+	var target: Vector2 = _target_override if _target_override is Vector2 else resolve_aim()
 	_aim.present(target, _valid_target(target), true)
 
 func _resolve_impact(result: Dictionary) -> void:

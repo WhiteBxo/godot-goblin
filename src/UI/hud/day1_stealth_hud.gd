@@ -42,11 +42,20 @@ var _refresh_now := false
 @onready var _rule: Control = $Panel/Content/Rule
 
 func _ready() -> void:
-	_coin.pressed.connect(func() -> void: _service.select_throwable(&"coin"))
-	_torch.pressed.connect(func() -> void: _service.select_throwable(&"torch"))
+	_coin.pressed.connect(_on_throwable_pressed.bind(&"coin"))
+	_torch.pressed.connect(_on_throwable_pressed.bind(&"torch"))
 	_retry.pressed.connect(func() -> void: _service.retry_attempt())
 	_start.pressed.connect(func() -> void: _service.begin_attempt())
 	_drinks.item_selected.connect(_on_drink_selected)
+
+## The button is the panel's only throw control, so it selects first and throws
+## on the second press: one click never spends a coin by accident, and the label
+## then reads "点此投出". Throwing never depends on where the pointer sits.
+func _on_throwable_pressed(kind: StringName) -> void:
+	if _service.selected_kind == kind:
+		_service.throw_at_aim()
+		return
+	_service.select_throwable(kind)
 
 func configure(service: Day1StealthService) -> void:
 	_service = service
@@ -174,7 +183,7 @@ func _refresh_actions(setup: Day1StealthSetup) -> void:
 		# nothing" looked like, so the balance owns the label and the state.
 		var balance := _service.get_coin_balance()
 		if balance >= WalletTransactions.COIN_FACE_VALUE:
-			_coin.text = "投掷金币 · %dG%s" % [WalletTransactions.COIN_FACE_VALUE, " · 已选" if _service.selected_kind == &"coin" else ""]
+			_coin.text = "投掷金币 · %dG%s" % [WalletTransactions.COIN_FACE_VALUE, " · 点此投出" if _service.selected_kind == &"coin" else ""]
 		else:
 			_coin.text = "金币不足 · 当前 %dG" % balance
 			_coin.disabled = true

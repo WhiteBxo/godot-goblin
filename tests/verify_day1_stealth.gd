@@ -166,6 +166,11 @@ func _run() -> void:
 	_check(refusals.size() == 1 and refusals[0].contains("暂时不能投掷"), "A refused throw reports its reason to the panel")
 	await _until(func() -> bool: return _player.get_active_action().is_empty(), "Refused throw pose finishes")
 	_external_lock = false
+	# The pointer usually rests over the HUD panel, so an unusable aim must still
+	# resolve to a legal landing point instead of cancelling the throw.
+	var fallback := _service.get_fallback_target()
+	_check(_service._valid_target(fallback) and fallback.distance_to(_player.global_position) > 1.0, "An unusable pointer still yields a legal landing point in front of the body")
+	_check(_service.resolve_aim().is_finite(), "Aim resolution never returns a broken point")
 	var entry := _setup.guards[0]
 	var target := _setup.flammable_targets[0]
 	var coins := _inventory.get_stock("strange_coin")

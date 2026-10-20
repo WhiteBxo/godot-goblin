@@ -179,7 +179,7 @@ func _refresh_guards(setup: Day1StealthSetup) -> void:
 			elif guard.state != Day1GuardResponse.State.WATCHING:
 				watches.append("%s：%s" % [guard.actor.display_name, guard.get_feedback_text()])
 	if cleared > 0:
-		watches.append("已被放行 %d 名" % cleared)
+		watches.append("%d 名守卫已放行" % cleared)
 	_guards.text = " · ".join(watches)
 	_guards.visible = not watches.is_empty()
 

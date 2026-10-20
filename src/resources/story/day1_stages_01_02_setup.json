@@ -4,7 +4,9 @@
     "goblin_customer",
     "goblin_a",
     "goblin_b",
-    "goblin_c"
+    "goblin_c",
+    "goblin_d",
+    "goblin_e"
   ],
   "checkpoints": [
     {
@@ -13,12 +15,31 @@
       "actors": {}
     },
     {
+      "event": "day1.customer_e",
+      "stage": "day1.wait_group_e",
+      "actors": {
+        "goblin_e": "day1_counter"
+      }
+    },
+    {
+      "event": "day1.customer_d",
+      "stage": "day1.wait_group_d",
+      "actors": {
+        "goblin_d": "day1_counter"
+      }
+    },
+    {
+      "event": "day1.customer_c",
+      "stage": "day1.wait_group_c",
+      "actors": {
+        "goblin_c": "day1_counter"
+      }
+    },
+    {
       "event": "day1.group_arrival",
       "stage": "day1.wait_group",
       "actors": {
-        "goblin_a": "day1_group_a",
-        "goblin_b": "day1_group_b",
-        "goblin_c": "day1_group_c"
+        "goblin_a": "day1_counter"
       }
     },
     {
@@ -45,8 +66,9 @@
     {
       "orders": [
         "day1_group_a",
-        "day1_group_b",
-        "day1_group_c"
+        "day1_group_c",
+        "day1_group_d",
+        "day1_group_e"
       ],
       "completion_flag": "day1.group_settled"
     }

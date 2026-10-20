@@ -7,3 +7,9 @@
 
 # Local assistant workspace and memory
 .workbuddy/
+
+# Local export builds and playtest packages
+/dist/
+
+# Python bytecode from tests/run_all.py and the verifier scripts
+__pycache__/

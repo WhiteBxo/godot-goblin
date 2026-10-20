@@ -24,6 +24,12 @@ var _effects: Dictionary = {}
 func configure(parameters: Dictionary, distance_scale: float = 1.0) -> void:
 	payload = parameters.duplicate(true)
 	_distance_scale = distance_scale
+	if payload.is_empty():
+		# A historical cup without throw parameters must not become a live zero
+		# timer that keeps pulsing and querying physics forever.
+		finished = true
+		remaining = 0.0
+		return
 	_cell = float(payload.cell) * _distance_scale
 	_side = float(payload.area_cells) * _cell
 	_max_duration = float(payload.max_duration)

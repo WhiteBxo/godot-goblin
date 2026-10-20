@@ -26,6 +26,9 @@ func _run() -> void:
 	_map = main.get_active_level() as SettlementMap
 	_player = main.get_player() as ShopPlayer
 	_check(_map != null and _player != null, "MainGame must assemble the new settlement")
+	if _map == null or _player == null:
+		quit(1)
+		return
 	_check(_map.get_node("Districts").get_child_count() == 16, "All 15 reference regions plus the shop must be present")
 	_check(_map.get_node("Ground").get_used_cells().size() > 700, "Continuous editable ground must be saved in the scene")
 	_query.shape = _player.get_node("CollisionShape2D").shape

@@ -5,7 +5,7 @@
       "id": "day1.s03.explore",
       "type": "main",
       "title": "店门外的陌生世界",
-      "description": "店外灯亮着，去摊位和岔路看看，再回奶茶店。",
+      "description": "先在市场看一圈，再回奶茶店。无需与小贩交谈或接取任务。",
       "reveal_when": {
         "type": "flag",
         "key": "day1.stages_01_02_completed"
@@ -20,44 +20,22 @@
       },
       "objectives": [
         {
-          "id": "exit",
-          "text": "店外好像不太对劲",
-          "complete_when": {
-            "type": "flag",
-            "key": "day1.s03.exited_shop"
-          }
-        },
-        {
-          "id": "yard",
-          "text": "去亮着灯的摊位看看",
+          "id": "market",
+          "text": "看看店门口的集市",
           "complete_when": {
             "type": "flag",
             "key": "day1.s03.observed_yard"
-          }
-        },
-        {
-          "id": "street",
-          "text": "认清主街与岔路的方向",
-          "complete_when": {
-            "type": "flag",
-            "key": "day1.s03.observed_street"
-          }
-        },
-        {
-          "id": "path",
-          "text": "去昏暗的岔路口看看",
-          "complete_when": {
-            "type": "flag",
-            "key": "day1.s03.observed_path"
-          }
+          },
+          "location_id": "settlement.yard"
         },
         {
           "id": "return",
-          "text": "回奶茶店，和胖哥布林谈谈",
+          "text": "回奶茶店",
           "complete_when": {
             "type": "flag",
             "key": "day1.s03.returned_shop"
-          }
+          },
+          "location_id": "settlement.shop"
         }
       ]
     },
@@ -86,7 +64,7 @@
       },
       "rewards": {
         "money": 3,
-        "text": "营业收入 3G"
+        "text": "3G"
       },
       "objectives": [
         {
@@ -96,6 +74,45 @@
           "complete_when": {
             "type": "flag",
             "key": "day1.s04.order_delivered"
+          }
+        }
+      ]
+    },
+    {
+      "id": "day1.s04.taste",
+      "type": "main",
+      "title": "哥布林食材试饮 → 胖哥布林",
+      "description": "在制作台用奶茶基底、萤火伞与老火烧各一次用量试做，交给胖哥布林。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day1.s04.taste_open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day1.s04.taste_open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day1.s04.taste_delivered"
+      },
+      "delivery": {
+        "order_id": "day1_s04_taste",
+        "product_id": "day1_trial_milk_tea",
+        "target_object_id": "fat_goblin",
+        "accepted_flag": "day1.s04.taste_accepted"
+      },
+      "rewards": {
+        "text": "完成食材试饮",
+        "money": 0
+      },
+      "objectives": [
+        {
+          "id": "deliver",
+          "text": "试做并交付",
+          "location_id": "settlement.shop",
+          "complete_when": {
+            "type": "flag",
+            "key": "day1.s04.taste_delivered"
           }
         }
       ]
@@ -164,6 +181,35 @@
           "complete_when": {
             "type": "flag",
             "key": "day1.s05.escape_completed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "day1.s05.return_shop",
+      "type": "main",
+      "title": "带着材料回店",
+      "description": "已经安全撤离，带着取得的材料回奶茶店。",
+      "reveal_when": {
+        "type": "flag",
+        "key": "day1.s05.escape_completed"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day1.s05.escape_completed"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day1.s05.returned_shop"
+      },
+      "objectives": [
+        {
+          "id": "return",
+          "text": "回奶茶店",
+          "location_id": "settlement.shop",
+          "complete_when": {
+            "type": "flag",
+            "key": "day1.s05.returned_shop"
           }
         }
       ]

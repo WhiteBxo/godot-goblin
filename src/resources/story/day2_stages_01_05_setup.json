@@ -66,6 +66,26 @@
     {
       "id": "day2.s05.unsolved",
       "host": "shop"
+    },
+    {
+      "id": "day2.procurement.recipe",
+      "host": "shop"
+    },
+    {
+      "id": "day2.procurement.recipe",
+      "host": "settlement"
+    },
+    {
+      "id": "day2.procurement.recipe",
+      "host": "tavern"
+    },
+    {
+      "id": "day2.procurement.recipe",
+      "host": "casino"
+    },
+    {
+      "id": "day2.procurement.recipe",
+      "host": "elder_house"
     }
   ],
   "derived_facts": [],
@@ -74,7 +94,7 @@
       "host": "shop",
       "stage": "day2.s01",
       "actors": {
-        "fat_goblin": "day1_rest",
+        "fat_goblin": "day2_bedroom_rest",
         "human_customer": null,
         "goblin_customer": null,
         "goblin_a": null,
@@ -96,70 +116,70 @@
       "host": "shop",
       "stage": "day2.s02.open",
       "actors": {
-        "fat_goblin": "day1_rest"
+        "fat_goblin": "day2_bedroom_rest"
       }
     },
     {
       "host": "shop",
       "stage": "day2.s02.festival.arriving",
       "actors": {
-        "fat_goblin": "day1_rest"
+        "fat_goblin": "day2_bedroom_rest"
       }
     },
     {
       "host": "shop",
       "stage": "day2.s02.wait_festival",
       "actors": {
-        "fat_goblin": "day1_rest"
+        "fat_goblin": "day2_bedroom_rest"
       }
     },
     {
       "host": "shop",
       "stage": "day2.s02.elder.arriving",
       "actors": {
-        "fat_goblin": "day1_rest"
+        "fat_goblin": "day2_bedroom_rest"
       }
     },
     {
       "host": "shop",
       "stage": "day2.s02.wait_elder",
       "actors": {
-        "fat_goblin": "day1_rest"
+        "fat_goblin": "day2_bedroom_rest"
       }
     },
     {
       "host": "shop",
       "stage": "day2.s02.emissary.arriving",
       "actors": {
-        "fat_goblin": "day1_rest"
+        "fat_goblin": "day2_bedroom_rest"
       }
     },
     {
       "host": "shop",
       "stage": "day2.s02.wait_emissary",
       "actors": {
-        "fat_goblin": "day1_rest"
+        "fat_goblin": "day2_bedroom_rest"
       }
     },
     {
       "host": "shop",
       "stage": "day2.s02.rumor.arriving",
       "actors": {
-        "fat_goblin": "day1_rest"
+        "fat_goblin": "day2_bedroom_rest"
       }
     },
     {
       "host": "shop",
       "stage": "day2.s02.wait_rumor",
       "actors": {
-        "fat_goblin": "day1_rest"
+        "fat_goblin": "day2_bedroom_rest"
       }
     },
     {
       "host": "shop",
       "stage": "day2.s02.wait_close",
       "actors": {
-        "fat_goblin": "day1_rest"
+        "fat_goblin": "day2_bedroom_rest"
       }
     },
     {
@@ -201,14 +221,14 @@
       "host": "shop",
       "stage": "day2.s05.return_shop",
       "actors": {
-        "fat_goblin": "day1_rest"
+        "fat_goblin": "day2_bedroom_rest"
       }
     },
     {
       "host": "shop",
       "stage": "day2.s05.wait_special_drink",
       "actors": {
-        "fat_goblin": "day1_rest"
+        "fat_goblin": "day2_bedroom_rest"
       }
     },
     {
@@ -225,28 +245,28 @@
       "host": "shop",
       "stage": "day2.s05.return_final",
       "actors": {
-        "fat_goblin": "day1_rest"
+        "fat_goblin": "day2_bedroom_rest"
       }
     },
     {
       "host": "shop",
       "stage": "day2.s03.travel_tavern",
       "actors": {
-        "fat_goblin": "day1_rest"
+        "fat_goblin": "day2_bedroom_rest"
       }
     },
     {
       "host": "shop",
       "stage": "day2.s05.deliver_guard",
       "actors": {
-        "fat_goblin": "day1_rest"
+        "fat_goblin": "day2_bedroom_rest"
       }
     },
     {
       "host": "shop",
       "stage": "day3.handoff",
       "actors": {
-        "fat_goblin": "day1_rest"
+        "fat_goblin": "day2_bedroom_rest"
       }
     },
     {

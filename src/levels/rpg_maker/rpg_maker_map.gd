@@ -13,6 +13,9 @@ const STAR := 16
 @export var map_title: String = ""
 @export var map_size: Vector2i = Vector2i(1, 1)
 @export_range(1, 512, 1) var tile_size: int = 48
+## Map-local corrections for walls and furniture whose source passage flags are open.
+## Coordinates are native cells; saved tiles and shared TileSets stay authoritative for art.
+@export var solid_regions: Array[Rect2i] = []
 
 var _ground_layers: Array[TileMapLayer] = []
 ## Set bits indicate permitted movement, using RPG Maker's down/left/right/up bits.
@@ -68,6 +71,11 @@ func can_cross_edge(cell: Vector2i, direction: Vector2i) -> bool:
 ## The floor query excludes solid cells and map edges. Directional edge collisions
 ## are enforced by the derived world-layer StaticBody2D, preserving partial tiles.
 func can_stand_at(world_position: Vector2, half_size: Vector2) -> bool:
+	return is_walkable_at(world_position, half_size)
+
+## Side-effect-free floor query for actors that only plan a step. Subclasses own
+## the player-facing variant, which may report the rejected position to the HUD.
+func is_walkable_at(world_position: Vector2, half_size: Vector2) -> bool:
 	var minimum := Vector2i(2147483647, 2147483647)
 	var maximum := Vector2i(-2147483648, -2147483648)
 	for corner: Vector2 in [Vector2(-half_size.x, -half_size.y), Vector2(half_size.x, -half_size.y), Vector2(-half_size.x, half_size.y), half_size]:
@@ -104,6 +112,9 @@ func rebuild_passability() -> void:
 	_build_vertical_edges()
 
 func _read_cell_directions(cell: Vector2i) -> int:
+	for region: Rect2i in solid_regions:
+		if region.has_point(cell):
+			return 0
 	for index in range(3, -1, -1):
 		var data: TileData = _ground_layers[index].get_cell_tile_data(cell)
 		if data == null:

@@ -24,10 +24,35 @@
 
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_common_goblin.tscn" id="goblin"]
 
-[ext_resource type="PackedScene" path="res://src/levels/rpg_maker/wayfinding_sign.tscn" id="sign"]
 [ext_resource type="Script" path="res://src/levels/rpg_maker/chapter_wayfinding.gd" id="sign_visibility"]
 [ext_resource type="Script" path="res://src/gameplay/characters/ambient_wander.gd" id="wander"]
 [ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_030_00.png" id="gather_atlas"]
+[ext_resource type="Script" path="res://src/gameplay/story_interaction/signature_discovery_point.gd" id="signature"]
+
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_warehouse_sentry.tscn" id="warehouse_sentry"]
+
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_prayer_man.tscn" id="prayer_man"]
+
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_prayer_woman.tscn" id="prayer_woman"]
+
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_market_mother.tscn" id="market_mother"]
+
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_prayer_elder.tscn" id="prayer_elder"]
+
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_tavern_drunk.tscn" id="tavern_drunk"]
+
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_goblin_boy.tscn" id="goblin_boy"]
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_goblin_girl.tscn" id="goblin_girl"]
+
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_market_vendor_1.tscn" id="vendor_1"]
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_market_vendor_2.tscn" id="vendor_2"]
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_market_vendor_3.tscn" id="vendor_3"]
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_signature_philosopher.tscn" id="philosopher"]
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_barracks_soldier.tscn" id="soldier"]
+
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/scorch_tongue_pepper.png" id="gather_pepper"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/honey_amber_crystal.png" id="gather_honey"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/insomnia_mushroom.png" id="gather_insomnia"]
 
 [sub_resource type="AtlasTexture" id="moss_art"]
 atlas = ExtResource("gather_atlas")
@@ -54,6 +79,11 @@ script = ExtResource("map")
 chapter_host = &"settlement"
 
 exterior_location = "settlement.shop"
+first_visit_bounds = Rect2(336, 2184, 1440, 576)
+market_observation_area = Rect2(336, 2304, 1128, 336)
+first_visit_blocked_message = "主角·内心：黑灯瞎火的、谁知道里面有什么？不去。"
+
+objective_points = {"day1.s03.explore:market": "Interactions/day1_s03_yard", "day1.s03.explore:return": "Exits/ShopDoor", "day1.s05.infiltration:approach": "StoryPositions/drunken_guard", "day1.s05.infiltration:pair": "Interactions/MansionPayment", "day1.s05.infiltration:document": "Exits/ElderDoor", "day1.s05.infiltration:blood": "Exits/ElderDoor", "day1.s05.infiltration:escape": "StoryPositions/day1_observation"}
 
 [node name="Entrances" type="Node2D" parent="."]
 
@@ -132,7 +162,7 @@ destination_scene = "res://src/core/tavern.tscn"
 destination_entrance = &"exterior_door"
 
 allowed_stages = Array[String](["day2", "day3"])
-unavailable_message = "酒馆尚未开放。先完成当前委托，第二天夜晚再来找裂牙。"
+unavailable_message = "目前暂未开放该区域。"
 
 [node name="GuardReturn" parent="Exits" instance=ExtResource("point")]
 visible = false
@@ -144,11 +174,6 @@ description = "招待完成后可沿熟路直接返店，也可以继续步行�
 destination_scene = "res://src/core/main.tscn"
 destination_entrance = &"street_door"
 allowed_stages = Array[String](["day2.s05.return_final"])
-
-[node name="ReturnSign" parent="Exits/GuardReturn" instance=ExtResource("sign")]
-position = Vector2(0, -40)
-[node name="Text" parent="Exits/GuardReturn/ReturnSign/Panel"]
-text = "直接返店"
 
 [node name="CasinoDoor" parent="Exits" instance=ExtResource("point")]
 
@@ -167,7 +192,7 @@ destination_scene = "res://src/core/casino.tscn"
 destination_entrance = &"exterior_door"
 
 allowed_stages = Array[String](["day2.s04", "day2.s05"])
-unavailable_message = "先去居民区右下方的酒馆，听取裂牙的委托，再来赌场。"
+unavailable_message = "目前暂未开放该区域。"
 
 [node name="ElderDoor" parent="Exits" instance=ExtResource("point")]
 
@@ -186,7 +211,7 @@ destination_scene = "res://src/core/elder_house.tscn"
 destination_entrance = &"exterior_door"
 
 allowed_stages = Array[String](["day1.s05"])
-required_flags = Array[StringName](["day1.s05.drunken_paid", "day1.s05.guard_payment_completed"])
+required_flags = Array[StringName](["world.phase.night", "day1.s04.commission_accepted", "day1.s05.drunken_paid", "day1.s05.guard_payment_completed"])
 unavailable_message = "长老居所只在受托夜访时开放。先到西侧找醉酒守卫交涉（10G），再回宅门前，在两名宅邸守卫之间按 E 支付 10G；放行后沿道路向东，走上门前台阶按 E 进门。"
 
 [node name="CollisionShape2D" parent="Exits/ShopDoor"]
@@ -255,7 +280,7 @@ position = Vector2(1320, 2376)
 script = ExtResource("story")
 
 kind = 1
-show_world_marker = true
+show_world_marker = false
 
 interaction_id = &"day1_s03_yard"
 
@@ -276,7 +301,7 @@ position = Vector2(1176, 2280)
 script = ExtResource("story")
 
 kind = 1
-show_world_marker = true
+show_world_marker = false
 
 interaction_id = &"day1_s03_street"
 
@@ -297,7 +322,7 @@ position = Vector2(1272, 2184)
 script = ExtResource("story")
 
 kind = 1
-show_world_marker = true
+show_world_marker = false
 
 interaction_id = &"day1_s03_path"
 
@@ -314,6 +339,44 @@ success_flags = Array[StringName](["day1.s03.observed_path"])
 [node name="GatherPoints" type="Node2D" parent="."]
 
 [node name="Characters" type="Node2D" parent="."]
+
+[node name="Philosopher" parent="Characters" instance=ExtResource("philosopher")]
+position = Vector2(1464, 1896)
+actor_id = &"signature_philosopher"
+display_name = "酒馆外的哥布林哲人"
+story_role = "S08：与醉鬼争论格里芬、感官认知与幻觉。"
+active_phase = "always"
+
+[node name="Drunk" parent="Characters" instance=ExtResource("tavern_drunk")]
+position = Vector2(1560, 1896)
+actor_id = &"signature_drunk"
+display_name = "酒馆外的醉鬼"
+story_role = "S08：相信格里芬就在酒瓶中。"
+active_phase = "always"
+
+[node name="Wander" type="Node" parent="Characters/Drunk"]
+script = ExtResource("wander")
+radius = 20.0
+speed = 22.0
+minimum_pause = 2.0
+maximum_pause = 4.5
+
+[node name="SignatureS08" parent="Interactions" instance=ExtResource("point")]
+position = Vector2(1560, 1944)
+script = ExtResource("signature")
+interaction_id = &"signature_s08"
+signature_id = "S08"
+display_name = "与哲人和醉鬼谈谈幻彩小方"
+feedback_rect = Rect2(-72, -120, 144, 96)
+show_world_marker = true
+
+[node name="SignatureS06" parent="Interactions" instance=ExtResource("point")]
+position = Vector2(1320, 2376)
+script = ExtResource("signature")
+interaction_id = &"signature_s06"
+signature_id = "S06"
+display_name = "向市场卖家询问醒神菇搭配"
+show_world_marker = true
 
 [node name="EntranceGuard" parent="Characters" instance=ExtResource("guard")]
 position = Vector2(1176, 456)
@@ -360,11 +423,11 @@ script = ExtResource("stealth")
 wallet_coins = true
 throw_range = 230.0
 effect_scale = 0.5
-guards = Array[NodePath]([NodePath("Entrance"), NodePath("Lure"), NodePath("Gate"), NodePath("Drunken")])
+guards = Array[NodePath]([NodePath("Entrance"), NodePath("Lure"), NodePath("Gate"), NodePath("Drunken"), NodePath("StreetWatchA"), NodePath("StreetWatchB")])
 objective_names = {"day1.s05.document_read": "书房文书", "day1.s05.blood_acquired": "右室血液"}
 approach_hint = "先到西侧找醉卫交涉（10G），再回宅门前，在双卫之间按 E 支付 10G。投币只能引开守卫。"
 escape_hint = "拿齐文书和血液，沿原路回到北侧观察位撤离。"
-controls_hint = "鼠标瞄落点 · 侧边可绕 · 别停在扇区里"
+controls_hint = "Ctrl 潜行 · 绕开扇区 · R 重试"
 checkpoint = NodePath("../StoryPositions/day1_checkpoint")
 escape_zone = NodePath("../EscapeZone")
 required_flags = Array[StringName](["day1.s05.blood_acquired", "day1.s05.document_read"])
@@ -377,12 +440,14 @@ actor = NodePath("../../Characters/EntranceGuard")
 role = 0
 clearance_flag = &""
 encounter_event_id = ""
-sight_range = 84.0
-sight_half_angle = 45.0
+sight_range = 120.0
+sight_half_angle = 40.0
 hearing_range = 156.0
-discovery_seconds = 0.9
-distraction_seconds = 3.0
+discovery_seconds = 2.0
+distraction_seconds = 5.0
 patrol_offsets = Array[Vector2]([Vector2(-48, 0), Vector2(48, 0)])
+
+hear_footsteps = true
 
 [node name="Lure" type="Node2D" parent="StealthSetup" node_paths=PackedStringArray("actor")]
 script = ExtResource("response")
@@ -390,12 +455,13 @@ actor = NodePath("../../Characters/MansionLure")
 role = 1
 clearance_flag = &"day1.s05.guard_payment_completed"
 encounter_event_id = ""
-sight_range = 48.0
-sight_half_angle = 45.0
+sight_range = 96.0
+sight_half_angle = 40.0
 hearing_range = 132.0
-discovery_seconds = 1.0
+discovery_seconds = 1.8
 distraction_seconds = 2.5
-patrol_offsets = Array[Vector2]([Vector2(-96, 0), Vector2(0, 0)])
+
+hear_footsteps = true
 
 [node name="Gate" type="Node2D" parent="StealthSetup" node_paths=PackedStringArray("actor")]
 script = ExtResource("response")
@@ -403,12 +469,13 @@ actor = NodePath("../../Characters/MansionGate")
 role = 2
 clearance_flag = &"day1.s05.guard_payment_completed"
 encounter_event_id = ""
-sight_range = 60.0
-sight_half_angle = 45.0
+sight_range = 120.0
+sight_half_angle = 40.0
 hearing_range = 132.0
-discovery_seconds = 1.0
+discovery_seconds = 1.8
 distraction_seconds = 2.5
-patrol_offsets = Array[Vector2]([Vector2(0, 0), Vector2(96, 0)])
+
+hear_footsteps = true
 
 [node name="Drunken" type="Node2D" parent="StealthSetup" node_paths=PackedStringArray("actor")]
 script = ExtResource("response")
@@ -416,12 +483,14 @@ actor = NodePath("../../Characters/DrunkenGuard")
 role = 3
 clearance_flag = &"day1.s05.drunken_paid"
 encounter_event_id = "day1.s05.drunken_guard"
-sight_range = 48.0
-sight_half_angle = 45.0
+sight_range = 96.0
+sight_half_angle = 40.0
 hearing_range = 120.0
 discovery_seconds = 1.2
 distraction_seconds = 2.0
 patrol_offsets = Array[Vector2]([Vector2(-24, 0), Vector2(24, 0)])
+
+hear_footsteps = true
 
 [node name="DrunkenEncounter" parent="." instance=ExtResource("trigger")]
 position = Vector2(1416, 456)
@@ -450,6 +519,7 @@ description = "从覆苔岩块上收集苔痕青。"
 feedback_rect = Rect2(-24, -40, 48, 48)
 show_world_marker = true
 item_id = "moss_green"
+success_description = "得到了从潮湿苔地采集的苔痕青。"
 amount = 2
 refresh_mode = "daily"
 required_flag = "world.phase.night"
@@ -471,6 +541,7 @@ description = "路边的材料袋里装着窟窟糖芋。"
 feedback_rect = Rect2(-24, -40, 48, 48)
 show_world_marker = true
 item_id = "sugar_yam"
+success_description = "得到了从田里挖出的宠宠糖芋。"
 amount = 2
 refresh_mode = "daily"
 required_flag = "world.phase.night"
@@ -492,6 +563,7 @@ description = "路边生长着一簇萤火伞。"
 feedback_rect = Rect2(-24, -40, 48, 48)
 show_world_marker = true
 item_id = "firefly_cap"
+success_description = "得到了从树下采摘的荧火伞。"
 amount = 2
 refresh_mode = "daily"
 required_flag = "world.phase.night"
@@ -512,7 +584,7 @@ entrance_id = &"infiltration_start"
 [node name="ReturningGoblinA" parent="Characters" instance=ExtResource("goblin")]
 position = Vector2(1416, 2424)
 actor_id = &"goblin_a"
-display_name = "哥布林甲"
+display_name = "赌徒哥布林"
 active_phase = "day"
 facing = 2
 
@@ -523,7 +595,7 @@ radius = 28.0
 [node name="ReturningGoblinB" parent="Characters" instance=ExtResource("goblin")]
 position = Vector2(1416, 2328)
 actor_id = &"goblin_b"
-display_name = "哥布林乙"
+display_name = "说教的哥布林"
 active_phase = "day"
 facing = 3
 
@@ -534,7 +606,7 @@ radius = 24.0
 [node name="ReturningGoblinC" parent="Characters" instance=ExtResource("goblin")]
 position = Vector2(1272, 2472)
 actor_id = &"goblin_c"
-display_name = "哥布林丙"
+display_name = "爱收集的哥布林"
 active_phase = "day"
 facing = 1
 
@@ -543,79 +615,6 @@ script = ExtResource("wander")
 radius = 32.0
 
 [node name="Wayfinding" type="Node2D" parent="."]
-
-[node name="ShopSign" parent="Wayfinding" instance=ExtResource("sign")]
-position = Vector2(1608, 2496)
-[node name="Text" parent="Wayfinding/ShopSign/Panel"]
-text = "奶茶店"
-
-[node name="NorthSign" parent="Wayfinding" instance=ExtResource("sign")]
-position = Vector2(1176, 2160)
-[node name="Text" parent="Wayfinding/NorthSign/Panel"]
-text = "↑ 北侧守卫"
-
-[node name="WestSign" parent="Wayfinding" instance=ExtResource("sign")]
-position = Vector2(1104, 2214)
-[node name="Text" parent="Wayfinding/WestSign/Panel"]
-text = "← 酒馆 · 赌场"
-
-[node name="JunctionShopSign" parent="Wayfinding" instance=ExtResource("sign")]
-position = Vector2(1248, 2214)
-[node name="Text" parent="Wayfinding/JunctionShopSign/Panel"]
-text = "奶茶店 ↘"
-
-[node name="ObservationSign" parent="Wayfinding" instance=ExtResource("sign")]
-position = Vector2(1032, 552)
-[node name="Text" parent="Wayfinding/ObservationSign/Panel"]
-text = "观察位 ↘"
-
-[node name="EvacuationSign" parent="Wayfinding" instance=ExtResource("sign")]
-position = Vector2(1032, 624)
-[node name="Text" parent="Wayfinding/EvacuationSign/Panel"]
-text = "撤离点 ↓"
-
-[node name="ElderDoorSign" type="Node2D" parent="Wayfinding"]
-position = Vector2(2040, 448)
-visible = false
-script = ExtResource("sign_visibility")
-required_stages = Array[String](["day1.s05"])
-
-[node name="Sign" parent="Wayfinding/ElderDoorSign" instance=ExtResource("sign")]
-[node name="Text" parent="Wayfinding/ElderDoorSign/Sign/Panel"]
-text = "长老居所 ↑ 进门"
-
-[node name="ReleasedSign" type="Node2D" parent="Wayfinding"]
-position = Vector2(1824, 520)
-visible = false
-script = ExtResource("sign_visibility")
-required_stages = Array[String](["day1.s05"])
-required_flags = Array[StringName](["day1.s05.drunken_paid", "day1.s05.guard_payment_completed"])
-
-[node name="Sign" parent="Wayfinding/ReleasedSign" instance=ExtResource("sign")]
-[node name="Text" parent="Wayfinding/ReleasedSign/Sign/Panel"]
-text = "长老居所 → 东侧"
-
-[node name="DetourSign" type="Node2D" parent="Wayfinding"]
-position = Vector2(1400, 552)
-visible = false
-script = ExtResource("sign_visibility")
-required_stages = Array[String](["day1.s05"])
-required_flags = Array[StringName](["day1.s05.drunken_paid"])
-
-[node name="Sign" parent="Wayfinding/DetourSign" instance=ExtResource("sign")]
-[node name="Text" parent="Wayfinding/DetourSign/Sign/Panel"]
-text = "石墙北侧可绕行"
-
-[node name="EscapeReadySign" type="Node2D" parent="Wayfinding"]
-position = Vector2(1104, 696)
-visible = false
-script = ExtResource("sign_visibility")
-required_stages = Array[String](["day1.s05"])
-required_flags = Array[StringName](["day1.s05.document_read", "day1.s05.blood_acquired"])
-
-[node name="Sign" parent="Wayfinding/EscapeReadySign" instance=ExtResource("sign")]
-[node name="Text" parent="Wayfinding/EscapeReadySign/Sign/Panel"]
-text = "撤离点 → 站上门圈"
 
 [node name="FestivalPreparation" type="Node2D" parent="Wayfinding"]
 position = Vector2(1176, 2136)
@@ -640,21 +639,200 @@ color = Color(0.88, 0.67, 0.29, 1)
 polygon = PackedVector2Array(32, -21, 56, -23, 44, 0)
 color = Color(0.38, 0.57, 0.36, 1)
 
-[node name="Sign" parent="Wayfinding/FestivalPreparation" instance=ExtResource("sign")]
-position = Vector2(0, 18)
-[node name="Text" parent="Wayfinding/FestivalPreparation/Sign/Panel"]
-text = "七日祭 · 筹备中"
-
 [node name="NightGuidance" type="Node2D" parent="Wayfinding"]
 script = ExtResource("sign_visibility")
 required_stages = Array[String](["day1.s05"])
 required_flags = Array[StringName](["day1.s04.commission_accepted"])
 
-[node name="CoinLanding" parent="Wayfinding/NightGuidance" instance=ExtResource("sign")]
+[node name="CoinLanding" type="Marker2D" parent="Wayfinding/NightGuidance"]
 position = Vector2(1272, 504)
-[node name="Text" parent="Wayfinding/NightGuidance/CoinLanding/Panel"]
-text = "↓ 投币落点"
 
-[node name="Landing" type="Polygon2D" parent="Wayfinding/NightGuidance/CoinLanding"]
-polygon = PackedVector2Array(0, -5, 5, 0, 0, 5, -5, 0)
-color = Color(1, 0.82, 0.48, 0.9)
+[node name="StreetWatchA" parent="Characters" instance=ExtResource("guard")]
+position = Vector2(1032, 1200)
+actor_id = &"street_watch_a"
+display_name = "街区巡守A"
+active_phase = "night"
+facing = 2
+initial_facing = 2
+
+[node name="StreetWatchA" type="Node2D" parent="StealthSetup" node_paths=PackedStringArray("actor")]
+script = ExtResource("response")
+actor = NodePath("../../Characters/StreetWatchA")
+role = 4
+sight_range = 120.0
+sight_half_angle = 40.0
+hearing_range = 120.0
+hear_footsteps = true
+discovery_seconds = 2.0
+patrol_offsets = Array[Vector2]([Vector2(-48, 0), Vector2(48, 0)])
+patrol_speed = 32.0
+
+[node name="StreetWatchB" parent="Characters" instance=ExtResource("guard")]
+position = Vector2(1512, 1512)
+actor_id = &"street_watch_b"
+display_name = "街区巡守B"
+active_phase = "night"
+facing = 3
+initial_facing = 3
+
+[node name="StreetWatchB" type="Node2D" parent="StealthSetup" node_paths=PackedStringArray("actor")]
+script = ExtResource("response")
+actor = NodePath("../../Characters/StreetWatchB")
+role = 4
+sight_range = 120.0
+sight_half_angle = 40.0
+hearing_range = 120.0
+hear_footsteps = true
+discovery_seconds = 2.0
+patrol_offsets = Array[Vector2]([Vector2(-48, 0), Vector2(48, 0)])
+patrol_speed = 32.0
+
+[node name="PrayerMan" parent="Characters" instance=ExtResource("prayer_man")]
+position = Vector2(1104, 336)
+actor_id = &"prayer_man"
+display_name = "祈祷者"
+active_phase = "always"
+
+[node name="Wander" type="Node" parent="Characters/PrayerMan"]
+script = ExtResource("wander")
+radius = 16.0
+speed = 26.0
+
+[node name="PrayerWoman" parent="Characters" instance=ExtResource("prayer_woman")]
+position = Vector2(1200, 336)
+actor_id = &"prayer_woman"
+display_name = "同伴"
+active_phase = "always"
+
+[node name="Wander" type="Node" parent="Characters/PrayerWoman"]
+script = ExtResource("wander")
+radius = 16.0
+speed = 26.0
+
+[node name="PrayerElder" parent="Characters" instance=ExtResource("prayer_elder")]
+position = Vector2(1344, 240)
+actor_id = &"prayer_elder"
+display_name = "年迈祈祷者"
+active_phase = "always"
+
+[node name="WarehouseGuard1" parent="Characters" instance=ExtResource("warehouse_sentry")]
+position = Vector2(456, 648)
+actor_id = &"warehouse_guard_1"
+display_name = "嘴馋的守卫"
+active_phase = "always"
+
+[node name="Wander" type="Node" parent="Characters/WarehouseGuard1"]
+script = ExtResource("wander")
+radius = 20.0
+speed = 28.0
+
+[node name="WarehouseGuard2" parent="Characters" instance=ExtResource("warehouse_sentry")]
+position = Vector2(552, 648)
+actor_id = &"warehouse_guard_2"
+display_name = "心虚的守卫"
+active_phase = "always"
+
+[node name="Wander" type="Node" parent="Characters/WarehouseGuard2"]
+script = ExtResource("wander")
+radius = 20.0
+speed = 28.0
+
+[node name="Vendor1" parent="Characters" instance=ExtResource("vendor_1")]
+position = Vector2(1272, 2328)
+actor_id = &"market_vendor_1"
+display_name = "吆喝的摊主"
+active_phase = "always"
+
+[node name="Vendor2" parent="Characters" instance=ExtResource("vendor_2")]
+position = Vector2(1416, 2328)
+actor_id = &"market_vendor_2"
+display_name = "懂行的摊主"
+active_phase = "always"
+
+[node name="Vendor3" parent="Characters" instance=ExtResource("vendor_3")]
+position = Vector2(1560, 2376)
+actor_id = &"market_vendor_3"
+display_name = "老练的摊主"
+active_phase = "always"
+
+[node name="BarracksSoldier" parent="Characters" instance=ExtResource("soldier")]
+position = Vector2(1944, 984)
+actor_id = &"barracks_soldier"
+display_name = "哥布林军人"
+active_phase = "always"
+
+[node name="MarketMother" parent="Characters" instance=ExtResource("market_mother")]
+position = Vector2(1224, 2424)
+actor_id = &"market_mother"
+display_name = "哥布林母亲"
+story_role = "带孩子逛集市的母亲。"
+active_phase = "always"
+
+[node name="MarketBoy" parent="Characters" instance=ExtResource("goblin_boy")]
+position = Vector2(1272, 2424)
+actor_id = &"market_boy"
+active_phase = "always"
+
+[node name="Wander" type="Node" parent="Characters/MarketBoy"]
+script = ExtResource("wander")
+radius = 28.0
+speed = 40.0
+minimum_pause = 0.8
+maximum_pause = 2.0
+
+[node name="VillageChild" parent="Characters" instance=ExtResource("goblin_girl")]
+position = Vector2(2040, 1656)
+actor_id = &"village_child"
+active_phase = "always"
+
+[node name="Wander" type="Node" parent="Characters/VillageChild"]
+script = ExtResource("wander")
+radius = 30.0
+speed = 40.0
+minimum_pause = 0.8
+maximum_pause = 2.2
+
+[node name="NightGather3" parent="GatherPoints" instance=ExtResource("point")]
+position = Vector2(840, 2088)
+script = ExtResource("gather")
+interaction_id = &"night_gather_3"
+display_name = "野外采集 · 炽舌椒"
+item_id = "scorch_tongue_pepper"
+amount = 1
+refresh_mode = "daily"
+success_description = "得到了从石缝中采集的炽石枯辛辣。"
+show_world_marker = true
+
+[node name="HarvestVisual" type="Sprite2D" parent="GatherPoints/NightGather3"]
+position = Vector2(0, -16)
+texture = ExtResource("gather_pepper")
+
+[node name="NightGather4" parent="GatherPoints" instance=ExtResource("point")]
+position = Vector2(840, 1992)
+script = ExtResource("gather")
+interaction_id = &"night_gather_4"
+display_name = "野外采集 · 蜜珀晶"
+item_id = "honey_amber_crystal"
+amount = 1
+refresh_mode = "daily"
+success_description = "得到了从树上摘下的蜜珀晶蛙。"
+show_world_marker = true
+
+[node name="HarvestVisual" type="Sprite2D" parent="GatherPoints/NightGather4"]
+position = Vector2(0, -16)
+texture = ExtResource("gather_honey")
+
+[node name="NightGather5" parent="GatherPoints" instance=ExtResource("point")]
+position = Vector2(1128, 2088)
+script = ExtResource("gather")
+interaction_id = &"night_gather_5"
+display_name = "野外采集 · 醒神菇"
+item_id = "insomnia_mushroom"
+amount = 1
+refresh_mode = "daily"
+success_description = "得到了从路边采摘的醒神菇。"
+show_world_marker = true
+
+[node name="HarvestVisual" type="Sprite2D" parent="GatherPoints/NightGather5"]
+position = Vector2(0, -16)
+texture = ExtResource("gather_insomnia")

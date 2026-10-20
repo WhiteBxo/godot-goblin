@@ -1,6 +1,6 @@
 # 独立家具、道具与墙体素材库
 
-本轮把已有聚落场景中的物品、建筑墙体整理为 **208 张独立透明 PNG + 208 个独立 Godot 场景**，共 26 组。原整图保留；本轮交付素材库，没有将原地图的底图去底并重新搭建。
+当前素材库包含 **214 张独立透明 PNG + 214 个独立 Godot 场景**，共 27 组：原有聚落家具与墙体 208 件，以及 2026-10-20 导入的用户格里芬信仰装饰 6 件。原整图保留；本次交付素材库，没有改变正式地图布局。
 
 ![独立素材总览](captures/catalog.png)
 
@@ -11,6 +11,7 @@
 | 区域家具与小道具 | 136 | 酒馆、赌场、聚餐区、厨房、军营、长老房、祭坛、宿舍、仓库、奶茶店、种植、工坊、火塘、庭院，以及独立桌面物品和厨具 |
 | 墙体与附属组件 | 48 | 灰石木梁、赌场深灰石、奶茶店粉刷墙三种材质，各含四向墙段、转角、门框、支柱、窗框、墙灯与横梁 |
 | 原有通用道具 | 24 | 石块、石柱、箱桶、长凳、蘑菇、草药、灯杆、板车等，从已有透明图集中原尺寸提取 |
+| 格里芬信仰装饰 | 6 | 用户提供的路灯、徽记石砖、铸铁井盖、盾牌木牌、信仰石柱与祭坛圣像 |
 
 桌子、凳子、柜台和墙体已分开；杯子、瓶子、烛台、书卷、骰子、卡牌、金币、菜刀和砧板等另有独立小道具。轮盘桌保留家具本身的轮盘机构，储物架保留其库存陈设，火盆保留火焰；这些属于完整道具组合，而不是可逐零件拆开的模型。
 
@@ -42,6 +43,31 @@ modules/tavern/skull_banner.tscn
 图片主体像素经过透明化与完整轮廓裁切，不做拉伸或重采样；PNG 带 2 像素透明边距。所有对象的根节点和 Sprite2D 默认均为 scale=(1,1)，真实像素尺寸在索引中记录。预览海报的缩略显示不影响运行素材。
 
 这批 PackedScene 是视觉组件，尚未配置每件物品的碰撞、交互、门动画或灯火动画。墙体是独立构件，尚未配置自动拼接 TileSet；摆放时使用位置与定位点对齐，不通过拉伸弥合接缝。正式替换地图时仍需结合主角校准布局、脚底碰撞和遮挡。
+
+## 格里芬信仰装饰（2026-10-20）
+
+![用户格里芬装饰裁片](../../../assets/map/settlement/modular/previews/griffin_faith.png)
+
+来源为用户在本次会话提供的 1536×1024 RGBA PNG，原文件逐字节保存在 `assets/map/settlement/modular/source/griffin_faith.png`。SHA256 为 `59c757b2117085f85bfb5651417ca6127596a0bc9e29c1d21d2bd3cc6b807bc7`。用户要求导入本项目，未提供独立许可证，不据此声明外部来源或额外授权。
+
+透明图片在 `assets/map/settlement/modular/griffin_faith/`；可拖入场景的组件在 `src/levels/settlement/modules/griffin_faith/`。每件裁片保留源图的真实像素比例；原图上的 48×48、48×144、144×144 仅记录为 `source_annotation_size`，不作为缩放指令。实际 PNG 尺寸如下，均含四周 2px 透明边距：
+
+| 文件名（PNG / TSCN 同名） | 内容 | 实际尺寸 |
+| --- | --- | --- |
+| `lamp_post` | 格里芬信仰路灯 | 177×396 |
+| `emblem_stone_tile` | 格里芬徽记石砖 | 320×319 |
+| `emblem_manhole_cover` | 格里芬徽记铸铁井盖 | 331×319 |
+| `emblem_shield_sign` | 格里芬徽记盾牌形木牌 | 306×321 |
+| `faith_pillar` | 大型格里芬信仰石柱 | 156×394 |
+| `altar_statue` | 大型格里芬祭坛圣像 | 406×394 |
+
+处理复用已有连通域提取：在每件的指定区域内保留 alpha≥170 的最大连通轮廓，排除尺寸箭头、文字和孤立噪点，将 alpha 转为 0 / 255；没有重新生图或重采样。RGB 来自原图。路灯的 `GroundAnchor` 对齐石质底座中心，避免被右侧灯笼偏移；其余对象以底部中心落点。图中火焰和灯光是静态绘制，没有添加实际光源或动画。
+
+复现命令为 `python tools/art/import_griffin_faith.py`，初次归档可用 `--source <原图路径>`。工具写入裁片、独立场景、预览和目录索引；重复运行替换同一组，不累加重复条目。通用提取工具重建其他组时会保留 `source_kind=user_supplied` 的补充组。`catalog.json` 中本组的来源与处理元数据优先于顶层历史生成模型字段。
+
+在下方画廊按 Tab 可切到最后一组“格里芬信仰装饰”；也可在画廊根节点将 `initial_pack` 设为 `griffin_faith` 后 F6，观察六件独立物体与约 110px 高的主角参考。当前素材尺寸大于原图标注，正式摆入关卡前仍需评估比例、通行与遮挡，未将这些视觉组件配置为碰撞或可交互物体。
+
+本次验证：6 件 PNG 的硬透明、2px 边距、来源散列及每个保留像素的原图 RGB 一致性通过；`verify_modular_assets.gd` 在 Godot 4.7.2 headless 下检查 214 对 PNG / PackedScene，0 failures。D3D12 / Forward+ 实际画廊显示第 27 组，六件素材与主角参考均可见，截图见[格里芬画廊实拍](captures/griffin_faith_godot.png)。没有改变正式地图或玩法，未执行整仓回归和正式关卡通行验收。编辑器导入成功退出，但仍有与此前导出相同的退出资源释放诊断（495 ObjectDB / 10 resources）；模块检查与本次图形画廊均正常退出。
 
 ## Godot 检查场景
 
@@ -77,8 +103,8 @@ godot --headless --path . --script res://tests/verify_modular_assets.gd
 godot --path . --script res://tests/verify_modular_assets.gd -- --capture
 ```
 
-上述测试已在 Godot 4.7.2 / Windows 上通过：208 个 PNG / PackedScene 对、26 组目录，0 failures。验证索引数量、每个独立场景的加载、每张独立贴图的实际尺寸、透明边角、原生比例、落点和画廊分组切换。另经像素检查，全部 PNG 的 alpha 仅为 0 或 255，四周留有透明边距；人工检查每组预览，没有相邻家具残片或切断的轮廓。检查图的棋盘背景不属于物品 PNG。
+初始素材库的上述测试已在 Godot 4.7.2 / Windows 上通过：208 个 PNG / PackedScene 对、26 组目录，0 failures；加入格里芬组后的 214 件检查见上节本次记录。验证索引数量、每个独立场景的加载、每张独立贴图的实际尺寸、透明边角、原生比例、落点和画廊分组切换。另经像素检查，全部 PNG 的 alpha 仅为 0 或 255，四周留有透明边距；人工检查每组预览，没有相邻家具残片或切断的轮廓。检查图的棋盘背景不属于物品 PNG。
 
 已保存酒馆、赌场与灰石墙体的实际 Godot 画廊截图。原聚落的 48,623 个可达采样点、入口、路线、桥梁、碰撞与交互回归检查亦通过。
 
-实现参照 [Godot 4.7 Sprite2D 官方说明](https://github.com/godotengine/godot/blob/4.7-stable/doc/classes/Sprite2D.xml)：使用独立 Texture2D、centered=false 和整数锚点偏移，保持素材定位明确；[Node2D 官方说明](https://github.com/godotengine/godot/blob/4.7-stable/doc/classes/Node2D.xml) 定义实例的局部位置与变换。未执行游戏整包导出。
+实现参照 [Godot 4.7.2 Sprite2D 官方说明](https://github.com/godotengine/godot/blob/4.7.2-stable/doc/classes/Sprite2D.xml)：使用独立 Texture2D、centered=false 和整数锚点偏移，保持素材定位明确；[Node2D 官方说明](https://github.com/godotengine/godot/blob/4.7-stable/doc/classes/Node2D.xml) 定义实例的局部位置与变换。未执行游戏整包导出。

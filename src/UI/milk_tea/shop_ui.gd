@@ -8,6 +8,8 @@ signal closed
 signal craft_requested(materials: Array[String], quantity: int)
 signal accept_requested(order_id: String)
 signal track_requested(order_id: String)
+signal deliver_requested(order_id: String)
+signal cancel_requested(order_id: String)
 signal formula_requested(materials: Array[String], iced: bool)
 signal confirm_formula_requested(materials: Array[String])
 var _production: TeaProduction
@@ -38,8 +40,27 @@ func configure_orders(model: OrderBoardModel) -> void:
 func show_feedback(message: String, succeeded: bool = true) -> void:
 	$Feedback/Panel/Text.text = message
 	$Feedback/Panel/Text.theme_type_variation = &"Success" if succeeded else &"Warning"
-	$Feedback.visible = not message.is_empty()
+	var shown := not message.is_empty()
+	$Feedback.visible = shown
+	if not shown:
+		return
+	if _feedback_tween != null:
+		_feedback_tween.kill()
+	$Feedback.modulate.a = 0.0
+	UIFlourish.settle($Feedback/Panel, 0.94)
+	_feedback_tween = create_tween()
+	_feedback_tween.tween_property($Feedback, "modulate:a", 1.0, 0.14)
 	$FeedbackTimer.start()
+
+## The notice leaves the way it arrived instead of blinking out.
+func _fade_feedback_out() -> void:
+	if not $Feedback.visible:
+		return
+	if _feedback_tween != null:
+		_feedback_tween.kill()
+	_feedback_tween = create_tween()
+	_feedback_tween.tween_property($Feedback, "modulate:a", 0.0, 0.32)
+	_feedback_tween.tween_callback($Feedback.hide)
 
 func get_feedback_text() -> String:
 	return $Feedback/Panel/Text.text if $Feedback.visible else ""
@@ -55,12 +76,21 @@ func show_interaction_result(message: String) -> void:
 	if is_instance_valid(_popup):
 		_popup.show_interaction_result(message)
 
+func show_harvest_result(message: String, icon: Texture2D, amount: int) -> void:
+	if is_instance_valid(_popup):
+		_popup.show_harvest_result(message, icon, amount)
+
 func show_production_result(result: Dictionary) -> void:
 	if is_instance_valid(_popup):
 		_popup.show_production_result(result)
 
 func select_formula(materials: Array, iced := false) -> bool:
 	return is_instance_valid(_popup) and _popup.select_formula(materials, iced)
+
+## The station is already open: land it on the tracked order's own mode.
+func focus_tracked_order() -> void:
+	if is_instance_valid(_popup) and _popup.is_making_station():
+		_popup.get_page().focus_tracked_order()
 
 func show_formula_result(result: Dictionary) -> void:
 	_popup.show_formula_result(result)
@@ -72,11 +102,12 @@ func show_formula_result(result: Dictionary) -> void:
 @onready var _prompt: PromptBar = $Prompt
 var _popup: ShopPopup
 var _manager: UIManager
+var _feedback_tween: Tween
 
 func _ready() -> void:
 	$Header.text = help_text
 	$Header.visible = show_help
-	$FeedbackTimer.timeout.connect(func() -> void: $Feedback.hide())
+	$FeedbackTimer.timeout.connect(_fade_feedback_out)
 
 func set_popup_layer(layer: CanvasLayer) -> void:
 	if is_instance_valid(_popup):
@@ -88,6 +119,8 @@ func set_popup_layer(layer: CanvasLayer) -> void:
 	_popup.craft_requested.connect(func(materials: Array[String], quantity: int) -> void: craft_requested.emit(materials, quantity))
 	_popup.accept_requested.connect(func(id: String) -> void: accept_requested.emit(id))
 	_popup.track_requested.connect(func(id: String) -> void: track_requested.emit(id))
+	_popup.deliver_requested.connect(deliver_requested.emit)
+	_popup.cancel_requested.connect(func(id: String) -> void: cancel_requested.emit(id))
 	_popup.formula_requested.connect(formula_requested.emit)
 	_popup.confirm_formula_requested.connect(confirm_formula_requested.emit)
 	if _inventory != null:

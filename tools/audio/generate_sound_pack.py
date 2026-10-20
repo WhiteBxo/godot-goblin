@@ -17,6 +17,14 @@ ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / 'assets/audio/source'
 RATE = 44100
 PACKS = {'rpg_sfx': '80-CC0-RPG-SFX.zip', 'tinysized': 'tinysized.zip', 'accessory': 'accessory.zip'}
+## Music the user supplied directly. Copied into assets/audio/music unchanged; the
+## generator only re-registers them so a rebuild cannot silently unregister a cue.
+MUSIC = [
+    dict(id='music.daily_milk_tea', label='奶茶店日常 BGM', path='assets/audio/music/daily_milk_tea.ogg',
+         resource_id='music', loop=True, loop_offset='68.279', note='末尾回到 68.279 秒'),
+    dict(id='music.two_days_end', label='两日终曲', path='assets/audio/music/two_days_end.wav',
+         resource_id='music_end', loop=False, note='不循环，按原速播放'),
+]
 
 
 def write_text(path, content):
@@ -171,9 +179,14 @@ def main():
             descriptions.append(f'`{variant_id}` → `res://{relative}` ({len(pcm) / RATE:.3f})；' + ', '.join('`' + s.removeprefix('assets/audio/source/') + '`' for s in sources))
         entries.append('{"id": "%s", "label": "%s", "loop": %s, "streams": [%s]}' % (sound_id, label, str(looping).lower(), ', '.join(refs)))
         mapping.append(f'| `{sound_id}` | {label}；{spec["note"]} | ' + '<br>'.join(descriptions) + ' |')
-    ext.append('[ext_resource type="AudioStream" path="res://assets/audio/music/daily_milk_tea.ogg" id="music"]')
-    entries.append('{"id": "music.daily_milk_tea", "label": "奶茶店日常 BGM", "loop": true, "loop_offset": 68.279, "streams": [ExtResource("music")]}')
-    mapping.append('| `music.daily_milk_tea` | 用户提供原音乐 | `res://assets/audio/music/daily_milk_tea.ogg`；末尾回到 68.279 秒 |')
+    # User-provided music is copied as-is and never resampled here. Every entry
+    # must be listed so a rebuild never drops one of them from the library.
+    for music in MUSIC:
+        ext.append('[ext_resource type="AudioStream" path="res://%s" id="%s"]' % (music['path'], music['resource_id']))
+        loop_offset = ', "loop_offset": %s' % music['loop_offset'] if music.get('loop_offset') else ''
+        entries.append('{"id": "%s", "label": "%s", "loop": %s%s, "streams": [ExtResource("%s")]}'
+                       % (music['id'], music['label'], str(music['loop']).lower(), loop_offset, music['resource_id']))
+        mapping.append('| `%s` | %s | `res://%s`；%s |' % (music['id'], music['label'], music['path'], music['note']))
     resource = '[gd_resource type="Resource" script_class="SoundLibrary" load_steps=%d format=3]\n\n' % (len(ext) + 2)
     resource += '[ext_resource type="Script" path="res://src/resources/audio/sound_library.gd" id="1"]\n' + '\n'.join(ext)
     resource += '\n\n[resource]\nscript = ExtResource("1")\nentries = Array[Dictionary]([\n' + ',\n'.join(entries) + '\n])\n'
@@ -182,7 +195,7 @@ def main():
     write_text(ROOT / 'docs/assets/sound_library_ids.md', '\n'.join(mapping) + '\n')
     import runpy
     runpy.run_path(str(ROOT / 'tools/story/generate_demo_knock.py'), run_name='__main__')
-    print(f'Built {len(report)} sampled WAVs / {len(specs)} base IDs; preserved music.daily_milk_tea.')
+    print(f'Built {len(report)} sampled WAVs / {len(specs)} base IDs; preserved {len(MUSIC)} user music cue(s).')
 
 
 if __name__ == '__main__':

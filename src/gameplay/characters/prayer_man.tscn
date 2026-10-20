@@ -1,0 +1,36 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/characters/settlement_character.gd" id="1"]
+[ext_resource type="SpriteFrames" path="res://src/gameplay/characters/prayer_man_frames.tres" id="2"]
+
+[sub_resource type="CapsuleShape2D" id="Feet"]
+radius = 8.0
+height = 28.0
+
+[node name="PrayerMan" type="CharacterBody2D"]
+texture_filter = 1
+collision_layer = 4
+collision_mask = 1
+motion_mode = 1
+script = ExtResource("1")
+accepts_player_input = false
+actor_id = &"prayer_man"
+display_name = "祈祷者"
+story_role = "祭坛前的祈祷者。"
+side_faces_left = false
+
+[node name="Shadow" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-18, -2, -12, -6, 12, -6, 18, -2, 12, 4, -12, 4)
+color = Color(0.08, 0.04, 0.03, 0.35)
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Visual"]
+sprite_frames = ExtResource("2")
+animation = &"idle_down"
+scale = Vector2(2, 2)
+offset = Vector2(0, -32)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5707964
+shape = SubResource("Feet")

@@ -15,6 +15,10 @@ signal skip_requested
 @export_range(0.0, 0.5, 0.01) var sentence_pause: float = 0.12
 @export_range(0.0, 0.5, 0.01) var ellipsis_pause: float = 0.18
 @export_range(0.0, 0.5, 0.01) var portrait_fade_seconds: float = 0.14
+## Artwork with a tall hat may need raising to keep the face above the panel.
+@export var portrait_vertical_offsets: Dictionary[Texture2D, float] = {}
+## Right-facing NPC artwork is mirrored when shown in the right portrait slot.
+@export var right_facing_portraits: Array[Texture2D] = []
 ## Holding confirm for this long starts continuous fast-forward.
 @export_range(0.1, 1.0, 0.05) var fast_forward_hold_seconds: float = 0.35
 @export_range(0.02, 0.3, 0.01) var fast_forward_interval: float = 0.06
@@ -30,6 +34,7 @@ var _buttons: Array[Button] = []
 var _selected: int = 0
 var _reveal_remaining: float = 0.0
 var _portrait_tween: Tween
+var _portrait_on_left := false
 var _revealing: bool = false
 var _input_ready_frame: int = 0
 var _previous_focus: Control
@@ -59,14 +64,18 @@ func _ready() -> void:
 	hide()
 
 
-func present_line(speaker: String, text: String, portrait: Texture2D, choices: Array[String], portrait_on_left: bool = false) -> void:
+## Returns the reason the line could not be shown so the caller can end the
+## dialogue instead of leaving its input lock on with no visible text.
+func present_line(speaker: String, text: String, portrait: Texture2D, choices: Array[String], portrait_on_left: bool = false) -> Error:
 	if is_instance_valid(_ui_manager):
-		if _ui_manager.open_screen(_screen_id) != OK:
-			return
+		var open_error := _ui_manager.open_screen(_screen_id)
+		if open_error != OK:
+			return open_error
 	elif not visible:
 		_previous_focus = get_viewport().gui_get_focus_owner()
 	var portrait_changed := not visible or _speaker.text != speaker or _portrait.texture != portrait
 	_speaker.text = speaker
+	_portrait_on_left = portrait_on_left
 	set_portrait(portrait)
 	if portrait_changed:
 		_finish_portrait_fade()
@@ -105,6 +114,7 @@ func present_line(speaker: String, text: String, portrait: Texture2D, choices: A
 		reveal_all()
 	elif is_zero_approx(PlayerPreferences.get_values().dialogue_speed):
 		reveal_all()
+	return OK
 
 
 ## Change only the image; text reveal, choices, focus and placement stay intact.
@@ -112,6 +122,11 @@ func set_portrait(portrait: Texture2D) -> void:
 	if _portrait.texture != portrait or portrait == null:
 		_finish_portrait_fade()
 	_portrait.texture = portrait
+	_portrait.flip_h = portrait != null and not _portrait_on_left and portrait in right_facing_portraits
+	var vertical_offset: float = portrait_vertical_offsets.get(portrait, 0.0)
+	_portrait.offset_top = -284.0 + vertical_offset
+	_portrait.offset_bottom = -12.0 + vertical_offset
+	_portrait.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST if portrait is AtlasTexture else CanvasItem.TEXTURE_FILTER_LINEAR
 	_portrait.visible = portrait != null
 
 
@@ -124,10 +139,24 @@ func reveal_all() -> void:
 	_reveal_remaining = 0.0
 	_finish_portrait_fade()
 	_text.visible_characters = -1
+	var appeared := not _choice_scroll.visible and not _buttons.is_empty()
 	_choice_scroll.visible = not _buttons.is_empty()
 	_update_hint()
+	if appeared:
+		_reveal_choices()
 	if not _buttons.is_empty():
 		_buttons[_selected].grab_focus()
+
+
+## Choices arrive one after another so the eye reads them in order instead of
+## facing a wall of text. Only alpha moves, so focus and layout stay put.
+func _reveal_choices() -> void:
+	for index in range(_buttons.size()):
+		var button := _buttons[index]
+		button.modulate.a = 0.0
+		var tween := button.create_tween()
+		tween.tween_interval(0.03 * index)
+		tween.tween_property(button, "modulate:a", 1.0, 0.1)
 
 
 func close_dialogue() -> void:

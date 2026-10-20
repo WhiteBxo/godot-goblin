@@ -68,13 +68,19 @@ Signals：`dialogue_started(dialogue_id: String)`、`dialogue_ended(dialogue_id:
 ```
 
 - `speaker` 和 `text` 为必填字符串，可为空；文本支持 Unicode、换行，不启用 BBCode。长文本可滚动阅读。
-- 省略 `portrait` 时，Manager 按 `speaker` 精确匹配导出的 `speaker_portraits` 字典。默认主角、玩家、主角·内心使用用户提供的平静表情全身图 `player_neutral_portrait.png`，胖哥布林、哥布林使用微笑立绘；旁白及其他未配置角色不显示图片。宿主可在 Inspector 或启动前修改该字典，为新角色配置 Texture2D，不依赖 Actor 节点层级。
+- 省略 `portrait` 时，Manager 按 `speaker` 精确匹配导出的 `speaker_portraits` 字典。默认主角、玩家、主角·内心使用用户提供的平静表情全身图 `player_neutral_portrait.png`；胖哥布林使用 `assets/characters/fat_goblin/fat_goblin_smiling_portrait.png`，该立绘为胖哥布林专属，普通哥布林（哥布林甲/乙/丙、哥布林顾客等）与酒馆老板、赌场老板没有立绘，不显示图片也不借用胖哥布林的脸；旁白及其他未配置角色同样不显示图片。宿主可在 Inspector 或启动前修改该字典，为新角色配置 Texture2D，不依赖 Actor 节点层级。
 - `portrait` 非空时必须为存在的 `res://` Texture2D 路径，优先于角色默认图，可用于单句表情变化；显式 `"portrait": ""` 隐藏该句立绘。每行重新解析，缺图、结束或取消均清除上一张图片。对话使用独立的透明背景 PNG，原始白底素材保留；默认图使用 preload 建立资源依赖。
 - `left_portrait_speakers` 配置主角的姓名（默认主角、主角·内心、玩家），这些角色显示在左侧；其他 NPC 显示在右侧。单句覆盖图片不改变角色所属侧。
+
+醉酒守卫的默认头像使用 `src/resources/dialogue/guard_portrait.tres`，从现有 `assets/characters/npc/guard/walk_sheet_02.png` 裁取正面首帧（64×64），潜入拦截与后续同名对白均显示。AtlasTexture 头像使用最近邻过滤，保持像素清晰；原始动画图集保留。区域与裁边依据 [Godot 4.7 AtlasTexture](https://docs.godotengine.org/en/4.7/classes/class_atlastexture.html)，过滤方式依据 [CanvasItem](https://docs.godotengine.org/en/4.7/classes/class_canvasitem.html#enum-canvasitem-texturefilter)；官方网页受限时可核对同版本 [AtlasTexture 类文档源码](https://github.com/godotengine/godot/blob/4.7/doc/classes/AtlasTexture.xml)。
 - 普通行用 `next` 指向同一对话中的行；省略或 `""` 表示确认后结束。连续对白必须显式连接。
 - 选项由 `id`、`text` 和可选 `next` 构成。ID 在当前行内唯一，文案非空；`next` 为空表示选择后直接完成。非空 choices 与行级 next 不能同时出现。
 - 加载时校验整个目录及全部分支目标；不会边演出边发现悬空的 `next`。循环分支允许，每次都等待用户确认，不会自动死循环。更新 JSON 后可 idle 时显式 reload。
 - `export_presets.cfg` 已用 `*.json` 导出所有对话文件，测试目录仍被排除。新增导出 preset 时需保留 JSON 包含规则，以及字体许可证规则；改为仅导出选择的场景时需显式包含头像等由 JSON 动态引用的资源。
+
+醉酒守卫的默认头像使用 `src/resources/dialogue/guard_portrait.tres`，从现有 `assets/characters/npc/guard/walk_sheet_02.png` 裁取正面首帧（64×64），潜入拦截与后续同名对白均显示。AtlasTexture 头像使用最近邻过滤，保持像素清晰；原始动画图集保留。区域与裁边依据 [Godot 4.7 AtlasTexture](https://docs.godotengine.org/en/4.7/classes/class_atlastexture.html)，过滤方式依据 [CanvasItem](https://docs.godotengine.org/en/4.7/classes/class_canvasitem.html#enum-canvasitem-texturefilter)；官方网页受限时可核对同版本 [AtlasTexture 类文档源码](https://github.com/godotengine/godot/blob/4.7/doc/classes/AtlasTexture.xml)。
+
+![醉酒守卫像素头像](../gameplay/captures/recipe_feedback_2026_10_19/guard_portrait.png)
 
 ## 主角立绘与程序切换
 
@@ -122,7 +128,7 @@ UI 按 640×360 视口设计，底部面板为 560×136px，水平居中、距�
 2. E 补全文本，再按推进；到达问题后出现两个选项，按 ↓ + Enter 或点击按钮选择，看到对应的不同回应。
 3. 最后一行确认后返回菜单，显示稳定的选项结果 ID；菜单可重复播放普通对白、连续对白和主角表情，体验另一个分支。
 4. 对话中 WASD 不移动角色；结束或 Esc 中止后 WASD 恢复移动，角色被限制在试玩区域。
-5. 返回菜单点击“角色立绘 · 切换与隐藏”，依次观察左侧主角 → 右侧胖哥布林 → 旁白（隐藏）→ 左侧主角内心 → 右侧哥布林大笑（单句覆盖）→ 显式隐藏。确认立绘无白底，约上半身露在对话框上方，下半身被面板遮住，不盖住正文或选项。每句用确认键补全文本，再按推进；Esc 中止后立绘消失。F5 的现有 Day 1 主角对白也会自动显示左侧立绘。
+5. 返回菜单点击“角色立绘 · 切换与隐藏”，依次观察左侧主角 → 右侧胖哥布林 → 右侧普通哥布林（无立绘，只有姓名与文本）→ 旁白（隐藏）→ 左侧主角内心 → 右侧胖哥布林大笑（单句覆盖）→ 显式隐藏。确认立绘无白底，约上半身露在对话框上方，下半身被面板遮住，不盖住正文或选项。每句用确认键补全文本，再按推进；Esc 中止后立绘消失。F5 的现有 Day 1 主角对白也会自动显示左侧立绘。
 
 立绘回归包含在 `tests/verify_dialogue.gd`；有渲染运行时加 `-- --capture-portraits` 可将各句截图保存至 `user://dialogue-portrait-<行 ID>.png`。立绘布局依据 [Godot 4.7 TextureRect](https://docs.godotengine.org/en/4.7/classes/class_texturerect.html) 的 `EXPAND_IGNORE_SIZE` 和 `STRETCH_KEEP_ASPECT_CENTERED`，前后遮挡依据 [CanvasItem 的 z_index](https://docs.godotengine.org/en/4.7/classes/class_canvasitem.html#class-canvasitem-property-z-index)，资源依赖依据 [preload](https://docs.godotengine.org/en/4.7/classes/class_@gdscript.html#class-gdscript-method-preload)。
 
@@ -137,3 +143,19 @@ UI 按 640×360 视口设计，底部面板为 560×136px，水平居中、距�
 实现依据 Godot 4.7 官方文档：[InputEvent 的处理顺序与消费](https://docs.godotengine.org/en/4.7/tutorials/inputs/inputevent.html)、[RichTextLabel 的 visible_characters](https://docs.godotengine.org/en/4.7/classes/class_richtextlabel.html#class-richtextlabel-property-visible-characters)、[JSON](https://docs.godotengine.org/en/4.7/classes/class_json.html)、[导出资源过滤](https://docs.godotengine.org/en/4.7/tutorials/export/exporting_projects.html#resource-options)。
 
 本次新增 API 与导入素材已在 Godot 4.7.2 验证。官网文档站本次访问返回 403，因此实现前直接核对同版本的官方文档源文件：[TextureRect 4.7.2](https://github.com/godotengine/godot/blob/4.7.2-stable/doc/classes/TextureRect.xml)（替换 `texture`、等比居中与忽略图片最小尺寸）、[ResourceLoader 4.7.2](https://github.com/godotengine/godot/blob/4.7.2-stable/doc/classes/ResourceLoader.xml)（已导入资源加载及缓存复用）。
+
+2026-10-19：守卫、酒馆老板、赌场老板与普通顾客使用用户提供的独立插画，见 [对话立绘来源](../../assets/characters/dialogue/README.md)。第二天胖哥布林对白显式使用不适表情。`DialogueUI.portrait_vertical_offsets` 可按 Texture2D 配置垂直偏移；当前守卫为 -40 逻辑像素，使高头盔下的脸露出对话框，切换到其他角色时恢复默认位置。
+
+## 对话立绘朝向（2026-10-20）
+
+已核对现有20张对话立绘及表情。右侧显示的朝右 NPC 插画统一在显示时水平镜像：守卫 `dialogue/guard_portrait.png`、赌场侍卫 `npc/casino_sentry/portrait.png`、集市母亲 `npc/market_mother/portrait.png`、女孩 `npc/goblin_girl/portrait.png`，路径均相对 `assets/characters/`。左侧主角保持朝右；原本朝左或正面的立绘保持原方向，祭坛女同伴无需翻转。
+
+配置位于 `DialogueUI.right_facing_portraits: Array[Texture2D]`，按图片资源记录朝向，避免同名角色的不同表情被一概翻转。`present_line()` 先记录左右位置，`set_portrait()` 再设置 `TextureRect.flip_h`；逐句显示、程序即时换图、隐藏和切换到左侧均重新计算，避免上一张的镜像状态残留。图像原件、地图动画、对白内容和位置不因镜像变化。
+
+F6运行 `src/debug/dialogue/portrait_facing_preview.tscn`，点击“下一个角色”依次查看四位 NPC、主角、祭坛同伴与胖哥布林；“查看调整前 / 后”比较原朝向和正式显示。预览复用正式 DialogueUI，按 E / 空格 / Enter 也可切换角色。
+
+Godot 4.7.2 验证：`tests/run_all.py --filter verify_dialogue --jobs 1` 的对话模块264项通过，包含右侧镜像、同图切换到左侧、主角三表情、原本朝左/正面图和隐藏后的状态清理；带 OpenGL 运行 `tests/verify_women_and_girl.gd -- --capture` 的正式角色508项检查通过，并检查了集市母亲、女孩和祭坛同伴的真实游戏对话截图。未运行全项目回归，本次改动限对话显示。实现核对 Godot 4.7 官方 [TextureRect.flip_h](https://github.com/godotengine/godot/blob/4.7/doc/classes/TextureRect.xml)：仅水平翻转显示纹理。
+
+下图为正式 DialogueUI 渲染结果的相同区域裁切，按“调整前 / 调整后”成对排列；[左侧主角预览](captures/portrait_facing_player_2026_10_20.png)保持原朝向，[集市母亲游戏内预览](captures/portrait_facing_mother_ingame_2026_10_20.png)与[女孩游戏内预览](captures/portrait_facing_girl_ingame_2026_10_20.png)显示朝左效果。
+
+![NPC立绘朝向对照](captures/portrait_facing_comparison_2026_10_20.png)

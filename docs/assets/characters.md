@@ -26,6 +26,7 @@
 - 只有一侧的素材采用左右镜像；普通哥布林和长老的侧面源图朝左，其他侧面源图按右侧使用。守卫长为接近侧面的斜向图，尚缺真正侧面行走图。
 - 守卫没有独立待机图，各方向取对应行走首帧。其他人物缺失的方向待机同样取行走首帧。
 - 胖哥布林只有待机素材：正面/侧面待机已接入，移动采用对应静帧；背面使用正面 fallback，尚缺四向行走及背面素材。`emote_laugh` 收录第三张表情动画，未自动插入剧情。
+- 第 1 天委托流程另用受难集里三套站姿情绪图集：`mood_pleading_sheet.png`（合十拜托）、`mood_worried_sheet.png`（摸额头苦恼）、`mood_happy_sheet.png`（摸肚子满足），各 12 帧、无朝向；由 `Day1WorldController._fat_goblin_mood()` 按阶段投影到 `PLEADING` / `WORRIED` / `HAPPY`，受难状态（`COLLAPSED`、`RESTING`）优先。详见 `assets/characters/npc/fat_goblin/README.md`。
 - 普通哥布林在生成时独立以 50% 概率选择背包版或无背包版，实例的行走、转向、待机与显隐保持该外观。`common_goblin.tscn` 及其 RPG 继承场景都适用；`appearance` 默认 `RANDOM`，也可在编辑器固定外观。背包版沿用原图集；无背包版复用 `goblin_actions/goblin_frames.tres` 的走路帧，映射为四向 `run_*`（8 FPS）和对应首帧 `idle_*`，侧面源图朝右，向左镜像。无背包版没有独立待机动画。
 - 长老两张待机分别用于正面、侧面；守卫长原待机额外保留 `idle_variant`。所有原图均被引用。
 
@@ -65,9 +66,7 @@ Godot F6 打开 `src/debug/characters/character_gallery.tscn`：同时查看 8 �
 源图不裁剪、不重编码，原附件路径记录在
 `src/gameplay/characters/customer_catalog.json` 的 `source_entry` 中。
 
-`human_customer.tscn` 使用红衣男顾客替换原主角动画及蓝色染色，正式店铺已有的
-`human_customer` 自动使用新图。`human_customer_female.tscn` 提供黄裙女顾客，
-可独立复用，尚未加入剧情出场排程。普通哥布林仍使用自己的素材。
+`human_customer.tscn` 以各 50% 概率选择红衣男顾客或黄裙女顾客，默认 `appearance = RANDOM`，也可在编辑器固定 `MALE` / `FEMALE`。两种外观都沿用 `human_customer` Actor ID、订单与剧情目标；同一实例的移动、转向、待机和显隐不重选。正式游戏由存档内 `visuals.appearance_seed`、素材族、Actor ID 与天数确定外观，读档和重建相同日期的角色保持一致；旧档使用固定兼容值，独立 F6 仍随机预览。这里的 1:1 是概率比例，不保证短序列人数相等。`human_customer_female.tscn` 仍提供固定女顾客独立场景。普通哥布林使用自己的素材，并采用相同的外观持久化规则。
 
 两套资源均提供 `run_*`（8 FPS，现有 NPC 行走接口）和 `idle_*`（6 FPS）四向循环，
 左右共用侧面图，由 `SettlementCharacter` 镜像左向。每格 64×64、步长 88，
@@ -96,3 +95,159 @@ F6 打开 `src/debug/characters/character_gallery.tscn`，右下角两位顾客�
 的 `region`、`filter_clip`，循环与帧率沿用
 [SpriteFrames](https://docs.godotengine.org/en/4.7/classes/class_spriteframes.html)，
 侧向镜像沿用 [AnimatedSprite2D](https://docs.godotengine.org/en/4.7/classes/class_animatedsprite2d.html) 的 `flip_h`。
+
+## 赌场侍卫（2026-10-19）
+
+用户附件 `侍卫2(1).zip` 已接入独立 `casino_sentry`，按[最新聚落补充稿](../design/settlement_dialogue_supplement_revised.md)的“赌场：侍卫”确定身份，正文别名为“护卫”。基础场景 `src/gameplay/characters/casino_sentry.tscn`、RPG 场景 `rpg_casino_sentry.tscn`、独立 `sentry_catalog.json` 和 SpriteFrames 均已配置；不改变 `guard`、`guard_captain` 或四个潜入守卫的身份和素材。
+
+正式赌场继承场景在已有 `casino_guard_a` 锚点 `(120, 552)` 放置一名侍卫，随宿主注册到 ActorDirector，使用 RPG 人物比例。三向行走图分别为下 13、右 15、上 10 帧，左向镜像，待机使用对应首帧；保留原始插画并生成仅裁透明边的显示立绘。“侍卫”“护卫”均绑定这张立绘；原守卫两种说话人仍绑定原立绘。
+
+素材来源、SHA-256、裁切矩形与重建命令见[侍卫素材说明](../../assets/characters/npc/casino_sentry/README.md)。补充稿的分支对话尚未编排到运行时，本次接入 NPC 与素材；普通交互沿用忙碌反馈。
+
+试玩：F6 打开 `src/core/casino.tscn`，从入口向左上走到地毯左端，应看到独立侍卫，角色不受 WASD 控制，脚部可阻挡玩家且不与墙或家具重叠。F6 打开 `src/debug/characters/character_gallery.tscn`，第二排最右侧的侍卫自动循环四向行走、镜像和停止待机。
+
+![赌场侍卫正式宿主截图](captures/casino_sentry_2026_10_19.png)
+
+实际验证（Godot 4.7.2）：`verify_casino_sentry.gd` headless 263 项通过，OpenGL 图形 264 项通过（含正式赌场截图）；覆盖逐帧非空与边界、镜像、输入隔离、真实 ActorDirector 移动、隐藏退出碰撞层、原守卫素材隔离、正式注册、锚点和站位碰撞。未运行全项目回归，本次没有更改通用逻辑或剧情状态契约。首次导入新 PNG 时已有 autoload 提前解析产生预导入报错，完成导入后运行时验证通过；再次 editor 导入无脚本解析错误，退出时仍报告 495 个 ObjectDB 实例与 10 个资源未清理。
+
+实现沿用 Godot 4.7 [AtlasTexture](https://docs.godotengine.org/en/4.7/classes/class_atlastexture.html) 的 `region` / `filter_clip` 与 [SpriteFrames](https://docs.godotengine.org/en/4.7/classes/class_spriteframes.html) 的动画序列，不重编码行走图。
+
+## 角色素材使用盘点（2026-10-19）
+
+这里以正式店铺、外景、酒馆、赌场和长老宅的场景引用、实际角色组装为准；角色预览或帧资源引用不等于正式出场。原图、派生图和同角色不同表情不按新角色计数。上文早期“所有源图均被引用”是资源接入覆盖记录，不代表当前主线使用了所有角色。
+
+| 角色 / 素材 | 当前状态 | 路径与说明 |
+| --- | --- | --- |
+| 守卫长 | 有基础场景、动画和画廊预览，未进入正式流程 | `assets/characters/npc/guard_captain/`，4 张；不把它自动认定为补充稿中的侍卫 |
+| 厨师 | 有基础场景、动画和画廊预览，未进入正式流程 | `assets/characters/npc/chef/`，4 张 |
+| 长老本人 | 有基础场景、动画和画廊预览，正式长老宅尚未实例化本人 | `assets/characters/npc/elder/`，5 张；地图中的长老宅不等于长老本人已出场 |
+| 守卫长、厨师、守卫的攻击动画 | 有动作资源与独立预览，尚未接入正式战斗 / 行为 | `assets/characters/goblin_actions/` 的 `captain_attack_*`、`chef_attack_*`、`guard_attack_*`，各 3 张；不代表守卫整个角色没用 |
+| 普通哥布林攻击动画 | 资源被无背包哥布林读取，但正式外观只提取行走 / 待机，未触发攻击 | 同目录 `goblin_attack_*`，3 张；`goblin_walk_*` 已实际用于无背包哥布林 |
+
+已在正式场景使用的角色包括：主角、胖哥布林、普通哥布林（有 / 无背包）、原守卫、人类顾客（男 / 女各 50%）、酒馆老板、赌场老板，以及本次新增赌场侍卫。侍卫立绘已绑定，等待其补充稿对白的运行时编排。各类原始插画、旧像素头像和待机候选图属于来源或备选版本，不额外统计为未使用角色。
+
+未使用角色的原因：当前前两天主线未安排守卫长、厨师的独立出场；长老已在故事中被提及，但首夜潜入明确利用他外出的时机，当前没有本人出场演出。男女顾客现已通过正式人类顾客的 1:1 概率外观接入。攻击动画未触发属于行为尚未接入，不意味着对应人物没有出场。
+
+用户于 2026-10-19 确认，原按附件名误称“猫鸡”的 19 张图片属于**格里芬剧情物品素材**，已移到 `assets/story/griffin/`，候选图改用 `griffin_<hash>.png`，不再计入未使用人物。前两天剧情已经涉及格里芬与格里芬之血，但这批图片尚未绑定具体物品或场景；“没有使用这批图”不能解释成“前两天没有格里芬相关内容”。来源和当前路径见[格里芬素材说明](../../assets/story/griffin/README.md)。
+
+## 人类顾客男女比例（2026-10-19）
+
+正式店铺的 `human_customer.tscn` 已接入 `human_customer.gd`，生成时男、女各 50% 概率；女顾客素材不再属于未使用人物。角色画廊保留固定男、女两位，便于同时比较外观。
+
+局部验证：`tests/verify_human_customer_appearances.gd` 无图形 4362 项、OpenGL 图形 4363 项通过；固定种子的 256 次生成得到男 115、女 141，检查动画资源、四向行走与镜像、显隐碰撞、玩家输入隔离、稳定 Actor ID 和真实 ActorDirector 移动。未运行全项目回归，本次只改角色外观选择。
+
+F5 新游戏，第一位人类顾客可出现男或女；同一实例出入场不会变换外观。F6 打开 `src/debug/characters/character_gallery.tscn` 可同时观察两种外观的四向行走和待机。生命周期及随机选择沿用 Godot 4.7 [Node._ready](https://docs.godotengine.org/en/4.7/classes/class_node.html#class-node-private-method-ready) 与 [randf](https://docs.godotengine.org/en/4.7/classes/class_@globalscope.html#class-globalscope-method-randf)。
+
+![男女人类顾客](captures/human_customer_ratio_2026_10_19.png)
+
+## 2026-10-20 聚落补充角色
+
+六个用户 ZIP 中的 46 张 PNG 保留原始字节，并为八类人物生成基础场景、RPG 半尺寸继承场景及 SpriteFrames。新增集市母亲为成年女哥布林美术的独立实例，不与祭坛同伴共享 Actor；儿童使用新提供的男孩、女孩素材。九组补充对话均已接线，流程与画面见[实施记录](../development/story_supplement_2026_10_20.md)。
+
+| 素材目录 / 场景名 | 来源 | 用法及缺帧边界 |
+| --- | --- | --- |
+| `warehouse_sentry` | `侍卫3(1).zip` | 仓库两卫，四向待机 / 行走与非循环倒地，左右镜像。 |
+| `prayer_man` | `祈祷者(1).zip` 男 | 祭坛祈祷者，四向；左右镜像。 |
+| `prayer_woman` | `祈祷者(1).zip` 女 | 祭坛同伴、独立集市母亲；“待机3”为背向，正面行走退回正面待机，不假作正面走路。 |
+| `prayer_elder` | `祈祷者(1).zip` 老头 | 静坐展示，方向 / 行走接口退回现有待机。 |
+| `tavern_drunk` / `tavern_drinker` | `酒鬼（改后(1).zip` | 正式外景醉鬼 / 室内买醉者均使用修订版；仅静止使用，旧版 `酒鬼.zip` 原图仍保存。 |
+| `goblin_boy` | `小男孩.zip` | 集市小男孩，四向行走；侧面待机用侧走首帧，另保留坐姿、弹弓、抛石子。 |
+| `goblin_girl` | `女孩.zip` | 居民区小孩，原 4×2 混合方向图集按方向分组；侧图朝左，向右镜像。坐姿原图保留，未插入剧情。 |
+
+每个目录的 `source/sources.json` 记录原包条目、原文件路径与 SHA-256；酒鬼新原件位于 `source/revised/`。`supplement_npc_catalog.json` 记录 active_archive、帧数、原帧尺寸、透明包围框、等比倍率及女孩源格索引。原件不被派生图覆盖。附件未附独立许可证，来源记作用户提供供本项目使用。
+
+派生图采用 NEAREST 等比生成 64px 格、88px 步距、6 列图集，脚底 y=62；成年人可见高度不超过 58px，男孩 44px、女孩 50px。基础人物约两倍，`rpg_*.tscn` 还原到地图半尺寸。待机 6 FPS、行走 8 FPS 是接入参数，原包未指定。所有人物缺少的帧均按表内回退，不声称补出了新美术。
+
+复现命令（Python 3 + Pillow，source-dir 同时包含上述六个 ZIP，含旧酒鬼包）：
+
+```powershell
+python tools/characters/import_supplement_npcs.py --source-dir '<用户附件目录>'
+```
+
+Godot 导入后可在编辑器打开各 `rpg_*.tscn` 查看动作。正式 F5 进入游戏并完成胖哥布林委托对话后，分别前往集市、居民区、祭坛、仓库及酒馆 / 赌场按 E 交谈。`verify_supplement_content.gd` 覆盖全部派生动画帧非空、地图真实交互、选项、儿童尺寸 / 通路、修订包选择、采集与实购；本轮最终 1001 项通过。
+
+## 妇女与女孩更新（2026-10-20）
+
+本次附件 `妇女(1).zip`、`女孩(3).zip` 更新下列三位角色，覆盖上节对应外观映射。角色身份与对白内容保留；集市母亲现使用独立场景，不再与祭坛同伴共用 SpriteFrames。
+
+| 角色 | 立绘与原图 | 正式动画与回退 |
+| --- | --- | --- |
+| 集市母亲 `market_mother` | 妇女1立绘、待机、走路，共3张 | 侧向待机8帧；背向走路源格 `[0,1,7]`，正面 `[3,4,6]`，侧向 `[2,5]`。侧图统一朝左，源格5镜像；正、背待机使用对应走路首帧。 |
+| 祭坛同伴 `prayer_woman` | 妇女2立绘、两张待机、重复走路，共4张 | 正面挥手与侧向待机各8帧，侧图朝左。背向和移动使用本人待机回退。`妇女2走路.png` 与妇女1走路原件 SHA-256 相同，不用于同伴，避免移动时串角色。 |
+| 居民区小孩 `goblin_girl`，Actor `village_child` | 女孩立绘、走路、三张待机，共5张 | 待机/走路分别取背向 `[0,1,4]`、正面 `[3,6,7]`、侧向 `[2,5]`。待机源格2、走路源格5镜像后统一朝右；修复侧向周期中途翻面。另保留8帧扫地、8帧张望循环，不新增剧情触发。 |
+
+全部12张 PNG 原始字节保存在 `assets/characters/npc/<角色>/source/update_2026_10_20/`，各 `source/sources.json` 记录 ZIP 条目与 SHA-256；旧源图仍保留。新女孩包的部分图片与旧包相同，正式立绘继续复用相同内容。附件未附独立许可证，来源为用户提供。
+
+新动画源图均为无间隔4×2网格。各帧先按实际朝向选取、必要时镜像；原图中单元内位置有明显偏移，派生图按各帧透明包围框居中、脚底对齐 y=62，同一段共用等比倍率并用 NEAREST 采样，消除打包位置造成的漂移。输出仍为64px格、88px步距、6列；成人最高58px，女孩最高50px。catalog 记录源格、镜像格、原始包围框、倍率与对齐规则。基础/RPG场景沿用既有倍率、碰撞和输入隔离，左右由控制器镜像。
+
+母亲在 Day 1 / Day 2 各7句对白中的立绘引用，先修改 `docs/story_authoring/day*_project.json`，再由 StoryProject 生成运行时对白和清单散列。祭坛同伴、女孩沿用原路径加载更新后的立绘。
+
+```powershell
+# 首次从附件导入；后续不带参数即可从仓库保留原图重建这三位角色。
+python tools/characters/update_women_and_girl.py --source-dir '<附件所在目录>'
+python tools/characters/update_women_and_girl.py
+```
+
+若重跑旧版 `import_supplement_npcs.py`，需随后运行上述更新工具以恢复本次外观。Godot重新导入后，F6运行 `src/debug/characters/women_and_girl_preview.tscn`，可比较三张立绘并观察真实 ActorDirector 四向移动与待机循环。正式 F5 接受胖哥布林委托后，到集市母亲、祭坛同伴、居民区小孩处按 E，对话应显示对应立绘；女孩保持比成人矮。同伴移动仍为本人待机，这是附件缺少独立行走图的回退。
+
+Godot 4.7.2 OpenGL 图形运行 `tests/verify_women_and_girl.gd -- --capture`，508项检查通过，覆盖帧边界、非空、脚底、镜像、输入隔离、四向移动、显隐碰撞、正式角色、真实交谈和对白接线。已检查[集市母亲](captures/market_mother_updated_2026_10_20.png)、[祭坛同伴](captures/prayer_woman_updated_2026_10_20.png)、[居民区小孩](captures/village_child_updated_2026_10_20.png)的正式对话画面。两份 StoryProject 生成校验通过；12张原件逐字节校验通过，生成工具仅更新这三位角色，使用保留原图重建得到相同字节。本次不运行全项目回归，未改共享控制器或剧情状态契约。编辑器导入仍出现既有495个 ObjectDB 实例 / 10个资源未清理诊断，与上节历史记录一致。
+
+提交前工作区出现并行的对白标点修改（`......`→`……`），直接 CLI 一致性复检因此报告两份运行时对白与工程不同。该改动保留在工作区，未混入本次提交；已将本次暂存的工程、对白和清单复制到 `.godot/`，使用同一 StoryProject 编译器核对对白、Beat映射和工程散列，两份均通过。
+
+实现核对 Godot 4.7 官方 [SpriteFrames](https://github.com/godotengine/godot/blob/4.7/doc/classes/SpriteFrames.xml) 的帧序列/循环/FPS，以及 [AtlasTexture](https://github.com/godotengine/godot/blob/4.7/doc/classes/AtlasTexture.xml) 的 `region` / `filter_clip`；不改变运行时 API。
+
+![妇女与女孩更新预览](captures/women_and_girl_2026_10_20.png)
+
+## 集市三个摊贩（2026-10-20）
+
+用户附件 `哥布林npc：有特定对话，不能重复利用的npc(1).zip` 的 `其他可对话npc/小贩/小贩1-3` 已接入，替换 `chapter_cave.tscn` 里原先借用 `rpg_common_goblin.tscn` 的三个占位摊主。摊位位置、Actor ID、显示名与商品清单不变，所以 `chapter_actions.json` 的 `market_vendors`、`supplement.vendor_1-3` 对白和既有购买按钮无需改动。
+
+| Actor ID | 显示名 | 商品（原价格规则不变） | 对白 |
+| --- | --- | --- | --- |
+| `market_vendor_1` | 吆喝的摊主 | 炽舌椒、蜜珀晶、萤火伞 | `supplement.vendor_1` |
+| `market_vendor_2` | 懂行的摊主 | 苔痕青、窟窟糖芋、醒神菇 | `supplement.vendor_2` |
+| `market_vendor_3` | 老练的摊主 | 炽舌椒、蜜珀晶、醒神菇 | `supplement.vendor_3` |
+
+- 附件每家只给一张单帧像素图（64×64、128×128、64×64）与一张立绘，没有行走图：八个方向动画全部复用同一帧，摊主在集市里不移动。派生图按项目统一的 64px 帧、88px 步距、脚底 y=62、成人可见高度 58px 用最近邻生成，因此与同场普通哥布林同高、同地线；`market_vendor_2` 原图带一圈浅灰烘焙投影，派生时去掉，场景自身的地面阴影保留。
+- 立绘本身已是透明底，只做了 4px 余量的边界清理，未缩放、未重绘；接管 `DialogueManager.speaker_portraits` 的三个说话人名（吆喝的摊主 / 懂行的摊主 / 老练的摊主）。
+- 原件逐字节保存在各家 `source/`，来源与 SHA-256 见 `source/sources.json`；帧资源由 `market_vendor_catalog.json` 生成。
+
+```sh
+python tools/characters/import_market_vendors.py --archive '<附件路径>'
+python tools/characters/build_character_frames.py --catalog src/gameplay/characters/market_vendor_catalog.json
+```
+
+F6 运行 `src/core/settlement.tscn`，走到集市（三个摊位在 (1272, 2328)、(1416, 2328)、(1560, 2376)）按 E，即可看到各自立绘与台词。与既有普通哥布林的同地线尺寸对比见 `artifacts/market_vendors_preview.png`。
+
+## 具名可对话 NPC：诗人 / 哲人 / 军人（2026-10-20）
+
+同一附件里此前完全缺美术的三位已接入，替换 `chapter_casino.tscn` 的 `Poet`（原借用 `rpg_common_goblin.tscn`）与 `chapter_cave.tscn` 的 `Philosopher`（原 `rpg_common_goblin.tscn`）、`BarracksSoldier`（原 `rpg_guard.tscn`）。位置、Actor ID、场景里的显示名不变；只有诗句、哲思与口号这三种站桩人物，附件也只给单帧，因此八向动画共用一帧。
+
+| Actor ID / 场景 | 场景显示名 | 对白说话人（新增立绘绑定） | 对白事件 |
+| --- | --- | --- | --- |
+| `casino_poet` | 哥布林诗人 | 诗人 | `supplement.poet` |
+| `signature_philosopher` | 酒馆外的哥布林哲人 | 哥布林哲人 | `supplement.philosopher` |
+| `barracks_soldier` | 哥布林军人 | 军人 | `supplement.soldier` |
+
+- 三张像素图原件本身就是 64×64 单帧，派生图沿用成人 NPC 规格（脚底 y=62、可见高度 58px）；艺术上人物宽窄不同（诗人 36px、哲人 41px、军人 55px），窄的那位在原图里就是瘦，没有额外缩放。
+- `诗人` 的立绘本来就是透明底；`哲人`、`军人` 两张被压平到一张渲染出来的透明棋盘上（RGB，无 alpha）。用噪声与中性高亮把棋盘抠掉，再按“轮廓内空洞若整体为高亮中性色就一并去掉”补掉四肢之间的漏网区域，牙齿与眼白的饱和度更高因此保留。抠图仍有极细的浅色描边，若用户后续提供透明原图可直接替换 `source/portrait.png` 后重跑脚本。
+- 原件逐字节保存在 `source/`，来源、SHA-256 与派生方式见各家 `source/sources.json`；帧资源由 `talkable_npc_catalog.json` 生成。
+
+```sh
+python tools/characters/import_talkable_npcs.py --archive '<附件路径>'
+python tools/characters/build_character_frames.py --catalog src/gameplay/characters/talkable_npc_catalog.json
+```
+
+F6 运行 `src/core/casino.tscn` 找诗人、`src/core/settlement.tscn`（集市）找哲人与军人，按 E 触发对话即可看到立绘；三人与普通哥布林的同地线尺寸对比见 `artifacts/talkable_npc_lineup.png`。
+
+## 附件重复素材核对（2026-10-20）
+
+`哥布林npc：有特定对话，不能重复利用的npc(1).zip` 里除本页已记录的接入项外，其余目录
+（哥布林母亲、小男孩、女孩、祈祷者男女、酒鬼两套、仓库侍卫 2/3、小贩之外的部分）与先前
+各自独立 zip 的接入文件**逐字节一致**（比对 `source/sources.json` 的 SHA-256），因此没有重复
+覆盖，也没有新增副本。
+
+唯一例外是 `赌场护卫/守卫长.png` 与 `image-1791819548672-skpfy6dzwtf.png`：前者是 2048×1870
+立绘、后者是 256×256、4×2 共 8 帧（64px 帧）的像素图集。它与现有 `guard_captain`（504×240 待机 + 888×432
+走路 + `goblin_actions/captain_attack_*` 攻击帧）是两套不同设计，且没有四向行走与攻击帧，
+未替换；`guard_captain` 当前在主线未出场，专属剧情仍待设计。

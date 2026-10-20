@@ -1,0 +1,56 @@
+[
+  {
+    "archive": "侍卫3(1).zip",
+    "entry": "侍卫3/u1278783335_A_stylized_full-body_illustration_in_a_highly_dis_4d0a928d-1ef7-4ce0-8323-b81a9fffeb29_1 2.png",
+    "path": "assets/characters/npc/warehouse_sentry/source/portrait.png",
+    "sha256": "553c6bccb8c85670129520f86e4b931e82fd1472506eef1702e6de7bb9f6607f",
+    "portrait_crop": [
+      0,
+      0,
+      1024,
+      964
+    ]
+  },
+  {
+    "archive": "侍卫3(1).zip",
+    "entry": "侍卫3/尝试的倒地.png",
+    "path": "assets/characters/npc/warehouse_sentry/source/fall.png",
+    "sha256": "35121c9a532257f652e45440a92af4df0cf8d2c7804cf3477c558e92b02f6fc7"
+  },
+  {
+    "archive": "侍卫3(1).zip",
+    "entry": "侍卫3/待机.png",
+    "path": "assets/characters/npc/warehouse_sentry/source/idle_down.png",
+    "sha256": "0db48b56904c7e8d37b911c27f6a7c72c2031e78c249ba59d2fcc3d7e7c84ee0"
+  },
+  {
+    "archive": "侍卫3(1).zip",
+    "entry": "侍卫3/走路1.png",
+    "path": "assets/characters/npc/warehouse_sentry/source/run_down.png",
+    "sha256": "5a58d17715eebb779b843c55127d710439ebfb0ff70729a3aedaa00709618763"
+  },
+  {
+    "archive": "侍卫3(1).zip",
+    "entry": "侍卫3/走路2.png",
+    "path": "assets/characters/npc/warehouse_sentry/source/run_right.png",
+    "sha256": "51f01f80b3dabf25ab681e0c48eda099f3e3877347994c3d21f030d9a1632172"
+  },
+  {
+    "archive": "侍卫3(1).zip",
+    "entry": "侍卫3/走路3.png",
+    "path": "assets/characters/npc/warehouse_sentry/source/run_up.png",
+    "sha256": "22df2af3195b096d0e625d47ef015fc430875982d1277dad797177951e101770"
+  },
+  {
+    "archive": "侍卫3(1).zip",
+    "entry": "侍卫3/待机2.png",
+    "path": "assets/characters/npc/warehouse_sentry/source/idle_up.png",
+    "sha256": "065759382680a91cfe8ee72ed99e5ecc4222844d648d471578593914648dbfba"
+  },
+  {
+    "archive": "侍卫3(1).zip",
+    "entry": "侍卫3/待机3.png",
+    "path": "assets/characters/npc/warehouse_sentry/source/idle_right.png",
+    "sha256": "88c31f49989b528f298a3d91989f98d6378487052e6ded4fab7bf735e618bb07"
+  }
+]

@@ -34,6 +34,7 @@ func press(action: StringName) -> void:
 func capture(label: String) -> void:
 	if not _capture or DisplayServer.get_name() == "headless":
 		return
+	await create_timer(0.25).timeout
 	await RenderingServer.frame_post_draw
 	root.get_texture().get_image().save_png("res://.godot/order_" + label + ".png")
 
@@ -48,10 +49,14 @@ func _run() -> void:
 	for id: String in ["day1.opening", "day1.first_goblin", "day1.group_arrival"]:
 		state.complete_event(id)
 	state.set_flag("day1.group_open")
+	# Keep shared-stock UI coverage independent of the serial story route.
+	for id: String in ["b", "c", "d", "e"]:
+		state.set_flag("day1.group_" + id + "_open")
 	_game = load("res://src/core/main.tscn").instantiate()
 	root.add_child(_game)
 	current_scene = _game
 	await frames(10)
+	_game.get_gameplay_bridge().stop(true)
 	var ui := _game.get_shop_ui()
 	var board: InteractionPoint
 	var station: InteractionPoint
@@ -105,49 +110,52 @@ func _run() -> void:
 	ui.open(station)
 	await frames()
 	var crafting := ui.get_popup().get_page().get_order_crafting_page()
-	check(crafting.visible and crafting.get_ticket().get_primary_button().text == "按缺口制作 3 杯并入库", "Station offers the actual three-cup shortfall")
-	check("经典珍珠奶茶" in crafting.get_ticket().get_title_text(), "Station follows the selected order")
+	check(crafting.visible and crafting.get_ticket().get_primary_button().text == "制作 1 杯并入库", "Station offers the selected coffee order")
+	check("咖啡可可冰奶" in crafting.get_ticket().get_title_text(), "Station follows the selected order")
 	await capture("crafting_640")
 	var inventory := _game.get_warehouse_inventory()
-	var before := inventory.get_stock("classic_boba_milk_tea")
-	var material_before := inventory.get_uses("brown_sugar_boba")
+	var before := inventory.get_stock("coffee_cocoa_ice_milk")
+	var material_before := inventory.get_uses("instant_coffee_concentrate")
 	check(crafting.submit().get("ok", false), "One confirmation crafts the shared shortfall")
-	check(inventory.get_stock("classic_boba_milk_tea") == before + 3, "One order confirmation produces exactly three carried cups")
-	check(inventory.get_uses("brown_sugar_boba") == material_before - 3, "Batch consumes three actual recipe uses")
+	check(inventory.get_stock("coffee_cocoa_ice_milk") == before + 1, "One order confirmation produces exactly one carried cup")
+	check(inventory.get_uses("instant_coffee_concentrate") == material_before - 1, "Batch consumes one actual recipe use")
 	check(not state.get_flag("day1.group_c_settled"), "Crafting never settles the order")
 	check(_game.get_order_board().get_entry("day1_group_c").remaining_to_craft == 0, "Shared stock covers all accepted demand")
 	var snapshot := state.to_dict()
 	check(not crafting.submit().get("ok", false) and state.to_dict() == snapshot, "Further preparation stops only after all accepted demand is covered")
 	await capture("ready_640")
-	check(crafting.get_ticket().get_primary_button().text == "返回店铺，去交付" and not crafting.get_ticket().get_primary_button().disabled, "Ready cup offers a usable return action")
+	check(crafting.get_ticket().get_primary_button().text == "立即交付" and not crafting.get_ticket().get_primary_button().disabled, "Ready cup offers immediate delivery")
 	crafting.get_ticket().get_primary_button().grab_focus()
 	await press(&"ui_accept")
-	check(not ui.is_open() and _game.get_player().movement_enabled, "Return action closes through UIManager and restores movement")
-	check(state.to_dict() == snapshot, "Returning never produces or delivers another cup")
+	check(state.get_flag("day1.group_c_settled") and inventory.get_stock("coffee_cocoa_ice_milk") == before, "Station button immediately consumes and delivers the coffee")
+	check(ui.is_open(), "Delivery keeps the station available for other orders")
+	check(crafting.select_order("day1_group_a") and crafting.submit().get("ok", false), "Prepare the two shared strawberry orders")
+	ui.close()
 	ui.open(station)
 	await frames()
 	ui.get_popup().get_page().select_crafting_mode(true)
 	check(ui.get_popup().get_crafting_panel().visible and not crafting.visible, "Free mixing remains available as a secondary mode")
+	await capture("known_recipes_640")
 	ui.close()
 	ui.open(board)
-	page.select_order("day1_group_c")
+	page.select_order("day1_group_a")
 	await frames()
-	check("可交付" == _game.get_order_board().get_entry("day1_group_c").status_text, "Board reflects actual crafted inventory")
+	check("可交付" == _game.get_order_board().get_entry("day1_group_a").status_text, "Board reflects actual crafted inventory")
 	root.size = Vector2i(1280, 720)
 	await frames(8)
-	check(page.get_selected_id() == "day1_group_c", "Deferred modal focus and resizing preserve the selected order")
+	check(page.get_selected_id() == "day1_group_a", "Deferred modal focus and resizing preserve the selected order")
 	await capture("active_1280")
 	check(page.get_ticket().get_global_rect().end.x <= ui.get_viewport_rect().size.x, "Ticket fits larger viewport")
 	ui.close()
 	await frames()
 	check(_game.get_player().movement_enabled, "Closing restores gameplay movement")
 	root.size = Vector2i(640, 360)
-	var point := _game.get_delivery_point("goblin_c")
+	var point := _game.get_delivery_point("goblin_a")
 	_game.get_player().teleport_to(point.global_position + Vector2(0, -40))
 	for index in range(5):
 		await physics_frame
 	await frames()
-	check("交付" in ui.get_prompt_text() and "经典珍珠" in ui.get_prompt_text(), "Ready customer prompt names the actual deliverable product")
+	check("交付" in ui.get_prompt_text() and "草莓奶绿" in ui.get_prompt_text(), "Ready customer prompt names the actual deliverable product")
 	await capture("hud_640")
 	var balance := state.get_transactions().get_balance()
 	await press(&"interact")
@@ -155,11 +163,12 @@ func _run() -> void:
 	check(not ui.is_open() and not _game.get_ui_manager().has_modal() and _game.get_player().movement_enabled, "Settlement feedback keeps gameplay available")
 	check("交付成功" in ui.get_feedback_text() and "3G" in ui.get_feedback_text(), "Nonmodal feedback reports actual committed reward")
 	check("+3G" in _game.get_business_hud().get_node("BusinessBalance").text, "Wallet highlights the real sale delta")
-	check(_game.get_order_board().get_tracked_entry().order_id != "day1_group_c", "Completed tracking falls back to another active order")
+	check(_game.get_order_board().get_tracked_entry().order_id != "day1_group_a", "Completed tracking falls back to another active order")
 	await capture("delivered_640")
-	var settled := state.to_dict()
+	var settled_balance := state.get_transactions().get_balance()
+	var settled_count := _game.get_task_delivery().get_completed_count()
 	await press(&"interact")
-	check(state.to_dict() == settled, "Repeated physical E cannot pay twice")
+	check(state.get_transactions().get_balance() - settled_balance == 3 * (_game.get_task_delivery().get_completed_count() - settled_count), "Further register interaction pays only newly settled orders")
 	ui.open(board)
 	await press(&"ui_cancel")
 	check(not ui.is_open() and _game.get_player().movement_enabled, "Keyboard Esc closes the board and restores movement")
@@ -199,10 +208,13 @@ func _test_long_content(sample: Dictionary) -> void:
 	ticket.size = Vector2(396, 216)
 	var entry := sample.duplicate(true)
 	entry.product_id = ""
+	entry.title = "特殊奶茶订单"
+	entry.description = "基底：植脂末奶茶底、辛辣"
 	entry.items.clear()
 	for index: int in range(20):
 		entry.items.append({"name": "所需物资 %d" % index, "owned": 0, "needed": 1})
 	ticket.present(entry, "追踪此单", true)
+	check(ticket.get_title_text() == "特殊奶茶订单" and "基底：植脂末奶茶底、辛辣" in ticket.get_node("%Requirements").text, "Special recipe requirements appear in the body below a short order title")
 	await frames()
 	# A real parent Container reapplies the available size after wrapped text settles.
 	ticket.size = Vector2(396, 216)

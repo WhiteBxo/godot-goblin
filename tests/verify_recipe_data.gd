@@ -45,6 +45,7 @@ func _test_catalog() -> void:
 				rows[source] = ingredient
 				_check(ingredient.uses_per_portion == 5, "New sheet ingredient has five uses: " + source)
 				_check(ingredient.get_taste().size() == 6, "All six tastes are available: " + source)
+				_check(source == "C07" or not ingredient.recipe_flavors.is_empty(), "All flavored sheet ingredients retain their authored tags: " + source)
 				_check(ingredient.throw_kind == ROLES.get(source, ""), "Only mapped ingredients carry throw roles: " + source)
 				if not ingredient.throw_kind.is_empty():
 					roles += 1
@@ -54,11 +55,19 @@ func _test_catalog() -> void:
 		_check(rows.size() == 22 and roles == 12, "Both menus cover 22 ingredients and exactly twelve throw roles")
 		_check(rows.F09.market_price == -1 and rows.F09.can_be_base and not rows.F09.free_recipe_allowed and rows.F09.throw_kind.is_empty(), "F09 stays story-only with unknown market price and no throw buff")
 		_check(rows.C06.throw_kind.is_empty() and rows.F02.throw_kind.is_empty(), "Unmapped additives cannot stack buffs")
-		_check(inventory.get_uses_per_portion("black_tea") == 1 and inventory.get_uses("black_tea") == 12, "Legacy teaching ingredient keeps one use per portion")
+		_check(inventory.get_uses_per_portion("black_tea") == 1 and inventory.get_uses("black_tea") == (0 if path.ends_with("day1_menu.tres") else 12), "Legacy ingredients remain in teaching and are absent from formal starting stock")
 		var copy := inventory.get_definition(ITEM)
 		copy.recipe_flavors.append("mutated")
 		copy.sweetness = 99
 		_check(inventory.get_definition(ITEM).sweetness == 3 and not "mutated" in inventory.get_definition(ITEM).recipe_flavors, "New definition fields are independent copies")
+		inventory.add_ingredient(ITEM, 1)
+		var snapshot := inventory.to_dict()
+		var flavors := PackedStringArray()
+		for choice: Dictionary in inventory.get_formula_choices():
+			if choice.id == ITEM:
+				flavors = choice.flavors
+		_check(flavors == PackedStringArray(["薄荷", "甜味"]) and not inventory.is_property_known(ITEM, "flavor_tags"), "Crafting discloses spreadsheet flavors before property discovery")
+		_check(inventory.to_dict() == snapshot, "Reading crafting flavors never writes discovery facts")
 		inventory.free()
 
 func _test_uses() -> void:

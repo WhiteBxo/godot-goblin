@@ -1,6 +1,6 @@
 # 启动、整局新游戏与返回标题
 
-F5 进入 `src/UI/title/title_menu.tscn`。标题显示 Godot Goblin、新游戏、退出游戏；有效存档通过预检时增加并默认聚焦“继续游戏”，否则聚焦新游戏。已有文件时新游戏先确认覆盖，可按 Esc 返回。界面复用项目 Theme，鼠标、Tab、Enter / 空格可操作。新游戏进入 `src/core/main.tscn` 奶茶店，启用 Day 1 正式经营配置，建立初始检查点后开始开场演出，详见 [Day 1 前两阶段](../gameplay/day_01_stages_01_02.md)。原三单无剧情教学使用 `src/debug/story/legacy_shop.tscn`。聚落仍可打开 `src/core/settlement.tscn` 后 F6 试玩。
+F5 进入 `src/UI/title/title_menu.tscn`。标题提供新游戏、读取存档、设置与退出；有效存档通过预检时增加并默认聚焦“继续游戏”，否则聚焦新游戏。“读取存档”可选择三个自动槽与六个手动槽；暂停菜单可保存或读取。已有文件时新游戏先确认更新自动档，手动档保留，可按 Esc 返回。界面复用项目 Theme，鼠标、Tab、Enter / 空格可操作。新游戏进入 `src/core/main.tscn` 奶茶店，启用 Day 1 正式经营配置，建立初始检查点后开始开场演出，详见 [Day 1 前两阶段](../gameplay/day_01_stages_01_02.md)。原三单无剧情教学使用 `src/debug/story/legacy_shop.tscn`。聚落仍可打开 `src/core/settlement.tscn` 后 F6 试玩。
 
 ## 导航与生命周期
 
@@ -9,7 +9,7 @@ F5 进入 `src/UI/title/title_menu.tscn`。标题显示 Godot Goblin、新游戏
 | 接口 | 行为 |
 | --- | --- |
 | `start_new_game(tree: SceneTree) -> Error` | 先加载并校验奶茶店 PackedScene，再调用唯一 GameState 的 `start_new_game()`，成功后切换 |
-| `continue_game(tree: SceneTree) -> Error` | 预检正式档 / 备份、检查点、目标资源与现场，再整体恢复并等待项目初始化完成 |
+| `continue_game(tree: SceneTree, slot_id: String = "") -> Error` | 空 ID 选择九槽中最近有效记录；指定 ID 只预检该槽及其备份、检查点、目标资源与现场，再整体恢复并等待项目初始化完成；支持暂停内读取 |
 | `return_to_title(tree: SceneTree) -> Error` | 切换到标题，不重置会话；成功切换后解除暂停 |
 | `travel_to_scene(tree: SceneTree, destination: Node) -> Error` | 接收已预检的离树目标，复用导航锁；门口进出保留会话与暂停边界，详见[店铺与聚落进出](../systems/scene_travel.md) |
 

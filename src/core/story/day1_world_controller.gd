@@ -8,12 +8,47 @@ var _actors: Array[SettlementCharacter] = []
 var _points: Dictionary = {}
 var _refresh_pending := false
 var _staging: Callable
+var _player: Node2D
+var _boundary_cooldown := 0.0
+## Authored once per level; the physics step must not walk the entrance list.
+var _shop_door: SceneEntrance
+signal boundary_reached(message: String)
+
+func set_player(player: Node2D) -> void:
+	_player = player
+	if _level is RpgChapterMap:
+		_level.market_boundary_reached.connect(_on_market_boundary)
+
+func _on_market_boundary() -> void:
+	if _boundary_cooldown <= 0.0:
+		_boundary_cooldown = 3.0
+		boundary_reached.emit(_level.first_visit_blocked_message)
+
+func _physics_process(delta: float) -> void:
+	_boundary_cooldown = maxf(0.0, _boundary_cooldown - delta)
+	if not is_instance_valid(_player) or not _level is RpgChapterMap:
+		return
+	# An older save or an F6 spawn may already be beyond the newly gated market.
+	# Recover to the authored shop entrance rather than trapping every movement axis.
+	if _level.market_only and _level.first_visit_bounds.has_area() and not _level.first_visit_bounds.has_point(_level.to_local(_player.global_position)):
+		if _shop_door != null:
+			_player.teleport_to(_shop_door.global_position)
+			_on_market_boundary()
+	if not Day1Access.at_stage(_state, "day1.s03.explore"):
+		return
+	if _level.is_observing_market(_player.global_position) and not _state.get_flag("day1.s03.observed_yard"):
+		_state.set_flag("day1.s03.observed_yard")
+	if (_shop_door != null and _state.get_flag("day1.s03.exploration_completed")
+		and _player.global_position.distance_to(_shop_door.global_position) <= 80.0
+		and not _state.get_flag("day1.s03.returned_to_door")):
+		_state.set_flag("day1.s03.returned_to_door")
 
 func configure(state: Node, level: Node2D, actors: Array[SettlementCharacter], points: Dictionary) -> void:
 	_state = state
 	_level = level
 	_actors = actors
 	_points = points
+	_shop_door = level.get_scene_entrance(&"shop_door")
 	_state.state_changed.connect(_schedule_refresh)
 	_refresh()
 
@@ -30,7 +65,7 @@ func _schedule_refresh() -> void:
 
 func _refresh() -> void:
 	_refresh_pending = false
-	if not is_instance_valid(_state):
+	if not is_inside_tree() or not is_instance_valid(_state):
 		return
 	# Entering the accepted night mission is the formal day -> night boundary.
 	if (_state.get_business_profile() == "day1" and Day1Access.at_stage(_state, "day1.s05")
@@ -45,13 +80,45 @@ func _refresh() -> void:
 			actor.refresh_phase(_state)
 			if _level is MilkTeaShop and actor.actor_id == &"fat_goblin" and Day1Access.is_later_stage(_state):
 				actor.visible = Day1Access.at_stage(_state, "day1.s06")
+		if actor is FatGoblin:
+			actor.set_health(_fat_goblin_health())
+			actor.set_mood(_fat_goblin_mood())
 		if _points.has(actor.actor_id):
-			_points[actor.actor_id].interaction_enabled = actor.visible
+			var resting: bool = (_level is MilkTeaShop and actor.actor_id == &"fat_goblin"
+				and (Day1Access.at_stage(_state, "day2") or _state.story_stage == "day3.handoff"))
+			_points[actor.actor_id].interaction_enabled = actor.visible and not resting
 	if _level is SettlementMap:
 		_level.set_elder_access(_state.get_business_profile() != "day1" or Day1Access.can_enter_elder(_state))
+	if _level is RpgChapterMap:
+		_level.market_only = Day1Access.is_market_only(_state)
+		for id: StringName in _points:
+			_points[id].interaction_enabled = _points[id].interaction_enabled and not _level.market_only
 	if _state.get_business_profile() == "day1":
 		var ready := Day1Access.can_make_blood_drink(_state)
 		_state.set_flag("day1.s06.blood_drink_available", ready)
+
+## 剧情事实投影：喝下格里芬之血倒地后是坐地反胃，第二天起改为坐地休养，
+## 救治成功（signature.S06.rescued_in_time）后恢复常态。
+func _fat_goblin_health() -> FatGoblin.Health:
+	if _state.get_business_profile() != "day1" or _state.get_flag("signature.S06.rescued_in_time"):
+		return FatGoblin.Health.NORMAL
+	if _state.current_day >= 2:
+		return FatGoblin.Health.RESTING
+	return FatGoblin.Health.COLLAPSED if _state.get_flag("day1.s06.blood_collapsed") else FatGoblin.Health.NORMAL
+
+## 剧情事实投影（第一天委托流程）：他上门求主角收下哥布林食材时合十拜托，
+## 嘀咕"这食材怎么奇形怪状"时摸额头苦恼，吃完奶茶给出地图时摸着肚子满足。
+## 身体状态非 NORMAL 时情绪不生效，由 FatGoblin 自己保证。
+func _fat_goblin_mood() -> FatGoblin.Mood:
+	if _state.get_business_profile() != "day1" or _state.current_day >= 2:
+		return FatGoblin.Mood.NEUTRAL
+	if Day1Access.at_stage(_state, "day1.s04.wait_map"):
+		return FatGoblin.Mood.HAPPY
+	if Day1Access.at_stage(_state, "day1.s04.wait_taste"):
+		return FatGoblin.Mood.WORRIED
+	if Day1Access.at_stage(_state, "day1.s04"):
+		return FatGoblin.Mood.PLEADING
+	return FatGoblin.Mood.NEUTRAL
 
 func record_shop_arrival() -> void:
 	if _state.get_business_profile() != "day1":

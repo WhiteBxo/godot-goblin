@@ -44,12 +44,26 @@ func _run() -> void:
 	check(state.to_dict() == loaded.data.game_state, "Exact wallet, quotes, stock, receipts, tasks and escrow survive cold restore")
 	check(FileAccess.get_file_as_bytes(args[0].path_join("autosave.dat")) == before, "Restoring does not rotate or rewrite the checkpoint")
 	check(game.get_chapter_gameplay().last_error.is_empty() and game.get_chapter_controller().last_error.is_empty(), "Recovery produces no chapter or route failure")
-	check(game.get_player().movement_enabled and not game.get_story_director().is_busy(), "Waiting boundary releases player input")
+	# A run that already reached the handoff reopens the two-day ending, so the
+	# player stays locked until that card hands the title back.
+	var ended: bool = args[0].get_file() in ["day3_handoff", "day4_expired"]
+	if ended:
+		check(not game.get_player().movement_enabled and (game.get_ui_manager().is_open(ScreenIds.CHAPTER_RECAP) or game.get_ui_manager().is_open(ScreenIds.TWO_DAYS_END)), "Handoff checkpoints reopen the ending instead of free play")
+	else:
+		check(game.get_player().movement_enabled and not game.get_story_director().is_busy(), "Waiting boundary releases player input")
 	check(not game.has_scene_arrival(), "Recovery never fabricates actual entrance travel")
+	if ended:
+		# Dismiss the ending the way a player leaving early would, so the rest of
+		# this pass can still exercise the restored handoff.
+		for id: StringName in [ScreenIds.CHAPTER_RECAP, ScreenIds.TWO_DAYS_END]:
+			if game.get_ui_manager().is_open(id):
+				game.get_ui_manager().close_screen(id)
+				for frame in range(6):
+					await process_frame
 	if args[0].get_file() == "day3_handoff":
 		var actions := game.get_chapter_gameplay()
 		var ids: Array = actions.get_user_actions().map(func(action: Dictionary) -> String: return action.id)
-		check(ids.has("hire:day2_ordinary_a"), "Late hire remains available after closed business is restored")
+		check(ids.has("hire:day2_ordinary_a"), "Temporary commission is available independently of long-term hiring")
 		actions.perform_user_action("hire:day2_ordinary_a")
 		for frame in range(6):
 			await process_frame

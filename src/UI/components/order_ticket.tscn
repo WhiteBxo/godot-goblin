@@ -89,3 +89,11 @@ custom_minimum_size = Vector2(0, 28)
 layout_mode = 2
 theme_type_variation = &"TicketButton"
 text = "接取订单"
+
+[node name="Secondary" type="Button" parent="Content"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 26)
+layout_mode = 2
+theme_type_variation = &"GhostButton"
+text = "放弃此单"

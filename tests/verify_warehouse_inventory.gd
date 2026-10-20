@@ -76,13 +76,20 @@ func _test_inventory() -> void:
 		var invalid := valid.duplicate(true)
 		invalid.ingredients.pearl.quantity = bad
 		_check(restored.restore_state(invalid) == ERR_INVALID_DATA and restored.to_dict() == valid, "Invalid restore cannot partially change stock")
+	# A catalog build may add or retire ingredient ids without invalidating a save.
+	var catalog_shift := WarehouseInventory.new()
+	var shifted := valid.duplicate(true)
+	shifted.ingredients.erase("pearl")
+	shifted.ingredients["retired_ingredient"] = {"quantity": 3, "used": 0, "discovered": true, "known_properties": []}
+	var retired_drink := DrinkFormula.key_for(["retired_ingredient"], false)
+	shifted.encyclopedia[retired_drink] = {"ingredients": ["retired_ingredient"], "discovered_day": 1, "pricing": "legacy_unpriced"}
+	shifted.drinks[retired_drink] = 1
+	_check(catalog_shift.restore_state(shifted) == OK, "A save written against another catalog build still restores")
+	_check(catalog_shift.get_stock("pearl") == 0 and not catalog_shift.is_discovered("pearl"), "A newly added catalog id starts at zero")
+	_check(not catalog_shift.to_dict().ingredients.has("retired_ingredient") and catalog_shift.to_dict().ingredients.size() == WarehouseInventory.CATALOG.ingredients.size(), "A retired catalog id is dropped instead of rejecting the whole file")
+	_check(catalog_shift.get_drink_stock(retired_drink) == 1 and catalog_shift.get_drink_record(retired_drink).get("read_only", false), "A cup made from a retired ingredient stays as read-only history")
+	catalog_shift.free()
 	var invalid := valid.duplicate(true)
-	invalid.ingredients["unknown"] = invalid.ingredients.pearl
-	_check(restored.restore_state(invalid) == ERR_INVALID_DATA, "Reject unknown saved IDs")
-	invalid = valid.duplicate(true)
-	invalid.ingredients.erase("pearl")
-	_check(restored.restore_state(invalid) == ERR_INVALID_DATA, "Reject incomplete saved inventory")
-	invalid = valid.duplicate(true)
 	invalid.ingredients.pearl.known_properties = ["special_effects", "special_effects"]
 	_check(restored.restore_state(invalid) == ERR_INVALID_DATA, "Reject duplicate discovery properties")
 	invalid = valid.duplicate(true)
@@ -128,6 +135,16 @@ func _test_production_transaction() -> void:
 	before = inventory.to_dict()
 	_check(not production.make_drink(recipe, order_id).ok and not production.make_drink(["green_tea", "creamer", "coconut", "syrup"], order_id).ok and inventory.to_dict() == before, "Replayed old order ID rejects even a recipe matching the next order")
 	_check(production.get_stock("syrup") == inventory.get_stock("syrup"), "Production reads the injected inventory")
+	var cups := WarehouseInventory.new()
+	var cup_data := cups.to_dict()
+	var cup_id := DrinkFormula.key_for(["black_tea"], false)
+	cup_data.encyclopedia[cup_id] = {"ingredients": ["black_tea"], "discovered_day": 1, "pricing": "legacy_unpriced"}
+	cup_data.drinks[cup_id] = 2
+	_check(cups.restore_state(cup_data) == OK, "A restored finished cup is available for refund checks")
+	_check(cups.try_consume_drink(cup_id) and cups.get_drink_stock(cup_id) == 1, "A consumed cup leaves finished stock")
+	_check(cups.refund_drink(cup_id) and cups.get_drink_stock(cup_id) == 2, "An interrupted throw returns the deducted cup")
+	_check(not cups.refund_drink("missing") and not cups.refund_drink(cup_id, 0), "Only a known cup and a positive quantity can be returned")
+	cups.free()
 	production.free()
 	inventory.free()
 

@@ -234,9 +234,11 @@ func _project(task: Dictionary, view: Dictionary, accepted: bool, done: bool) ->
 	for id: String in missing:
 		missing_names.append("%s ×%d" % [_production.get_item_name(id), missing[id]])
 	var rewards: String = view.rewards.get("text", "暂无报酬")
-	return {"order_id": order_id, "task_id": task.id, "title": "、".join(names), "task_title": view.title,
+	return {"order_id": order_id, "task_id": task.id, "title": "特殊奶茶订单" if task.delivery.has("drink") else "、".join(names), "task_title": view.title,
+		"description": "、".join(names) if task.delivery.has("drink") else "",
 		"status": status, "stage": stage, "status_text": label, "accepted": accepted, "ready": ready,
 		"target_id": target_id, "target_name": target_name, "items": items, "icon": icon,
 		"product_id": product_id, "recipe_materials": recipe_materials, "can_craft": can_craft and not done,
 		"free_formula": task.delivery.has("drink"),
+		"allow_cancel": bool(task.get("allow_cancel", false)) and accepted and not done,
 		"missing": missing, "missing_text": "、".join(missing_names), "hint": hint, "rewards": rewards}

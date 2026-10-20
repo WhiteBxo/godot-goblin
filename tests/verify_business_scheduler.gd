@@ -175,7 +175,7 @@ func _run() -> void:
 	await _test_receipt_gap()
 	_host.queue_free()
 	await _frames()
-	_test_formal_five()
+	_test_formal_orders()
 	print("BUSINESS_SCHEDULER: %s (%d checks, %d failures)" % ["PASS" if _failures.is_empty() else "FAIL", _checks, _failures.size()])
 	quit(0 if _failures.is_empty() else 1)
 
@@ -399,11 +399,11 @@ func _test_receipt_gap() -> void:
 	check(_scheduler.confirm_departure("visit_0") == OK and _scheduler.request_arrival("visit_0") == ERR_ALREADY_EXISTS, "Recovered customer can finish exit but cannot regenerate")
 	check(_state.get_transactions().get_balance() == income and not _delivery.try_submit("visit_0", "visit_0").ok, "Receipt gap never collects twice")
 
-func _test_formal_five() -> void:
+func _test_formal_orders() -> void:
 	var state := StateData.new()
 	state.select_business_profile("day1")
 	var catalog := TaskCatalog.new()
-	check(catalog.load_file("res://src/resources/tasks/day1_stages_01_02.json") == OK, "Load unchanged formal Day 1 catalog")
+	check(catalog.load_file("res://src/resources/tasks/day1_stages_01_02.json") == OK, "Load serial formal Day 1 catalog")
 	var journal := TaskJournal.new()
 	journal.configure(catalog, state)
 	var delivery := TaskDelivery.new()
@@ -413,9 +413,9 @@ func _test_formal_five() -> void:
 	batches.assign(setup.batches)
 	delivery.configure_batches(batches)
 	var inventory := state.get_warehouse_inventory()
-	for flag: String in ["day1.human_open", "day1.goblin_open", "day1.group_open"]:
+	for flag: String in ["day1.human_open", "day1.goblin_open", "day1.group_open", "day1.group_c_open", "day1.group_d_open", "day1.group_e_open"]:
 		state.set_flag(flag)
-	for id: String in ["day1_human", "day1_goblin", "day1_group_c", "day1_group_a", "day1_group_b"]:
+	for id: String in ["day1_human", "day1_goblin", "day1_group_a", "day1_group_c", "day1_group_d", "day1_group_e"]:
 		var order: Dictionary = {}
 		for candidate: Dictionary in delivery.get_orders():
 			if candidate.order_id == id:
@@ -424,7 +424,7 @@ func _test_formal_five() -> void:
 		var recipe := state.get_tea_production().get_recipe_by_product(order.product_id)
 		check(state.get_tea_production().craft(recipe.materials).ok, "Legacy recipe still crafts: " + id)
 		check(delivery.try_submit(id, order.target_object_id).ok, "Legacy five-order settlement preserved: " + id)
-	check(delivery.get_completed_count() == 5 and state.get_transactions().get_balance() == 15 and inventory.get_stock("strange_coin") == 0 and state.get_flag("day1.group_settled"), "Five formal H01 orders settle 15G and preserve the batch fact without duplicate coins")
+	check(delivery.get_completed_count() == 6 and state.get_transactions().get_balance() == 18 and inventory.get_stock("strange_coin") == 0 and state.get_flag("day1.group_settled"), "Human plus five goblin orders settle 18G and preserve the batch fact")
 	delivery.free()
 	journal.free()
 	state.free()

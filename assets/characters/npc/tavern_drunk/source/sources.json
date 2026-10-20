@@ -1,0 +1,38 @@
+[
+  {
+    "archive": "酒鬼.zip",
+    "entry": "酒鬼/1/待机.png",
+    "path": "assets/characters/npc/tavern_drunk/source/idle_down.png",
+    "sha256": "9683ff762d1f7e1a373433165b53bec46a40216808d8cbe7a25c867ae831510f"
+  },
+  {
+    "archive": "酒鬼.zip",
+    "entry": "酒鬼/1/u1278783335_A_stylized_full-body_illustration_in_a_highly_dis_79de60db-8548-4a94-b09c-63245054e1bb_2 2.png",
+    "path": "assets/characters/npc/tavern_drunk/source/portrait.png",
+    "sha256": "a09b98596d85f4cda6d54a63264c172bb925a206a8f469532696fe9849a4af25",
+    "portrait_crop": [
+      0,
+      0,
+      1024,
+      1024
+    ]
+  },
+  {
+    "archive": "酒鬼（改后(1).zip",
+    "entry": "酒鬼/1/待机.png",
+    "path": "assets/characters/npc/tavern_drunk/source/revised/idle_down.png",
+    "sha256": "9683ff762d1f7e1a373433165b53bec46a40216808d8cbe7a25c867ae831510f"
+  },
+  {
+    "archive": "酒鬼（改后(1).zip",
+    "entry": "酒鬼/1/u1278783335_A_stylized_full-body_illustration_in_a_highly_dis_79de60db-8548-4a94-b09c-63245054e1bb_2 2.png",
+    "path": "assets/characters/npc/tavern_drunk/source/revised/portrait.png",
+    "sha256": "a09b98596d85f4cda6d54a63264c172bb925a206a8f469532696fe9849a4af25",
+    "portrait_crop": [
+      0,
+      0,
+      1024,
+      1024
+    ]
+  }
+]

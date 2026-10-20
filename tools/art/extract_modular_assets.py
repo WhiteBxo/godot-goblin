@@ -22,9 +22,9 @@ def opaque_edges(image):
     return Image.fromarray(pixels)
 
 
-def prefab(pack, item, size):
+def prefab(pack, item, size, anchor=None):
     width, height = size
-    anchor = [width // 2, height - 2]
+    anchor = anchor if anchor is not None else [width // 2, height - 2]
     name = "".join(part.capitalize() for part in item.split("_"))
     texture = f"res://assets/map/settlement/modular/{pack}/{item}.png"
     text = f'''[gd_scene load_steps=2 format=3]
@@ -218,6 +218,14 @@ def main():
         group, warnings = extract(pack, sheet, (256, 256), 4, "res://assets/map/settlement/props.png")
         catalog.append(group)
         issues.extend(warnings)
+    # Supplementary user sheets have their own importer and provenance. Rebuilding
+    # the generated packs must not remove those independent catalog entries.
+    catalog_path = ART / "catalog.json"
+    if catalog_path.exists():
+        previous = json.loads(catalog_path.read_text(encoding="utf-8"))
+        generated_ids = {pack["id"] for pack in catalog}
+        catalog.extend(pack for pack in previous["packs"]
+                       if pack.get("source_kind") == "user_supplied" and pack["id"] not in generated_ids)
     result = {"version": 1, "model": "gpt-image-2.5-sunburst", "processing": "native crop + hard alpha only; no resizing", "count": sum(len(pack["assets"]) for pack in catalog), "packs": catalog, "inspection_notes": issues}
     (ART / "catalog.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     docs = ROOT / "docs/assets/modular_assets/captures"

@@ -1,13 +1,16 @@
 class_name TaskPanel
 extends VBoxContainer
+## Shared read-only projection, configured by the containing handbook page.
+@export_enum("all", "tasks", "milk_orders") var content_filter := "all"
 ## Read-only activity browser page. Facts and reveal rules belong to TaskJournal.
 ## The page owns no chrome: ModalShell provides the shade, panel, header and close button.
 
-@onready var _list: ItemList = %Entries
+@onready var _list: TaskList = %Entries
 @onready var _body: BoxContainer = %Body
 @onready var _title: Label = %Title
 @onready var _text: RichTextLabel = %Text
 @onready var _summary: Label = %Summary
+@onready var _detail: Control = %Detail
 
 var _journal: TaskJournal
 var _orders: OrderBoardModel
@@ -71,7 +74,7 @@ func uses_native_gui_input() -> bool:
 func get_default_focus() -> Control:
 	return _list if _list.item_count > 0 else null
 
-func get_entries() -> ItemList:
+func get_entries() -> TaskList:
 	return _list
 
 func get_detail_title() -> Label:
@@ -107,14 +110,26 @@ func _on_visibility_changed() -> void:
 func _refresh() -> void:
 	if not is_node_ready():
 		return
+	# The list is rebuilt row by row, so remember which row held the focus and
+	# hand it back afterwards; otherwise a refresh would strand keyboard users.
+	var focused_row := _list.focused_row()
 	var list_scroll := _list.get_v_scroll_bar().value
 	_list.clear()
 	_ids.clear()
 	var tasks: Array[Dictionary] = []
 	if is_instance_valid(_journal):
 		tasks = _journal.get_visible_tasks()
+	if content_filter != "all":
+		tasks = tasks.filter(func(task: Dictionary) -> bool:
+			var milk: bool = task.delivery.has("product_id") or task.delivery.has("drink")
+			if content_filter == "tasks":
+				return not milk
+			if not milk:
+				return false
+			var order := _orders.get_task_entry(task.id) if is_instance_valid(_orders) else {}
+			return task.status != "active" or order.get("accepted", false))
 	for task in tasks:
-		var label := ("主线 · " if task.type == "main" else "委托 · ") + String(task.title).replace("\n", " ")
+		var label := ("" if content_filter == "milk_orders" else ("主线 · " if task.type == "main" else "支线 · ")) + String(task.title).replace("\n", " ")
 		if task.status != "active":
 			label = "[" + _status_text(task.status) + "] " + label
 		var index := _list.add_item(label)
@@ -123,11 +138,11 @@ func _refresh() -> void:
 	var choose_first := _selected_id not in _ids
 	if choose_first:
 		_selected_id = _ids[0] if not _ids.is_empty() else ""
-	_summary.text = "任务记录 · %d" % _ids.size()
+	_summary.text = ("奶茶订单 · %d" if content_filter == "milk_orders" else "任务日志 · %d") % _ids.size()
 	if _ids.is_empty():
-		_title.text = "暂无活动任务"
+		_title.text = "暂无奶茶订单记录" if content_filter == "milk_orders" else "暂无任务记录"
 		_title.tooltip_text = ""
-		_set_detail("接取任务后，可在这里查看目标、交付对象和奖励。")
+		_set_detail("已接取与已结束的奶茶订单会保存在这里。" if content_filter == "milk_orders" else "需要完成和已经完成的任务会记录在这里。")
 		return
 	var selected_index := _ids.find(_selected_id)
 	_list.select(selected_index) # select() does not emit item_selected.
@@ -136,6 +151,8 @@ func _refresh() -> void:
 	else:
 		_list.get_v_scroll_bar().set_deferred("value", list_scroll)
 	_show_task(tasks[selected_index])
+	if focused_row >= 0:
+		_list.focus_row(focused_row)
 
 func _number(value: float) -> String:
 	return String.num(value).trim_suffix(".0")
@@ -145,6 +162,9 @@ func _show_task(task: Dictionary) -> void:
 	_title.tooltip_text = task.title
 	if task.status in ["completed", "failed", "expired", "cancelled"]:
 		var lines := PackedStringArray([task.description, "", "任务结果：" + _status_text(task.status)])
+		if content_filter == "milk_orders":
+			var entry := _orders.get_task_entry(task.id) if is_instance_valid(_orders) else {}
+			lines = PackedStringArray(["饮品：" + str(entry.get("title", task.title)), "顾客：" + str(entry.get("target_name", "未知顾客")), "", "订单状态：" + _status_text(task.status), "报酬：" + str(entry.get("rewards", task.rewards.get("text", "—")))])
 		var result: Dictionary = task.get("result", {})
 		if not result.is_empty():
 			lines.append("结算时间：第 %d 天 · %s" % [result.day, "白天" if result.phase == "day" else "夜晚"])
@@ -177,21 +197,21 @@ func _show_task(task: Dictionary) -> void:
 	if task.current_objective.is_empty():
 		lines.append("目标已达成，等待后续剧情。")
 	if not task.delivery.is_empty():
-		lines.append("\n交付对象：" + String(_target_names.get(task.delivery.target_object_id, "交付对象待确认")))
+		lines.append("\n交付对象：" + String(_target_names.get(task.delivery.target_object_id, "未知")))
 		if task.delivery.has("uses"):
 			var uses := PackedStringArray()
 			for id: String in task.delivery.uses:
-				uses.append("%s × %s 次" % [_product_names.get(id, "物资待确认"), _number(task.delivery.uses[id])])
+				uses.append("%s × %s 次" % [_product_names.get(id, "未知物资"), _number(task.delivery.uses[id])])
 			lines.append("使用物资：" + "、".join(uses))
 		elif task.delivery.has("items"):
 			var materials := PackedStringArray()
 			for id: String in task.delivery.items:
-				materials.append("%s × %s" % [_product_names.get(id, "物资待确认"), _number(task.delivery.items[id])])
+				materials.append("%s × %s" % [_product_names.get(id, "未知物资"), _number(task.delivery.items[id])])
 			lines.append("交付物资：" + "、".join(materials))
 		elif task.delivery.has("drink"):
 			lines.append("交付饮品：" + DrinkFormula.requirement_text(task.delivery.drink, _product_names))
 		else:
-			lines.append("交付成品：" + String(_product_names.get(task.delivery.product_id, "成品待确认")))
+			lines.append("交付成品：" + String(_product_names.get(task.delivery.product_id, "未知成品")))
 	lines.append("\n奖励：" + String(task.rewards.get("text", "暂无奖励说明")))
 	_set_detail("\n".join(lines))
 
@@ -201,10 +221,18 @@ func _set_detail(content: String) -> void:
 	if _text.text != content or not same_task:
 		_text.text = content
 		_text.get_v_scroll_bar().set_deferred("value", scroll)
+	# Another task opens instead of swapping the words under the eye; a journal
+	# refresh of the task already on screen leaves it still.
+	if not same_task:
+		UIFlourish.reveal(_detail, 0.99)
 	_displayed_id = _selected_id
 
 func _select(index: int) -> void:
 	if not is_visible_in_tree() or not can_process() or index < 0 or index >= _ids.size():
+		return
+	# Re-selecting the row that is already open must not rebuild the list: the
+	# rows are the focus targets now, and rebuilding would drop the focus.
+	if _ids[index] == _selected_id and _displayed_id == _selected_id:
 		return
 	_selected_id = _ids[index]
 	_refresh()

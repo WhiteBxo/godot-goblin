@@ -1,0 +1,8 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/debug/developer_tools/flow_test_panel.gd" id="1_script"]
+[ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="2_theme"]
+
+[node name="FlowTestPanel" type="VBoxContainer"]
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")

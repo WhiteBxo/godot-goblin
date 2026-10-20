@@ -1,7 +1,7 @@
 extends Node2D
 ## F6: all characters independently exercise the real ActorDirector movement API.
 
-const IDS := ["fat_goblin", "common_goblin", "guard", "guard_captain", "elder", "chef", "tavern", "casino", "human_customer", "human_customer_female"]
+const IDS := ["fat_goblin", "common_goblin", "guard", "guard_captain", "elder", "chef", "tavern", "casino", "human_customer", "human_customer_female", "casino_sentry"]
 var _actors := ActorDirector.new()
 
 func _ready() -> void:
@@ -23,7 +23,9 @@ func _ready() -> void:
 	for index in IDS.size():
 		var id: String = IDS[index]
 		var actor: SettlementCharacter = load("res://src/gameplay/characters/%s.tscn" % id).instantiate()
-		actor.position = Vector2(120 + index % 5 * 250, 270 + index / 5 * 310)
+		if id == "human_customer":
+			actor.appearance = actor.Appearance.MALE
+		actor.position = Vector2(120 + index % 6 * 205, 270 + index / 6 * 310)
 		entities.add_child(actor)
 		_actors.actor_register(StringName(id), actor)
 		var label := Label.new()

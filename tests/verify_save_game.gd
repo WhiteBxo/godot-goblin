@@ -208,12 +208,31 @@ func _test_bad_continue() -> void:
 		file = FileAccess.open(_directory.path_join(name), FileAccess.WRITE)
 		file.store_string("broken")
 		file.close()
-	check(GameEntry.continue_game(self) != OK and current_scene == title and _state.to_dict() == snapshot, "Bad primary and backup preserve the title and previous session")
+	check(GameEntry.continue_game(self, "auto") != OK and current_scene == title and _state.to_dict() == snapshot, "A broken selected slot preserves the title and previous session")
+	var historical := GameEntry.create_save_library().newest_valid_id(GameEntry.preflight_save)
+	check(historical in ["auto_2", "auto_3"] and GameEntry.continue_game(self) == OK, "Continue can recover from another automatic slot")
+	await _wait_ready()
+	check(GameEntry.return_to_title(self) == OK, "Return after automatic-history recovery")
+	await scene_changed
+	await frames()
+	title = current_scene
+	snapshot = _state.to_dict()
+	for id: String in SaveLibrary.AUTOMATIC_IDS:
+		var store := GameEntry.create_save_store(id)
+		for name: String in ["autosave.dat", "autosave.bak"]:
+			if not FileAccess.file_exists(store.directory.path_join(name)):
+				continue
+			file = FileAccess.open(store.directory.path_join(name), FileAccess.WRITE)
+			file.store_string("broken")
+			file.close()
+	check(GameEntry.continue_game(self) != OK and current_scene == title and _state.to_dict() == snapshot, "No valid slot leaves all memory and navigation untouched")
 
 func _worker(mode: String) -> void:
 	if mode == "craft":
 		check(GameEntry.start_new_game(self) == OK, "Worker starts a fresh formal game")
 		var game := await _wait_ready()
+		if game == null:
+			return
 		await _human_checkpoint(game)
 		check(game.get_task_delivery().accept_order("day1_human") == OK, "Worker accepts order")
 		check(game.get_tea_production().make_drink(["creamer_milk_tea_base", "brown_sugar_boba", "ice"], "day1_human").ok, "Worker crafts product")
@@ -223,6 +242,8 @@ func _worker(mode: String) -> void:
 		return
 	check(GameEntry.continue_game(self) == OK, "Worker continues a previous process save")
 	var game := await _wait_ready()
+	if game == null:
+		return
 	var file := FileAccess.open(_directory.path_join("expected.dat"), FileAccess.READ)
 	var expected: Dictionary = file.get_var(false)
 	file.close()

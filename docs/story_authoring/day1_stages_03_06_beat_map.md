@@ -1,5 +1,7 @@
 # Day 1 S03–S06 Beat 映射与验证
 
+> 2026-10-20：下表为早期导入草案。现行发布状态、步骤区间与工程散列以 [day1_stages_03_06_bridge.json](day1_stages_03_06_bridge.json) 为准；新增内容及验证见[实施记录](../development/story_supplement_2026_10_20.md)。本历史表不作为当前 pending 清单。
+
 核对日期：2026-10-18。正式编辑入口为 [day1_stages_03_06_project.json](day1_stages_03_06_project.json)，派生清单为 [day1_stages_03_06_bridge.json](day1_stages_03_06_bridge.json)。本表覆盖 24 Beat、19 个 Dialogue、127 个文本节点、3 条 Phase 草案、56 条静态／待执行 case。
 
 **本轮新增发布区间为 0；以下所有 Beat、事件及 Phase 均 pending。** 标准编译集合为空，没有运行时步骤区间，不填虚假的 `[start, start + count)`。`event_id` 是保留的正式事件候选；`review.*` 是仅供原 Loader 检查的文本片段，未装入正式宿主。动作、业务调用、真实触发及恢复拓扑尚未具备，不能将文本片段直接发布。

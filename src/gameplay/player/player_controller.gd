@@ -33,6 +33,7 @@ const NPC_LAYER := 3
 @export var accepts_player_input := true
 @export_range(1.0, 4.0, 0.05) var run_speed_multiplier := 1.6
 @export_range(0.1, 1.0, 0.05) var sneak_speed_multiplier := 0.5
+@export_range(0.05, 0.8, 0.05) var movement_deadzone := 0.25
 
 var facing: Facing = Facing.DOWN:
 	set(value):
@@ -68,6 +69,18 @@ func _ready() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_VISIBILITY_CHANGED:
 		_sync_npc_collision()
+	elif what == NOTIFICATION_APPLICATION_FOCUS_OUT and accepts_player_input:
+		clear_movement_input()
+
+## Focus changes may swallow key releases. Clear global actions and residual velocity.
+func clear_movement_input() -> void:
+	for action: StringName in [&"move_left", &"move_right", &"move_up", &"move_down", &"player_run", &"player_sneak", &"player_throw"]:
+		Input.action_release(action)
+	velocity = Vector2.ZERO
+	if is_node_ready():
+		cancel_action()
+		_reset_locomotion()
+		_update_animation(false)
 
 ## Applies to both settlement NPCs and actors spawned for story performances.
 ## Parent visibility also matters: an off-stage actor must never be an invisible wall.
@@ -85,7 +98,7 @@ func _physics_process(delta: float) -> void:
 		elif Input.is_action_pressed(&"player_run"):
 			mode = Locomotion.RUN
 		set_locomotion_mode(mode)
-	move_direction(Input.get_vector("move_left", "move_right", "move_up", "move_down"), delta)
+	move_direction(Input.get_vector("move_left", "move_right", "move_up", "move_down", movement_deadzone), delta)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if accepts_player_input and event.is_action_pressed(&"player_throw"):
@@ -285,6 +298,9 @@ func set_movement_enabled(enabled: bool) -> void:
 ## [param speed_override] lets scene-owned ambient NPC movement use its own
 ## pace without changing the body's configured player speed.
 func move_direction(direction: Vector2, delta: float, speed_override: float = 0.0) -> void:
+	if not direction.is_finite() or not is_finite(delta) or delta <= 0.0:
+		velocity = Vector2.ZERO
+		return
 	if not movement_enabled or is_performance_controlled() or not _active_action.is_empty():
 		return
 	direction = direction.limit_length()

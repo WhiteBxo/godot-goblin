@@ -17,13 +17,15 @@ var _startup_frames := 0
 var _signature := PackedByteArray()
 var _status := ""
 var _retry_at := 0
+var _manual_safe: Callable
 
-func configure(state: Node, store: SaveStore, checkpoint: Callable, safe: Callable, finish_startup: Callable = Callable(), new_game: bool = false) -> void:
+func configure(state: Node, store: SaveStore, checkpoint: Callable, safe: Callable, finish_startup: Callable = Callable(), new_game: bool = false, manual_safe: Callable = Callable()) -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_state = state
 	_store = store
 	_checkpoint = checkpoint
 	_safe = safe
+	_manual_safe = manual_safe
 	_finish_startup = finish_startup
 	_initializing = finish_startup.is_valid()
 	_new_game = new_game
@@ -32,6 +34,20 @@ func configure(state: Node, store: SaveStore, checkpoint: Callable, safe: Callab
 
 func get_status_text() -> String:
 	return _status
+
+func can_save_manual() -> bool:
+	return not _initializing and GameEntry.is_save_session_active() and is_instance_valid(_state) and _state.can_take_snapshot() and _manual_safe.is_valid() and _manual_safe.call() and not _checkpoint.call().is_empty()
+
+func save_manual(slot_id: String, overwrite: bool = false) -> Error:
+	if not can_save_manual():
+		return ERR_BUSY
+	var checkpoint: Dictionary = _checkpoint.call()
+	var saved_at := int(Time.get_unix_time_from_system())
+	var error := SaveLibrary.new(_store.directory).save_manual(slot_id, _state.to_dict(), checkpoint.id, overwrite, saved_at)
+	if error == OK:
+		GameEntry.record_saved_at(saved_at)
+		_set_status(_saved_text(saved_at))
+	return error
 
 func _mark_dirty() -> void:
 	_dirty = true
@@ -71,7 +87,7 @@ func _process(_delta: float) -> void:
 		_dirty = false
 		return
 	var saved_at := int(Time.get_unix_time_from_system())
-	var error := _store.save(snapshot, checkpoint.id, saved_at)
+	var error := SaveLibrary.new(_store.directory).save_automatic(_store, snapshot, checkpoint.id, saved_at)
 	if error == OK:
 		_signature = signature
 		_dirty = false

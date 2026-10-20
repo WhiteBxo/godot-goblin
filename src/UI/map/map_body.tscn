@@ -36,4 +36,4 @@ size_flags_horizontal = 3
 [node name="Legend" type="Label" parent="Details"]
 layout_mode = 2
 theme_type_variation = &"Hint"
-text = "● 你的位置\n◆ 当前目标\n数字 已知地点\n细线 主要通路"
+text = "● 你的位置\n○ 当前目标\n地名 已知区域\n路线以实际道路为准"

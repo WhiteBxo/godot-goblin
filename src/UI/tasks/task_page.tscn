@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://src/UI/tasks/task_panel.gd" id="1"]
 [ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="2"]
+[ext_resource type="Script" path="res://src/UI/tasks/task_list.gd" id="3"]
 
 [node name="TaskPage" type="VBoxContainer"]
 size_flags_vertical = 3
@@ -25,12 +26,19 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 12
 
-[node name="Entries" type="ItemList" parent="Body"]
+[node name="Entries" type="ScrollContainer" parent="Body"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(176, 0)
 layout_mode = 2
-allow_reselect = true
-allow_search = false
+follow_focus = true
+focus_mode = 2
+horizontal_scroll_mode = 0
+script = ExtResource("3")
+
+[node name="Rows" type="VBoxContainer" parent="Body/Entries"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
 
 [node name="Detail" type="VBoxContainer" parent="Body"]
 unique_name_in_owner = true

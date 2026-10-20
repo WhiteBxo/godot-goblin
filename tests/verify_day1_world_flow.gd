@@ -91,7 +91,8 @@ func _run() -> void:
 	await _frames()
 	_check(DayPhase.is_night(_state) and _state.current_day == 1, "Accepted mission enters night on the same day")
 	_check(Day1Access.can_enter_elder(_state) and blood.conditions_met() and document.conditions_met(), "Accepted S05 unlocks both actual indoor objectives")
-	_check("书房文书" in _game.get_stealth_service().get_objective_progress() and not _game.get_stealth_service().has_mission_items(), "Indoor guidance names actual room objectives without inventing completion")
+	_check(map.get_stealth_setup() == null and _game.get_stealth_service() == null, "Elder house has no stealth setup, detection service or stealth HUD")
+	_check(map.get_chapter_characters().is_empty(), "Indoor patrol guards are removed")
 	var checkpoint: Dictionary = _state.to_dict()
 	for document_first: bool in [true, false]:
 		_check(_state.restore_state(checkpoint) == OK, "Restore investigation baseline")
@@ -103,7 +104,7 @@ func _run() -> void:
 			await _take_blood(blood)
 			await _read_document(document)
 		_check(_inventory.get_uses("day1_griffin_blood") == 3 and _inventory.get_stock("day1_elder_document") == 1, "Both investigation orders grant exactly the approved items")
-		_check(_game.get_stealth_service().has_mission_items(), "Return guidance waits for both true flags and real inventory")
+		_check(_state.get_flag("day1.s05.document_read") and _state.get_flag("day1.s05.blood_acquired"), "Indoor investigation preserves both facts without a stealth service")
 		_check(_state.get_tea_production().preview_craft(BLOOD).code == "locked", "Taking blood inside the house does not unlock the S06 recipe")
 		_check(not _state.get_flag("day1.s05.returned_shop"), "Indoor inspection never invents a return-to-shop fact")
 	current_scene = null

@@ -27,6 +27,7 @@ var _shop_ui: ShopUI
 var _shop_interaction: ShopInteraction
 var _task_journal: TaskJournal
 var _map_panel: SettlementMapPanel
+var _navigation_hud: NavigationHUD
 var _map_button: Button
 var _map_registered := false
 var _map_provider: Object
@@ -34,6 +35,9 @@ var _handbook: HandbookPanel
 var _handbook_hud: HandbookHUD
 var _game_menu: ChapterActionsHUD
 var _task_hud: TaskHUD
+var _wallet_hud: WalletHUD
+var _payment_fx_orders := 0
+var _payment_fx_pending := false
 var _saved_status := "尚未自动保存"
 var _save_status: Label
 var _save_toast: Tween
@@ -211,11 +215,25 @@ func _create_ui_system() -> void:
 	pause.settings_requested.connect(func() -> void: _ui_manager.open_screen(ScreenIds.SETTINGS))
 	pause.resume_requested.connect(func() -> void: _ui_manager.set_paused(false))
 	pause.title_requested.connect(_return_to_title.bind(pause), CONNECT_DEFERRED)
+	var saves: SaveSlotsPanel = preload("res://src/UI/saves/save_slots_panel.tscn").instantiate()
+	saves.configure(save_manual, can_save_manual)
+	_ui_manager.register_screen(ScreenIds.SAVES, saves, &"pause", true)
+	pause.saves_requested.connect(func(saving: bool) -> void:
+		saves.open_mode(saving)
+		_ui_manager.open_screen(ScreenIds.SAVES))
+	saves.load_requested.connect(func(slot_id: String) -> void:
+		var error := GameEntry.continue_game(get_tree(), slot_id)
+		if error != OK:
+			saves.show_load_error(error), CONNECT_DEFERRED)
 	_ui_manager.modal_changed.connect(_refresh_input_lock)
 	var audio_feedback := UIAudioFeedback.new()
 	audio_feedback.name = "UIAudioFeedback"
 	$Systems.add_child(audio_feedback)
 	audio_feedback.configure(_interaction_audio.play_sound, [$HudLayer, $PopupLayer, $PauseLayer], _ui_manager)
+	var button_motion := UIButtonMotion.new()
+	button_motion.name = "UIButtonMotion"
+	$Systems.add_child(button_motion)
+	button_motion.configure([$HudLayer, $PopupLayer, $PauseLayer])
 
 func _return_to_title(pause: PauseMenu) -> void:
 	var error := ERR_BUSY if is_instance_valid(_scene_travel) and _scene_travel.is_busy() else GameEntry.return_to_title(get_tree())
@@ -260,7 +278,7 @@ func _refresh_game_menu() -> void:
 	var summary := _task_hud.get_objective_summary() if is_instance_valid(_task_hud) else {}
 	_game_menu.set_overview(summary.get("title", ""), summary.get("objective", ""), WalletTransactions.format_money(get_transactions().get_balance()), _saved_status)
 	var pages := _handbook.get_pages()
-	_game_menu.set_navigation_access({ScreenIds.TASKS: not pages.is_tab_hidden(0), ScreenIds.CHRONICLE: not pages.is_tab_hidden(1), ScreenIds.DRINKS: not pages.is_tab_hidden(2), ScreenIds.CHARACTERS: not pages.is_tab_hidden(3), ScreenIds.INVENTORY: true, ScreenIds.MAP: _map_registered, ScreenIds.SETTINGS: true})
+	_game_menu.set_navigation_access({ScreenIds.TASKS: not pages.is_tab_hidden(0), ScreenIds.ORDER_HISTORY: true, ScreenIds.HIRING: false, ScreenIds.CHRONICLE: not pages.is_tab_hidden(1), ScreenIds.DRINKS: not pages.is_tab_hidden(2), ScreenIds.CHARACTERS: not pages.is_tab_hidden(3), ScreenIds.INVENTORY: true, ScreenIds.MAP: _map_registered, ScreenIds.SETTINGS: true})
 
 func _navigate_game_menu(id: StringName) -> void:
 	_ui_manager.close_screen(ScreenIds.CHAPTER_ACTIONS)
@@ -276,7 +294,7 @@ func _navigate_game_menu(id: StringName) -> void:
 		_:
 			error = _open_handbook(id)
 	if error == OK:
-		_menu_destination = ScreenIds.HANDBOOK if id in [ScreenIds.TASKS, ScreenIds.CHRONICLE, ScreenIds.DRINKS, ScreenIds.CHARACTERS] else id
+		_menu_destination = ScreenIds.HANDBOOK if id in [ScreenIds.TASKS, ScreenIds.CHRONICLE, ScreenIds.DRINKS, ScreenIds.CHARACTERS, ScreenIds.ORDER_HISTORY] else id
 	else:
 		open_game_menu.call_deferred()
 
@@ -397,6 +415,7 @@ func _create_handbook() -> void:
 		_handbook.get_drinks_page().show_remake_result(is_instance_valid(_shop_ui) and _shop_ui.select_formula(materials, iced)))
 	_handbook.close_requested.connect(func() -> void: _ui_manager.close_screen(ScreenIds.HANDBOOK))
 	_ui_manager.register_screen_alias(ScreenIds.TASKS, ScreenIds.HANDBOOK, _handbook.select_page.bind(ScreenIds.TASKS))
+	_ui_manager.register_screen_alias(ScreenIds.ORDER_HISTORY, ScreenIds.HANDBOOK, _handbook.select_page.bind(ScreenIds.ORDER_HISTORY))
 	_ui_manager.register_screen_alias(ScreenIds.CHRONICLE, ScreenIds.HANDBOOK, _handbook.select_page.bind(ScreenIds.CHRONICLE))
 	_ui_manager.register_screen_alias(ScreenIds.DRINKS, ScreenIds.HANDBOOK, _handbook.select_page.bind(ScreenIds.DRINKS))
 	_ui_manager.register_screen_alias(ScreenIds.CHARACTERS, ScreenIds.HANDBOOK, _handbook.select_page.bind(ScreenIds.CHARACTERS))
@@ -430,9 +449,7 @@ func _refresh_handbook_access() -> void:
 	var chronicle: bool = state.get_flag("day1.chronicle_unlocked") if day1_story_enabled else not _chronicle_journal.get_entries().is_empty()
 	var drinks: bool = not state.get_warehouse_inventory().get_drinks(true).is_empty()
 	var characters: bool = not _character_journal.get_characters().is_empty()
-	_handbook.refresh_access(tasks, chronicle, drinks, characters)
-	if not tasks and not chronicle and not drinks and not characters:
-		_ui_manager.close_screen(ScreenIds.HANDBOOK)
+	_handbook.refresh_access(true, chronicle, drinks, characters)
 	_handbook_hud.refresh_access(true, _chronicle_journal.get_unread_count() if chronicle else 0, _character_journal.get_unread_count())
 	_refresh_game_menu()
 
@@ -536,6 +553,12 @@ func is_session_initializing() -> bool:
 func get_save_coordinator() -> SaveCoordinator:
 	return _save_coordinator
 
+func can_save_manual() -> bool:
+	return is_instance_valid(_save_coordinator) and _save_coordinator.can_save_manual()
+
+func save_manual(slot_id: String, overwrite: bool = false) -> Error:
+	return _save_coordinator.save_manual(slot_id, overwrite) if is_instance_valid(_save_coordinator) else ERR_UNAVAILABLE
+
 func _create_save_system() -> void:
 	if not GameEntry.is_save_session_active() or not day1_story_enabled:
 		return
@@ -545,7 +568,8 @@ func _create_save_system() -> void:
 	$Systems.add_child(_save_coordinator)
 	_save_coordinator.configure(get_node("/root/GameState"), store,
 		func() -> Dictionary: return store.checkpoints.find_checkpoint(get_node("/root/GameState").to_dict(), scene_file_path),
-		_can_save_checkpoint, _finish_session_initialization if _session_initializing else Callable(), _new_saved_session)
+		_can_save_checkpoint, _finish_session_initialization if _session_initializing else Callable(), _new_saved_session,
+		_can_save_checkpoint.bind(true))
 	_save_status = preload("res://src/UI/hud/save_status.tscn").instantiate()
 	$HudLayer.add_child(_save_status)
 	_save_status.hide()
@@ -576,8 +600,9 @@ func _on_save_status_changed(text: String) -> void:
 	_save_toast.tween_property(_save_status, "modulate:a", 0.0, 0.35)
 	_save_toast.tween_callback(_save_status.hide)
 
-func _can_save_checkpoint() -> bool:
-	if get_tree().paused or _ui_manager.has_modal() or _story_director.is_busy() or _dialogue_manager.is_active():
+func _can_save_checkpoint(allow_pause: bool = false) -> bool:
+	var modal := _ui_manager.has_modal_except([ScreenIds.PAUSE, ScreenIds.SAVES]) if allow_pause else _ui_manager.has_modal()
+	if (get_tree().paused and not allow_pause) or modal or _story_director.is_busy() or _dialogue_manager.is_active():
 		return false
 	if (is_instance_valid(_scene_travel) and _scene_travel.is_busy()) or _shop_player.is_performance_controlled():
 		return false
@@ -603,8 +628,10 @@ func _finish_session_initialization(error: Error) -> void:
 	session_initialized.emit(error)
 
 func _create_scene_travel(exits: Array[SceneExit]) -> void:
-	for point in exits:
+	for point: SceneExit in exits:
 		_scene_exits[point.interaction_id] = point
+		# Walking into the door's reach is the earliest honest warm-up point.
+		point.availability_changed.connect(_on_exit_availability_changed)
 	var visual: ScreenTransition = preload("res://src/UI/screen_transition/screen_transition.tscn").instantiate()
 	$TransitionLayer.add_child(visual)
 	_scene_travel = SceneTravel.new()
@@ -616,6 +643,19 @@ func _create_scene_travel(exits: Array[SceneExit]) -> void:
 	_scene_travel.travel_failed.connect(_on_scene_travel_failed)
 	if _arrival_entrance != &"":
 		_scene_travel.begin_arrival()
+		_play_door_bell.call_deferred()
+
+## Preloads the destination once the player can actually reach the exit, so the
+## commit stays synchronous while the expensive part runs on a worker thread.
+func _on_exit_availability_changed(point: InteractionPoint, available: bool) -> void:
+	if available and point is SceneExit and is_instance_valid(_scene_travel):
+		_scene_travel.preload_destination(point as SceneExit)
+
+## Scene travel swaps the whole host, so the bell has to ring on the arriving
+## side; a deferred call lets the new AudioManager register the library first.
+func _play_door_bell() -> void:
+	await get_tree().process_frame
+	_interaction_audio.play_sound("shop.door_bell", "SFX", -13.0)
 
 func _can_leave_scene() -> bool:
 	if _shop_level != null and not Day1Access.can_leave_shop(get_node("/root/GameState")):
@@ -801,10 +841,11 @@ func _restore_stealth_camera() -> void:
 	if is_instance_valid(_camera_director):
 		_camera_director.camera_follow(0.35)
 
-func _on_stealth_throw_resolved(_kind: StringName, _affected: bool) -> void:
+func _on_stealth_throw_resolved(kind: StringName, _affected: bool) -> void:
 	if is_instance_valid(_camera_director):
 		_camera_director.camera_shake(2.0, 0.12, 1.6)
-	_interaction_audio.play_event("throw_impact")
+	# A thrown coin has its own metallic drop; everything else keeps the impact.
+	_interaction_audio.play_sound("story.coin_drop" if kind == &"coin" else "story.impact")
 
 func _retry_infiltration_travel() -> void:
 	var destination: MainGame = load("res://src/core/settlement.tscn").instantiate()
@@ -844,19 +885,26 @@ func _create_shop_business(ui: ShopUI) -> void:
 	var error := _task_delivery.configure(_task_catalog, _task_journal, get_node("/root/GameState"), _warehouse_inventory)
 	if error != OK:
 		push_error("Could not configure task delivery (%d)" % error)
-	_task_delivery.delivered.connect(func(_id: String) -> void: _interaction_audio.play_event("delivery_success"))
+	_task_delivery.delivered.connect(func(_id: String) -> void: _celebrate_payment())
 	_task_delivery.delivery_failed.connect(func(_id: String, _reason: String) -> void: _interaction_audio.play_event("delivery_failure"))
 	_order_board = OrderBoardModel.new()
 	_order_board.name = "OrderBoardModel"
 	$Systems.add_child(_order_board)
 	_order_board.configure(_task_catalog, _task_journal, state, _warehouse_inventory, _tea_production, _task_delivery)
 	_handbook.get_tasks_page().bind_orders(_order_board)
+	_handbook.get_order_history_page().bind_orders(_order_board)
 	_task_journal.projection_changed.connect(_refresh_order_requirements.bind(ui))
 	ui.point_opened.connect(_on_shop_point_opened)
 	ui.configure_inventory(_warehouse_inventory)
 	ui.configure_production(_tea_production)
 	ui.configure_orders(_order_board)
 	ui.track_requested.connect(_track_order)
+	ui.deliver_requested.connect(func(id: String) -> void:
+		var entry := _order_board.get_entry(id)
+		if entry.get("status") != "active" or not entry.get("ready", false):
+			return
+		var result := _task_delivery.try_submit(id, entry.target_id)
+		ui.show_feedback(result.message, result.ok))
 	ui.accept_requested.connect(func(id: String) -> void:
 		var accepted := _task_delivery.accept_order(id)
 		if accepted == OK:
@@ -865,13 +913,22 @@ func _create_shop_business(ui: ShopUI) -> void:
 		elif accepted != ERR_ALREADY_EXISTS:
 			_interaction_audio.play_event("order_failure")
 			ui.show_feedback("暂时无法接取这张订单，请核对当前阶段。", false))
+	ui.cancel_requested.connect(func(id: String) -> void:
+		var cancelled := ERR_UNCONFIGURED
+		if is_instance_valid(_chapter_gameplay):
+			cancelled = _chapter_gameplay.cancel_optional_order(id)
+		ui.show_feedback("已放弃这张订单。" if cancelled == OK else "这张订单现在无法放弃。", cancelled == OK))
 	var task_hud: TaskHUD = preload("res://src/UI/tasks/task_hud.tscn").instantiate()
 	_task_hud = task_hud
 	_ui_manager.register_screen(ScreenIds.TASK_HUD, task_hud, &"hud", false)
 	_ui_manager.open_screen(ScreenIds.TASK_HUD)
 	task_hud.bind_journal(_task_journal)
 	task_hud.bind_orders(_order_board)
-	# Dialogue and documents already own the frame; the one-line objective
+	task_hud.tasks_requested.connect(open_tasks)
+	_wallet_hud = preload("res://src/UI/hud/wallet_hud.tscn").instantiate()
+	$HudLayer.add_child(_wallet_hud)
+	_wallet_hud.bind_wallet(get_transactions())
+	# Dialogue and documents already own the frame; the current task
 	# comes back when they close instead of adding a second guidance layer.
 	_ui_manager.modal_changed.connect(func() -> void: task_hud.set_obscured(_ui_manager.has_modal()))
 	task_hud.set_obscured(_ui_manager.has_modal())
@@ -935,6 +992,8 @@ func get_delivery_point(target_id: String) -> InteractionPoint:
 func _track_order(order_id: String) -> void:
 	if _order_board.get_entry(order_id).get("status") == "active":
 		get_node("/root/GameState").set_variable(OrderBoardModel.TRACKED_KEY, order_id)
+		if is_instance_valid(_shop_ui) and _shop_ui.is_open():
+			_shop_ui.focus_tracked_order()
 
 func get_gathering_service() -> GatheringService:
 	return _gathering_service if is_instance_valid(_gathering_service) else null
@@ -948,8 +1007,8 @@ func _create_gathering(points: Array[GatherPoint]) -> void:
 	var error := _gathering_service.configure(get_node("/root/GameState"), _warehouse_inventory, points)
 	if error != OK:
 		push_error("Could not configure gathering (%d)" % error)
-	_gathering_service.harvested.connect(func(_point: GatherPoint, _id: String, _amount: int, _stock: int) -> void:
-		_interaction_audio.play_event("gather_success"))
+	_gathering_service.harvested.connect(func(_point: GatherPoint, id: String, _amount: int, _stock: int) -> void:
+		_interaction_audio.play_sound(GatherSoundKit.for_item(id)))
 
 func _with_npc_points(points: Array[InteractionPoint]) -> Array[InteractionPoint]:
 	for entity in $World/EntityRoot.get_children():
@@ -979,6 +1038,8 @@ func _route_story_interaction(id: StringName) -> Error:
 		var error := _story_director.request_interaction(String(id))
 		if error != ERR_DOES_NOT_EXIST:
 			return error
+	if id == &"orders" and _deliver_ready_orders():
+		return OK
 	if _story_points.has(id):
 		var point := _story_points[id]
 		if not point.is_available():
@@ -1001,14 +1062,75 @@ func _route_story_interaction(id: StringName) -> Error:
 		var result := _gathering_service.harvest(id)
 		if is_instance_valid(point):
 			_shop_ui.open(point)
-			_shop_ui.show_interaction_result(result.message)
+			if result.get("ok", false):
+				_shop_ui.show_harvest_result(
+					str(result.message), _item_icon(str(result.get("item_id", ""))), int(result.get("amount", 0)))
+			else:
+				_shop_ui.show_interaction_result(result.message)
 		return OK if result.ok else ERR_UNAVAILABLE
 	if _npc_points.has(id) and is_instance_valid(_task_delivery):
+		var has_order := false
+		for entry: Dictionary in _order_board.get_entries():
+			has_order = has_order or (entry.status == "active" and entry.target_id == String(id))
+		if not has_order:
+			_shop_ui.show_feedback("对方正忙着自己的事。")
+			return OK
 		var tracked := _order_board.get_tracked_entry()
 		var delivery_result := _task_delivery.deliver_to(String(id), tracked.get("order_id", ""))
 		_shop_ui.show_feedback(delivery_result.message, delivery_result.ok)
 		return OK if delivery_result.ok else ERR_UNAVAILABLE
 	return ERR_DOES_NOT_EXIST
+
+## A sale just settled: the money bag shakes with a metallic tail, then coins arc
+## from the player into the wallet chip. A register batch fires delivered once per
+## order, so the burst is merged into one wave.
+func _celebrate_payment() -> void:
+	_interaction_audio.play_event("delivery_success")
+	# The chain is the metallic tail of the same beat, played now so the sound
+	# never drifts into the next interaction if the player acts quickly.
+	_interaction_audio.play_sound("shop.coins_chain")
+	_payment_fx_orders += 1
+	if _payment_fx_pending:
+		return
+	_payment_fx_pending = true
+	get_tree().create_timer(0.12).timeout.connect(_flush_payment_fx)
+
+func _flush_payment_fx() -> void:
+	_payment_fx_pending = false
+	var orders := _payment_fx_orders
+	_payment_fx_orders = 0
+	if not is_instance_valid(_wallet_hud) or not _wallet_hud.is_visible_in_tree() or not is_instance_valid(_shop_player):
+		return
+	var origin := get_viewport().get_canvas_transform() * (_shop_player.global_position + Vector2(0, -16))
+	UIFlourish.coins_to_wallet(origin, _wallet_hud, mini(2 + orders, 6))
+
+## The register uses the same authoritative per-order settlement as NPC delivery.
+func _deliver_ready_orders() -> bool:
+	if not is_instance_valid(_order_board) or not is_instance_valid(_task_delivery):
+		return false
+	var count := 0
+	var ids: Array[String] = []
+	for entry: Dictionary in _order_board.get_entries():
+		if entry.status == "active" and entry.ready and (not entry.product_id.is_empty() or entry.free_formula):
+			ids.append(entry.order_id)
+	for id: String in ids:
+		var current := _order_board.get_entry(id)
+		if current.get("status") != "active" or not current.get("ready", false):
+			continue
+		var result := _task_delivery.try_submit(id, current.target_id)
+		if result.ok:
+			count += 1
+	if count > 0:
+		_shop_ui.show_feedback("交付成功：已在收银台结算 %d 张奶茶订单。" % count)
+	return count > 0
+
+
+func _item_icon(item_id: String) -> Texture2D:
+	if item_id.is_empty() or not is_instance_valid(_warehouse_inventory):
+		return null
+	var definition := _warehouse_inventory.get_definition(item_id)
+	return definition.icon if definition != null else null
+
 
 func _create_world_controller() -> void:
 	_world_controller = Day1WorldController.new()
@@ -1018,6 +1140,9 @@ func _create_world_controller() -> void:
 		if entity is SettlementCharacter:
 			actors.append(entity)
 	_world_controller.configure(get_node("/root/GameState"), get_active_level(), actors, _npc_points)
+	_world_controller.set_player(_shop_player)
+	_world_controller.boundary_reached.connect(func(message: String) -> void:
+		_shop_ui.show_feedback(message, false))
 	_shop_ui.closed.connect(_complete_story_document)
 	# Only a successfully instantiated destination can publish an arrival fact.
 	if _shop_level != null and _arrival_entrance == &"street_door" and _arrival_records_travel:
@@ -1074,7 +1199,7 @@ func _create_dialogue_system() -> void:
 func _create_story_business() -> void:
 	_story_business = StoryBusinessAdapter.new()
 	_story_business.configure(get_node("/root/GameState"), unlock_map,
-		func(location: String) -> bool: return SettlementMap.MAP_LOCATIONS.has(location))
+		func(location: String) -> bool: return RpgWorldMapData.LOCATIONS.has(location) or SettlementMap.MAP_LOCATIONS.has(location))
 	_story_director.set_business_adapter(_story_business)
 	if day1_story_enabled:
 		_chapter_gameplay = ChapterGameplay.new()
@@ -1187,6 +1312,8 @@ func _refresh_input_lock() -> void:
 		_map_button.disabled = should_lock
 	if is_instance_valid(_handbook_hud):
 		_handbook_hud.disabled = should_lock
+	if is_instance_valid(_navigation_hud):
+		_navigation_hud.set_display_enabled(not should_lock)
 	if should_lock == _input_locked:
 		return
 	var player := get_player() as PlayerController
@@ -1234,6 +1361,10 @@ func _create_debug_components() -> void:
 		"tasks": get_task_journal(),
 		"delivery": get_task_delivery(),
 		"bridge": get_gameplay_bridge(),
+		"get_level": get_active_level,
+		"get_player": get_player,
+		"can_cheat": func() -> bool:
+			return _can_control_debug_player() and not is_session_initializing() and not (is_instance_valid(_scene_travel) and _scene_travel.is_busy()),
 	})
 
 func _get_developer_status() -> Dictionary:
@@ -1343,6 +1474,11 @@ func _create_map_ui() -> void:
 	_map_panel = preload("res://src/UI/map/map_panel.tscn").instantiate()
 	$PopupLayer.add_child(_map_panel)
 	_map_panel.configure(_map_provider, _shop_player, _task_journal, _get_known_map_locations)
+	_navigation_hud = preload("res://src/UI/map/navigation_hud.tscn").instantiate()
+	_ui_manager.register_screen(ScreenIds.NAVIGATION_HUD, _navigation_hud, &"hud", false)
+	_navigation_hud.configure(level, _map_provider, _shop_player, _task_journal, get_node("/root/GameState"), _get_known_map_locations)
+	_ui_manager.open_screen(ScreenIds.NAVIGATION_HUD)
+	_navigation_hud.set_display_enabled(not _input_locked)
 	_map_panel.close_requested.connect(func() -> void: _ui_manager.close_screen(ScreenIds.MAP))
 	_ui_manager.screen_closed.connect(func(id: StringName) -> void:
 		if id != ScreenIds.MAP:
@@ -1361,14 +1497,19 @@ func _get_known_map_locations() -> Array[String]:
 	# Only the shop is initially established. Other areas require explicit knowledge.
 	var known: Array[String] = ["settlement.shop"]
 	var state := get_node("/root/GameState")
+	if state.get_flag("day1.s03.exited_shop"):
+		known.append("settlement.yard")
 	var locations: Array = _map_provider.get_map_location_ids() if is_instance_valid(_map_provider) and _map_provider.has_method("get_map_location_ids") else SettlementMap.MAP_LOCATIONS.keys()
 	for id: String in locations:
 		if state.get_flag("ui.map.known." + id) and id not in known:
 			known.append(id)
 	return known
 
+func get_navigation_hud() -> NavigationHUD:
+	return _navigation_hud
+
 func _refresh_map_access() -> void:
-	if not is_instance_valid(_map_panel):
+	if not is_inside_tree() or not is_instance_valid(_map_panel):
 		return
 	var unlocked: bool = get_node("/root/GameState").get_flag("day1.s04.map_available")
 	if unlocked:

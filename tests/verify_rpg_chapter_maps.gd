@@ -118,12 +118,14 @@ func _verify_map(index: int) -> void:
 	if setup != null:
 		_check(setup.throw_range == 230.0 and setup.effect_scale == 0.5, "RPG throw range and effect distances are halved")
 		for guard: Day1GuardResponse in setup.guards:
-			var expected_range: float = {Day1GuardResponse.Role.ENTRANCE: 84.0, Day1GuardResponse.Role.MANSION_LURE: 48.0,
-				Day1GuardResponse.Role.MANSION_GATE: 60.0, Day1GuardResponse.Role.DRUNKEN: 48.0}[guard.role]
-			_check(guard.sight_range == expected_range, "Guard sight reaches one post without covering the street: " + str(guard.role))
-			_check(guard.hearing_range == (156.0 if guard.role == Day1GuardResponse.Role.ENTRANCE else (120.0 if guard.role == Day1GuardResponse.Role.DRUNKEN else 132.0)), "Guard hearing matches the authored observation distance")
-			_check(guard.sight_half_angle == 45.0, "Guard cone is a forward sector, not a half-screen fan")
-			_check(not guard.patrol_offsets.is_empty(), "Guard has an authored patrol beat: " + str(guard.role))
+			_check(guard.sight_range >= 96.0 and guard.sight_range <= 120.0, "Published guard sight leaves space to pass beside the native lanes")
+			_check(guard.hear_footsteps and guard.hearing_range > 0, "Published guards can hear footsteps")
+			_check(guard.sight_half_angle == 40.0, "Published guard sight uses the playable forward cone")
+			if guard.role in [Day1GuardResponse.Role.MANSION_LURE, Day1GuardResponse.Role.MANSION_GATE]:
+				_check(guard.patrol_offsets.is_empty(), "Mansion door guards keep their posts")
+			else:
+				_check(not guard.patrol_offsets.is_empty(), "Street and indoor guards have authored patrols")
+
 	var data := map.get_map_data(["settlement.shop", "settlement.elder"])
 	_check(data.regions.size() == 2, "Map exposes only requested known exterior locations")
 	_check(map.get_scene_entrance(&"unknown") == null, "Unknown entrances fail closed")
@@ -168,12 +170,12 @@ func _verify_north_guidance(map: RpgChapterMap) -> void:
 	# Isolate the sight lane from the authored patrol: the watch stands still here.
 	var patrol := watch.patrol_offsets.duplicate()
 	watch.patrol_offsets = []
-	for x: float in [1128.0, 1176.0, 1224.0]:
+	for x: float in [1176.0]:
 		watch.reset_response()
 		player.teleport_to(Vector2(x, 504))
 		await physics_frame
-		_check(watch.advance(1.0, player, space), "Forward watch covers native street lane: " + str(x))
-	for x: float in [1104.0, 1248.0]:
+		_check(watch.advance(watch.discovery_seconds, player, space), "Forward watch covers native street lane after its grace period: " + str(x))
+	for x: float in [1104.0, 1128.0, 1224.0, 1248.0]:
 		watch.reset_response()
 		player.teleport_to(Vector2(x, 504))
 		await physics_frame

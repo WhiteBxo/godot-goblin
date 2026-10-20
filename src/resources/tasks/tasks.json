@@ -48,7 +48,7 @@
       "id": "tavern.insomnia_order",
       "type": "commission",
       "title": "酒馆的醒神菇委托",
-      "description": "酒馆人物想要三朵醒神菇。夜里到聚落各处的夜光菌丛采集，再回来交付。",
+      "description": "酒馆老板想要三朵醒神菇。夜里到聚落各处的夜光菌丛采集，再回来交付。",
       "reveal_when": {
         "type": "flag",
         "key": "world.phase.night"
@@ -73,7 +73,7 @@
         },
         {
           "id": "deliver_mushrooms",
-          "text": "把醒神菇交给酒馆人物",
+          "text": "把醒神菇交给酒馆老板",
           "complete_when": {
             "type": "flag",
             "key": "tavern.insomnia.delivered"
@@ -88,7 +88,7 @@
         "target_object_id": "tavern"
       },
       "rewards": {
-        "text": "糖浆 × 2（占位）",
+        "text": "糖浆 × 2",
         "items": {
           "syrup": 2
         }

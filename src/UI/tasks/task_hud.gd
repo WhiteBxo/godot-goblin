@@ -1,14 +1,21 @@
 class_name TaskHUD
-extends PanelContainer
-## Non-interactive view of the current main task; no gameplay or story commands.
+extends HBoxContainer
+## Read-only task projection; the host handles navigation and owns the wallet.
 
-@onready var _title: Label = $Margin/Content/Title
-@onready var _objective: Label = $Margin/Content/Objective
+signal tasks_requested
+
+@onready var _title: Label = $TaskCard/Margin/Content/Title
+@onready var _objective: Label = $TaskCard/Margin/Content/Objective
 var _journal: TaskJournal
 var _orders: OrderBoardModel
+var _signature := ""
+var _shown := false
 ## Dialogue, documents and menus own the frame while they are open; the
 ## objective strip returns afterwards instead of stacking under the shade.
 var _obscured := false
+
+func get_task_button() -> Button:
+	return $TaskCard/OpenTasks
 
 func set_obscured(value: bool) -> void:
 	if _obscured == value:
@@ -41,9 +48,8 @@ func _enter_tree() -> void:
 		_refresh()
 
 func _ready() -> void:
-	$Margin/Content/Heading.hide()
-	_title.hide()
-	_objective.max_lines_visible = 1
+	get_task_button().pressed.connect(func() -> void: tasks_requested.emit())
+	_objective.max_lines_visible = 2
 	_objective.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_resize_card()
 	_refresh()
@@ -68,7 +74,7 @@ func _disconnect_journal() -> void:
 		_journal.projection_changed.disconnect(_refresh)
 
 func _resize_card() -> void:
-	offset_right = offset_left + minf(260.0, maxf(1.0, get_viewport_rect().size.x - 96.0))
+	offset_right = offset_left + minf(380.0, maxf(1.0, get_viewport_rect().size.x - 120.0))
 
 func get_objective_summary() -> Dictionary:
 	return {"title": _title.text, "objective": _objective.text}
@@ -78,27 +84,64 @@ func _refresh() -> void:
 		return
 	var task: Dictionary = _journal.get_current_main_task() if is_instance_valid(_journal) else {}
 	var entry := _orders.get_tracked_entry() if is_instance_valid(_orders) else {}
-	if not entry.is_empty() and (task.is_empty() or not task.delivery.is_empty()):
+	visible = not _obscured and (not task.is_empty() or not entry.is_empty())
+	$TaskCard.visible = not task.is_empty() or not entry.is_empty()
+	if not entry.is_empty() and task.is_empty():
 		var others := -1
 		for order: Dictionary in _orders.get_entries():
 			if order.status == "active":
 				others += 1
-		visible = not _obscured
-		$Margin/Content/Heading.text = "追踪订单" + (" · 另有 %d 单" % others if others > 0 else "")
+		$TaskCard/Margin/Content/Heading.text = "追踪订单" + (" · 另有 %d 单" % others if others > 0 else "")
 		_title.text = entry.title
 		_objective.text = "还缺：" + entry.missing_text if not entry.missing_text.is_empty() else entry.hint
+		_after_refresh()
 		return
-	$Margin/Content/Heading.text = "当前主线"
-	visible = not task.is_empty() and not _obscured
+	$TaskCard/Margin/Content/Heading.text = "当前任务 · 点击查看 [J]"
 	if task.is_empty():
 		_title.text = ""
 		_objective.text = ""
+		_after_refresh()
 		return
 	_title.text = task.title
 	var objective: Dictionary = task.current_objective
 	if objective.is_empty():
 		_objective.text = "目标已达成，等待后续剧情。"
+		_after_refresh()
 		return
 	_objective.text = objective.text
 	if objective.target != null:
 		_objective.text += "  %s / %s" % [String.num(objective.progress).trim_suffix(".0"), String.num(objective.target).trim_suffix(".0")]
+	_after_refresh()
+
+## Presentation only: a new objective or a new balance nudges the strip once so
+## the change is noticed without taking the pointer away from the world.
+func _after_refresh() -> void:
+	if not visible:
+		_shown = false
+		modulate.a = 1.0
+		return
+	if not _shown:
+		_shown = true
+		modulate.a = 0.0
+		create_tween().tween_property(self, "modulate:a", 1.0, 0.12)
+	var signature := "%s|%s|%s" % [$TaskCard/Margin/Content/Heading.text, _title.text, _objective.text]
+	if not _signature.is_empty() and signature != _signature:
+		_nudge($TaskCard, Vector2(1.015, 1.015), Vector2(0.0, 0.5))
+	_signature = signature
+
+func _nudge(control: Control, scale_to: Vector2, pivot: Vector2) -> void:
+	if control.size == Vector2.ZERO:
+		return
+	if not control.is_inside_tree():
+		return
+	var previous: Tween = null
+	if control.has_meta(&"ui_nudge"):
+		previous = control.get_meta(&"ui_nudge") as Tween
+	if previous != null and previous.is_valid():
+		previous.kill()
+	control.pivot_offset = control.size * pivot
+	control.scale = Vector2.ONE
+	var tween := control.create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(control, "scale", scale_to, 0.10)
+	tween.tween_property(control, "scale", Vector2.ONE, 0.16)
+	control.set_meta(&"ui_nudge", tween)

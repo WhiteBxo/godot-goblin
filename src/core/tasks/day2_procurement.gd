@@ -21,15 +21,30 @@ func hire(actor_id: String) -> Error:
 		return ERR_UNAVAILABLE
 	status.status = "hired"
 	status.runner = actor_id
-	status.return_day = 3
-	status.return_phase = "day" if _state.current_day == 2 else "night"
+	status.return_day = _state.current_day
+	status.return_phase = "night"
 	return _state.commit_story_transaction("day2.procurement.hired", {}, {}, 0, {}, {"day2.s02.errand_runner_hired": true}, {KEY: status})
+
+## The client pays 30G for the commission offer; the unused 5G returns to them.
+## Keep the existing eight-key escrow format readable by older saves.
+func purchase_direct() -> Error:
+	var status := get_status()
+	if status.get("status") != "funded" or _state.current_day not in [2, 3]:
+		return ERR_UNAVAILABLE
+	status.merge({"status": "returned", "escrow": 0, "purchase": 30, "fee": 0, "refund": 5, "runner": "player", "return_day": _state.current_day, "return_phase": "night" if DayPhase.is_night(_state) else "day"}, true)
+	var flags := {"day3.procurement.returned": true}
+	if _state.current_day == 2:
+		flags["day2.procurement.purchased"] = true
+	return _state.commit_story_transaction("day2.procurement.direct", {}, {}, 0, {"insomnia_mushroom": 1}, flags, {KEY: status})
 
 func refresh() -> void:
 	var status := get_status()
 	if status.is_empty() or status.status in ["delivered", "expired"]:
 		return
-	if _state.get_flag("day3.procurement.delivered"):
+	# Delivery only closes an errand that already returned and settled its 35G.
+	# Any other state keeps its own branch so a stray flag cannot write an
+	# escrow that valid_status rejects.
+	if _state.get_flag("day3.procurement.delivered") and status.status == "returned":
 		status.status = "delivered"
 		_state.commit_story_transaction("day2.procurement.closed", {}, {}, 0, {}, {}, {KEY: status})
 	elif _state.current_day > 3:
@@ -43,7 +58,10 @@ func refresh() -> void:
 		status.fee = 5
 		status.refund = status.escrow - status.purchase - status.fee
 		status.escrow = 0
-		_state.commit_story_transaction("day2.procurement.returned", {}, {}, 0, {"insomnia_mushroom": 1}, {"day3.procurement.returned": true}, {KEY: status})
+		var flags := {"day3.procurement.returned": true}
+		if _state.current_day == 2:
+			flags["day2.procurement.purchased"] = true
+		_state.commit_story_transaction("day2.procurement.returned", {}, {}, 0, {"insomnia_mushroom": 1}, flags, {KEY: status})
 
 static func valid_status(value: Variant) -> bool:
 	if not value is Dictionary or value.size() != 8 or not value.has_all(["status", "escrow", "purchase", "fee", "refund", "runner", "return_day", "return_phase"]):
@@ -58,7 +76,11 @@ static func valid_status(value: Variant) -> bool:
 		return false
 	if value.runner == "":
 		return value.status in ["funded", "expired"] and value.purchase == 0 and value.fee == 0 and value.return_day == 0 and value.return_phase == "" and value.escrow == (35 if value.status == "funded" else 0)
-	if value.runner not in RUNNERS or value.return_day != 3 or value.return_phase not in ["day", "night"]:
+	if value.runner == "player":
+		return value.status in ["returned", "delivered", "expired"] and value.return_day in [2, 3] and value.return_phase in ["day", "night"] and value.escrow == 0 and value.purchase == 30 and value.fee == 0 and value.refund == 5
+	# Accept the old third-day return in saves, but new day-two hires return that
+	# night so the Day 2 purchase dialogue can be reached that day.
+	if value.runner not in RUNNERS or value.return_day not in [2, 3] or value.return_phase not in ["day", "night"]:
 		return false
 	if value.status == "hired":
 		return value.escrow == 35 and value.purchase == 0 and value.fee == 0 and value.refund == 0

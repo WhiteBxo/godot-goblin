@@ -24,6 +24,10 @@
       "host": "shop"
     },
     {
+      "id": "day1.s04.after_taste",
+      "host": "shop"
+    },
+    {
       "id": "day1.s04.commission_choice",
       "host": "shop"
     },
@@ -49,9 +53,7 @@
       "flag": "day1.s03.exploration_completed",
       "stage": "day1.s03.explore",
       "all_flags": [
-        "day1.s03.observed_yard",
-        "day1.s03.observed_street",
-        "day1.s03.observed_path"
+        "day1.s03.observed_yard"
       ]
     }
   ],
@@ -65,7 +67,9 @@
         "goblin_a": null,
         "goblin_b": null,
         "goblin_c": null,
-        "fat_goblin": null
+        "fat_goblin": null,
+        "goblin_d": null,
+        "goblin_e": null
       }
     },
     {
@@ -77,7 +81,9 @@
         "goblin_a": null,
         "goblin_b": null,
         "goblin_c": null,
-        "fat_goblin": null
+        "fat_goblin": null,
+        "goblin_d": null,
+        "goblin_e": null
       }
     },
     {
@@ -89,7 +95,9 @@
         "goblin_a": null,
         "goblin_b": null,
         "goblin_c": null,
-        "fat_goblin": "day1_counter"
+        "fat_goblin": "day1_counter",
+        "goblin_d": null,
+        "goblin_e": null
       }
     },
     {
@@ -101,7 +109,9 @@
         "goblin_a": null,
         "goblin_b": null,
         "goblin_c": null,
-        "fat_goblin": "day1_counter"
+        "fat_goblin": "day1_counter",
+        "goblin_d": null,
+        "goblin_e": null
       }
     },
     {
@@ -113,7 +123,9 @@
         "goblin_a": null,
         "goblin_b": null,
         "goblin_c": null,
-        "fat_goblin": "day1_counter"
+        "fat_goblin": "day1_counter",
+        "goblin_d": null,
+        "goblin_e": null
       }
     },
     {
@@ -125,7 +137,9 @@
         "goblin_a": null,
         "goblin_b": null,
         "goblin_c": null,
-        "fat_goblin": null
+        "fat_goblin": null,
+        "goblin_d": null,
+        "goblin_e": null
       }
     },
     {
@@ -137,7 +151,9 @@
         "goblin_a": null,
         "goblin_b": null,
         "goblin_c": null,
-        "fat_goblin": null
+        "fat_goblin": null,
+        "goblin_d": null,
+        "goblin_e": null
       }
     },
     {
@@ -149,7 +165,9 @@
         "goblin_a": null,
         "goblin_b": null,
         "goblin_c": null,
-        "fat_goblin": null
+        "fat_goblin": null,
+        "goblin_d": null,
+        "goblin_e": null
       }
     },
     {
@@ -161,7 +179,9 @@
         "goblin_a": null,
         "goblin_b": null,
         "goblin_c": null,
-        "fat_goblin": "day1_counter"
+        "fat_goblin": "day1_counter",
+        "goblin_d": null,
+        "goblin_e": null
       }
     },
     {
@@ -218,6 +238,20 @@
       "host": "elder_house",
       "stage": "day1.s05.ready",
       "actors": {}
+    },
+    {
+      "host": "shop",
+      "stage": "day1.s04.wait_taste",
+      "actors": {
+        "human_customer": null,
+        "goblin_customer": null,
+        "goblin_a": null,
+        "goblin_b": null,
+        "goblin_c": null,
+        "fat_goblin": "day1_counter",
+        "goblin_d": null,
+        "goblin_e": null
+      }
     }
   ]
 }

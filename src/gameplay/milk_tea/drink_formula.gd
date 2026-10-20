@@ -32,6 +32,9 @@ static func describe(drink: Dictionary, show_taste := true) -> String:
 	for index in range(TAG_KEYS.size()):
 		lines.append("%s：%s" % [["风味", "口感", "特殊效果"][index], "、".join(drink[TAG_KEYS[index]]) if not drink[TAG_KEYS[index]].is_empty() else "无"])
 	lines.append("售价：%s · 单杯成本：%s" % ["未定价" if drink.price <= 0 else "%dG" % drink.price, "未知" if drink.cost == null else "%.2fG" % drink.cost])
+	for field: String in ["appearance", "tasting_note", "discovery_note"]:
+		if not str(drink.get(field, "")).is_empty():
+			lines.append("\n" + str(drink[field]))
 	return "\n".join(lines)
 
 ## Additive order changes the generated name, but never the identity or signature.
@@ -52,7 +55,7 @@ static func key_for(materials: Variant, iced := false) -> String:
 		identity.append("iced")
 	return "drink_" + JSON.stringify(identity).sha256_text()
 
-static func evaluate(materials: Variant, lookup: Callable, rules: RecipeRules, enforce_slots := true, iced := false) -> Dictionary:
+static func evaluate(materials: Variant, lookup: Callable, rules: RecipeRules, enforce_slots := true, iced := false, signature_access: Callable = Callable()) -> Dictionary:
 	if rules == null or rules.slot_count < 1 or rules.slot_count > 16 or rules.ordinary_price < 0 or rules.ordinary_price > LIMIT:
 		return _failure("invalid_rules", "配方配置无效。")
 	var key := key_for(materials, iced)
@@ -118,25 +121,37 @@ static func evaluate(materials: Variant, lookup: Callable, rules: RecipeRules, e
 	var signature_id := ""
 	var signature_keys := {}
 	var signature_ids := {}
+	var matched := {}
 	for signature: Dictionary in rules.signatures:
-		# A signature only names a stable discovery; the selling price comes from
-		# the permanent ledger and is never overridden by the signature entry.
-		if not signature.has_all(["id", "name", "ingredients"]) or signature.has("price") or not signature.id is String or not signature.id.is_valid_identifier() or not signature.name is String or signature.name.strip_edges().is_empty() or not signature.ingredients is Array:
+		if not signature.has_all(["id", "name", "ingredients"]) or not signature.id is String or not signature.id.is_valid_identifier() or not signature.name is String or signature.name.strip_edges().is_empty() or not signature.ingredients is Array:
 			return _failure("invalid_signature", "爆品配置无效。")
-		var signature_key := key_for(signature.ingredients)
+		if signature.has("price") and (not signature.price is int or signature.price <= 0 or signature.price > LIMIT):
+			return _failure("invalid_signature", "爆品专属售价无效。")
+		if signature.has("iced") and not signature.iced is bool:
+			return _failure("invalid_signature", "爆品加冰条件无效。")
+		var signature_key := key_for(signature.ingredients, signature.get("iced", false))
 		if signature_key.is_empty() or signature_keys.has(signature_key) or signature_ids.has(signature.id):
 			return _failure("invalid_signature", "爆品配方或 ID 重复。")
 		signature_keys[signature_key] = true
 		signature_ids[signature.id] = true
-		if key_for(materials) == signature_key:
+		var ice_matches: bool = not signature.has("iced") or iced == signature.iced
+		var accessible: bool = not signature_access.is_valid() or bool(signature_access.call(signature.id))
+		if key_for(materials) == key_for(signature.ingredients) and ice_matches and accessible:
 			signature_id = signature.id
 			generated_name = signature.name
-	if iced:
+			price = int(signature.get("price", 0))
+			matched = signature
+			for field: String in TAG_KEYS:
+				if signature.has(field):
+					tags[field] = signature[field].duplicate()
+	if iced and signature_id.is_empty():
 		generated_name = generated_name.trim_suffix(base.base_suffix) + "冰" + base.base_suffix
 	return {"ok": true, "code": "ok", "id": key, "ingredients": materials.duplicate(), "base_id": base.id,
 		"name": generated_name, "iced": iced, "taste": taste, "flavors": tags.flavors, "textures": tags.textures,
 		"effects": tags.effects, "counts": counts, "ingredient_names": names,
 		"price": price, "cost": cost if cost_known else null, "signature_id": signature_id,
+		"appearance": matched.get("appearance", ""), "tasting_note": matched.get("tasting_note", ""),
+		"discovery_note": matched.get("discovery_note", ""),
 		"throw": _throw_parameters(roles, rules.throw_tuning)}
 
 static func _throw_parameters(roles: Dictionary, tuning: ThrowTuning) -> Dictionary:

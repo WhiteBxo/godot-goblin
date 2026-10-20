@@ -55,7 +55,7 @@ func attach() -> void:
 func wait_event(id: String) -> bool:
 	var deadline := Time.get_ticks_msec() + 30000
 	var captured_dialogue := false
-	while not state.is_event_completed(id) and Time.get_ticks_msec() < deadline and event_errors.is_empty():
+	while not event_completed(id) and Time.get_ticks_msec() < deadline and event_errors.is_empty():
 		var dialogue := game.get_dialogue_manager()
 		if dialogue.is_active():
 			if not captured_dialogue:
@@ -67,8 +67,8 @@ func wait_event(id: String) -> bool:
 			dialogue.advance()
 			dialogue.select_choice(0)
 		await process_frame
-	check(state.is_event_completed(id), "Completes " + id + " at " + state.story_stage)
-	if not state.is_event_completed(id):
+	check(event_completed(id), "Completes " + id + " at " + state.story_stage)
+	if not event_completed(id):
 		print("FLOW_ABORT ", event_errors, " director=", game.get_story_director().last_error, " chapter=", game.get_chapter_controller().last_error, " bridge=", game.get_gameplay_bridge().get_runtime_status())
 		quit(1)
 		return false
@@ -77,6 +77,12 @@ func wait_event(id: String) -> bool:
 	await frames()
 	await picture(id)
 	return true
+
+func event_completed(id: String) -> bool:
+	# Negotiation may be revisited after leaving; only the actual payment is durable.
+	if id == "day1.s05.mansion_payment":
+		return state.get_flag("day1.s05.guard_payment_completed") and not game.get_story_director().is_busy()
+	return state.is_event_completed(id)
 
 func make_order(order: String, target: String, accept := true) -> void:
 	var delivery := game.get_task_delivery()
@@ -87,8 +93,20 @@ func make_order(order: String, target: String, accept := true) -> void:
 	var recipe := game.get_tea_production().get_recipe_by_product(product)
 	var result := game.get_tea_production().craft(recipe.materials)
 	check(result.ok, "Crafts " + product + ": " + result.message)
-	result = delivery.try_submit(order, target)
-	check(result.ok, "Delivers " + order + ": " + result.message)
+	# Exercise the actual button -> page -> modal -> facade -> host -> atomic delivery.
+	var ui := game.get_shop_ui()
+	var point := InteractionPoint.new()
+	point.interaction_id = &"orders"
+	ui.open(point)
+	point.free()
+	var board := ui.get_popup().get_page().get_order_board_page()
+	check(board.select_order(order), "Selects ready order immediately: " + order)
+	check(board.get_ticket().get_primary_button().text == "立即交付", "Ready order has a delivery action")
+	board.get_ticket().get_primary_button().pressed.emit()
+	check(state.get_flag("delivery." + order + ".completed"), "Button immediately settles " + order + " for " + target)
+	var settled: Dictionary = state.to_dict()
+	check(not delivery.try_submit(order, target).ok and state.to_dict() == settled, "Repeated delivery cannot consume or reward twice")
+	ui.close()
 	await frames()
 
 func travel(exit_id: String) -> void:
@@ -164,34 +182,68 @@ func _run() -> void:
 	await scene_changed
 	attach()
 	await wait_event("day1.opening")
+	await capture("day1_01_human")
 	await make_order("day1_human", "human_customer")
 	await wait_event("day1.first_goblin")
+	await capture("day1_02_goblin")
 	await make_order("day1_goblin", "goblin_customer")
 	await wait_event("day1.group_arrival")
-	for id: String in ["a", "b", "c"]:
+	await capture("day1_03_group")
+	for id: String in ["a", "c", "d", "e"]:
+		if id != "a":
+			await wait_event("day1.customer_" + id)
+		var visible_customers := 0
+		for actor_id: String in ["goblin_customer", "goblin_a", "goblin_b", "goblin_c", "goblin_d", "goblin_e"]:
+			visible_customers += 1 if game.get_actor_director().get_actor(StringName(actor_id)).visible else 0
+		check(visible_customers == 1, "Only the current customer occupies the shop")
+		await capture("day1_03_customer_" + id)
 		await make_order("day1_group_" + id, "goblin_" + id)
 	await wait_event("day1.ending")
 	await wait_event("day1.s03.coin_inspect")
-	check(state.get_transactions().get_balance() == 15, "Five H01 cups pay 15G")
+	await capture("day1_04_coin")
+	check(state.get_transactions().get_balance() == 18, "One human and five goblins pay 18G")
 	check(state.get_warehouse_inventory().get_stock("strange_coin") == 0, "No duplicate coin inventory")
 	await travel("shop_exit")
 	await wait_event("day1.s03.street_gone")
-	for point: InteractionPoint in game.get_active_level().get_interaction_points():
-		if point is StoryInteractionPoint and String(point.interaction_id).begins_with("day1_s03"):
-			check(point.resolve().ok, "Investigates " + str(point.interaction_id))
+	await capture("day1_05_market")
+	var market := game.get_active_level() as RpgChapterMap
+	check(market.market_only, "First outing restricts exploration to the market")
+	var gather := game.get_gathering_service()
+	var unopened: Dictionary = state.to_dict()
+	check(not gather.harvest(&"night_gather_0").ok and state.to_dict() == unopened, "First outing cannot harvest or consume a gathering opportunity")
+	check(not market.can_stand_at(Vector2(1176, 2112), Vector2(4, 3)), "Cannot walk north out of market")
+	check(not market.can_stand_at(Vector2(1512, 1896), Vector2(4, 3)), "Cannot walk toward tavern during first visit")
+	check(game.get_shop_ui().get_feedback_text().contains("黑灯瞎火"), "Boundary explains the protagonist's refusal")
+	check(get_nodes_in_group("wayfinding").is_empty(), "Removed road signs leave no interactive targets")
+	game.get_player().teleport_to(Vector2(1320, 2424))
+	await frames(30)
+	check(state.get_flag("day1.s03.exploration_completed"), "Walking through market completes observation without interacting")
+	check(not state.is_event_completed("day1.s03.back_to_door"), "Observation does not interrupt exploration before returning")
+	check(not state.get_flag("day1.s03.observed_street") and not state.get_flag("day1.s03.observed_path"), "No investigation checklist required")
+	await picture("first_market_visit")
+	game.get_player().teleport_to(Vector2(1608, 2568))
 	await wait_event("day1.s03.back_to_door")
 	await travel("shop_enter")
 	await wait_event("day1.s04.commission")
+	await capture("day1_06_commission")
 	await make_order("day1_s04_fat", "fat_goblin")
 	await wait_event("day1.s04.after_order")
+	check(state.story_stage == "day1.s04.wait_taste", "The new gift dialogue returns control for real trial crafting")
+	check(not state.is_event_completed("day1.s04.after_taste"), "Dialogue alone does not complete the trial")
+	await capture("day1_06_trial_taste")
+	await make_order("day1_s04_taste", "fat_goblin")
+	await wait_event("day1.s04.after_taste")
 	check(game.open_map() == OK, "Player opens map in shop")
 	game.get_ui_manager().close_screen(ScreenIds.MAP)
 	await wait_event("day1.s04.commission_choice")
-	check(state.get_transactions().get_balance() == 68, "Six cups and once-only 50G funding")
+	await capture("day1_07_before_stealth")
+	check(state.get_transactions().get_balance() == 71, "Seven paid cups and once-only 50G funding")
 	var gameplay: ChapterGameplay = game.get("_chapter_gameplay")
-	check(gameplay.execute("day1.s04.funding").ok and state.get_transactions().get_balance() == 68, "Funding replay pays no duplicate")
-	check(state.get_warehouse_inventory().get_uses("firefly_cap") == 2 and state.get_warehouse_inventory().get_uses("goblin_firebrew") == 2, "Gift grants two uses each")
+	check(gameplay.execute("day1.s04.funding").ok and state.get_transactions().get_balance() == 71, "Funding replay pays no duplicate")
+	check(state.get_warehouse_inventory().get_uses("firefly_cap") == 1 and state.get_warehouse_inventory().get_uses("goblin_firebrew") == 1, "Trial consumes one use of each gift")
 	await travel("shop_exit")
+	check(not (game.get_active_level() as RpgChapterMap).market_only, "Accepted commission removes first-visit movement restrictions")
+	check(game.get_gathering_service().is_harvestable(game.get_gathering_service().get_point(&"night_gather_0")), "Accepted commission opens real gathering")
 	# Exercise whole-attempt inventory, wallet and investigation rollback across room travel.
 	await frames(10)
 	var baseline: Dictionary = state.to_dict()
@@ -201,7 +253,7 @@ func _run() -> void:
 	await wait_event("day1.s05.drunken_guard")
 	check(game.get_story_director().request_interaction("mansion_payment") == OK, "Player pays mansion pair")
 	await wait_event("day1.s05.mansion_payment")
-	check(state.get_transactions().get_balance() == 18, "First night spends full 50G")
+	check(state.get_transactions().get_balance() == 21, "First night spends full 50G")
 	await travel("elder_enter")
 	var blood: StoryInteractionPoint
 	var document: StoryInteractionPoint
@@ -212,15 +264,13 @@ func _run() -> void:
 			else:
 				blood = point
 	check(blood.resolve().ok and document.resolve().ok, "Blood then document works")
+	check(game.get_stealth_service() == null, "Indoor collection has no stealth or retry flow")
+	await travel("elder_exit")
 	var retry_error := game.get_stealth_service().retry_attempt()
-	check(retry_error == OK, "Interior retry restores exterior baseline")
+	check(retry_error == OK, "Exterior retry restores the whole attempt after leaving the house")
 	if retry_error != OK:
 		quit(1)
 		return
-	await scene_changed
-	attach()
-	while game.get_scene_travel().is_busy():
-		await process_frame
 	await frames(5)
 	check(state.to_dict() == baseline, "Retry restores full coins, inventory, facts and events")
 	for i in range(3):
@@ -245,16 +295,17 @@ func _run() -> void:
 	check(state.get_flag("day1.s05.escape_completed"), "Must actually reach escape zone")
 	await travel("shop_enter")
 	await wait_event("day1.s06.pondering")
+	await capture("day1_08_blood_recipe")
 	var recipe := game.get_tea_production().get_recipe_by_product("day1_blood_milk_tea")
 	check(game.get_tea_production().craft(recipe.materials).ok, "C01+blood crafts task special")
 	await wait_event("day1.s06.customer")
 	check(game.get_task_delivery().try_submit("day1_s06_blood_drink", "fat_goblin").ok, "Blood drink pays its task")
 	await wait_event("day1.s06.reaction")
 	check(state.current_day == 2 and state.story_stage == "day2.s01", "Automatic Day2 morning")
-	check(state.get_transactions().get_balance() == 58, "Blood task pays total 40G once")
+	check(state.get_transactions().get_balance() == 61, "Blood task pays total 40G once")
 	check(state.get_warehouse_inventory().get_uses("day1_griffin_blood") == 2, "Blood remains two uses")
 	await wait_event("day2.s01.morning")
-	check(state.get_transactions().get_balance() == 58, "35G procurement escrow never credits the wallet")
+	check(state.get_transactions().get_balance() == 61, "35G procurement escrow never credits the wallet")
 	check(game.get_chapter_gameplay().get_procurement().get_status().escrow == 35, "Dedicated procurement escrow holds 35G")
 	for group: String in ["festival", "elder", "emissary", "rumor"]:
 		await wait_event("day2.s02." + group + "_order")
@@ -265,7 +316,7 @@ func _run() -> void:
 		for i in range(count):
 			await make_order("day2_s02_%s_%d" % [group, i], "day2_%s_%d" % [group, i])
 		await wait_event("day2.s02." + group + "_after")
-	check(state.get_transactions().get_balance() == 73, "Mandatory path has 73G before wine")
+	check(state.get_transactions().get_balance() == 76, "Mandatory path has 76G before wine")
 	var scheduler := game.get_chapter_gameplay().get_scheduler()
 	var deadline := Time.get_ticks_msec() + 10000
 	while scheduler.get_group("rumor").status != "departed" and Time.get_ticks_msec() < deadline:
@@ -288,7 +339,7 @@ func _run() -> void:
 	await capture("wait_wine")
 	await use_service_point(&"tavern")
 	await wait_event("day2.s03.purchase")
-	check(state.get_transactions().get_balance() == (28 if ordinary_order else 25), "Wine actually costs 48G")
+	check(state.get_transactions().get_balance() == (31 if ordinary_order else 28), "Wine actually costs 48G")
 	check(state.get_warehouse_inventory().get_uses("griffin_amber_wine") == 5, "One purchased portion has five uses")
 	check(not state.is_event_completed("day2.s03.commission_token"), "Commission waits for another counter interaction")
 	await use_service_point(&"tavern")
@@ -335,7 +386,7 @@ func _run() -> void:
 	await capture("wait_guard")
 	check(not game.get_task_delivery().try_submit("day2_guard_special", "casino").ok, "Wrong recipient cannot consume the special")
 	check(game.get_task_delivery().try_submit("day2_guard_special", "drunken_guard").ok, "Real guard receives the special")
-	check(state.get_transactions().get_balance() == (28 if ordinary_order else 25), "Guard hospitality pays zero G")
+	check(state.get_transactions().get_balance() == (31 if ordinary_order else 28), "Guard hospitality pays zero G")
 	await wait_event("day2.s05.guard_after")
 	await capture("delivered_guard")
 	await travel("shop_enter")
@@ -346,6 +397,17 @@ func _run() -> void:
 	await picture("two_day_recap")
 	game.get_ui_manager().close_screen(ScreenIds.CHAPTER_RECAP)
 	check(state.get_flag("ui.two_day_recap_seen"), "Closing the recap acknowledges it for future saves")
+	await frames(10)
+	check(game.get_ui_manager().is_open(ScreenIds.TWO_DAYS_END), "Closing the recap ends the build on the end card")
+	# The switch lands after the outgoing track has faded; the card is up by then.
+	await frames(140)
+	check(game.get_audio_manager().get_bgm_state().id == "music.two_days_end", "The end card plays its own cue")
+	await picture("two_days_end")
+	# Dismiss the card without finishing it: the handoff state still has to be
+	# captured for the persistence pass, and the task clock exercised below.
+	game.get_ui_manager().close_screen(ScreenIds.TWO_DAYS_END)
+	check(not state.get_flag("ui.two_days_end_seen"), "Leaving the card early does not mark the run finished")
+	await frames(5)
 	await capture("day3_handoff")
 	check(DayPhase.advance_to(state, 3, "night") == OK, "Wait through the allowed third evening")
 	check(DayPhase.advance_to(state, 4, "day") == OK, "End the permitted handoff period")
@@ -357,4 +419,8 @@ func _run() -> void:
 	check(state.validate_snapshot(state.to_dict()) == OK, "Complete two-day snapshot validates")
 	check(game.get_chapter_gameplay().last_error.is_empty(), "Chapter actions finish without runtime error")
 	print("TWO_DAY_FLOW: ", checks, " checks, ", failures.size(), " failures")
+	if not fixture_directory.is_empty():
+		var completion := FileAccess.open(fixture_directory.path_join("complete.json"), FileAccess.WRITE)
+		if completion != null:
+			completion.store_string(JSON.stringify({"checks": checks, "failures": failures.size()}))
 	quit(0 if failures.is_empty() else 1)

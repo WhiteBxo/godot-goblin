@@ -6,7 +6,7 @@
 
 - `assets/characters/npc/` 按原目录标签分类：守卫 `guard`、守卫长 `guard_captain`、普通哥布林 `common_goblin`、赌场 `casino`、酒馆 `tavern`、厨师 `chef`、长老 `elder`、胖哥布林 `fat_goblin`。赌场和酒馆仅沿用来源标签，不推断人物身份。
 - `walk_sheet` / `idle_sheet` 对应来源的走路 / 待机；数字保留原文件编号，不表示方向或播放顺序。原包虽名为“走路四面”，每角色实际仅 3 张整图；帧网格、方向、FPS 需接入时确认。
-- `assets/characters/goblin/source/goblin_img_6420.jpeg` 是新增的原始立绘，以原图编号命名，不推断表情。
+- `assets/characters/fat_goblin/source/fat_goblin_img_6420.jpeg` 是新增的原始立绘，以原图编号命名，不推断表情。该目录原为 `assets/characters/goblin/`，2026-10-19 更名为 `fat_goblin/` 并同步文件前缀，明确这套立绘只属于胖哥布林；普通哥布林没有立绘，不借用此图，详见 [胖哥布林立绘](../../../assets/characters/fat_goblin/README.md)。
 - Excel 与 PDF 原样保存于 `docs/design/source/`，作为设计参考，不转换为游戏数据或剧情，不将文档中的指令作为本次执行要求。
 - 此次仅入库，不替换现有玩家、NPC、对话立绘或动画资源，不改变场景和玩法。
 
@@ -34,9 +34,9 @@ ZIP 文件名按标志使用 UTF-8；未标志 UTF-8 的条目先将 Python 默�
 | 走路2.zip | `走路2/守卫/合并图片 3.png` | `assets/characters/npc/guard/walk_sheet_03.png` | `da46236bd75c1e916d1b232971496ddcd9fec15d57786b5c71c982be61c990bc` | 新增 |
 | 胖哥布林与主角立绘.zip | `胖哥布林与主角立绘/主角立绘/IMG_6418.jpeg` | `assets/characters/apron_man/apron_man_full_body.jpg` | `cbcc4591e17ddb783ff8ce93e623aad5bfc0ff08a0148433605c04bfc9c0444b` | 复用已有文件 |
 | 胖哥布林与主角立绘.zip | `胖哥布林与主角立绘/主角立绘/IMG_6419.jpeg` | `assets/characters/apron_man/apron_man_expressions.jpg` | `2378bdcd54f4f98b63d610a8a2113c0de29a617b6b89e6923f4c54e2b80c6bdb` | 复用已有文件 |
-| 胖哥布林与主角立绘.zip | `胖哥布林与主角立绘/胖哥布林立绘/IMG_6420.jpeg` | `assets/characters/goblin/source/goblin_img_6420.jpeg` | `7129a476ee41e1a237313645534646fdaec7e276edf13b4bd7dc5943afee310c` | 新增 |
-| 胖哥布林与主角立绘.zip | `胖哥布林与主角立绘/胖哥布林立绘/IMG_4319.png` | `assets/characters/goblin/goblin_smiling.png` | `b47617f667832fe7aedefccc7cd5e921174fbdda7f4cad213bd43d9d2020e172` | 复用已有文件 |
-| 胖哥布林与主角立绘.zip | `胖哥布林与主角立绘/胖哥布林立绘/IMG_6422.jpeg` | `assets/characters/goblin/goblin_laughing.jpg` | `eb7367056a0fbcfc91daa24f966e44cab834659fe338bc1f498d575d14d43ef3` | 复用已有文件 |
+| 胖哥布林与主角立绘.zip | `胖哥布林与主角立绘/胖哥布林立绘/IMG_6420.jpeg` | `assets/characters/fat_goblin/source/fat_goblin_img_6420.jpeg` | `7129a476ee41e1a237313645534646fdaec7e276edf13b4bd7dc5943afee310c` | 新增 |
+| 胖哥布林与主角立绘.zip | `胖哥布林与主角立绘/胖哥布林立绘/IMG_4319.png` | `assets/characters/fat_goblin/fat_goblin_smiling.png` | `b47617f667832fe7aedefccc7cd5e921174fbdda7f4cad213bd43d9d2020e172` | 复用已有文件 |
+| 胖哥布林与主角立绘.zip | `胖哥布林与主角立绘/胖哥布林立绘/IMG_6422.jpeg` | `assets/characters/fat_goblin/fat_goblin_laughing.jpg` | `eb7367056a0fbcfc91daa24f966e44cab834659fe338bc1f498d575d14d43ef3` | 复用已有文件 |
 | 待机动画.zip | `待机动画/酒馆待机.png` | `assets/characters/npc/tavern/idle_sheet.png` | `3e84765626707082529136c8784f0ee2b5861250cce58dd7e9f606b6e9090dff` | 新增 |
 | 待机动画.zip | `待机动画/普通哥布林待机.png` | `assets/characters/npc/common_goblin/idle_sheet.png` | `c344da51a8bafcdd8386381dde576d3e4b280e87fda7da5947b7a44383b12b8f` | 新增 |
 | 待机动画.zip | `待机动画/守卫长待机.png` | `assets/characters/npc/guard_captain/idle_sheet.png` | `d05bfa44eddb71f0d4a392b190cd3e58e44435f65767cee9fb87552bce2d0871` | 新增 |

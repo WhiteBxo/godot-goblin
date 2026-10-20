@@ -69,10 +69,6 @@
           "duration": 1.0
         },
         {
-          "command": "dialogue",
-          "id": "day1.s03.limited_exploration"
-        },
-        {
           "command": "camera_reset"
         },
         {
@@ -87,7 +83,8 @@
         "day": 1.0,
         "stage": "day1.s03.explore",
         "flags": {
-          "day1.s03.exploration_completed": true
+          "day1.s03.exploration_completed": true,
+          "day1.s03.returned_to_door": true
         }
       },
       "steps": [
@@ -180,50 +177,8 @@
           "id": "day1.s04.first_taste"
         },
         {
-          "command": "actor_emote",
-          "actor": "fat_goblin",
-          "symbol": "♪",
-          "duration": 1.0
-        },
-        {
           "command": "dialogue",
-          "id": "day1.s04.griffin_faith"
-        },
-        {
-          "command": "chronicle_unlock",
-          "entry_id": "chronicle.griffin",
-          "title": "伟大的格里芬"
-        },
-        {
-          "command": "chronicle_append",
-          "entry_id": "chronicle.griffin",
-          "record_id": "chronicle.griffin.s04_first",
-          "content": "哥布林普遍敬畏的存在。胖哥布林称，格里芬会惩罚不守规矩的哥布林，也会庇护他们。其真实存在与具体情况尚未确认。"
-        },
-        {
-          "command": "chronicle_append",
-          "entry_id": "chronicle.elder",
-          "record_id": "chronicle.elder.s04_first",
-          "content": "被哥布林视为最了解格里芬的人，负责主持仪式、传达格里芬的意志，并解释格里芬的规矩。"
-        },
-        {
-          "command": "chronicle_unlock",
-          "entry_id": "chronicle.emissary",
-          "title": "格里芬使者"
-        },
-        {
-          "command": "chronicle_append",
-          "entry_id": "chronicle.emissary",
-          "record_id": "chronicle.emissary.s04_first",
-          "content": "据胖哥布林所说，长老将偶尔到来的行脚商称为格里芬派来的使者。使者带来的稀奇商品，被视为格里芬对勤劳、守规矩的哥布林的赏赐。"
-        },
-        {
-          "command": "wait",
-          "seconds": 0.25
-        },
-        {
-          "command": "dialogue",
-          "id": "day1.s04.griffin_blood"
+          "id": "day1.s04.offer_ingredients"
         },
         {
           "command": "chapter_action",
@@ -231,27 +186,18 @@
         },
         {
           "command": "dialogue",
-          "id": "day1.s04.map_handover"
+          "id": "day1.s04.wait_taste"
         },
         {
-          "command": "camera_reset"
-        },
-        {
-          "command": "unlock_map",
-          "locations": [
-            "settlement.shop",
-            "settlement.tavern",
-            "settlement.casino",
-            "settlement.elder",
-            "settlement.ritual",
-            "settlement.training",
-            "settlement.workshop",
-            "settlement.warehouse"
-          ]
+          "command": "set_flag",
+          "key": "day1.s04.taste_open"
         },
         {
           "command": "set_stage",
-          "value": "day1.s04.wait_map"
+          "value": "day1.s04.wait_taste"
+        },
+        {
+          "command": "camera_reset"
         }
       ]
     },
@@ -357,7 +303,7 @@
       ]
     },
     "day1.s05.mansion_payment": {
-      "once": true,
+      "once": false,
       "conditions": {
         "day": 1.0,
         "stage": "day1.s05.ready",
@@ -369,19 +315,37 @@
       "trigger": "mansion_payment",
       "steps": [
         {
-          "command": "chapter_action",
-          "id": "day1.s05.pay_pair"
-        },
-        {
           "command": "camera_focus",
           "actor": "mansion_gate",
           "duration": 0.6
         },
         {
+          "command": "dialogue",
+          "id": "day1.s05.mansion_bribe"
+        },
+        {
+          "command": "chapter_action",
+          "id": "day1.s05.pay_pair",
+          "when": {
+            "choice": {
+              "dialogue": "day1.s05.mansion_bribe",
+              "line": "choice",
+              "id": "pay"
+            }
+          }
+        },
+        {
           "command": "title_card",
           "text": "宅邸双卫放行",
           "subtitle": "沿宅前道路向东，走上门前台阶按 E 进入长老居所",
-          "seconds": 1.2
+          "seconds": 1.2,
+          "when": {
+            "choice": {
+              "dialogue": "day1.s05.mansion_bribe",
+              "line": "choice",
+              "id": "pay"
+            }
+          }
         },
         {
           "command": "camera_reset"
@@ -480,6 +444,11 @@
           "wait": false
         },
         {
+          "command": "set_flag",
+          "key": "day1.s06.blood_collapsed",
+          "value": true
+        },
+        {
           "command": "dialogue",
           "id": "day1.s06.reaction_shock"
         },
@@ -516,6 +485,338 @@
         {
           "command": "set_stage",
           "value": "day2.s01"
+        }
+      ]
+    },
+    "day1.s04.after_taste": {
+      "once": true,
+      "conditions": {
+        "day": 1.0,
+        "stage": "day1.s04.wait_taste",
+        "flags": {
+          "day1.s04.taste_delivered": true
+        }
+      },
+      "steps": [
+        {
+          "command": "camera_focus",
+          "actor": "fat_goblin",
+          "duration": 0.6
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.s04.taste_reaction"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.s04.after_taste"
+        },
+        {
+          "command": "actor_emote",
+          "actor": "fat_goblin",
+          "symbol": "♪",
+          "duration": 1.0
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.s04.griffin_faith"
+        },
+        {
+          "command": "chronicle_unlock",
+          "entry_id": "chronicle.griffin",
+          "title": "伟大的格里芬"
+        },
+        {
+          "command": "chronicle_append",
+          "entry_id": "chronicle.griffin",
+          "record_id": "chronicle.griffin.s04_first",
+          "content": "哥布林普遍敬畏的存在。胖哥布林称，格里芬会惩罚不守规矩的哥布林，也会庇护他们。其真实存在与具体情况尚未确认。"
+        },
+        {
+          "command": "chronicle_append",
+          "entry_id": "chronicle.elder",
+          "record_id": "chronicle.elder.s04_first",
+          "content": "被哥布林视为最了解格里芬的人，负责主持仪式、传达格里芬的意志，并解释格里芬的规矩。"
+        },
+        {
+          "command": "chronicle_unlock",
+          "entry_id": "chronicle.emissary",
+          "title": "格里芬使者"
+        },
+        {
+          "command": "chronicle_append",
+          "entry_id": "chronicle.emissary",
+          "record_id": "chronicle.emissary.s04_first",
+          "content": "据胖哥布林所说，长老将偶尔到来的行脚商称为格里芬派来的使者。使者带来的稀奇商品，被视为格里芬对勤劳、守规矩的哥布林的赏赐。"
+        },
+        {
+          "command": "wait",
+          "seconds": 0.25
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.s04.griffin_blood"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.s04.map_handover"
+        },
+        {
+          "command": "camera_reset"
+        },
+        {
+          "command": "unlock_map",
+          "locations": [
+            "settlement.shop",
+            "settlement.tavern",
+            "settlement.casino",
+            "settlement.elder",
+            "settlement.ritual",
+            "settlement.training",
+            "settlement.workshop",
+            "settlement.warehouse",
+            "settlement.residential"
+          ]
+        },
+        {
+          "command": "set_stage",
+          "value": "day1.s04.wait_map"
+        }
+      ]
+    },
+    "supplement.poet.casino_poet": {
+      "once": false,
+      "trigger": "casino_poet",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.poet"
+        }
+      ]
+    },
+    "supplement.drinker.signature_heartbroken_drinker": {
+      "once": false,
+      "trigger": "signature_heartbroken_drinker",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.drinker"
+        }
+      ]
+    },
+    "supplement.philosopher.signature_philosopher": {
+      "once": false,
+      "trigger": "signature_philosopher",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.philosopher"
+        }
+      ]
+    },
+    "supplement.philosopher.signature_drunk": {
+      "once": false,
+      "trigger": "signature_drunk",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.philosopher"
+        }
+      ]
+    },
+    "supplement.prayer.prayer_man": {
+      "once": false,
+      "trigger": "prayer_man",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.prayer"
+        }
+      ]
+    },
+    "supplement.prayer.prayer_woman": {
+      "once": false,
+      "trigger": "prayer_woman",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.prayer"
+        }
+      ]
+    },
+    "supplement.warehouse.warehouse_guard_1": {
+      "once": false,
+      "trigger": "warehouse_guard_1",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.warehouse"
+        }
+      ]
+    },
+    "supplement.warehouse.warehouse_guard_2": {
+      "once": false,
+      "trigger": "warehouse_guard_2",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.warehouse"
+        }
+      ]
+    },
+    "supplement.soldier.barracks_soldier": {
+      "once": false,
+      "trigger": "barracks_soldier",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.soldier"
+        }
+      ]
+    },
+    "supplement.casino_sentry": {
+      "once": false,
+      "trigger": "casino_sentry",
+      "conditions": {},
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.casino_sentry"
+        }
+      ]
+    },
+    "supplement.vendor_1": {
+      "once": false,
+      "trigger": "market_vendor_1",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.vendor_1"
+        }
+      ]
+    },
+    "supplement.vendor_2": {
+      "once": false,
+      "trigger": "market_vendor_2",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.vendor_2"
+        }
+      ]
+    },
+    "supplement.vendor_3": {
+      "once": false,
+      "trigger": "market_vendor_3",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.vendor_3"
+        }
+      ]
+    },
+    "supplement.family.market_mother": {
+      "once": false,
+      "trigger": "market_mother",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.family"
+        }
+      ]
+    },
+    "supplement.family.market_boy": {
+      "once": false,
+      "trigger": "market_boy",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.family"
+        }
+      ]
+    },
+    "supplement.child.village_child": {
+      "once": false,
+      "trigger": "village_child",
+      "conditions": {
+        "flags": {
+          "day1.s04.commission_accepted": true
+        }
+      },
+      "steps": [
+        {
+          "command": "dialogue",
+          "id": "supplement.child"
         }
       ]
     }

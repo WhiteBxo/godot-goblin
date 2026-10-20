@@ -4,6 +4,7 @@ extends Control
 signal resume_requested
 signal title_requested
 signal settings_requested
+signal saves_requested(saving: bool)
 
 @onready var _resume: Button = $Center/Panel/Margin/Content/Resume
 @onready var _title: Button = $Center/Panel/Margin/Content/ReturnTitle
@@ -14,6 +15,8 @@ func _ready() -> void:
 	_resume.pressed.connect(func() -> void: resume_requested.emit())
 	_title.pressed.connect(_request_title)
 	$Center/Panel/Margin/Content/Settings.pressed.connect(settings_requested.emit)
+	$Center/Panel/Margin/Content/SaveGame.pressed.connect(func() -> void: saves_requested.emit(true))
+	$Center/Panel/Margin/Content/LoadGame.pressed.connect(func() -> void: saves_requested.emit(false))
 
 func _request_title() -> void:
 	if _leaving:

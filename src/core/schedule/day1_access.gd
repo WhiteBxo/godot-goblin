@@ -29,6 +29,10 @@ static func can_enter_elder(state: Node) -> bool:
 	return (at_stage(state, "day1.s05") and DayPhase.is_night(state)
 		and state.get_flag("day1.s04.commission_accepted"))
 
+static func is_market_only(state: Node) -> bool:
+	return (state.get_business_profile() == "day1" and state.current_day == 1
+		and is_later_stage(state) and not state.get_flag("day1.s04.commission_accepted"))
+
 static func can_make_blood_drink(state: Node) -> bool:
 	return (at_stage(state, "day1.s06") and state.get_flag("day1.s05.blood_acquired")
 		and state.get_flag("day1.s05.returned_shop"))

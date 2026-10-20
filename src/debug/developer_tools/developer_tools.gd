@@ -28,6 +28,7 @@ var _event_rows: Array = []
 var _event_message := ""
 var _phases: Array[Dictionary] = []
 var _phases_error := ""
+var flow_test_tools := FlowTestTools.new()
 
 func _ready() -> void:
 	if DebugRuntime.is_enabled() and not InputMap.has_action(TOGGLE_ACTION):
@@ -56,6 +57,11 @@ func configure(set_multiplier: Callable, get_multiplier: Callable, panel: Develo
 	if log != null:
 		log.bind_services(context)
 	bind_business_services(context)
+	var flow_context := context.duplicate()
+	flow_context["log"] = log
+	flow_test_tools.configure(flow_context)
+	if is_instance_valid(_panel) and is_instance_valid(_panel.flow_test_panel):
+		_panel.flow_test_panel.configure(flow_test_tools)
 	_load_phases()
 	_configured = DebugRuntime.is_enabled() and is_instance_valid(_panel)
 	if not _configured:

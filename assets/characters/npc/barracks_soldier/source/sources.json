@@ -1,0 +1,21 @@
+[
+  {
+    "archive": "哥布林npc：有特定对话，不能重复利用的npc(1).zip",
+    "entry": "哥布林npc：有特定对话，不能重复利用的npc/其他可对话npc/军人/job_c6ebed9cb1e64d66a6751f6aab722b3d_02.png",
+    "path": "assets/characters/npc/barracks_soldier/source/idle_sheet.png",
+    "sha256": "23f55595720da5a6d5e2b35c1621c1efa525c201bb2bf692a860b522a92cd4f8"
+  },
+  {
+    "archive": "哥布林npc：有特定对话，不能重复利用的npc(1).zip",
+    "entry": "哥布林npc：有特定对话，不能重复利用的npc/其他可对话npc/军人/870bf4a6-40f5-426e-9a83-42f147a3a0a2_0_2.png",
+    "path": "assets/characters/npc/barracks_soldier/source/portrait.png",
+    "sha256": "541536a5cf40b580ad55bdf6576e850fe60a15aa76fd00abe00b29627db96d3d",
+    "portrait_crop": [
+      0,
+      0,
+      928,
+      1232
+    ],
+    "derive": "checkerboard matte + 4px trim"
+  }
+]

@@ -116,7 +116,8 @@ func refresh() -> void:
 		option.set_item_metadata(0, "")
 		var selected := 0
 		for choice: Dictionary in _production.get_formula_choices(index == 0):
-			var line := "%s · %s%s" % [choice.name, "、".join(choice.flavors), "（缺货）" if choice.uses == 0 else ""]
+			var flavors := "、".join(choice.flavors) if not choice.flavors.is_empty() else "无特殊风味"
+			var line := "%s · %s%s" % [choice.name, flavors, "（缺货）" if choice.uses == 0 else ""]
 			option.add_item(line)
 			var item := option.item_count - 1
 			option.set_item_metadata(item, choice.id)
@@ -163,11 +164,17 @@ func select_formula(materials: Array, iced := false) -> bool:
 func _refresh_preview() -> void:
 	var materials := get_materials()
 	var result := _production.preview_formula(materials, 1, is_iced())
-	var quote := _production.preview_formula_price(materials) if not materials.is_empty() else {}
+	var quote := _production.preview_formula_price(materials, is_iced()) if not materials.is_empty() else {}
 	var priced: bool = bool(quote.get("priced", false))
+	var can_confirm := _production.can_confirm_formula(materials)
+	var pricing_hint := ""
+	if not materials.is_empty() and not quote.get("ok", false):
+		pricing_hint = "纯人类饮品请到「已知配方」制作，固定售价 3G；自由实验需加入至少一种哥布林原料。" if quote.get("code") == "human_only" else str(quote.get("message", "当前配方无法报价。"))
+	elif not priced and not can_confirm:
+		pricing_hint = "请返回可恢复的经营阶段后确认新价格。"
 	_craft.disabled = not result.ok or not priced
-	_confirm.disabled = not quote.get("ok", false) or priced or not _production.can_confirm_formula(materials)
-	_confirm.tooltip_text = "请返回可恢复的经营阶段后确认新价格。" if not _production.can_confirm_formula(materials) else ""
+	_confirm.disabled = not quote.get("ok", false) or priced or not can_confirm
+	_confirm.tooltip_text = pricing_hint
 	if result.has("name"):
 		_preview.text = DrinkFormula.describe(result, false)
 		if priced:
@@ -178,6 +185,8 @@ func _refresh_preview() -> void:
 		_preview.text = str(result.get("message", ""))
 	if not result.ok and result.has("name"):
 		_preview.text += "\n" + str(result.get("message", ""))
+	if not pricing_hint.is_empty():
+		_preview.text += "\n" + pricing_hint
 	elif result.ok and not priced:
 		_preview.text += "\n请先确认报价，之后才能制作。"
 
@@ -191,6 +200,13 @@ func show_result(result: Dictionary) -> void:
 	_result.text = str(result.get("message", ""))
 	_result.theme_type_variation = &"Success" if result.get("ok", false) else &"Warning"
 	_refresh_preview()
+	if _result.text.is_empty():
+		return
+	if result.get("ok", false):
+		UIFlourish.cups(_craft, null, 1, Vector2(0.06, 0.5))
+		UIFlourish.settle(_result, 0.94)
+	else:
+		UIFlourish.refuse(_result)
 
 func get_default_focus() -> Control:
 	return _options[0] if not _options.is_empty() else _craft

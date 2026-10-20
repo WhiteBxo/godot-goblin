@@ -1,0 +1,20 @@
+[
+  {
+    "archive": "哥布林npc：有特定对话，不能重复利用的npc(1).zip",
+    "entry": "哥布林npc：有特定对话，不能重复利用的npc/其他可对话npc/小贩/小贩1/job_5aec32b66fe2407696340c48399b2c91_00.png",
+    "path": "assets/characters/npc/market_vendor_1/source/idle_sheet.png",
+    "sha256": "b2c94e17c91290bc1767c048ee96c48ff8bdcdbd9e064ff3645f6e859a84f3ca"
+  },
+  {
+    "archive": "哥布林npc：有特定对话，不能重复利用的npc(1).zip",
+    "entry": "哥布林npc：有特定对话，不能重复利用的npc/其他可对话npc/小贩/小贩1/微信图片_20261020032733_2381_2110.png",
+    "path": "assets/characters/npc/market_vendor_1/source/portrait.png",
+    "sha256": "5c5ee6f8aed8697824d63ec3dbe187b4a5e436733e4049a32671507339b8a0c3",
+    "portrait_crop": [
+      0,
+      0,
+      758,
+      1135
+    ]
+  }
+]

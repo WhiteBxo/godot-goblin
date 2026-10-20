@@ -129,6 +129,12 @@ func is_open(id: StringName) -> bool:
 func has_modal() -> bool:
 	return not _stack.is_empty()
 
+func has_modal_except(allowed: Array[StringName]) -> bool:
+	for id in _stack:
+		if id not in allowed:
+			return true
+	return false
+
 func get_top_screen_id() -> StringName:
 	return _stack.back() if not _stack.is_empty() else &""
 

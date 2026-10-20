@@ -100,7 +100,7 @@
       "mode": "自动演出",
       "event": "day1.group_arrival",
       "start": 5,
-      "count": 17,
+      "count": 7,
       "dialogues": [
         "day1.goblin_group_customers"
       ]
@@ -109,8 +109,8 @@
       "id": "chronicle_unlocked",
       "mode": "自动演出",
       "event": "day1.group_arrival",
-      "start": 22,
-      "count": 8,
+      "start": 12,
+      "count": 9,
       "dialogues": [
         "day1.chronicle_unlocked"
       ]
@@ -123,7 +123,82 @@
         "after_event": "day1.group_arrival",
         "stage": "day1.wait_group",
         "completion": {
-          "flag": "day1.group_settled",
+          "flag": "day1.group_a_settled",
+          "allow_existing": true
+        },
+        "completion_flag": "day1.group_a_done",
+        "next_event": "day1.customer_c"
+      }
+    },
+    {
+      "id": "customer_c_arrives",
+      "mode": "自动演出",
+      "event": "day1.customer_c",
+      "start": 0,
+      "count": 12,
+      "dialogues": [
+        "day1.customer_c"
+      ]
+    },
+    {
+      "id": "customer_c_order",
+      "mode": "玩家操作",
+      "phase": {
+        "id": "day1.customer_c.order",
+        "after_event": "day1.customer_c",
+        "stage": "day1.wait_group_c",
+        "completion": {
+          "flag": "day1.group_c_settled",
+          "allow_existing": true
+        },
+        "completion_flag": "day1.group_c_done",
+        "next_event": "day1.customer_d"
+      }
+    },
+    {
+      "id": "customer_d_arrives",
+      "mode": "自动演出",
+      "event": "day1.customer_d",
+      "start": 0,
+      "count": 12,
+      "dialogues": [
+        "day1.customer_d"
+      ]
+    },
+    {
+      "id": "customer_d_order",
+      "mode": "玩家操作",
+      "phase": {
+        "id": "day1.customer_d.order",
+        "after_event": "day1.customer_d",
+        "stage": "day1.wait_group_d",
+        "completion": {
+          "flag": "day1.group_d_settled",
+          "allow_existing": true
+        },
+        "completion_flag": "day1.group_d_done",
+        "next_event": "day1.customer_e"
+      }
+    },
+    {
+      "id": "customer_e_arrives",
+      "mode": "自动演出",
+      "event": "day1.customer_e",
+      "start": 0,
+      "count": 12,
+      "dialogues": [
+        "day1.customer_e"
+      ]
+    },
+    {
+      "id": "customer_e_order",
+      "mode": "玩家操作",
+      "phase": {
+        "id": "day1.customer_e.order",
+        "after_event": "day1.customer_e",
+        "stage": "day1.wait_group_e",
+        "completion": {
+          "flag": "day1.group_e_settled",
           "allow_existing": true
         },
         "completion_flag": "day1.group_done",
@@ -135,7 +210,7 @@
       "mode": "自动演出",
       "event": "day1.ending",
       "start": 0,
-      "count": 16,
+      "count": 8,
       "dialogues": [
         "day1.coins_raise_suspicion"
       ]
@@ -150,7 +225,9 @@
     "goblin_customer": "res://src/gameplay/characters/common_goblin.tscn",
     "goblin_a": "res://src/gameplay/characters/common_goblin.tscn",
     "goblin_b": "res://src/gameplay/characters/common_goblin.tscn",
-    "goblin_c": "res://src/gameplay/characters/common_goblin.tscn"
+    "goblin_c": "res://src/gameplay/characters/common_goblin.tscn",
+    "goblin_d": "res://src/gameplay/characters/common_goblin.tscn",
+    "goblin_e": "res://src/gameplay/characters/common_goblin.tscn"
   },
   "markers": {
     "level": "res://src/levels/milkTea/milk_tea_shop.tscn",
@@ -162,7 +239,9 @@
       "day1_counter",
       "day1_group_a",
       "day1_group_b",
-      "day1_group_c"
+      "day1_group_c",
+      "day1_group_d",
+      "day1_group_e"
     ]
   },
   "audio": {
@@ -182,5 +261,5 @@
     "fallback": "Unprovided expressions retain speaker default; unconfirmed fat-goblin portraits are not bound."
   },
   "authoring_project": "res://docs/story_authoring/day1_stages_01_02_project.json",
-  "authoring_sha256": "dd4704e350d2ba07629cae93f1c2671bf48c96c954da71f55134364c84485dfd"
+  "authoring_sha256": "3c8d0ee0d17eadf541dd3c781dbee4f4c2d3926213cd19aa0a64fe10c4390fb5"
 }

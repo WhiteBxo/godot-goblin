@@ -15,7 +15,14 @@ func _verify() -> void:
 	var scene: Node = load("res://src/debug/story/legacy_shop.tscn").instantiate()
 	root.add_child(scene)
 	await process_frame
-	var cave_map: CaveMap = scene.get_active_level()
+	var level: Node = scene.get_active_level()
+	if not level is CaveMap:
+		# legacy_shop now boots the milk tea shop; fail fast instead of dying
+		# inside a coroutine that never reaches quit().
+		push_error("legacy_shop no longer loads a CaveMap; the cave demo entry scene needs an update")
+		quit(1)
+		return
+	var cave_map: CaveMap = level
 	var cells: Dictionary = cave_map.walkable_cells
 	var player: Node2D = scene.get_player()
 	player.set_physics_process(false)

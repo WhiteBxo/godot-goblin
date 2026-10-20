@@ -3,11 +3,14 @@ extends RefCounted
 ## Stable screen IDs shared by the host, the manager and the UI scenes.
 
 const PAUSE := &"pause"
+const SAVES := &"saves"
 const SETTINGS := &"settings"
 const MENU_SETTINGS := &"menu_settings"
 const HANDBOOK := &"handbook"
 const HANDBOOK_HUD := &"handbook_hud"
 const TASKS := &"tasks"
+const ORDER_HISTORY := &"order_history"
+const HIRING := &"hiring"
 const CHRONICLE := &"chronicle"
 const DRINKS := &"drinks"
 const CHARACTERS := &"characters"
@@ -19,7 +22,10 @@ const BUSINESS_HUD := &"business_hud"
 const TASK_HUD := &"task_hud"
 const STEALTH_HUD := &"stealth_hud"
 const MAP := &"map"
+const NAVIGATION_HUD := &"navigation_hud"
 const TAVERN_PURCHASE := &"tavern_purchase"
 
 const CHAPTER_ACTIONS := &"chapter_actions"
 const CHAPTER_RECAP := &"chapter_recap"
+## The two-day build ends here; the card owns its own music and leaves to the title.
+const TWO_DAYS_END := &"two_days_end"

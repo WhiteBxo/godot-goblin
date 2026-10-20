@@ -1,0 +1,66 @@
+[
+  {
+    "id": "casino_sentry",
+    "display_name": "侍卫",
+    "role": "赌场的侍卫，负责看守赌场。",
+    "side_faces_left": false,
+    "animations": {
+      "run_down": {
+        "source": "run_down",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 13,
+        "source_entry": "侍卫2/合并图片 2.png"
+      },
+      "idle_down": {
+        "source": "run_down",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 13,
+        "source_entry": "侍卫2/合并图片 2.png"
+      },
+      "run_right": {
+        "source": "run_right",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 15,
+        "source_entry": "侍卫2/合并图片 3.png"
+      },
+      "idle_right": {
+        "source": "run_right",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 15,
+        "source_entry": "侍卫2/合并图片 3.png"
+      },
+      "run_left": {
+        "source": "run_right",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 15,
+        "source_entry": "侍卫2/合并图片 3.png"
+      },
+      "idle_left": {
+        "source": "run_right",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 15,
+        "source_entry": "侍卫2/合并图片 3.png"
+      },
+      "run_up": {
+        "source": "run_up",
+        "fps": 8,
+        "first_only": false,
+        "frame_count": 10,
+        "source_entry": "侍卫2/合并图片.png"
+      },
+      "idle_up": {
+        "source": "run_up",
+        "fps": 6,
+        "first_only": true,
+        "frame_count": 10,
+        "source_entry": "侍卫2/合并图片.png"
+      }
+    }
+  }
+]

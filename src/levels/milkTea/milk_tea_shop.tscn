@@ -63,7 +63,7 @@ size = Vector2(65.99997, 104)
 size = Vector2(12, 104)
 
 [sub_resource type="RectangleShape2D" id="Shape_BathroomNorthWall"]
-size = Vector2(170, 19)
+size = Vector2(170, 112)
 
 [sub_resource type="RectangleShape2D" id="Shape_BathroomEastWall"]
 size = Vector2(35, 113)
@@ -109,6 +109,9 @@ size = Vector2(43, 31)
 
 [sub_resource type="RectangleShape2D" id="Shape_BathroomSink"]
 size = Vector2(45, 48)
+
+[sub_resource type="RectangleShape2D" id="Shape_BathroomShower"]
+size = Vector2(52, 40)
 
 [sub_resource type="RectangleShape2D" id="Shape_BathroomToilet"]
 size = Vector2(60, 57)
@@ -235,7 +238,7 @@ position = Vector2(460, 402)
 shape = SubResource("Shape_HallPanelEast")
 
 [node name="BathroomNorthWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1229471626]
-position = Vector2(223, 441.5)
+position = Vector2(223, 488)
 shape = SubResource("Shape_BathroomNorthWall")
 
 [node name="BathroomEastWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1417433548]
@@ -298,6 +301,10 @@ shape = SubResource("Shape_StorageBox")
 [node name="BathroomSink" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=507683032]
 position = Vector2(254.5, 555)
 shape = SubResource("Shape_BathroomSink")
+
+[node name="BathroomShower" type="CollisionShape2D" parent="WallsAndFurniture"]
+position = Vector2(176, 563)
+shape = SubResource("Shape_BathroomShower")
 
 [node name="BathroomToilet" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1864126032]
 position = Vector2(181, 630.5)
@@ -511,6 +518,8 @@ description = "今日订单 #001
 制作流程：查看订单 → 仓库备料 → 制作台调配。"
 feedback_rect = Rect2(-26, -53, 52, 52)
 
+mouse_interaction_enabled = true
+
 [node name="Marker" parent="InteractionPoints/OrderBoard" index="1"]
 visible = false
 
@@ -629,3 +638,12 @@ position = Vector2(1080, 590)
 
 [node name="day2_ordinary_c" type="Marker2D" parent="StoryPositions"]
 position = Vector2(1160, 590)
+
+[node name="day1_group_d" type="Marker2D" parent="StoryPositions"]
+position = Vector2(1030, 550)
+
+[node name="day1_group_e" type="Marker2D" parent="StoryPositions"]
+position = Vector2(1120, 550)
+
+[node name="day2_bedroom_rest" type="Marker2D" parent="StoryPositions"]
+position = Vector2(285, 350)

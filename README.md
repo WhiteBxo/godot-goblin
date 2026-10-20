@@ -89,11 +89,13 @@ tests/            # 模块验证与隔离夹具
 
 ```sh
 godot --headless --editor --path . --quit
-godot --headless --path . --script res://tests/verify_day1_stages_01_02.gd
-godot --headless --path . --script res://tests/verify_order_board.gd
+python tests/run_all.py                    # 完整回归：每项独立进程 + 超时强杀
+python tests/run_all.py --filter day2 -v   # 只跑名字含 day2 的项
 godot --headless --path . --script res://tests/verify_free_recipes.gd
 godot --headless --path . --script res://tests/verify_drink_throw.gd
 ```
+
+`tests/run_all.py` 按 0=PASS / 1=失败 / 2=需夹具 / 124=挂起 分类，报告写到 `.godot/test_logs/`；单项预算与渲染、编辑器需求登记在脚本的 `PROFILES`。
 
 画面、交互及听感需在有渲染环境中观察；自动化不能代替人工验收。已知历史失败与环境限制见 [现状记录](docs/development/development_status_2026_10_18.md#验证记录与限制)。纯文档维护只检查内容、链接、格式和 diff。
 

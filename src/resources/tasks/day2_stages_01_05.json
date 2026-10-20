@@ -68,7 +68,7 @@
         },
         {
           "id": "elder",
-          "text": "到收银台接待谈论长老的顾客，制作并交付经典珍珠奶茶",
+          "text": "到收银台接待谈论长老的顾客，制作并交付薄荷巧脆奶茶",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -77,7 +77,7 @@
         },
         {
           "id": "emissary",
-          "text": "到收银台接待谈论使者的顾客，制作并交付经典珍珠奶茶",
+          "text": "到收银台接待谈论使者的顾客，制作并交付咖啡可可冰奶",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -86,7 +86,7 @@
         },
         {
           "id": "rumor_first",
-          "text": "接取最后一组的两张订单，制作两杯经典珍珠奶茶并分别交付",
+          "text": "接取最后一组的两张订单，制作苹果奶绿和草莓奶绿并分别交付",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -95,7 +95,7 @@
         },
         {
           "id": "rumor_second",
-          "text": "将另一杯经典珍珠奶茶交给最后一组的另一位顾客",
+          "text": "将草莓奶绿交给最后一组的另一位顾客",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -104,7 +104,7 @@
         },
         {
           "id": "close",
-          "text": "交清已接散客订单，点击「关店 · 前往酒馆」；可先雇一名散客代购",
+          "text": "交清已接散客订单，点击「关店 · 前往酒馆」",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -263,7 +263,7 @@
         },
         {
           "id": "deliver",
-          "text": "交谈结束后，再按 E 将特殊奶茶交给醉酒守卫",
+          "text": "将奶茶提交给守卫",
           "location_id": "settlement.elder",
           "complete_when": {
             "type": "flag",
@@ -331,8 +331,8 @@
     {
       "id": "day2.orders.elder_0",
       "type": "commission",
-      "title": "经典珍珠奶茶 → 议论长老的顾客甲",
-      "description": "经典珍珠奶茶 → 议论长老的顾客甲",
+      "title": "薄荷巧脆奶茶 → 议论长老的顾客甲",
+      "description": "薄荷巧脆奶茶 → 议论长老的顾客甲",
       "reveal_when": {
         "type": "flag",
         "key": "day2.s02.elder.open"
@@ -348,7 +348,7 @@
       "objectives": [
         {
           "id": "deliver",
-          "text": "经典珍珠奶茶 → 议论长老的顾客甲",
+          "text": "薄荷巧脆奶茶 → 议论长老的顾客甲",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.elder_0.delivered"
@@ -357,7 +357,7 @@
       ],
       "delivery": {
         "order_id": "day2_s02_elder_0",
-        "product_id": "classic_boba_milk_tea",
+        "product_id": "mint_choc_milk_tea",
         "target_object_id": "day2_elder_0",
         "accepted_flag": "task.day2_s02_elder_0.accepted"
       },
@@ -369,8 +369,8 @@
     {
       "id": "day2.orders.emissary_0",
       "type": "commission",
-      "title": "经典珍珠奶茶 → 谈论使者的顾客",
-      "description": "经典珍珠奶茶 → 谈论使者的顾客",
+      "title": "咖啡可可冰奶 → 谈论使者的顾客",
+      "description": "咖啡可可冰奶 → 谈论使者的顾客",
       "reveal_when": {
         "type": "flag",
         "key": "day2.s02.emissary.open"
@@ -386,7 +386,7 @@
       "objectives": [
         {
           "id": "deliver",
-          "text": "经典珍珠奶茶 → 谈论使者的顾客",
+          "text": "咖啡可可冰奶 → 谈论使者的顾客",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.emissary_0.delivered"
@@ -395,7 +395,7 @@
       ],
       "delivery": {
         "order_id": "day2_s02_emissary_0",
-        "product_id": "classic_boba_milk_tea",
+        "product_id": "coffee_cocoa_ice_milk",
         "target_object_id": "day2_emissary_0",
         "accepted_flag": "task.day2_s02_emissary_0.accepted"
       },
@@ -407,8 +407,8 @@
     {
       "id": "day2.orders.rumor_0",
       "type": "commission",
-      "title": "经典珍珠奶茶 → 打听酒馆与赌场的顾客甲",
-      "description": "经典珍珠奶茶 → 打听酒馆与赌场的顾客甲",
+      "title": "苹果奶绿 → 打听酒馆与赌场的顾客甲",
+      "description": "苹果奶绿 → 打听酒馆与赌场的顾客甲",
       "reveal_when": {
         "type": "flag",
         "key": "day2.s02.rumor.open"
@@ -424,7 +424,7 @@
       "objectives": [
         {
           "id": "deliver",
-          "text": "经典珍珠奶茶 → 打听酒馆与赌场的顾客甲",
+          "text": "苹果奶绿 → 打听酒馆与赌场的顾客甲",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.rumor_0.delivered"
@@ -433,7 +433,7 @@
       ],
       "delivery": {
         "order_id": "day2_s02_rumor_0",
-        "product_id": "classic_boba_milk_tea",
+        "product_id": "apple_milk_green_tea",
         "target_object_id": "day2_rumor_0",
         "accepted_flag": "task.day2_s02_rumor_0.accepted"
       },
@@ -445,8 +445,8 @@
     {
       "id": "day2.orders.rumor_1",
       "type": "commission",
-      "title": "经典珍珠奶茶 → 打听酒馆与赌场的顾客乙",
-      "description": "经典珍珠奶茶 → 打听酒馆与赌场的顾客乙",
+      "title": "草莓奶绿 → 打听酒馆与赌场的顾客乙",
+      "description": "草莓奶绿 → 打听酒馆与赌场的顾客乙",
       "reveal_when": {
         "type": "flag",
         "key": "day2.s02.rumor.open"
@@ -462,7 +462,7 @@
       "objectives": [
         {
           "id": "deliver",
-          "text": "经典珍珠奶茶 → 打听酒馆与赌场的顾客乙",
+          "text": "草莓奶绿 → 打听酒馆与赌场的顾客乙",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.rumor_1.delivered"
@@ -471,7 +471,7 @@
       ],
       "delivery": {
         "order_id": "day2_s02_rumor_1",
-        "product_id": "classic_boba_milk_tea",
+        "product_id": "strawberry_milk_green_tea",
         "target_object_id": "day2_rumor_1",
         "accepted_flag": "task.day2_s02_rumor_1.accepted"
       },
@@ -483,8 +483,8 @@
     {
       "id": "day2.orders.ordinary_a",
       "type": "commission",
-      "title": "散客 A · 经典珍珠奶茶",
-      "description": "散客 A · 经典珍珠奶茶",
+      "title": "散客 A · 冰吸薄荷拿铁",
+      "description": "散客 A · 冰吸薄荷拿铁",
       "reveal_when": {
         "type": "flag",
         "key": "day2.s02.open"
@@ -500,7 +500,7 @@
       "objectives": [
         {
           "id": "deliver",
-          "text": "散客 A · 经典珍珠奶茶",
+          "text": "散客 A · 冰吸薄荷拿铁",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.ordinary_a.delivered"
@@ -509,7 +509,7 @@
       ],
       "delivery": {
         "order_id": "day2_ordinary_a",
-        "product_id": "classic_boba_milk_tea",
+        "product_id": "iced_mint_latte",
         "target_object_id": "day2_ordinary_a",
         "accepted_flag": "task.day2_ordinary_a.accepted"
       },
@@ -521,8 +521,8 @@
     {
       "id": "day2.orders.ordinary_b",
       "type": "commission",
-      "title": "散客 B · 经典珍珠奶茶",
-      "description": "散客 B · 经典珍珠奶茶",
+      "title": "散客 B · 薄荷巧脆奶茶",
+      "description": "散客 B · 薄荷巧脆奶茶",
       "reveal_when": {
         "type": "flag",
         "key": "day2.s02.open"
@@ -538,7 +538,7 @@
       "objectives": [
         {
           "id": "deliver",
-          "text": "散客 B · 经典珍珠奶茶",
+          "text": "散客 B · 薄荷巧脆奶茶",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.ordinary_b.delivered"
@@ -547,7 +547,7 @@
       ],
       "delivery": {
         "order_id": "day2_ordinary_b",
-        "product_id": "classic_boba_milk_tea",
+        "product_id": "mint_choc_milk_tea",
         "target_object_id": "day2_ordinary_b",
         "accepted_flag": "task.day2_ordinary_b.accepted"
       },
@@ -559,8 +559,8 @@
     {
       "id": "day2.orders.ordinary_c",
       "type": "commission",
-      "title": "散客 C · 经典珍珠奶茶",
-      "description": "散客 C · 经典珍珠奶茶",
+      "title": "散客 C · 苹果奶绿",
+      "description": "散客 C · 苹果奶绿",
       "reveal_when": {
         "type": "flag",
         "key": "day2.s02.open"
@@ -576,7 +576,7 @@
       "objectives": [
         {
           "id": "deliver",
-          "text": "散客 C · 经典珍珠奶茶",
+          "text": "散客 C · 苹果奶绿",
           "complete_when": {
             "type": "flag",
             "key": "day2.s02.ordinary_c.delivered"
@@ -585,7 +585,7 @@
       ],
       "delivery": {
         "order_id": "day2_ordinary_c",
-        "product_id": "classic_boba_milk_tea",
+        "product_id": "apple_milk_green_tea",
         "target_object_id": "day2_ordinary_c",
         "accepted_flag": "task.day2_ordinary_c.accepted"
       },
@@ -598,7 +598,7 @@
       "id": "day3.procurement",
       "type": "commission",
       "title": "把醒神菇交给胖哥布林",
-      "description": "把醒神菇交给胖哥布林",
+      "description": "自行到市场用专款购买，或雇佣普通顾客代购醒神菇。在第三天结束前交给胖哥布林一次用量；第二天购得还可发现醒菇薄荷特调。",
       "reveal_when": {
         "type": "flag",
         "key": "day3.procurement.returned"
@@ -623,10 +623,10 @@
       ],
       "delivery": {
         "order_id": "day3_procurement",
-        "items": {
+        "target_object_id": "fat_goblin",
+        "uses": {
           "insomnia_mushroom": 1
-        },
-        "target_object_id": "fat_goblin"
+        }
       },
       "rewards": {
         "money": 0,
@@ -737,7 +737,7 @@
       "description": "招待醉酒守卫 · 0G",
       "reveal_when": {
         "type": "flag",
-        "key": "day1.s05.drunken_paid"
+        "key": "day2.s05.guard_delivery_open"
       },
       "activate_when": {
         "type": "flag",
@@ -773,17 +773,42 @@
       "title": "散客 C · 辛辣奶茶试饮（可选）",
       "allow_cancel": true,
       "description": "试饮需求：奶茶基底，带辛辣风味。到制作台自由实验，可用昨日得到的老火烧；确认报价、制作后带给散客 C。未接取时不影响关店。",
-      "reveal_when": {"type": "flag", "key": "day2.s02.open"},
-      "activate_when": {"type": "flag", "key": "day2.s02.open"},
-      "complete_when": {"type": "flag", "key": "day2.taste.delivered"},
-      "objectives": [{"id": "taste", "text": "自由调一杯带辛辣风味的奶茶，确认报价后交给散客 C", "complete_when": {"type": "flag", "key": "day2.taste.delivered"}}],
+      "reveal_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "activate_when": {
+        "type": "flag",
+        "key": "day2.s02.open"
+      },
+      "complete_when": {
+        "type": "flag",
+        "key": "day2.taste.delivered"
+      },
+      "objectives": [
+        {
+          "id": "taste",
+          "text": "自由调一杯带辛辣风味的奶茶，确认报价后交给散客 C",
+          "complete_when": {
+            "type": "flag",
+            "key": "day2.taste.delivered"
+          }
+        }
+      ],
       "delivery": {
         "order_id": "day2_taste",
-        "drink": {"base_id": "creamer_milk_tea_base", "flavors": ["辛辣"]},
+        "drink": {
+          "base_id": "creamer_milk_tea_base",
+          "flavors": [
+            "辛辣"
+          ]
+        },
         "target_object_id": "day2_ordinary_c",
         "accepted_flag": "task.day2_taste.accepted"
       },
-      "rewards": {"text": "按已确认配方售价结算 · 留下饮品图鉴"}
+      "rewards": {
+        "text": "按已确认配方售价结算 · 留下饮品图鉴"
+      }
     }
   ]
 }

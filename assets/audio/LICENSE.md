@@ -21,3 +21,9 @@ CC0 1.0 Universal 完整条款：[legal code](https://creativecommons.org/public
 `music/start.ogg` 于 2026-10-18 由用户提供，来源为 `D:/reaper/REAPER Media/start.ogg`，按用户要求用于本项目标题界面。原样复制，无转码或裁剪；淡入淡出由播放器完成。用户未声明额外许可，本文件的 WAV CC0 声明不适用于此曲。
 
 SHA-256：`a6366c55ce5de090eee1f25ba44a9fdc62cf60104c86d8121eb76c52b8357dde`。
+
+## 用户提供的结尾音乐（2026-10-20）
+
+`music/two_days_end.wav` 于 2026-10-20 由用户提供，源文件 `D:/download/Pixel-Quest-Adventure-mixdown-00-00_01-30-1x.wav`，按用户要求用于两天版结尾卡。原样复制，未转码、未裁剪，长度 90.000 秒，44.1 kHz 立体声；导入时按项目默认的 QOA 压缩（`compress/mode=2`）生成运行时采样，非循环。用户未声明额外许可，上述 WAV CC0 声明不适用于此曲。
+
+SHA-256：`174ac84c4fad0396b2701ef59ca147b242ee5293f974e282ba88340cecd3beda`。

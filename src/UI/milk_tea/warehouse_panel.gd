@@ -10,7 +10,11 @@ var _inventory: WarehouseInventory
 var _filter: OptionButton
 var _list: ItemList
 var _details: Label
+var _detail: Control
 var _selected_id: String = ""
+## The pane only turns when a different item is opened; a stock refresh of the
+## item already on screen must leave the words still.
+var _shown_id: String = ""
 
 func _ready() -> void:
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -49,6 +53,7 @@ func _ready() -> void:
 	_details.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	details_column.add_child(_details)
+	_detail = details_column
 
 func configure(inventory: WarehouseInventory) -> void:
 	if is_instance_valid(_inventory) and _inventory.changed.is_connected(refresh):
@@ -95,6 +100,7 @@ func refresh() -> void:
 		_image.texture = null
 		Artwork.show_materials(_materials, _inventory, [])
 		_details.text = "暂无已发现物品。"
+		_open_detail()
 		return
 	selected = maxi(selected, 0)
 	_list.select(selected)
@@ -102,6 +108,18 @@ func refresh() -> void:
 
 func _select_item(index: int) -> void:
 	_selected_id = _list.get_item_metadata(index)
+	_fill_detail()
+	_open_detail()
+
+## The pane opens on the new item instead of swapping the words in place.
+## Alpha and scale only, so the split layout never reflows.
+func _open_detail() -> void:
+	var changed := _selected_id != _shown_id
+	_shown_id = _selected_id
+	if changed:
+		UIFlourish.reveal(_detail, 0.99)
+
+func _fill_detail() -> void:
 	var drink := _inventory.get_drink_record(_selected_id)
 	if not drink.is_empty():
 		_image.texture = Artwork.DRINK_ICON
@@ -112,7 +130,11 @@ func _select_item(index: int) -> void:
 	_image.texture = ingredient.icon
 	Artwork.show_materials(_materials, _inventory, [])
 	if ingredient.category == "story_item":
-		_details.text = "%s · %d 枚\n剧情物品\n金币上印着某种兽类，价值未知。" % [ingredient.name, ingredient.quantity]
+		# Each story item carries its own note; never borrow another item's words.
+		var note := str(ingredient.description)
+		_details.text = "%s · %d 枚\n剧情物品" % [ingredient.name, ingredient.quantity]
+		if not note.is_empty():
+			_details.text += "\n" + note
 		return
 	var category: String = {"tea": "茶底", "milk": "奶基底", "syrup": "糖浆", "topping": "小料", "product": "成品", "material": "原料"}.get(ingredient.category, ingredient.category)
 	var lines: PackedStringArray = ["%s · %d 份%s" % [ingredient.name, ingredient.quantity, " · 缺货" if ingredient.quantity == 0 else ""],
@@ -125,13 +147,19 @@ func _select_item(index: int) -> void:
 		lines.append("形态：%s · 加工：%s" % [ingredient.form, _property_text(ingredient.processing_methods)])
 	if int(ingredient.price) > 0:
 		lines.append("标价：%s" % WalletTransactions.format_money(int(ingredient.price)))
-	lines.append("已知风味：%s" % _property_text(ingredient.flavor_tags))
-	lines.append("战斗属性：%s" % _property_text(ingredient.combat_attributes))
-	lines.append("特殊效果：%s" % _property_text(ingredient.special_effects))
-	lines.append("获取方式：%s" % _property_text(ingredient.acquisition_sources))
+	_append_if_any(lines, "已知风味", ingredient.flavor_tags)
+	_append_if_any(lines, "战斗属性", ingredient.combat_attributes)
+	_append_if_any(lines, "特殊效果", ingredient.special_effects)
+	_append_if_any(lines, "获取方式", ingredient.acquisition_sources)
 	if not str(ingredient.description).is_empty():
 		lines.append("\n%s" % ingredient.description)
 	_details.text = "\n".join(lines)
+
+## An empty property is not information; a column of "无" only pushes the real
+## lines off the pane.
+func _append_if_any(lines: PackedStringArray, label: String, values: PackedStringArray) -> void:
+	if not values.is_empty():
+		lines.append("%s：%s" % [label, "、".join(values)])
 
 func _property_text(values: PackedStringArray) -> String:
 	return "、".join(values) if not values.is_empty() else "无"

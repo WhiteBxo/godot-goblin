@@ -353,6 +353,141 @@
     ]
   },
   {
+    "id": "story.coin_drop",
+    "label": "硬币落地",
+    "note": "单枚金属币落地弹跳，潜入投币命中的收尾",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "rpg_sfx/item_coins_01.ogg"
+          }
+        ],
+        "seconds": 0.42
+      },
+      {
+        "parts": [
+          {
+            "source": "rpg_sfx/item_coins_02.ogg"
+          }
+        ],
+        "seconds": 0.42
+      },
+      {
+        "parts": [
+          {
+            "source": "rpg_sfx/item_coins_03.ogg"
+          }
+        ],
+        "seconds": 0.42
+      },
+      {
+        "parts": [
+          {
+            "source": "rpg_sfx/item_coins_04.ogg"
+          }
+        ],
+        "seconds": 0.42
+      }
+    ]
+  },
+  {
+    "id": "gather.plant",
+    "label": "采摘植物",
+    "note": "木本材料被拔下的轻响，用于苔藓、菌菇与块茎",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "rpg_sfx/item_wood_01.ogg"
+          }
+        ]
+      },
+      {
+        "parts": [
+          {
+            "source": "rpg_sfx/item_wood_02.ogg"
+          }
+        ]
+      },
+      {
+        "parts": [
+          {
+            "source": "rpg_sfx/item_wood_03.ogg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gather.crystal",
+    "label": "敲下晶簇",
+    "note": "晶体清脆头部 + 石头碎裂底噪，避免只有一下 UI 叮声",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "rpg_sfx/item_gem_02.ogg"
+          },
+          {
+            "source": "rpg_sfx/stones_04.ogg",
+            "at": 0.02,
+            "gain": 0.5
+          }
+        ],
+        "seconds": 0.42
+      },
+      {
+        "parts": [
+          {
+            "source": "rpg_sfx/item_gem_03.ogg"
+          },
+          {
+            "source": "rpg_sfx/stones_01.ogg",
+            "at": 0.02,
+            "gain": 0.4
+          }
+        ],
+        "seconds": 0.5
+      },
+      {
+        "parts": [
+          {
+            "source": "rpg_sfx/item_gem_04.ogg"
+          },
+          {
+            "source": "rpg_sfx/item_stone_04.ogg",
+            "at": 0.03,
+            "gain": 0.45
+          }
+        ],
+        "seconds": 0.55
+      }
+    ]
+  },
+  {
+    "id": "gather.vial",
+    "label": "装瓶取样",
+    "note": "玻璃瓶拔出塞子再合上，取血等液体样本",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "tinysized/sfx-cc0/vial-glass-open-01.wav"
+          },
+          {
+            "source": "tinysized/sfx-cc0/vial-glass-close-01.wav",
+            "at": 0.42
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "ui.failure",
     "label": "交互失败",
     "note": "锁扣声降低音高",
@@ -535,6 +670,42 @@
             "source": "accessory/sfx/coins-shake-03.wav"
           }
         ]
+      }
+    ]
+  },
+  {
+    "id": "shop.coins_chain",
+    "label": "金币串落袋",
+    "note": "金属链短响裁剪，收款入袋的收尾声",
+    "loop": false,
+    "variants": [
+      {
+        "parts": [
+          {
+            "source": "rpg_sfx/chain_01.ogg",
+            "duration": 0.42
+          }
+        ],
+        "seconds": 0.42
+      },
+      {
+        "parts": [
+          {
+            "source": "rpg_sfx/chain_02.ogg",
+            "duration": 0.4
+          }
+        ],
+        "seconds": 0.4
+      },
+      {
+        "parts": [
+          {
+            "source": "rpg_sfx/chain_03.ogg",
+            "start": 0.1,
+            "duration": 0.55
+          }
+        ],
+        "seconds": 0.55
       }
     ]
   },

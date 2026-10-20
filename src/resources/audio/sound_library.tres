@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="SoundLibrary" load_steps=46 format=3]
+[gd_resource type="Resource" script_class="SoundLibrary" load_steps=61 format=3]
 
 [ext_resource type="Script" path="res://src/resources/audio/sound_library.gd" id="1"]
 [ext_resource type="AudioStream" path="res://assets/audio/ui/hover.wav" id="s1"]
@@ -23,28 +23,43 @@
 [ext_resource type="AudioStream" path="res://assets/audio/story/knock_01.wav" id="s20"]
 [ext_resource type="AudioStream" path="res://assets/audio/story/knock_02.wav" id="s21"]
 [ext_resource type="AudioStream" path="res://assets/audio/story/impact.wav" id="s22"]
-[ext_resource type="AudioStream" path="res://assets/audio/ui/failure.wav" id="s23"]
-[ext_resource type="AudioStream" path="res://assets/audio/ambience/drip_01.wav" id="s24"]
-[ext_resource type="AudioStream" path="res://assets/audio/ambience/drip_02.wav" id="s25"]
-[ext_resource type="AudioStream" path="res://assets/audio/ambience/rock_scrape.wav" id="s26"]
-[ext_resource type="AudioStream" path="res://assets/audio/story/goblin_01.wav" id="s27"]
-[ext_resource type="AudioStream" path="res://assets/audio/story/goblin_02.wav" id="s28"]
-[ext_resource type="AudioStream" path="res://assets/audio/story/goblin_03.wav" id="s29"]
-[ext_resource type="AudioStream" path="res://assets/audio/ambience/shop.wav" id="s30"]
-[ext_resource type="AudioStream" path="res://assets/audio/ambience/cave.wav" id="s31"]
-[ext_resource type="AudioStream" path="res://assets/audio/shop/coins_01.wav" id="s32"]
-[ext_resource type="AudioStream" path="res://assets/audio/shop/coins_02.wav" id="s33"]
-[ext_resource type="AudioStream" path="res://assets/audio/shop/coins_03.wav" id="s34"]
-[ext_resource type="AudioStream" path="res://assets/audio/story/unlock_01.wav" id="s35"]
-[ext_resource type="AudioStream" path="res://assets/audio/story/unlock_02.wav" id="s36"]
-[ext_resource type="AudioStream" path="res://assets/audio/shop/bottle_open_01.wav" id="s37"]
-[ext_resource type="AudioStream" path="res://assets/audio/shop/bottle_open_02.wav" id="s38"]
-[ext_resource type="AudioStream" path="res://assets/audio/shop/stir_01.wav" id="s39"]
-[ext_resource type="AudioStream" path="res://assets/audio/shop/stir_02.wav" id="s40"]
-[ext_resource type="AudioStream" path="res://assets/audio/shop/stir_03.wav" id="s41"]
-[ext_resource type="AudioStream" path="res://assets/audio/story/page_turn_01.wav" id="s42"]
-[ext_resource type="AudioStream" path="res://assets/audio/story/page_turn_02.wav" id="s43"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/coin_drop_01.wav" id="s23"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/coin_drop_02.wav" id="s24"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/coin_drop_03.wav" id="s25"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/coin_drop_04.wav" id="s26"]
+[ext_resource type="AudioStream" path="res://assets/audio/gather/plant_01.wav" id="s27"]
+[ext_resource type="AudioStream" path="res://assets/audio/gather/plant_02.wav" id="s28"]
+[ext_resource type="AudioStream" path="res://assets/audio/gather/plant_03.wav" id="s29"]
+[ext_resource type="AudioStream" path="res://assets/audio/gather/crystal_01.wav" id="s30"]
+[ext_resource type="AudioStream" path="res://assets/audio/gather/crystal_02.wav" id="s31"]
+[ext_resource type="AudioStream" path="res://assets/audio/gather/crystal_03.wav" id="s32"]
+[ext_resource type="AudioStream" path="res://assets/audio/gather/vial.wav" id="s33"]
+[ext_resource type="AudioStream" path="res://assets/audio/ui/failure.wav" id="s34"]
+[ext_resource type="AudioStream" path="res://assets/audio/ambience/drip_01.wav" id="s35"]
+[ext_resource type="AudioStream" path="res://assets/audio/ambience/drip_02.wav" id="s36"]
+[ext_resource type="AudioStream" path="res://assets/audio/ambience/rock_scrape.wav" id="s37"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/goblin_01.wav" id="s38"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/goblin_02.wav" id="s39"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/goblin_03.wav" id="s40"]
+[ext_resource type="AudioStream" path="res://assets/audio/ambience/shop.wav" id="s41"]
+[ext_resource type="AudioStream" path="res://assets/audio/ambience/cave.wav" id="s42"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/coins_01.wav" id="s43"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/coins_02.wav" id="s44"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/coins_03.wav" id="s45"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/coins_chain_01.wav" id="s46"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/coins_chain_02.wav" id="s47"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/coins_chain_03.wav" id="s48"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/unlock_01.wav" id="s49"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/unlock_02.wav" id="s50"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/bottle_open_01.wav" id="s51"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/bottle_open_02.wav" id="s52"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/stir_01.wav" id="s53"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/stir_02.wav" id="s54"]
+[ext_resource type="AudioStream" path="res://assets/audio/shop/stir_03.wav" id="s55"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/page_turn_01.wav" id="s56"]
+[ext_resource type="AudioStream" path="res://assets/audio/story/page_turn_02.wav" id="s57"]
 [ext_resource type="AudioStream" path="res://assets/audio/music/daily_milk_tea.ogg" id="music"]
+[ext_resource type="AudioStream" path="res://assets/audio/music/two_days_end.wav" id="music_end"]
 
 [resource]
 script = ExtResource("1")
@@ -61,16 +76,22 @@ entries = Array[Dictionary]([
 {"id": "player.step_stone", "label": "石地脚步", "loop": false, "streams": [ExtResource("s16"), ExtResource("s17"), ExtResource("s18"), ExtResource("s19")]},
 {"id": "story.knock", "label": "门后神秘三连敲", "loop": false, "streams": [ExtResource("s20"), ExtResource("s21")]},
 {"id": "story.impact", "label": "剧情冲击", "loop": false, "streams": [ExtResource("s22")]},
-{"id": "ui.failure", "label": "交互失败", "loop": false, "streams": [ExtResource("s23")]},
-{"id": "ambience.drip", "label": "远处滴水", "loop": false, "streams": [ExtResource("s24"), ExtResource("s25")]},
-{"id": "ambience.rock_scrape", "label": "岩石摩擦", "loop": false, "streams": [ExtResource("s26")]},
-{"id": "story.goblin", "label": "哥布林含糊嘀咕", "loop": false, "streams": [ExtResource("s27"), ExtResource("s28"), ExtResource("s29")]},
-{"id": "ambience.shop", "label": "奶茶店室内循环", "loop": true, "streams": [ExtResource("s30")]},
-{"id": "ambience.cave", "label": "地下洞穴循环", "loop": true, "streams": [ExtResource("s31")]},
-{"id": "shop.coins", "label": "收取钱币", "loop": false, "streams": [ExtResource("s32"), ExtResource("s33"), ExtResource("s34")]},
-{"id": "story.unlock", "label": "锁盒解锁", "loop": false, "streams": [ExtResource("s35"), ExtResource("s36")]},
-{"id": "shop.bottle_open", "label": "打开玻璃瓶", "loop": false, "streams": [ExtResource("s37"), ExtResource("s38")]},
-{"id": "shop.stir", "label": "碗勺搅拌", "loop": false, "streams": [ExtResource("s39"), ExtResource("s40"), ExtResource("s41")]},
-{"id": "story.page_turn", "label": "书页翻动", "loop": false, "streams": [ExtResource("s42"), ExtResource("s43")]},
-{"id": "music.daily_milk_tea", "label": "奶茶店日常 BGM", "loop": true, "loop_offset": 68.279, "streams": [ExtResource("music")]}
+{"id": "story.coin_drop", "label": "硬币落地", "loop": false, "streams": [ExtResource("s23"), ExtResource("s24"), ExtResource("s25"), ExtResource("s26")]},
+{"id": "gather.plant", "label": "采摘植物", "loop": false, "streams": [ExtResource("s27"), ExtResource("s28"), ExtResource("s29")]},
+{"id": "gather.crystal", "label": "敲下晶簇", "loop": false, "streams": [ExtResource("s30"), ExtResource("s31"), ExtResource("s32")]},
+{"id": "gather.vial", "label": "装瓶取样", "loop": false, "streams": [ExtResource("s33")]},
+{"id": "ui.failure", "label": "交互失败", "loop": false, "streams": [ExtResource("s34")]},
+{"id": "ambience.drip", "label": "远处滴水", "loop": false, "streams": [ExtResource("s35"), ExtResource("s36")]},
+{"id": "ambience.rock_scrape", "label": "岩石摩擦", "loop": false, "streams": [ExtResource("s37")]},
+{"id": "story.goblin", "label": "哥布林含糊嘀咕", "loop": false, "streams": [ExtResource("s38"), ExtResource("s39"), ExtResource("s40")]},
+{"id": "ambience.shop", "label": "奶茶店室内循环", "loop": true, "streams": [ExtResource("s41")]},
+{"id": "ambience.cave", "label": "地下洞穴循环", "loop": true, "streams": [ExtResource("s42")]},
+{"id": "shop.coins", "label": "收取钱币", "loop": false, "streams": [ExtResource("s43"), ExtResource("s44"), ExtResource("s45")]},
+{"id": "shop.coins_chain", "label": "金币串落袋", "loop": false, "streams": [ExtResource("s46"), ExtResource("s47"), ExtResource("s48")]},
+{"id": "story.unlock", "label": "锁盒解锁", "loop": false, "streams": [ExtResource("s49"), ExtResource("s50")]},
+{"id": "shop.bottle_open", "label": "打开玻璃瓶", "loop": false, "streams": [ExtResource("s51"), ExtResource("s52")]},
+{"id": "shop.stir", "label": "碗勺搅拌", "loop": false, "streams": [ExtResource("s53"), ExtResource("s54"), ExtResource("s55")]},
+{"id": "story.page_turn", "label": "书页翻动", "loop": false, "streams": [ExtResource("s56"), ExtResource("s57")]},
+{"id": "music.daily_milk_tea", "label": "奶茶店日常 BGM", "loop": true, "loop_offset": 68.279, "streams": [ExtResource("music")]},
+{"id": "music.two_days_end", "label": "两日终曲", "loop": false, "streams": [ExtResource("music_end")]}
 ])

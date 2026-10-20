@@ -161,7 +161,7 @@ func assert_main(task_id: String, objective_id: String) -> void:
 	var task := game.get_task_journal().get_current_main_task()
 	check(task.get("id") == task_id and task.get("current_objective", {}).get("id") == objective_id, "Current objective is %s / %s" % [task_id, objective_id])
 	var hud := game.find_children("*", "TaskHUD", true, false)[0] as TaskHUD
-	check(hud.is_visible_in_tree() and hud.get_node("Margin/Content/Objective").text == task.get("current_objective", {}).get("text", ""), "The player sees the current objective on the actual HUD")
+	check(hud.is_visible_in_tree() and hud.get_node("TaskCard/Margin/Content/Objective").text == task.get("current_objective", {}).get("text", ""), "The player sees the current objective on the actual HUD")
 
 func serve_order(order: String) -> void:
 	var board := shop_point(&"orders")

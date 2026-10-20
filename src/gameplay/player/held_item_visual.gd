@@ -13,6 +13,10 @@ extends Node2D
 @export var offset_up := Vector2(-24.0, -52.0)
 @export var offset_left := Vector2(-24.0, -52.0)
 @export var offset_right := Vector2(24.0, -52.0)
+## The player has no carry or throw poses yet, so the stand-in shapes are parked by
+## default: the held slot keeps working for throw rules while nothing is drawn in
+## the hands. Flip this on only after real held-item frames exist.
+@export var draw_stand_in := false
 
 var _player: PlayerController
 var _item: StringName = &""
@@ -35,7 +39,7 @@ func _on_facing_changed(_direction: PlayerController.Facing) -> void:
 
 func _apply(item: StringName) -> void:
 	_item = item
-	visible = item != &""
+	visible = draw_stand_in and item != &""
 	_place()
 	queue_redraw()
 

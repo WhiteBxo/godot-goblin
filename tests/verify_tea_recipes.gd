@@ -70,13 +70,14 @@ func _check_menus() -> void:
 func _check_blood_unlock() -> void:
 	var menu: TeaMenu = load(DAY1_MENU)
 	var state := StateData.new(menu)
+	_check(state.select_business_profile("day1") == OK, "Use the formal current-ingredient profile")
 	state.set_story_stage("day1.s05")
 	var inventory := state.get_warehouse_inventory()
 	var production := state.get_tea_production()
 	_check(production.get_recipe_errors().is_empty(), "Formal menu validates with the gated recipe")
 	_check(inventory.add_ingredient("day1_griffin_blood", 1) and inventory.try_spend_uses({"day1_griffin_blood": 2}), "Fixture carries the acquired three blood uses")
 	var book: TeaRecipeBook = menu.recipe_book
-	_check(book.get_recipes_for(state).size() == 3, "Locked recipe is filtered out in catalog order")
+	_check(book.get_recipes_for(state).size() == 6, "Locked recipe is filtered out in catalog order")
 	var preview := production.preview_craft(BLOOD)
 	_check(preview.code == "locked", "Locked recipe previews as locked")
 	_check(preview.product_id.is_empty() and preview.materials == BLOOD, "Locked preview leaks no product and consumes nothing")
@@ -91,8 +92,8 @@ func _check_blood_unlock() -> void:
 	_check(production.preview_craft(BLOOD).code == "locked", "S05 remains locked even with blood and a return receipt")
 	state.set_story_stage("day1.s06.wait_craft")
 	var unlocked := book.get_recipes_for(state)
-	_check(unlocked.size() == 4, "Unlocked recipe joins the catalog")
-	_check(unlocked.size() == 4 and unlocked[3].id == "day1_blood_recipe", "Unlocked recipe keeps its catalog position")
+	_check(unlocked.size() == 7, "Unlocked recipe joins the catalog")
+	_check(unlocked.size() == 7 and unlocked[0].id == "day1_blood_recipe", "Unlocked recipe keeps its catalog position")
 	preview = production.preview_craft(BLOOD)
 	_check(preview.code == "ok" and preview.product_id == "day1_blood_milk_tea", "Unlocked recipe previews the blood drink")
 	_check(not preview.advances_order, "Blood recipe never joins the fixed order queue")
@@ -303,7 +304,7 @@ func _check_panel() -> void:
 	await process_frame
 	var panel: CraftingPanel = popup.get_crafting_panel()
 	_check(panel.visible, "Crafting panel opens at the tea station")
-	_check(root.gui_get_focus_owner() == panel.get_node("Body/Left/MaterialList"), "Focus starts on the material list")
+	_check(root.gui_get_focus_owner() == panel.get_node("Body/Right/RecipeList"), "Focus starts on the recipe list")
 	_check(not panel.is_craft_enabled(), "Empty selection cannot be submitted")
 	panel.add_material("black_tea")
 	panel.add_material("black_tea")
@@ -330,7 +331,7 @@ func _check_panel() -> void:
 		submit_button.grab_focus()
 		await process_frame
 		await process_frame
-		_check((panel.get_parent() as ScrollContainer).get_global_rect().encloses(submit_button.get_global_rect()), "Keyboard focus exposes the teaching submit button in a small viewport")
+		_check((panel.get_parent() as Control).get_global_rect().encloses(submit_button.get_global_rect()), "Keyboard focus exposes the teaching submit button in a small viewport")
 	root.size = Vector2i(1280, 720)
 	_check(panel.select_recipe("pearl_milk_tea"), "A known recipe auto-fills without owning a product")
 	_check(panel.selected_materials() == PEARL, "Recipe selection replaces all tray materials")
@@ -343,7 +344,7 @@ func _check_panel() -> void:
 	_check(panel.batch_quantity() == 2, "Typing a quantity updates the pending batch immediately")
 	panel.set_batch_quantity(3)
 	_check(panel.batch_quantity() == 3, "Batch quantity can be changed")
-	_check(panel.get_node("Body/Right/SelectedScroll").size.y >= 40, "The selected material tray stays readable")
+	_check(not panel.get_node("Body/Left").visible and not panel.get_node("Body/Right/SelectedScroll").visible, "Known recipes omit the manual ingredients and selection tray")
 	var before_stock := main.get_warehouse_inventory().get_stock("pearl_milk_tea")
 	result = panel.submit()
 	_check(result.ok and main.get_warehouse_inventory().get_stock("pearl_milk_tea") == before_stock + 3, "UI forwards the entire batch through the host")

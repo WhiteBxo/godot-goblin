@@ -46,7 +46,7 @@ offset_left = -248.0
 offset_top = 84.0
 offset_right = -16.0
 grow_horizontal = 0
-text = "演出已中断 · 继续剧情"
+text = "继续剧情"
 
 [node name="Notice" type="Label" parent="."]
 visible = false

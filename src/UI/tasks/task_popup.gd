@@ -38,7 +38,7 @@ func uses_native_gui_input() -> bool:
 func get_default_focus() -> Control:
 	return _shell.get_default_focus()
 
-func get_entries() -> ItemList:
+func get_entries() -> TaskList:
 	return _page.get_entries()
 
 func get_detail_title() -> Label:

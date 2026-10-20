@@ -6,4 +6,5 @@
 - 壳通过 `content_scene` 组合内容页，暴露 `get_content()`、`get_close_button()`、`get_panel_rect()`、`get_default_focus()`；屏幕脚本负责把 `close_requested` 转给宿主。
 - 打开动画只动 `%Panel` 的 alpha / scale，隐藏时立即复位；根节点保持布局，焦点、命中区域和 `get_panel_rect()` 从首帧起有效。
 - 组件样式只使用主题 variation 与 tokens，不写 raw Color、字号或场景级 StyleBox；新增状态先补 `src/resources/ui/ui_tokens.gd` 与 `tools/ui/build_theme.gd`。
+- `ui_button_motion.gd` 只负责悬停 / 按下 / 焦点的缩放反馈，由宿主持有并传入 UI 层根节点；不改变布局、焦点或按钮信号，整块热区可写 `metadata/ui_motion = false` 退出。
 - 新增组件提供可独立 F6 的场景，并先接入 `src/debug/ui/ui_kit.tscn`；只在一处使用的布局不要提前抽象。

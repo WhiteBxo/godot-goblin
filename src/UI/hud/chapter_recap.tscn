@@ -18,5 +18,5 @@ script = ExtResource("script")
 [node name="ModalShell" parent="." instance=ExtResource("shell")]
 layout_mode = 1
 title = "前两天 · 旅程回顾"
-hint = "Esc / Enter 继续 · 进度会在下一安全检查点保存"
+hint = "Esc / Enter 结束 · 可回到标题画面"
 content_scene = ExtResource("page")

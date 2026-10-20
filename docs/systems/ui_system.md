@@ -14,7 +14,7 @@ UI 使用 Godot 4.7 原生 Control、Container 和 Theme，不增加 autoload �
 
 UIManager 在 Systems 下使用 Always；World 和其他普通 Systems 保持 Pausable。界面节点由其 CanvasLayer 持有，管理器保存注册和模态栈。店铺 HUD 和弹窗通过独立场景实例化，不再从 HUD 内部 reparent 弹窗。
 
-右上角 `handbook_hud` 现在显示“菜单”及未读圆点，打开 `chapter_actions`（PopupLayer 的按需游戏菜单）。完整目标、钱包、存档时间、支线与经营动作在菜单查看；委托、异闻录、饮品、人物、背包、地图和设置从这里进入，子页返回菜单，再返回游戏。手册本体仍使用 `handbook`（PopupLayer 的统一模态窗口）。委托、异闻录与饮品图鉴通过页签切换，未解锁页签隐藏；全部未解锁时手册不可打开，基础菜单仍可使用。`MainGame.open_handbook()` 选择上次页签，首次优先委托；`open_tasks()` / J 键、`open_chronicle()` 与 `open_drinks()` 选择对应页。饮品图鉴首次自由制作后开放。`tasks`、`chronicle`、`drinks` 保留为手册别名，复用弹窗互斥、操作锁、Esc 关闭和 P 暂停；ItemList 使用原生方向键、Enter 和鼠标输入，Tab 继续由原生 Control 导航及管理器焦点约束处理。详见 [见闻录模块](../gameplay/chronicle.md)。
+右上角 `handbook_hud` 现在显示“菜单”及未读圆点，打开 `chapter_actions`（PopupLayer 的按需游戏菜单）。完整目标、钱包、存档时间、支线与经营动作在菜单查看；奶茶订单、雇佣系统（暂未开放）、任务日志、异闻录、饮品图鉴、人物记录、背包、地图和设置从这里进入，子页返回菜单，再返回游戏。原“委托”入口拆为三处：`奶茶订单`（`order_history`，经营订单的进行中／可接取与历史）、`任务日志 [J]`（`tasks`，主线与支线）和置灰的`雇佣系统`（`hiring`）。手册本体仍使用 `handbook`（PopupLayer 的统一模态窗口）。奶茶订单页常驻可打开，任务日志、异闻录与饮品图鉴按解锁隐藏页签；除奶茶订单外全部未解锁时手册不可打开，基础菜单仍可使用。`MainGame.open_handbook()` 选择上次页签，首次优先任务日志；`open_tasks()` / J 键、`open_chronicle()` 与 `open_drinks()` 选择对应页。饮品图鉴首次自由制作后开放。`tasks`、`order_history`、`chronicle`、`drinks` 保留为手册别名，复用弹窗互斥、操作锁、Esc 关闭和 P 暂停；ItemList 使用原生方向键、Enter 和鼠标输入，Tab 继续由原生 Control 导航及管理器焦点约束处理。详见 [见闻录模块](../gameplay/chronicle.md) 与 [奶茶订单](../gameplay/order_system.md)。
 
 ## 接入接口
 
@@ -65,7 +65,13 @@ UIManager 在 Systems 下使用 Always；World 和其他普通 Systems 保持 Pa
 godot --headless --path . --script res://tools/ui/build_theme.gd
 ```
 
-主题覆盖 Button、Label、Panel/PanelContainer、ItemList、TabContainer/TabBar、LineEdit、SpinBox、VScrollBar/HScrollBar、PopupMenu、Tooltip、CheckBox、ProgressBar、HSeparator、RichTextLabel 和容器间距。正文 12px，弹窗标题 24px，标题画面 36px，不使用 14/18。静态样式全部来自主题，场景和脚本用 `theme_type_variation`（Title/H2/Speaker/Hint/Muted/Subtitle/Value/Success/Warning/Danger/Badge/Keycap/PrimaryButton/GhostButton/DangerButton/IconButton/InsetPanel/CardPanel/SunkenPanel/ShadePanel/SuccessBar）表达语义，不写 per-node 颜色或字号覆盖。
+主题覆盖 Button、Label、Panel/PanelContainer、ItemList、TabContainer/TabBar、LineEdit、SpinBox、VScrollBar/HScrollBar、PopupMenu、Tooltip、CheckBox、ProgressBar、HSeparator、RichTextLabel 和容器间距。正文 12px，弹窗标题 24px，标题画面 36px，不使用 14/18。静态样式全部来自主题，场景和脚本用 `theme_type_variation`（Title/H2/Speaker/Hint/Muted/Subtitle/Value/Success/Warning/Danger/Badge/Keycap/PrimaryButton/GhostButton/ChipButton/DangerButton/IconButton/InsetPanel/HudPanel/CoinPanel/CardPanel/SunkenPanel/ShadePanel/SuccessBar）表达语义，不写 per-node 颜色或字号覆盖。
+
+视觉层级按“表面”分工：普通 Panel 只留 1px 暗边和投影，用于 HUD 与对白；`InsetPanel` 是弹窗唯一的金色细边表面；`HudPanel` 用左侧 3px 铜色导轨强调当前目标；`CoinPanel` 是圆角金币药丸；`ChipButton` 用于“菜单”这类需要在小地图/场景上保持可发现的入口。正文 Label 带 1px 暗色投影，纸色订单笺的墨色文字则关闭投影。
+
+`UIButtonMotion`（`src/UI/components/ui_button_motion.gd`）与 `UIAudioFeedback` 并列挂在宿主 Systems 下，扫过 Hud/Popup/Pause 层内的按钮：悬停轻微放大、按下回缩、松开回弹、键盘焦点微抬。它只改 `scale` 与 `pivot_offset`，不动布局、焦点和按钮信号；覆盖整张卡片的透明热区用 `metadata/ui_motion = false` 退出，避免悬停底框溢出卡片。弹窗打开、交互提示出现、任务目标/余额变化与标题画面另有各自的一次性缓动，全部由对应脚本在展示层完成。
+
+`UIFlourish`（`src/UI/components/ui_flourish.gd`）收纳“刚刚发生了什么”的一次性动效：`settle()` 数值落地、`stamp()` 状态改判、`refuse()` 操作被拒、`cups()` 产出物离开台面、`reveal()` 就地换页后的落定、`float_text()` 金额变化浮字。它只动 `scale`/`rotation`/`modulate`，结束时回到单位变换；`cups()` 与 `float_text()` 的浮层挂到最近的非 Container 祖先上，绝不进入任何容器的布局，也不吃鼠标。同一控件重复触发会先杀掉上一段同类型缓动，因此可以随手调用。按钮本体的按压反馈仍归 `UIButtonMotion`，这里只负责“结果”。
 
 `src/debug/ui/ui_kit.tscn` 是主题画廊，F6 检查字体层级、按钮状态、面板、ItemList 选中、页签、输入框、进度条与长文本。`tests/verify_ui_theme.gd` 审计场景使用的控件类型、字号范围和 UI 脚本中的 raw Color；`tests/verify_ui_kit.gd` 冒烟加载画廊并输出截图。
 
@@ -123,7 +129,9 @@ godot --path . --log-file .godot/ui-visual.log --script res://tests/verify_ui_ma
 
 解锁后菜单的“地图 [M]”或 M 调用 `open_map()`；未解锁返回 `ERR_UNAVAILABLE`，暂停、演出、其他模态、潜行拦截或现有移动锁期间返回 `ERR_BUSY`。Esc / 关闭按钮退出，P 暂停覆盖，焦点和玩家锁沿用 UIManager / MainGame。Debug 全图改为 F7，Tab 路线在模态期间不响应。独立店内及洞穴宿主未装配聚落地图，不能解锁或打开它。
 
-`SettlementMap.get_map_data(known_locations)` 只返回世界边界、保存场景中的区域 footprint 和真实外部入口位置的值副本；不返回节点、内部贴图、文书、血液、书柜、隐藏石盖或路线。`SettlementMap.MAP_LOCATIONS` 是唯一的 `location_id → zone_id → *_entrance` 映射：`settlement.shop/muster/vestibule/training/lodging/kitchen/tavern/casino/dining/ritual/elder/growing/warehouse/yard/hearth/workshop`。正式展示采用克制的编号轮廓图和地点列表，不加载制作源 JSON，不生成或复制地图图片。
+`SettlementMap.get_map_data(known_locations)` 只返回世界边界、保存场景中的区域 footprint 和真实外部入口位置的值副本；不返回节点、内部贴图、文书、血液、书柜、隐藏石盖或路线。`SettlementMap.MAP_LOCATIONS` 是唯一的 `location_id → zone_id → *_entrance` 映射：`settlement.shop/muster/vestibule/training/lodging/kitchen/tavern/casino/dining/ritual/elder/growing/warehouse/yard/hearth/workshop`。`RpgWorldMapData.LOCATIONS` 在聚落章节图里补充 `settlement.residential`（东侧居民区），并作为 `references.locations` 的校验来源之一。
+
+正式展示使用用户提供的实际洞窟全图 `assets/map/cartography/cavern_floor_overview.png`（1200 × 1320）作为底图。世界范围 2400 × 2640 与图片等比对应，区域名称、玩家圆点与目标圆环由 `SettlementMapCanvas` 实时绘制；地名落在区域中心，玩家和目标使用实际外景位置。未知区域不画标签；`map_data.illustrated` 为假时回退到编号轮廓图。打开面板标题为“哥布林洞窟地图”。
 
 奶茶店是当前唯一默认已知地点。其他地点须由剧情或真实探索业务写入 `ui.map.known.<location_id>`（例如 `ui.map.known.settlement.elder`）；地图不擅自推断认知，也不写探索完成事实。即使取得长老住处知识，也只显示建筑轮廓和外部入口。当前尚无正式 S04 知识发布及查看完成条件接线，不能将地图能力视为 P14 整项完成。
 
@@ -131,6 +139,16 @@ godot --path . --log-file .godot/ui-visual.log --script res://tests/verify_ui_ma
 
 `SettlementMapCanvas.world_to_map()` 统一处理世界原点、等比缩放和居中。打开时读取最新地图/玩家/投影；打开期间只逐帧检查玩家位置，任务与知识变化按信号刷新。隐藏时停止处理，暂停覆盖时由管理器禁用处理。
 
+## 小地图与目标箭头
+
+`src/UI/map/navigation_hud.tscn`（`NavigationHUD`，注册为 `navigation_hud` 的 HUD 屏，不进入模态栈）在聚落章节图右上角显示小地图与目标箭头。它在 `day1` 业务档案、已出店（或后续阶段／第二天起）且宿主为 `RpgChapterMap` 时出现；打开弹窗、演出、潜行拦截等输入锁期间隐藏，`set_display_enabled` 由 MainGame 的输入锁统一驱动。
+
+`ObjectiveNavigation.resolve()` 与大地图共用同一份只读投影：只取 `TaskJournal.get_current_main_task()` 中已揭示的 `current_objective`，`RpgChapterMap.objective_points` 把 `task_id:objective_id` 映射到章节场景里的真实锚点（`get_objective_position`）；室外坐标不会被当成室内目标。没有目标时显示“自由探索”，不画箭头。
+
+小地图以 48px 格读取玩家周围 ±7 格的可走格绘制局部平面图，随所在房间与走廊变化，附玩家圆点、目标菱形与“北”字；每 0.2 秒刷新一次。箭头画在可见屏幕坐标上，并按 `get_emote_offset()` 抬高退出角色头部范围，方向优先沿 `RpgChapterMap.get_navigation_path()` 的实际可通行格搜索（`can_cross_edge`，跳过角色占位格），找不到路线时退回直指目标，保证不会穿墙指路。该 HUD 只读章节状态，不写任何事实。
+
 本次最低模块验证：`verify_map_ui.gd`、`verify_ui_manager.gd`、`verify_ui_theme.gd`、`verify_task_panel.gd`、`verify_main_game.gd` 及 `verify_settlement.gd`。窗口专项使用 `-- --capture` 在真实 `src/core/settlement.tscn` 且关闭开发工具的宿主执行键鼠、移动、暂停与知识/目标隔离夹具，截图输出到 `.godot/map_ui/`。不代表完整 S04 剧情或真实 Release 导出验收。
+
+2026-10-19 图形专项由 `tests/verify_feedback_iteration.gd` 覆盖（76 项通过）：菜单拆分与入口、奶茶订单归档、一键接单后收银台结算不重复发钱、旧存档角色越界后回到店门口、小地图与箭头、长老宅双卫的警戒与听觉。截图输出到 `.godot/feedback_navigation/captures/`。完整回归 99 项中 64 项通过，28 个失败与 1 个挂起均为 HEAD 基线已有项（多次在全量回归和隔离基线复现），新增项无回归。
 
 2026-10-18 验收结果（Godot 4.7.2，macOS / Apple M1）：地图专项 headless 初版 55 项通过，最终 Metal 窗口版 59 项通过（含重复解锁、按键无冲突与真实窗口尺寸断言）；UIManager 47、Theme 167、TaskPanel 92、MainGame 73、DebugBuild 97 项均通过。聚落检查通过 48,623 个物理采样点及 16 区域、锚点、桥、实际移动与碰撞。已人工检查 `.godot/map_ui/known_shop_640.png`、`settlement_640.png`、`settlement_1280.png`，全地点截图的知识和目标来自隔离夹具。headless 有 macOS 系统证书诊断，无脚本错误；导入阶段另有沙箱中编辑器设置写入和退出资源诊断，不计为玩法检查。未扩大到完整剧情回归或 Release 导出，因为没有修改剧情内容、任务业务或地图通行布局。

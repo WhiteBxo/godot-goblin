@@ -77,7 +77,7 @@
 | [采集点与任务物资提交](gameplay/gathering.md) | `gathering.md` |
 | [2D 交互反馈](gameplay/interaction_feedback.md) | `interaction_feedback.md` |
 | [成品携带与指定 NPC 交付](gameplay/task_delivery.md) | `task_delivery.md` |
-| [委托列表与详情](gameplay/task_panel.md) | `task_panel.md` |
+| [任务日志与奶茶订单](gameplay/task_panel.md) | `task_panel.md` |
 | [任务、委托与订单投影](gameplay/task_system.md) | 当前 Schema、目录分工与历史 P0 验证 |
 | [钱包与原子交易](gameplay/wallet_transactions.md) | `wallet_transactions.md` |
 | [仓库与共享库存（第一阶段）](gameplay/warehouse_inventory.md) | `warehouse_inventory.md` |
@@ -107,8 +107,9 @@
 | --- | --- |
 | [游戏人物与美术接入](assets/characters.md) | `characters.md` |
 | [主角对话立绘：平静 / 说话](assets/imports/player_dialogue_portraits.md) | `imports/player_dialogue_portraits.md` |
+| [2026-10-19 古文书与洞窟全图](assets/imports/elder_feedback_2026_10_19.md) | 用户原图、来源散列与显示接入。 |
 | [2026-10-18 奶茶与原料素材更新](assets/imports/user_assets_2026_10_18.md) | 36 张 PNG、来源映射与接入边界。 |
-| [2026-10-18 卷轴与猫鸡素材导入](assets/imports/2026-10-18_story_and_creature_assets.md) | 22 个文件、归类与未接线边界。 |
+| [2026-10-18 卷轴与格里芬剧情物品素材导入](assets/imports/2026-10-18_story_and_creature_assets.md) | 22 个文件、归类与未接线边界。 |
 | [2026-10-17 用户素材导入清单](assets/imports/user_assets_2026_10_17.md) | `imports/user_assets_2026_10_17.md` |
 | [独立家具、道具与墙体素材库](assets/modular_assets/README.md) | `modular_assets/README.md` |
 | [Sound Library v1](assets/sound_library.md) | `sound_library.md` |
@@ -130,13 +131,17 @@
 | [Day 1 前两个阶段：剧情演出初稿](design/day_01_stages_01_02_draft.md) | 保留来源；现行演出 / 对白以结构化工程为准。 |
 | [Day 1 第三至第六阶段：剧情演出初稿](design/day_01_stages_03_06_draft.md) | S03–S06 Beat 化初稿，对白逐字取自修改版；冲突仍按 pending。 |
 | [第一天:一杯奶茶引发的异世界生](design/day_01_story_flow.md) | 原 PDF 转录稿，保留原文和开发备注。 |
-| [第一天](design/day_01_story_flow_revised.md) | 修改稿；对接约定采用其 S03–S06。 |
+| [第一天](design/day_01_story_flow_revised.md) | 按 10-19 新附件补入赠送食材与试饮；保留已确认的首次出店与返店流程。 |
 | [Gameplay Bridge 独立验收剧情](design/gameplay_bridge_demo.md) | `gameplay_bridge_demo.md` |
 | [系统设计文档:奶茶店系统与异世界见闻录](design/milk_tea_system_and_otherworld_chronicle.md) | `milk_tea_system_and_otherworld_chronicle.md` |
 | [真实订单 Gameplay Bridge 最小示例](design/order_bridge_demo.md) | `order_bridge_demo.md` |
-| [day_02.pdf](design/source/day_02.pdf) | 第二天剧情原始 PDF。 |
+| [day_02.pdf](design/source/day_02.pdf) | 37 页旧剧情 PDF，保留旧 Beat 来源。 |
+| [第二天剧情修改稿](design/day_02_story_flow_revised.md) | 38 页新 PDF 完整转录；新增第二天购买醒神菇对白及配方发现。 |
+| [洞窟聚落对话与原料补充稿](design/settlement_dialogue_supplement_revised.md) | 九组 NPC、三名小贩及六条免费采集原文，尚未编排。 |
+| [两天剧情与聚落补充更新记录](design/story_source_update_2026_10_19.md) | 三份附件来源、正文差异、配方奖励时限与救治期限等待确认项。 |
 | [Day 2 五个阶段：剧情演出初稿](design/day_02_stages_01_05_draft.md) | 由 day_02.pdf 逐字整理的 Beat 化初稿。 |
 | [经营与战斗经济规则（10-19）](design/milk_tea_economy_revised.md) | 现行设计：人类 3G、哥布林持久槽位定价、爆品 150G、战斗独立采购及来源冲突。 |
+| [爆品配方配置（开发可视版）](design/signature_recipes_revised.md) | S01–S10 十款完整配方、图鉴与发现原文；已接入游戏，按新版专属售价、加冰条件和一次性发现奖励执行。 |
 | [新经济实现方案](design/milk_tea_economy_implementation_plan.md) | 经营阶段 1–3 已接通；保留原始差距分析，独立战斗采购待实施。 |
 | [奶茶配方系统 V0.1](design/milk_tea_recipe_system_revised.md) | 保留原文与 12 张表格；售价等冲突规则由 10-19 经济方案替代。 |
 | [22 种原料 2.0 配置](design/recipe_ingredients_revised.md) | 10-19 原料来源，经营等级、价格及用量已导入运行时。 |
@@ -177,8 +182,18 @@ Beat 映射、验证清单及待定项；不供游戏运行时加载。
 | [RPG 角色新尺度下的流程与关卡优化方案（2026-10-19）](development/flow_and_level_review_rpg_scale_2026_10_19.md) | 按 1.0 倍镜头、120 步速与缩小的交互 / 视听范围重审地图、路线与实施优先级，含三张示意图。 |
 | [前两天流程体验与地图关卡审查（2026-10-19 历史基线）](development/flow_and_level_review_2026_10_19.md) | `9337cd2` 的旧参数分析；当前尺度与优化顺序以新版方案为准。 |
 | [两工作树整合（2026-10-19）](development/two_day_integration_2026_10_19.md) | 单一经济账本、两天剧情、RPG Maker 地图、迁移与验证。 |
+| [新版十款爆品接入（2026-10-19）](development/signature_recipes_2026_10_19.md) | 专属售价、加冰匹配、发现奖励、S06 时限、试玩与回归限制。 |
+| [第二天反馈修正（2026-10-19）](development/day2_feedback_2026_10_19.md) | 当前任务与金币卡、卧室休养、独立对话立绘与守卫交付提示；含截图及验证。 |
 | [前两天体验打磨（2026-10-19）](development/experience_polish_2026_10_19.md) | 制作与交付反馈、守卫警戒可读性、环境与脚步、截图及实际验证。 |
 | [前两天操作手感与反馈打磨（2026-10-19）](development/feel_polish_2026_10_19.md) | 投掷准星与命中、警戒张力与被发现冲击、交互/弹窗/对白节拍、镜头前瞻与钱包浮字；含实际检查与试玩步骤。 |
+| [UI 视觉层级与手感打磨（2026-10-19）](development/ui_feel_polish_2026_10_19.md) | 表面层级重排、按钮悬停/按下动效、任务卡与金币药丸、弹窗和交互提示缓动、标题底图；含截图与基线对照。 |
+| [奶茶系统手感打磨（2026-10-19）](development/milk_tea_feel_2026_10_19.md) | 制作升杯与状态戳、失败回缩、订单笺换手与状态戳、交付提示淡入淡出、泡茶分步节拍；含逐帧截图与试玩步骤。 |
+| [菜单与过场手感打磨（2026-10-20）](development/menus_feel_2026_10_20.md) | 换日卡分层入场、地图目标呼吸与脚下脉冲、手册翻页落定、酒馆余额浮字、对白选项错开淡入；含截图与试玩步骤。 |
+| [阅读页翻页、章末回顾与一键接单（2026-10-20）](development/reading_pages_and_accept_queue_2026_10_20.md) | 任务日志/背包/图鉴/见闻录/人物记录的详情改为翻页落定、章末结算随后落定、经营菜单新解锁项弹一下、一键接单逐张接取；含断言与试玩步骤。 |
+| [玩家起停与脚步反馈 L1+L2（2026-10-20）](development/player_body_feel_2026_10_20.md) | 起步纵向拉伸、刹车压扁并落下 1px、走路整像素起伏与影子同步、左右转 1px 侧移、脚步扬尘（潜行无）；含为何只用整像素、半尺寸玩家的相对缩放，以及 L3 边界。 |
+| [携杯与交杯已回退（2026-10-20）](development/handover_reverted_2026_10_20.md) | 说明为何图标替身做不出“端杯/递杯”，回退范围，以及保留的采集结果行。 |
+| [两天版发布前置清单（2026-10-20）](development/release_two_day_preflight_2026_10_20.md) | 只发前两天还缺什么：结尾、应用身份与图标、导出筛选、立绘缺口、待判定的测试与发布动作。 |
+| [两天新稿、素材与反馈修复（2026-10-20）](development/story_supplement_2026_10_20.md) | 五位哥布林逐位接待、赠料试饮、第二天购菇配方、九组 NPC、儿童与修订酒鬼，以及潜行实走 / 耗尽重试。 |
 | [首日可玩性修复（2026-10-19）](development/day1_playability_fixes_2026_10_19.md) | 柜台焦点、同款连续制作、说话立绘、出店调查引导与隐藏守卫交互；真实按键和步行验收。 |
 | [通用 Developer Console（第一阶段）](development/developer_console.md) | `developer_console.md` |
 | [项目开发现状（2026-10-18）](development/development_status_2026_10_18.md) | 10-18 历史快照，基线 88684ac；当前变化见 10-19 整合记录。 |

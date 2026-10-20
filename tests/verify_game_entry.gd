@@ -46,7 +46,7 @@ func _click(button: Button) -> void:
 func _wait_for_scene(path: String) -> bool:
 	var deadline := Time.get_ticks_msec() + 5000
 	while Time.get_ticks_msec() < deadline:
-		if current_scene != null and current_scene.scene_file_path == path:
+		if current_scene != null and current_scene.scene_file_path == path and not (current_scene is MainGame and current_scene.is_session_initializing()):
 			await _frames()
 			return true
 		await process_frame
@@ -100,7 +100,11 @@ func _run() -> void:
 	await _key(KEY_TAB)
 	_check(root.gui_get_focus_owner() == _button(title, "Quit"), "Native Tab reaches quit")
 	await _key(KEY_TAB)
-	_check(root.gui_get_focus_owner() == _button(title, "NewGame"), "Native Tab wraps to new game")
+	_check(root.gui_get_focus_owner() == _button(title, "Settings"), "Native Tab reaches settings")
+	await _key(KEY_TAB)
+	_check(root.gui_get_focus_owner() == _button(title, "LoadGame"), "Native Tab reaches the save browser")
+	await _key(KEY_TAB)
+	_check(root.gui_get_focus_owner() == _button(title, "NewGame"), "Native Tab wraps through all title actions")
 	for window_size: Vector2i in [Vector2i(640, 360), Vector2i(1280, 720)]:
 		root.size = window_size
 		await _frames()
@@ -220,6 +224,11 @@ func _run() -> void:
 	await _key(KEY_P)
 	_check(paused, "P opens pause after failure recovery")
 	await _key(KEY_TAB)
+	_check(root.gui_get_focus_owner() == _button(current_scene.get_node("PauseLayer/PauseMenu"), "SaveGame"), "Pause keyboard reaches manual saving")
+	await _key(KEY_TAB)
+	_check(root.gui_get_focus_owner() == _button(current_scene.get_node("PauseLayer/PauseMenu"), "LoadGame"), "Pause keyboard reaches loading")
+	await _key(KEY_TAB)
+	_check(root.gui_get_focus_owner() == _button(current_scene.get_node("PauseLayer/PauseMenu"), "ReturnTitle"), "Pause keyboard reaches return to title")
 	await _key(KEY_ENTER)
 	if not await _wait_for_scene(GameEntry.TITLE_SCENE):
 		quit(1)

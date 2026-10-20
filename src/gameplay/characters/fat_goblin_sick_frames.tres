@@ -1,0 +1,217 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" uid="uid://crkba5cdtvshd" path="res://assets/characters/npc/fat_goblin/sick_retch_sheet.png" id="retch"]
+[ext_resource type="Texture2D" uid="uid://d2e4k7ql3eskb" path="res://assets/characters/npc/fat_goblin/sick_sit_sheet.png" id="sit"]
+
+[sub_resource type="AtlasTexture" id="r0"]
+atlas = ExtResource("retch")
+region = Rect2(0, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="r1"]
+atlas = ExtResource("retch")
+region = Rect2(88, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="r2"]
+atlas = ExtResource("retch")
+region = Rect2(176, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="r3"]
+atlas = ExtResource("retch")
+region = Rect2(264, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="r4"]
+atlas = ExtResource("retch")
+region = Rect2(352, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="r5"]
+atlas = ExtResource("retch")
+region = Rect2(440, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="r6"]
+atlas = ExtResource("retch")
+region = Rect2(0, 88, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="r7"]
+atlas = ExtResource("retch")
+region = Rect2(88, 88, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="r8"]
+atlas = ExtResource("retch")
+region = Rect2(176, 88, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="r9"]
+atlas = ExtResource("retch")
+region = Rect2(264, 88, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="r10"]
+atlas = ExtResource("retch")
+region = Rect2(352, 88, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="r11"]
+atlas = ExtResource("retch")
+region = Rect2(440, 88, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="r12"]
+atlas = ExtResource("retch")
+region = Rect2(0, 176, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="r13"]
+atlas = ExtResource("retch")
+region = Rect2(88, 176, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="r14"]
+atlas = ExtResource("retch")
+region = Rect2(176, 176, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="r15"]
+atlas = ExtResource("retch")
+region = Rect2(264, 176, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="s0"]
+atlas = ExtResource("sit")
+region = Rect2(0, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="s1"]
+atlas = ExtResource("sit")
+region = Rect2(88, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="s2"]
+atlas = ExtResource("sit")
+region = Rect2(176, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="s3"]
+atlas = ExtResource("sit")
+region = Rect2(264, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="s4"]
+atlas = ExtResource("sit")
+region = Rect2(352, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="s5"]
+atlas = ExtResource("sit")
+region = Rect2(440, 0, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="s6"]
+atlas = ExtResource("sit")
+region = Rect2(0, 88, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="s7"]
+atlas = ExtResource("sit")
+region = Rect2(88, 88, 64, 64)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="s8"]
+atlas = ExtResource("sit")
+region = Rect2(176, 88, 64, 64)
+filter_clip = true
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("r0")
+}, {
+"duration": 1.0,
+"texture": SubResource("r1")
+}, {
+"duration": 1.0,
+"texture": SubResource("r2")
+}, {
+"duration": 1.0,
+"texture": SubResource("r3")
+}, {
+"duration": 1.0,
+"texture": SubResource("r4")
+}, {
+"duration": 1.0,
+"texture": SubResource("r5")
+}, {
+"duration": 1.0,
+"texture": SubResource("r6")
+}, {
+"duration": 1.0,
+"texture": SubResource("r7")
+}, {
+"duration": 1.0,
+"texture": SubResource("r8")
+}, {
+"duration": 1.0,
+"texture": SubResource("r9")
+}, {
+"duration": 1.0,
+"texture": SubResource("r10")
+}, {
+"duration": 1.0,
+"texture": SubResource("r11")
+}, {
+"duration": 1.0,
+"texture": SubResource("r12")
+}, {
+"duration": 1.0,
+"texture": SubResource("r13")
+}, {
+"duration": 1.0,
+"texture": SubResource("r14")
+}, {
+"duration": 1.0,
+"texture": SubResource("r15")
+}],
+"loop": 1,
+"name": &"sick_retch",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("s0")
+}, {
+"duration": 1.0,
+"texture": SubResource("s1")
+}, {
+"duration": 1.0,
+"texture": SubResource("s2")
+}, {
+"duration": 1.0,
+"texture": SubResource("s3")
+}, {
+"duration": 1.0,
+"texture": SubResource("s4")
+}, {
+"duration": 1.0,
+"texture": SubResource("s5")
+}, {
+"duration": 1.0,
+"texture": SubResource("s6")
+}, {
+"duration": 1.0,
+"texture": SubResource("s7")
+}, {
+"duration": 1.0,
+"texture": SubResource("s8")
+}],
+"loop": 1,
+"name": &"sick_sit",
+"speed": 5.0
+}]

@@ -8,6 +8,7 @@ signal rejected(entry_id: StringName, reason: String)
 enum Kind { PICKUP, DOCUMENT }
 
 @export var kind: Kind = Kind.PICKUP
+@export var document_texture: Texture2D
 @export var entry_id: StringName
 @export var item_id: String = ""
 @export_range(1, 99) var amount := 1

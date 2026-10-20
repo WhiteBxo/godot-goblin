@@ -141,7 +141,10 @@ func harvest(id: StringName) -> Dictionary:
 	harvested.emit(point, item_id, amount, stock)
 	_committing = false
 	_state.end_business_transaction()
-	return {"ok": true, "message": "采集成功：%s × %d（现有 %d）。" % [_display_name(item_id), amount, stock],
+	var message := "采集成功：%s × %d（现有 %d）。" % [_display_name(item_id), amount, stock]
+	if not point.success_description.is_empty():
+		message = point.success_description + "\n" + message
+	return {"ok": true, "message": message,
 		"item_id": item_id, "amount": amount, "stock": stock}
 
 
@@ -162,6 +165,8 @@ func _unavailable_reason(point: GatherPoint) -> String:
 		return "采集系统正在提交。"
 	if not is_instance_valid(point) or _points.get(String(point.interaction_id)) != point:
 		return "该采集点不存在。"
+	if Day1Access.is_market_only(_state):
+		return "先在集市附近看看，接下委托后再采集。"
 	if not point.required_flag.is_empty() and not _state.get_flag(point.required_flag):
 		return "现在还不能采集。"
 	if point.refresh_mode == "once":

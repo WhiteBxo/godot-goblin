@@ -349,7 +349,7 @@ func _test_host() -> void:
 	var service := game.get_gathering_service()
 	var player := game.get_player()
 	var ui := game.get_shop_ui()
-	_check(level != null and service.get_points().size() == 3, "Formal RPG exterior hosts the three commercial-route resources")
+	_check(level != null and service.get_points().size() == 6, "Formal RPG exterior hosts the six supplemental resources")
 	var first := service.get_point(&"night_gather_0")
 	_check(not first.get_node("Marker").visible and not first.get_node("HarvestVisual").visible, "Daytime hides the night harvest artwork and clue")
 	await _move_player(player, first.global_position)

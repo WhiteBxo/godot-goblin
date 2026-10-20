@@ -12,7 +12,9 @@
 
 [ext_resource type="Script" path="res://src/gameplay/story_interaction/story_interaction_point.gd" id="story"]
 
-[ext_resource type="Script" path="res://src/gameplay/stealth/day1_stealth_setup.gd" id="stealth"]
+
+[ext_resource type="Texture2D" path="res://assets/story/elder_document.png" id="document_image"]
+[ext_resource type="Script" path="res://src/gameplay/story_interaction/signature_discovery_point.gd" id="signature"]
 
 [node name="RpgMakerMap006" instance=ExtResource("base")]
 
@@ -21,6 +23,8 @@ script = ExtResource("map")
 chapter_host = &"elder_house"
 
 exterior_location = "settlement.elder"
+
+objective_points = {"day1.s05.infiltration:document": "Interactions/day1_elder_document", "day1.s05.infiltration:blood": "Interactions/day1_blood_storage", "day1.s05.infiltration:escape": "Exits/Outside"}
 
 [node name="Entrances" type="Node2D" parent="."]
 
@@ -68,6 +72,15 @@ position = Vector2(408, 552)
 
 [node name="Interactions" type="Node2D" parent="."]
 
+[node name="SignatureS10" parent="Interactions" instance=ExtResource("point")]
+position = Vector2(456, 168)
+script = ExtResource("signature")
+interaction_id = &"signature_s10"
+signature_id = "S10"
+display_name = "书柜旧书里夹着的信"
+feedback_rect = Rect2(-48, -144, 96, 144)
+show_world_marker = true
+
 [node name="GatherPoints" type="Node2D" parent="."]
 
 [node name="day1_elder_document" parent="Interactions" instance=ExtResource("point")]
@@ -77,6 +90,7 @@ collision_layer = 0
 collision_mask = 2
 script = ExtResource("story")
 kind = 1
+document_texture = ExtResource("document_image")
 interaction_id = &"day1_elder_document"
 success_sound = "story.page_turn"
 sound_bus = "SFX"
@@ -109,15 +123,4 @@ required_stages = Array[String](["day1.s05"])
 display_name = "右室桌上的封蜡小瓶"
 description = "桌上放着一支封蜡小瓶。标签写着：格里芬之血。"
 
-[node name="StealthSetup" type="Node" parent="."]
-script = ExtResource("stealth")
-wallet_coins = true
-throw_range = 230.0
-effect_scale = 0.5
-interior_only = true
-required_flags = Array[StringName](["day1.s05.blood_acquired", "day1.s05.document_read"])
-required_items = {"day1_griffin_blood": 3, "day1_elder_document": 1}
-objective_names = {"day1.s05.document_read": "书房文书", "day1.s05.blood_acquired": "右室血液"}
-approach_hint = "中央书房找纸页，右室找封蜡小瓶，顺序自选。"
-escape_hint = "两件目标已取得。返回下方宅门，向左下回北侧观察位撤离，再返店。"
-controls_hint = "书房取文书 · 右室取血液 · 原路出门"
+[node name="Characters" type="Node2D" parent="."]

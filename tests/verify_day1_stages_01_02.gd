@@ -88,9 +88,24 @@ func _event_finished(id: String, ok: bool, reason: String) -> void:
 	if not ok and reason != "Resume checkpoint" and not reason.contains("GameState") and not (_expected_cancellation and reason.ends_with("Player cancellation")):
 		_events_failed.append(id + ": " + reason)
 
+func _await_scene(previous: Node, context: String, seconds: float = 10.0) -> bool:
+	# scene_changed never fires when the reload or travel is rejected, so bound it;
+	# an unbounded await would leave the whole regression hanging.
+	var deadline := Time.get_ticks_msec() + int(seconds * 1000.0)
+	while (current_scene == previous or not current_scene is MainGame) and Time.get_ticks_msec() < deadline:
+		await process_frame
+	if not current_scene is MainGame:
+		var landed := "nothing" if current_scene == null else str(current_scene.scene_file_path)
+		check(false, context + ": landed on " + landed + " instead of MainGame")
+		quit(1)
+		return false
+	return true
+
 func _reload(snapshot: Dictionary) -> void:
+	var previous := current_scene
 	check(reload_current_scene() == OK, "Real scene reload starts")
-	await scene_changed
+	if not await _await_scene(previous, "Real scene reload"):
+		return
 	_game = current_scene as MainGame
 	_attach_observers()
 	await frames(8)
@@ -253,8 +268,10 @@ func _travel_completed_run(snapshot: Dictionary) -> void:
 	var production := _game.get_tea_production()
 	for path: String in ["res://src/core/settlement.tscn", "res://src/core/main.tscn"]:
 		var exit: SceneExit = _game.get_active_level().get_scene_exits()[0]
+		var previous := current_scene
 		check(_game.get_scene_travel().request_exit(exit) == OK, "Completed Day 1 can travel to " + path)
-		await scene_changed
+		if not await _await_scene(previous, "Day 1 travel to " + path):
+			return
 		_game = current_scene as MainGame
 		var deadline := Time.get_ticks_msec() + 5000
 		while _game.get_scene_travel().is_busy() and Time.get_ticks_msec() < deadline:
@@ -357,7 +374,7 @@ func _run() -> void:
 	check(_lines.size() == _authored_line_count and _events_failed.is_empty(), "All authored dialogue lines execute without actor or audio failure")
 	check(_state.get_variable("shop.orders_completed") == 5 and _game.get_tea_production().get_completed_count() == 5, "Five crafted and independently settled orders")
 	check(_game.get_transactions().get_balance() == 10 and _game.get_warehouse_inventory().get_stock("strange_coin") == 4, "Final totals are income 10 and four strange coins")
-	check(_game.get_business_hud().get_node("BusinessBalance").text == "营业收入 10G    古怪金币 4（40G）", "HUD follows the actual committed wallet and story-item balance")
+	check(_game.get_business_hud().get_node("BusinessBalance").text.begins_with("钱包 10G"), "HUD follows the actual committed wallet balance")
 	check(_state.current_day == 1 and _state.story_stage == "day1.investigate_coins", "Stops at same-day investigation intent")
 	check(_game.get_chronicle_journal().get_unread_count() == 3, "Opening the list does not falsely mark entries read")
 	var final := _state.to_dict()

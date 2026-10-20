@@ -1,0 +1,76 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/UI/hud/two_days_end.gd" id="script"]
+[ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="theme"]
+
+[node name="TwoDaysEnd" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("theme")
+script = ExtResource("script")
+
+[node name="Scrim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.043137256, 0.02745098, 0.019607844, 1)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Content" type="VBoxContainer" parent="Center"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Kicker" type="Label" parent="Center/Content"]
+layout_mode = 2
+theme_type_variation = &"Hint"
+text = "第 1—2 天"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="Center/Content"]
+layout_mode = 2
+theme_type_variation = &"HeroTitle"
+text = "洞窟深处的奶茶店"
+horizontal_alignment = 1
+
+[node name="Rule" type="HSeparator" parent="Center/Content"]
+layout_mode = 2
+
+[node name="Summary" type="Label" parent="Center/Content"]
+layout_mode = 2
+autowrap_mode = 3
+text = ""
+horizontal_alignment = 1
+
+[node name="Thanks" type="Label" parent="Center/Content"]
+layout_mode = 2
+theme_type_variation = &"Hint"
+text = "感谢试玩 · 后面的故事还没写"
+horizontal_alignment = 1
+
+[node name="Gap" type="Control" parent="Center/Content"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="Return" type="Button" parent="Center/Content"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"PrimaryButton"
+text = "返回标题"

@@ -1,0 +1,20 @@
+[
+  {
+    "archive": "妇女(1).zip",
+    "entry": "妇女/妇女1.png",
+    "path": "assets/characters/npc/market_mother/source/update_2026_10_20/portrait.png",
+    "sha256": "a2dbf4a28924591d8da070d9f3705e398148bee8766622588c759f09c7a3e40f"
+  },
+  {
+    "archive": "妇女(1).zip",
+    "entry": "妇女/妇女1待机.png",
+    "path": "assets/characters/npc/market_mother/source/update_2026_10_20/idle.png",
+    "sha256": "83920a906e3bd9942deeb371839ad8171cbaee706092603f337e4667ee675125"
+  },
+  {
+    "archive": "妇女(1).zip",
+    "entry": "妇女/妇女1走路.png",
+    "path": "assets/characters/npc/market_mother/source/update_2026_10_20/walk.png",
+    "sha256": "39ff0e17f3dec53a8a260f432ff9bcf455eeb7d4980c6ca3e147da0455903238"
+  }
+]

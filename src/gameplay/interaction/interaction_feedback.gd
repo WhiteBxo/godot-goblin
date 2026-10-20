@@ -17,6 +17,7 @@ var _focus: InteractionPoint
 var _pulse: InteractionPoint
 var _remaining := 0.0
 var _focus_time := 0.0
+var _last_paint_key: Array = []
 
 func _ready() -> void:
 	# World feedback must stay visible over foreground furniture and room roofs.
@@ -76,9 +77,28 @@ func _process(delta: float) -> void:
 		_remaining = maxf(0.0, _remaining - delta)
 		if _remaining == 0.0:
 			_pulse = null
-	_focus_time = minf(focus_grow_seconds, _focus_time + delta)
-	# Follow moving/removed objects without caching their world transforms.
+	if _focus_time < focus_grow_seconds:
+		_focus_time = minf(focus_grow_seconds, _focus_time + delta)
+	# Repaint only when the picture can differ: an idle bracket around a standing
+	# target costs a full draw pass per frame and produces the same corners.
+	var key := _paint_key()
+	if key == _last_paint_key:
+		return
+	_last_paint_key = key
 	queue_redraw()
+
+## Everything _draw() reads, reduced to comparable values. Transforms are part of
+## the key because targets may move; _focus_time drives the corner growth.
+func _paint_key() -> Array:
+	var key: Array = [_focus_time]
+	if is_instance_valid(_focus):
+		key.append(_focus.get_instance_id())
+		key.append(_focus.global_transform)
+	if is_instance_valid(_pulse):
+		key.append(_pulse.get_instance_id())
+		key.append(_pulse.global_transform)
+		key.append(_remaining > pulse_seconds * 0.5)
+	return key
 
 func _draw() -> void:
 	if not is_inside_tree() or get_tree().paused:

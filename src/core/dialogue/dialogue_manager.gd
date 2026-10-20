@@ -15,19 +15,26 @@ signal line_changed(line_id: String)
 	"主角": preload("res://assets/characters/apron_man/player_talking_portrait.png"),
 	"主角·内心": preload("res://assets/characters/apron_man/player_neutral_portrait.png"),
 	"玩家": preload("res://assets/characters/apron_man/player_talking_portrait.png"),
-	"胖哥布林": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
-	"哥布林": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
-	# The authored scenes name the same townsfolk by role; they share the one
-	# finished goblin portrait instead of blinking to an empty frame.
-	"哥布林甲": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
-	"哥布林乙": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
-	"哥布林丙": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
-	"哥布林顾客": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
-	"哥布林顾客甲": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
-	"哥布林顾客乙": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
-	"另一名哥布林": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
-	"酒馆老板": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
-	"赌场老板": preload("res://assets/characters/goblin/goblin_smiling_portrait.png"),
+	# Each NPC uses their own dialogue illustration, separate from map sprites.
+	"胖哥布林": preload("res://assets/characters/fat_goblin/fat_goblin_smiling_portrait.png"),
+	"醉酒守卫": preload("res://assets/characters/dialogue/guard_portrait.png"),
+	"守卫": preload("res://assets/characters/dialogue/guard_portrait.png"),
+	"侍卫": preload("res://assets/characters/npc/casino_sentry/portrait.png"),
+	"护卫": preload("res://assets/characters/npc/casino_sentry/portrait.png"),
+	"酒馆老板": preload("res://assets/characters/dialogue/tavern_portrait.png"),
+	"赌场老板": preload("res://assets/characters/dialogue/casino_portrait.png"),
+	# 集市的三个摊主各用自己附件里的立绘。
+	"吆喝的摊主": preload("res://assets/characters/npc/market_vendor_1/portrait.png"),
+	"懂行的摊主": preload("res://assets/characters/npc/market_vendor_2/portrait.png"),
+	"老练的摊主": preload("res://assets/characters/npc/market_vendor_3/portrait.png"),
+	# 具名可对话 NPC：诗人、哲人、军人。
+	"诗人": preload("res://assets/characters/npc/casino_poet/portrait.png"),
+	"哥布林哲人": preload("res://assets/characters/npc/signature_philosopher/portrait.png"),
+	"军人": preload("res://assets/characters/npc/barracks_soldier/portrait.png"),
+	"胆小的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	"围观的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	"凑热闹的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	"格里芬使者": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
 }
 
 var last_error: String = ""
@@ -99,7 +106,7 @@ func start_dialogue(id: String, cancel_protected: bool = false) -> Error:
 	_ui.set_cancel_protected(cancel_protected)
 	dialogue_started.emit(id)
 	if is_active():
-		_present_line()
+		return _present_line()
 	return OK
 
 
@@ -167,8 +174,8 @@ func skip_to_end() -> void:
 		moved = true
 	if not is_instance_valid(_ui):
 		return
-	if moved:
-		_present_line()
+	if moved and _present_line() != OK:
+		return
 	_ui.reveal_all()
 
 
@@ -184,8 +191,9 @@ func select_choice(index: int) -> void:
 	_selecting = true
 	choice_selected.emit(selected_dialogue, selected_line, choice["id"])
 	_selecting = false
-	# A listener may cancel the session. Never advance an already-ended dialogue.
-	if is_active():
+	# A listener may cancel this dialogue, or end it and start another one. The
+	# old choice must never advance the replacement session.
+	if _dialogue_id == selected_dialogue and _line_id == selected_line:
 		_go_to(choice.get("next", ""))
 
 
@@ -211,7 +219,7 @@ func _go_to(line_id: String) -> void:
 		_present_line()
 
 
-func _present_line() -> void:
+func _present_line() -> Error:
 	var line: Dictionary = _dialogue["lines"][_line_id]
 	var portrait: Texture2D = speaker_portraits.get(line["speaker"])
 	if line.has("portrait"):
@@ -222,8 +230,15 @@ func _present_line() -> void:
 	var choices: Array[String] = []
 	for choice: Dictionary in line.get("choices", []):
 		choices.append(choice["text"])
-	_ui.present_line(line["speaker"], line["text"], portrait, choices, line["speaker"] in left_portrait_speakers)
+	var error := _ui.present_line(line["speaker"], line["text"], portrait, choices, line["speaker"] in left_portrait_speakers)
+	if error != OK:
+		# Dropping the line would leave the host's input lock on with no visible
+		# dialogue, so the session ends instead.
+		last_error = "Dialogue UI could not present a line: %s" % error_string(error)
+		end_dialogue(true)
+		return error
 	line_changed.emit(_line_id)
+	return OK
 
 
 func _cancel() -> void:

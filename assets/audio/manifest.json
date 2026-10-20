@@ -486,6 +486,223 @@
     }
   },
   {
+    "id": "story.coin_drop.01",
+    "path": "assets/audio/story/coin_drop_01.wav",
+    "loop": false,
+    "seconds": 0.289932,
+    "sha256": "01b120d7ebca8583ba697443bf40eb279630fc5f98449bb88b0e1566a44b2a29",
+    "sources": [
+      "assets/audio/source/rpg_sfx/item_coins_01.ogg"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "rpg_sfx/item_coins_01.ogg"
+        }
+      ],
+      "seconds": 0.42
+    }
+  },
+  {
+    "id": "story.coin_drop.02",
+    "path": "assets/audio/story/coin_drop_02.wav",
+    "loop": false,
+    "seconds": 0.42,
+    "sha256": "a4b1dab5288a98e591b80d19b98e8279d7436d1f6dcaabf6c558b55242cc2017",
+    "sources": [
+      "assets/audio/source/rpg_sfx/item_coins_02.ogg"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "rpg_sfx/item_coins_02.ogg"
+        }
+      ],
+      "seconds": 0.42
+    }
+  },
+  {
+    "id": "story.coin_drop.03",
+    "path": "assets/audio/story/coin_drop_03.wav",
+    "loop": false,
+    "seconds": 0.42,
+    "sha256": "53ffedf8238a4afdb157eb69b14cceb602d98e38b25306669fb01b4607a7ebaf",
+    "sources": [
+      "assets/audio/source/rpg_sfx/item_coins_03.ogg"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "rpg_sfx/item_coins_03.ogg"
+        }
+      ],
+      "seconds": 0.42
+    }
+  },
+  {
+    "id": "story.coin_drop.04",
+    "path": "assets/audio/story/coin_drop_04.wav",
+    "loop": false,
+    "seconds": 0.42,
+    "sha256": "518f35479e15cf6c936636e8f3403ee834e2e63658e06b0e6f7249b01bc38daa",
+    "sources": [
+      "assets/audio/source/rpg_sfx/item_coins_04.ogg"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "rpg_sfx/item_coins_04.ogg"
+        }
+      ],
+      "seconds": 0.42
+    }
+  },
+  {
+    "id": "gather.plant.01",
+    "path": "assets/audio/gather/plant_01.wav",
+    "loop": false,
+    "seconds": 0.321406,
+    "sha256": "13f272731857fe8287712ca58e692f38f237ac8bea5abd2b42d4358223895fc2",
+    "sources": [
+      "assets/audio/source/rpg_sfx/item_wood_01.ogg"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "rpg_sfx/item_wood_01.ogg"
+        }
+      ]
+    }
+  },
+  {
+    "id": "gather.plant.02",
+    "path": "assets/audio/gather/plant_02.wav",
+    "loop": false,
+    "seconds": 0.203991,
+    "sha256": "aef279cd2dd8a0b66917153ec3c8a4d286a4a8a571fca62e9dd68c3c0b527573",
+    "sources": [
+      "assets/audio/source/rpg_sfx/item_wood_02.ogg"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "rpg_sfx/item_wood_02.ogg"
+        }
+      ]
+    }
+  },
+  {
+    "id": "gather.plant.03",
+    "path": "assets/audio/gather/plant_03.wav",
+    "loop": false,
+    "seconds": 0.280249,
+    "sha256": "15d919c451e87d13e44644b6ffd614fbe4373a5e8ed0d596418ca1cdc9715fc6",
+    "sources": [
+      "assets/audio/source/rpg_sfx/item_wood_03.ogg"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "rpg_sfx/item_wood_03.ogg"
+        }
+      ]
+    }
+  },
+  {
+    "id": "gather.crystal.01",
+    "path": "assets/audio/gather/crystal_01.wav",
+    "loop": false,
+    "seconds": 0.268141,
+    "sha256": "2e9d0d947702666f3115c84e9109f8f6e50ed984852c441a1e1e5bead7fba7a9",
+    "sources": [
+      "assets/audio/source/rpg_sfx/item_gem_02.ogg",
+      "assets/audio/source/rpg_sfx/stones_04.ogg"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "rpg_sfx/item_gem_02.ogg"
+        },
+        {
+          "source": "rpg_sfx/stones_04.ogg",
+          "at": 0.02,
+          "gain": 0.5
+        }
+      ],
+      "seconds": 0.42
+    }
+  },
+  {
+    "id": "gather.crystal.02",
+    "path": "assets/audio/gather/crystal_02.wav",
+    "loop": false,
+    "seconds": 0.493855,
+    "sha256": "c271d591a8b70101aebfc8b846f6fb2938e2b17b5077034213ec3a19889f54ce",
+    "sources": [
+      "assets/audio/source/rpg_sfx/item_gem_03.ogg",
+      "assets/audio/source/rpg_sfx/stones_01.ogg"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "rpg_sfx/item_gem_03.ogg"
+        },
+        {
+          "source": "rpg_sfx/stones_01.ogg",
+          "at": 0.02,
+          "gain": 0.4
+        }
+      ],
+      "seconds": 0.5
+    }
+  },
+  {
+    "id": "gather.crystal.03",
+    "path": "assets/audio/gather/crystal_03.wav",
+    "loop": false,
+    "seconds": 0.55,
+    "sha256": "344eab757588bd314cc3f3abea5595b147227787acc4e6730ce1ebf1c9a1cd1b",
+    "sources": [
+      "assets/audio/source/rpg_sfx/item_gem_04.ogg",
+      "assets/audio/source/rpg_sfx/item_stone_04.ogg"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "rpg_sfx/item_gem_04.ogg"
+        },
+        {
+          "source": "rpg_sfx/item_stone_04.ogg",
+          "at": 0.03,
+          "gain": 0.45
+        }
+      ],
+      "seconds": 0.55
+    }
+  },
+  {
+    "id": "gather.vial",
+    "path": "assets/audio/gather/vial.wav",
+    "loop": false,
+    "seconds": 0.810136,
+    "sha256": "c5188fbb77caf0a85834a271fc13c5f0439104797895c7ee534a6050fccf9c19",
+    "sources": [
+      "assets/audio/source/tinysized/sfx-cc0/vial-glass-close-01.wav",
+      "assets/audio/source/tinysized/sfx-cc0/vial-glass-open-01.wav"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "tinysized/sfx-cc0/vial-glass-open-01.wav"
+        },
+        {
+          "source": "tinysized/sfx-cc0/vial-glass-close-01.wav",
+          "at": 0.42
+        }
+      ]
+    }
+  },
+  {
     "id": "ui.failure",
     "path": "assets/audio/ui/failure.wav",
     "loop": false,
@@ -736,6 +953,64 @@
           "source": "accessory/sfx/coins-shake-03.wav"
         }
       ]
+    }
+  },
+  {
+    "id": "shop.coins_chain.01",
+    "path": "assets/audio/shop/coins_chain_01.wav",
+    "loop": false,
+    "seconds": 0.396576,
+    "sha256": "e522816f555fa1b48ddee031fdefe877634363343d7c26fe0f82d30a29ade7f4",
+    "sources": [
+      "assets/audio/source/rpg_sfx/chain_01.ogg"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "rpg_sfx/chain_01.ogg",
+          "duration": 0.42
+        }
+      ],
+      "seconds": 0.42
+    }
+  },
+  {
+    "id": "shop.coins_chain.02",
+    "path": "assets/audio/shop/coins_chain_02.wav",
+    "loop": false,
+    "seconds": 0.366304,
+    "sha256": "5a5617dc897ec4b42ff8648a9c9cac997546d7a5d0cae8c0623026506c155c9c",
+    "sources": [
+      "assets/audio/source/rpg_sfx/chain_02.ogg"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "rpg_sfx/chain_02.ogg",
+          "duration": 0.4
+        }
+      ],
+      "seconds": 0.4
+    }
+  },
+  {
+    "id": "shop.coins_chain.03",
+    "path": "assets/audio/shop/coins_chain_03.wav",
+    "loop": false,
+    "seconds": 0.55,
+    "sha256": "19b9042e90a62de9397976d879ca2184665aab24a29ff9a40f949bb65a9a6700",
+    "sources": [
+      "assets/audio/source/rpg_sfx/chain_03.ogg"
+    ],
+    "recipe": {
+      "parts": [
+        {
+          "source": "rpg_sfx/chain_03.ogg",
+          "start": 0.1,
+          "duration": 0.55
+        }
+      ],
+      "seconds": 0.55
     }
   },
   {

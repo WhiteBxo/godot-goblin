@@ -250,7 +250,7 @@ func try_submit(order_id: String, target_object_id: String, drink_id: String = "
 		if record.is_empty():
 			return _failure("该饮品尚未确认售价，不能作为普通订单出售。", order_id)
 		drink_costs[drink.id] = 1
-		sale_price = int(record.selling_price)
+		sale_price = _state.get_transactions().get_drink_sale_price(drink)
 	elif task.delivery.has("product_id"):
 		sale_price = _product_sale_price(str(task.delivery.product_id))
 		if sale_price < 0 and not task.get("rewards", {}).has("money"):
@@ -290,7 +290,7 @@ func try_submit(order_id: String, target_object_id: String, drink_id: String = "
 		var committed_items := {}
 		var gains := PackedStringArray()
 		if money_delta > 0:
-			gains.append("营业收入 " + WalletTransactions.format_money(money_delta))
+			gains.append("报酬 " + WalletTransactions.format_money(money_delta))
 		for id: String in rewards:
 			var quantity: int = _inventory.get_stock(id) - reward_stock[id] + int(requirement.get(id, 0))
 			committed_items[id] = quantity

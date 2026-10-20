@@ -8,8 +8,6 @@
 [ext_resource type="Texture2D" uid="uid://dajqdidmkrpf6" path="res://assets/map/rpg_maker/tileset_030_05.png" id="6_074i2"]
 [ext_resource type="Texture2D" uid="uid://caechh7873uua" path="res://assets/map/rpg_maker/tileset_030_06.png" id="7_whdi5"]
 
-[ext_resource type="TileSetAtlasSource" path="res://src/resources/tilesets/rpg_maker/goblin_wine_atlas.tres" id="goblin_wines"]
-
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7wde4"]
 texture = ExtResource("1_2c6iw")
 texture_region_size = Vector2i(48, 48)
@@ -16645,4 +16643,3 @@ sources/3 = SubResource("TileSetAtlasSource_cb0v6")
 sources/4 = SubResource("TileSetAtlasSource_rea5l")
 sources/5 = SubResource("TileSetAtlasSource_fpq2w")
 sources/6 = SubResource("TileSetAtlasSource_yuygg")
-sources/200 = ExtResource("goblin_wines")

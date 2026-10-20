@@ -1,0 +1,486 @@
+{
+  "tile_size": 48,
+  "atlas_columns": 16,
+  "atlas_rows": 16,
+  "palette_colors": 48,
+  "model": "gpt-image-2.5-sunburst",
+  "mode": "imagegen skill CLI/API via shared guarded adapter",
+  "reference": "source/reference_map006.png",
+  "reference_original": "docs/levels/rpg_maker/captures/map_006_overview.png",
+  "specification_pdf": "长老房间prompt（18个）(2).pdf",
+  "specification_sha256": "459af3e586a06d6f0c1934726375cb0039df9d555cb178772992543304c215cf",
+  "assets": [
+    {
+      "id": "01_old_candlestick",
+      "name": "老旧烛台",
+      "width": 48,
+      "height": 48,
+      "description": "One compact ancient standing candleholder made from black iron and aged dark-gold metal, with a readable severe griffin eagle-head or wing relief. A single half-burned deep-red candle has hardened wax drips; its small flame has a muted yellow center and dark-red outer pixels. Heavy pointed silhouette, restrained decoration, dark iron / aged gold / burgundy colors, matching the RPGMaker elder-room reference.",
+      "pdf_pages": [
+        1
+      ],
+      "category": "floor_prop",
+      "important_constraints": [
+        "One complete candleholder and flame only; exactly 48x48 pixels.",
+        "One deep-red candle; visible wax drips; muted yellow and deep-red flame.",
+        "Readable simplified griffin motif, not dense ornament.",
+        "Transparent background; front or slight overhead RPGMaker map view; hard pixel edges; no glow backdrop."
+      ],
+      "source_image": "source/01_old_candlestick.png",
+      "generation_size": "1024x1024",
+      "padding": 2,
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "02_elder_bookshelf",
+      "name": "长老书架",
+      "width": 96,
+      "height": 144,
+      "description": "A tall complete forbidden-book shelf built from heavy black-brown ancient hardwood and black iron. Its top is crowned by a fierce griffin eagle head with hooked beak and wings spread sideways. Thick dark posts have sparse worn dark-gold edging and burgundy accents. Shelves contain uneven old leather-bound books, dark-red and dark-brown book spines, yellowed scrolls and a few parchment scraps. Strong readable furniture structure, restrained ritual motifs, matching the RPGMaker elder-room reference.",
+      "pdf_pages": [
+        1,
+        2
+      ],
+      "category": "floor_prop",
+      "important_constraints": [
+        "Exactly 96x144 pixels, 2x3 tiles.",
+        "Complete top griffin crest, bookshelf body, shelves and base; front map view.",
+        "Books and scrolls remain contained in the shelf; no separate props.",
+        "Transparent background; crisp pixel clusters; no wall or floor."
+      ],
+      "source_image": "source/02_elder_bookshelf.png",
+      "generation_size": "1024x1536",
+      "padding": 2,
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "03_ritual_dining_table",
+      "name": "长老餐桌组合",
+      "width": 96,
+      "height": 288,
+      "description": "One complete narrow vertical griffin dining table and eight chairs, occupying 96x288 pixels total (2x6 tiles). Preserve dark walnut, aged-gold trim and the flat burgundy runner with simplified griffin embroidery. The tabletop has no loose objects. Four chairs along each long side are pushed nearly entirely under the tabletop, with only narrow outer backrests visible, matching the original RPG Maker Map006 table placement. No chairs on the short ends.",
+      "pdf_pages": [
+        2,
+        3,
+        4
+      ],
+      "category": "floor_prop",
+      "important_constraints": [
+        "Current user revision overrides the original PDF dimensions and dressed tabletop: the entire ensemble is 96x288 pixels, exactly 2x6 tiles.",
+        "Clear all candles, vessels, food, books and other tabletop props; retain only bare wood and the flat cloth runner.",
+        "Exactly eight chairs, four per long side, pushed under the tabletop with seats occluded and slim backs close to the rim; no broad protruding chair columns or gaps.",
+        "Keep the existing griffin furniture style and top-down RPG Maker perspective; the whole table/chair silhouette fits inside the 2x6 canvas."
+      ],
+      "source_image": "source/03_ritual_dining_table_v3.png",
+      "generation_size": "1024x1536",
+      "padding": 0,
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        4,
+        0
+      ],
+      "revision_prompt": "prompts/03_ritual_dining_table_v3.txt"
+    },
+    {
+      "id": "04_griffin_stone_head",
+      "name": "格里芬头部石雕挂件",
+      "width": 96,
+      "height": 96,
+      "description": "A severe griffin eagle-head stone wall mount, visibly projecting in relief from a compact thick shield-shaped rock backplate. The fierce head has a broad brow, deep dark eye sockets, a strong downward-curving beak, and angular layered stone feathers forming a crown. Use weathered charcoal and slate-gray stone with sparse pale-gray edge pixels, small cracks and chips. Symmetric radiating sacred carvings on the shield retain tiny aged dark-gold traces. A few dry burgundy and brown-red ritual stains sit below the beak, in grooves and along the lower shield edge. Match the front-facing wall-prop rendering of the RPGMaker elder-room reference.",
+      "pdf_pages": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "category": "wall_prop",
+      "important_constraints": [
+        "Exactly 96x96 pixels, 2x2 tiles; single complete front-facing mount.",
+        "Clearly stone material and dimensional relief, not a flat emblem, taxidermy, wood or metal.",
+        "Eagle head, hooked beak, crown-like feathers and shield shape must remain readable.",
+        "Small old dry stains only; no fresh splashes, body parts or gore; sacred character comes from carving, not glow.",
+        "Transparent background, no wall, hooks, floor, characters or additional props."
+      ],
+      "source_image": "source/04_griffin_stone_head.png",
+      "generation_size": "1024x1024",
+      "padding": 2,
+      "anchor": "center",
+      "atlas_cell": [
+        8,
+        0
+      ]
+    },
+    {
+      "id": "05_griffin_blood_reliquary",
+      "name": "格里芬之血容器（异界心脏圣器）",
+      "width": 96,
+      "height": 96,
+      "description": "A single strange heart-shaped sacred vessel grown from charcoal/slate-gray stone, aged bone-white mineral and black rock. The vertical asymmetrical heart silhouette is broad with two irregular upper lobes and tapers to a slightly curved point. Three pointed stone feather crests crown the top; curved wing-like stone plates fold inward around an open central window. Inside the window floats a cohesive irregular burgundy blood core with no horizontal liquid surface, a small brighter deep-red center and sparse red veins continuing into stone cracks. Two or three curved claw-like stone supports grow naturally from the base. Include sparse worn dark-gold sacred carvings and tiny dried dark-red traces, matching the RPGMaker elder-room reference.",
+      "pdf_pages": [
+        7,
+        8,
+        9
+      ],
+      "category": "floor_prop",
+      "important_constraints": [
+        "Exactly 96x96 pixels, 2x2 tiles; one centered complete front-facing static object.",
+        "Not a bottle, glass container, cup, ordinary gemstone, normal griffin statue or realistic anatomical heart.",
+        "Show the heart outline, floating blood core, three feather crests, inward wings and claw supports clearly.",
+        "Blood is dark red, not fluorescent; no strong halo, light beam or realistic fleshy anatomy.",
+        "Transparent background; no extra scene props or unrelated display stand."
+      ],
+      "source_image": "source/05_griffin_blood_reliquary_refined.png",
+      "generation_size": "1024x1024",
+      "padding": 2,
+      "anchor": "bottom_center",
+      "revision_prompt": "prompts/05_griffin_blood_reliquary_refine.txt",
+      "atlas_cell": [
+        10,
+        0
+      ]
+    },
+    {
+      "id": "06_wax_sealed_letter",
+      "name": "火漆密信",
+      "width": 48,
+      "height": 48,
+      "description": "One old formal secret letter folded into a compact tri-fold or rolled-fold shape, made of aged ochre parchment with slightly curled worn edges and a few dark-brown age marks. A thick irregular burgundy wax seal is the visual focus, bearing a simplified griffin eagle head, feather crown and restrained radiating emblem. Sparse dark-gold or red highlights show hardened wax. Only a few non-readable dark-brown ink strokes may peek from the exposed paper edge. Match the slightly overhead RPGMaker elder-room prop rendering. Current user revision: a small one-cell 48x48 map prop, retaining the existing parchment and griffin wax-seal design.",
+      "pdf_pages": [
+        10,
+        11
+      ],
+      "category": "floor_prop",
+      "important_constraints": [
+        "Current user revision overrides the PDF: exactly 48x48 pixels, 1x1 tile, a small letter prop.",
+        "Only one complete letter with attached wax seal; no extra quill, ink, coin, key or candle.",
+        "Sealed and carefully preserved, not excessively torn; readable griffin seal rather than full animal illustration.",
+        "Transparent background; no readable words, labels, tabletop, hands or magical effects."
+      ],
+      "source_image": "source/06_wax_sealed_letter.png",
+      "generation_size": "1024x1024",
+      "padding": 2,
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        12,
+        0
+      ],
+      "revision_note": "Reuse the accepted source artwork and the existing nearest-neighbor extraction at the new 48x48 target; no image-generation call."
+    },
+    {
+      "id": "07_griffin_blood_vial",
+      "name": "格里芬神血小瓶",
+      "width": 48,
+      "height": 48,
+      "description": "A small thick archaic bottle made of dark-gray or black-brown ceramic stone, with a slightly irregular asymmetric silhouette and dark sealed neck trimmed with a little aged gold. Its front bears a clear simplified griffin eagle-head, hooked-beak or wing emblem. A small opening or stylized partially transparent section reveals dense burgundy liquid with a few brighter dark-red pixel highlights. Primitive sturdy goblin craftsmanship, matching the RPGMaker elder-room reference.",
+      "pdf_pages": [
+        11,
+        12
+      ],
+      "category": "floor_prop",
+      "important_constraints": [
+        "Exactly 48x48 pixels, 1x1 tile; complete bottle and neck.",
+        "Ancient ceramic/stone vessel, not modern glass or an ordinary potion bottle.",
+        "Front emblem and contained dark-red liquid must both be readable.",
+        "Transparent background; no table, other objects, bright fluorescent red or broad glow."
+      ],
+      "source_image": "source/07_griffin_blood_vial.png",
+      "generation_size": "1024x1024",
+      "padding": 2,
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        14,
+        0
+      ]
+    },
+    {
+      "id": "08_twisted_plant_pedestal",
+      "name": "异界扭曲植物与格里芬石台",
+      "width": 48,
+      "height": 144,
+      "description": "One tall narrow otherworldly plant in a heavy dark-gray stone pot supported by a matching tall griffin ritual stone pedestal. A thin black-brown trunk twists upward into asymmetric entwined claw-like branches, bearing sparse narrow burgundy, black-purple and muted gray-green leaves plus a few bone-white thorns. The pot has simple wing reliefs and worn gold traces. The pedestal has a clear front-facing fierce griffin eagle-head relief, hooked beak and spread-wing outline, worn stone edges, small cracks and restrained old dark-red marks. Match the RPGMaker elder-room map furniture perspective.",
+      "pdf_pages": [
+        12,
+        13
+      ],
+      "category": "floor_prop",
+      "important_constraints": [
+        "Exactly 48x144 pixels, 1x3 tiles; one combined plant, pot and pedestal.",
+        "All branch tips, foliage, pot, pedestal top and base must fit without cropping.",
+        "Tall narrow silhouette; clear supporting structure and readable griffin relief.",
+        "Not a normal green houseplant, cute pot or mass of fleshy tentacles.",
+        "Transparent background; front or slight overhead view, no room or separate props."
+      ],
+      "source_image": "source/08_twisted_plant_pedestal.png",
+      "generation_size": "1024x1536",
+      "padding": 2,
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        15,
+        0
+      ]
+    },
+    {
+      "id": "09_griffin_bed",
+      "name": "哥布林长老的格里芬床",
+      "width": 48,
+      "height": 96,
+      "description": "A complete narrow elder's bed made from thick black-brown hardwood and black-iron braces. Its shield-shaped headboard bears a stern simplified griffin eagle head with hooked beak, sharp feather crown and small side-wing motifs edged sparingly with aged dark gold. Deep burgundy bedding and a dark-gray or dark-red pillow sit inside the dark frame; restrained dark woven edging and a tiny gold motif decorate the blanket. Show headboard, pillow, bed surface and frame in the RPGMaker elder-room overhead furniture perspective.",
+      "pdf_pages": [
+        13,
+        14
+      ],
+      "category": "floor_prop",
+      "important_constraints": [
+        "Exactly 48x96 pixels, 1x2 tiles; compact vertical bed.",
+        "Complete headboard, pillow, blanket and bed body; readable simplified motifs.",
+        "Not a plain village bed or ornate wide royal bed.",
+        "Transparent background; no bedside cabinet, rug or other independent furniture."
+      ],
+      "source_image": "source/09_griffin_bed.png",
+      "generation_size": "1024x1536",
+      "padding": 2,
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "10_elder_portrait",
+      "name": "哥布林长老肖像画",
+      "width": 48,
+      "height": 96,
+      "description": "A front-facing formal head-and-shoulders portrait of an elderly intimidating goblin in a thick aged-gold and tarnished-brass frame. The goblin has gray-olive skin, deep eye sockets, narrow stern eyes, forehead wrinkles, a long pointed nose, tightly closed thin mouth and a slightly hunched posture. Dark-brown robes have sparse worn-gold wing motifs; a simple aged-gold head ornament is optional, never an elaborate crown. The heavy frame has a dark inner liner, a small griffin eagle-head crest at the top, sparse wing reliefs and worn metal highlights visibly lighter than the dark painting. Match the pixel rendering and wall perspective of the RPGMaker elder-room reference.",
+      "pdf_pages": [
+        14,
+        15
+      ],
+      "category": "wall_prop",
+      "important_constraints": [
+        "Exactly 48x96 pixels, 1x2 tiles; complete portrait and frame including crest.",
+        "Elderly stern goblin face remains readable; not comic, cute or a separate character sprite.",
+        "Aged gold/brass frame must visibly contrast with the dark figure.",
+        "Transparent outside the complete framed painting; no wall, labels or independent props."
+      ],
+      "source_image": "source/10_elder_portrait.png",
+      "generation_size": "1024x1536",
+      "padding": 2,
+      "anchor": "center",
+      "atlas_cell": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "11_griffin_wall_sconce",
+      "name": "格里芬墙壁吊灯",
+      "width": 48,
+      "height": 48,
+      "description": "One compact symmetrical wall sconce built from heavy black iron and worn dark-gold metal. A simplified fierce griffin eagle-head relief forms the center, with hooked beak, deep eyes, pointed feather crown and small wing-shaped metal extensions. Curved candle brackets below or beside the head hold one or two short candles with small clear muted-yellow and warm-gold flames. Sparse worn feather details, matching the front-facing wall props of the RPGMaker elder-room reference.",
+      "pdf_pages": [
+        15
+      ],
+      "category": "wall_prop",
+      "important_constraints": [
+        "Exactly 48x48 pixels, 1x1 tile; complete sconce, bracket, candles and flames.",
+        "Griffin eagle head is the main readable feature; one or two short candles.",
+        "No modern electric lamp, crystal chandelier, large halo or light backdrop.",
+        "Transparent background, no wall or other independent objects."
+      ],
+      "source_image": "source/11_griffin_wall_sconce.png",
+      "generation_size": "1024x1024",
+      "padding": 2,
+      "anchor": "center",
+      "atlas_cell": [
+        14,
+        1
+      ]
+    },
+    {
+      "id": "12_bedroom_small_table",
+      "name": "哥布林长老的卧室小桌",
+      "width": 48,
+      "height": 96,
+      "description": "One refined vertically oriented bedroom reading table made from rich black-walnut and dark-brown hardwood. The thick flat tabletop has modest carved edging and softly rounded corners, while the sturdy elegant legs have a few aged dark-gold inlays. Subtle griffin eagle-head and wing carvings sit on the front rim or edge. Fine but restrained pixel wood grain suggests a treasured, well-used piece of furniture. Match the RPGMaker elder-room overhead furniture view.",
+      "pdf_pages": [
+        16
+      ],
+      "category": "floor_prop",
+      "important_constraints": [
+        "Exactly 48x96 pixels, 1x2 tiles, vertical orientation.",
+        "Only the bare table; complete tabletop, legs and restrained carved details.",
+        "Refined reading/research table, not an altar, long office table or crude plain four-leg stool.",
+        "Transparent background; no tabletop accessories or excessive gold ornament."
+      ],
+      "source_image": "source/12_bedroom_small_table.png",
+      "generation_size": "1024x1536",
+      "padding": 2,
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        8,
+        2
+      ]
+    },
+    {
+      "id": "13_upholstered_bedroom_chair",
+      "name": "哥布林长老的软包卧室椅",
+      "width": 48,
+      "height": 48,
+      "description": "One refined upholstered bedroom chair with an elegant curved dark-hardwood back frame, visibly thick cushioned backrest and soft seat in deep burgundy or red-brown fabric. Use restrained pixel cloth folds and subtle quilting. Simplified griffin wing carvings on the back frame, a few worn dark-gold studs and thin inlay lines, and slightly curved sturdy legs coordinate with the elder's small bedroom table. Match the RPGMaker elder-room furniture rendering.",
+      "pdf_pages": [
+        16
+      ],
+      "category": "floor_prop",
+      "important_constraints": [
+        "Exactly 48x48 pixels, 1x1 tile; one complete chair.",
+        "Clearly padded backrest and seat; optional armrests remain within silhouette.",
+        "Comfortable refined bedroom chair, not a hard dining chair, stool or throne.",
+        "Transparent background; dark wood, burgundy fabric and restrained old-gold details only."
+      ],
+      "source_image": "source/13_upholstered_bedroom_chair.png",
+      "generation_size": "1024x1024",
+      "padding": 2,
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        9,
+        2
+      ]
+    },
+    {
+      "id": "14_griffin_reading_candle",
+      "name": "格里芬阅读烛灯",
+      "width": 48,
+      "height": 48,
+      "description": "A low-centered compact reading candle lamp with a heavy blackened bronze base, a simplified central griffin eagle-head relief and folded-wing decoration at either side, accented by sparse aged dark-gold metal lines. A single short thick old-ivory candle has clear melted-wax traces and a small warm golden-yellow flame with a few orange-yellow pixels. Refined practical shape for the elder's reading table, matching the RPGMaker elder-room reference.",
+      "pdf_pages": [
+        16,
+        17
+      ],
+      "category": "floor_prop",
+      "important_constraints": [
+        "Exactly 48x48 pixels, 1x1 tile; complete centered lamp, ivory candle and flame.",
+        "Distinct from item 01: ivory candle, warm gold flame and low compact reading-lamp base.",
+        "Readable simplified griffin head and folded wings; no dense microdetail or blurred halo.",
+        "Transparent background; lamp only, no table, wall or other object."
+      ],
+      "source_image": "source/14_griffin_reading_candle.png",
+      "generation_size": "1024x1024",
+      "padding": 2,
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        10,
+        2
+      ]
+    },
+    {
+      "id": "15_black_iron_griffin_statue",
+      "name": "格里芬黑铁雕塑台",
+      "width": 48,
+      "height": 96,
+      "description": "One dark cast-iron griffin statue on a complete heavy stepped iron pedestal. The stern griffin combines a clear eagle head, sharply curved beak, deep eye socket, lion body, half-folded wings and claws gripping the base. Use near-black iron, charcoal highlights, sparse dark-red rust and small worn-gold carved accents. The pedestal bears simplified wing and eagle-head reliefs. Angular weighty silhouette, matching the RPGMaker elder-room reference.",
+      "pdf_pages": [
+        17
+      ],
+      "category": "floor_prop",
+      "important_constraints": [
+        "Exactly 48x96 pixels, 1x2 tiles; statue and stepped base form one complete vertical object.",
+        "Readable eagle head, wings, lion body and claws; no separate decorative props.",
+        "Near-black aged iron, not a bright gold trophy, modern ornament or ordinary animal statue.",
+        "Eye may have a tiny dark-red reflection but must not glow strongly.",
+        "Transparent background; no floor, wall or candles."
+      ],
+      "source_image": "source/15_black_iron_griffin_statue.png",
+      "generation_size": "1024x1536",
+      "padding": 2,
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        11,
+        2
+      ]
+    },
+    {
+      "id": "16_large_griffin_chest",
+      "name": "格里芬纹章大宝箱",
+      "width": 48,
+      "height": 96,
+      "description": "A closed tall narrow rectangular treasure chest of dark-brown hardwood with thick black-iron edging, small rivets and aged metal plates. Its slightly raised lid and long vertical form must remain clear. A prominent griffin eagle-head emblem sits at the front center: hooked beak, deep eye sockets, sharp feather crown and symmetrical wing reliefs, made from raised black iron with aged dark-gold edges. A claw-shaped black-iron latch is below the emblem and sparse feather carvings decorate the corners. Match the RPGMaker elder-room front/slight overhead chest perspective.",
+      "pdf_pages": [
+        18
+      ],
+      "category": "floor_prop",
+      "important_constraints": [
+        "Exactly 48x96 pixels, 1x2 tiles; closed, complete, front-facing tall chest.",
+        "Explicitly vertical and elongated, not a wide squat chest.",
+        "Prominent central griffin head and wings, subordinate claw-shaped latch.",
+        "Transparent background; no open lid, loot, floor or extra items."
+      ],
+      "source_image": "source/16_large_griffin_chest.png",
+      "generation_size": "1024x1536",
+      "padding": 2,
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        12,
+        2
+      ]
+    },
+    {
+      "id": "17_small_griffin_chest",
+      "name": "格里芬纹章小宝箱",
+      "width": 48,
+      "height": 48,
+      "description": "A small closed rectangular chest matching the larger elder's chest: worn black-brown hardwood, thick black-iron edging and cool gray metal highlights. A clear front-center griffin eagle-head relief with hooked beak, feather crown and sharp eye socket is edged with aged dark gold. Small symmetric wing motifs flank the emblem, and a claw-like black-iron latch sits below. Compact readable form with only restrained ornament, matching the RPGMaker elder-room map chest rendering.",
+      "pdf_pages": [
+        18,
+        19
+      ],
+      "category": "floor_prop",
+      "important_constraints": [
+        "Exactly 48x48 pixels, 1x1 tile; complete closed front-facing chest.",
+        "Match item 16 in wood, iron, gold colors and griffin motifs.",
+        "Central griffin emblem must read as a head, not generic gold filigree.",
+        "Transparent background; no loose valuables, floor or independent objects."
+      ],
+      "source_image": "source/17_small_griffin_chest.png",
+      "generation_size": "1024x1024",
+      "padding": 2,
+      "anchor": "bottom_center",
+      "atlas_cell": [
+        13,
+        2
+      ]
+    },
+    {
+      "id": "18_silver_framed_griffin_portrait",
+      "name": "格里芬画像（银色画框）",
+      "width": 48,
+      "height": 48,
+      "description": "One small framed painting of a severe griffin, its hooked eagle head, powerful lion body, layered wings and claws drawn in black and deep charcoal with a few cool-gray defining pixels. The painting interior is nearly black and the eyes remain dark. A distinctly bright cool-silver metal frame surrounds it, with silver-white edge highlights, cool silver-gray midtones, dark-gray shadows, restrained wing carvings and a small griffin eagle-head relief at the top. Match the wall-prop pixel rendering of the RPGMaker elder-room reference.",
+      "pdf_pages": [
+        19
+      ],
+      "category": "wall_prop",
+      "important_constraints": [
+        "Exactly 48x48 pixels, 1x1 tile; complete centered painting and frame.",
+        "Frame must be cool silver, visibly brighter than the black griffin; neither black iron nor gold.",
+        "Griffin eagle head, hooked beak, wings and lion body should remain readable.",
+        "Transparent outside the painting/frame; no wall, hook, extra objects or bright glowing eyes."
+      ],
+      "source_image": "source/18_silver_framed_griffin_portrait.png",
+      "generation_size": "1024x1024",
+      "padding": 2,
+      "anchor": "center",
+      "atlas_cell": [
+        14,
+        2
+      ]
+    }
+  ]
+}

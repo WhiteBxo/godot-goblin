@@ -1,0 +1,1426 @@
+{
+  "schema_version": 1,
+  "tile_size_px": 48,
+  "atlas_size_px": [
+    768,
+    768
+  ],
+  "atlas_size_in_cells": [
+    16,
+    16
+  ],
+  "atlas_image": "atlas.png",
+  "empty_tile_cell": [
+    0,
+    0
+  ],
+  "object_brush_anchor": "leftmost cell of bottom row; texture_origin aligns canvas to that cell",
+  "collision": "none; configured separately by the destination map",
+  "palette_limit_per_object": 48,
+  "complete": true,
+  "ready_count": 18,
+  "asset_count": 18,
+  "tilesets": {
+    "individual_cells": "src/resources/tilesets/elder_room/elder_room_tiles.tres",
+    "whole_objects": "src/resources/tilesets/elder_room/elder_room_objects.tres"
+  },
+  "assets": [
+    {
+      "id": "01_old_candlestick",
+      "name": "老旧烛台",
+      "status": "ready",
+      "source_image": "source/01_old_candlestick.png",
+      "atlas_cell": [
+        1,
+        0
+      ],
+      "size_in_cells": [
+        1,
+        1
+      ],
+      "atlas_rect_px": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "object_placement_anchor_cell": [
+        0,
+        0
+      ],
+      "object_texture_origin_px": [
+        0,
+        0
+      ],
+      "object_image": "objects/01_old_candlestick.png",
+      "processing": {
+        "source_size_px": [
+          1254,
+          1254
+        ],
+        "source_bbox_px": [
+          385,
+          202,
+          870,
+          1037
+        ],
+        "source_bbox_convention": "left, top, right-exclusive, bottom-exclusive",
+        "uniform_scale": 0.05269461077844311,
+        "resampled_size_px": [
+          26,
+          44
+        ],
+        "resampling": "nearest; one aspect-preserving scale with integer size rounding",
+        "placement_px": [
+          11,
+          2
+        ],
+        "canvas_size_px": [
+          48,
+          48
+        ],
+        "padding_px": 2,
+        "image_anchor": "bottom_center",
+        "opaque_bbox_px": [
+          11,
+          3,
+          37,
+          46
+        ],
+        "opaque_palette_colors": 46,
+        "source_sha256": "9b12af4b41888daae2d3fc7f84dd8e82b72769cae9bca997efb836d836a03d73",
+        "chroma": {
+          "key": "#ff00ff",
+          "keyed_pixels": 1388597,
+          "fringe_pixels_recolored": 101,
+          "fringe_pixels_removed": 1284,
+          "hard_alpha": true
+        }
+      },
+      "tiles": [
+        "tiles/01_old_candlestick_x0_y0.png"
+      ]
+    },
+    {
+      "id": "02_elder_bookshelf",
+      "name": "长老书架",
+      "status": "ready",
+      "source_image": "source/02_elder_bookshelf.png",
+      "atlas_cell": [
+        2,
+        0
+      ],
+      "size_in_cells": [
+        2,
+        3
+      ],
+      "atlas_rect_px": [
+        96,
+        0,
+        96,
+        144
+      ],
+      "object_placement_anchor_cell": [
+        0,
+        2
+      ],
+      "object_texture_origin_px": [
+        -24,
+        48
+      ],
+      "object_image": "objects/02_elder_bookshelf.png",
+      "processing": {
+        "source_size_px": [
+          1024,
+          1536
+        ],
+        "source_bbox_px": [
+          117,
+          68,
+          908,
+          1468
+        ],
+        "source_bbox_convention": "left, top, right-exclusive, bottom-exclusive",
+        "uniform_scale": 0.1,
+        "resampled_size_px": [
+          79,
+          140
+        ],
+        "resampling": "nearest; one aspect-preserving scale with integer size rounding",
+        "placement_px": [
+          8,
+          2
+        ],
+        "canvas_size_px": [
+          96,
+          144
+        ],
+        "padding_px": 2,
+        "image_anchor": "bottom_center",
+        "opaque_bbox_px": [
+          8,
+          2,
+          87,
+          142
+        ],
+        "opaque_palette_colors": 47,
+        "source_sha256": "482a3ff4ceadde57d7af253895e98a6870698123e671875d2c1ca5d43db23e64",
+        "chroma": {
+          "key": "#ff00ff",
+          "keyed_pixels": 603742,
+          "fringe_pixels_recolored": 226,
+          "fringe_pixels_removed": 1665,
+          "hard_alpha": true
+        }
+      },
+      "tiles": [
+        "tiles/02_elder_bookshelf_x0_y0.png",
+        "tiles/02_elder_bookshelf_x1_y0.png",
+        "tiles/02_elder_bookshelf_x0_y1.png",
+        "tiles/02_elder_bookshelf_x1_y1.png",
+        "tiles/02_elder_bookshelf_x0_y2.png",
+        "tiles/02_elder_bookshelf_x1_y2.png"
+      ]
+    },
+    {
+      "id": "03_ritual_dining_table",
+      "name": "长老餐桌组合",
+      "status": "ready",
+      "source_image": "source/03_ritual_dining_table_v3.png",
+      "atlas_cell": [
+        4,
+        0
+      ],
+      "size_in_cells": [
+        2,
+        6
+      ],
+      "atlas_rect_px": [
+        192,
+        0,
+        96,
+        288
+      ],
+      "object_placement_anchor_cell": [
+        0,
+        5
+      ],
+      "object_texture_origin_px": [
+        -24,
+        120
+      ],
+      "object_image": "objects/03_ritual_dining_table.png",
+      "processing": {
+        "source_size_px": [
+          724,
+          2172
+        ],
+        "source_bbox_px": [
+          55,
+          60,
+          669,
+          2102
+        ],
+        "source_bbox_convention": "left, top, right-exclusive, bottom-exclusive",
+        "uniform_scale": 0.14103819784524976,
+        "resampled_size_px": [
+          87,
+          288
+        ],
+        "resampling": "nearest; one aspect-preserving scale with integer size rounding",
+        "placement_px": [
+          4,
+          0
+        ],
+        "canvas_size_px": [
+          96,
+          288
+        ],
+        "padding_px": 0,
+        "image_anchor": "bottom_center",
+        "opaque_bbox_px": [
+          4,
+          0,
+          91,
+          288
+        ],
+        "opaque_palette_colors": 43,
+        "source_sha256": "e7de938245219872c6d50a7aa181993f7cc7cbc51a2714b3241432f26d613550",
+        "chroma": {
+          "key": "#ff00ff",
+          "keyed_pixels": 425395,
+          "fringe_pixels_recolored": 38,
+          "fringe_pixels_removed": 1736,
+          "hard_alpha": true
+        }
+      },
+      "tiles": [
+        "tiles/03_ritual_dining_table_x0_y0.png",
+        "tiles/03_ritual_dining_table_x1_y0.png",
+        "tiles/03_ritual_dining_table_x0_y1.png",
+        "tiles/03_ritual_dining_table_x1_y1.png",
+        "tiles/03_ritual_dining_table_x0_y2.png",
+        "tiles/03_ritual_dining_table_x1_y2.png",
+        "tiles/03_ritual_dining_table_x0_y3.png",
+        "tiles/03_ritual_dining_table_x1_y3.png",
+        "tiles/03_ritual_dining_table_x0_y4.png",
+        "tiles/03_ritual_dining_table_x1_y4.png",
+        "tiles/03_ritual_dining_table_x0_y5.png",
+        "tiles/03_ritual_dining_table_x1_y5.png"
+      ]
+    },
+    {
+      "id": "04_griffin_stone_head",
+      "name": "格里芬头部石雕挂件",
+      "status": "ready",
+      "source_image": "source/04_griffin_stone_head.png",
+      "atlas_cell": [
+        8,
+        0
+      ],
+      "size_in_cells": [
+        2,
+        2
+      ],
+      "atlas_rect_px": [
+        384,
+        0,
+        96,
+        96
+      ],
+      "object_placement_anchor_cell": [
+        0,
+        1
+      ],
+      "object_texture_origin_px": [
+        -24,
+        24
+      ],
+      "object_image": "objects/04_griffin_stone_head.png",
+      "processing": {
+        "source_size_px": [
+          1254,
+          1254
+        ],
+        "source_bbox_px": [
+          222,
+          60,
+          1037,
+          1146
+        ],
+        "source_bbox_convention": "left, top, right-exclusive, bottom-exclusive",
+        "uniform_scale": 0.0847145488029466,
+        "resampled_size_px": [
+          69,
+          92
+        ],
+        "resampling": "nearest; one aspect-preserving scale with integer size rounding",
+        "placement_px": [
+          13,
+          2
+        ],
+        "canvas_size_px": [
+          96,
+          96
+        ],
+        "padding_px": 2,
+        "image_anchor": "center",
+        "opaque_bbox_px": [
+          13,
+          2,
+          82,
+          94
+        ],
+        "opaque_palette_colors": 48,
+        "source_sha256": "a5d4d81010a8ef5098f46250982316ff0db50c5e3410913e350bbd1fa8c5acc3",
+        "chroma": {
+          "key": "#ff00ff",
+          "keyed_pixels": 971265,
+          "fringe_pixels_recolored": 122,
+          "fringe_pixels_removed": 865,
+          "hard_alpha": true
+        }
+      },
+      "tiles": [
+        "tiles/04_griffin_stone_head_x0_y0.png",
+        "tiles/04_griffin_stone_head_x1_y0.png",
+        "tiles/04_griffin_stone_head_x0_y1.png",
+        "tiles/04_griffin_stone_head_x1_y1.png"
+      ]
+    },
+    {
+      "id": "05_griffin_blood_reliquary",
+      "name": "格里芬之血容器（异界心脏圣器）",
+      "status": "ready",
+      "source_image": "source/05_griffin_blood_reliquary_refined.png",
+      "atlas_cell": [
+        10,
+        0
+      ],
+      "size_in_cells": [
+        2,
+        2
+      ],
+      "atlas_rect_px": [
+        480,
+        0,
+        96,
+        96
+      ],
+      "object_placement_anchor_cell": [
+        0,
+        1
+      ],
+      "object_texture_origin_px": [
+        -24,
+        24
+      ],
+      "object_image": "objects/05_griffin_blood_reliquary.png",
+      "processing": {
+        "source_size_px": [
+          1254,
+          1254
+        ],
+        "source_bbox_px": [
+          245,
+          42,
+          1009,
+          1212
+        ],
+        "source_bbox_convention": "left, top, right-exclusive, bottom-exclusive",
+        "uniform_scale": 0.07863247863247863,
+        "resampled_size_px": [
+          60,
+          92
+        ],
+        "resampling": "nearest; one aspect-preserving scale with integer size rounding",
+        "placement_px": [
+          18,
+          2
+        ],
+        "canvas_size_px": [
+          96,
+          96
+        ],
+        "padding_px": 2,
+        "image_anchor": "bottom_center",
+        "opaque_bbox_px": [
+          18,
+          2,
+          78,
+          94
+        ],
+        "opaque_palette_colors": 48,
+        "source_sha256": "32d8d8e3fbb0cb1fa01d9758f3cf78a2eaf09c77660f6291ab263f3cbea70195",
+        "chroma": {
+          "key": "#ff00ff",
+          "keyed_pixels": 1026834,
+          "fringe_pixels_recolored": 562,
+          "fringe_pixels_removed": 2000,
+          "hard_alpha": true
+        }
+      },
+      "tiles": [
+        "tiles/05_griffin_blood_reliquary_x0_y0.png",
+        "tiles/05_griffin_blood_reliquary_x1_y0.png",
+        "tiles/05_griffin_blood_reliquary_x0_y1.png",
+        "tiles/05_griffin_blood_reliquary_x1_y1.png"
+      ]
+    },
+    {
+      "id": "06_wax_sealed_letter",
+      "name": "火漆密信",
+      "status": "ready",
+      "source_image": "source/06_wax_sealed_letter.png",
+      "atlas_cell": [
+        12,
+        0
+      ],
+      "size_in_cells": [
+        1,
+        1
+      ],
+      "atlas_rect_px": [
+        576,
+        0,
+        48,
+        48
+      ],
+      "object_placement_anchor_cell": [
+        0,
+        0
+      ],
+      "object_texture_origin_px": [
+        0,
+        0
+      ],
+      "object_image": "objects/06_wax_sealed_letter.png",
+      "processing": {
+        "source_size_px": [
+          1254,
+          1254
+        ],
+        "source_bbox_px": [
+          83,
+          368,
+          1175,
+          949
+        ],
+        "source_bbox_convention": "left, top, right-exclusive, bottom-exclusive",
+        "uniform_scale": 0.040293040293040296,
+        "resampled_size_px": [
+          44,
+          23
+        ],
+        "resampling": "nearest; one aspect-preserving scale with integer size rounding",
+        "placement_px": [
+          2,
+          23
+        ],
+        "canvas_size_px": [
+          48,
+          48
+        ],
+        "padding_px": 2,
+        "image_anchor": "bottom_center",
+        "opaque_bbox_px": [
+          2,
+          23,
+          46,
+          46
+        ],
+        "opaque_palette_colors": 46,
+        "source_sha256": "eba50a4afb468dafbed982b70dc8ec50cb06075cb8d22baa1cf241b8f600dcaf",
+        "chroma": {
+          "key": "#ff00ff",
+          "keyed_pixels": 1031377,
+          "fringe_pixels_recolored": 51,
+          "fringe_pixels_removed": 835,
+          "hard_alpha": true
+        }
+      },
+      "tiles": [
+        "tiles/06_wax_sealed_letter_x0_y0.png"
+      ]
+    },
+    {
+      "id": "07_griffin_blood_vial",
+      "name": "格里芬神血小瓶",
+      "status": "ready",
+      "source_image": "source/07_griffin_blood_vial.png",
+      "atlas_cell": [
+        14,
+        0
+      ],
+      "size_in_cells": [
+        1,
+        1
+      ],
+      "atlas_rect_px": [
+        672,
+        0,
+        48,
+        48
+      ],
+      "object_placement_anchor_cell": [
+        0,
+        0
+      ],
+      "object_texture_origin_px": [
+        0,
+        0
+      ],
+      "object_image": "objects/07_griffin_blood_vial.png",
+      "processing": {
+        "source_size_px": [
+          1254,
+          1254
+        ],
+        "source_bbox_px": [
+          314,
+          172,
+          930,
+          1098
+        ],
+        "source_bbox_convention": "left, top, right-exclusive, bottom-exclusive",
+        "uniform_scale": 0.047516198704103674,
+        "resampled_size_px": [
+          29,
+          44
+        ],
+        "resampling": "nearest; one aspect-preserving scale with integer size rounding",
+        "placement_px": [
+          9,
+          2
+        ],
+        "canvas_size_px": [
+          48,
+          48
+        ],
+        "padding_px": 2,
+        "image_anchor": "bottom_center",
+        "opaque_bbox_px": [
+          9,
+          2,
+          38,
+          46
+        ],
+        "opaque_palette_colors": 48,
+        "source_sha256": "0bfa6537bdf2b3ca8708925f0d286afdb07860db5d836123d30ece9496875636",
+        "chroma": {
+          "key": "#ff00ff",
+          "keyed_pixels": 1168696,
+          "fringe_pixels_recolored": 67,
+          "fringe_pixels_removed": 1109,
+          "hard_alpha": true
+        }
+      },
+      "tiles": [
+        "tiles/07_griffin_blood_vial_x0_y0.png"
+      ]
+    },
+    {
+      "id": "08_twisted_plant_pedestal",
+      "name": "异界扭曲植物与格里芬石台",
+      "status": "ready",
+      "source_image": "source/08_twisted_plant_pedestal.png",
+      "atlas_cell": [
+        15,
+        0
+      ],
+      "size_in_cells": [
+        1,
+        3
+      ],
+      "atlas_rect_px": [
+        720,
+        0,
+        48,
+        144
+      ],
+      "object_placement_anchor_cell": [
+        0,
+        2
+      ],
+      "object_texture_origin_px": [
+        0,
+        48
+      ],
+      "object_image": "objects/08_twisted_plant_pedestal.png",
+      "processing": {
+        "source_size_px": [
+          724,
+          2172
+        ],
+        "source_bbox_px": [
+          132,
+          129,
+          581,
+          2034
+        ],
+        "source_bbox_convention": "left, top, right-exclusive, bottom-exclusive",
+        "uniform_scale": 0.07349081364829396,
+        "resampled_size_px": [
+          33,
+          140
+        ],
+        "resampling": "nearest; one aspect-preserving scale with integer size rounding",
+        "placement_px": [
+          7,
+          2
+        ],
+        "canvas_size_px": [
+          48,
+          144
+        ],
+        "padding_px": 2,
+        "image_anchor": "bottom_center",
+        "opaque_bbox_px": [
+          7,
+          2,
+          40,
+          142
+        ],
+        "opaque_palette_colors": 48,
+        "source_sha256": "ffc520a430f33a60cc61124a8bc58504a63c3fb5cd15d6d8dc62227f7a3b2e09",
+        "chroma": {
+          "key": "#ff00ff",
+          "keyed_pixels": 1119023,
+          "fringe_pixels_recolored": 1876,
+          "fringe_pixels_removed": 3247,
+          "hard_alpha": true
+        }
+      },
+      "tiles": [
+        "tiles/08_twisted_plant_pedestal_x0_y0.png",
+        "tiles/08_twisted_plant_pedestal_x0_y1.png",
+        "tiles/08_twisted_plant_pedestal_x0_y2.png"
+      ]
+    },
+    {
+      "id": "09_griffin_bed",
+      "name": "哥布林长老的格里芬床",
+      "status": "ready",
+      "source_image": "source/09_griffin_bed.png",
+      "atlas_cell": [
+        0,
+        1
+      ],
+      "size_in_cells": [
+        1,
+        2
+      ],
+      "atlas_rect_px": [
+        0,
+        48,
+        48,
+        96
+      ],
+      "object_placement_anchor_cell": [
+        0,
+        1
+      ],
+      "object_texture_origin_px": [
+        0,
+        24
+      ],
+      "object_image": "objects/09_griffin_bed.png",
+      "processing": {
+        "source_size_px": [
+          887,
+          1774
+        ],
+        "source_bbox_px": [
+          144,
+          147,
+          743,
+          1629
+        ],
+        "source_bbox_convention": "left, top, right-exclusive, bottom-exclusive",
+        "uniform_scale": 0.0620782726045884,
+        "resampled_size_px": [
+          37,
+          92
+        ],
+        "resampling": "nearest; one aspect-preserving scale with integer size rounding",
+        "placement_px": [
+          5,
+          2
+        ],
+        "canvas_size_px": [
+          48,
+          96
+        ],
+        "padding_px": 2,
+        "image_anchor": "bottom_center",
+        "opaque_bbox_px": [
+          5,
+          2,
+          42,
+          94
+        ],
+        "opaque_palette_colors": 48,
+        "source_sha256": "88a72da8a8f64f66f55011e4d64e010f261ff02202ed85c8acb51d461f564550",
+        "chroma": {
+          "key": "#ff00ff",
+          "keyed_pixels": 791603,
+          "fringe_pixels_recolored": 46,
+          "fringe_pixels_removed": 991,
+          "hard_alpha": true
+        }
+      },
+      "tiles": [
+        "tiles/09_griffin_bed_x0_y0.png",
+        "tiles/09_griffin_bed_x0_y1.png"
+      ]
+    },
+    {
+      "id": "10_elder_portrait",
+      "name": "哥布林长老肖像画",
+      "status": "ready",
+      "source_image": "source/10_elder_portrait.png",
+      "atlas_cell": [
+        1,
+        1
+      ],
+      "size_in_cells": [
+        1,
+        2
+      ],
+      "atlas_rect_px": [
+        48,
+        48,
+        48,
+        96
+      ],
+      "object_placement_anchor_cell": [
+        0,
+        1
+      ],
+      "object_texture_origin_px": [
+        0,
+        24
+      ],
+      "object_image": "objects/10_elder_portrait.png",
+      "processing": {
+        "source_size_px": [
+          887,
+          1774
+        ],
+        "source_bbox_px": [
+          67,
+          58,
+          819,
+          1668
+        ],
+        "source_bbox_convention": "left, top, right-exclusive, bottom-exclusive",
+        "uniform_scale": 0.05714285714285714,
+        "resampled_size_px": [
+          43,
+          92
+        ],
+        "resampling": "nearest; one aspect-preserving scale with integer size rounding",
+        "placement_px": [
+          2,
+          2
+        ],
+        "canvas_size_px": [
+          48,
+          96
+        ],
+        "padding_px": 2,
+        "image_anchor": "center",
+        "opaque_bbox_px": [
+          2,
+          2,
+          45,
+          94
+        ],
+        "opaque_palette_colors": 48,
+        "source_sha256": "972d8728ad7e397ecc72b0b0a2fdc6b732cc5d8f2e077c18f691547bc26a285e",
+        "chroma": {
+          "key": "#ff00ff",
+          "keyed_pixels": 501828,
+          "fringe_pixels_recolored": 105,
+          "fringe_pixels_removed": 844,
+          "hard_alpha": true
+        }
+      },
+      "tiles": [
+        "tiles/10_elder_portrait_x0_y0.png",
+        "tiles/10_elder_portrait_x0_y1.png"
+      ]
+    },
+    {
+      "id": "11_griffin_wall_sconce",
+      "name": "格里芬墙壁吊灯",
+      "status": "ready",
+      "source_image": "source/11_griffin_wall_sconce.png",
+      "atlas_cell": [
+        14,
+        1
+      ],
+      "size_in_cells": [
+        1,
+        1
+      ],
+      "atlas_rect_px": [
+        672,
+        48,
+        48,
+        48
+      ],
+      "object_placement_anchor_cell": [
+        0,
+        0
+      ],
+      "object_texture_origin_px": [
+        0,
+        0
+      ],
+      "object_image": "objects/11_griffin_wall_sconce.png",
+      "processing": {
+        "source_size_px": [
+          1254,
+          1254
+        ],
+        "source_bbox_px": [
+          193,
+          194,
+          1060,
+          1058
+        ],
+        "source_bbox_convention": "left, top, right-exclusive, bottom-exclusive",
+        "uniform_scale": 0.05074971164936563,
+        "resampled_size_px": [
+          44,
+          44
+        ],
+        "resampling": "nearest; one aspect-preserving scale with integer size rounding",
+        "placement_px": [
+          2,
+          2
+        ],
+        "canvas_size_px": [
+          48,
+          48
+        ],
+        "padding_px": 2,
+        "image_anchor": "center",
+        "opaque_bbox_px": [
+          2,
+          3,
+          46,
+          46
+        ],
+        "opaque_palette_colors": 48,
+        "source_sha256": "63b719936fc8f08b7b9db3aa683960a00e2b94b759927c38cff21f270359e2e0",
+        "chroma": {
+          "key": "#ff00ff",
+          "keyed_pixels": 1164609,
+          "fringe_pixels_recolored": 348,
+          "fringe_pixels_removed": 1912,
+          "hard_alpha": true
+        }
+      },
+      "tiles": [
+        "tiles/11_griffin_wall_sconce_x0_y0.png"
+      ]
+    },
+    {
+      "id": "12_bedroom_small_table",
+      "name": "哥布林长老的卧室小桌",
+      "status": "ready",
+      "source_image": "source/12_bedroom_small_table.png",
+      "atlas_cell": [
+        8,
+        2
+      ],
+      "size_in_cells": [
+        1,
+        2
+      ],
+      "atlas_rect_px": [
+        384,
+        96,
+        48,
+        96
+      ],
+      "object_placement_anchor_cell": [
+        0,
+        1
+      ],
+      "object_texture_origin_px": [
+        0,
+        24
+      ],
+      "object_image": "objects/12_bedroom_small_table.png",
+      "processing": {
+        "source_size_px": [
+          887,
+          1774
+        ],
+        "source_bbox_px": [
+          151,
+          220,
+          738,
+          1439
+        ],
+        "source_bbox_convention": "left, top, right-exclusive, bottom-exclusive",
+        "uniform_scale": 0.07495741056218058,
+        "resampled_size_px": [
+          44,
+          91
+        ],
+        "resampling": "nearest; one aspect-preserving scale with integer size rounding",
+        "placement_px": [
+          2,
+          3
+        ],
+        "canvas_size_px": [
+          48,
+          96
+        ],
+        "padding_px": 2,
+        "image_anchor": "bottom_center",
+        "opaque_bbox_px": [
+          2,
+          3,
+          46,
+          94
+        ],
+        "opaque_palette_colors": 46,
+        "source_sha256": "2bf9c5c0ea87229514f7562be255525eda7feed45eabbcb84259323ad4399c16",
+        "chroma": {
+          "key": "#ff00ff",
+          "keyed_pixels": 984603,
+          "fringe_pixels_recolored": 42,
+          "fringe_pixels_removed": 1287,
+          "hard_alpha": true
+        }
+      },
+      "tiles": [
+        "tiles/12_bedroom_small_table_x0_y0.png",
+        "tiles/12_bedroom_small_table_x0_y1.png"
+      ]
+    },
+    {
+      "id": "13_upholstered_bedroom_chair",
+      "name": "哥布林长老的软包卧室椅",
+      "status": "ready",
+      "source_image": "source/13_upholstered_bedroom_chair.png",
+      "atlas_cell": [
+        9,
+        2
+      ],
+      "size_in_cells": [
+        1,
+        1
+      ],
+      "atlas_rect_px": [
+        432,
+        96,
+        48,
+        48
+      ],
+      "object_placement_anchor_cell": [
+        0,
+        0
+      ],
+      "object_texture_origin_px": [
+        0,
+        0
+      ],
+      "object_image": "objects/13_upholstered_bedroom_chair.png",
+      "processing": {
+        "source_size_px": [
+          1254,
+          1254
+        ],
+        "source_bbox_px": [
+          321,
+          161,
+          934,
+          1052
+        ],
+        "source_bbox_convention": "left, top, right-exclusive, bottom-exclusive",
+        "uniform_scale": 0.04938271604938271,
+        "resampled_size_px": [
+          30,
+          44
+        ],
+        "resampling": "nearest; one aspect-preserving scale with integer size rounding",
+        "placement_px": [
+          9,
+          2
+        ],
+        "canvas_size_px": [
+          48,
+          48
+        ],
+        "padding_px": 2,
+        "image_anchor": "bottom_center",
+        "opaque_bbox_px": [
+          9,
+          2,
+          39,
+          46
+        ],
+        "opaque_palette_colors": 46,
+        "source_sha256": "0d9be0a742fcd170c232430d7ebaf0c764f2fc4b4319013c3c2e360d57662091",
+        "chroma": {
+          "key": "#ff00ff",
+          "keyed_pixels": 1190965,
+          "fringe_pixels_recolored": 93,
+          "fringe_pixels_removed": 1255,
+          "hard_alpha": true
+        }
+      },
+      "tiles": [
+        "tiles/13_upholstered_bedroom_chair_x0_y0.png"
+      ]
+    },
+    {
+      "id": "14_griffin_reading_candle",
+      "name": "格里芬阅读烛灯",
+      "status": "ready",
+      "source_image": "source/14_griffin_reading_candle.png",
+      "atlas_cell": [
+        10,
+        2
+      ],
+      "size_in_cells": [
+        1,
+        1
+      ],
+      "atlas_rect_px": [
+        480,
+        96,
+        48,
+        48
+      ],
+      "object_placement_anchor_cell": [
+        0,
+        0
+      ],
+      "object_texture_origin_px": [
+        0,
+        0
+      ],
+      "object_image": "objects/14_griffin_reading_candle.png",
+      "processing": {
+        "source_size_px": [
+          1254,
+          1254
+        ],
+        "source_bbox_px": [
+          298,
+          212,
+          955,
+          1010
+        ],
+        "source_bbox_convention": "left, top, right-exclusive, bottom-exclusive",
+        "uniform_scale": 0.05513784461152882,
+        "resampled_size_px": [
+          36,
+          44
+        ],
+        "resampling": "nearest; one aspect-preserving scale with integer size rounding",
+        "placement_px": [
+          6,
+          2
+        ],
+        "canvas_size_px": [
+          48,
+          48
+        ],
+        "padding_px": 2,
+        "image_anchor": "bottom_center",
+        "opaque_bbox_px": [
+          6,
+          2,
+          42,
+          46
+        ],
+        "opaque_palette_colors": 48,
+        "source_sha256": "1526132bc3a9202a32be6919e29ec2811555b9965f7a26115b63ecd508770834",
+        "chroma": {
+          "key": "#ff00ff",
+          "keyed_pixels": 1291216,
+          "fringe_pixels_recolored": 146,
+          "fringe_pixels_removed": 1307,
+          "hard_alpha": true
+        }
+      },
+      "tiles": [
+        "tiles/14_griffin_reading_candle_x0_y0.png"
+      ]
+    },
+    {
+      "id": "15_black_iron_griffin_statue",
+      "name": "格里芬黑铁雕塑台",
+      "status": "ready",
+      "source_image": "source/15_black_iron_griffin_statue.png",
+      "atlas_cell": [
+        11,
+        2
+      ],
+      "size_in_cells": [
+        1,
+        2
+      ],
+      "atlas_rect_px": [
+        528,
+        96,
+        48,
+        96
+      ],
+      "object_placement_anchor_cell": [
+        0,
+        1
+      ],
+      "object_texture_origin_px": [
+        0,
+        24
+      ],
+      "object_image": "objects/15_black_iron_griffin_statue.png",
+      "processing": {
+        "source_size_px": [
+          1024,
+          1536
+        ],
+        "source_bbox_px": [
+          236,
+          72,
+          791,
+          1432
+        ],
+        "source_bbox_convention": "left, top, right-exclusive, bottom-exclusive",
+        "uniform_scale": 0.06764705882352941,
+        "resampled_size_px": [
+          38,
+          92
+        ],
+        "resampling": "nearest; one aspect-preserving scale with integer size rounding",
+        "placement_px": [
+          5,
+          2
+        ],
+        "canvas_size_px": [
+          48,
+          96
+        ],
+        "padding_px": 2,
+        "image_anchor": "bottom_center",
+        "opaque_bbox_px": [
+          5,
+          2,
+          43,
+          94
+        ],
+        "opaque_palette_colors": 48,
+        "source_sha256": "77c3d23683545000efda737f572ae21bab38ad3e282a156d9218177543adf48f",
+        "chroma": {
+          "key": "#ff00ff",
+          "keyed_pixels": 976283,
+          "fringe_pixels_recolored": 142,
+          "fringe_pixels_removed": 867,
+          "hard_alpha": true
+        }
+      },
+      "tiles": [
+        "tiles/15_black_iron_griffin_statue_x0_y0.png",
+        "tiles/15_black_iron_griffin_statue_x0_y1.png"
+      ]
+    },
+    {
+      "id": "16_large_griffin_chest",
+      "name": "格里芬纹章大宝箱",
+      "status": "ready",
+      "source_image": "source/16_large_griffin_chest.png",
+      "atlas_cell": [
+        12,
+        2
+      ],
+      "size_in_cells": [
+        1,
+        2
+      ],
+      "atlas_rect_px": [
+        576,
+        96,
+        48,
+        96
+      ],
+      "object_placement_anchor_cell": [
+        0,
+        1
+      ],
+      "object_texture_origin_px": [
+        0,
+        24
+      ],
+      "object_image": "objects/16_large_griffin_chest.png",
+      "processing": {
+        "source_size_px": [
+          887,
+          1774
+        ],
+        "source_bbox_px": [
+          157,
+          150,
+          731,
+          1549
+        ],
+        "source_bbox_convention": "left, top, right-exclusive, bottom-exclusive",
+        "uniform_scale": 0.06576125804145819,
+        "resampled_size_px": [
+          38,
+          92
+        ],
+        "resampling": "nearest; one aspect-preserving scale with integer size rounding",
+        "placement_px": [
+          5,
+          2
+        ],
+        "canvas_size_px": [
+          48,
+          96
+        ],
+        "padding_px": 2,
+        "image_anchor": "bottom_center",
+        "opaque_bbox_px": [
+          5,
+          2,
+          43,
+          94
+        ],
+        "opaque_palette_colors": 48,
+        "source_sha256": "eefbb237cf74bb26c910ce7e04da7a80221fa3d63f55bdea70c56a32c694724a",
+        "chroma": {
+          "key": "#ff00ff",
+          "keyed_pixels": 822193,
+          "fringe_pixels_recolored": 16,
+          "fringe_pixels_removed": 680,
+          "hard_alpha": true
+        }
+      },
+      "tiles": [
+        "tiles/16_large_griffin_chest_x0_y0.png",
+        "tiles/16_large_griffin_chest_x0_y1.png"
+      ]
+    },
+    {
+      "id": "17_small_griffin_chest",
+      "name": "格里芬纹章小宝箱",
+      "status": "ready",
+      "source_image": "source/17_small_griffin_chest.png",
+      "atlas_cell": [
+        13,
+        2
+      ],
+      "size_in_cells": [
+        1,
+        1
+      ],
+      "atlas_rect_px": [
+        624,
+        96,
+        48,
+        48
+      ],
+      "object_placement_anchor_cell": [
+        0,
+        0
+      ],
+      "object_texture_origin_px": [
+        0,
+        0
+      ],
+      "object_image": "objects/17_small_griffin_chest.png",
+      "processing": {
+        "source_size_px": [
+          1254,
+          1254
+        ],
+        "source_bbox_px": [
+          236,
+          312,
+          1019,
+          941
+        ],
+        "source_bbox_convention": "left, top, right-exclusive, bottom-exclusive",
+        "uniform_scale": 0.0561941251596424,
+        "resampled_size_px": [
+          44,
+          35
+        ],
+        "resampling": "nearest; one aspect-preserving scale with integer size rounding",
+        "placement_px": [
+          2,
+          11
+        ],
+        "canvas_size_px": [
+          48,
+          48
+        ],
+        "padding_px": 2,
+        "image_anchor": "bottom_center",
+        "opaque_bbox_px": [
+          2,
+          11,
+          46,
+          46
+        ],
+        "opaque_palette_colors": 47,
+        "source_sha256": "b9cafc7a3736888e5e85894a0681b2ccb948747fcde14afb6b2bd7d926cfd1fa",
+        "chroma": {
+          "key": "#ff00ff",
+          "keyed_pixels": 1123668,
+          "fringe_pixels_recolored": 29,
+          "fringe_pixels_removed": 651,
+          "hard_alpha": true
+        }
+      },
+      "tiles": [
+        "tiles/17_small_griffin_chest_x0_y0.png"
+      ]
+    },
+    {
+      "id": "18_silver_framed_griffin_portrait",
+      "name": "格里芬画像（银色画框）",
+      "status": "ready",
+      "source_image": "source/18_silver_framed_griffin_portrait.png",
+      "atlas_cell": [
+        14,
+        2
+      ],
+      "size_in_cells": [
+        1,
+        1
+      ],
+      "atlas_rect_px": [
+        672,
+        96,
+        48,
+        48
+      ],
+      "object_placement_anchor_cell": [
+        0,
+        0
+      ],
+      "object_texture_origin_px": [
+        0,
+        0
+      ],
+      "object_image": "objects/18_silver_framed_griffin_portrait.png",
+      "processing": {
+        "source_size_px": [
+          1254,
+          1254
+        ],
+        "source_bbox_px": [
+          202,
+          153,
+          1052,
+          1029
+        ],
+        "source_bbox_convention": "left, top, right-exclusive, bottom-exclusive",
+        "uniform_scale": 0.0502283105022831,
+        "resampled_size_px": [
+          43,
+          44
+        ],
+        "resampling": "nearest; one aspect-preserving scale with integer size rounding",
+        "placement_px": [
+          2,
+          2
+        ],
+        "canvas_size_px": [
+          48,
+          48
+        ],
+        "padding_px": 2,
+        "image_anchor": "center",
+        "opaque_bbox_px": [
+          2,
+          2,
+          45,
+          46
+        ],
+        "opaque_palette_colors": 46,
+        "source_sha256": "bbcbbba4f49f63cb150c7ec6c7a59acc59009fb7f5376245c051226974a68c23",
+        "chroma": {
+          "key": "#ff00ff",
+          "keyed_pixels": 887415,
+          "fringe_pixels_recolored": 71,
+          "fringe_pixels_removed": 1867,
+          "hard_alpha": true
+        }
+      },
+      "tiles": [
+        "tiles/18_silver_framed_griffin_portrait_x0_y0.png"
+      ]
+    }
+  ]
+}

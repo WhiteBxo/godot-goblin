@@ -1561,8 +1561,10 @@ func _refresh_map_access() -> void:
 		_map_registered = false
 	if _ui_manager.is_open(ScreenIds.MAP):
 		_map_panel.refresh()
-	_map_button.hide()
-	_map_button.focus_mode = Control.FOCUS_NONE
+	# The button follows the unlock it just computed; hiding it unconditionally
+	# left the map unreachable even after the host registered the canvas.
+	_map_button.visible = unlocked
+	_map_button.focus_mode = Control.FOCUS_ALL if unlocked else Control.FOCUS_NONE
 	_refresh_game_menu()
 
 func open_map() -> Error:

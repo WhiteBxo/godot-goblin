@@ -42,7 +42,8 @@ func _verify() -> void:
 	tools.set_player_speed_multiplier(8.0)
 	check(other_state.multiplier == 2.0, "Disabled tools ignore direct API calls")
 	check(tools.configure(setter, getter, panel) == ERR_UNCONFIGURED and not panel.visible, "Disabled configuration hides panel")
-	ProjectSettings.set_setting("debug/developer_tools/enabled", null)
+	# Clear (rather than null) so the setting falls back to its default value.
+	ProjectSettings.clear("debug/developer_tools/enabled")
 	check(tools.configure(Callable(), getter, panel) == ERR_UNCONFIGURED, "Invalid binding fails safely")
 	await _verify_observation(tools, panel, setter, getter)
 	await _verify_business(tools, panel, setter, getter)
@@ -221,7 +222,11 @@ func _verify_writes(tools: DeveloperTools, panel: DeveloperPanel, setter: Callab
 	var state := root.get_node("GameState")
 	var original: Dictionary = state.to_dict()
 	var phases: Array[Dictionary] = _phase_rows()
-	check(phases.size() == 3, "Phase data exposes three stages")
+	# The chapter grew past the three stages this used to hardcode; assert the data
+	# is usable (named rows with completion flags) instead of pinning a count.
+	check(not phases.is_empty() and phases.all(
+		func(row: Dictionary) -> bool: return not row.id.is_empty() and not row.flag.is_empty()),
+		"Phase data exposes named stages with completion flags")
 	check(tools.configure(setter, getter, panel, {"state": state}) == OK, "Write page binds GameState through context")
 	var configured_phases := tools.get_phases()
 	check(configured_phases.size() == phases.size(), "Phase list is read from phase data instead of being hardcoded")
@@ -318,7 +323,8 @@ func _verify_writes(tools: DeveloperTools, panel: DeveloperPanel, setter: Callab
 	var after_reset: Dictionary = state.to_dict()
 	check(not tools.write_flag("console.disabled_write", true) and state.to_dict() == after_reset,
 		"Disabled tools refuse writes")
-	ProjectSettings.set_setting("debug/developer_tools/enabled", null)
+	# Clear (rather than null) so the setting falls back to its default value.
+	ProjectSettings.clear("debug/developer_tools/enabled")
 	state.restore_state(original)
 	director.queue_free()
 	manager.queue_free()
@@ -598,7 +604,8 @@ func _verify_shared_log() -> void:
 	log_dir = DirAccess.open(DebugLog.EXPORT_DIR)
 	check((log_dir.get_files().size() if log_dir != null else 0) == files_before,
 		"Disabled export creates no file")
-	ProjectSettings.set_setting("debug/developer_tools/enabled", null)
+	# Clear (rather than null) so the setting falls back to its default value.
+	ProjectSettings.clear("debug/developer_tools/enabled")
 
 	new_console.queue_free()
 	new_panel.queue_free()

@@ -35,6 +35,10 @@ func _wait(action: CameraAction) -> void:
 	await _frames(2)
 
 func _run() -> void:
+	# Headless opens a 64x64 window, which stretches into a square viewport and
+	# changes both the fit zoom and the camera limits. Match the shipping 16:9 window.
+	root.size = Vector2i(1280, 720)
+	await _frames(2)
 	_game = load("res://src/debug/story/legacy_shop.tscn").instantiate()
 	root.add_child(_game)
 	current_scene = _game

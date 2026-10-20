@@ -108,7 +108,11 @@ func _run() -> void:
 	var text: RichTextLabel = panel.get_detail_text()
 	var hud: HandbookHUD = game.get_node("HudLayer/HandbookHUD")
 	var player := game.get_player() as PlayerController
-	check(game.open_chronicle() == ERR_UNAVAILABLE and list.item_count == 0 and not hud.visible, "Review remains hidden until the first entry unlocks")
+	# The handbook HUD is the task-log entry and stays visible from the start, so
+	# "locked" means the review page refuses to open and nothing advertises it.
+	check(game.open_chronicle() == ERR_UNAVAILABLE and list.item_count == 0
+		and not hud.tooltip_text.contains("见闻录"),
+		"Locked review refuses to open and is not advertised on the HUD")
 	ui.close_screen(&"chronicle")
 	check(player.movement_enabled, "Closing restores movement")
 	var director := game.get_story_director()

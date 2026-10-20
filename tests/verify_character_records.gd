@@ -112,7 +112,9 @@ func _run() -> void:
 	var text := panel.get_detail_text()
 	var hud: HandbookHUD = game.get_node("HudLayer/HandbookHUD")
 	var player := game.get_player() as PlayerController
-	check(not hud.visible and book.get_pages().is_tab_hidden(3) and game.open_characters() == ERR_UNAVAILABLE, "Locked character page and entry are hidden")
+	# As with the chronicle page, the handbook HUD is the task-log entry and stays
+	# visible; "locked" means the character tab is hidden and the page refuses to open.
+	check(book.get_pages().is_tab_hidden(3) and game.open_characters() == ERR_UNAVAILABLE, "Locked character page is hidden and cannot be opened")
 	check(ui.open_screen(ScreenIds.CHARACTERS) == ERR_UNAVAILABLE and not ui.has_modal(), "Locked alias cannot reserve modal")
 	var director := game.get_story_director()
 	director.load_events(STORY)
@@ -173,7 +175,7 @@ func _run() -> void:
 	game.get_dialogue_manager().end_dialogue(false)
 	snapshot = state.to_dict()
 	state.reset_state()
-	check(list.item_count == 0 and not hud.visible, "Reset refreshes character UI and access")
+	check(list.item_count == 0 and book.get_pages().is_tab_hidden(3), "Reset clears the character list and hides its tab")
 	state.restore_state(snapshot)
 	check(list.item_count == 2 and journal.get_unread_count() == 1, "Restore refreshes UI without story replay")
 

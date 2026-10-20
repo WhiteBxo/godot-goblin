@@ -78,7 +78,9 @@ func _run() -> void:
 	current_scene = game
 	await frames()
 	var ui := game.get_ui_manager()
-	var level := game.get_active_level() as SettlementMap
+	# The settlement host mounts the RPG Maker chapter map now, not the retired
+	# editable SettlementMap; both expose the same map/query surface.
+	var level := game.get_active_level() as RpgChapterMap
 	var player := game.get_player() as ShopPlayer
 	var panel: SettlementMapPanel = game.get_node("PopupLayer/SettlementMapPanel")
 	var button: Button = game.get_node("HudLayer/MapButton")
@@ -142,8 +144,10 @@ func _run() -> void:
 	state.set_flag("test.map.revealed")
 	check(canvas.target.is_empty(), "An objective cannot reveal an unknown district")
 	state.set_flag("ui.map.known.settlement.tavern")
-	check(canvas.target.get("position") == level.get_story_anchor(&"06_tavern_entrance").global_position, "Known objective maps to the real authored tavern entrance")
-	check(canvas.target.get("name") == "酒馆", "Target includes a short real location name")
+	# Objectives resolve through the shared world-map data (the same table the map
+	# canvas draws), not through scene anchors; compare against that source.
+	check(canvas.target.get("position") == RpgWorldMapData.get_entrance_position("settlement.tavern"), "Known objective maps to the authored tavern entrance")
+	check(canvas.target.get("name") == RpgWorldMapData.LOCATIONS["settlement.tavern"]["name"], "Target includes the authored location name")
 	state.set_flag("ui.map.known.settlement.elder")
 	for location in ["settlement.elder_document", "settlement.elder_blood_storage", "settlement.elder_hidden_bookcase", "settlement.ritual_hidden_cover", "test.missing"]:
 		journal.configure(catalog_for(location), state)
@@ -156,7 +160,7 @@ func _run() -> void:
 	state.set_flag("test.map.revealed", false)
 	check(canvas.target.is_empty(), "Hidden current objective does not leak task location")
 	state.set_flag("test.map.revealed")
-	check(canvas.target.get("position") == level.get_story_anchor(&"10_elder_entrance").global_position, "Elder objective reveals exterior entrance only")
+	check(canvas.target.get("position") == RpgWorldMapData.get_entrance_position("settlement.elder"), "Elder objective reveals exterior entrance only")
 	var data := level.get_map_data(["settlement.elder", "settlement.elder_document"])
 	check(data.regions.size() == 1 and data.regions[0].location_id == "settlement.elder", "Read-only map allowlist excludes private anchors even with arbitrary knowledge IDs")
 	data.regions.clear()

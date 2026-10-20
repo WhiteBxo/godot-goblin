@@ -512,7 +512,10 @@ func _test_speaker_portraits() -> void:
 	var expected := {
 		"player": "res://assets/characters/apron_man/player_talking_portrait.png",
 		"goblin": "res://assets/characters/fat_goblin/fat_goblin_smiling_portrait.png",
-		"common": "",
+		# The gambler keeps the original artwork (the cards in his hand match his role),
+		# so this line shows a portrait instead of clearing it. Empty-portrait coverage
+		# now comes from the narrator and the explicitly hidden line below.
+		"common": "res://assets/characters/dialogue/common_goblin_portrait.png",
 		"narrator": "",
 		"inner": "res://assets/characters/apron_man/player_neutral_portrait.png",
 		"override": "res://assets/characters/fat_goblin/fat_goblin_laughing_portrait.png",

@@ -64,6 +64,7 @@ func _run() -> void:
 	var state_before: Dictionary = root.get_node("GameState").call("to_dict")
 	_test_library()
 	await _test_flow()
+	await _test_adhoc_lines()
 	await _test_mouse_advance()
 	await _test_presentation_timing()
 	await _test_story_skip()
@@ -179,6 +180,41 @@ func _test_flow() -> void:
 	_check(not _ui.is_revealing(), "Typewriter can finish naturally without a skip")
 	await _tap(KEY_ENTER)
 	_check(not _manager.is_active() and not _ends.back()["cancelled"], "Single-line dialogue ends normally")
+
+
+## 摊主成交这类一次性对白：台词不进目录文件，播完即弃。
+func _test_adhoc_lines() -> void:
+	var manager := DialogueManager.new()
+	root.add_child(manager)
+	var ui: DialogueUI = load("res://src/UI/dialogue/dialogue_ui.tscn").instantiate()
+	root.add_child(ui)
+	manager.configure(ui)
+	var started: Array[String] = []
+	manager.dialogue_started.connect(func(id: String) -> void: started.append(id))
+	_check(manager.start_lines([]) == ERR_INVALID_DATA, "Ad-hoc exchange needs at least one line")
+	_check(manager.start_lines([{"speaker": "摊主", "text": " "}]) == ERR_INVALID_DATA, "Ad-hoc line needs real text")
+	_check(not manager.is_active() and started.is_empty(), "Rejected ad-hoc lines open nothing")
+	var lines: Array = [
+		{"speaker": "吆喝的摊主", "text": "拿好！"},
+		{"speaker": "主角", "text": "……谢了。"},
+	]
+	_check(manager.start_lines(lines, "market_vendor.farewell.test") == OK, "Ad-hoc exchange starts from memory")
+	_check(started == ["market_vendor.farewell.test"] and manager.get_current_line_id() == "line_0", "Ad-hoc session reports its own ID")
+	var speaker: Label = ui.get_node("Panel/Margin/Content/Speaker")
+	var text: RichTextLabel = ui.get_node("Panel/Margin/Content/Line/Text")
+	_check(speaker.text == "吆喝的摊主" and text.text == "拿好！", "First ad-hoc line reaches the window")
+	ui.reveal_all()
+	manager.advance()
+	_check(manager.get_current_line_id() == "line_1" and speaker.text == "主角" and text.text == "……谢了。", "Second ad-hoc line follows the first")
+	ui.reveal_all()
+	manager.advance()
+	_check(not manager.is_active() and not ui.visible, "Ad-hoc exchange closes itself after the last line")
+	_check(manager.load_dialogues("res://src/resources/dialogue/example_dialogues.json") == OK
+		and manager.start_dialogue("market_vendor.farewell.test") == ERR_DOES_NOT_EXIST,
+		"Ad-hoc lines never enter the catalogue")
+	ui.queue_free()
+	manager.queue_free()
+	await _frames()
 
 
 func _test_mouse_advance() -> void:

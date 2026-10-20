@@ -18,7 +18,7 @@ static func describe(drink: Dictionary, show_taste := true) -> String:
 		legacy.append("历史记录 · 不可出售")
 		legacy.append("配方：" + "、".join(PackedStringArray(drink.get("ingredients", []))))
 		return "\n".join(legacy)
-	var lines := PackedStringArray([str(drink.name), "预设爆品" if not str(drink.signature_id).is_empty() else "普通饮品"])
+	var lines := PackedStringArray([str(drink.name), "爆品" if not str(drink.signature_id).is_empty() else "普通饮品"])
 	var ingredients := PackedStringArray()
 	for id: String in drink.counts:
 		ingredients.append("%s ×%d" % [drink.ingredient_names[id], drink.counts[id]])

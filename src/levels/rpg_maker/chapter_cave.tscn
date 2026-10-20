@@ -547,7 +547,7 @@ description = "路边的材料袋里装着窟窟糖芋。"
 feedback_rect = Rect2(-24, -40, 48, 48)
 show_world_marker = true
 item_id = "sugar_yam"
-success_description = "得到了从田里挖出的宠宠糖芋。"
+success_description = "得到了从田里挖出的窟窟糖芋。"
 amount = 2
 refresh_mode = "daily"
 required_flag = "world.phase.night"
@@ -569,7 +569,7 @@ description = "路边生长着一簇萤火伞。"
 feedback_rect = Rect2(-24, -40, 48, 48)
 show_world_marker = true
 item_id = "firefly_cap"
-success_description = "得到了从树下采摘的荧火伞。"
+success_description = "得到了从树下采摘的萤火伞。"
 amount = 2
 refresh_mode = "daily"
 required_flag = "world.phase.night"
@@ -806,7 +806,7 @@ display_name = "野外采集 · 炽舌椒"
 item_id = "scorch_tongue_pepper"
 amount = 1
 refresh_mode = "daily"
-success_description = "得到了从石缝中采集的炽石枯辛辣。"
+success_description = "得到了从石缝中采集的炽舌椒。"
 show_world_marker = true
 
 [node name="HarvestVisual" type="Sprite2D" parent="GatherPoints/NightGather3"]
@@ -821,7 +821,7 @@ display_name = "野外采集 · 蜜珀晶"
 item_id = "honey_amber_crystal"
 amount = 1
 refresh_mode = "daily"
-success_description = "得到了从树上摘下的蜜珀晶蛙。"
+success_description = "得到了从树上摘下的蜜珀晶。"
 show_world_marker = true
 
 [node name="HarvestVisual" type="Sprite2D" parent="GatherPoints/NightGather4"]

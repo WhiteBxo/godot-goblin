@@ -72,6 +72,21 @@ func _visit(day: int) -> void:
 	check(bought.get("ok", false), "Buying the chosen good settles: " + str(bought.get("message", "")))
 	check(state.get_transactions().get_balance() == money - int(quote.unit_price), "The stall charges the real quote")
 	check(state.get_warehouse_inventory().get_stock(str(quote.item_id)) == stock + 1, "The good lands in the shared warehouse")
+	# 真实路径：在摊位上按下购买，摊子收起，摊主用其他 NPC 同款对话窗口把那句话说完。
+	check(game._route_story_interaction(vendor_id) == OK, "The stall opens again after a sale")
+	await frames(4)
+	check(popup.select_product(str(first.id)), "Pick a good from the reopened stall")
+	popup._buy.pressed.emit()
+	await frames(8)
+	check(not game.get_ui_manager().is_open(ScreenIds.MARKET_VENDOR), "A settled sale closes the stall before speaking")
+	var dialogue: DialogueManager = game.get_dialogue_manager()
+	check(dialogue.is_active(), "The keeper keeps talking after the sale")
+	if dialogue.is_active():
+		var line: Dictionary = dialogue._dialogue["lines"][dialogue.get_current_line_id()]
+		check(str(line.get("speaker", "")) == str(view.get("title", "")), "The parting line belongs to that stall keeper")
+		check(not str(line.get("text", "")).is_empty(), "The parting line is authored in the stall data")
+		dialogue.end_dialogue(true)
+	await frames(2)
 	var mushroom: Dictionary = {}
 	for product: Dictionary in view.products:
 		if str(product.id) == "market_insomnia_mushroom":

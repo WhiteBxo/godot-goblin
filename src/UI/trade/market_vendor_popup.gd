@@ -5,6 +5,10 @@ extends UIScreen
 
 const BROWSING_HINT := "看看摊上的货，点一件听听摊主怎么说。"
 
+## A settled sale hands the screen back to the world: the keeper says his piece
+## through the normal dialogue window instead of a line inside the stall.
+signal farewell_requested(lines: Array)
+
 @onready var _shell: ModalShell = $ModalShell
 var _manager: UIManager
 var _screen_id: StringName = ScreenIds.MARKET_VENDOR
@@ -143,6 +147,12 @@ func _purchase() -> void:
 	_quantity.apply()
 	var result: Dictionary = _buy_call.call(str(product.get("id", "")), int(_quantity.value))
 	var succeeded := bool(result.get("ok", false))
+	var farewell: Array = result.get("farewell", [])
+	if succeeded and not farewell.is_empty():
+		# The stall closes first so the dialogue window is not stacked on it.
+		_close()
+		farewell_requested.emit(farewell)
+		return
 	_feedback.text = str(result.get("message", ""))
 	_feedback.theme_type_variation = &"Success" if succeeded else &"Warning"
 	if succeeded:

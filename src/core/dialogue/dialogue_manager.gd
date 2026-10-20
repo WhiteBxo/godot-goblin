@@ -120,6 +120,43 @@ func start_dialogue(id: String, cancel_protected: bool = false) -> Error:
 	return OK
 
 
+## Ad-hoc exchange: a short scripted reply that belongs to no catalogue file,
+## such as the line a stall keeper drops right after a sale. The lines live for
+## this one session and are discarded when it ends.
+func start_lines(lines: Array, dialogue_id: String = "adhoc") -> Error:
+	last_error = ""
+	if is_active() or _selecting or (_can_start.is_valid() and not _can_start.call()):
+		return ERR_BUSY
+	if not is_instance_valid(_ui) or not _ui.is_inside_tree():
+		return ERR_UNCONFIGURED
+	var mapped := {}
+	for index in range(lines.size()):
+		if not lines[index] is Dictionary:
+			last_error = "Ad-hoc line %d is not a line object" % index
+			return ERR_INVALID_DATA
+		var entry: Dictionary = lines[index]
+		var speaker := str(entry.get("speaker", "")).strip_edges()
+		var text := str(entry.get("text", "")).strip_edges()
+		if speaker.is_empty() or text.is_empty():
+			last_error = "Ad-hoc line %d needs a speaker and text" % index
+			return ERR_INVALID_DATA
+		var key := "line_%d" % index
+		var line := {"speaker": speaker, "text": text}
+		if index + 1 < lines.size():
+			line["next"] = "line_%d" % (index + 1)
+		mapped[key] = line
+	if mapped.is_empty():
+		last_error = "Ad-hoc dialogue needs at least one line"
+		return ERR_INVALID_DATA
+	_dialogue = {"start": "line_0", "lines": mapped}
+	_dialogue_id = dialogue_id
+	_line_id = "line_0"
+	_cancel_protected = false
+	_ui.set_cancel_protected(false)
+	dialogue_started.emit(dialogue_id)
+	return _present_line()
+
+
 func is_active() -> bool:
 	return not _dialogue_id.is_empty()
 

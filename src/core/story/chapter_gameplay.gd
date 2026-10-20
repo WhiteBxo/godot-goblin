@@ -66,6 +66,7 @@ func configure(game: MainGame) -> Error:
 	_ending.finished.connect(_finish_two_days)
 	_vendor_popup = preload("res://src/UI/trade/market_vendor_popup.tscn").instantiate()
 	game.get_ui_manager().register_screen(ScreenIds.MARKET_VENDOR, _vendor_popup, &"popup", true)
+	_vendor_popup.farewell_requested.connect(_play_vendor_farewell)
 	_state.state_changed.connect(_schedule_refresh)
 	_game.get_tea_production().changed.connect(_schedule_refresh)
 	_schedule_refresh()
@@ -464,6 +465,8 @@ func get_vendor_view(actor_id: StringName) -> Dictionary:
 	}
 
 ## Settled from the stall's own button; the result is the sentence read there.
+## A sale also carries what the keeper says once the coins change hands, so the
+## stall can close and let the normal dialogue window take over.
 func buy_from_vendor(product: String, quantity: int) -> Dictionary:
 	var count: int = maxi(1, quantity)
 	var quote: Dictionary = _state.get_transactions().get_product_quote(product)
@@ -476,7 +479,41 @@ func buy_from_vendor(product: String, quantity: int) -> Dictionary:
 		return {"ok": false, "message": "没能买成，金币还在你手里。"}
 	var definition = _state.get_warehouse_inventory().get_definition(quote.item_id)
 	return {"ok": true, "message": "买下 %s ×%d 份（%dG）。" % [
-		definition.display_name if definition != null else String(quote.item_id), count, cost]}
+		definition.display_name if definition != null else String(quote.item_id), count, cost],
+		"farewell": _vendor_farewell(product)}
+
+## The pitch sells the good; this is the same keeper a beat later, so the two
+## lines are authored side by side in the stall's own entry.
+func _vendor_farewell(product: String) -> Array:
+	for vendor: Dictionary in _data.get("market_vendors", []):
+		if not _vendor_actor.is_empty() and String(vendor.get("actor", "")) != String(_vendor_actor):
+			continue
+		for entry: Dictionary in vendor.get("products", []):
+			if String(entry.get("id", "")) != product:
+				continue
+			var deal := String(entry.get("deal", "")).strip_edges()
+			if deal.is_empty():
+				return []
+			var lines: Array = [{"speaker": String(vendor.get("title", "摊主")), "text": deal}]
+			var reply := String(vendor.get("reply", "")).strip_edges()
+			if not reply.is_empty():
+				lines.append({"speaker": "主角", "text": reply})
+			return lines
+	return []
+
+## Sale done: the stall is already closed, so the keeper speaks through the same
+## dialogue window every other NPC uses. One frame of distance keeps two modals
+## from overlapping.
+func _play_vendor_farewell(lines: Array) -> void:
+	if lines.is_empty() or not is_inside_tree():
+		return
+	await get_tree().process_frame
+	var manager := _game.get_dialogue_manager()
+	if not is_instance_valid(manager):
+		return
+	var error := manager.start_lines(lines, "market_vendor.farewell.%d" % Time.get_ticks_usec())
+	if error != OK:
+		last_error = "摊主的成交台词没有播出来：%s" % error_string(error)
 
 func _buy_market_product(product: String, quantity := 1) -> Error:
 	if product == "market_insomnia_mushroom" and _state.current_day >= 2:

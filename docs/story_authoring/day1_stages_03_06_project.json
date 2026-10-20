@@ -72,10 +72,7 @@
 			"once": true,
 			"conditions": {
 				"day": 1.0,
-				"stage": "day1.s04.wait_map",
-				"flags": {
-					"day1.s04.map_closed": true
-				}
+				"stage": "day1.s04.wait_map"
 			}
 		},
 		"day1.s05.drunken_guard": {
@@ -746,21 +743,6 @@
 					}
 				}
 			]
-		},
-		{
-			"id": "day1_bridge_map",
-			"mode": "玩家操作",
-			"phase": {
-				"id": "day1.bridge.map",
-				"after_event": "day1.s04.after_taste",
-				"stage": "day1.s04.wait_map",
-				"completion": {
-					"flag": "day1.s04.map_closed",
-					"allow_existing": true
-				},
-				"completion_flag": "day1.bridge.map.completed",
-				"next_event": "day1.s04.commission_choice"
-			}
 		},
 		{
 			"id": "s04_commission_choice",
@@ -1746,8 +1728,8 @@
 			"start": "choice",
 			"lines": {
 				"choice": {
-					"speaker": "",
-					"text": "",
+					"speaker": "主角·内心",
+					"text": "……要接下这趟活吗？",
 					"choices": [
 						{
 							"id": "accept",

@@ -1529,13 +1529,6 @@ func _create_map_ui() -> void:
 	$PopupLayer.add_child(_map_panel)
 	_map_panel.configure(_map_provider, _shop_player, _task_journal, _get_known_map_locations)
 	_map_panel.close_requested.connect(func() -> void: _ui_manager.close_screen(ScreenIds.MAP))
-	_ui_manager.screen_closed.connect(func(id: StringName) -> void:
-		if id != ScreenIds.MAP:
-			return
-		var state := get_node("/root/GameState")
-		if state.story_stage == "day1.s04.wait_map" and state.get_flag("day1.s04.map_opened"):
-			state.set_flag("day1.s04.map_closed")
-	)
 	_map_button = preload("res://src/UI/map/map_button.tscn").instantiate()
 	$HudLayer.add_child(_map_button)
 	if MobileSupport.is_touch_ui():
@@ -1582,10 +1575,8 @@ func open_map() -> Error:
 		or (is_instance_valid(_stealth_service) and _stealth_service.is_blocking())
 		or not _shop_player.movement_enabled):
 		return ERR_BUSY
-	var error := _ui_manager.open_screen(ScreenIds.MAP)
-	if error == OK and get_node("/root/GameState").story_stage == "day1.s04.wait_map":
-		get_node("/root/GameState").set_flag("day1.s04.map_opened")
-	return error
+	# Reading the map is optional: the story never waits on this screen.
+	return _ui_manager.open_screen(ScreenIds.MAP)
 
 func _checkpoint_host(path: String) -> String:
 	var hosts := {"res://src/core/settlement.tscn": "settlement", "res://src/core/tavern.tscn": "tavern", "res://src/core/casino.tscn": "casino", "res://src/core/elder_house.tscn": "elder_house"}

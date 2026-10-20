@@ -399,8 +399,8 @@
       "start": "choice",
       "lines": {
         "choice": {
-          "speaker": "",
-          "text": "",
+          "speaker": "主角·内心",
+          "text": "……要接下这趟活吗？",
           "choices": [
             {
               "id": "accept",

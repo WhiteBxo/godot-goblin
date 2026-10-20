@@ -111,21 +111,6 @@
       ]
     },
     {
-      "id": "day1_bridge_map",
-      "mode": "玩家操作",
-      "phase": {
-        "id": "day1.bridge.map",
-        "after_event": "day1.s04.after_taste",
-        "stage": "day1.s04.wait_map",
-        "completion": {
-          "flag": "day1.s04.map_closed",
-          "allow_existing": true
-        },
-        "completion_flag": "day1.bridge.map.completed",
-        "next_event": "day1.s04.commission_choice"
-      }
-    },
-    {
       "id": "s04_commission_choice",
       "mode": "自动演出",
       "event": "day1.s04.commission_choice",
@@ -356,6 +341,6 @@
     }
   ],
   "authoring_project": "res://docs/story_authoring/day1_stages_03_06_project.json",
-  "authoring_sha256": "93f95bcfdea1c83b538084c7fa8f1e449fd45ee23ce6c89cacc96aa77d8991d2",
+  "authoring_sha256": "b306a7bae2c0d2f4488b09910b676b8db7a81865c53e0eb2bbb0335323ce2572",
   "verification": "res://tests/verify_two_day_flow.gd"
 }

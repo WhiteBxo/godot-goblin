@@ -72,8 +72,11 @@ func wait_event(id: String) -> bool:
 		print("FLOW_ABORT ", event_errors, " director=", game.get_story_director().last_error, " chapter=", game.get_chapter_controller().last_error, " bridge=", game.get_gameplay_bridge().get_runtime_status())
 		quit(1)
 		return false
-	var camera := game.get_camera_director().get_camera()
-	check(camera.mode == BoundedFollowCamera.Mode.FOLLOW and is_equal_approx(camera.get_directed_zoom(), camera.preferred_zoom), "Event restores gameplay camera follow and zoom: " + id)
+	# Back-to-back events (handover -> commission choice) hand over the camera
+	# before this frame, so only judge follow state when the queue is quiet.
+	if not game.get_story_director().is_busy():
+		var camera := game.get_camera_director().get_camera()
+		check(camera.mode == BoundedFollowCamera.Mode.FOLLOW and is_equal_approx(camera.get_directed_zoom(), camera.preferred_zoom), "Event restores gameplay camera follow and zoom: " + id)
 	await frames()
 	await picture(id)
 	return true
@@ -249,9 +252,12 @@ func _run() -> void:
 	await capture("day1_06_trial_taste")
 	await make_order("day1_s04_taste", "fat_goblin")
 	await wait_event("day1.s04.after_taste")
-	check(game.open_map() == OK, "Player opens map in shop")
-	game.get_ui_manager().close_screen(ScreenIds.MAP)
+	# The handover leads straight into the choice: reading the map is optional now.
 	await wait_event("day1.s04.commission_choice")
+	check(state.get_flag("day1.s04.map_available"), "Handover still unlocks the real map")
+	check(not state.get_flag("day1.s04.map_opened") and not state.get_flag("day1.s04.map_closed"), "Commission choice never waits on the map screen")
+	check(game.open_map() == OK, "Player can still open the map in shop")
+	game.get_ui_manager().close_screen(ScreenIds.MAP)
 	await capture("day1_07_before_stealth")
 	check(state.get_transactions().get_balance() == 71, "Seven paid cups and once-only 50G funding")
 	var gameplay: ChapterGameplay = game.get("_chapter_gameplay")

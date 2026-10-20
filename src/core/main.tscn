@@ -48,21 +48,21 @@ display_name = "胆小的哥布林"
 
 [node name="GoblinA" parent="World/EntityRoot" unique_id=602519118 instance=ExtResource("npc_common")]
 visible = false
-position = Vector2(1403.75, 887.5)
+position = Vector2(1403.75, 890)
 collision_layer = 0
 actor_id = &"goblin_a"
 display_name = "赌徒哥布林"
 
 [node name="GoblinB" parent="World/EntityRoot" unique_id=483573736 instance=ExtResource("npc_common")]
 visible = false
-position = Vector2(1403.75, 887.5)
+position = Vector2(1459.75, 890)
 collision_layer = 0
 actor_id = &"goblin_b"
 display_name = "说教的哥布林"
 
 [node name="GoblinC" parent="World/EntityRoot" unique_id=1071084715 instance=ExtResource("npc_common")]
 visible = false
-position = Vector2(1403.75, 887.5)
+position = Vector2(1347.75, 890)
 collision_layer = 0
 actor_id = &"goblin_c"
 display_name = "爱收集的哥布林"

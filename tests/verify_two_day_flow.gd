@@ -206,10 +206,12 @@ func _run() -> void:
 	for id: String in ["a", "c", "d", "e"]:
 		if id != "a":
 			await wait_event("day1.customer_" + id)
+		# 第二次来客是赌徒、说教的、爱收集的一起进门，之后仍是逐位接待。
+		var expected_customers := 3 if id == "a" else 1
 		var visible_customers := 0
 		for actor_id: String in ["goblin_customer", "goblin_a", "goblin_b", "goblin_c", "goblin_d", "goblin_e"]:
 			visible_customers += 1 if game.get_actor_director().get_actor(StringName(actor_id)).visible else 0
-		check(visible_customers == 1, "Only the current customer occupies the shop")
+		check(visible_customers == expected_customers, "Only the intended customers occupy the shop")
 		await capture("day1_03_customer_" + id)
 		await make_order("day1_group_" + id, "goblin_" + id)
 	await wait_event("day1.ending")

@@ -35,6 +35,15 @@ signal line_changed(line_id: String)
 	"围观的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
 	"凑热闹的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
 	"哥布林顾客": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	# 第一天逐位接待的五位顾客与跑腿哥布林暂无独立立绘，共用普通哥布林那张；
+	# 素材只提供了一张普通哥布林立绘，等美术给独立稿再逐个替换。
+	"哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	"赌徒哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	"说教的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	"爱收集的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	"领工钱的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	"倒霉的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	"跑腿的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
 }
 
 var last_error: String = ""

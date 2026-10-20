@@ -39,7 +39,9 @@
       "event": "day1.group_arrival",
       "stage": "day1.wait_group",
       "actors": {
-        "goblin_a": "day1_counter"
+        "goblin_a": "day1_group_b",
+        "goblin_b": "day1_group_c",
+        "goblin_c": "day1_group_a"
       }
     },
     {

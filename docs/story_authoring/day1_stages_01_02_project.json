@@ -1,7 +1,7 @@
 {
 	"version": 1.0,
 	"format": "goblin_story_project",
-	"next_step_id": 24030.0,
+	"next_step_id": 24055.0,
 	"manifest": {
 		"version": 1.0,
 		"source": "res://docs/design/day_01_stages_01_02_draft.md",
@@ -514,7 +514,7 @@
 			"event": "day1.group_arrival",
 			"steps": [
 				{
-					"id": "step_21001",
+					"id": "step_24031",
 					"data": {
 						"command": "play_sfx",
 						"id": "shop.door_bell",
@@ -522,48 +522,103 @@
 					}
 				},
 				{
-					"id": "step_21002",
+					"id": "step_24032",
 					"data": {
 						"command": "actor_show",
-						"actor": "goblin_a"
+						"actor": "goblin_a",
+						"wait": false
 					}
 				},
 				{
-					"id": "step_21003",
+					"id": "step_24033",
+					"data": {
+						"command": "actor_show",
+						"actor": "goblin_b",
+						"wait": false
+					}
+				},
+				{
+					"id": "step_24034",
+					"data": {
+						"command": "actor_show",
+						"actor": "goblin_c",
+						"wait": false
+					}
+				},
+				{
+					"id": "step_24035",
+					"data": {
+						"command": "wait",
+						"seconds": 0.25
+					}
+				},
+				{
+					"id": "step_24036",
+					"data": {
+						"command": "actor_move",
+						"actor": "goblin_b",
+						"target": "day1_group_c",
+						"speed": 300.0,
+						"wait": false
+					}
+				},
+				{
+					"id": "step_24037",
 					"data": {
 						"command": "actor_move",
 						"actor": "goblin_a",
-						"target": "day1_aisle",
-						"speed": 240.0
+						"target": "day1_group_b",
+						"speed": 300.0,
+						"wait": false
 					}
 				},
 				{
-					"id": "step_21004",
+					"id": "step_24038",
 					"data": {
 						"command": "actor_move",
-						"actor": "goblin_a",
-						"target": "day1_counter",
-						"speed": 240.0
+						"actor": "goblin_c",
+						"target": "day1_group_a",
+						"speed": 300.0,
+						"wait": true
 					}
 				},
 				{
-					"id": "step_21005",
+					"id": "step_24039",
 					"data": {
 						"command": "actor_face",
 						"actor": "goblin_a",
-						"direction": "up"
+						"direction": "up",
+						"wait": false
 					}
 				},
 				{
-					"id": "step_21006",
+					"id": "step_24040",
+					"data": {
+						"command": "actor_face",
+						"actor": "goblin_b",
+						"direction": "up",
+						"wait": false
+					}
+				},
+				{
+					"id": "step_24041",
+					"data": {
+						"command": "actor_face",
+						"actor": "goblin_c",
+						"direction": "up",
+						"wait": true
+					}
+				},
+				{
+					"id": "step_24042",
 					"data": {
 						"command": "camera_focus",
-						"target": "day1_counter",
+						"target": "day1_group_b",
 						"duration": 0.6
 					}
 				},
 				{
-					"id": "step_21007",
+					"id": "step_24043",
 					"data": {
 						"command": "dialogue",
 						"id": "day1.goblin_group_customers"
@@ -674,7 +729,7 @@
 			"event": "day1.customer_c",
 			"steps": [
 				{
-					"id": "step_21012",
+					"id": "step_24044",
 					"data": {
 						"command": "actor_move",
 						"actor": "goblin_a",
@@ -683,7 +738,7 @@
 					}
 				},
 				{
-					"id": "step_21013",
+					"id": "step_24045",
 					"data": {
 						"command": "actor_move",
 						"actor": "goblin_a",
@@ -692,47 +747,50 @@
 					}
 				},
 				{
-					"id": "step_21014",
+					"id": "step_24046",
 					"data": {
 						"command": "actor_hide",
-						"actor": "goblin_a"
-					}
-				},
-				{
-					"id": "step_21015",
-					"data": {
-						"command": "play_sfx",
-						"id": "shop.door_bell",
+						"actor": "goblin_a",
 						"wait": false
 					}
 				},
 				{
-					"id": "step_21016",
-					"data": {
-						"command": "actor_show",
-						"actor": "goblin_c"
-					}
-				},
-				{
-					"id": "step_21017",
+					"id": "step_24047",
 					"data": {
 						"command": "actor_move",
-						"actor": "goblin_c",
+						"actor": "goblin_b",
 						"target": "day1_aisle",
 						"speed": 240.0
 					}
 				},
 				{
-					"id": "step_21018",
+					"id": "step_24048",
 					"data": {
 						"command": "actor_move",
-						"actor": "goblin_c",
-						"target": "day1_counter",
+						"actor": "goblin_b",
+						"target": "day1_door",
 						"speed": 240.0
 					}
 				},
 				{
-					"id": "step_21019",
+					"id": "step_24049",
+					"data": {
+						"command": "actor_hide",
+						"actor": "goblin_b",
+						"wait": false
+					}
+				},
+				{
+					"id": "step_24050",
+					"data": {
+						"command": "actor_move",
+						"actor": "goblin_c",
+						"target": "day1_counter",
+						"speed": 120.0
+					}
+				},
+				{
+					"id": "step_24051",
 					"data": {
 						"command": "actor_face",
 						"actor": "goblin_c",
@@ -740,28 +798,28 @@
 					}
 				},
 				{
-					"id": "step_21020",
+					"id": "step_24052",
 					"data": {
 						"command": "dialogue",
 						"id": "day1.customer_c"
 					}
 				},
 				{
-					"id": "step_21021",
+					"id": "step_24053",
 					"data": {
 						"command": "set_flag",
 						"key": "day1.group_c_open"
 					}
 				},
 				{
-					"id": "step_21022",
+					"id": "step_24054",
 					"data": {
 						"command": "set_stage",
 						"value": "day1.wait_group_c"
 					}
 				},
 				{
-					"id": "step_21023",
+					"id": "step_24055",
 					"data": {
 						"command": "camera_reset"
 					}
@@ -1192,7 +1250,7 @@
 					"next": "line_5"
 				},
 				"line_5": {
-					"speaker": "胆小的哥布林",
+					"speaker": "赌徒哥布林",
 					"text": "老板，这个草莓奶绿是什么？给我来一杯！"
 				}
 			}

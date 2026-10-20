@@ -529,10 +529,9 @@ func close_business() -> Error:
 		return ERR_UNCONFIGURED
 	if _taste_pending():
 		return ERR_UNAVAILABLE
-	# Unaccepted optional orders never prevent closing; accepted ones must settle.
-	for id: String in Day2Procurement.RUNNERS:
-		if _state.get_flag("task." + id + ".accepted") and not _state.get_flag("delivery." + id + ".completed"):
-			return ERR_UNAVAILABLE
+	# Ordinary errands are judged by the scheduler alone: it already treats a
+	# cancelled order as settled. A second accepted/completed check here ignored
+	# that result and left a cancelled errand blocking the counter forever.
 	return _scheduler.request_close()
 
 ## Why the counter cannot close, in the player's words. An optional job the
@@ -543,13 +542,10 @@ func get_close_block_reason() -> String:
 	for order_id: String in OPTIONAL_ORDERS:
 		if _optional_pending(order_id):
 			return "还有客人点的特调没有交付：做好再去关店，或在订单板放弃这一单。"
-	for id: String in Day2Procurement.RUNNERS:
-		if _state.get_flag("task." + id + ".accepted") and not _state.get_flag("delivery." + id + ".completed"):
-			return "还有已接取的跑腿订单没有交付。"
 	var progress: Dictionary = _scheduler.get_progress()
 	if not progress.get("close_ready", false):
 		return "这一天的关店条件还没有配置齐全。"
-	return "还有些客人没有交代完，先把他们招待好。"
+	return "还有些客人没有交代完，先把他们招待好；做不出来的单可以在订单板放弃。"
 
 ## Accepted optional order given up from the order board. Releasing the waiting
 ## customer keeps the close path open instead of stranding the day.

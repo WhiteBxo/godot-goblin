@@ -105,6 +105,10 @@ func _run() -> void:
 	check(scheduler.get_group("ordinary_b").status in ["leaving", "departed"], "Customer can leave after all their orders are resolved")
 	ui.close()
 	check(await wait_group(scheduler, "ordinary_b", "departed"), "Cancelled customer finishes the actual departure route")
+	# A cancelled errand must read as settled for the counter too: the remaining
+	# blocker is the guests still waiting, not the order the player gave up.
+	var reason: String = _game.get_chapter_gameplay().get_close_block_reason()
+	check(reason.contains("招待好") and not reason.contains("没有交付"), "Cancelled errand no longer blocks the counter: " + reason)
 	var saved: Dictionary = _state.to_dict()
 	var invalid := saved.duplicate(true)
 	invalid.task_results = []

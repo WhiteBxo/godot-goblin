@@ -369,7 +369,7 @@ func _process(_delta: float) -> void:
 			if _is_current(generation):
 				_track(card, "title_card", step.get("wait", true), generation)
 			return
-		"unlock_map", "tavern_purchase", "casino_settle", "business", "chapter_action":
+		"unlock_map", "tavern_purchase", "casino_settle", "business", "chapter_action", "grant_money":
 			_dispatch_business(step, generation)
 			return
 		"play_sfx", "play_bgm", "stop_bgm", "fade_bgm":
@@ -418,6 +418,8 @@ func _dispatch_business(step: Dictionary, generation: int) -> void:
 			result = _business.purchase(step.product_id, step.quantity, step.receipt)
 		"casino_settle":
 			result = _business.casino(String(step.get("step", "")), String(step.get("reason", "")))
+		"grant_money":
+			result = _business.grant_money(int(step.amount), step.receipt)
 		_:
 			result = _business.business(step.action, String(step.get("stage_id", "")),
 				String(step.get("group_id", "")))

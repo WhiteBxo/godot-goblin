@@ -345,7 +345,7 @@ func _run() -> void:
 	check(game.get_task_delivery().try_submit("day1_s06_blood_drink", "fat_goblin").ok, "Blood drink pays its task")
 	await wait_event("day1.s06.reaction")
 	check(state.current_day == 2 and state.story_stage == "day2.s01", "Automatic Day2 morning")
-	check(state.get_transactions().get_balance() == 121, "Blood task pays its 100G reward once")
+	check(state.get_transactions().get_balance() == 121, "Reward is prepaid at the commission, delivery never pays twice")
 	check(state.get_warehouse_inventory().get_uses("day1_griffin_blood") == 2, "Blood remains two uses")
 	await wait_event("day2.s01.morning")
 	check(state.get_transactions().get_balance() == 156, "The 35G errand bag lands in the real purse")

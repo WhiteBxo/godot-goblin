@@ -1,6 +1,6 @@
 # 剧情编排指令速查（v1）
 
-以 `src/core/story/story_library.gd`、`story_director.gd` 及 `src/core/dialogue/dialogue_library.gd` 的实际校验和 dispatch 为准。共 29 条 Story 指令；Director 的公开 GDScript API 不一定能在 JSON 中使用，例如 `camera_follow` 不是 Story command。
+以 `src/core/story/story_library.gd`、`story_director.gd` 及 `src/core/dialogue/dialogue_library.gd` 的实际校验和 dispatch 为准。共 30 条 Story 指令；Director 的公开 GDScript API 不一定能在 JSON 中使用，例如 `camera_follow` 不是 Story command。
 
 ## Story JSON
 
@@ -19,6 +19,7 @@
 | `character_unlock` | `character_id` 命名空间 ID；`name` 非空姓名；重复解锁保留已有信息与已读状态 | 同步，不接受 wait |
 | `character_append` | 已解锁的 `character_id`；人物记录模块全局唯一命名空间 `record_id`；非空 `content`；同人物重试幂等，跨人物冲突失败 | 同步，不接受 wait |
 | `pay_items` | `items` 物品 ID→正整数；`receipt` 命名空间 flag；`set_flags = {}` 命名空间 key→bool，不得包含 receipt。经 `GameState.commit_item_payment` 原子扣物品并写 flags 与 receipt；receipt 已存在视为已付、不再扣；不足或会话忙时事件失败且不扣任何东西 | 同步，不接受 wait |
+| `grant_money` | `amount` 正整数（≤ 2147483647）；`receipt` 命名空间 flag。经 `WalletTransactions.add_money` 入账，receipt 同时是钱包请求号与持久事实；replay 视为已结算、不重复入账；钱包忙或余额溢出时事件失败 | 同步，不接受 wait |
 | `set_phase` | `phase` 为 `day` / `night`；经 DayPhase 切换，已在目标阶段时成功且不变；夜→昼 `current_day` 加一 | 同步，不接受 wait |
 | `unlock_map` | `locations = []` 命名空间地点 ID 数组；逐项写 `ui.map.known.<id>` 后调用宿主 `unlock_map()`，装配失败时事件失败且不下发解锁提示。地图服务未接入时失败 | 同步，不接受 wait |
 | `tavern_purchase` | `product_id` 非空；`quantity` 正整数；`receipt` 命名空间 flag。经 `TavernPurchase.purchase` 走同一钱包事务；receipt 同时作为钱包请求号与持久事实，已结算视为成功且不重复扣款；商品未配置、余额/库存不足时事件失败 | 同步，不接受 wait |

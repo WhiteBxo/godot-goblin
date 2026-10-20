@@ -373,8 +373,21 @@
       },
       "steps": [
         {
+          "command": "actor_show",
+          "actor": "fat_goblin"
+        },
+        {
           "command": "dialogue",
           "id": "day1.s06.pondering"
+        },
+        {
+          "command": "grant_money",
+          "amount": 100,
+          "receipt": "day1.s06.reward_paid"
+        },
+        {
+          "command": "dialogue",
+          "id": "day1.s06.reward_arrived"
         },
         {
           "command": "set_stage",
@@ -395,10 +408,6 @@
         {
           "command": "actor_show",
           "actor": "fat_goblin"
-        },
-        {
-          "command": "dialogue",
-          "id": "day1.s06.customer"
         },
         {
           "command": "set_stage",

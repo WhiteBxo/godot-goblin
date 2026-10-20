@@ -198,6 +198,13 @@ func _step(step: Variant, context: String) -> bool:
 			for key: Variant in facts:
 				if not is_namespaced(key) or not facts[key] is bool or key == step.receipt:
 					return _invalid(context, "set_flags requires namespaced keys, bool values and no receipt")
+		"grant_money":
+			fields.append_array(["amount", "receipt"])
+			var amount: Variant = step.get("amount")
+			if not _number(amount) or amount < 1 or floor(amount) != amount or amount > 2147483647:
+				return _invalid(context, "grant_money requires a positive bounded integer amount")
+			if not is_namespaced(step.get("receipt")):
+				return _invalid(context, "grant_money requires a namespaced receipt")
 		"unlock_map":
 			fields.append("locations")
 			var locations: Variant = step.get("locations", [])

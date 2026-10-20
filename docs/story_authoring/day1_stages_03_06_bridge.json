@@ -1,7 +1,7 @@
 {
   "version": 1,
   "source": "res://docs/design/day_01_stages_03_06_draft.md",
-  "source_sha256": "2f5365b226e1cce76e166058b0dcb3eb4855e79d20297b0045432e1f309c9b96",
+  "source_sha256": "53176857ee7a7768955223d6c3d848854abbc23a4849e38afbe202c2fd17ff3e",
   "scene": "res://src/core/main.tscn",
   "story": "res://src/resources/story/day1_stages_03_06.json",
   "dialogue": "res://src/resources/dialogue/day1_stages_03_06.json",
@@ -156,9 +156,10 @@
       "mode": "自动演出",
       "event": "day1.s06.pondering",
       "start": 0,
-      "count": 2,
+      "count": 5,
       "dialogues": [
-        "day1.s06.pondering"
+        "day1.s06.pondering",
+        "day1.s06.reward_arrived"
       ]
     },
     {
@@ -181,10 +182,8 @@
       "mode": "自动演出",
       "event": "day1.s06.customer",
       "start": 0,
-      "count": 3,
-      "dialogues": [
-        "day1.s06.customer"
-      ]
+      "count": 2,
+      "dialogues": []
     },
     {
       "id": "day1_bridge_blood_drink",
@@ -345,6 +344,6 @@
     }
   ],
   "authoring_project": "res://docs/story_authoring/day1_stages_03_06_project.json",
-  "authoring_sha256": "60181e7989f96693240ff6c00be3e6247cba59e02c8a2a2c2910f695723de1d3",
+  "authoring_sha256": "b33eb11208606e8659ae41de3e603ce35ccff8782136781c862ad856d7666032",
   "verification": "res://tests/verify_two_day_flow.gd"
 }

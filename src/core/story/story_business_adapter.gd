@@ -38,6 +38,22 @@ func set_casino(service: FixedStoryCasino) -> void:
 func set_business(service: BusinessScheduler) -> void:
 	_business = service
 
+## Story-authored payment. The receipt is both the wallet request ID and the
+## durable step fact, so a replayed event never credits twice. The wallet owns
+## the balance; this adapter only projects the real result.
+func grant_money(amount: int, receipt: String) -> Dictionary:
+	if not is_instance_valid(_state):
+		return _failure("unconfigured", "钱包尚未接入。")
+	var result: Dictionary = _state.get_transactions().add_money(amount, receipt)
+	var replayed: bool = result.get("code", "") == "duplicate_transaction"
+	if not result.get("ok", false) and not replayed:
+		return _failure(String(result.get("code", "failed")), String(result.get("message", "报酬发放失败。")))
+	if not _project(receipt):
+		return _failure("unavailable", "报酬已发放，但步骤事实写入被拒绝。")
+	var message := "该笔报酬已结算。" if replayed else "报酬已发放。"
+	return {"ok": true, "code": "ok", "message": message,
+		"money_delta": int(result.get("money_delta", 0))}
+
 ## Map unlocking and region knowledge publish together; the panel only opens
 ## after the host reports a real assembly.
 func unlock_map(locations: Array) -> Dictionary:

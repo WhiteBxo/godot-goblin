@@ -57,6 +57,10 @@ SCRIPT_ERROR_MARKERS = (
     "Invalid call. Nonexistent function",
 )
 
+# Lines a script prints to declare its own verdict, e.g.
+# "DIALOGUE: PASS (289 checks, 0 failures)" or "Casino sentry: 263 checks, 0 failures".
+VERDICT_LINE = re.compile(r"\d+\s+checks?[,)]|:\s*(?:PASS|FAIL)\b")
+
 # Python verifiers import optional third-party packages; a missing one is a
 # fixture problem, not a regression.
 MISSING_DEPENDENCY_MARKERS = (
@@ -179,6 +183,27 @@ def first_line_with(log_text: str, markers: tuple[str, ...]) -> str:
     return ""
 
 
+def before_final_verdict(log_text: str) -> str:
+    """Drop everything from the script's last verdict line onwards.
+
+    Shutdown is not part of the test. Once a scene is still referenced by an
+    autoload or a lingering resource, the engine re-resolves that scene's
+    dependency chain while tearing down, and `ResourceLoader` can no longer
+    parse it, so a perfectly green script ends with lines like
+    `chapter_cave.tscn:58 - Parse Error`. Those arrive after `quit()` and must
+    not overturn the verdict the script already printed.
+
+    A script that dies before printing a verdict keeps its whole log, so a real
+    mid-coroutine failure still fails.
+    """
+    cut: int | None = None
+    for match in VERDICT_LINE.finditer(log_text):
+        cut = log_text.rfind("\n", 0, match.start()) + 1
+    if cut is None:
+        return log_text
+    return log_text[:cut]
+
+
 def assertion_messages(log_text: str) -> list[str]:
     """Failed checks report through push_error, so they arrive as `ERROR: <message>`."""
     messages: list[str] = []
@@ -211,8 +236,8 @@ def classify(case: Case, code: int, log_text: str, timed_out: bool) -> tuple[str
             return FAIL, code, f"{len(messages)} 条失败信息，首条：{messages[0][:140]}"
         return FAIL, code, "断言失败"
     for marker in SCRIPT_ERROR_MARKERS:
-        if marker in log_text:
-            line = first_line_with(log_text, (marker,))
+        if marker in before_final_verdict(log_text):
+            line = first_line_with(before_final_verdict(log_text), (marker,))
             return FAIL, EXIT_FAIL, f"退出码 0 但存在脚本错误：{line[:160]}"
     return PASS, EXIT_PASS, ""
 

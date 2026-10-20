@@ -50,10 +50,11 @@ func _run() -> void:
 	var interaction: ShopInteraction = main.get_node("Systems/ShopInteraction")
 	var feedback: InteractionFeedback = main.get_node("World/EffectRoot/InteractionFeedback")
 	var ui: ShopUI = main.get_node("HudLayer/ShopUI")
-	if not ui.get_node_or_null("Prompt") is Label:
-		# The prompt is no longer a bare Label; fail fast instead of dying inside
-		# a coroutine that never reaches quit().
-		_check(false, "ShopUI/Prompt is no longer a Label; the prompt text assertions need the new node path")
+	# The prompt became a PromptBar component (keycap + text row) instead of a bare
+	# Label; text assertions go through its accessor rather than `.text`.
+	var prompt: PromptBar = ui.get_node("Prompt") as PromptBar
+	if prompt == null:
+		_check(false, "ShopUI/Prompt is not a PromptBar")
 		quit(1)
 		return
 	var counter: Node2D = level.get_node("EquipmentForeground/Counter")
@@ -96,11 +97,11 @@ func _run() -> void:
 		_check(interaction.get_target() == point and point.is_available(), "Approach selects the actual device: " + config[0])
 		_check(feedback._focus == point and feedback.z_index > counter.z_index, "Existing corner feedback stays above device art")
 		_check(not point.get_node("Marker").visible and not point.get_node("Label").visible, "No floating marker or permanent label remains")
-		_check(ui.get_node("Prompt").visible and point.display_name in ui.get_node("Prompt").text, "Existing E prompt names the selected equipment")
+		_check(prompt.visible and point.display_name in prompt.get_text(), "Existing E prompt names the selected equipment")
 		await _capture(player, config[2])
 		await _key(KEY_E)
 		_check(ui.is_open(), "E opens existing equipment interaction: " + config[2])
-		_check(interaction.get_target() == null and not ui.get_node("Prompt").visible, "Modal hides interaction feedback and prompt")
+		_check(interaction.get_target() == null and not prompt.visible, "Modal hides interaction feedback and prompt")
 		await _key(KEY_ESCAPE)
 		_check(not ui.is_open() and player.movement_enabled, "Closing restores free movement")
 	player.global_position = level.get_spawn_position()

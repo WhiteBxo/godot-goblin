@@ -18,14 +18,17 @@ func _check(ok: bool, message: String) -> void:
 		push_error(message)
 
 func _run() -> void:
-	var main: MainGame = load("res://src/core/settlement.tscn").instantiate()
-	root.add_child(main)
-	current_scene = main
+	# The formal host (`src/core/settlement.tscn`) now mounts the RPG Maker
+	# chapter settlement, not this editable map, so the map is exercised directly
+	# here. Host-level UI/input behaviour is covered by the chapter-host tests.
+	_map = load("res://src/levels/settlement/settlement_map.tscn").instantiate()
+	root.add_child(_map)
+	_player = load("res://src/gameplay/player/shop_player.tscn").instantiate()
+	_map.add_child(_player)
 	await physics_frame
 	await physics_frame
-	_map = main.get_active_level() as SettlementMap
-	_player = main.get_player() as ShopPlayer
-	_check(_map != null and _player != null, "MainGame must assemble the new settlement")
+	_player.global_position = _map.get_spawn_position()
+	_check(_map != null and _player != null, "Editable settlement map must build with a player")
 	if _map == null or _player == null:
 		quit(1)
 		return
@@ -91,31 +94,18 @@ func _run() -> void:
 		await physics_frame
 	Input.action_release("move_up")
 	_check(_player.global_position.y > 4730, "Actual player must not cross the tavern front wall")
-	var ui: ShopUI = main.get_node("HudLayer/ShopUI")
-	_player.global_position = Vector2(4970, 8450)
-	_player.velocity = Vector2.ZERO
-	for frame in range(4):
-		await physics_frame
-	await _action(&"interact")
-	_check(ui.is_open() and not _player.movement_enabled, "New shop orders must open through E and lock movement")
-	await _action(&"debug_toggle_overview")
-	_check(not _player.movement_enabled, "Overview input cannot unlock an open modal")
-	await _action(&"ui_cancel")
-	_check(not ui.is_open() and _player.movement_enabled, "Esc must close and restore movement")
-	await _action(&"debug_toggle_overview")
-	_check(not _player.movement_enabled and root.get_camera_2d() != _player.camera, "M must show the overview and hold movement")
-	await _action(&"debug_toggle_overview")
-	_check(_player.movement_enabled and root.get_camera_2d() == _player.camera, "M must restore the follow camera")
 	print("Reachable physical samples: %d; checked 16 districts, public story anchors, bridges, real movement and walls." % _reachable.size())
-	if "--capture" in OS.get_cmdline_user_args():
-		await _captures(main)
-	main.queue_free()
+	_map.queue_free()
 	await process_frame
+	# Keep the production host under test as well: it must still assemble a
+	# playable chapter settlement with preview tools disabled.
 	var previous_debug: Variant = ProjectSettings.get_setting("debug/developer_tools/enabled", true)
 	ProjectSettings.set_setting("debug/developer_tools/enabled", false)
 	var normal: MainGame = load("res://src/core/settlement.tscn").instantiate()
 	root.add_child(normal)
-	_check(normal.get_active_level() is SettlementMap and normal.get_player() != null, "Production map must initialize independently of preview tools")
+	await physics_frame
+	await physics_frame
+	_check(normal.get_active_level() is RpgChapterMap and normal.get_player() != null, "Production host must assemble the chapter settlement")
 	_check(normal.get_node_or_null("Systems/SettlementPreview") == null, "Disabled debug tools must not create map inspection UI")
 	normal.queue_free()
 	await process_frame

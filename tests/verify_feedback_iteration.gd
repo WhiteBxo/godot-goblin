@@ -50,6 +50,14 @@ func _run() -> void:
 	await _market_and_recovery()
 	await _guards_on_real_maps()
 	await _hearing()
+	# Drop the last host before quitting: a `current_scene` still pointing at a
+	# freed node makes the engine re-resolve that scene's dependency chain during
+	# shutdown, which surfaces as bogus "Parse Error" lines after the verdict.
+	current_scene = null
+	for child: Node in root.get_children():
+		if child.name != &"GameState":
+			child.free()
+	await frames()
 	print("FEEDBACK_ITERATION: %d checks, %d failures" % [checks, failures.size()])
 	quit(0 if failures.is_empty() else 1)
 
@@ -75,7 +83,9 @@ func _orders_and_menu() -> void:
 	var menu := game.get_game_menu()
 	check(menu.get_navigation_button(ScreenIds.TASKS).text == "任务日志 [J]", "Task log replaces the commission menu")
 	check(menu.get_navigation_button(ScreenIds.ORDER_HISTORY).text == "奶茶订单", "Separate milk order record is present")
-	check(menu.get_navigation_button(ScreenIds.HIRING).disabled, "Hiring remains explicitly unavailable")
+	# Hiring was dropped from the menu entirely (no entry in ChapterActionsHUD's
+	# titles table), so the unavailable state is the missing button, not a grey one.
+	check(menu.get_navigation_button(ScreenIds.HIRING) == null, "Hiring has no menu entry while the feature is unbuilt")
 	check(menu.get_navigation_button(ScreenIds.DRINKS).text == "哥布林饮品图鉴", "Encyclopedia uses the requested name")
 	await picture("menu")
 	game.get_ui_manager().close_screen(ScreenIds.CHAPTER_ACTIONS)

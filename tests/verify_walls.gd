@@ -12,20 +12,33 @@ func check(condition: bool, description: String) -> void:
 		failures.append(description)
 
 func _verify() -> void:
-	var scene: Node = load("res://src/debug/story/legacy_shop.tscn").instantiate()
-	root.add_child(scene)
+	# `legacy_shop` now boots the milk tea shop, so the cave map gets its own
+	# minimal host here instead of borrowing a scene whose identity changed.
+	# Map and player stay siblings under one world node, matching the shape the
+	# real host uses (map translation must never drag the player along).
+	ProjectSettings.set_setting("debug/developer_tools/enabled", true)
+	var world := Node2D.new()
+	world.name = "World"
+	root.add_child(world)
+	var cave_map: CaveMap = load("res://src/levels/cave/cave_map.tscn").instantiate()
+	world.add_child(cave_map)
+	var player: CavePlayer = load("res://src/gameplay/player/player.tscn").instantiate()
+	world.add_child(player)
+	var overlay: CaveDebugOverlay = load("res://src/debug/cave_demo/debug_overlay.tscn").instantiate()
+	root.add_child(overlay)
+	var tools := CaveDemoController.new()
+	tools.name = "DemoTools"
+	tools.configure(cave_map, player, overlay)
+	root.add_child(tools)
 	await process_frame
-	var level: Node = scene.get_active_level()
-	if not level is CaveMap:
-		# legacy_shop now boots the milk tea shop; fail fast instead of dying
-		# inside a coroutine that never reaches quit().
-		push_error("legacy_shop no longer loads a CaveMap; the cave demo entry scene needs an update")
+	await process_frame
+	if cave_map.load_error != OK:
+		push_error("Cave map failed to build its floor: %d" % cave_map.load_error)
 		quit(1)
 		return
-	var cave_map: CaveMap = level
-	var cells: Dictionary = cave_map.walkable_cells
-	var player: Node2D = scene.get_player()
+	player.configure(cave_map.can_stand_at)
 	player.set_physics_process(false)
+	var cells: Dictionary = cave_map.walkable_cells
 	check(cave_map.walls.conflicts.is_empty(), "Raised walls must not overlap walkable floor")
 	var original: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://src/levels/cave/cave_layout_original.json"))
 	var revised: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://src/levels/cave/cave_layout.json"))
@@ -99,7 +112,7 @@ func _verify() -> void:
 	check(player.position.y < b_room.y * 32 + 9, "Collision stops too far from wall foot")
 	check(river_cells(revised, expected_cells) == cells_from_layer(cave_map.river_layer), "River cells remain on the defined river path")
 	for mode in range(3):
-		scene.get_demo_tools().set_wall_mode(mode)
+		tools.set_wall_mode(mode)
 		check(cells == cave_map.walkable_cells, "View toggle changes collision")
 	# The map may be placed away from the world origin without changing grid rules.
 	var old_map_position := cave_map.position
@@ -112,9 +125,9 @@ func _verify() -> void:
 	player.global_position = cave_map.get_spawn_position()
 	# Overview must release the top-level camera again when returning to follow mode.
 	for cycle in range(2):
-		scene.get_demo_tools().toggle_overview()
+		tools.toggle_overview()
 		check(player.overview_enabled and player.camera.top_level, "Overview detaches the camera")
-		scene.get_demo_tools().toggle_overview()
+		tools.toggle_overview()
 		player.move_direction(Vector2.RIGHT, 1.0 / 60.0)
 		check(not player.overview_enabled and not player.camera.top_level, "Follow mode restores parent transform")
 		check(player.camera.global_position.is_equal_approx(player.global_position), "Camera follows after overview toggle")
@@ -123,7 +136,7 @@ func _verify() -> void:
 	var expected_bindings := {
 		"move_left": [KEY_A, KEY_LEFT], "move_right": [KEY_D, KEY_RIGHT],
 		"move_up": [KEY_W, KEY_UP], "move_down": [KEY_S, KEY_DOWN],
-		"debug_cycle_walls": [KEY_F2], "debug_toggle_overview": [KEY_M],
+		"debug_cycle_walls": [KEY_F2], "debug_toggle_overview": [KEY_F7],
 	}
 	for action: String in expected_bindings:
 		var physical_keys: Array[int] = []

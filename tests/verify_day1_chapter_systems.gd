@@ -208,6 +208,12 @@ func _check_shop_host() -> void:
 	result = await _run_event(game, "t.anim_missing")
 	_check(not result.ok, "Missing animation fails instead of skipping")
 	var goblin := game.get_actor_director().get_actor(&"fat_goblin")
+	# Advancing the day above projects him into the resting pose, whose sheet only
+	# carries the two sick frames. This check is about `anim_hold`, not about which
+	# pose the story put him in, so return him to his normal sheet first.
+	if goblin is FatGoblin:
+		goblin.set_health(FatGoblin.Health.NORMAL)
+		goblin.set_mood(FatGoblin.Mood.NEUTRAL)
 	result = await _run_event(game, "t.anim_hold")
 	_check(result.ok, "Finite animation completes: " + result.reason)
 	_check(goblin.animated_sprite.animation == &"emote_laugh", "Held pose stays after the event")
@@ -325,18 +331,21 @@ func _check_settlement_host() -> void:
 
 func _check_catalog_and_fallback() -> void:
 	var catalog := TaskCatalog.new()
-	_check(catalog.load_files(Day1ChapterController.TASK_FILES) == OK, "Day 1 task files merge: " + catalog.last_error)
+	# The real host injects the authored map regions (main.gd `_create_task_system`);
+	# loading without them makes every `settlement.*` location look unknown.
+	var references := {"locations": RpgWorldMapData.location_ids()}
+	_check(catalog.load_files(Day1ChapterController.TASK_FILES, references) == OK, "Day 1 task files merge: " + catalog.last_error)
 	var total := 0
 	for path: String in Day1ChapterController.TASK_FILES:
 		var single := TaskCatalog.new()
-		_check(single.load_file(path) == OK, "Chapter file loads alone: " + path)
+		_check(single.load_file(path, references) == OK, "Chapter file loads alone: " + path)
 		total += single.get_tasks().size()
 	_check(catalog.get_tasks().size() == total, "Chapter files merge without losing or duplicating tasks")
 	var duplicate_path := "user://day1_chapter_systems_dup.json"
 	var file := FileAccess.open(duplicate_path, FileAccess.WRITE)
 	file.store_string(FileAccess.get_file_as_string(Day1ChapterController.TASK_FILES[0]))
 	file.close()
-	_check(catalog.load_files([Day1ChapterController.TASK_FILES[0], duplicate_path]) != OK, "Duplicate IDs across files are rejected")
+	_check(catalog.load_files([Day1ChapterController.TASK_FILES[0], duplicate_path], references) != OK, "Duplicate IDs across files are rejected")
 	# Two orders for one NPC: the active one is reported, not the later inactive one.
 	var tasks := {"version": 1, "tasks": [
 		_task("t.s04_order", "t.s04_open", "t.s04_done", "t_s04_order", "plain_milk_tea"),

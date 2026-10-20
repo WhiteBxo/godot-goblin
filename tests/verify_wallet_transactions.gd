@@ -226,8 +226,13 @@ func _test_snapshots() -> void:
 	state.set_flag("test.saved")
 	var full := state.to_dict()
 	# Use the existing native Variant snapshot contract with real file I/O.
-	var path := "/tmp/goblin_verify_wallet_transactions.tmp"
+	# `user://` is the only directory guaranteed writable on every export target;
+	# a bare `/tmp` path has no meaning on Windows and opens as null.
+	var path := "user://verify_wallet_transactions.tmp"
 	var file := FileAccess.open(path, FileAccess.WRITE)
+	_check(file != null, "Wallet snapshot temp file opens for writing")
+	if file == null:
+		return
 	file.store_var(full)
 	file.close()
 	var restored := StateData.new()

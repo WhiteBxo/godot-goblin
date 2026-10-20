@@ -24,6 +24,9 @@ const MOOD_FRAMES: SpriteFrames = preload("res://src/gameplay/characters/fat_gob
 var health := Health.NORMAL
 var mood := Mood.NEUTRAL
 var _normal_frames: SpriteFrames
+## A pose change that arrived while the director was performing; applied once the
+## performance ends so the projection is not lost.
+var _pose_pending := false
 
 func _ready() -> void:
 	_normal_frames = animated_sprite.sprite_frames
@@ -42,9 +45,23 @@ func set_mood(value: Mood) -> void:
 	_apply_pose()
 
 func _apply_pose() -> void:
+	# 导演的表演动作优先于状态投影：中途换图集会让表情动画整段消失，
+	# 还会让“Missing animation”把剧情事件直接判失败。挂起到表演结束再落地。
+	if is_performance_controlled():
+		_pose_pending = true
+		return
+	_pose_pending = false
 	animated_sprite.sprite_frames = _frames_for_pose()
 	animated_sprite.frame = 0
 	_update_animation(false)
+
+func clear_performance_pose() -> void:
+	super()
+	# 只有姿势真的被清掉时才补上挂起的状态投影；成功保持的 held pose 不清，
+	# 那正是“保持到最后”要留在屏幕上的表情。
+	if _pose_pending:
+		_pose_pending = false
+		_apply_pose.call_deferred()
 
 ## 身体状态优先于情绪：倒地与坐地休养期间不摆情绪姿势。
 func _frames_for_pose() -> SpriteFrames:
@@ -70,6 +87,9 @@ func _state_animation() -> StringName:
 	return &""
 
 func _update_animation(moving: bool, movement_ratio: float = 1.0) -> void:
+	# 表演期间由导演接管动画，状态动画不能把姿势顶掉。
+	if is_performance_controlled():
+		return
 	if health == Health.NORMAL and mood == Mood.NEUTRAL:
 		super(moving, movement_ratio)
 		return

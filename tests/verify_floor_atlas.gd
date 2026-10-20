@@ -15,17 +15,23 @@ func _initialize() -> void:
 	call_deferred("_verify")
 
 func _verify() -> void:
-	var scene: Node = (load("res://src/debug/story/legacy_shop.tscn") as PackedScene).instantiate()
-	root.add_child(scene)
+	# `legacy_shop` hosts the milk tea shop now, so mount the cave map on a
+	# minimal host of our own rather than borrowing a scene that changed identity.
+	var world := Node2D.new()
+	root.add_child(world)
+	var cave_map: CaveMap = load("res://src/levels/cave/cave_map.tscn").instantiate()
+	world.add_child(cave_map)
+	var player: CavePlayer = load("res://src/gameplay/player/player.tscn").instantiate()
+	world.add_child(player)
 	await process_frame
-	var level: Node = scene.get_active_level()
-	if not level is CaveMap:
-		# legacy_shop now boots the milk tea shop; fail fast instead of dying
-		# inside a coroutine that never reaches quit().
-		push_error("legacy_shop no longer loads a CaveMap; the cave demo entry scene needs an update")
+	await process_frame
+	if cave_map.load_error != OK:
+		push_error("Cave map failed to build its floor: %d" % cave_map.load_error)
 		quit(1)
 		return
-	var cave_map: CaveMap = level
+	player.configure(cave_map.can_stand_at)
+	# The real host snaps the camera onto the player right after wiring queries.
+	player.follow_player()
 	var failures: Array[String] = []
 	var original_layout := "--original-layout" in OS.get_cmdline_user_args()
 	var layout_path := "res://src/levels/cave/cave_layout.json"
@@ -151,8 +157,7 @@ func _verify() -> void:
 			failures.append("corner sampling failed for mask %d" % mask)
 	cave_map.walkable_cells = original_cells
 
-	var player: CharacterBody2D = scene.get_player()
-	var camera: Camera2D = scene.get_player().camera
+	var camera: Camera2D = player.camera
 	if not player.can_stand_at(Vector2(90.5, 0.5 if original_layout else -1.5) * 32.0):
 		failures.append("one-cell-wide top passage should stay passable")
 	if not camera.global_position.is_equal_approx(player.global_position):

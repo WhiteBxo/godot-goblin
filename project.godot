@@ -14,6 +14,8 @@ config/name="洞窟深处的奶茶店"
 config/version="0.1.0"
 run/main_scene="res://src/UI/title/title_menu.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
+; Android back is routed to ui_cancel by the touch HUD instead of killing the app.
+config/quit_on_go_back=false
 
 [autoload]
 
@@ -30,6 +32,15 @@ window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="canvas_items"
 window/stretch/scale_mode="integer"
+; Touch devices are wider than 16:9; expanding the viewport keeps the HUD on
+; the physical edges instead of letterboxing the game.
+window/stretch/aspect="expand"
+; SCREEN_SENSOR_LANDSCAPE: either landscape direction, never portrait.
+window/handheld/orientation=4
+
+[input_devices]
+
+pointing/android/enable_long_press_as_right_click=false
 
 [editor_plugins]
 
@@ -133,6 +144,9 @@ rendering_device/driver.windows="d3d12"
 textures/vram_compression/import_etc2_astc=true
 environment/defaults/default_clear_color=Color(0, 0, 0, 1)
 2d/snap/snap_2d_transforms_to_pixel=true
+; Android: Vulkan coverage is uneven and the game is pure 2D canvas shaders,
+; so mobile exports use the OpenGL ES 3 compatibility renderer.
+renderer/rendering_method.mobile="gl_compatibility"
 
 [editor]
 

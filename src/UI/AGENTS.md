@@ -46,6 +46,7 @@ UI 使用 Godot 原生 Control、Container、Theme。总体接口见 [UI 系统]
 | `chronicle/`：见闻录入口、列表与详情 | [见闻录规范](../core/chronicle/AGENTS.md) |
 | `characters/`：人物记录列表与详情 | [人物记录规范](../core/characters/AGENTS.md) |
 | `hud/`：业务阶段与交互提示 | 按实际显示内容读 [剧情规范](../core/story/AGENTS.md) 或 [交互规范](../gameplay/interaction/AGENTS.md) |
+| `touch/`：虚拟摇杆、动作按钮与手机布局让位 | [触摸规范](touch/AGENTS.md) |
 | `title/`、`pause/`：新游戏、返回标题与暂停 | [核心入口规范](../core/AGENTS.md)；暂停栈另读管理规范 |
 
 候选验证：`tests/verify_ui_manager.gd` 与直接涉及的模块测试；主题或样式调整加 `tests/verify_ui_theme.gd`、`tests/verify_ui_kit.gd`。局部画面 / 参数调整只做目标界面检查和 F6 观察。按 [验证分级](../../tests/AGENTS.md) 选择，报告键鼠、关闭 / 取消与锁恢复的实际结果。

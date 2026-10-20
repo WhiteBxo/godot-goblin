@@ -31,6 +31,7 @@ func _ready() -> void:
 	motion.name = "UIButtonMotion"
 	add_child(motion)
 	motion.configure([self])
+	_apply_platform_layout()
 	_new_game.pressed.connect(_request_new_game)
 	_continue.pressed.connect(_request_continue)
 	_quit.pressed.connect(_request_quit)
@@ -88,6 +89,18 @@ func _recenter_pivot() -> void:
 	_backdrop.pivot_offset = _backdrop.size * 0.5
 	if _panel.size != Vector2.ZERO:
 		_panel.pivot_offset = _panel.size * 0.5
+
+## Phone builds drop desktop-only affordances: the shell owns app exit, key
+## hints would name keys that do not exist, and the save list must be draggable.
+func _apply_platform_layout() -> void:
+	if not MobileSupport.is_touch_ui():
+		return
+	var scroll := TouchScroll.new()
+	scroll.name = "TouchScroll"
+	add_child(scroll)
+	scroll.configure([self])
+	_quit.visible = false
+	$Center/Panel/Margin/Content/Keys.visible = false
 
 ## Exactly one gold button: the action a returning player wants first.
 func _apply_primary() -> void:

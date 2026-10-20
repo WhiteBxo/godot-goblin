@@ -245,6 +245,14 @@ func _tick_auto_advance(delta: float) -> void:
 
 
 func _update_hint() -> void:
+	if MobileSupport.is_touch_ui():
+		if _revealing:
+			_hint.text = "点按「交互」显示全文"
+		elif not _buttons.is_empty():
+			_hint.text = "点按选项确认"
+		else:
+			_hint.text = "点按「交互」继续 · 按住快进"
+		return
 	var escape := "Esc 跳过本段" if _cancel_protected else "Esc 结束"
 	if _revealing:
 		_hint.text = "E / 空格 / Enter 显示全文 · " + escape

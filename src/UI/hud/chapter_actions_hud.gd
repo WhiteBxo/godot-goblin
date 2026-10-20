@@ -14,6 +14,8 @@ var _access_known := false
 func _ready() -> void:
 	_page = $ModalShell.get_content()
 	$ModalShell.close_requested.connect(close_requested.emit)
+	if MobileSupport.is_touch_ui():
+		$ModalShell.set_hint("点按选项 · 右上角返回游戏")
 	var titles := {ScreenIds.ORDER_HISTORY: "奶茶订单", ScreenIds.TASKS: "任务日志 [J]", ScreenIds.CHRONICLE: "异世界见闻录", ScreenIds.DRINKS: "哥布林饮品图鉴", ScreenIds.CHARACTERS: "人物记录", ScreenIds.INVENTORY: "原料图鉴 [B]", ScreenIds.MAP: "地图 [M]", ScreenIds.SETTINGS: "设置"}
 	for id: StringName in titles:
 		var button := Button.new()

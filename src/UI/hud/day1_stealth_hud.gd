@@ -47,6 +47,23 @@ func _ready() -> void:
 	_retry.pressed.connect(func() -> void: _service.retry_attempt())
 	_start.pressed.connect(func() -> void: _service.begin_attempt())
 	_drinks.item_selected.connect(_on_drink_selected)
+	if MobileSupport.is_touch_ui():
+		_apply_touch_layout()
+
+## The bottom-left card would sit under the thumb. Touch builds move it to the
+## right edge, clear of the stick and the throw pads.
+func _apply_touch_layout() -> void:
+	_panel.anchor_left = 1.0
+	_panel.anchor_right = 1.0
+	_panel.anchor_top = 0.0
+	_panel.anchor_bottom = 0.0
+	_panel.offset_left = -288.0
+	_panel.offset_right = -16.0
+	_panel.offset_top = 52.0
+	_panel.offset_bottom = 188.0
+	_panel.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	# Content taller than the authored card must grow upward, away from the pads.
+	_panel.grow_vertical = Control.GROW_DIRECTION_BEGIN
 
 ## The button is the panel's only throw control, so it selects first and throws
 ## on the second press: one click never spends a coin by accident, and the label

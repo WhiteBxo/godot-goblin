@@ -67,3 +67,12 @@ const RADIUS_PANEL := 6
 const BORDER_PANEL := 2
 const BORDER_CONTROL := 1
 const FOCUS_EXPAND := 1
+
+# --- Touch HUD ---
+## The stick and action pads sit on top of pixel art, so their fills stay
+## translucent while the rim and active state keep enough contrast to read.
+const TOUCH_PAD := Color(0.16, 0.11, 0.08, 0.44)
+const TOUCH_PAD_EDGE := Color(0.77, 0.57, 0.30, 0.58)
+const TOUCH_PAD_ACTIVE := Color(0.99, 0.81, 0.46, 0.70)
+const TOUCH_PAD_TEXT := Color(1.0, 0.91, 0.77, 0.94)
+const TOUCH_PAD_TEXT_ACTIVE := Color(0.14, 0.09, 0.06, 0.96)

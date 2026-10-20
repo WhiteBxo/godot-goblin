@@ -13,6 +13,8 @@ var _key_pop: Tween
 
 func _ready() -> void:
 	_panel.resized.connect(_center_pivot)
+	# Keycaps name a key the player cannot press; the touch pad is the key.
+	_key.visible = not MobileSupport.is_touch_ui()
 
 func show_prompt(text: String, key: String = "E") -> void:
 	var changed := _text.text != text or _key.text != key

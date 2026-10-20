@@ -54,17 +54,27 @@ func present(point: InteractionPoint) -> void:
 			illustration.texture = document.document_texture
 			illustration.tooltip_text = point.description
 			illustration.show()
+			_shell.set_hint("")
 			return
 		var note := _ensure_note()
 		note.text = point.description
 		note.show()
 		note.scroll_to_line(0)
+		_refresh_note_hint.call_deferred()
 		return
 	if is_instance_valid(_note):
 		_note.hide()
+	_shell.set_hint("")
 	_page.show()
 	_shell.set_title("今日订单" if point.interaction_id == &"orders" else point.display_name)
 	_page.present(point)
+
+## Authored letters can be longer than the modal. Say so only when it happens,
+## otherwise a short clue would advertise scrolling that does nothing.
+func _refresh_note_hint() -> void:
+	if not _story_note or not is_instance_valid(_note) or not _note.is_visible_in_tree():
+		return
+	_shell.set_hint("滚轮或拖动 · 翻阅全文" if _note.get_content_height() > _note.size.y + 1.0 else "")
 
 func _ensure_document_image() -> TextureRect:
 	if is_instance_valid(_document_image):
@@ -84,7 +94,10 @@ func _ensure_note() -> RichTextLabel:
 	_note = RichTextLabel.new()
 	_note.name = "StoryNote"
 	_note.bbcode_enabled = false
-	_note.fit_content = true
+	# Long authored letters must stay inside the modal: `fit_content` grows the
+	# label past the panel and pushes the title off-screen. Fill the body instead
+	# and scroll inside it.
+	_note.fit_content = false
 	_note.scroll_active = true
 	_note.custom_minimum_size = Vector2(0, 132)
 	_note.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -141,12 +154,14 @@ func show_order_requirements(message: String) -> void:
 func show_interaction_result(message: String) -> void:
 	if _story_note and is_instance_valid(_note):
 		_note.text = message
+		_refresh_note_hint.call_deferred()
 		return
 	_page.show_interaction_result(message)
 
 func show_harvest_result(message: String, icon: Texture2D, amount: int) -> void:
 	if _story_note and is_instance_valid(_note):
 		_note.text = message
+		_refresh_note_hint.call_deferred()
 		return
 	_page.show_harvest_result(message, icon, amount)
 

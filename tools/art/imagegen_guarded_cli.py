@@ -18,9 +18,9 @@ def main():
     key = provider.get("experimental_bearer_token") or os.environ.get(provider.get("env_key", ""))
     if not key:
         raise SystemExit("Selected provider has no usable experimental_bearer_token/env_key credential.")
-    base = provider["base_url"].rstrip("/")
+    base = provider["base_url"]
     os.environ["OPENAI_API_KEY"] = key
-    os.environ["OPENAI_BASE_URL"] = base if base.endswith("/v1") else base + "/v1"
+    os.environ["OPENAI_BASE_URL"] = base
     sys.path.insert(0, str(home / "tools"))
     from api_concurrency import guarded_call
 

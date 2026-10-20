@@ -5,9 +5,13 @@
 layout_mode = 2
 theme = ExtResource("theme")
 
-[node name="Summary" type="Label" parent="."]
+[node name="Summary" type="RichTextLabel" parent="."]
 layout_mode = 2
-autowrap_mode = 3
+size_flags_vertical = 3
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+theme_override_constants/line_separation = 0
 text = ""
 
 [node name="Next" type="Label" parent="."]

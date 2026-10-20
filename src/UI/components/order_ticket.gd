@@ -39,7 +39,7 @@ func present(entry: Dictionary, action: String = "", enabled: bool = false, seco
 	_title.text = entry.get("title", "今天暂时没有订单")
 	_target.text = "交给：" + str(entry.target_name) if not entry.is_empty() else "新的订单会在这里出现"
 	_status.text = status
-	_status.theme_type_variation = &"TicketWarning" if entry.get("stage") in ["missing_materials", "recipe_locked", "experiment"] else &"TicketStamp"
+	_status.theme_type_variation = _stamp_variation(str(entry.get("stage", "")))
 	var lines := PackedStringArray()
 	if not entry.is_empty():
 		if not str(entry.get("description", "")).is_empty():
@@ -80,7 +80,7 @@ func show_result(result: Dictionary) -> void:
 		return
 	_status.text = "制作完成 · 已入库"
 	UIFlourish.stamp(_status)
-	_status.modulate = Color(1.0, 0.94, 0.68)
+	_status.modulate = UITokens.STAMP_FLASH
 	if _flash_tween != null:
 		_flash_tween.kill()
 	_flash_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_STOP)
@@ -104,6 +104,19 @@ func _clear_result() -> void:
 	_status.rotation = 0.0
 	_icon.scale = Vector2.ONE
 	_feedback.hide()
+
+## The stamp colour says what the slip is waiting for: red for something the
+## player must fix, green for a slip that is ready, muted for plain progress.
+## 待制作 and 可接取 are neither failures nor wins, so they stay neutral ink.
+const WARNING_STAGES := ["missing_materials", "recipe_locked", "experiment", "failed", "expired", "cancelled"]
+const SETTLED_STAGES := ["ready", "completed"]
+
+static func _stamp_variation(stage: String) -> StringName:
+	if stage in WARNING_STAGES:
+		return &"TicketWarning"
+	if stage in SETTLED_STAGES:
+		return &"TicketStamp"
+	return &"TicketNote"
 
 func get_primary_button() -> Button:
 	return _primary

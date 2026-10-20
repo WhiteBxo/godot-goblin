@@ -4,6 +4,7 @@ extends HBoxContainer
 
 signal tasks_requested
 
+@onready var _heading: Label = %Heading
 @onready var _title: Label = $TaskCard/Margin/Content/Title
 @onready var _objective: Label = $TaskCard/Margin/Content/Objective
 var _journal: TaskJournal
@@ -91,12 +92,12 @@ func _refresh() -> void:
 		for order: Dictionary in _orders.get_entries():
 			if order.status == "active":
 				others += 1
-		$TaskCard/Margin/Content/Heading.text = "追踪订单" + (" · 另有 %d 单" % others if others > 0 else "")
+		_heading.text = "追踪订单" + (" · 另有 %d 单" % others if others > 0 else "")
 		_title.text = entry.title
 		_objective.text = "还缺：" + entry.missing_text if not entry.missing_text.is_empty() else entry.hint
 		_after_refresh()
 		return
-	$TaskCard/Margin/Content/Heading.text = "当前任务 · 点击查看 [J]"
+	_heading.text = "当前任务"
 	if task.is_empty():
 		_title.text = ""
 		_objective.text = ""
@@ -124,7 +125,7 @@ func _after_refresh() -> void:
 		_shown = true
 		modulate.a = 0.0
 		create_tween().tween_property(self, "modulate:a", 1.0, 0.12)
-	var signature := "%s|%s|%s" % [$TaskCard/Margin/Content/Heading.text, _title.text, _objective.text]
+	var signature := "%s|%s|%s" % [_heading.text, _title.text, _objective.text]
 	if not _signature.is_empty() and signature != _signature:
 		_nudge($TaskCard, Vector2(1.015, 1.015), Vector2(0.0, 0.5))
 	_signature = signature

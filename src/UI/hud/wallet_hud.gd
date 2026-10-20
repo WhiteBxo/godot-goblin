@@ -32,6 +32,9 @@ func bind_wallet(wallet: WalletTransactions) -> void:
 	_balance.text = WalletTransactions.format_money(_shown)
 	_fit()
 
+func get_balance_text() -> String:
+	return _balance.text if is_instance_valid(_balance) else ""
+
 ## Global centre of the coin icon: the point incoming coins fly into.
 func get_coin_target() -> Vector2:
 	return _icon.get_global_rect().get_center()

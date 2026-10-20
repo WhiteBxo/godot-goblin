@@ -90,6 +90,7 @@ func _typography(parent: VBoxContainer) -> void:
 	_caption(box, "Title 24 / H2 12 / 正文 12 / Hint 12；只用这三个字号。")
 	_row(box).add_child(_label("Title · 手册", &"Title"))
 	_row(box).add_child(_label("H2 · 当前目标", &"H2"))
+	_row(box).add_child(_label("Section · 目标", &"Section"))
 	_row(box).add_child(_label("正文 · 珍珠奶茶 × 1", &""))
 	_row(box).add_child(_label("Hint · 方向键选择", &"Hint"))
 	_row(box).add_child(_label("Muted · 暂无记录", &"Muted"))

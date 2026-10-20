@@ -30,17 +30,23 @@ func _process(delta: float) -> void:
 	if target.has("position") or _ping_age >= 0.0:
 		queue_redraw()
 
+## Ring alpha fades with the beat; the hue stays the theme's.
+func _with_alpha(color: Color, alpha: float) -> Color:
+	var tint := color
+	tint.a = alpha
+	return tint
+
 func _draw_target_ring(center: Vector2, radius: float) -> void:
 	var beat := 0.5 + 0.5 * sin(_clock * 4.2)
 	var color := get_theme_color("font_color", "Warning")
-	draw_arc(center, radius + 3.0 * beat, 0, TAU, 24, Color(color, 0.4 + 0.35 * beat), 1.0)
+	draw_arc(center, radius + 3.0 * beat, 0, TAU, 24, _with_alpha(color, 0.4 + 0.35 * beat), 1.0)
 
 func _draw_player_ping(center: Vector2) -> void:
 	if _ping_age < 0.0:
 		return
 	var weight := clampf(_ping_age / PING_SECONDS, 0.0, 1.0)
 	var color := get_theme_color("font_color", "Success")
-	draw_arc(center, 4.0 + 16.0 * weight, 0, TAU, 32, Color(color, 0.7 * (1.0 - weight)), 1.0)
+	draw_arc(center, 4.0 + 16.0 * weight, 0, TAU, 32, _with_alpha(color, 0.7 * (1.0 - weight)), 1.0)
 
 func _art_rect() -> Rect2:
 	var extent := OVERVIEW.get_size()

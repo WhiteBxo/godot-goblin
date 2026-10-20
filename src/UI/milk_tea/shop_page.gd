@@ -189,6 +189,11 @@ func _select_craft_mode() -> void:
 				has_formula_order = true
 			if entry.status == "active" and not entry.product_id.is_empty():
 				has_order = true
+	# 委托特调只在自由实验中手调，没有其他固定订单时直接停在这一页。
+	if not has_order and not has_formula_order and is_instance_valid(_production) and _production.has_pending_experiment():
+		_craft_modes.current_tab = 2
+		_making_tabs.current_tab = 1
+		return
 	_craft_modes.current_tab = 0 if has_order else (2 if has_formula_order else 1)
 	if not has_order:
 		_making_tabs.current_tab = 1 if has_formula_order else 0

@@ -60,7 +60,7 @@ func refresh(clear_result: bool = false) -> void:
 		return
 	_refreshing = true
 	var scroll := int(_list.get_v_scroll_bar().value)
-	_collect_available(_production.get_available_recipes())
+	_collect_available(_production.get_known_recipes())
 	_prune_selection()
 	_rebuild_list()
 	_rebuild_recipes()
@@ -101,7 +101,7 @@ func _on_recipe_selected(index: int) -> void:
 func _rebuild_recipes() -> void:
 	var scroll := _recipe_list.get_v_scroll_bar().value
 	_recipe_list.clear()
-	for recipe: TeaRecipe in _production.get_available_recipes():
+	for recipe: TeaRecipe in _production.get_known_recipes():
 		var maximum := _production.get_max_craftable(recipe.materials)
 		var index := _recipe_list.add_item("%s · %s" % [_production.get_item_name(recipe.product_id), "可做 %d 杯" % maximum if maximum > 0 else "材料不足或库存已满"])
 		_recipe_list.set_item_metadata(index, recipe.product_id)
@@ -445,7 +445,7 @@ func _collect_available(recipes: Array[TeaRecipe]) -> void:
 			_available_materials[id] = true
 
 func _is_product_available(product_id: String) -> bool:
-	for recipe: TeaRecipe in _production.get_available_recipes():
+	for recipe: TeaRecipe in _production.get_known_recipes():
 		if recipe.product_id == product_id:
 			return true
 	return false

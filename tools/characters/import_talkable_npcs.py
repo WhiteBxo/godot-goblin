@@ -38,11 +38,15 @@ DEFINITIONS = [
 def cut_checkerboard(data: bytes) -> Image.Image:
     """Remove a rendered transparency checker flattened into an opaque portrait.
 
-    The checker is bright, neutral and noisy; the character's armour and helmet are
-    also grey but either darker or slightly saturated, so brightness plus saturation
+    The checker is neutral and noisy; the character's armour and helmet are also
+    grey but either darker or slightly saturated, so brightness plus saturation
     separates them. Enclosed leftovers (gaps between limbs) are dropped by looking at
-    the holes of the remaining silhouette and keeping only bright neutral ones, which
-    leaves teeth and eye highlights intact.
+    the holes of the remaining silhouette. Such a hole is only treated as checker
+    when it is *both* very bright and textured: the first pass also removed every
+    plain bright neutral hole, which is exactly what eye whites and teeth are, and
+    both portraits lost their eyes. Checker holes measure ~203 mean luminance with
+    a standard deviation above 25, whereas eye whites sit above 250 and are smooth,
+    so the two are separable without a hand-drawn mask.
     """
     image = Image.open(io.BytesIO(data)).convert("RGBA")
     pixels = np.array(image)
@@ -57,7 +61,7 @@ def cut_checkerboard(data: bytes) -> Image.Image:
         added = False
         for index in range(1, count + 1):
             area = labels == index
-            if luminance[area].mean() > 190 and saturation[area].mean() < 4:
+            if luminance[area].mean() > 230 and luminance[area].std() > 12 and saturation[area].mean() < 4:
                 background |= area
                 added = True
         if not added:

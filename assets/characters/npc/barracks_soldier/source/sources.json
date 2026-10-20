@@ -17,5 +17,19 @@
       1232
     ],
     "derive": "checkerboard matte + 4px trim"
+  },
+  {
+    "archive": "用户附件 2026-10-20（剪贴板）",
+    "entry": "clipboard-2026-10-20T05-27-18-282Z-853e99a9.jpg",
+    "path": "assets/characters/npc/barracks_soldier/source/portrait_2026_10_20.jpg",
+    "sha256": "7d915e4d1652b6ec76cf545b61c1035a1c02ea0010944842f1e02d00f9630de5",
+    "portrait_crop": [
+      0,
+      0,
+      923,
+      1224
+    ],
+    "derive": "white-background flood cut + 1px rim trim + 4px margin",
+    "replaces": "source/portrait.png（棋盘抠图，眼睛被当背景扣掉）"
   }
 ]

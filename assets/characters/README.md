@@ -70,4 +70,10 @@
 
 ### 诗人 / 哲人 / 军人（2026-10-20）
 
-同一附件的 `诗人`、`哲人`、`军人` 接入为 `npc/casino_poet`、`npc/signature_philosopher`、`npc/barracks_soldier`：单帧像素图 + 立绘。哲人与军人的立绘在原包里被压平在渲染出来的透明棋盘上（无 alpha），派生时用噪声/中性高亮抠掉。三位接管 `DialogueManager.speaker_portraits` 的诗人 / 哥布林哲人 / 军人。详见[人物接入](../../docs/assets/characters.md#具名可对话-npc诗人--哲人--军人2026-10-20)。
+同一附件的 `诗人`、`哲人`、`军人` 接入为 `npc/casino_poet`、`npc/signature_philosopher`、`npc/barracks_soldier`：单帧像素图 + 立绘。哲人与军人的立绘在原包里被压平在渲染出来的透明棋盘上（无 alpha），派生时用噪声/中性高亮抠掉；这一版把眼白也当成背景扣掉了，耳朵旁还留着棋盘格。三位接管 `DialogueManager.speaker_portraits` 的诗人 / 哥布林哲人 / 军人。详见[人物接入](../../docs/assets/characters.md#具名可对话-npc诗人--哲人--军人2026-10-20)。
+
+### 哲人与军人立绘重抠（2026-10-20）
+
+用户重新导出两图（923×1224，纯白底、眼睛完整）。原件逐字节存为各自 `source/portrait_2026_10_20.jpg`，`portrait.png` 由
+`python tools/characters/repair_white_matte_portraits.py --portrait signature_philosopher=<哲人.png> --portrait barracks_soldier=<军人.png>`
+重抠：只去掉与边框连通的近白区域（封闭的眼白、牙齿、书页保留），四肢/两腿之间的封闭白块按坐标点名清除，最后削掉切口处的浅色描边。复现命令、种子坐标与裁切记录见脚本与各自 `source/sources.json`；原 zip 的棋盘原件继续保留在 `source/portrait.png`。

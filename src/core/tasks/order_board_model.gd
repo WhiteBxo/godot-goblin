@@ -193,7 +193,7 @@ func _project(task: Dictionary, view: Dictionary, accepted: bool, done: bool) ->
 		for ingredient: IngredientDefinition in WarehouseInventory.CATALOG.ingredients:
 			ingredient_names[ingredient.id] = ingredient.display_name
 		names.append(DrinkFormula.requirement_text(task.delivery.drink, ingredient_names))
-		hint = "交给" + target_name if ready else "制作台 → 自由实验；选择奶茶基底与辛辣原料，确认报价后制作"
+		hint = "交给" + target_name if ready else "制作台 → 自由实验；要求：%s；确认报价后制作" % names[-1]
 	if product_id.is_empty() and not ready:
 		for item: Dictionary in items:
 			if item.owned < item.needed:

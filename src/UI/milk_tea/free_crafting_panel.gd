@@ -38,8 +38,8 @@ func _ready() -> void:
 	_slots = VBoxContainer.new()
 	content.add_child(_slots)
 	var ice_row := HBoxContainer.new()
-	# 冰块和预览一样留在滚动区外：委托特调必须「不加冰」，这一行不该被滚走。
-	add_child(ice_row)
+	# 选料与预览共用滚动区，长预览不能把基底和辅料挤成零高度。
+	content.add_child(ice_row)
 	var ice_label := Label.new()
 	ice_label.text = "冰块"
 	ice_label.custom_minimum_size.x = 48
@@ -53,13 +53,13 @@ func _ready() -> void:
 		_result.text = ""
 		_refresh_preview())
 	ice_row.add_child(_ice_option)
-	# 预览与结果钉在选料区下方：槽位再多也滚，结论始终看得见。
+	# 制作按钮固定在底部；配方详情与选料一起滚动。
 	_preview = Label.new()
 	_preview.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	add_child(_preview)
+	content.add_child(_preview)
 	_result = Label.new()
 	_result.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	add_child(_result)
+	content.add_child(_result)
 	var actions := HBoxContainer.new()
 	add_child(actions)
 	var clear := Button.new()

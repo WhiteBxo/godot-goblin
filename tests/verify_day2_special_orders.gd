@@ -93,10 +93,17 @@ func _run() -> void:
 		var view: Dictionary = _game.get_order_board().get_entry(order_id)
 		check(not view.is_empty() and view.get("status") == "available", "Special slip is offered on the board: " + order_id)
 		check(_game.get_task_delivery().accept_order(order_id) == OK, "Player accepts the special slip: " + order_id)
+		if order_id == "day2_special_herbal":
+			view = _game.get_order_board().get_entry(order_id)
+			check("草木气息" in view.hint and "辛辣" not in view.hint, "Herbal order guidance states its own flavor requirement")
 		var materials: Array[String] = []
 		materials.assign(entry.materials)
-		check(_state.confirm_formula(materials, "special.price." + order_id).get("ok", false), "Formula price is fixed before selling: " + order_id)
-		var cup: Dictionary = production.craft_formula(materials, 1, "special.craft." + order_id)
+		var cup: Dictionary
+		if order_id == "day2_special_herbal":
+			cup = await _craft_herbal_through_ui(materials)
+		else:
+			check(_state.confirm_formula(materials, "special.price." + order_id).get("ok", false), "Formula price is fixed before selling: " + order_id)
+			cup = production.craft_formula(materials, 1, "special.craft." + order_id)
 		check(cup.get("ok", false), "Crafting the demanded flavor succeeds: " + order_id)
 		if not cup.get("ok", false):
 			continue
@@ -133,3 +140,58 @@ func _gathered_items() -> Array[String]:
 			found.append(id)
 		index = text.find(needle, end)
 	return found
+
+## Exercise the actual slot and button signals rather than bypassing the station UI.
+func _craft_herbal_through_ui(materials: Array[String]) -> Dictionary:
+	_state.set_variable(OrderBoardModel.TRACKED_KEY, "day2_special_herbal")
+	var station: InteractionPoint
+	for point: InteractionPoint in _game.get_active_level().get_interaction_points():
+		if point.interaction_id == &"tea_station":
+			station = point
+	var shop := _game.get_shop_ui()
+	# Finish the authored business or recipe-discovery dialogue before opening a modal.
+	var deadline := Time.get_ticks_msec() + 15000
+	while (_game.get_story_director().is_busy() or _game.get_dialogue_manager().is_active()) and Time.get_ticks_msec() < deadline:
+		var dialogue := _game.get_dialogue_manager()
+		if dialogue.is_active():
+			dialogue.advance()
+			dialogue.select_choice(0)
+		await process_frame
+	shop.open(station)
+	await frames()
+	var panel := shop.get_popup().get_page().get_formula_panel()
+	check(panel.is_visible_in_tree(), "Tracked herbal order opens the free crafting page")
+	if not panel.is_visible_in_tree():
+		return {"ok": false}
+	var slots := panel.get_slots()
+	for slot: int in range(materials.size()):
+		var option := slots[slot]
+		var selected := -1
+		for index: int in range(option.item_count):
+			if option.get_item_metadata(index) == materials[slot]:
+				selected = index
+		check(selected >= 0, "Herbal ingredient is selectable: " + materials[slot])
+		if selected < 0:
+			shop.close()
+			return {"ok": false}
+		option.select(selected)
+		option.item_selected.emit(selected)
+	check(panel.get_materials() == materials, "Manual selections assemble the herbal formula")
+	check(not panel.get_confirm_button().disabled, "Herbal quote button is enabled during business")
+	panel.get_confirm_button().pressed.emit()
+	await frames()
+	check(not panel.get_craft_button().disabled, "Confirmed herbal formula enables crafting")
+	panel.get_craft_button().pressed.emit()
+	await frames()
+	var id := DrinkFormula.key_for(materials)
+	var record: Dictionary = _state.get_warehouse_inventory().get_drink_record(id)
+	check(_state.get_warehouse_inventory().get_drink_stock(id) == 1, "Station button puts one herbal drink into shared stock")
+	# A long priced preview used to shrink the ingredient scroller to zero height.
+	var scroll := slots[0].get_parent().get_parent().get_parent().get_parent() as ScrollContainer
+	check(scroll.size.y >= slots[0].size.y * 3, "Priced preview leaves enough room to select ingredients")
+	if DisplayServer.get_name() != "headless" and "--capture-herbal" in OS.get_cmdline_user_args():
+		await RenderingServer.frame_post_draw
+		root.get_texture().get_image().save_png("res://.godot/herbal_crafting.png")
+	shop.close()
+	await frames()
+	return {"ok": not record.is_empty(), "id": id, "price": _state.get_transactions().get_formula_price(materials).get("selling_price", 0)}

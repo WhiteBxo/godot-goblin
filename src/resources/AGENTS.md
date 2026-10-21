@@ -14,6 +14,7 @@
 
 - 数据结构、合法字段和默认值以实际 Resource 定义与 Loader 为准；修改前查看直接消费者，不依据历史示例猜测 Schema，不往严格 JSON 插入 Beat 注释等开发元数据。
 - 保持稳定资源 / 事件 / 物品 ID 和路径大小写；变更 ID 或类型时同步引用方与必要验证，避免只改显示名称就改业务键。
+- **批量重存 `.tres` 会静默丢字段**：属性值等于默认值的行在保存时被省略，导入脚本只重写自己 `GENERATED` 列表里的字段，两者都可能把手工维护的列（`flavor_tags`、`processing_methods`、`source_ids`、`acquisition_sources`）洗掉，而提交信息往往只提了别的事。改完资源跑 `python tools/milk_tea/import_recipe_ingredients.py --check` 与对应 `verify_*` 验证；怀疑丢失时按字段用 `git log -S "<字段名>" -- <资源>` 定位，从引入丢失的提交前一个版本逐字段恢复，不要整文件回滚（会覆盖之后的改动）。`c52233fd` 就是这样丢了 90 处，见 [回归红区分类](../../docs/development/regression_triage_2026_10_21.md)。
 - 可复用 TileSet 存为外部 Resource；素材与必要的 `.import` 设置一同管理，不引用 `.godot/` 中的派生缓存。
 - JSON 及运行时动态加载的数据必须纳入 `export_presets.cfg` 的现有导出规则；检查正式资源引用与 source / prompts、docs、tools、tests 等开发文件的排除范围，只改本次必要配置。
 - 菜单、配方和物品描述是数据，UI 与剧情不另维护一份目录；设计中的战斗属性或效果描述不自动意味着具备执行系统。

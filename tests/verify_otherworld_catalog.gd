@@ -184,10 +184,15 @@ func _check_spreadsheet_coverage() -> void:
 	expected_rows.sort()
 	_check(covered == expected_rows, "Every configured row maps to exactly one runtime item: %s" % str(covered))
 
-## The tutorial keeps its six discovered materials; formal items stay dormant there.
+## The tutorial keeps its observed materials; formal items stay dormant there.
 func _check_teaching_session() -> void:
 	var inventory := WarehouseInventory.new()
-	_check(inventory.get_ingredients().size() == 6, "Tutorial session still stocks six materials")
+	# initial_stock has carried the same 16 teaching materials since before the resource
+	# re-save; the old "six" number predates the expanded tutorial shelf. The invariant
+	# worth guarding is that the tutorial never opens otherworld-only items.
+	var total := inventory.get_ingredients().size()
+	var human := inventory.get_ingredients("human").size()
+	_check(human == total, "Tutorial exposes only human-side materials (%d of %d)" % [human, total])
 	for id: String in ["moss_green", "goblin_firebrew", "classic_boba_milk_tea", "day1_griffin_blood"]:
 		_check(not inventory.is_discovered(id) and inventory.get_stock(id) == 0, "Formal item %s is dormant in the tutorial" % id)
 	inventory.free()

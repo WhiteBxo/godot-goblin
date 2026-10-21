@@ -91,7 +91,10 @@ icon = ExtResource("icon_art_insomnia_mushroom")
 origin = "otherworld"
 category = "material"
 rarity = "稀有"
+flavor_tags = PackedStringArray("微苦清冽", "汁水充足", "带有草木气息")
+acquisition_sources = PackedStringArray("胖哥布林任务。主角委托 NPC 购买")
 form = "固体"
+processing_methods = PackedStringArray("榨汁")
 description = "一种价格昂贵的洞窟菌类。胖哥布林委托主角购买的关键材料，关系到他的心智衰退与恢复。它的用途远不止调味，其稀缺性也让普通哥布林难以负担。"
 ; generated:recipe_ingredients
 can_be_base = true
@@ -140,6 +143,7 @@ display_name = "古怪金币"
 icon = ExtResource("icon_coin")
 origin = "otherworld"
 category = "story_item"
+acquisition_sources = PackedStringArray("顾客支付；金币上印着某种兽类，价值未知。")
 description = "金币上印着某种兽类，价值未知。"
 
 [sub_resource type="Resource" id="Ingredient_day1_griffin_blood"]
@@ -151,7 +155,10 @@ icon = ExtResource("icon_art_day1_griffin_blood")
 origin = "otherworld"
 category = "material"
 rarity = "传奇"
+flavor_tags = PackedStringArray("浓稠腥苦", "带有明显的铁锈气息")
+acquisition_sources = PackedStringArray("day1偷窃任务。从长老住所偷窃")
 form = "液体"
+processing_methods = PackedStringArray("免加工")
 description = "被哥布林奉为神圣恩赐的特殊液体。饮用后可能引发严重眩晕、呕吐等反应，但部分信徒仍坚信它能够洗清罪孽、带来庇护。其真实性质与信仰解释之间存在明显矛盾。"
 ; generated:recipe_ingredients
 can_be_base = true
@@ -187,6 +194,7 @@ display_name = "植脂末奶茶底"
 source_ids = PackedStringArray("C01")
 icon = ExtResource("icon_art_creamer_milk_tea_base")
 category = "milk"
+flavor_tags = PackedStringArray("奶香浓厚", "甜味明显", "入口顺滑但略显腻口")
 description = "米黄色奶茶液体，质地浓稠。"
 ; generated:recipe_ingredients
 show_in_encyclopedia = false
@@ -214,6 +222,7 @@ id = "industrial_green_tea"
 display_name = "工业绿茶清汤"
 source_ids = PackedStringArray("C02")
 icon = ExtResource("icon_art_industrial_green_tea")
+flavor_tags = PackedStringArray("茶味清淡单薄", "带有轻微苦涩感")
 description = "淡黄绿色茶汤，质地清透。"
 ; generated:recipe_ingredients
 show_in_encyclopedia = false
@@ -242,6 +251,7 @@ display_name = "荧绿薄荷糖浆"
 source_ids = PackedStringArray("C03")
 icon = ExtResource("icon_art_mint_syrup")
 category = "syrup"
+flavor_tags = PackedStringArray("糖浆甜味浓重", "薄荷凉感强烈而直接")
 description = "鲜绿色糖浆，质地黏稠。"
 ; generated:recipe_ingredients
 can_be_base = false
@@ -268,6 +278,7 @@ id = "instant_coffee_concentrate"
 display_name = "浓缩速溶咖啡原浆"
 source_ids = PackedStringArray("C04")
 icon = ExtResource("icon_art_instant_coffee_concentrate")
+flavor_tags = PackedStringArray("焦苦味突出", "带有速溶咖啡特有的酸涩感")
 description = "深褐色咖啡液体。"
 ; generated:recipe_ingredients
 can_be_base = true
@@ -295,6 +306,7 @@ display_name = "黑糖波霸珍珠"
 source_ids = PackedStringArray("C05")
 icon = ExtResource("icon_art_brown_sugar_boba")
 category = "topping"
+flavor_tags = PackedStringArray("黑糖甜味浓郁", "珍珠软糯弹韧", "略有黏牙感")
 description = "乌黑圆润的珍珠，表面裹着黑糖浆。"
 ; generated:recipe_ingredients
 can_be_base = false
@@ -322,6 +334,7 @@ display_name = "代可可脂薄荷巧脆碎"
 source_ids = PackedStringArray("C06")
 icon = ExtResource("icon_art_mint_choc_crisp")
 category = "topping"
+flavor_tags = PackedStringArray("巧克力甜味明显", "入口酥脆", "带有薄荷凉感")
 description = "黑绿相间的细碎巧克力颗粒。"
 ; generated:recipe_ingredients
 can_be_base = false
@@ -349,6 +362,7 @@ display_name = "冰块"
 source_ids = PackedStringArray("C07")
 icon = ExtResource("icon_art_ice")
 category = "material"
+flavor_tags = PackedStringArray("没有明显味道", "主要提供冰凉感并稀释饮品")
 description = "透明冰块，表面带有水珠。"
 ; generated:recipe_ingredients
 can_be_base = false
@@ -376,6 +390,7 @@ display_name = "可可粉"
 source_ids = PackedStringArray("C08")
 icon = ExtResource("icon_art_cocoa_powder")
 category = "material"
+flavor_tags = PackedStringArray("可可香气明显", "微苦带甜", "粉感略重")
 description = "棕色细粉末。"
 ; generated:recipe_ingredients
 can_be_base = false
@@ -403,6 +418,7 @@ display_name = "苹果果酱"
 source_ids = PackedStringArray("C09")
 icon = ExtResource("icon_pearl")
 category = "topping"
+flavor_tags = PackedStringArray("苹果甜香明显", "酸味较淡", "甜度偏高")
 description = "金黄色浓稠果酱。"
 ; generated:recipe_ingredients
 can_be_base = false
@@ -430,6 +446,7 @@ display_name = "草莓果酱"
 source_ids = PackedStringArray("C10")
 icon = ExtResource("icon_art_strawberry_jam")
 category = "topping"
+flavor_tags = PackedStringArray("草莓香甜浓郁", "略带酸味", "质地黏稠")
 description = "红色或粉红色浓稠果酱。"
 ; generated:recipe_ingredients
 can_be_base = false
@@ -456,48 +473,60 @@ id = "classic_boba_milk_tea"
 display_name = "经典珍珠奶茶（成品）"
 icon = ExtResource("icon_art_classic_boba_milk_tea")
 category = "product"
+flavor_tags = PackedStringArray("奶精味明显", "甜度偏高", "珍珠软糯有嚼劲")
 description = "奶精味明显，甜度偏高，珍珠软糯有嚼劲。"
 
+source_ids = PackedStringArray("H01")
 [sub_resource type="Resource" id="Product_mint_choc"]
 script = ExtResource("ingredient")
 id = "mint_choc_milk_tea"
 display_name = "薄荷巧脆奶茶（成品）"
 icon = ExtResource("icon_art_mint_choc_milk_tea")
 category = "product"
+flavor_tags = PackedStringArray("薄荷味突出", "甜度较高", "巧脆碎带有酥脆感")
 description = "薄荷味突出，甜度较高，巧脆碎带有酥脆感。"
 
+source_ids = PackedStringArray("H02")
 [sub_resource type="Resource" id="Product_coffee_cocoa"]
 script = ExtResource("ingredient")
 id = "coffee_cocoa_ice_milk"
 display_name = "咖啡可可冰奶（成品）"
 icon = ExtResource("icon_art_coffee_cocoa_ice_milk")
 category = "product"
+flavor_tags = PackedStringArray("咖啡焦苦与可可甜味交织", "奶味较浓")
 description = "咖啡焦苦与可可甜味交织，奶味较浓。"
 
+source_ids = PackedStringArray("H03")
 [sub_resource type="Resource" id="Product_apple_green"]
 script = ExtResource("ingredient")
 id = "apple_milk_green_tea"
 display_name = "苹果奶绿（成品）"
 icon = ExtResource("icon_art_apple_milk_green_tea")
 category = "product"
+flavor_tags = PackedStringArray("苹果果酱甜味明显", "奶味偏重", "茶味较淡")
 description = "苹果果酱甜味明显，奶味偏重，茶味较淡。"
 
+source_ids = PackedStringArray("H04")
 [sub_resource type="Resource" id="Product_strawberry_green"]
 script = ExtResource("ingredient")
 id = "strawberry_milk_green_tea"
 display_name = "草莓奶绿（成品）"
 icon = ExtResource("icon_art_strawberry_milk_green_tea")
 category = "product"
+flavor_tags = PackedStringArray("草莓果酱香气突出", "甜度较高", "茶味较淡")
 description = "草莓果酱香气突出，甜度较高，茶味较淡。"
 
+source_ids = PackedStringArray("H05")
 [sub_resource type="Resource" id="Product_iced_mint_latte"]
 script = ExtResource("ingredient")
 id = "iced_mint_latte"
 display_name = "冰吸薄荷拿铁（成品）"
 icon = ExtResource("icon_art_iced_mint_latte")
 category = "product"
+flavor_tags = PackedStringArray("咖啡味略苦", "薄荷凉感明显", "带有甜奶味")
 description = "咖啡味略苦，薄荷凉感明显，带有甜奶味。"
 
+source_ids = PackedStringArray("H06")
 [sub_resource type="Resource" id="Ingredient_moss_green"]
 script = ExtResource("ingredient")
 id = "moss_green"
@@ -506,7 +535,10 @@ source_ids = PackedStringArray("F01")
 icon = ExtResource("icon_green_tea")
 origin = "otherworld"
 category = "material"
+flavor_tags = PackedStringArray("黏稠微酸", "略带发酵气息")
+acquisition_sources = PackedStringArray("在湿润区域的石壁上采集，例如河岸工坊附近道路两侧的潮湿石壁。")
 form = "液体"
+processing_methods = PackedStringArray("免加工")
 description = "洞窟潮湿石壁上凝结的青绿色植物汁液。当地哥布林常用它调制廉价饮品，据说能缓解饭后的胀满感。"
 ; generated:recipe_ingredients
 can_be_base = true
@@ -535,7 +567,10 @@ source_ids = PackedStringArray("F02")
 icon = ExtResource("icon_coconut")
 origin = "otherworld"
 category = "material"
+flavor_tags = PackedStringArray("软糯绵密", "带有淡淡甜味")
+acquisition_sources = PackedStringArray("在厨房备料区向 NPC 购买，或雇佣 NPC 代为订购")
 form = "固体"
+processing_methods = PackedStringArray("切丁", "切块")
 description = "生长在洞窟深处的块茎，外皮灰紫，内部质地柔软。切块后容易吸收饮品的甜味，是增加饱腹感的常见配料"
 ; generated:recipe_ingredients
 can_be_base = false
@@ -565,7 +600,10 @@ icon = ExtResource("icon_insomnia")
 origin = "otherworld"
 category = "material"
 rarity = "稀有"
+flavor_tags = PackedStringArray("柔滑细嫩", "清甜微凉")
+acquisition_sources = PackedStringArray("在道路旁的大树根部或树荫下采集")
 form = "固体"
+processing_methods = PackedStringArray("切块", "榨汁")
 description = "菌盖会散发蓝绿色荧光的特殊蘑菇。榨汁后能形成带有微光的饮品，饮用者偶尔会感到轻微眩晕，因而常被用于猎奇特调。"
 ; generated:recipe_ingredients
 can_be_base = false
@@ -590,12 +628,15 @@ throw_kind = "lure"
 script = ExtResource("ingredient")
 id = "goblin_firebrew"
 display_name = "纯正哥布林老火烧"
-source_ids = PackedStringArray("F05")
+source_ids = PackedStringArray("F05", "W02")
 icon = ExtResource("icon_art_goblin_firebrew")
 origin = "otherworld"
 category = "material"
 rarity = "优秀"
+flavor_tags = PackedStringArray("酒劲强烈", "谷物焦香明显", "入口辛辣灼热")
+acquisition_sources = PackedStringArray("在酒馆直接购买")
 form = "液体"
+processing_methods = PackedStringArray("免加工")
 price = 4
 description = "哥布林酒馆常见的标准烈酒，采用传统谷物发酵与蒸馏工艺制成。没有精致的香气，也谈不上顺滑，却凭借强烈的酒劲受到老酒客欢迎。"
 ; generated:recipe_ingredients
@@ -621,12 +662,15 @@ throw_kind = ""
 script = ExtResource("ingredient")
 id = "griffin_amber_wine"
 display_name = "格里芬琥珀酒"
-source_ids = PackedStringArray("F06")
+source_ids = PackedStringArray("F06", "W04")
 icon = ExtResource("icon_art_griffin_amber_wine")
 origin = "otherworld"
 category = "material"
 rarity = "史诗"
+flavor_tags = PackedStringArray("蜂蜜甜香与木质香交织", "酒体顺滑", "余味悠长")
+acquisition_sources = PackedStringArray("醉酒守卫任务。在酒馆购买；因酒馆老板误认主角为格里芬使者，可获得折扣")
 form = "液体"
+processing_methods = PackedStringArray("免加工")
 price = 100
 description = "以格里芬纹章为标志的高档酒品，常出现在富裕哥布林的宴席与重要社交场合。民间流传着饮用此酒便能得到格里芬庇佑的说法，但这种传闻从未得到证实。"
 ; generated:recipe_ingredients
@@ -657,7 +701,10 @@ icon = ExtResource("icon_art_red_mottled_wood")
 origin = "otherworld"
 category = "material"
 rarity = "优秀"
+flavor_tags = PackedStringArray("坚韧耐嚼", "咸甜中带有苦涩")
+acquisition_sources = PackedStringArray("在赌场相关区域通过购买、赌博方式获取")
 form = "固体"
+processing_methods = PackedStringArray("切丁", "免加工")
 description = "经过特殊腌制的刺激性木质配料，性质类似槟榔。赌场顾客喜欢边喝饮品边咀嚼它，认为这样能保持精神、缓解烦躁。"
 ; generated:recipe_ingredients
 can_be_base = false
@@ -687,7 +734,10 @@ icon = ExtResource("icon_art_honey_amber_crystal")
 origin = "otherworld"
 category = "material"
 rarity = "优秀"
+flavor_tags = PackedStringArray("坚硬易碎", "甜味浓郁")
+acquisition_sources = PackedStringArray("在赌场相关区域通过购买、赌博方式获取")
 form = "固体"
+processing_methods = PackedStringArray("切块")
 description = "外观像琥珀的天然甜味晶体。研碎后可以加入饮品，融化时会释放浓厚甜香。长期偏好甜食的顾客尤其喜欢它。"
 ; generated:recipe_ingredients
 can_be_base = false
@@ -717,7 +767,10 @@ icon = ExtResource("icon_art_phantom_gold_mushroom")
 origin = "otherworld"
 category = "material"
 rarity = "史诗"
+flavor_tags = PackedStringArray("菌肉柔韧", "微甜", "带有淡淡坚果香")
+acquisition_sources = PackedStringArray("完成「醉酒守卫」任务并赢得赌场赌局后，从赌场老板的收藏中自由挑选")
 form = "固体"
+processing_methods = PackedStringArray("切块")
 description = "一种带有金色纹理的特殊蘑菇，在昏暗环境中也十分醒目。据说吃了它就能发财，因此深受赌徒追捧。它与赌场及守卫订单相关的材料线有所联系，具体用途由对应任务揭示。"
 ; generated:recipe_ingredients
 can_be_base = false
@@ -747,7 +800,10 @@ icon = ExtResource("icon_art_rainbow_cube")
 origin = "otherworld"
 category = "material"
 rarity = "史诗"
+flavor_tags = PackedStringArray("外脆内滑", "薄荷凉感", "带有金属余味")
+acquisition_sources = PackedStringArray("赢得赌场老板提出的赌局后，从其收藏中自由挑选")
 form = "胶体"
+processing_methods = PackedStringArray("切丁")
 description = "一种具有致幻作用的奇异凝胶，切成规整的小方块后会随观察角度呈现不同色彩。食用后，感官可能逐渐失真，现实与幻觉的界限也会变得模糊。赌场老板将其作为稀有藏品保存，其真正的危险性却远不止外观所展示的那样。"
 ; generated:recipe_ingredients
 can_be_base = false
@@ -777,7 +833,10 @@ icon = ExtResource("icon_art_scorch_tongue_pepper")
 origin = "otherworld"
 category = "material"
 rarity = "稀有"
+flavor_tags = PackedStringArray("鲜辣强烈", "辣感持久", "带有微弱的烟熏味")
+acquisition_sources = PackedStringArray("生长在公共火塘周围受热的地面和石缝中，可以采集。")
 form = "固体"
+processing_methods = PackedStringArray("切丁", "榨汁")
 description = "一种生长在公共火塘附近的奇异果实，外皮鲜红，果实越成熟，辣味就越强烈。传说有些哥布林会直接生嚼它，以此证明自己够不够硬气。"
 ; generated:recipe_ingredients
 can_be_base = false
@@ -805,10 +864,13 @@ display_name = "劣质酸苔麦酒"
 icon = ExtResource("icon_art_sour_moss_ale")
 origin = "otherworld"
 category = "material"
+flavor_tags = PackedStringArray("麦芽味淡", "酸涩明显", "带有苔藓般的土腥气")
 form = "液体"
+processing_methods = PackedStringArray("免加工")
 price = 1
 description = "哥布林酒馆中最廉价的酒，以低品质麦芽和洞窟苔类发酵而成。味道粗劣，但价格低廉，是收入微薄的哥布林偶尔也能负担的饮品。"
 
+source_ids = PackedStringArray("W01")
 [sub_resource type="Resource" id="Ingredient_brute_lava_firebrew"]
 script = ExtResource("ingredient")
 id = "brute_lava_firebrew"
@@ -817,10 +879,13 @@ icon = ExtResource("icon_art_brute_lava_firebrew")
 origin = "otherworld"
 category = "material"
 rarity = "稀有"
+flavor_tags = PackedStringArray("烟熏焦苦", "带有灼烧感与矿物气息", "酒劲猛烈")
 form = "液体"
+processing_methods = PackedStringArray("免加工")
 price = 15
 description = "据说最初由地下帮派私自酿造，以满足偏好强烈刺激的酒客。原料来源不明，酿造标准也不稳定，每批酒的味道都可能不同，因此在黑市上流通。"
 
+source_ids = PackedStringArray("W03")
 [sub_resource type="Resource" id="Ingredient_griffin_sacred_wine"]
 script = ExtResource("ingredient")
 id = "griffin_sacred_wine"
@@ -829,9 +894,12 @@ icon = ExtResource("icon_art_griffin_sacred_wine")
 origin = "otherworld"
 category = "material"
 rarity = "传奇"
+flavor_tags = PackedStringArray("酒味浓烈", "带有明显的腥气与铁锈味", "苦涩难咽", "余味令人不适")
 form = "液体"
+processing_methods = PackedStringArray("免加工")
 description = "只在格里芬七日祭祀期间供应的传说级祭酒。据说配方中加入了极少量的格里芬之血，因此被部分信徒视为最接近格里芬神迹的酒品。每次祭祀供应数量极少，宴会席位一票难求。配方传闻从未得到公开证实，能够饮用本身便被视为一种身份与荣誉的象征。"
 
+source_ids = PackedStringArray("W05")
 [sub_resource type="Resource" id="Item_elder_document"]
 script = ExtResource("ingredient")
 id = "day1_elder_document"

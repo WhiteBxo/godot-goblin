@@ -62,10 +62,10 @@ mouse_filter = 2
 [node name="Positions" type="Node2D" parent="."]
 
 [node name="door" type="Marker2D" parent="Positions"]
-position = Vector2(1500, 270)
+position = Vector2(1123, 710)
 
 [node name="aisle" type="Marker2D" parent="Positions"]
-position = Vector2(1470, 560)
+position = Vector2(1000, 660)
 
 [node name="counter" type="Marker2D" parent="Positions"]
-position = Vector2(1100, 610)
+position = Vector2(844, 550)

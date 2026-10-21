@@ -26,6 +26,15 @@ func play_sfx(step: Dictionary) -> bool:
 	return handle != AudioManager.INVALID_HANDLE
 
 
+## Number of live voices still owned by this adapter. Cancellation must bring this to
+## zero; a plain "active voices" count also includes ambience and unrelated one-shots,
+## which makes it a misleading leak check.
+func owned_voice_count() -> int:
+	if not is_instance_valid(_audio):
+		return 0
+	return _audio.get_active_sound_count(_owner)
+
+
 func stop_owned(preserve_music: bool = false) -> void:
 	if is_instance_valid(_audio):
 		_audio.stop_owned(_owner)

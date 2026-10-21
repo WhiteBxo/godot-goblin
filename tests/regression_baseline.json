@@ -4,7 +4,6 @@
   "recorded_at": "2026-10-21",
   "accepted_failures": [
     "verify_chapter_stealth_route.gd",
-    "verify_cinematic_integration.gd",
     "verify_day1_chapter_systems.gd",
     "verify_day1_stages_01_02.gd",
     "verify_flow_playtest.gd",

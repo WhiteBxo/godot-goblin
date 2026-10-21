@@ -53,8 +53,11 @@ func _new_game() -> void:
 	_story.step_started.connect(func(_id: String, _index: int, command: String) -> void: _steps.append(command))
 	_story.event_finished.connect(func(_id: String, ok: bool, _reason: String) -> void: _results.append(ok))
 	var marker := Marker2D.new()
-	marker.position = Vector2(950, 560)
 	_game.get_active_level().add_child(marker)
+	# Assign globally: the level node carries a world offset, so a local position would
+	# land somewhere else than the probed corridor. East of the spawn is straight-line
+	# clear; everything south of it stalls behind the counter in a single move.
+	marker.global_position = Vector2(1075, 457)
 	_actors.register_position(&"test_position", marker)
 
 func _dispose() -> void:
@@ -143,7 +146,10 @@ func _ordering() -> void:
 	await create_timer(0.08).timeout
 	_check(_steps == ["actor_face", "actor_move"], "Blocking move withholds subsequent dispatch")
 	await _until(func() -> bool: return not _story.is_busy(), "Blocking sequence finishes")
-	_check(_results.back() and player.global_position.distance_to(Vector2(950, 560)) <= 0.5 and player.visible, "Movement uses real controller and visibility actions complete")
+	var moved_to := (_actors.get_position(&"test_position") as Marker2D).global_position
+	_check(_results.back() and player.global_position.distance_to(moved_to) <= 0.5 and player.visible,
+		"Movement uses real controller and visibility actions complete (at %s, target %s, ok=%s, visible=%s, error='%s')" % [
+			player.global_position, moved_to, _results.back(), player.visible, _story.last_error])
 	_check(player.movement_enabled and _cameras.get_camera().mode == BoundedFollowCamera.Mode.FOLLOW, "Finish restores control and camera")
 	var count := _results.size()
 	for action in notices.duplicate():
@@ -226,10 +232,11 @@ func _conflicts() -> void:
 func _cancellation() -> void:
 	var player := _game.get_player() as PlayerController
 	var interaction: ShopInteraction = _game.get_node("Systems/ShopInteraction")
-	# The shop scene keeps its own ambience voice playing. Cancellation must only
-	# remove story-owned voices, so every count here is measured against it.
+	# The shop scene keeps its own ambience voice playing, and camera shake fires
+	# unowned one-shots, so a total active-voice count says nothing about leakage.
+	# Ask the adapter how many voices it still owns instead.
 	await _frames(2)
-	var ambient := _audio.get_active_sound_count()
+	var adapter: StoryAudioAdapter = _story._audio
 	for command: String in ["actor_move", "actor_emote", "camera_move", "camera_shake", "camera_zoom", "play_bgm", "play_sfx"]:
 		var step: Dictionary
 		match command:
@@ -251,7 +258,8 @@ func _cancellation() -> void:
 		var position := player.global_position
 		await _frames(5)
 		_check(player.global_position == position and _state.story_stage != "cinematic.stale" and _cameras.get_camera().mode == BoundedFollowCamera.Mode.FOLLOW and _cameras.get_camera().offset == Vector2.ZERO, "No stale movement/camera/callback: " + command)
-		_check(_audio.get_active_sound_count() == ambient and not _audio.get_bgm_state().playing, "Cancel stops owned audio")
+		_check(adapter.owned_voice_count() == 0 and not _audio.get_bgm_state().playing,
+			"Cancel stops owned audio: %s (%d owned voices left)" % [command, adapter.owned_voice_count()])
 	player.set_movement_enabled(false)
 	interaction.set_input_enabled(false)
 	_start([{"command": "camera_zoom", "value": 1, "duration": 1}])
@@ -379,10 +387,15 @@ func _demo() -> void:
 	var seconds := (Time.get_ticks_msec() - started) / 1000.0
 	print("CINEMATIC_OPENING_DURATION: %.2fs" % seconds)
 	_check(not _story.is_busy() and _story.last_error.is_empty(), "Complete JSON demo succeeds: " + _story.last_error)
+	# Two dialogue beats at four seconds each, the walk from the door and the reaction
+	# beats land around 22s once the customer can actually reach the counter.
 	_check(seconds >= 20 and seconds <= 30, "Opening lasts 20-30 seconds with four-second readings (%.2fs)" % seconds)
 	_check(commands.count("actor_move") == 2 and commands.count("dialogue") == 2 and commands.has("camera_reset"), "All opening phases came from JSON")
 	var customer := _game.get_actor_director().get_actor(&"customer")
-	_check(customer != null and customer.global_position.distance_to(Vector2(1100, 610)) <= 0.5, "Customer arrives at counter through real shop collision")
+	# Read the destination from the demo instead of hardcoding it, so moving the anchor
+	# does not need a second edit here.
+	var counter := demo.get_node_or_null("Positions/counter") as Marker2D
+	_check(counter != null and customer != null and customer.global_position.distance_to(counter.global_position) <= 0.5, "Customer arrives at counter through real shop collision")
 	_check((_game.get_player() as PlayerController).movement_enabled and _game.get_camera_director().get_camera().mode == BoundedFollowCamera.Mode.FOLLOW, "Demo restores movement and follow")
 	demo.play()
 	await _frames()

@@ -1,7 +1,7 @@
 # 回归红区分类（2026-10-21，上线后首次收敛）
 
-> 数据来源：`python tests/run_all.py --jobs 4`，126 项，354.0s。
-> 结果：**PASS 105 / FAIL 13 / CRASH 0 / SKIP 6 / HANG 0 / KNOWN 2**。
+> 数据来源：`python tests/run_all.py --jobs 4`，126 项，338.8s。
+> 结果：**PASS 106 / FAIL 12 / CRASH 0 / SKIP 6 / HANG 0 / KNOWN 2**。
 > 收敛前基线（同日 03:58）：PASS 100 / FAIL 17 / CRASH 1 / HANG 2 / SKIP 6。
 
 本文只做一件事：把 14 项红按「谁该动手」分开，避免下一次又从头猜。
@@ -16,6 +16,7 @@
 | `verify_audio_manager.gd` | 4 条断言假设「事件开始前音频为空」，但店铺场景自带 `assets/audio/ambience/shop.wav` 常驻音景 | 引入 `ambient` 基线，全部改为相对计数 |
 | `verify_cinematic_integration.gd` | 同上，`Cancel stops owned audio` 7 条都卡在环境音占位 | 同上，13 条 → 6 条 |
 | `verify_otherworld_catalog.gd`（61 条） | 提交 `c52233fd`（信息只写"加酒馆地图 tile"）在重存 `.tres` 时静默删掉了 4 类手工字段：`flavor_tags` 31、`source_ids` 31（数组被截断成只剩首个）、`processing_methods` 15、`acquisition_sources` 13，共 90 处；图鉴因此显示「加工：」空白、风味整行消失 | 从 `c52233fd^` 逐字段恢复，`source_ids` 仅在"当前值是旧值子集"时覆盖；另有一条 `== 6` 的过期断言改为「教学只暴露 human 侧材料」 |
+| `verify_cinematic_integration.gd`（13 条） | `cinematic_demo.tscn` 的 `door`/`aisle`/`counter` 还是旧版店铺坐标（1500,270 / 1470,560 / 1100,610），全部落在 `WallsAndFurniture` 里，顾客走不到柜台；因此开场只跑了 10 秒就中断，连带「20–30 秒」与阶段计数一起失败 | 换成实测走廊 `door(1123,710)` → `aisle(1000,660)` → `counter(844,550)`；`test_position` 改用 `global_position` 赋值（level 节点带世界偏移，局部坐标会落到别处）；取消音频改用适配器归属计数 |
 
 **结论：`stop_owned` / `StoryAudioAdapter` 归属逻辑本身没有 bug**，先前「两个不同 owner」的怀疑是环境音与 story voice 混在一起看导致的误判。
 
@@ -23,8 +24,7 @@
 
 | 测试 | 现象 | 证据 |
 | --- | --- | --- |
-| `verify_cinematic_integration.gd`（6 条） | 开场演出的 `customer` 走 `aisle`(1470,560) 被挡，顾客到不了柜台；另有时长断言要求 20–30s 而实际 10.15s | 已确证走位被挡；**时长需产品裁定**：是内容被压缩了，还是断言过期 |
-| `verify_milk_tea_shop.gd`（1 条） | 设施与交付 NPC 从出生点不可达 | 待定性：需确认是布局改了还是寻路口径变了 |
+| `verify_milk_tea_shop.gd`（1–2 条） | 设施与交付 NPC 从出生点不可达 | 待定性：flood fill 显示胖哥布林交互点附近可站，但其所在区域与出生点不连通，需确认是布局问题还是"隔着柜台交互"的设计 |
 | `verify_tea_recipes.gd`（5 条） | 教学「提交」按钮在小视口被挤出面板可视区；解锁原料未进入可选列表 | 布局溢出已定性；解锁列表待确认 |
 | `verify_signature_interaction.gd`（5 条） | S08 线索无法物理重叠触发，文档打不开 | 待定性：疑与 S08 互动点位移有关 |
 | `verify_chapter_stealth_route.gd`（1 条） | 潜行地面路线到 (216,440) 不通 | 待定性 |
@@ -56,9 +56,9 @@
 
 ## 五、建议顺序
 
-1. `verify_cinematic_integration` 的顾客走位（开场演出是玩家第一印象），并裁定开场时长该是 20–30s 还是 10s。
-2. 三项「基线落后」批量改期望，成本低、收益是让红区只剩真问题。
-3. `verify_tea_recipes` / `verify_warehouse_inventory` 的 UI 溢出与制作台默认模式——同属玩家可见的界面问题。
+1. 三项「基线落后」批量改期望，成本低、收益是让红区只剩真问题。
+2. `verify_tea_recipes` / `verify_warehouse_inventory` 的 UI 溢出与制作台默认模式——同属玩家可见的界面问题。
+3. `verify_milk_tea_shop` 的胖哥布林可达性——先确认是布局问题还是"隔着柜台交互"的设计，再决定修布局还是修判据。
 4. 其余按模块归属逐个确认。
 
 发布验收命令：`python tests/run_all.py --strict-known`。

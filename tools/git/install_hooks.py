@@ -26,6 +26,19 @@ MARKER = "# managed-by: tools/git/install_hooks.py"
 
 PRE_PUSH = f"""#!/bin/sh
 {MARKER}
+# 公开仓库已冻结：origin 停在最后一个开源提交，之后的版本只进 private。
+# 拦在回归检查之前，命中即返回，不浪费几分钟跑测试。
+# 注意 godot-goblin.git 不会匹配 godot-goblin-private.git，两个远端互不误伤。
+case "$1" in
+origin | *github.com/WhiteBxo/godot-goblin.git* | *github.com:WhiteBxo/godot-goblin.git*)
+	if [ "$ALLOW_PUBLIC_PUSH" != "1" ]; then
+		echo "pre-push: origin（公开仓库）已冻结，新版本只推 private。" >&2
+		echo "pre-push: 确需更新公开仓库时用 ALLOW_PUBLIC_PUSH=1 git push origin main，" >&2
+		echo "pre-push: 并自行确认这次提交不含闭源内容。" >&2
+		exit 1
+	fi
+	;;
+esac
 # Gate on "no new red" rather than "zero red": a tree that already carries known
 # failures would otherwise be unpushable, and the gate would just get skipped.
 if [ "$SKIP_REGRESSION" = "1" ]; then

@@ -8,11 +8,6 @@
       "reason": "打完 appearances 两行后无输出死等，是 await 缺少 deadline 的挂起（超时被强杀）。需要逐个 await 补 deadline，属测试代码修复，不影响运行时角色表现。"
     },
     {
-      "name": "verify_day1_return_feedback.gd",
-      "category": "environment",
-      "reason": "0xC0000005 只在 4 路并发时出现，串行 16 checks 全过；是进程级并发偶发，不是断言失败。跑 --jobs 1 可复现清白。"
-    },
-    {
       "name": "verify_rpg_chapter_maps.gd",
       "category": "test-drift",
       "reason": "停在 MansionPayment 距离倍率断言后超时；docs/levels/rpg_maker/README.md 已把该项登记为既有问题，距值随地图重导漂移，需按当前制式重算期望。"

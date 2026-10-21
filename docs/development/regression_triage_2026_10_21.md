@@ -49,8 +49,10 @@
 | 测试 | 类别 | 理由 |
 | --- | --- | --- |
 | `verify_characters.gd` | environment | `await` 缺 deadline，打完 appearances 后死等被强杀 |
-| `verify_day1_return_feedback.gd` | environment | `0xC0000005` 仅 4 路并发出现，串行 16 checks 全过 |
 | `verify_rpg_chapter_maps.gd` | test-drift | MansionPayment 距离倍率随地图重导漂移，README 已登记 |
+
+> `verify_day1_return_feedback.gd` 曾因 4 路并发下 `0xC0000005` 登记在册；同日复跑两次均通过，
+> 已按台账规则移出。若再复现，先串行 `--jobs 1` 确认，再考虑是引擎侧并发问题。
 
 ## 五、建议顺序
 

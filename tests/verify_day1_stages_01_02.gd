@@ -118,6 +118,23 @@ func _await_scene(previous: Node, context: String, seconds: float = 10.0) -> boo
 		return false
 	return true
 
+## A real v2 save predates portion tracking: its inventories are v1 records, three
+## keys per ingredient and no drinks / encyclopedia. The inventory migration fills
+## `used` for the whole file and therefore rejects a mixed snapshot, so the fixture
+## has to look exactly like a genuine one instead of a current file with a coin removed.
+func _downgrade_to_v2(snapshot: Dictionary) -> Dictionary:
+	var legacy := snapshot.duplicate(true)
+	legacy.schema_version = 2
+	legacy.business.erase("profile_id")
+	for inventory: Dictionary in [legacy.business.inventory, legacy.economy.inventory]:
+		inventory.schema_version = 1
+		inventory.erase("drinks")
+		inventory.erase("encyclopedia")
+		inventory.ingredients.erase("strange_coin")
+		for entry: Dictionary in inventory.ingredients.values():
+			entry.erase("used")
+	return legacy
+
 func _reload(snapshot: Dictionary, allow_resume_story: bool = false) -> void:
 	var previous := current_scene
 	check(reload_current_scene() == OK, "Real scene reload starts")
@@ -511,11 +528,7 @@ func _run() -> void:
 		check(_state.story_stage == snapshot.story_stage and not _game.get_story_director().is_busy(), "Every gameplay checkpoint restores idle and operable")
 	await _restore(final)
 	var legacy := StateData.new()
-	var v2 := legacy.to_dict()
-	v2.schema_version = 2
-	v2.business.erase("profile_id")
-	v2.business.inventory.ingredients.erase("strange_coin")
-	v2.economy.inventory.ingredients.erase("strange_coin")
+	var v2 := _downgrade_to_v2(legacy.to_dict())
 	check(legacy.restore_state(v2) == OK and legacy.get_business_profile() == "tutorial", "Old complete v2 snapshots migrate to tutorial without inventing coins")
 	legacy.free()
 	var services: Array[Node] = [_game.get_tea_production(), _game.get_transactions(), _game.get_warehouse_inventory()]

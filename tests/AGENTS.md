@@ -39,7 +39,7 @@
 - `product-bug` 只能短期停留：要么修掉，要么把设计取舍写清楚并改写测试期望，不能长期挂在台账里。
 - 台账里的项一旦恢复通过，运行器会提示「台账过期」，此时删除该条；台账腐烂比没有台账更糟。
 - 发布验收用 `python tests/run_all.py --strict-known`，已知红也按失败计。
-- 推送前钩子由 `python tools/git/install_hooks.py` 安装，跑完整回归后才允许 push；临时跳过用 `SKIP_REGRESSION=1 git push`。
+- 推送前的闸门由 `python tools/git/install_hooks.py` 安装。它判断的是**有没有新增红**，不是「必须全绿」：`tests/regression_baseline.json` 记录当前已存在的失败，名单只许变短；修好一项要同步删除，新增一项必须显式登记并写清原因。临时跳过用 `SKIP_REGRESSION=1 git push`。
 
 写测试时要让失败可见，不要把断言失败伪装成挂起：
 

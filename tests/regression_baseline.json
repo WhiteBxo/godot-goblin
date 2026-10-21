@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "note": "当前已存在、且不阻塞推送的失败名单。护栏只拦「新增红」：修好一项要同步从这里删掉（运行器会提示），新增一项则必须显式加进这里并写清原因。目标是把这份名单逐项清零，而不是让它变长。分类与下一步见 docs/development/regression_triage_2026_10_21.md。",
+  "recorded_at": "2026-10-21",
+  "accepted_failures": [
+    "verify_chapter_stealth_route.gd",
+    "verify_cinematic_integration.gd",
+    "verify_day1_chapter_systems.gd",
+    "verify_day1_stages_01_02.gd",
+    "verify_flow_playtest.gd",
+    "verify_gathering.gd",
+    "verify_interaction_audio.gd",
+    "verify_milk_tea_shop.gd",
+    "verify_otherworld_catalog.gd",
+    "verify_rpg_maker_map.gd",
+    "verify_signature_interaction.gd",
+    "verify_supplement_content.gd",
+    "verify_tea_recipes.gd",
+    "verify_warehouse_inventory.gd"
+  ]
+}

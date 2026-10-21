@@ -26,8 +26,8 @@ MARKER = "# managed-by: tools/git/install_hooks.py"
 
 PRE_PUSH = f"""#!/bin/sh
 {MARKER}
-# Refuse to push a tree whose regression suite is red. Failures that are already
-# understood belong in tests/known_red.json, not in a habit of ignoring red.
+# Gate on "no new red" rather than "zero red": a tree that already carries known
+# failures would otherwise be unpushable, and the gate would just get skipped.
 if [ "$SKIP_REGRESSION" = "1" ]; then
 	echo "pre-push: SKIP_REGRESSION=1，跳过回归检查。"
 	exit 0
@@ -39,13 +39,15 @@ if [ -z "$PYTHON" ]; then
 	echo "pre-push: 找不到 python，跳过回归检查（请手动运行 python tests/run_all.py）。" >&2
 	exit 0
 fi
+REPORT=".godot/test_logs/run_all.json"
 echo "pre-push: 运行完整回归，约 5 分钟。临时跳过用 SKIP_REGRESSION=1 git push" >&2
-"$PYTHON" tests/run_all.py
+"$PYTHON" tests/run_all.py --report "$REPORT"
+# run_all 的退出码回答「有没有红」，这里要回答的是「有没有新增红」。
+"$PYTHON" tools/git/check_regression.py --report "$REPORT"
 CODE=$?
 if [ "$CODE" -ne 0 ]; then
 	echo "" >&2
-	echo "pre-push: 回归未通过（exit $CODE），已阻止推送。" >&2
-	echo "pre-push: 修掉失败，或把已确认接受的失败登记到 tests/known_red.json。" >&2
+	echo "pre-push: 出现新增红，已阻止推送。" >&2
 	exit 1
 fi
 exit 0

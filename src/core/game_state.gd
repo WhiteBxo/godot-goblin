@@ -376,6 +376,10 @@ func commit_fixed_craft(costs: Dictionary, product_id: String, quantity: int, pr
 	if error == OK:
 		_tea_production.set_block_signals(true)
 		_tea_production.restore_state(production)
+		# Keep the session's made-drinks counter in step with production before the
+		# snapshot goes out, the same way the legacy changed-signal path did.
+		if _business_profile == "day1":
+			_variables["shop.drinks_made"] = _tea_production.get_completed_count()
 		_warehouse_inventory.set_session_locked(true)
 		_notify_state_changed()
 		_economy.publish_restored(before)

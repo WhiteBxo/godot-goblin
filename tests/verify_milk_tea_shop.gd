@@ -148,9 +148,16 @@ func _reachable(level: MilkTeaShop, player: ShopPlayer, delivery_point: Interact
 	points.append_array(level.get_scene_exits())
 	points.append(delivery_point)
 	for point in points:
+		# Reach means "some standable cell lies inside the point's own trigger
+		# circle"; a fixed 60px margin rejects props that sit inside furniture
+		# but are still perfectly usable from the aisle.
+		var reach := 60.0
+		var trigger := point.get_node_or_null("CollisionShape2D") as CollisionShape2D
+		if trigger != null and trigger.shape is CircleShape2D:
+			reach = (trigger.shape as CircleShape2D).radius
 		var found := false
 		for cell: Vector2i in queue:
-			if (Vector2(cell) * 24.0).distance_to(point.global_position) < 60.0:
+			if (Vector2(cell) * 24.0).distance_to(point.global_position) <= reach:
 				found = true
 				break
 		if not found:

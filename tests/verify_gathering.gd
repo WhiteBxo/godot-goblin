@@ -349,7 +349,12 @@ func _test_host() -> void:
 	var service := game.get_gathering_service()
 	var player := game.get_player()
 	var ui := game.get_shop_ui()
-	_check(level != null and service.get_points().size() == 6, "Formal RPG exterior hosts the six supplemental resources")
+	var kinds := {}
+	for point: GatherPoint in service.get_points():
+		kinds[point.item_id] = true
+	# The exterior carries six distinct materials; some of them hold more than one
+	# patch, so the point count is not the material count.
+	_check(level != null and service.get_points().size() >= 6 and kinds.size() == 6, "Formal RPG exterior hosts the six supplemental resources")
 	var first := service.get_point(&"night_gather_0")
 	_check(not first.get_node("Marker").visible and not first.get_node("HarvestVisual").visible, "Daytime hides the night harvest artwork and clue")
 	await _move_player(player, first.global_position)
@@ -383,9 +388,23 @@ func _test_host() -> void:
 	await _frames()
 	_check(state.get_flag("day2.s03.has_gathered"), "Gathering before accepting the commission is recognized")
 	var notice := game.get_chapter_gameplay().get_gathering_notice()
+	# Accepting on day two only points at tomorrow's list; the itemised notice is a
+	# day-three affordance, so unlock it the same way the day change does.
+	_check("明天向酒馆老板确认食材清单" in notice, "Day two notice defers the itemised list")
+	state.set_flag("day3.festival.available")
+	notice = game.get_chapter_gameplay().get_gathering_notice()
 	_check("缺0" in notice and "已齐备" in notice, "Commission projects actual held portions and zero shortfall")
-	game.get_warehouse_inventory().try_consume({"moss_green": 1})
-	_check("苔痕青 1/2 · 缺1" in game.get_chapter_gameplay().get_gathering_notice(), "Using shared stock immediately changes the displayed shortfall")
+	# Patch counts and yields differ per material, so project the numbers from the
+	# real requirement instead of hard-coding them.
+	var inventory: WarehouseInventory = game.get_warehouse_inventory()
+	var moss_needed: int = game.get_task_delivery().get_requirement("day3_festival")["moss_green"]
+	# Drain the shared pile so the projection must show a real shortfall.
+	var moss_owned: int = inventory.get_stock("moss_green")
+	_check(inventory.try_consume({"moss_green": moss_owned}), "Shared stock can be consumed")
+	moss_owned = inventory.get_stock("moss_green")
+	var short_notice := game.get_chapter_gameplay().get_gathering_notice()
+	_check(("苔痕青 %d/%d · 缺%d" % [moss_owned, moss_needed, maxi(0, moss_needed - moss_owned)]) in short_notice
+		and not "已齐备" in short_notice, "Using shared stock immediately changes the displayed shortfall")
 	_check(state.restore_state(before) == OK, "Restore the pre-harvest state")
 	await _frames()
 	_check(first.get_node("HarvestVisual").visible and service.is_harvestable(first), "Restore rebuilds artwork from saved harvest facts")

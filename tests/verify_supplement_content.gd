@@ -93,8 +93,12 @@ func run() -> void:
 			for choice in range(3): await conversation("casino_sentry",choice)
 		if host == "settlement" and day == 2:
 			var gather := game.get_gathering_service()
-			check(gather.get_points().size() == 6,"All six source materials keep their patch")
-			var harvested := 0
+			# Six distinct materials; some hold more than one patch on the exterior.
+			var kinds := {}
+			for point: GatherPoint in gather.get_points():
+				kinds[point.item_id] = true
+			check(gather.get_points().size() >= 6 and kinds.size() == 6,"All six source materials keep their patch")
+			var harvested := {}
 			for point: GatherPoint in gather.get_points():
 				game.get_player().teleport_to(point.global_position + Vector2(0,24))
 				await frames()
@@ -109,8 +113,8 @@ func run() -> void:
 				var result := gather.harvest(point.interaction_id)
 				check(result.ok and result.message.begins_with(point.success_description),"Source acquisition text follows committed harvest: " + point.item_id)
 				check(state.get_warehouse_inventory().get_stock(point.item_id) == before + point.amount and not gather.harvest(point.interaction_id).ok,"Harvest pays once per day: " + point.item_id)
-				harvested += 1
-			check(harvested == 5,"The other five materials stay harvestable")
+				harvested[point.item_id] = true
+			check(harvested.size() == 5,"The other five materials stay harvestable")
 			check(not state.can_discover_signature("S06"),"Free mushroom harvesting never fabricates a Day2 purchase")
 			state.commit_story_transaction("test.market_money",{},{},5000)
 			var chapter := game.get_chapter_gameplay()

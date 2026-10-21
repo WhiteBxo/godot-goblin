@@ -23,6 +23,16 @@ func _process(_delta: float) -> bool:
 			dialogue.advance()
 			dialogue.select_choice(0)
 	return false
+## Story props sit on the prop itself; walk up to whichever side is free instead
+## of assuming the floor below is always open.
+func approach(point: InteractionPoint) -> Vector2:
+	var map := game.get_active_level() as RpgChapterMap
+	for offset: Vector2 in [Vector2(0, 32), Vector2(0, 24), Vector2(0, -32), Vector2(32, 0), Vector2(-32, 0)]:
+		var spot := point.global_position + offset
+		if map.can_stand_at(spot, Vector2(8, 4)):
+			return spot
+	return point.global_position
+
 func stop_input() -> void:
 	for action: String in ["move_left", "move_right", "move_up", "move_down"]:
 		Input.action_release(action)
@@ -116,11 +126,16 @@ func run() -> void:
 	check(game.get_stealth_service() == null,"Interior has no stealth failure")
 	for point: InteractionPoint in game.get_active_level().get_interaction_points():
 		if point is StoryInteractionPoint and String(point.interaction_id) in ["day1_elder_document","day1_blood_storage"]:
-			if not await walk_to(point.global_position + Vector2(0,32)):
+			if not await walk_to(approach(point)):
 				quit(1);return
 			await frames()
 			check(point.is_available() and point.resolve().ok,"Physically reach and collect " + String(point.interaction_id))
-	if not await exit_through("elder_exit") or not await walk_to(Vector2(1176,648)):
+	if not await exit_through("elder_exit"):
+		quit(1);return
+	# The escape only completes at the shop door, where day one starts; read the
+	# authored zone instead of pinning an old exterior coordinate.
+	var escape_setup = game.get_stealth_service().get("_setup")
+	if escape_setup == null or not await walk_to(escape_setup.escape_zone.global_position):
 		quit(1);return
 	await frames(20)
 	check(state.get_flag("day1.s05.escape_completed"),"Return on foot completes escape")

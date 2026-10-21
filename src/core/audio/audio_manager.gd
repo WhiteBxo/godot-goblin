@@ -7,7 +7,10 @@ signal sound_finished(handle: int, cancelled: bool)
 const SILENCE_DB: float = -80.0
 const INVALID_HANDLE: int = 0
 
-@export_range(1, 32) var pool_size: int = 8
+# Eight voices are easy to saturate once ambience, UI blips and a station loop
+# overlap, and the mixer drops any further sound as "optional". Sixteen keeps
+# room for the feedback that matters (craft, delivery) without a real cost.
+@export_range(1, 32) var pool_size: int = 16
 ## Direct resource references are export-safe; the same catalogue serves all APIs.
 @export var sounds: Dictionary[String, AudioStream] = {}
 

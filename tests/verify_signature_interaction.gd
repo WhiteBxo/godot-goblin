@@ -42,6 +42,9 @@ func run() -> void:
 	var state := root.get_node("GameState")
 	state.reset_state()
 	state.set_flag("day2.s04.casino_reward_received")
+	# S08 is the philosopher-and-drunkard clue; the map gates it behind hearing
+	# them out first.
+	state.set_flag("supplement.philosopher.heard")
 	state.get_warehouse_inventory().add_ingredient("rainbow_cube", 1)
 	for entry: Array in [["tavern", "S04", "SignatureS04"], ["casino", "S07", "SignatureS07"], ["elder_house", "S10", "SignatureS10"], ["settlement", "S08", "SignatureS08"]]:
 		if not await open_scene(entry[0]):

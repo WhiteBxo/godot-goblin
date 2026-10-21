@@ -943,7 +943,7 @@ initial_stock = {
 }
 initial_discovery = {
 }
-orders = Array[Dictionary]([{"id":"day1_human","product_id":"classic_boba_milk_tea","name":"经典珍珠奶茶","accepted_flag":"task.day1.human.active"},{"id":"day1_goblin","product_id":"classic_boba_milk_tea","name":"经典珍珠奶茶","accepted_flag":"task.day1.goblin.active"},{"id":"day1_group_a","product_id":"strawberry_milk_green_tea","name":"草莓奶绿","accepted_flag":"task.day1.group_a.active"},{"id":"day1_group_b","product_id":"strawberry_milk_green_tea","name":"草莓奶绿","accepted_flag":"task.day1.group_b.active"},{"id":"day1_group_c","product_id":"coffee_cocoa_ice_milk","name":"咖啡可可冰奶","accepted_flag":"task.day1.group_c.active"},{"id":"day1_group_d","accepted_flag":"task.day1.group_d.active","product_id":"mint_choc_milk_tea","name":"薄荷巧脆奶茶"},{"id":"day1_group_e","accepted_flag":"task.day1.group_e.active","product_id":"iced_mint_latte","name":"冰吸薄荷拿铁"}])
+orders = Array[Dictionary]([{"id":"day1_human","product_id":"classic_boba_milk_tea","name":"经典珍珠奶茶","accepted_flag":"task.day1.human.active"},{"id":"day1_goblin","product_id":"classic_boba_milk_tea","name":"经典珍珠奶茶","accepted_flag":"task.day1.goblin.active"},{"id":"day1_group_a","product_id":"strawberry_milk_green_tea","name":"草莓奶绿","accepted_flag":"task.day1.group_a.active"},{"id":"day1_group_c","product_id":"coffee_cocoa_ice_milk","name":"咖啡可可冰奶","accepted_flag":"task.day1.group_c.active"},{"id":"day1_group_d","accepted_flag":"task.day1.group_d.active","product_id":"mint_choc_milk_tea","name":"薄荷巧脆奶茶"},{"id":"day1_group_e","accepted_flag":"task.day1.group_e.active","product_id":"iced_mint_latte","name":"冰吸薄荷拿铁"}])
 recipe_book = ExtResource("book")
 products = {
 "day2_amber_wine": {

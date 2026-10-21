@@ -71,7 +71,11 @@ func _run() -> void:
 	_formal = root.get_node("GameState").to_dict()
 	var default_menu: TeaMenu = TeaProduction.CATALOG
 	var default_stock := default_menu.initial_stock.duplicate(true)
-	_check(default_menu.products.is_empty(), "Formal menu has no fixture products")
+	var default_products: Array = default_menu.products.keys()
+	default_products.sort()
+	# The shared catalog is the shipped menu (it legitimately carries real products),
+	# so the check is that the fixture's own entries never land in it.
+	_check(not default_menu.products.has(Fixture.TAVERN_PRODUCT) and not default_menu.products.has(Fixture.PRODUCT), "Formal menu has no fixture products")
 	_check(change_scene_to_file(SCENE) == OK, "F6 scene loads")
 	await scene_changed
 	await _frames()
@@ -174,7 +178,10 @@ func _run() -> void:
 	await _frames()
 	await _capture("complete")
 	_check(root.get_node("GameState").to_dict() == _formal, "Entire flow never changes formal autoload state")
-	_check(default_menu.initial_stock == default_stock and default_menu.products.is_empty(), "Fixture never edits the shared formal Resource")
+	var current_products: Array = default_menu.products.keys()
+	current_products.sort()
+	_check(default_menu.initial_stock == default_stock and current_products == default_products
+		and not default_menu.products.has(Fixture.TAVERN_PRODUCT), "Fixture never edits the shared formal Resource")
 	_check(state.start_new_game() == OK and state.to_dict() == defaults, "Injected session reset retains fixture configuration")
 	_check(state.restore_state(complete) == OK and state.to_dict() == complete, "Injected session restores its own complete snapshot")
 	_check(reload_current_scene() == OK, "F6 host can be reloaded")

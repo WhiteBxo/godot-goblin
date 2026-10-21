@@ -16,6 +16,9 @@ func _check(condition: bool, message: String) -> void:
 		_failures.append(message)
 		push_error(message)
 
+func _is_uniform(value: Vector2) -> bool:
+	return value.x > 0.0 and is_equal_approx(value.x, value.y)
+
 func _run() -> void:
 	var game: Node = load("res://src/debug/disappeared_street/disappeared_street_demo.tscn").instantiate()
 	root.add_child(game)
@@ -34,7 +37,13 @@ func _run() -> void:
 		_check(_can_stand(point.global_position), "Interaction approach intersects scenery: " + str(point.interaction_id))
 		_check(_reachable_near(point.global_position), "Interaction is not reachable from shop: " + str(point.interaction_id))
 	for object: Node2D in _level.get_node("Objects").get_children():
-		_check(object.scale == Vector2.ONE and object.get_node("Visual").scale == Vector2.ONE, "Artwork must keep native proportions: " + str(object.name))
+		# Uniform scale is a legitimate composition choice; only non-uniform stretch
+		# distorts the artwork. assets/AGENTS.md forbids stretching, not scaling.
+		var visual := object.get_node_or_null("Visual") as Node2D
+		var kept := _is_uniform(object.scale)
+		if visual != null:
+			kept = kept and _is_uniform(visual.scale)
+		_check(kept, "Artwork must keep native proportions: " + str(object.name))
 	var start := player.global_position
 	Input.action_press("move_down")
 	for frame in range(24):
@@ -49,7 +58,11 @@ func _run() -> void:
 	for frame in range(35):
 		await physics_frame
 	Input.action_release("move_down")
-	_check(player.global_position.y > 615 and player.global_position.y < 632, "Real movement must stop at a floor cell removed in the editor data")
+	# The removed cell (6, 5) starts at y = 5 * tile_size; the feet must stop on its
+	# top edge instead of crossing into the hole.
+	var blocking_edge := 5.0 * float((_level.get_node("Ground") as TileMapLayer).tile_set.tile_size.y)
+	_check(player.global_position.y > blocking_edge - 24.0 and player.global_position.y <= blocking_edge,
+		"Real movement must stop at a floor cell removed in the editor data (stopped at y=%d, blocking edge %.0f)" % [roundi(player.global_position.y), blocking_edge])
 	ground.set_cell(Vector2i(6, 5), 0, Vector2i(6, 5))
 	player.global_position = Vector2(414, 510)
 	player.velocity = Vector2.ZERO

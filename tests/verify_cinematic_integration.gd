@@ -226,6 +226,10 @@ func _conflicts() -> void:
 func _cancellation() -> void:
 	var player := _game.get_player() as PlayerController
 	var interaction: ShopInteraction = _game.get_node("Systems/ShopInteraction")
+	# The shop scene keeps its own ambience voice playing. Cancellation must only
+	# remove story-owned voices, so every count here is measured against it.
+	await _frames(2)
+	var ambient := _audio.get_active_sound_count()
 	for command: String in ["actor_move", "actor_emote", "camera_move", "camera_shake", "camera_zoom", "play_bgm", "play_sfx"]:
 		var step: Dictionary
 		match command:
@@ -247,7 +251,7 @@ func _cancellation() -> void:
 		var position := player.global_position
 		await _frames(5)
 		_check(player.global_position == position and _state.story_stage != "cinematic.stale" and _cameras.get_camera().mode == BoundedFollowCamera.Mode.FOLLOW and _cameras.get_camera().offset == Vector2.ZERO, "No stale movement/camera/callback: " + command)
-		_check(_audio.get_active_sound_count() == 0 and not _audio.get_bgm_state().playing, "Cancel stops owned audio")
+		_check(_audio.get_active_sound_count() == ambient and not _audio.get_bgm_state().playing, "Cancel stops owned audio")
 	player.set_movement_enabled(false)
 	interaction.set_input_enabled(false)
 	_start([{"command": "camera_zoom", "value": 1, "duration": 1}])

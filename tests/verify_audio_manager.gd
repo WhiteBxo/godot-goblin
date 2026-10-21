@@ -163,12 +163,17 @@ func _test_story() -> void:
 	var director := game.get_story_director()
 	_check(director.load_events("res://tests/fixtures/audio_events.json") == OK, "Audio story fixture loads")
 	audio.play_bgm("demo.music_a", 0.0)
+	# The shop scene starts its own ambience (assets/audio/ambience/shop.wav) as an
+	# independent voice. Counts below are relative to that ambient baseline instead
+	# of assuming a silent manager, which never holds for a real shop scene.
+	await process_frame
+	var ambient := audio.get_active_sound_count()
 	var independent := audio.play_sfx("demo.story")
 	director.request_event("audio.owned")
-	await _until(func() -> bool: return audio.get_active_sound_count() == 3, "Director plays logical id and legacy path through adapter")
+	await _until(func() -> bool: return audio.get_active_sound_count() == ambient + 3, "Director plays logical id and legacy path through adapter")
 	_check(director.is_busy(), "Owned sounds play during active story")
 	director.cancel_event()
-	_check(audio.get_active_sound_count() == 1 and audio._active.has(independent), "Cancel stops only story-owned voices")
+	_check(audio.get_active_sound_count() == ambient + 1 and audio._active.has(independent), "Cancel stops only story-owned voices")
 	_check(audio.get_bgm_state()["playing"] and audio.get_bgm_state()["id"] == "demo.music_a", "Story cancel leaves scene BGM playing")
 	audio.stop_sound(independent)
 	var skipped: Array[String] = []
@@ -178,13 +183,13 @@ func _test_story() -> void:
 	_check(not director.is_busy() and state.get_flag("audio.after_missing") and skipped.size() == 3, "Missing id, path and wrong-type resource skip and story advances")
 	director.request_event("audio.finish")
 	await _until(func() -> bool: return not director.is_busy(), "Successful audio story finishes")
-	_check(not director.is_busy() and audio.get_active_sound_count() == 0, "Successful story finish also cleans owned voices")
+	_check(not director.is_busy() and audio.get_active_sound_count() == ambient, "Successful story finish also cleans owned voices")
 	var first := StoryAudioAdapter.new(audio)
 	var second := StoryAudioAdapter.new(audio)
 	first.play_sfx({"id": "demo.story"})
 	second.play_sfx({"id": "demo.story"})
 	first.stop_owned()
-	_check(audio.get_active_sound_count() == 1, "Separate adapters have isolated ownership")
+	_check(audio.get_active_sound_count() == ambient + 1, "Separate adapters have isolated ownership")
 	second.stop_owned()
 	var handles: Array[int] = []
 	for index in range(audio.pool_size):
@@ -204,7 +209,7 @@ func _test_story() -> void:
 	await _delay(0.1)
 	director.queue_free()
 	await process_frame
-	_check(audio.get_active_sound_count() == 0 and audio.get_bgm_state()["playing"], "Director removal cleans sounds and preserves BGM")
+	_check(audio.get_active_sound_count() == ambient and audio.get_bgm_state()["playing"], "Director removal cleans sounds and preserves BGM")
 	game.queue_free()
 	await process_frame
 	game = load("res://src/debug/story/legacy_shop.tscn").instantiate()

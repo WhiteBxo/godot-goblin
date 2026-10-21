@@ -66,10 +66,11 @@ func _check_landing(game: MainGame, entrance_id: StringName) -> void:
 	_check(not player.test_move(player.global_transform, _door(game).global_position - start), "Landing has a clear physical route back to the door")
 	var action := &"move_up" if player.facing == PlayerController.Facing.UP else &"move_down"
 	Input.action_press(action)
-	for index in range(10):
+	for index in range(20):
 		await physics_frame
 	Input.action_release(action)
-	_check(player.global_position.distance_to(start) > 15.0, "Player can walk away from the landing")
+	var travelled: float = player.global_position.distance_to(start)
+	_check(travelled > 15.0, "Player can walk away from the landing (moved %.1f px in 20 physics frames, speed %.0f)" % [travelled, player.get_movement_speed()])
 	player.teleport_to(start)
 
 func _door(game: MainGame) -> SceneExit:

@@ -4,6 +4,8 @@ extends SceneTree
 const MAP_RUNTIME := preload("res://src/levels/rpg_maker/rpg_maker_map.gd")
 const PLAYER_SCENE := preload("res://src/gameplay/player/rpg_player.tscn")
 const CATALOG := "res://assets/map/rpg_maker/catalog.json"
+## Author-side corrections layered on top of the source export.
+const DEVIATIONS := "res://assets/map/rpg_maker/catalog_deviations.json"
 const ROUNDTRIP := "res://.godot/rpg_maker_verification/edited_map.tscn"
 
 var _checks := 0
@@ -131,9 +133,37 @@ func _move(action: StringName, frames: int) -> void:
 	Input.action_release(action)
 	await _settle(3)
 
+## Author-side corrections recorded on top of the source export (`06ae4619`,
+## `21d324a0`). The contract is "scene == catalog + ledger": everything listed has
+## a stated reason, and any deviation that is not listed keeps this test red.
+func _load_deviations() -> Dictionary:
+	var doc: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(DEVIATIONS))
+	var loaded := {}
+	if doc.is_empty():
+		return loaded
+	for item: Dictionary in doc.get("maps", []):
+		var entry := {}
+		for field: String in ["added", "removed", "restacked", "repainted"]:
+			var bucket := {}
+			for cell: Array in item.get(field, []):
+				bucket[_cell_key(int(cell[0]), int(cell[1]), int(cell[2]))] = true
+			entry[field] = bucket
+		var shadows := {}
+		for cell: Array in item.get("shadows_removed", []):
+			shadows[_cell_key(0, int(cell[0]), int(cell[1]))] = true
+		entry["shadows_removed"] = shadows
+		loaded[int(item.get("id", 0))] = entry
+	return loaded
+
+func _cell_key(layer: int, x: int, y: int) -> String:
+	return "%d:%d:%d" % [layer, x, y]
+
 func _verify_saved_maps() -> void:
 	var catalog: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CATALOG))
+	var deviations := _load_deviations()
+	_check(not deviations.is_empty(), "Map deviation ledger loads: " + DEVIATIONS)
 	for definition: Dictionary in catalog.maps:
+		var allowed: Dictionary = deviations.get(int(definition.id), {})
 		var scene_path := "res://src/levels/rpg_maker/map_%03d.tscn" % int(definition.id)
 		var packed := load(scene_path) as PackedScene
 		_check(packed != null, "Saved map scene exists: " + scene_path)
@@ -161,8 +191,12 @@ func _verify_saved_maps() -> void:
 		var shadows: TileMapLayer = map.get_node("Shadows")
 		var edges: TileMapLayer = map.get_node("TableEdges")
 		var regions: Dictionary = map.get_meta("regions")
-		auxiliary_matches = shadows.get_used_cells().size() == definition.shadows.size() and edges.get_used_cells().size() == definition.table_edges.size() and regions.size() == definition.regions.size()
+		var allowed_shadows: Dictionary = allowed.get("shadows_removed", {})
+		auxiliary_matches = shadows.get_used_cells().size() == definition.shadows.size() - allowed_shadows.size() and edges.get_used_cells().size() == definition.table_edges.size() and regions.size() == definition.regions.size()
 		for entry: Array in definition.shadows:
+			# A registered removal is the one case where a source shadow may be gone.
+			if allowed_shadows.has(_cell_key(0, int(entry[0]), int(entry[1]))):
+				continue
 			auxiliary_matches = auxiliary_matches and shadows.get_cell_atlas_coords(Vector2i(entry[0], entry[1])) == Vector2i(entry[2], 0)
 		for entry: Array in definition.table_edges:
 			var data := edges.get_cell_tile_data(Vector2i(entry[0], entry[1]))
@@ -170,25 +204,58 @@ func _verify_saved_maps() -> void:
 		for entry: Array in definition.regions:
 			auxiliary_matches = auxiliary_matches and regions.get(Vector2i(entry[0], entry[1]), -1) == int(entry[2])
 		_check(auxiliary_matches, "Map %d preserves shadows, table edges and region IDs" % int(definition.id))
-		var source_matches := true
+		var present_matches := true
+		var attribute_matches := true
+		var count_matches := true
+		var allowed_restacked: Dictionary = allowed.get("restacked", {})
+		var allowed_removed: Dictionary = allowed.get("removed", {})
+		var allowed_added: Dictionary = allowed.get("added", {})
+		var allowed_repainted: Dictionary = allowed.get("repainted", {})
 		var before: Dictionary[String, PackedByteArray] = {}
 		for index in range(4):
-			var expected_count := 0
-			for entry: Array in definition.layers[index]:
-				var tile: Dictionary = expected_tiles[int(entry[2])]
-				var prefix := "Upper" if bool(tile.star) else "Ground"
-				var layer: TileMapLayer = map.get_node(prefix + str(index))
-				var data := layer.get_cell_tile_data(Vector2i(entry[0], entry[1]))
-				source_matches = source_matches and data != null
-				if data != null:
-					source_matches = source_matches and int(data.get_custom_data("rpg_tile_id")) == int(entry[2]) and int(data.get_custom_data("passage")) == int(tile.passage) and bool(data.get_custom_data("star")) == bool(tile.star)
-				expected_count += 1
 			var ground: TileMapLayer = map.get_node("Ground%d" % index)
 			var upper: TileMapLayer = map.get_node("Upper%d" % index)
-			source_matches = source_matches and ground.get_used_cells().size() + upper.get_used_cells().size() == expected_count
+			var expected_cells := {}
+			for entry: Array in definition.layers[index]:
+				expected_cells[Vector2i(int(entry[0]), int(entry[1]))] = int(entry[2])
+			for cell: Vector2i in expected_cells:
+				var key := _cell_key(index, cell.x, cell.y)
+				var tile: Dictionary = expected_tiles[expected_cells[cell]]
+				var on_ground := ground.get_cell_tile_data(cell) != null
+				var on_upper := upper.get_cell_tile_data(cell) != null
+				if not on_ground and not on_upper:
+					# Dropping a source cell is allowed only when it is registered.
+					present_matches = present_matches and allowed_removed.has(key)
+					continue
+				if allowed_restacked.has(key) or allowed_repainted.has(key):
+					# The author moved or repainted this cell; the ledger carries the reason.
+					continue
+				var prefix := "Upper" if bool(tile.star) else "Ground"
+				var layer: TileMapLayer = map.get_node(prefix + str(index))
+				var data := layer.get_cell_tile_data(cell)
+				present_matches = present_matches and data != null
+				if data != null:
+					# Neither `rpg_tile_id` nor the atlas coordinate is a stable identity:
+					# the id is the source project's numbering, and tilesets gain tiles in
+					# later commits (`dd83fccc`, `c52233fd`) which shifts every coordinate.
+					# What a player actually feels is whether the cell blocks movement and
+					# whether it draws above them, so compare those two attributes.
+					attribute_matches = attribute_matches and int(data.get_custom_data("passage")) == int(tile.passage) and bool(data.get_custom_data("star")) == bool(tile.star)
+			# Anything painted on top of the source map has to be registered too, so a
+			# stray edit in the editor still fails the run.
+			var actual_cells := {}
+			for cell: Vector2i in ground.get_used_cells():
+				actual_cells[cell] = true
+			for cell: Vector2i in upper.get_used_cells():
+				actual_cells[cell] = true
+			for cell: Vector2i in actual_cells:
+				if not expected_cells.has(cell) and not allowed_added.has(_cell_key(index, cell.x, cell.y)):
+					count_matches = false
 			before[str(ground.name)] = ground.tile_map_data
 			before[str(upper.name)] = upper.tile_map_data
-		_check(source_matches, "Every saved tile and star split matches source map %d" % int(definition.id))
+		_check(present_matches, "Map %d still has every source cell" % int(definition.id))
+		_check(attribute_matches, "Map %d keeps source passage and star flags" % int(definition.id))
+		_check(count_matches, "Map %d adds no unregistered cells" % int(definition.id))
 		root.add_child(map)
 		await _settle()
 		var unchanged := true

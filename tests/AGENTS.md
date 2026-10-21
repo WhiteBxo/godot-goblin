@@ -27,9 +27,19 @@
 
 运行器自身退出码：出现 HANG 返回 124，否则有 FAIL / CRASH 返回 1，全部通过返回 0。
 
-- 参数：`--jobs`（默认 4）、`--timeout`（全局覆盖单项预算）、`--filter`、`-v`、`--list`、`--include-python`、`--godot`，默认值见 `--help`。
+- 参数：`--jobs`（默认 4）、`--timeout`（全局覆盖单项预算）、`--filter`、`-v`、`--list`、`--include-python`、`--godot`、`--strict-known`，默认值见 `--help`。
 - 单项差异登记在 `tests/run_all.py` 的 `PROFILES`，不要散落到测试脚本里：需要真实渲染上下文（读回像素）的去掉 `--headless`；需要编辑器实例的记 SKIP 原因；等待剧情事件、天然较慢的给单独预算。
 - 结果写到 `.godot/test_logs/`（不提交）：每项一份 `<name>.log`，汇总 `run_all.json`；目录在每次运行前清空。
+
+### 已知红台账
+
+`tests/known_red.json` 登记「已接受但尚未修复」的失败项，命中项在报告里记为 `KNOWN`，不影响退出码，但会连同原因一起打印。用途只有一个：把少数**无法在当前环境稳定复现或已明确属于测试代码自身缺陷**的失败从「每次都红、于是没人再看」里摘出来，而不是给产品缺陷开后门。
+
+- 每条必须有 `category`（`product-bug` / `test-drift` / `environment`）与 `reason`，写得让下一个人能直接判断该不该修。
+- `product-bug` 只能短期停留：要么修掉，要么把设计取舍写清楚并改写测试期望，不能长期挂在台账里。
+- 台账里的项一旦恢复通过，运行器会提示「台账过期」，此时删除该条；台账腐烂比没有台账更糟。
+- 发布验收用 `python tests/run_all.py --strict-known`，已知红也按失败计。
+- 推送前钩子由 `python tools/git/install_hooks.py` 安装，跑完整回归后才允许 push；临时跳过用 `SKIP_REGRESSION=1 git push`。
 
 写测试时要让失败可见，不要把断言失败伪装成挂起：
 

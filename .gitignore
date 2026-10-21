@@ -13,3 +13,15 @@
 
 # Python bytecode from tests/run_all.py and the verifier scripts
 __pycache__/
+
+# One-off probe scripts written while diagnosing a failure. They are scratch work,
+# never a verification entry point; keep the tree clean instead of committing them.
+tests/_tmp_*.gd
+tests/_tmp_*.gd.uid
+
+# REAPER waveform caches next to the source audio. Editor-side artifacts only.
+*.reapeaks
+*.reapeak
+
+# Prompt / draft scratch directories kept next to the assets they were generated for
+tmp_elder_prompts/

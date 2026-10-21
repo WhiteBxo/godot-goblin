@@ -15,6 +15,14 @@ Exit-code contract (also used per test):
     python tests/run_all.py --filter day1       # 只跑名字含 day1 的
     python tests/run_all.py --include-python    # 额外跑 tests/*.py（缺依赖记 SKIP）
     python tests/run_all.py --godot <path>      # 指定 Godot 可执行文件
+    python tests/run_all.py --strict-known      # 已知红也当失败（发布前用）
+
+已知红台账:
+
+    tests/known_red.json 列出「已接受但尚未修复」的失败项，每条必须写 category
+    （product-bug / test-drift / environment）与 reason。命中的项记为 KNOWN，
+    不计入失败退出码，但在汇总里原样打印，避免红区被无感忽略。
+    台账里某项实际通过了会提示「台账过期」，要求删除该条，防止台账腐烂。
 
 运行器自身的退出码：有 HANG 返回 124，否则有 FAIL 返回 1，否则返回 0。
 """
@@ -39,11 +47,19 @@ FAIL = "FAIL"
 SKIP = "SKIP"
 HANG = "HANG"
 CRASH = "CRASH"
+# A failure recorded in tests/known_red.json. Still a failure in the product, but
+# it is enumerated and owned instead of being silently re-learned every run.
+KNOWN = "KNOWN"
 
 EXIT_PASS = 0
 EXIT_FAIL = 1
 EXIT_SKIP = 2
 EXIT_HANG = 124
+
+# Ledger of accepted red. Entries must carry a category and a reason; an entry
+# whose test starts passing is reported so the ledger cannot rot.
+KNOWN_RED_PATH = Path("tests") / "known_red.json"
+KNOWN_CATEGORIES = ("product-bug", "test-drift", "environment")
 
 # A test may need engine flags; everything else runs with the plain command.
 DEFAULT_LOG_DIR = Path(".godot") / "test_logs"
@@ -139,6 +155,35 @@ class Result:
     seconds: float
     reason: str
     log: Path
+
+
+def display_path(path: Path, root: Path) -> str:
+    """Shorten to a repo-relative path, but keep absolute paths for --report targets
+    outside the repository instead of crashing on relative_to()."""
+    try:
+        return str(path.relative_to(root))
+    except ValueError:
+        return str(path)
+
+
+def load_known_red(root: Path) -> dict[str, dict[str, str]]:
+    """Read the accepted-red ledger. Missing file means nothing is accepted."""
+    path = root / KNOWN_RED_PATH
+    if not path.exists():
+        return {}
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    entries = raw.get("entries", [])
+    ledger: dict[str, dict[str, str]] = {}
+    for entry in entries:
+        name = str(entry.get("name", "")).strip()
+        category = str(entry.get("category", "")).strip()
+        reason = str(entry.get("reason", "")).strip()
+        if not name or not reason:
+            raise SystemExit(f"{KNOWN_RED_PATH}: 每条台账都需要 name 与 reason（{name or '<缺少 name>'}）")
+        if category not in KNOWN_CATEGORIES:
+            raise SystemExit(f"{KNOWN_RED_PATH}: {name} 的 category 必须是 {'/'.join(KNOWN_CATEGORIES)}")
+        ledger[name] = {"category": category, "reason": reason}
+    return ledger
 
 
 def discover(root: Path, pattern: str | None, include_python: bool) -> list[Case]:
@@ -242,7 +287,14 @@ def classify(case: Case, code: int, log_text: str, timed_out: bool) -> tuple[str
     return PASS, EXIT_PASS, ""
 
 
-def run_case(root: Path, godot: str, case: Case, timeout: float, log_dir: Path) -> Result:
+def run_case(
+    root: Path,
+    godot: str,
+    case: Case,
+    timeout: float,
+    log_dir: Path,
+    ledger: dict[str, dict[str, str]] | None = None,
+) -> Result:
     log_path = log_dir / f"{case.path.stem}.log"
     if case.profile.requires:
         log_path.write_text(f"SKIP: {case.profile.requires}\n", encoding="utf-8")
@@ -284,6 +336,13 @@ def run_case(root: Path, godot: str, case: Case, timeout: float, log_dir: Path) 
     seconds = time.monotonic() - started
     log_text = log_path.read_text(encoding="utf-8", errors="replace")
     status, exit_code, reason = classify(case, code, log_text, timed_out)
+    entry = (ledger or {}).get(case.name)
+    if entry is not None:
+        if status in (FAIL, CRASH, HANG):
+            reason = f"[{entry['category']}] {entry['reason']}｜原判：{reason}"
+            status = KNOWN
+        else:
+            reason = f"台账已过期：现在 {status}，请从 {KNOWN_RED_PATH} 移除该条"
     return Result(case, status, exit_code, seconds, reason, log_path)
 
 
@@ -303,9 +362,15 @@ def main() -> int:
     parser.add_argument("-v", "--verbose", action="store_true", help="每项结束后打印日志尾部")
     parser.add_argument("--fail-fast", action="store_true", help="首项失败后不再启动新测试")
     parser.add_argument("--list", action="store_true", help="只列出将要运行的测试")
+    parser.add_argument(
+        "--strict-known",
+        action="store_true",
+        help=f"把 {KNOWN_RED_PATH} 中的已知红也当作失败（发布前或清理债务时用）",
+    )
     args = parser.parse_args()
 
     root = Path(__file__).resolve().parents[1]
+    ledger = load_known_red(root)
     cases = discover(root, args.filter, args.include_python)
     if not cases:
         raise SystemExit("没有匹配的测试。")
@@ -336,12 +401,12 @@ def main() -> int:
     def worker(case: Case) -> Result | None:
         if stop.is_set():
             return None
-        result = run_case(root, godot, case, budget(case), log_dir)
+        result = run_case(root, godot, case, budget(case), log_dir, ledger)
         with lock:
             results.append(result)
             suffix = f"  {result.reason}" if result.reason else ""
             print(f"[{len(results):>3}/{len(cases)}] {result.status:<4} {result.case.name:<40} {result.seconds:6.1f}s{suffix}", flush=True)
-            if args.verbose and result.status in (FAIL, CRASH):
+            if args.verbose and result.status in (FAIL, CRASH, KNOWN):
                 tail = result.log.read_text(encoding="utf-8", errors="replace").splitlines()[-15:]
                 for line in tail:
                     print(f"        | {line}")
@@ -354,10 +419,13 @@ def main() -> int:
         list(pool.map(worker, cases))
     total_seconds = time.monotonic() - started
 
-    order = {PASS: 0, SKIP: 1, FAIL: 2, CRASH: 3, HANG: 4}
+    order = {PASS: 0, SKIP: 1, KNOWN: 2, FAIL: 3, CRASH: 4, HANG: 5}
     results.sort(key=lambda item: (order[item.status], item.case.name))
     counts = {status: sum(1 for item in results if item.status == status) for status in order}
     not_run = len(cases) - len(results)
+    stale_entries = [
+        item.case.name for item in results if item.case.name in ledger and item.status not in (FAIL, CRASH, HANG, KNOWN)
+    ]
 
     print("\n" + "=" * 78)
     for item in results:
@@ -368,8 +436,11 @@ def main() -> int:
     print("-" * 78)
     print(
         f"合计 {len(cases)} | PASS {counts[PASS]} | FAIL {counts[FAIL]} | "
-        f"CRASH {counts[CRASH]} | SKIP {counts[SKIP]} | HANG {counts[HANG]} | 耗时 {total_seconds:.1f}s"
+        f"CRASH {counts[CRASH]} | SKIP {counts[SKIP]} | HANG {counts[HANG]} | "
+        f"KNOWN {counts[KNOWN]} | 耗时 {total_seconds:.1f}s"
     )
+    if stale_entries:
+        print(f"台账过期（这些项已不再失败，请从 {KNOWN_RED_PATH} 删除）：{'、'.join(stale_entries)}")
     if not_run:
         print(f"另有 {not_run} 项因 --fail-fast 未启动")
 
@@ -382,6 +453,8 @@ def main() -> int:
         "total_seconds": round(total_seconds, 2),
         "counts": counts,
         "not_run": not_run,
+        "known_entries": len(ledger),
+        "stale_known": stale_entries,
         "results": [
             {
                 "name": item.case.name,
@@ -397,11 +470,14 @@ def main() -> int:
     }
     report_path.parent.mkdir(parents=True, exist_ok=True)
     report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"报告: {report_path.relative_to(root)}")
+    print(f"报告: {display_path(report_path, root)}")
 
     if counts[HANG]:
         return EXIT_HANG
     if counts[FAIL] or counts[CRASH]:
+        return EXIT_FAIL
+    if args.strict_known and counts[KNOWN]:
+        print(f"--strict-known：{counts[KNOWN]} 项已知红仍存在，按失败返回。")
         return EXIT_FAIL
     return EXIT_PASS
 

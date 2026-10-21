@@ -30,6 +30,15 @@ func update_presentation(harvestable: bool) -> void:
 var _harvest_gate: Callable
 
 
+func _ready() -> void:
+	super()
+	# 章节地图上的采集点在迁移时漏配了 success_sound（旧聚落地图是逐个配的 24 处），
+	# 采集成功因此没有任何确认音，与制作/交付的手感不一致。空值时补上交互默认音，
+	# 场景里显式配置过的仍然优先。
+	if success_sound.is_empty():
+		success_sound = "ui.confirm"
+
+
 func bind_gathering(gate: Callable) -> void:
 	if _harvest_gate == gate:
 		return

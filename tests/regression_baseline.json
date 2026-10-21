@@ -4,11 +4,9 @@
   "recorded_at": "2026-10-21",
   "accepted_failures": [
     "verify_chapter_stealth_route.gd",
-    "verify_day1_chapter_systems.gd",
     "verify_day1_stages_01_02.gd",
     "verify_flow_playtest.gd",
     "verify_gathering.gd",
-    "verify_interaction_audio.gd",
     "verify_milk_tea_shop.gd",
     "verify_rpg_maker_map.gd",
     "verify_signature_interaction.gd",

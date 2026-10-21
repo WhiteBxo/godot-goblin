@@ -201,24 +201,21 @@ func _check_shop_host() -> void:
 	await _frames()
 	_check(not card.is_showing(), "Event end leaves no title card on screen")
 	var day := int(_state.current_day)
-	result = await _run_event(game, "t.night")
-	_check(result.ok and DayPhase.is_night(_state), "set_phase enters night and repeating it is a no-op")
-	result = await _run_event(game, "t.day")
-	_check(result.ok and not DayPhase.is_night(_state) and _state.current_day == day + 1, "set_phase day advances the day")
+	# Run the animation checks before advancing the day: past day 1 the world
+	# projection puts this actor in his resting pose, whose sheet has no
+	# `emote_laugh`, and a held expression would immediately be replaced by it.
 	result = await _run_event(game, "t.anim_missing")
 	_check(not result.ok, "Missing animation fails instead of skipping")
 	var goblin := game.get_actor_director().get_actor(&"fat_goblin")
-	# Advancing the day above projects him into the resting pose, whose sheet only
-	# carries the two sick frames. This check is about `anim_hold`, not about which
-	# pose the story put him in, so return him to his normal sheet first.
-	if goblin is FatGoblin:
-		goblin.set_health(FatGoblin.Health.NORMAL)
-		goblin.set_mood(FatGoblin.Mood.NEUTRAL)
 	result = await _run_event(game, "t.anim_hold")
 	_check(result.ok, "Finite animation completes: " + result.reason)
 	_check(goblin.animated_sprite.animation == &"emote_laugh", "Held pose stays after the event")
 	goblin.teleport_to(goblin.global_position)
 	_check(goblin.animated_sprite.animation != &"emote_laugh", "Teleport clears a held pose")
+	result = await _run_event(game, "t.night")
+	_check(result.ok and DayPhase.is_night(_state), "set_phase enters night and repeating it is a no-op")
+	result = await _run_event(game, "t.day")
+	_check(result.ok and not DayPhase.is_night(_state) and _state.current_day == day + 1, "set_phase day advances the day")
 	# Ending recipe: chapter end card, morning, chapter stage isolation.
 	_state.set_story_stage("day1.s06")
 	_state.commit_day_phase("night")
@@ -313,17 +310,25 @@ func _check_settlement_host() -> void:
 	var zone: StoryTriggerZone = load("res://src/gameplay/story_interaction/story_trigger_zone.tscn").instantiate()
 	zone.trigger_id = &"t_zone"
 	zone.required_stages = ["day1.s04"]
-	zone.position = Vector2(-5000, -5000)
 	game.get_active_level().add_child(zone)
+	var player := game.get_player() as PlayerController
+	# Place the zone on a real walkable spot. The old (-5000,-5000) sat outside the
+	# map, and the host snaps a player teleported out of bounds back to the spawn,
+	# so the walk-in never actually happened.
+	var entry: Vector2 = game.get_active_level().get_spawn_position()
+	zone.global_position = entry
+	player.teleport_to(entry + Vector2(160, 0))
 	game.call("_create_trigger_zones", zone)
 	_check(game.get_trigger_zones().has(zone), "Host registers trigger zones")
-	var player := game.get_player() as PlayerController
 	game.get_ui_manager().open_screen(ScreenIds.DIALOGUE)
-	player.teleport_to(zone.global_position)
-	await _frames(8)
+	player.teleport_to(entry)
+	# Area detection only updates on physics ticks; render frames left `_inside` false.
+	for i in range(12):
+		await physics_frame
 	_check(zone.is_player_inside() and not _state.get_flag("t.zone_fired"), "Busy host rejects the walk-in without consuming it")
 	game.get_ui_manager().close_screen(ScreenIds.DIALOGUE)
-	await _frames(30)
+	for i in range(30):
+		await physics_frame
 	_check(_state.get_flag("t.zone_fired"), "Zone retries and starts the event once the host is free")
 	current_scene = null
 	game.queue_free()

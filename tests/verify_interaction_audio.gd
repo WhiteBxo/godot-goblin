@@ -200,13 +200,24 @@ func test_host(path: String) -> void:
 	await process_frame
 	check(not paused and has_sound(audio, "ui.cancel"), "Real keyboard activation resumes with cancel")
 	if game.get_gathering_service() != null:
-		feedback.configure(audio)
 		state.set_flag("world.phase.night")
-		result = game.get_gathering_service().harvest(&"night_gather_0")
-		check(result.ok and has_sound(audio, "ui.confirm"), "Successful harvest confirms actual result")
-		feedback.configure(audio)
-		result = game.get_gathering_service().harvest(&"night_gather_0")
-		check(not result.ok and not has_sound(audio, "ui.confirm"), "Spent harvest never sounds success")
+		# The confirm sound belongs to the interaction layer, so drive the real
+		# gather point instead of calling the service directly (which never sounds).
+		var gather: GatherPoint = null
+		for point: GatherPoint in game.get_active_level().get_gather_points():
+			if point.interaction_id == &"night_gather_0":
+				gather = point
+		check(gather != null, "Night gather point is registered on the chapter map")
+		if gather != null:
+			game.get_player().global_position = gather.global_position + Vector2(0, -40)
+			await frames()
+			feedback.configure(audio)
+			gather.interact()
+			check(game.get_warehouse_inventory().get_stock("moss_green") >= 2 and has_sound(audio, "ui.confirm"),
+				"Successful harvest confirms actual result")
+			feedback.configure(audio)
+			gather.interact()
+			check(not has_sound(audio, "ui.confirm"), "Spent harvest never sounds success")
 	game.free()
 	await frames()
 	state.reset_state()

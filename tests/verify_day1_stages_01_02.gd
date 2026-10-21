@@ -300,10 +300,12 @@ func _run() -> void:
 	_attach_observers()
 	await frames()
 	check(_state.get_business_profile() == "day1", "Official host selects the formal profile")
-	check(_game.open_chronicle() == ERR_UNAVAILABLE and _game.get_node("PopupLayer/HandbookPanel").get_pages().is_tab_hidden(1), "Chronicle is inaccessible before unlock")
 	check(not _game.get_tea_production().make_drink(["black_tea", "creamer", "pearl", "syrup"], "day1_human").ok, "Cannot craft ahead of acceptance")
 	await _wait_event("day1.opening")
 	check(_state.story_stage == "day1.wait_human" and _game.get_player().movement_enabled, "First gameplay handoff releases input")
+	# Ask once the opening event has handed control back: while it plays the host
+	# answers ERR_BUSY, which says nothing about whether the review is locked.
+	check(_game.open_chronicle() == ERR_UNAVAILABLE and _game.get_node("PopupLayer/HandbookPanel").get_pages().is_tab_hidden(1), "Chronicle is inaccessible before unlock")
 	check(_game.open_tasks() == OK, "First order gameplay phase allows read-only handbook review")
 	_game.get_ui_manager().close_screen(&"handbook")
 	check(_game.get_audio_manager().get_bgm_state().id == "music.daily_milk_tea", "Opening starts registered scene music")

@@ -818,7 +818,9 @@ func _migrate_snapshot(data: Dictionary) -> Dictionary:
 			if not inventory.get("ingredients") is Dictionary:
 				return data
 			if not inventory.ingredients.has("strange_coin"):
-				inventory.ingredients["strange_coin"] = {"quantity": 0, "discovered": false, "known_properties": []}
+				# Inventory entries are four-key records; a three-key stub fails
+				# `validate_state`, so every v2 save would be rejected as corrupt.
+				inventory.ingredients["strange_coin"] = {"quantity": 0, "used": 0, "discovered": false, "known_properties": []}
 		migrated.business["profile_id"] = "tutorial"
 	# v4 adds formula products and the encyclopedia to the shared inventory. Old
 	# sessions keep their fixed products; no recipe/discovery is invented for them.

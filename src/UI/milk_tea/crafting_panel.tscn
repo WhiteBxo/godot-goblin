@@ -54,7 +54,7 @@ text = "选择已知配方"
 theme_override_colors/font_color = Color(0.42, 0.33, 0.25, 1)
 
 [node name="RecipeList" type="ScrollContainer" parent="Body/Right"]
-custom_minimum_size = Vector2(0, 78)
+custom_minimum_size = Vector2(0, 116)
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0

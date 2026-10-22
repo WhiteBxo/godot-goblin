@@ -131,7 +131,7 @@ func _rebuild_recipes() -> void:
 ## cups it still yields on the right, both on the same paper row.
 func _make_recipe_row(recipe: TeaRecipe, maximum: int, selected: bool) -> Button:
 	var button := Button.new()
-	button.custom_minimum_size = Vector2(0, 26)
+	button.custom_minimum_size = Vector2(0, 34)
 	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	button.theme_type_variation = &"RecipeRowSelected" if selected else &"RecipeRow"
 	button.tooltip_text = " + ".join(_production.get_recipe_names(recipe.materials))
@@ -143,12 +143,22 @@ func _make_recipe_row(recipe: TeaRecipe, maximum: int, selected: bool) -> Button
 	content.add_theme_constant_override("separation", 6)
 	button.add_child(content)
 	content.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	content.offset_left = 9
+	content.offset_left = 7
 	content.offset_right = -9
+	# The cup itself, at its native 32px so the pixel art stays on the grid.
+	var icon := TextureRect.new()
+	icon.name = "Icon"
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	icon.custom_minimum_size = Vector2(32, 32)
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.texture = _product_icon(recipe.product_id)
+	content.add_child(icon)
 	var name_label := Label.new()
 	name_label.name = "Name"
 	name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	name_label.clip_text = true
 	name_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	name_label.text = _display_name(recipe.product_id)
@@ -156,6 +166,7 @@ func _make_recipe_row(recipe: TeaRecipe, maximum: int, selected: bool) -> Button
 	var count := Label.new()
 	count.name = "Count"
 	count.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	count.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	count.theme_type_variation = &"Value" if maximum > 0 else &"Warning"
 	count.text = "%d 杯" % maximum if maximum > 0 else "缺料"
 	content.add_child(count)
@@ -297,7 +308,13 @@ func _present_batch(result: Dictionary) -> void:
 func _product_icon(product_id: String) -> Texture2D:
 	if product_id.is_empty() or not is_instance_valid(_production):
 		return null
-	return _production.get_inventory().get_ingredient_view(product_id).get("icon") as Texture2D
+	var inventory := _production.get_inventory()
+	if not is_instance_valid(inventory):
+		return null
+	# Read the definition directly: get_ingredient_view() hides undiscovered
+	# products, and a recipe the player can already make must still show its cup.
+	var definition := inventory.get_definition(product_id)
+	return definition.icon if definition != null else null
 
 func result_text() -> String:
 	return _result.text

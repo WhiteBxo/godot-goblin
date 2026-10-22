@@ -37,6 +37,7 @@ var _handbook_hud: HandbookHUD
 var _game_menu: ChapterActionsHUD
 var _task_hud: TaskHUD
 var _wallet_hud: WalletHUD
+var _context_actions: ContextActionBar
 var _touch_controls: TouchControls
 var _touch_scroll: TouchScroll
 var _payment_fx_orders := 0
@@ -1237,6 +1238,11 @@ func _create_story_business() -> void:
 		$Systems.add_child(_chapter_gameplay)
 		if _chapter_gameplay.configure(self) == OK:
 			_story_business.set_chapter_actions(_chapter_gameplay.execute)
+		# Chapter actions belong to the scene, not behind the menu: closing the
+		# shop is one click away instead of "open the menu, find the button".
+		_context_actions = preload("res://src/UI/hud/context_action_bar.tscn").instantiate()
+		$HudLayer.add_child(_context_actions)
+		_context_actions.bind(self)
 
 ## The existing transition layer owns full-screen presentation. SceneTravel adds
 ## its transition after this card, so scene changes can still cover it.

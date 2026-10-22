@@ -2,178 +2,199 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<title>哥布林奶茶店 · HUD 视觉重做 v2</title>
+<title>哥布林奶茶店 · HUD 视觉重做 v3</title>
 <style>
 :root{
-  --ink:#0A0C10;
-  --glass:rgba(14,17,22,.52);
-  --glass-strong:rgba(14,17,22,.82);
-  --stroke:rgba(255,255,255,.14);
-  --stroke-soft:rgba(255,255,255,.08);
-  --text:#F3F5F7;
-  --text-2:rgba(243,245,247,.62);
-  --text-3:rgba(243,245,247,.36);
-  --mint:#6FE3BE;
-  --mint-dim:rgba(111,227,190,.16);
-  --amber:#FFC46B;
-  --danger:#FF9090;
-  --shadow:0 12px 40px rgba(0,0,0,.42);
-  --sans:"Inter","Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --ink:#3A2A1A;
+  --ink-2:#7A6449;
+  --ink-3:#A08A6A;
+  --paper:#F7EDD9;
+  --paper-2:#EFE0C3;
+  --paper-edge:#4B3722;
+  --line:#CDB58F;
+  --tape:rgba(224,203,155,.82);
+  --red:#B4462F;
+  --green:#57703A;
+  --gold:#B8862A;
+  --wood:#7B5230;
+  --badge:#57703A;
+  --badge-edge:#2F3D1F;
+  --badge-ink:#F2EAD6;
+  --shadow:rgba(58,42,26,.26);
+  --serif:"Noto Serif SC","Songti SC","Source Han Serif SC","SimSun",serif;
+  --sans:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,sans-serif;
 }
-body.light .stage{
-  --glass:rgba(248,249,250,.62);
-  --glass-strong:rgba(250,251,252,.92);
-  --stroke:rgba(12,16,22,.14);
-  --stroke-soft:rgba(12,16,22,.08);
-  --text:#12161C;
-  --text-2:rgba(18,22,28,.62);
-  --text-3:rgba(18,22,28,.4);
-  --mint:#0E9C77;
-  --mint-dim:rgba(14,156,119,.12);
-  --amber:#B4711A;
-  --shadow:0 18px 50px rgba(12,16,22,.28);
+body.wood{
+  --ink:#F4E6CB;
+  --ink-2:#D3BB93;
+  --ink-3:#A98F68;
+  --paper:#33241A;
+  --paper-2:#3C2B1E;
+  --paper-edge:#0F0A06;
+  --line:#6B4C30;
+  --tape:rgba(120,86,50,.85);
+  --red:#E08A6E;
+  --green:#A8C077;
+  --gold:#E7B65A;
+  --wood:#5A3A22;
+  --badge:#6B3A28;
+  --badge-edge:#1A0D08;
+  --badge-ink:#F4E6CB;
+  --shadow:rgba(0,0,0,.5);
 }
-body.light .stage .glass{box-shadow:0 1px 0 rgba(255,255,255,.7) inset, 0 8px 26px rgba(12,16,22,.16)}
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{background:var(--ink);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+html,body{background:#14100B;color:#E9DCC4;font-family:var(--sans);-webkit-font-smoothing:antialiased}
 body{padding:26px 26px 34px;display:flex;flex-direction:column;align-items:center;gap:18px}
 header{width:100%;max-width:1280px;display:flex;align-items:baseline;justify-content:space-between;gap:16px}
-header h1{font-size:15px;font-weight:500;letter-spacing:.2px;color:rgba(243,245,247,.9)}
-header .v{color:var(--text-3);font-weight:400;font-size:13px;margin-left:8px}
-header .meta{font-size:12px;color:var(--text-3);letter-spacing:.4px}
+header h1{font-family:var(--serif);font-size:17px;font-weight:600;letter-spacing:.5px;color:#EFE2C9}
+header .v{font-family:var(--sans);color:#9C866A;font-weight:400;font-size:12px;margin-left:10px;letter-spacing:1px}
+header .meta{font-size:12px;color:#8A7860;letter-spacing:.4px}
 
 .stage-wrap{width:100%;max-width:1280px;display:flex;justify-content:center}
 .stage-outer{position:relative;width:100%;max-width:1280px;height:720px}
 .stage{
   position:absolute;inset:0;width:1280px;height:720px;transform-origin:top left;
-  overflow:hidden;border-radius:14px;box-shadow:var(--shadow);background:#05070A;
+  overflow:hidden;border-radius:8px;background:#0A0806;
+  box-shadow:0 0 0 2px #6B4C30, 0 0 0 6px #2A1C12, 0 18px 40px rgba(0,0,0,.55);
 }
 .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;image-rendering:pixelated;transition:opacity .4s ease,filter .4s ease}
 .scrim{position:absolute;inset:0;pointer-events:none;
   background:
-    radial-gradient(120% 80% at 50% 0%, rgba(6,8,11,.55) 0%, rgba(6,8,11,0) 42%),
-    radial-gradient(120% 90% at 50% 100%, rgba(6,8,11,.45) 0%, rgba(6,8,11,0) 40%);
+    radial-gradient(130% 70% at 50% -10%, rgba(12,8,5,.42) 0%, rgba(12,8,5,0) 46%),
+    radial-gradient(130% 80% at 50% 108%, rgba(12,8,5,.34) 0%, rgba(12,8,5,0) 44%);
 }
-.stage::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:14px;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08), inset 0 0 90px rgba(0,0,0,.35)}
 .vignette{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .5s ease;
-  background:radial-gradient(ellipse at 50% 55%, rgba(0,0,0,0) 52%, rgba(96,14,24,.5) 100%)}
+  background:radial-gradient(ellipse at 50% 55%, rgba(0,0,0,0) 50%, rgba(110,20,14,.42) 100%)}
 .vignette.on{opacity:1}
 
 .hud{position:absolute;inset:0;pointer-events:none}
 .hud > *{pointer-events:auto}
 
-.glass{
-  background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02)),var(--glass);
-  -webkit-backdrop-filter:blur(16px) saturate(1.5);
-  backdrop-filter:blur(16px) saturate(1.5);
-  border:1px solid var(--stroke);
-  box-shadow:0 1px 0 rgba(255,255,255,.16) inset, 0 8px 24px rgba(0,0,0,.28);
+.card{
+  background:var(--paper);
+  border:1.5px solid var(--paper-edge);
+  border-radius:7px 11px 6px 10px;
+  box-shadow:3px 3px 0 var(--shadow);
+  color:var(--ink);
 }
 
-.daytag{position:absolute;left:30px;top:24px;display:flex;align-items:center;gap:10px;
-  font-size:17px;letter-spacing:2.4px;color:rgba(243,245,247,.66);text-transform:uppercase;text-shadow:0 1px 4px rgba(0,0,0,.65)}
-.daytag .pip{width:6px;height:6px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 4px var(--mint-dim)}
+.daytag{position:absolute;left:30px;top:26px;display:flex;align-items:center;gap:9px;
+  font-family:var(--sans);font-size:15px;letter-spacing:2px;color:#F0E3C8;
+  text-shadow:0 2px 3px rgba(0,0,0,.85)}
+.daytag .pip{width:9px;height:9px;border-radius:2px;background:#D0A44A;border:1px solid #5A3A1C;transform:rotate(45deg)}
 
 .objective{
-  position:absolute;top:18px;left:50%;transform:translateX(-50%);
-  display:flex;align-items:center;gap:16px;height:64px;padding:0 24px;
-  border-radius:18px;cursor:pointer;max-width:min(620px,calc(100% - 560px));
-  transition:background .18s ease,border-color .18s ease,transform .18s ease;
-  overflow:hidden;
+  position:absolute;top:20px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:16px;height:66px;padding:0 24px;
+  cursor:pointer;max-width:min(660px,calc(100% - 560px));
+  transition:transform .12s ease,box-shadow .12s ease;
+  overflow:visible;
 }
-.objective:hover{transform:translateX(-50%) translateY(-1px);border-color:rgba(255,255,255,.24)}
-.objective.expanded{max-width:min(880px,calc(100% - 120px));height:auto;padding:16px 22px;align-items:flex-start;flex-wrap:wrap}
-.ring{width:32px;height:32px;flex:none;transform:rotate(-90deg)}
-.ring .track{fill:none;stroke:var(--stroke);stroke-width:2.5}
-.ring .bar{fill:none;stroke:var(--mint);stroke-width:2.5;stroke-linecap:round;stroke-dasharray:56.5;stroke-dashoffset:56.5;transition:stroke-dashoffset .5s cubic-bezier(.2,.8,.2,1)}
-.obj-main{display:flex;flex-direction:column;gap:3px;min-width:0}
-.obj-kicker{font-size:16px;letter-spacing:2.2px;color:var(--text-2);text-transform:uppercase}
-.obj-line{display:flex;align-items:baseline;gap:10px;min-width:0}
-.obj-text{font-size:25px;font-weight:500;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.obj-prog{font-size:19px;color:var(--mint);font-variant-numeric:tabular-nums;flex:none}
-.chev{width:16px;height:16px;flex:none;margin-left:4px;color:var(--text-3);transition:transform .2s ease}
+.objective::before{
+  content:"";position:absolute;top:-11px;left:-7px;width:54px;height:17px;
+  background:var(--tape);border-left:1px solid rgba(90,66,36,.25);border-right:1px solid rgba(90,66,36,.25);
+  transform:rotate(-6deg);
+}
+.objective:hover{transform:translateX(-50%) translateY(-1px);box-shadow:4px 5px 0 var(--shadow)}
+.objective.expanded{max-width:min(880px,calc(100% - 120px));height:auto;padding:18px 24px;align-items:flex-start;flex-wrap:wrap}
+.ring{width:34px;height:34px;flex:none;transform:rotate(-90deg)}
+.ring .track{fill:none;stroke:var(--line);stroke-width:3;stroke-dasharray:3 3.4}
+.ring .bar{fill:none;stroke:var(--green);stroke-width:3;stroke-linecap:round;stroke-dasharray:56.5;stroke-dashoffset:56.5;transition:stroke-dashoffset .5s cubic-bezier(.2,.8,.2,1)}
+.obj-main{display:flex;flex-direction:column;gap:2px;min-width:0}
+.obj-kicker{font-family:var(--sans);font-size:16px;letter-spacing:2.6px;color:var(--ink-2)}
+.obj-line{display:flex;align-items:baseline;gap:12px;min-width:0}
+.obj-text{font-family:var(--serif);font-size:26px;font-weight:600;letter-spacing:.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.obj-prog{font-family:var(--sans);font-size:18px;color:var(--green);font-variant-numeric:tabular-nums;flex:none}
+.chev{width:18px;height:18px;flex:none;margin-left:4px;color:var(--ink-3);transition:transform .2s ease}
 .objective.expanded .chev{transform:rotate(180deg)}
-.obj-detail{display:none;flex-basis:100%;font-size:19px;line-height:1.65;color:var(--text-2);
-  padding-top:10px;margin-top:2px;border-top:1px solid var(--stroke-soft);white-space:normal;font-weight:400}
+.obj-detail{display:none;flex-basis:100%;font-family:var(--sans);font-size:18px;line-height:1.7;color:var(--ink-2);
+  padding-top:12px;margin-top:8px;border-top:1px dashed var(--line);white-space:normal}
 .objective.expanded .obj-detail{display:block}
 
-.topright{position:absolute;top:18px;right:28px;display:flex;align-items:center;gap:10px}
-.pill{height:48px;padding:0 20px;border-radius:14px;display:flex;align-items:center;gap:10px;font-size:21px;letter-spacing:.2px}
-.pill svg{width:17px;height:17px;flex:none}
-.pill.badge{color:var(--text);border-color:rgba(111,227,190,.34)}
-.pill.badge .dot{width:7px;height:7px;border-radius:50%;background:var(--mint);position:relative}
-.pill.badge .dot::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--mint);opacity:.45;animation:pulse 2.2s ease-out infinite}
-@keyframes pulse{0%{transform:scale(.7);opacity:.5}70%{transform:scale(1.5);opacity:0}100%{opacity:0}}
-.pill.badge .n{color:var(--mint);font-variant-numeric:tabular-nums}
-.pill.wallet{gap:10px}
-.pill.wallet .amt{font-variant-numeric:tabular-nums;font-weight:500;font-size:23px}
-.pill.wallet .cur{color:var(--text-3);font-size:16px;margin-left:1px}
-.pill.wallet svg{color:var(--amber)}
-.menu-btn{height:48px;padding:0 18px;border-radius:14px;color:var(--text);font-family:var(--sans);font-size:21px;
-  display:flex;align-items:center;gap:8px;cursor:pointer;transition:background .15s,border-color .15s}
-.menu-btn:hover{border-color:rgba(255,255,255,.26)}
-.menu-btn svg{width:16px;height:16px;color:var(--text-2)}
+.topright{position:absolute;top:20px;right:28px;display:flex;align-items:center;gap:10px}
+.pill{height:48px;padding:0 16px;border-radius:6px 9px 5px 8px;display:flex;align-items:center;gap:9px;
+  font-family:var(--sans);font-size:20px;letter-spacing:.2px;box-shadow:2px 2px 0 var(--shadow)}
+.pill svg{width:19px;height:19px;flex:none}
+.pill.badge{background:var(--badge);border:1.5px solid var(--badge-edge);color:var(--badge-ink)}
+.pill.badge .dot{width:7px;height:7px;border-radius:50%;background:#E8C979;border:1px solid rgba(0,0,0,.35)}
+.pill.badge .n{color:#F0DCA6;font-variant-numeric:tabular-nums}
+.pill.wallet{background:var(--paper-2);border:1.5px solid var(--paper-edge);color:var(--ink)}
+.pill.wallet .amt{font-variant-numeric:tabular-nums;font-weight:600;font-size:22px}
+.pill.wallet .cur{color:var(--ink-3);font-size:15px;margin-left:1px}
+.pill.wallet svg{color:var(--gold)}
+.menu-btn{height:48px;padding:0 18px;border-radius:6px 9px 5px 8px;font-family:var(--sans);font-size:20px;
+  display:flex;align-items:center;gap:9px;cursor:pointer;
+  background:var(--wood);border:1.5px solid var(--paper-edge);color:#F7EAD2;box-shadow:2px 2px 0 var(--shadow);
+  transition:transform .1s ease,filter .15s ease}
+.menu-btn:hover{filter:brightness(1.08);transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--shadow)}
+.menu-btn:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--shadow)}
+.menu-btn svg{width:18px;height:18px;color:#E8D3AF}
 
 .actionbar{position:absolute;left:30px;bottom:30px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .chip{
-  height:58px;padding:0 22px;border-radius:15px;display:flex;align-items:center;gap:12px;
-  color:var(--text);font-family:var(--sans);font-size:22px;letter-spacing:.1px;cursor:pointer;
-  transition:transform .12s cubic-bezier(.2,.8,.2,1),background .15s,border-color .15s;
+  height:58px;padding:0 22px;border-radius:7px 11px 6px 10px;display:flex;align-items:center;gap:12px;
+  font-family:var(--sans);font-size:21px;letter-spacing:.1px;cursor:pointer;
+  background:var(--paper);border:1.5px solid var(--paper-edge);color:var(--ink);
+  box-shadow:3px 3px 0 var(--shadow);transition:transform .1s ease,box-shadow .1s ease,filter .15s;
 }
-.chip:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.28)}
-.chip:active{transform:translateY(0) scale(.985)}
-.chip svg{width:18px;height:18px;color:var(--amber)}
-.chip.primary{border-color:rgba(255,196,107,.4);
-  background:linear-gradient(180deg,rgba(255,196,107,.16),rgba(255,196,107,.05)),var(--glass)}
-.chip .k{font-size:16px;color:var(--text-3);border:1px solid var(--stroke-soft);border-radius:6px;padding:2px 6px;margin-left:2px}
-.bar-hint{align-self:center;font-size:18px;color:rgba(243,245,247,.74);letter-spacing:.3px;height:38px;display:flex;align-items:center;padding:0 14px;border-radius:10px;background:rgba(10,12,16,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.chip:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--shadow)}
+.chip:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--shadow)}
+.chip svg{width:20px;height:20px;color:var(--ink-2)}
+.chip.primary{background:var(--wood);border-color:var(--paper-edge);color:#F7EAD2}
+.chip.primary svg{color:#E8D3AF}
+.chip .k{font-size:15px;color:var(--ink-3);border:1px solid var(--line);border-radius:3px;padding:1px 6px;margin-left:2px}
+.chip.primary .k{color:#CFB48A;border-color:#5A3A1C}
+.bar-hint{align-self:center;font-family:var(--sans);font-size:17px;color:#EFE1C6;
+  padding:5px 12px;background:rgba(28,20,13,.72);border:1px solid rgba(0,0,0,.4);border-radius:4px;letter-spacing:.3px}
 
 .toast{
-  position:absolute;top:96px;left:50%;transform:translate(-50%,-10px);opacity:0;pointer-events:none;
-  padding:13px 22px;border-radius:12px;font-size:20px;color:var(--text);white-space:nowrap;
-  background:var(--glass-strong);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
-  border:1px solid var(--stroke);box-shadow:0 10px 30px rgba(0,0,0,.35);
-  transition:opacity .2s ease,transform .2s cubic-bezier(.2,.8,.2,1);
+  position:absolute;top:100px;left:50%;transform:translate(-50%,-8px);opacity:0;pointer-events:none;
+  padding:12px 20px;font-family:var(--sans);font-size:19px;color:var(--ink);white-space:nowrap;
+  background:var(--paper);border:1.5px solid var(--paper-edge);border-radius:6px 9px 5px 8px;
+  box-shadow:3px 3px 0 var(--shadow);
+  transition:opacity .18s ease,transform .18s ease;
 }
+.toast::before{content:"";position:absolute;left:-1px;top:-1px;bottom:-1px;width:6px;background:var(--gold);border-radius:5px 0 0 4px}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 
-.drink-pop{position:absolute;left:30px;bottom:96px;min-width:230px;padding:8px;border-radius:14px;display:none;flex-direction:column;gap:2px}
+.drink-pop{position:absolute;left:30px;bottom:100px;min-width:230px;padding:7px;display:none;flex-direction:column;gap:1px}
 .drink-pop.open{display:flex}
-.drink-pop button{background:none;border:none;color:var(--text);font-family:var(--sans);font-size:15px;text-align:left;
-  padding:10px 12px;border-radius:9px;cursor:pointer;display:flex;justify-content:space-between;gap:16px}
-.drink-pop button:hover{background:rgba(255,255,255,.08)}
-.drink-pop .qty{color:var(--text-3);font-variant-numeric:tabular-nums}
+.drink-pop button{background:none;border:none;color:var(--ink);font-family:var(--sans);font-size:18px;text-align:left;
+  padding:9px 12px;border-radius:3px;cursor:pointer;display:flex;justify-content:space-between;gap:16px}
+.drink-pop button:hover{background:var(--paper-2)}
+.drink-pop .qty{color:var(--ink-3);font-variant-numeric:tabular-nums}
 
-.modal{position:absolute;inset:0;display:none;align-items:center;justify-content:center;
-  background:rgba(6,8,11,.58);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.modal{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(12,8,5,.62)}
 .modal.open{display:flex}
-.sheet{width:1000px;display:flex;flex-direction:column;border-radius:22px;padding:28px 34px 32px;position:relative;
-  background:var(--glass-strong);-webkit-backdrop-filter:blur(24px) saturate(1.6);backdrop-filter:blur(24px) saturate(1.6);
-  border:1px solid var(--stroke);box-shadow:0 30px 80px rgba(0,0,0,.55)}
-.sheet-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:22px}
-.sheet-head .t{font-size:28px;font-weight:500;letter-spacing:.3px}
-.sheet-head .s{font-size:15px;letter-spacing:2.2px;color:var(--text-3);text-transform:uppercase;margin-top:8px}
-.x{height:40px;padding:0 16px;border-radius:10px;background:none;border:1px solid var(--stroke);color:var(--text-2);
-  font-family:var(--sans);font-size:18px;cursor:pointer}
-.x:hover{color:var(--text);border-color:rgba(255,255,255,.28)}
-.sheet-body{display:grid;grid-template-columns:240px 1fr;gap:28px}
-.nav{display:flex;flex-direction:column;justify-content:flex-start;gap:14px;border-right:1px solid var(--stroke-soft);padding-right:22px}
-.nav .gtitle{font-size:14px;letter-spacing:1.8px;color:var(--text-3);text-transform:uppercase;margin-bottom:4px}
-.nav button{width:100%;text-align:left;background:none;border:none;color:var(--text-2);font-family:var(--sans);font-size:18px;
-  padding:7px 12px;border-radius:9px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;
-  position:relative;transition:background .15s,color .15s}
-.nav button:hover{background:rgba(255,255,255,.06);color:var(--text)}
-.nav button:hover::before{content:"";position:absolute;left:0;top:9px;bottom:9px;width:2px;border-radius:2px;background:var(--mint)}
-.nav .k{font-size:14px;color:var(--text-3);border:1px solid var(--stroke-soft);border-radius:5px;padding:1px 5px}
-.side{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto 1fr;gap:14px}
-.block{border:1px solid var(--stroke-soft);border-radius:14px;padding:18px 20px;background:rgba(255,255,255,.03)}
-.block .label{font-size:15px;letter-spacing:1.6px;color:var(--text-3);text-transform:uppercase;margin-bottom:10px}
-.block .value{font-size:20px;line-height:1.55;color:var(--text)}
-.block .value .mint{color:var(--mint)}
-.block .value .big{font-size:30px;font-weight:500;font-variant-numeric:tabular-nums}
+.sheet{width:1000px;max-height:660px;overflow:auto;position:relative;padding:30px 36px 34px;
+  background:var(--paper);border:2px solid var(--paper-edge);border-radius:9px 13px 8px 12px;
+  box-shadow:0 0 0 6px rgba(58,42,26,.35), 0 22px 50px rgba(0,0,0,.6);
+  color:var(--ink)}
+.sheet::after{content:"";position:absolute;left:284px;top:26px;bottom:26px;border-left:1px dashed var(--line)}
+.sheet-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px}
+.sheet-head .t{font-family:var(--serif);font-size:30px;font-weight:600;letter-spacing:2px}
+.sheet-head .s{font-family:var(--sans);font-size:13px;letter-spacing:2.4px;color:var(--ink-3);margin-top:6px}
+.x{height:40px;padding:0 16px;border-radius:5px;background:var(--paper-2);border:1.5px solid var(--paper-edge);
+  color:var(--ink);font-family:var(--sans);font-size:17px;cursor:pointer;box-shadow:2px 2px 0 var(--shadow)}
+.x:hover{filter:brightness(1.04)}
+.sheet-body{display:grid;grid-template-columns:248px 1fr;gap:36px}
+.nav{display:flex;flex-direction:column;gap:18px}
+.nav .gtitle{font-family:var(--sans);font-size:13px;letter-spacing:2.2px;color:var(--ink-3);margin-bottom:6px;
+  border-bottom:1px solid var(--line);padding-bottom:4px}
+.nav button{width:100%;text-align:left;background:none;border:none;color:var(--ink);font-family:var(--sans);font-size:19px;
+  padding:8px 6px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;
+  border-bottom:1px dotted var(--line)}
+.nav button:hover{color:var(--red)}
+.nav button .k{font-size:13px;color:var(--ink-3);border:1px solid var(--line);border-radius:3px;padding:0 5px}
+.side{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-content:space-between;height:100%}
+.block{border:1.5px solid var(--line);border-radius:5px;padding:18px 20px;background:rgba(255,255,255,.22)}
+body.wood .block{background:rgba(255,235,200,.05)}
+.block .label{font-family:var(--sans);font-size:13px;letter-spacing:2px;color:var(--ink-3);margin-bottom:10px}
+.block .value{font-family:var(--sans);font-size:19px;line-height:1.6;color:var(--ink)}
+.block .value .mint{color:var(--green)}
+.block .value .big{font-family:var(--serif);font-size:32px;font-weight:600;font-variant-numeric:tabular-nums}
 .block.wide{grid-column:1/-1}
-.block .note{font-size:18px;line-height:1.7;color:var(--text-2)}
+.block .note{font-family:var(--sans);font-size:17px;line-height:1.7;color:var(--ink-2)}
 
 .legacy{display:none}
 body.compare .hud-new{display:none}
@@ -192,21 +213,21 @@ body.compare .legacy{display:block}
 .legacy-note{position:absolute;right:24px;top:300px;width:300px;color:#8A7A62;font-family:"fusion-pixel",monospace;font-size:20px;line-height:1.6;text-align:right}
 
 .controls{width:100%;max-width:1280px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center}
-.controls .seg{display:flex;background:rgba(255,255,255,.04);border:1px solid var(--stroke-soft);border-radius:12px;padding:3px}
-.controls .seg button{background:none;border:none;color:var(--text-2);font-family:var(--sans);font-size:13px;padding:8px 16px;border-radius:9px;cursor:pointer;transition:background .15s,color .15s}
-.controls .seg button.on{background:rgba(255,255,255,.1);color:var(--text)}
-.controls .toggle{background:none;border:1px solid var(--stroke-soft);border-radius:12px;color:var(--text-2);
-  font-family:var(--sans);font-size:13px;padding:9px 16px;cursor:pointer;transition:border-color .15s,color .15s}
-.controls .toggle:hover{border-color:var(--stroke);color:var(--text)}
-.controls .toggle.on{color:var(--text);border-color:rgba(255,255,255,.24);background:rgba(255,255,255,.06)}
-.legend{color:var(--text-3);font-size:12.5px;line-height:1.8;text-align:center;max-width:880px}
-.legend b{color:var(--text-2);font-weight:400}
+.controls .seg{display:flex;background:#231A12;border:1px solid #4B3722;border-radius:8px;padding:3px}
+.controls .seg button{background:none;border:none;color:#C6B091;font-family:var(--sans);font-size:13px;padding:8px 16px;border-radius:5px;cursor:pointer}
+.controls .seg button.on{background:#4A3524;color:#F4E6CC}
+.controls .toggle{background:none;border:1px solid #4B3722;border-radius:8px;color:#C6B091;
+  font-family:var(--sans);font-size:13px;padding:9px 16px;cursor:pointer}
+.controls .toggle:hover{color:#F4E6CC;border-color:#7A5B3C}
+.controls .toggle.on{color:#F4E6CC;border-color:#8A6A47;background:#3A2A1C}
+.legend{color:#8E7A60;font-size:12.5px;line-height:1.8;text-align:center;max-width:900px}
+.legend b{color:#C6B091;font-weight:400}
 @font-face{font-family:"fusion-pixel";src:url("fusion-pixel-12px-monospaced-zh_hans.otf.woff2") format("woff2");font-display:swap}
 </style>
 </head>
 <body>
 <header>
-  <h1>哥布林奶茶店 · HUD 视觉重做 <span class="v">v2 / 玻璃拟态</span></h1>
+  <h1>哥布林奶茶店 · HUD 视觉重做 <span class="v">v3 / 纸片手账</span></h1>
   <div class="meta">640×360 实机比例 · 真实游戏截图</div>
 </header>
 
@@ -218,9 +239,9 @@ body.compare .legacy{display:block}
       <div class="vignette" id="vignette"></div>
 
       <div class="hud hud-new">
-        <div class="daytag"><span class="pip"></span><span id="dayTag">Day 1 · 白天</span></div>
+        <div class="daytag"><span class="pip"></span><span id="dayTag">DAY 1 · 白天</span></div>
 
-        <div class="objective glass" id="objective" title="点击展开完整目标">
+        <div class="objective card" id="objective" title="点击展开完整目标">
           <svg class="ring" viewBox="0 0 24 24"><circle class="track" cx="12" cy="12" r="9"/><circle class="bar" id="ringBar" cx="12" cy="12" r="9"/></svg>
           <div class="obj-main">
             <div class="obj-kicker">当前目标</div>
@@ -229,24 +250,24 @@ body.compare .legacy{display:block}
               <span class="obj-prog" id="objProg">0/1</span>
             </div>
           </div>
-          <svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 6.5L8 10.5L12 6.5"/></svg>
+          <svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6.5L8 10.5L12 6.5"/></svg>
           <div class="obj-detail" id="objDetail"></div>
         </div>
 
         <div class="topright">
-          <div class="pill badge glass" id="badge" style="display:none"><span class="dot"></span><span id="badgeText">潜行</span><span class="n" id="badgeCount">0/2</span></div>
-          <div class="pill wallet glass">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="7"/><path d="M10 6.5v7M8 8.4h3.1a1.6 1.6 0 010 3.2H8" stroke-linecap="round"/></svg>
+          <div class="pill badge" id="badge" style="display:none"><span class="dot"></span><span id="badgeText">潜行</span><span class="n" id="badgeCount">0/2</span></div>
+          <div class="pill wallet">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="6.8"/><path d="M10 6.4v7.2M8.1 8.3h3a1.6 1.6 0 010 3.2H8.1" stroke-linecap="round"/></svg>
             <span class="amt" id="wallet">50</span><span class="cur">G</span>
           </div>
-          <button class="menu-btn glass" id="menuBtn">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 6h12M4 10h12M4 14h7"/></svg>
+          <button class="menu-btn" id="menuBtn">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 6h12M4 10h12M4 14h7"/></svg>
             菜单
           </button>
         </div>
 
         <div class="actionbar" id="actionbar"></div>
-        <div class="drink-pop glass" id="drinkPop">
+        <div class="drink-pop card" id="drinkPop">
           <button><span>珍珠奶茶</span><span class="qty">×1</span></button>
           <button><span>草莓奶绿</span><span class="qty">×2</span></button>
           <button><span>咖啡可可冰奶</span><span class="qty">×1</span></button>
@@ -277,7 +298,7 @@ body.compare .legacy{display:block}
           <div class="sheet-head">
             <div>
               <div class="t">菜单</div>
-              <div class="s" id="sheetSub">Day 1 · 营业中</div>
+              <div class="s" id="sheetSub">DAY 1 · 营业中</div>
             </div>
             <button class="x" id="closeMenu">关闭</button>
           </div>
@@ -309,14 +330,14 @@ body.compare .legacy{display:block}
               </div>
               <div class="block">
                 <div class="label">钱包 · 存档</div>
-                <div class="value"><span class="big" id="menuWallet">50</span> <span class="mint">G</span><br><span style="font-size:13px;color:var(--text-3)">10:24 自动保存</span></div>
+                <div class="value"><span class="big" id="menuWallet">50</span> <span class="mint">G</span><br><span style="font-size:13px;color:var(--ink-3)">10:24 自动保存</span></div>
               </div>
               <div class="block">
                 <div class="label">快捷键</div>
-                <div class="value" style="font-size:17px;line-height:1.9;color:var(--text-2)">J 任务日志　M 地图<br>B 原料图鉴　Esc 返回</div>
+                <div class="value" style="font-size:17px;line-height:1.9;color:var(--ink-2)">J 任务日志　M 地图<br>B 原料图鉴　Esc 返回</div>
               </div>
               <div class="block">
-                <div class="label">关于这个版本</div>
+                <div class="label">关于</div>
                 <div class="note">场景里能做的事已经放到画面左下的操作条，菜单只负责查阅与系统设置。</div>
               </div>
             </div>
@@ -333,12 +354,12 @@ body.compare .legacy{display:block}
     <button data-scene="stealth">第一夜 · 潜入</button>
     <button data-scene="close">第二天 · 关店</button>
   </div>
-  <button class="toggle" id="themeBtn">浅色玻璃</button>
+  <button class="toggle" id="themeBtn">木牌深色</button>
   <button class="toggle" id="compareBtn">对比旧版 HUD</button>
 </div>
 
 <div class="legend">
-  <b>操作</b>：点目标条展开 · 点左下按钮触发动作 · 点「菜单」看新结构 · 「浅色玻璃」切另一套配色 · 「对比旧版 HUD」看原来的布局
+  <b>操作</b>：点目标条展开 · 点左下按钮触发动作 · 点「菜单」看新结构 · 「木牌深色」切夜色版 · 「对比旧版 HUD」看原来的布局
 </div>
 
 <script>
@@ -375,28 +396,28 @@ const el = {
 };
 
 const ICONS = {
-  deliver: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12l-1.2 8.2a2 2 0 01-2 1.8H7.2a2 2 0 01-2-1.8L4 4z"/><path d="M4 8h12"/></svg>',
-  orders: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 3.5h10v13l-2.5-1.4L10 16.6l-2.5-1.5L5 16.5z"/><path d="M7.5 7h5M7.5 10h5"/></svg>',
-  coin: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="6.6"/><path d="M10 6.6v6.8M8 8.4h3a1.5 1.5 0 010 3H8" stroke-linecap="round"/></svg>',
-  torch: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.8c2.2 2.1 3.6 3.7 3.6 5.6a3.6 3.6 0 01-7.2 0c0-1.9 1.4-3.5 3.6-5.6z"/><path d="M10 17v-3.4"/></svg>',
-  drink: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h10l-1.2 9.4a2.4 2.4 0 01-2.4 2.1H8.6a2.4 2.4 0 01-2.4-2.1L5 4z"/><path d="M6.2 8.2h7.6"/></svg>',
-  close: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17V4.6a1 1 0 011-1h6.4l4.6 4.4V17"/><path d="M11 3.6v4.8h4.8"/></svg>'
+  deliver: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12l-1.2 8.2a2 2 0 01-2 1.8H7.2a2 2 0 01-2-1.8L4 4z"/><path d="M4 8h12"/></svg>',
+  orders: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M5 3.5h10v13l-2.5-1.4L10 16.6l-2.5-1.5L5 16.5z"/><path d="M7.5 7h5M7.5 10h5"/></svg>',
+  coin: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="10" cy="10" r="6.6"/><path d="M10 6.6v6.8M8 8.4h3a1.5 1.5 0 010 3H8" stroke-linecap="round"/></svg>',
+  torch: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.8c2.2 2.1 3.6 3.7 3.6 5.6a3.6 3.6 0 01-7.2 0c0-1.9 1.4-3.5 3.6-5.6z"/><path d="M10 17v-3.4"/></svg>',
+  drink: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h10l-1.2 9.4a2.4 2.4 0 01-2.4 2.1H8.6a2.4 2.4 0 01-2.4-2.1L5 4z"/><path d="M6.2 8.2h7.6"/></svg>',
+  close: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17V4.6a1 1 0 011-1h6.4l4.6 4.4V17"/><path d="M11 3.6v4.8h4.8"/></svg>'
 };
 
 const SCENES = {
   shop: {
     bg: 'bg_shop_day.png',
     filter: 'none',
-    day: 'Day 1 · 白天',
+    day: 'DAY 1 · 白天',
     objective: '做一杯珍珠奶茶交给哥布林',
     progress: '0/1',
     ratio: 0,
     detail: '在收银台接第一单，到制作台投入红茶、牛奶、珍珠，做好后走到哥布林面前交付。',
     badge: null,
     vignette: false,
-    hint: '营业中 · 有交付对象时才出现操作按钮',
+    hint: '营业中 · 有交付对象时才出现按钮',
     progressText: '第 1 天 · 白天<br>已交付 <span class="mint">0 / 1</span>',
-    sheetSub: 'Day 1 · 营业中',
+    sheetSub: 'DAY 1 · 营业中',
     actions: [
       { id: 'deliver', label: '交给哥布林', key: 'E', icon: 'deliver', primary: true },
       { id: 'orders', label: '订单板', key: '', icon: 'orders' }
@@ -405,7 +426,7 @@ const SCENES = {
   stealth: {
     bg: 'bg_stealth.png',
     filter: 'none',
-    day: 'Day 1 · 夜',
+    day: 'DAY 1 · 夜',
     objective: '长老宅邸 · 取得格里芬之血',
     progress: '0/2',
     ratio: 0,
@@ -414,7 +435,7 @@ const SCENES = {
     vignette: true,
     hint: '潜入中 · 投掷物只在这里出现',
     progressText: '第 1 夜 · 潜入<br>已取目标 <span class="mint">0 / 2</span>',
-    sheetSub: 'Day 1 · 夜间潜入',
+    sheetSub: 'DAY 1 · 夜间潜入',
     actions: [
       { id: 'coin', label: '金币', key: '1', icon: 'coin', primary: true, note: '10G' },
       { id: 'torch', label: '火把', key: '2', icon: 'torch' },
@@ -424,7 +445,7 @@ const SCENES = {
   close: {
     bg: 'bg_shop_day.png',
     filter: 'sepia(.24) saturate(.9) brightness(.9)',
-    day: 'Day 2 · 傍晚',
+    day: 'DAY 2 · 傍晚',
     objective: '交清散客订单后关店',
     progress: '2/3',
     ratio: 0.66,
@@ -433,7 +454,7 @@ const SCENES = {
     vignette: false,
     hint: '关店回到场景里，不用再开菜单',
     progressText: '第 2 天 · 傍晚<br>散客订单 <span class="mint">2 / 3</span>',
-    sheetSub: 'Day 2 · 打烊前',
+    sheetSub: 'DAY 2 · 打烊前',
     actions: [
       { id: 'close', label: '关店 · 前往酒馆', key: 'E', icon: 'close', primary: true }
     ]
@@ -445,8 +466,7 @@ let wallet = 50;
 let state = { shopDelivered: false, closed: false };
 
 function setRing(ratio){
-  const circumference = 56.5;
-  el.ring.style.strokeDashoffset = String(circumference * (1 - ratio));
+  el.ring.style.strokeDashoffset = String(56.5 * (1 - ratio));
 }
 
 function renderWallet(){
@@ -465,9 +485,9 @@ function renderActions(scene){
   el.bar.innerHTML = '';
   scene.actions.forEach(action => {
     const b = document.createElement('button');
-    b.className = 'chip glass' + (action.primary ? ' primary' : '');
+    b.className = 'chip' + (action.primary ? ' primary' : '');
     b.innerHTML = (ICONS[action.icon] || '') +
-      '<span>' + action.label + (action.note ? '<span style="color:var(--text-3);font-size:16px"> ' + action.note + '</span>' : '') + '</span>' +
+      '<span>' + action.label + (action.note ? '<span style="color:var(--ink-3);font-size:15px"> ' + action.note + '</span>' : '') + '</span>' +
       (action.key ? '<span class="k">' + action.key + '</span>' : '');
     b.onclick = () => runAction(action.id);
     el.bar.appendChild(b);
@@ -553,10 +573,10 @@ document.querySelectorAll('#sceneSeg button').forEach(b => b.onclick = () => {
 
 const themeBtn = document.getElementById('themeBtn');
 themeBtn.onclick = () => {
-  document.body.classList.toggle('light');
-  const light = document.body.classList.contains('light');
-  themeBtn.classList.toggle('on', light);
-  themeBtn.textContent = light ? '深色玻璃' : '浅色玻璃';
+  document.body.classList.toggle('wood');
+  const wood = document.body.classList.contains('wood');
+  themeBtn.classList.toggle('on', wood);
+  themeBtn.textContent = wood ? '纸片浅色' : '木牌深色';
 };
 
 const compareBtn = document.getElementById('compareBtn');
@@ -570,7 +590,7 @@ compareBtn.onclick = () => {
 renderWallet();
 const params = new URLSearchParams(location.search);
 setScene(params.get('scene') && SCENES[params.get('scene')] ? params.get('scene') : 'shop');
-if (params.get('theme') === 'light') themeBtn.click();
+if (params.get('theme') === 'wood') themeBtn.click();
 if (params.get('compare') === '1') compareBtn.click();
 if (params.get('menu') === '1') el.modal.classList.add('open');
 </script>

@@ -12,14 +12,17 @@ script = ExtResource("script")
 
 [node name="Content" type="VBoxContainer" parent="."]
 layout_mode = 2
+theme_override_constants/separation = 6
 
 [node name="Heading" type="HBoxContainer" parent="Content"]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="ProductIcon" type="TextureRect" parent="Content/Heading"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(48, 48)
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
+size_flags_vertical = 0
 expand_mode = 1
 stretch_mode = 5
 mouse_filter = 2
@@ -27,7 +30,7 @@ mouse_filter = 2
 [node name="Labels" type="VBoxContainer" parent="Content/Heading"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 4
+theme_override_constants/separation = 2
 
 [node name="ProductTitle" type="Label" parent="Content/Heading/Labels"]
 unique_name_in_owner = true
@@ -54,6 +57,7 @@ layout_mode = 2
 theme_type_variation = &"TicketSeparator"
 
 [node name="Scroll" type="ScrollContainer" parent="Content"]
+custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
@@ -62,6 +66,7 @@ follow_focus = true
 [node name="Details" type="VBoxContainer" parent="Content/Scroll"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 4
 
 [node name="Requirements" type="Label" parent="Content/Scroll/Details"]
 unique_name_in_owner = true

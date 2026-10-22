@@ -19,6 +19,12 @@ var _player: Node2D
 var _origin := Vector2.ZERO
 var _clock := 0.0
 var _running := false
+## Which fact marks this lesson as taught. L0 has one per device; later tips
+## (map, throwing) pass their own key.
+var _flag_key := ""
+## L0 folds away as soon as the player walks. A tip about a key he is already
+## pressing must not vanish the moment he moves.
+var _dismiss_on_walk := true
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -41,12 +47,31 @@ func bind(game: Node) -> void:
 	_player = game.get_player() if game.has_method("get_player") else null
 	if _state == null or _state.get_flag(_record_key()):
 		return
+	_start(KEYBOARD_TEXT if not MobileSupport.is_touch_ui() else TOUCH_TEXT, _record_key(), SHOW_SECONDS, true)
+
+## One lesson, shown once per save. The map and the throw controls are not
+## permanent HUD furniture: they are taught here, then they live in the menu or
+## on a key, and the corner stays free for the game.
+func show_tip(text: String, key: String, seconds: float = 7.0, dismiss_on_walk: bool = false) -> void:
+	if is_instance_valid(_state) and _state.get_flag(key):
+		return
+	if _running:
+		# A newer lesson replaces the one on screen rather than stacking.
+		_running = false
+	_start(text, key, seconds, dismiss_on_walk)
+
+func _start(text: String, key: String, seconds: float, dismiss_on_walk: bool) -> void:
+	_flag_key = key
+	_dismiss_on_walk = dismiss_on_walk
+	_label.text = text
+	_label.visible = true
+	_fit()
 	visible = true
 	_running = true
-	_clock = SHOW_SECONDS
+	_clock = seconds
 	_origin = _player.global_position if is_instance_valid(_player) else Vector2.ZERO
+	modulate.a = 1.0
 	set_process(true)
-	create_tween().tween_property(self, "modulate:a", 1.0, 0.3)
 
 ## One record per device: a phone player is not taught the keyboard layout and
 ## a keyboard player is not taught touch, even on the same save.
@@ -57,15 +82,15 @@ func _process(delta: float) -> void:
 	if not _running:
 		return
 	_clock -= delta
-	var walked: bool = is_instance_valid(_player) and _player.global_position.distance_to(_origin) >= WALK_DISTANCE
+	var walked: bool = _dismiss_on_walk and is_instance_valid(_player) and _player.global_position.distance_to(_origin) >= WALK_DISTANCE
 	if walked or _clock <= 0.0:
 		_finish()
 
 func _finish() -> void:
 	_running = false
 	set_process(false)
-	if _state != null:
-		_state.set_flag(_record_key())
+	if _state != null and not _flag_key.is_empty():
+		_state.set_flag(_flag_key)
 	var tween := create_tween()
 	tween.tween_property(self, "modulate:a", 0.0, FADE_SECONDS)
 	tween.tween_callback(func() -> void: visible = false)

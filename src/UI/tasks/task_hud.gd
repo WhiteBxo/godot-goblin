@@ -5,9 +5,9 @@ extends HBoxContainer
 signal tasks_requested
 
 @onready var _heading: Label = %Heading
-@onready var _title: Label = $TaskCard/Margin/Content/Title
+@onready var _title: Label = $TaskCard/Margin/Content/HeadingRow/Title
 @onready var _objective: Label = $TaskCard/Margin/Content/Objective
-@onready var _sep: Label = $TaskCard/Margin/Content/Sep
+@onready var _sep: Label = $TaskCard/Margin/Content/HeadingRow/Sep
 var _journal: TaskJournal
 var _orders: OrderBoardModel
 var _signature := ""
@@ -75,29 +75,21 @@ func _disconnect_journal() -> void:
 		_journal.projection_changed.disconnect(_refresh)
 
 func _resize_card() -> void:
-	# The strip grows with its sentence up to the point where the wallet chips
-	# start, so a long "奶茶 → 顾客 · 目标" line never gets cut mid-word. Only the
-	# objective may be trimmed, and only when the task really is longer than the
-	# HUD row can afford.
-	var limit := minf(392.0, maxf(220.0, get_viewport_rect().size.x - 248.0))
-	offset_right = offset_left + clampf(_content_width(), 220.0, limit)
+	# A block in the corner, not a banner across the top: the day and the task
+	# share one line, the objective gets the width to wrap to two. The height is
+	# whatever those lines need — the container clamps it to its own minimum, so
+	# an empty objective leaves a shorter card instead of a taller empty one.
+	var limit := maxf(180.0, get_viewport_rect().size.x * 0.45)
+	offset_right = offset_left + minf(252.0, limit)
+	# Height follows the wrapped text, so it has to be measured after the label
+	# has been shaped at its final width — one frame later, not in the same pass.
+	_fit_height.call_deferred()
 
-func _content_width() -> float:
-	# Paper margins plus a couple of pixels of headroom: a label whose clip width
-	# matches its text width exactly still renders an ellipsis.
-	var total := 40.0
-	var parts: Array[Label] = [_heading, _title, _sep, _objective]
-	for label: Label in parts:
-		if label == null or not label.visible or label.text.is_empty():
-			continue
-		total += _text_width(label) + 6.0
-	return total
-
-func _text_width(label: Label) -> float:
-	var font := label.get_theme_font("font")
-	if font == null:
-		return 0.0
-	return font.get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, label.get_theme_font_size("font_size")).x
+func _fit_height() -> void:
+	var card: Control = $TaskCard
+	var height: float = card.get_combined_minimum_size().y
+	if height > 0.0 and not is_equal_approx(offset_bottom - offset_top, height):
+		offset_bottom = offset_top + height
 
 func get_objective_summary() -> Dictionary:
 	return {"title": _title.text, "objective": _objective.text}
@@ -153,7 +145,7 @@ func _day_label() -> String:
 ## Presentation only: a new objective or a new balance nudges the strip once so
 ## the change is noticed without taking the pointer away from the world.
 func _after_refresh() -> void:
-	_sep.visible = not _objective.text.is_empty()
+	_sep.visible = not _title.text.is_empty() and not _objective.text.is_empty()
 	if visible:
 		_resize_card()
 	if not visible:

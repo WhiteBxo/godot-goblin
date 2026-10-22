@@ -190,10 +190,15 @@ func _refresh_actions(setup: Day1StealthSetup) -> void:
 	_torch.disabled = idle
 	_drinks.disabled = idle
 	var running := _service.status == Day1StealthService.Status.RUNNING
-	_coin.visible = not setup.interior_only and running
-	_torch.visible = not setup.wallet_coins and running
-	_drinks.visible = not setup.wallet_coins and running
 	var inventory := _service.get_inventory()
+	# The player already holds the coin when the mission starts, and F throws it.
+	# A chip that only repeats "you are holding a coin" is permanent tutorial
+	# furniture in the corner, so it appears only when it has a job: switching
+	# back from a drink or a torch.
+	var can_switch := _has_other_throwable(setup, inventory)
+	_coin.visible = running and not setup.interior_only and can_switch and _service.selected_kind != &"coin"
+	_torch.visible = running and can_switch and inventory.get_stock(setup.torch_item_id) > 0 and _service.selected_kind != &"torch"
+	_drinks.visible = not setup.wallet_coins and running
 	_coin.text = "金币 %d%s" % [inventory.get_stock(setup.coin_item_id), " ✓" if _service.selected_kind == &"coin" else ""]
 	if setup.wallet_coins:
 		# The wallet price is the only cost the player can be short of. An
@@ -216,6 +221,17 @@ func _refresh_actions(setup: Day1StealthSetup) -> void:
 	_hint.text = setup.controls_hint if not setup.controls_hint.is_empty() else "鼠标瞄准落点 · F 投掷 · Ctrl 潜行"
 	_retry.tooltip_text = _retry_hint.text
 	_status.tooltip_text = "\n".join([_service.message, _guards.text, _hint.text]).strip_edges()
+
+## Drinks kept for display carry no throw payload; they do not count as an
+## alternative the player could switch to.
+func _has_other_throwable(setup: Day1StealthSetup, inventory: WarehouseInventory) -> bool:
+	if inventory.get_stock(setup.torch_item_id) > 0:
+		return true
+	for drink: Dictionary in inventory.get_drinks():
+		if drink.get("read_only", false) or not drink.get("throw") is Dictionary or drink.throw.is_empty():
+			continue
+		return true
+	return false
 
 ## One line for "why nothing happened": a fresh refusal wins over the standing
 ## block reason so the panel never explains a state the player already left.

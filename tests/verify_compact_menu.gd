@@ -32,7 +32,7 @@ func _run() -> void:
 	var ui := game.get_ui_manager()
 	var menu := game.get_game_menu()
 	check(not menu.is_visible_in_tree(), "Idle gameplay has no chapter sidebar")
-	check(not game.get_node("HudLayer/MapButton").visible, "Map is consolidated in the menu")
+	check(not game.has_node("HudLayer/MapButton"), "Map is consolidated in the menu")
 	check(game.get_node("HudLayer/WalletHUD").is_visible_in_tree(), "Wallet chip stays visible next to the menu while a task is tracked")
 	check(not game.get_node("HudLayer/SaveStatus").visible, "Save timestamp is consolidated in the menu and pause")
 	var saved_text := game.get_save_coordinator().get_status_text()

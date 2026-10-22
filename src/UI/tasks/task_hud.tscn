@@ -26,8 +26,8 @@ shadow_offset = Vector2(2, 2)
 visible = false
 offset_left = 16.0
 offset_top = 12.0
-offset_right = 336.0
-offset_bottom = 44.0
+offset_right = 268.0
+offset_bottom = 13.0
 mouse_filter = 2
 theme = ExtResource("2")
 script = ExtResource("1")
@@ -49,20 +49,20 @@ metadata/ui_motion = false
 layout_mode = 2
 mouse_filter = 2
 
-[node name="Content" type="HBoxContainer" parent="TaskCard/Margin"]
+[node name="Content" type="VBoxContainer" parent="TaskCard/Margin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 2
+
+[node name="HeadingRow" type="HBoxContainer" parent="TaskCard/Margin/Content"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 6
 
-[node name="HeadingRow" type="HBoxContainer" parent="TaskCard/Margin/Content"]
-layout_mode = 2
-size_flags_vertical = 4
-mouse_filter = 2
-theme_override_constants/separation = 4
-
 [node name="Heading" type="Label" parent="TaskCard/Margin/Content/HeadingRow"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 4
 mouse_filter = 2
 theme_type_variation = &"Hint"
 theme_override_colors/font_color = Color(0.42, 0.33, 0.25, 1)
@@ -76,16 +76,7 @@ mouse_filter = 2
 theme_type_variation = &"Hint"
 text = "[J]"
 
-[node name="Title" type="Label" parent="TaskCard/Margin/Content"]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 4
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.227, 0.165, 0.102, 1)
-theme_override_font_sizes/font_size = 12
-text = "当前任务"
-
-[node name="Sep" type="Label" parent="TaskCard/Margin/Content"]
+[node name="Sep" type="Label" parent="TaskCard/Margin/Content/HeadingRow"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 4
@@ -94,12 +85,20 @@ theme_override_colors/font_color = Color(0.66, 0.58, 0.45, 1)
 theme_override_font_sizes/font_size = 10
 text = "·"
 
-[node name="Objective" type="Label" parent="TaskCard/Margin/Content"]
+[node name="Title" type="Label" parent="TaskCard/Margin/Content/HeadingRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 mouse_filter = 2
+theme_override_colors/font_color = Color(0.227, 0.165, 0.102, 1)
+theme_override_font_sizes/font_size = 12
+text = "当前任务"
+
+[node name="Objective" type="Label" parent="TaskCard/Margin/Content"]
+layout_mode = 2
+mouse_filter = 2
 theme_override_colors/font_color = Color(0.42, 0.33, 0.25, 1)
 theme_override_font_sizes/font_size = 12
-clip_text = true
+autowrap_mode = 3
+max_lines_visible = 2
 text_overrun_behavior = 3

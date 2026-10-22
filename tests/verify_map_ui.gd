@@ -83,21 +83,31 @@ func _run() -> void:
 	var level := game.get_active_level() as RpgChapterMap
 	var player := game.get_player() as ShopPlayer
 	var panel: SettlementMapPanel = game.get_node("PopupLayer/SettlementMapPanel")
-	var button: Button = game.get_node("HudLayer/MapButton")
+	var menu: ChapterActionsHUD = game.get_game_menu()
 	var canvas := panel.get_map_canvas()
 	check(not game.has_node("Systems/SettlementPreview"), "Actual settlement host runs with debug tools disabled")
-	check(game.open_map() == ERR_UNAVAILABLE and not button.visible, "Locked map rejects public entry and hides button")
+	check(game.open_map() == ERR_UNAVAILABLE and not game.has_node("HudLayer/MapButton"), "Locked map rejects public entry and adds no HUD chrome")
 	check(ui.open_screen(ScreenIds.MAP) == ERR_DOES_NOT_EXIST, "Locked map cannot be opened through manager")
 	await key(KEY_M)
 	check(not ui.is_open(ScreenIds.MAP) and player.movement_enabled, "M cannot open or lock movement before unlock")
 	check(not panel.is_processing(), "Closed map does not refresh")
 	check(not state.get_flag("day1.s04.map_available"), "Installing map capability does not fabricate S04 success")
-	check(game.unlock_map() == OK and state.get_flag("day1.s04.map_available") and button.visible, "Explicit host unlock registers real map before availability fact")
+	check(game.unlock_map() == OK and state.get_flag("day1.s04.map_available") and not game.has_node("HudLayer/MapButton"), "Explicit host unlock registers the map without adding a HUD chip")
 	check(not InputMap.action_get_events("open_map")[0].is_match(InputMap.action_get_events("debug_toggle_overview")[0]), "Formal M and debug overview use distinct bindings")
 	check(game.unlock_map() == OK, "Host map unlock is idempotent")
 	check(not InputMap.action_get_events("debug_cycle_walls")[0].is_match(InputMap.action_get_events("debug_toggle_overview")[0]), "Debug overview also avoids wall inspection binding")
-	await click(button)
-	check(ui.is_open(ScreenIds.MAP) and not player.movement_enabled, "HUD opens managed modal and locks player")
+	check(game.open_game_menu() == OK, "Menu opens so the map can be reached from it")
+	await frames(6)
+	var entry: Button = menu.get_navigation_button(ScreenIds.MAP)
+	check(entry != null and not entry.disabled, "Unlocked map becomes a menu entry")
+	await key(KEY_ESCAPE)
+	await frames(4)
+	check(not ui.has_modal(), "Menu closes before the map is opened")
+	# Opened directly rather than through the menu: closing a menu destination
+	# returns to the menu by design, which is not what this run measures.
+	check(game.open_map() == OK, "Map opens its managed modal")
+	await frames(4)
+	check(ui.is_open(ScreenIds.MAP) and not player.movement_enabled, "Map modal locks the player")
 	check(root.gui_get_focus_owner() == panel.get_default_focus(), "Map gives keyboard focus to close button")
 	if not canvas.map_data.has("regions"):
 		# An opened map must expose regions; without the guard the next line kills
@@ -122,7 +132,7 @@ func _run() -> void:
 	check(not paused and ui.is_open(ScreenIds.MAP), "Esc resumes map from pause")
 	await key(KEY_ESCAPE)
 	check(not ui.has_modal() and player.movement_enabled and not panel.is_processing(), "Esc closes map and restores movement and refresh lifecycle")
-	check(root.gui_get_focus_owner() == button, "Closing restores HUD focus")
+	check(root.gui_get_focus_owner() != panel.get_default_focus(), "Closing the map releases the modal focus")
 	check(state.to_dict() == snapshot, "Viewing map and pausing never alter task or story progress")
 	var old_marker := canvas.player_position
 	var start := player.global_position
@@ -183,7 +193,7 @@ func _run() -> void:
 	player.set_movement_enabled(true)
 	check(game.open_map() == OK, "Map can reopen normally")
 	state.set_flag("day1.s04.map_available", false)
-	check(not ui.has_modal() and not button.visible and not panel.is_processing() and player.movement_enabled, "Revoking unlock closes map and restores locks")
+	check(not ui.has_modal() and not panel.is_processing() and player.movement_enabled, "Revoking unlock closes map and restores locks")
 	check(game.unlock_map() == OK and game.open_map() == OK, "Re-registering same screen after revoke is safe")
 	state.reset_state()
 	check(not ui.is_open(ScreenIds.MAP) and game.open_map() == ERR_UNAVAILABLE, "New game reset revokes map and knowledge")

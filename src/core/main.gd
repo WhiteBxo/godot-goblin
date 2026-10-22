@@ -29,7 +29,10 @@ var _shop_ui: ShopUI
 var _shop_interaction: ShopInteraction
 var _task_journal: TaskJournal
 var _map_panel: SettlementMapPanel
-var _map_button: Button
+## The map lives in the menu; the HUD only teaches the shortcut once.
+var _map_access_known := false
+var _map_was_unlocked := false
+var _stealth_controls_taught := false
 var _map_registered := false
 var _map_provider: Object
 var _handbook: HandbookPanel
@@ -822,6 +825,8 @@ func _initialize_room_map(map: Node2D) -> void:
 	_create_scene_travel(exits)
 	if chapter_map and map.has_method("get_stealth_setup") and map.get_stealth_setup() != null:
 		_create_stealth_system()
+	if chapter_map:
+		_create_control_hint()
 	_create_debug_components()
 	_create_save_system()
 
@@ -843,6 +848,7 @@ func _create_stealth_system() -> void:
 	if is_instance_valid(_touch_controls):
 		_touch_controls.set_action_available(&"throw", true)
 	_stealth_service.changed.connect(_refresh_input_lock)
+	_stealth_service.changed.connect(_announce_stealth_controls)
 	_stealth_service.guard_intercepted.connect(_on_stealth_intercepted)
 	_stealth_service.attempt_failed.connect(_on_stealth_attempt_failed)
 	_stealth_service.throw_resolved.connect(_on_stealth_throw_resolved)
@@ -1353,8 +1359,6 @@ func _refresh_input_lock() -> void:
 		or (is_instance_valid(_actor_director) and _actor_director.is_actor_controlled(&"player"))
 		or (is_instance_valid(_stealth_service) and _stealth_service.is_blocking())
 	)
-	if is_instance_valid(_map_button):
-		_map_button.disabled = should_lock
 	if is_instance_valid(_handbook_hud):
 		_handbook_hud.disabled = should_lock
 	_sync_touch_controls(should_lock)
@@ -1541,6 +1545,9 @@ func _create_control_hint() -> void:
 	_control_hint = preload("res://src/UI/hud/control_hint.tscn").instantiate()
 	$HudLayer.add_child(_control_hint)
 	_control_hint.bind(self)
+	# A mission restored from a save is already running before this HUD exists;
+	# its lesson still belongs on the first frame the player can act.
+	_announce_stealth_controls()
 
 func _create_map_ui() -> void:
 	var level := get_active_level()
@@ -1549,12 +1556,6 @@ func _create_map_ui() -> void:
 	$PopupLayer.add_child(_map_panel)
 	_map_panel.configure(_map_provider, _shop_player, _task_journal, _get_known_map_locations)
 	_map_panel.close_requested.connect(func() -> void: _ui_manager.close_screen(ScreenIds.MAP))
-	_map_button = preload("res://src/UI/map/map_button.tscn").instantiate()
-	$HudLayer.add_child(_map_button)
-	if MobileSupport.is_touch_ui():
-		# No M key to press: the touch HUD has no keyboard hints.
-		_map_button.text = "地图"
-	_map_button.pressed.connect(open_map)
 	get_node("/root/GameState").state_changed.connect(_refresh_map_access)
 	_refresh_map_access()
 
@@ -1581,11 +1582,33 @@ func _refresh_map_access() -> void:
 		_map_registered = false
 	if _ui_manager.is_open(ScreenIds.MAP):
 		_map_panel.refresh()
-	# The button follows the unlock it just computed; hiding it unconditionally
-	# left the map unreachable even after the host registered the canvas.
-	_map_button.visible = unlocked
-	_map_button.focus_mode = Control.FOCUS_ALL if unlocked else Control.FOCUS_NONE
+	# The moment it becomes readable, teach the shortcut once. After that the map
+	# is a menu entry and the HUD keeps its corner.
+	if not _map_access_known:
+		_map_access_known = true
+		_map_was_unlocked = unlocked
+	elif unlocked and not _map_was_unlocked:
+		_announce_map()
+	_map_was_unlocked = unlocked
 	_refresh_game_menu()
+
+func _announce_map() -> void:
+	if not is_instance_valid(_control_hint):
+		return
+	# No M key on a phone: the menu is the only door there.
+	var text := "地图已解锁 · 在右上角菜单里" if MobileSupport.is_touch_ui() else "地图已解锁 · 按 M 打开，或从菜单进入"
+	_control_hint.show_tip(text, "ui.hint.map")
+
+## Throwing is a key, not a corner widget: teach it when the infiltration starts
+## and let the panel keep only the objective and the state.
+func _announce_stealth_controls() -> void:
+	if _stealth_controls_taught or not is_instance_valid(_control_hint) or not is_instance_valid(_stealth_service):
+		return
+	if _stealth_service.status != Day1StealthService.Status.RUNNING:
+		return
+	_stealth_controls_taught = true
+	var text := "瞄准后点右下「投掷」· 长按方向可潜行" if MobileSupport.is_touch_ui() else "鼠标瞄准落点 · F 投掷 · Ctrl 潜行"
+	_control_hint.show_tip(text, "ui.hint.throw")
 
 func open_map() -> Error:
 	if not is_instance_valid(_map_panel) or not get_node("/root/GameState").get_flag("day1.s04.map_available"):

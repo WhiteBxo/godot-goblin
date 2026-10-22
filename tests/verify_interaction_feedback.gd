@@ -48,6 +48,14 @@ func _run() -> void:
 	_check(interaction.get_target() == points[1] and prompt.is_prompt_visible() and not bar.visible, "Real Area2D detects initial target and moves the capsule, not the bottom bar")
 	_check(prompt.get_key_label().text == "E" and prompt.get_action_text() == "打开仓库" and prompt.mouse_filter == Control.MOUSE_FILTER_IGNORE, "Action capsule says verb and object without intercepting input")
 	_check(bar.get_text() == "仓库", "Bottom bar still carries the plain name for hosts that read it")
+	# 不可用状态：保留“这是什么”，收起键帽，补一行原因。
+	points[1].blocked_reason_resolver = func(_target: InteractionPoint) -> String: return "现在还不能通过"
+	await _frames()
+	_check(prompt.get_blocked_reason() == "现在还不能通过" and not prompt.get_key_label().visible, "A blocked target keeps its name, drops the key cap and states the reason")
+	_check(prompt.get_action_text() == "打开仓库", "A blocked target still says what the object is")
+	points[1].blocked_reason_resolver = Callable()
+	await _frames()
+	_check(prompt.get_blocked_reason() == "" and prompt.get_key_label().visible, "Lifting the block restores the key cap")
 	_check(prompt.get_text_label().get_theme_font_size("font_size") == 12, "Capsule uses native 12 px pixel font")
 	player.position = Vector2(275, 220)
 	player.facing = PlayerController.Facing.RIGHT
@@ -171,6 +179,26 @@ func _run() -> void:
 	await _frames()
 	_check(not prompt.is_prompt_visible(), "Deleting controller clears its HUD")
 	_check(feedback._focus == null and feedback._pulse == null, "Feedback safely retires deleted controller")
+	# 门和剧情出口：条件没满足时胶囊说原因，满足后恢复。
+	var gate: InteractionPoint = preload("res://src/gameplay/interaction/interaction_point.tscn").instantiate()
+	gate.set_script(preload("res://src/core/navigation/scene_exit.gd"))
+	gate.display_name = "长老居所"
+	gate.interaction_id = &"gate_test"
+	gate.destination_entrance = &"nowhere"
+	var gate_flags: Array[StringName] = [&"demo.gate.open"]
+	gate.required_flags = gate_flags
+	_demo.add_child(gate)
+	var gate_state := root.get_node("GameState")
+	gate_state.set_flag("demo.gate.open", false)
+	_check(gate.get_blocked_reason() == "现在还不能通过", "A gated door explains itself before the player presses anything")
+	gate.blocked_hint = "长老还没答应见你"
+	_check(gate.get_blocked_reason() == "长老还没答应见你", "A door prefers its authored hint")
+	gate_state.set_flag("demo.gate.open", true)
+	_check(gate.get_blocked_reason() == "", "An open door reports no reason")
+	gate_state.set_flag("demo.gate.open", false)
+	gate.blocked_hint = ""
+	gate.queue_free()
+	await _frames()
 	_demo._reset_points()
 	_demo.free()
 	print("INTERACTION_FEEDBACK: %s (%d checks, %d failures)" % ["PASS" if _failures.is_empty() else "FAIL", _checks, _failures.size()])

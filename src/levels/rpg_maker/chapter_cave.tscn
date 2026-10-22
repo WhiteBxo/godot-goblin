@@ -212,6 +212,8 @@ destination_scene = "res://src/core/elder_house.tscn"
 destination_entrance = &"exterior_door"
 
 allowed_stages = Array[String](["day1.s05"])
+
+blocked_hint = "守卫还没放行"
 required_flags = Array[StringName](["world.phase.night", "day1.s04.commission_accepted", "day1.s05.drunken_paid", "day1.s05.guard_payment_completed"])
 unavailable_message = "长老居所暂不开放。"
 

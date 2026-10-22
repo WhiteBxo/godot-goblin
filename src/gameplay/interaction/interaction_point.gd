@@ -8,6 +8,9 @@ signal interacted(point: InteractionPoint)
 @export var display_name := "交互地点"
 ## 动作胶囊里的动词（"打开""进入""交谈"…）。留空时按交互点类型推断。
 @export var action_verb := ""
+## 运行期条件（宿主注入）：返回一句话说明为什么现在按不动，空串表示可用。
+## 子类可以覆写 get_blocked_reason() 用自己已有的字段（门看通行条件）。
+var blocked_reason_resolver: Callable
 ## 胶囊底边相对交互点的高度：默认浮在物体上方，不压住美术。
 @export var prompt_anchor := Vector2(0, -30)
 @export_multiline var description := ""
@@ -58,6 +61,13 @@ func get_action_text() -> String:
 ## 世界胶囊与底部提示条只保留一个，宿主据此让底部闭嘴。
 func shows_world_prompt() -> bool:
 	return true
+
+## 为什么现在按不动。空串 = 可用。宁可显示"还不能用 + 原因"，也不要让玩家
+## 站在门口按 E 之后什么都不发生。
+func get_blocked_reason() -> String:
+	if blocked_reason_resolver.is_valid():
+		return str(blocked_reason_resolver.call(self))
+	return ""
 
 ## 动词按交互点类型推断；场景里写了 action_verb 就以它为准。
 func _action_verb() -> String:

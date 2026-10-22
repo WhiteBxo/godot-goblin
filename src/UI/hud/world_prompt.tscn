@@ -54,12 +54,17 @@ layout_mode = 0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("paper")
 
-[node name="Row" type="HBoxContainer" parent="Bar"]
+[node name="Content" type="VBoxContainer" parent="Bar"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 1
+
+[node name="Row" type="HBoxContainer" parent="Bar/Content"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 6
 
-[node name="Key" type="Label" parent="Bar/Row"]
+[node name="Key" type="Label" parent="Bar/Content/Row"]
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
@@ -67,10 +72,16 @@ theme_type_variation = &"Keycap"
 theme_override_styles/normal = SubResource("keycap")
 text = "E"
 
-[node name="Text" type="Label" parent="Bar/Row"]
+[node name="Text" type="Label" parent="Bar/Content/Row"]
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.227, 0.165, 0.102, 1)
 theme_override_font_sizes/font_size = 12
+text = ""
+
+[node name="Reason" type="Label" parent="Bar/Content"]
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"Danger"
 text = ""

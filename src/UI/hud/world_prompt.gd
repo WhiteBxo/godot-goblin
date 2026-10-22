@@ -15,14 +15,16 @@ var _target: InteractionPoint
 var _bar: PanelContainer
 var _key: Label
 var _text: Label
+var _reason: Label
 var _pop: Tween
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_bar = $Bar
-	_key = $Bar/Row/Key
-	_text = $Bar/Row/Text
+	_key = $Bar/Content/Row/Key
+	_text = $Bar/Content/Row/Text
+	_reason = $Bar/Content/Reason
 	_bar.visible = false
 	# 触屏没有 E 键：只说“做什么”。
 	_key.visible = not MobileSupport.is_touch_ui()
@@ -43,6 +45,10 @@ func clear() -> void:
 func get_action_text() -> String:
 	return _text.text
 
+## 空串 = 这个目标现在按得动；非空就是它给出的原因。
+func get_blocked_reason() -> String:
+	return _reason.text if _reason.visible else ""
+
 func get_text_label() -> Label:
 	return _text
 
@@ -57,10 +63,22 @@ func _on_target_changed(point: InteractionPoint) -> void:
 		clear()
 		return
 	_target = point
-	_text.text = point.get_action_text()
+	_apply(point)
 	_place()
 	_show_bar()
 	set_process(true)
+
+## 同一个目标的条件会变（旗标刚置上、材料刚凑齐），站着不动也要跟着改。
+func _apply(point: InteractionPoint) -> void:
+	var blocked := _reason_for(point)
+	_text.text = point.get_action_text()
+	# 不带键帽 + 一行红色原因：玩家看得见"这是什么、为什么还不行"。
+	_key.visible = not MobileSupport.is_touch_ui() and blocked.is_empty()
+	_reason.text = blocked
+	_reason.visible = not blocked.is_empty()
+
+func _reason_for(point: InteractionPoint) -> String:
+	return point.get_blocked_reason() if point.has_method("get_blocked_reason") else ""
 
 ## 跟随相机：目标点每帧重新投影到屏幕坐标，胶囊始终贴在物体上沿。
 func _process(_delta: float) -> void:
@@ -68,6 +86,9 @@ func _process(_delta: float) -> void:
 		clear()
 		return
 	_place()
+	if _reason_for(_target) != get_blocked_reason():
+		_apply(_target)
+		_place()
 
 func _place() -> void:
 	var size := _bar.get_combined_minimum_size()

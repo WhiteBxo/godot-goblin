@@ -63,8 +63,11 @@ func _blocked() -> bool:
 		return true
 	if not is_instance_valid(_game):
 		return true
-	if _game.has_method("get_ui_manager") and _game.get_ui_manager().has_modal():
-		return true
+	if _game.has_method("get_ui_manager"):
+		var ui = _game.get_ui_manager()
+		# The chapter menu is a "popup" screen, not a modal, so both are checked.
+		if ui.has_modal() or ui.is_open(ScreenIds.CHAPTER_ACTIONS):
+			return true
 	if _game.has_method("get_dialogue_manager") and _game.get_dialogue_manager().is_active():
 		return true
 	return false

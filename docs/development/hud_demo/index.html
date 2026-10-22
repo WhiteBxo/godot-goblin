@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>哥布林奶茶店 · HUD 重做 Demo</title>
+<style>
+@font-face{
+  font-family:"fusion-pixel";
+  src:url("../../../assets/fonts/fusion_pixel/fusion-pixel-12px-monospaced-zh_hans.otf.woff2") format("woff2");
+  font-display:swap;
+}
+:root{
+  --amber:#EF9F27;
+  --amber-light:#FAC775;
+  --cream:#F4E3C4;
+  --panel:rgba(34,24,16,.92);
+  --panel-solid:#22180F;
+  --panel-border:#6E4C31;
+  --teal:#5DCAA5;
+  --teal-deep:#085041;
+  --muted:#B4B2A9;
+  --dim:#888780;
+  --u:1px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#15100C;color:#E8DCC8;font-family:"fusion-pixel","PingFang SC","Microsoft YaHei",monospace}
+body{padding:24px 24px 40px;display:flex;flex-direction:column;align-items:center;gap:16px}
+h1{font-size:15px;font-weight:500;letter-spacing:.5px;color:#EFE3CB;text-align:center}
+h1 span{color:var(--dim);font-weight:400}
+.stage-wrap{width:100%;max-width:1280px;display:flex;justify-content:center}
+.stage-outer{position:relative;width:100%;max-width:1280px;aspect-ratio:16/9}
+.stage{
+  position:absolute;inset:0;width:1280px;height:720px;transform-origin:top left;
+  overflow:hidden;border-radius:6px;border:1px solid #3A2A1C;background:#0B0A08;
+  image-rendering:pixelated;
+}
+.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;image-rendering:pixelated;transition:opacity .35s ease, filter .35s ease}
+.vignette{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s ease;
+  background:radial-gradient(ellipse at center, rgba(0,0,0,0) 46%, rgba(120,18,18,.42) 100%)}
+.vignette.on{opacity:1}
+
+.hud{position:absolute;inset:0;pointer-events:none}
+.hud > *{pointer-events:auto}
+
+.objective{
+  position:absolute;top:16px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:10px;height:36px;padding:0 18px;
+  background:rgba(8,80,65,.9);border:1px solid var(--teal);border-radius:18px;
+  color:#E1F5EE;font-size:24px;line-height:1;white-space:nowrap;cursor:pointer;
+  transition:background .2s ease,border-color .2s ease,max-width .25s ease;
+  max-width:min(620px, calc(100% - 480px));
+}
+.objective:hover{background:rgba(8,80,65,.98);border-color:#9FE1CB}
+.objective .dot{width:10px;height:10px;border-radius:50%;background:var(--teal);flex:none}
+.objective .txt{overflow:hidden;text-overflow:ellipsis}
+.objective .prog{color:#9FE1CB;flex:none;font-variant-numeric:tabular-nums}
+.objective.expanded{max-width:900px;height:auto;min-height:36px;padding:12px 18px;align-items:flex-start;border-radius:12px}
+.objective .detail{display:none;color:#C9EFE2;font-size:20px;line-height:1.5;margin-top:6px;white-space:normal}
+.objective.expanded .detail{display:block}
+
+.topright{position:absolute;top:16px;right:24px;display:flex;align-items:center;gap:8px}
+.pill{
+  display:flex;align-items:center;gap:8px;height:36px;padding:0 16px;border-radius:18px;
+  background:var(--panel);border:1px solid var(--panel-border);color:var(--cream);font-size:24px;line-height:1;
+}
+.pill.badge{border-color:rgba(93,202,165,.55);color:#9FE1CB}
+.pill.badge .n{color:#5DCAA5}
+.pill.wallet{gap:6px;font-variant-numeric:tabular-nums}
+.pill.wallet .coin{width:14px;height:14px;border-radius:50%;background: radial-gradient(circle at 35% 30%,#FFD98A,#C98A1E 70%);border:1px solid #8A5C12}
+.menu-btn{height:36px;padding:0 18px;border-radius:18px;background:var(--panel);border:1px solid var(--panel-border);
+  color:var(--cream);font-size:24px;font-family:inherit;cursor:pointer;transition:border-color .15s,color .15s}
+.menu-btn:hover{border-color:var(--amber);color:#FFE0A8}
+
+.actionbar{position:absolute;left:24px;bottom:24px;display:flex;align-items:center;gap:8px;min-height:48px}
+.chip{
+  height:48px;padding:0 20px;border-radius:12px;background:rgba(65,36,2,.92);
+  border:1px solid var(--amber);color:var(--amber-light);font-size:24px;font-family:inherit;
+  cursor:pointer;display:flex;align-items:center;gap:8px;transition:transform .08s ease,background .15s,border-color .15s;
+}
+.chip:hover{background:rgba(99,56,6,.96);border-color:#FFC85C}
+.chip:active{transform:translateY(1px) scale(.99)}
+.chip .k{color:#8A6A44;font-size:18px}
+.chip[disabled]{opacity:.45;cursor:default}
+.bar-hint{color:#EFE3CB;background:rgba(20,14,9,.72);border-radius:8px;padding:0 12px;height:36px;display:flex;align-items:center;font-size:19px;margin-left:6px;white-space:nowrap}
+
+.toast{
+  position:absolute;top:72px;left:50%;transform:translate(-50%,-8px);opacity:0;
+  background:rgba(20,14,9,.94);border:1px solid var(--panel-border);border-radius:10px;
+  padding:10px 18px;font-size:22px;color:#F1E4CC;white-space:nowrap;pointer-events:none;
+  transition:opacity .18s ease,transform .18s ease;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+.drink-pop{
+  position:absolute;left:24px;bottom:84px;background:rgba(20,14,9,.97);border:1px solid var(--panel-border);
+  border-radius:10px;padding:6px;display:none;flex-direction:column;gap:4px;min-width:200px;
+}
+.drink-pop.open{display:flex}
+.drink-pop button{
+  background:none;border:none;color:#E9D9BF;font-family:inherit;font-size:22px;text-align:left;
+  padding:8px 12px;border-radius:6px;cursor:pointer;
+}
+.drink-pop button:hover{background:rgba(239,159,39,.16);color:#FFD9A0}
+
+.modal{position:absolute;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center}
+.modal.open{display:flex}
+.sheet{
+  width:960px;max-height:560px;background:var(--panel-solid);border:1px solid var(--panel-border);
+  border-radius:20px;padding:24px 28px;display:grid;grid-template-columns:260px 1fr;gap:24px;
+  box-shadow:0 18px 60px rgba(0,0,0,.5);
+}
+.sheet h2{font-size:28px;font-weight:400;color:var(--amber-light);margin-bottom:16px;grid-column:1/-1}
+.sheet .close{position:absolute;top:24px;right:28px;height:36px;padding:0 16px;border-radius:18px;
+  background:none;border:1px solid var(--panel-border);color:var(--cream);font-family:inherit;font-size:22px;cursor:pointer}
+.nav{display:flex;flex-direction:column;gap:14px;border-right:1px solid rgba(255,255,255,.08);padding-right:20px}
+.nav group{display:block}
+.nav .group{display:block}
+.nav .gtitle{color:var(--dim);font-size:19px;letter-spacing:.5px;margin-bottom:6px}
+.nav button{
+  display:block;width:100%;text-align:left;background:none;border:none;color:#E8DCC8;
+  font-family:inherit;font-size:22px;padding:9px 10px;border-radius:8px;cursor:pointer;
+}
+.nav button:hover{background:rgba(239,159,39,.14);color:#FFD9A0}
+.nav button .hint{color:var(--dim);font-size:18px;margin-left:8px}
+.side{display:flex;flex-direction:column;gap:16px}
+.side .block{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px}
+.side .label{color:var(--dim);font-size:19px;margin-bottom:6px}
+.side .value{font-size:22px;line-height:1.5;color:#EFE3CB}
+.side .value b{color:#9FE1CB;font-weight:400}
+
+.legacy{display:none}
+body.compare .hud-new{display:none}
+body.compare .legacy{display:block}
+.legacy-task{
+  position:absolute;left:32px;top:72px;width:760px;padding:18px 24px;border-radius:12px;
+  background:var(--panel-solid);border:1px solid #6E4C31;color:#F4E3C4;font-size:24px;line-height:1.45;
+}
+.legacy-task .head{display:flex;justify-content:space-between;color:#F4E3C4;margin-bottom:6px}
+.legacy-task .k{color:var(--dim);font-size:22px}
+.legacy-task .sub{color:var(--amber-light)}
+.legacy-stealth{
+  position:absolute;left:32px;bottom:32px;width:544px;padding:16px 20px;border-radius:12px;
+  background:var(--panel-solid);border:1px solid #6E4C31;color:#F4E3C4;font-size:22px;line-height:1.5;
+}
+.legacy-stealth .head{display:flex;justify-content:space-between;margin-bottom:4px}
+.legacy-stealth .tag{color:var(--dim);border:1px solid #4A3A2A;border-radius:8px;padding:0 8px;font-size:20px}
+.legacy-stealth .hint{color:var(--dim);font-size:20px;margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.legacy-stealth .btn{margin-top:8px;height:40px;border:1px solid #6E4C31;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#F4E3C4}
+.legacy-note{position:absolute;right:24px;top:300px;width:300px;color:#8A7A62;font-size:20px;line-height:1.6;text-align:right}
+
+.controls{width:100%;max-width:1280px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center}
+.controls .seg{display:flex;border:1px solid #3A2A1C;border-radius:10px;overflow:hidden}
+.controls .seg button{
+  background:#1D1610;color:#CBB79A;border:none;font-family:inherit;font-size:13px;padding:9px 16px;cursor:pointer;
+}
+.controls .seg button.on{background:#3A2A18;color:#FFD9A0}
+.controls .toggle{
+  background:#1D1610;color:#CBB79A;border:1px solid #3A2A1C;border-radius:10px;
+  font-family:inherit;font-size:13px;padding:9px 16px;cursor:pointer;
+}
+.controls .toggle.on{background:#3A2A18;color:#FFD9A0;border-color:#6E4C31}
+.legend{color:#A4917A;font-size:14px;line-height:1.8;text-align:center;max-width:960px}
+.legend b{color:#D8C4A6;font-weight:400}
+</style>
+</head>
+<body>
+<h1>哥布林奶茶店 · HUD 重做 Demo <span>／ 640×360 实机比例，背景为真实游戏截图</span></h1>
+
+<div class="stage-wrap">
+  <div class="stage-outer" id="outer">
+    <div class="stage" id="stage">
+      <img class="bg" id="bg" src="bg_shop_day.png" alt="">
+      <div class="vignette" id="vignette"></div>
+
+      <div class="hud hud-new">
+        <div class="objective" id="objective" title="点击展开完整目标">
+          <span class="dot"></span>
+          <span class="txt" id="objText">做一杯珍珠奶茶交给哥布林</span>
+          <span class="prog" id="objProg">0/1</span>
+          <div class="detail" id="objDetail"></div>
+        </div>
+
+        <div class="topright">
+          <div class="pill badge" id="badge" style="display:none"><span id="badgeText">潜行</span><span class="n" id="badgeCount">0/2</span></div>
+          <div class="pill wallet"><span class="coin"></span><span id="wallet">50G</span></div>
+          <button class="menu-btn" id="menuBtn">菜单</button>
+        </div>
+
+        <div class="actionbar" id="actionbar"></div>
+        <div class="drink-pop" id="drinkPop">
+          <button>珍珠奶茶 ×1</button>
+          <button>草莓奶绿 ×2</button>
+          <button>咖啡可可冰奶 ×1</button>
+        </div>
+        <div class="toast" id="toast"></div>
+      </div>
+
+      <div class="legacy" id="legacy">
+        <div class="legacy-task">
+          <div class="head"><span>当前任务</span><span class="k">[J]</span></div>
+          <div class="sub">夜访长老居所</div>
+          <div>取得格里芬之血</div>
+          <div class="k" style="margin-top:8px">旧版：380 × 68 · 占屏 11%</div>
+        </div>
+        <div class="legacy-stealth">
+          <div class="head"><span>潜入中</span><span class="tag">目标 0/2</span></div>
+          <div style="color:#FAC775">3 名守卫已放行</div>
+          <div style="color:#FAC775">○ 探索长老宅邸　○ 格里芬之血</div>
+          <div class="btn">投掷金币 · 10G · 点此投出</div>
+          <div class="hint">鼠标瞄准落点 · F 投掷 · Ctrl 潜行 …</div>
+          <div class="k" style="margin-top:8px;color:#888780">旧版：272 × 136 · 占屏 16%</div>
+        </div>
+        <div class="legacy-note">两块常驻面板合计遮挡约 27% 屏幕，且都压在左侧行动线上。</div>
+      </div>
+
+      <div class="modal" id="modal">
+        <div class="sheet" style="position:relative">
+          <button class="close" id="closeMenu">关闭</button>
+          <h2>菜单</h2>
+          <div class="nav">
+            <div class="group">
+              <div class="gtitle">今天</div>
+              <button>任务日志 <span class="hint">J</span></button>
+              <button>奶茶订单</button>
+              <button>地图 <span class="hint">M</span></button>
+            </div>
+            <div class="group">
+              <div class="gtitle">资料</div>
+              <button>原料图鉴 <span class="hint">B</span></button>
+              <button>饮品图鉴</button>
+              <button>异世界见闻录</button>
+              <button>人物记录</button>
+            </div>
+            <div class="group">
+              <div class="gtitle">系统</div>
+              <button>设置</button>
+              <button>操作说明</button>
+            </div>
+          </div>
+          <div class="side">
+            <div class="block">
+              <div class="label">今日进度</div>
+              <div class="value" id="menuProgress">第 1 天 · 白天　已交付 0/1</div>
+            </div>
+            <div class="block">
+              <div class="label">钱包 · 存档</div>
+              <div class="value"><b id="menuWallet">50G</b> · 10:24 自动保存</div>
+            </div>
+            <div class="block">
+              <div class="label">说明</div>
+              <div class="value" style="color:#B4A184;font-size:20px">场景里能做的事已经放在画面左下的操作条，菜单只负责查阅与系统设置。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="seg" id="sceneSeg">
+    <button data-scene="shop" class="on">第一天 · 营业</button>
+    <button data-scene="stealth">第一夜 · 潜入</button>
+    <button data-scene="close">第二天 · 关店</button>
+  </div>
+  <button class="toggle" id="compareBtn">对比旧版 HUD</button>
+</div>
+
+<div class="legend">
+  <b>操作</b>：点目标条展开完整目标 · 点左下按钮触发动作与反馈 · 点「菜单」看新版结构 · 「对比旧版 HUD」切回现在的布局
+</div>
+
+<script>
+const stage = document.getElementById('stage');
+const outer = document.getElementById('outer');
+function fit(){
+  const s = Math.min(outer.clientWidth / 1280, 1);
+  stage.style.transform = 'scale(' + s + ')';
+  outer.style.height = (720 * s) + 'px';
+}
+new ResizeObserver(fit).observe(outer);
+fit();
+
+const el = {
+  bg: document.getElementById('bg'),
+  vignette: document.getElementById('vignette'),
+  objective: document.getElementById('objective'),
+  objText: document.getElementById('objText'),
+  objProg: document.getElementById('objProg'),
+  objDetail: document.getElementById('objDetail'),
+  badge: document.getElementById('badge'),
+  badgeText: document.getElementById('badgeText'),
+  badgeCount: document.getElementById('badgeCount'),
+  wallet: document.getElementById('wallet'),
+  menuWallet: document.getElementById('menuWallet'),
+  menuObjective: document.getElementById('menuObjective'),
+  menuProgress: document.getElementById('menuProgress'),
+  bar: document.getElementById('actionbar'),
+  toast: document.getElementById('toast'),
+  drinkPop: document.getElementById('drinkPop'),
+  modal: document.getElementById('modal')
+};
+
+const SCENES = {
+  shop: {
+    bg: 'bg_shop_day.png',
+    filter: 'none',
+    objective: '做一杯珍珠奶茶交给哥布林',
+    progress: '0/1',
+    detail: '在收银台接第一单，到制作台投入红茶、牛奶、珍珠，做好后走到哥布林面前交付。',
+    badge: null,
+    vignette: false,
+    hint: '营业中 · 有交付对象时才出现操作按钮',
+    progressText: '第 1 天 · 白天　已交付 0/1',
+    actions: [
+      { id: 'deliver', label: '交给哥布林', key: 'E' },
+      { id: 'orders', label: '订单板', key: '' }
+    ]
+  },
+  stealth: {
+    bg: 'bg_stealth.png',
+    filter: 'none',
+    objective: '长老宅邸 · 取得格里芬之血',
+    progress: '0/2',
+    detail: '从门口进入长老宅邸，先在侧室找到血样，再取走书房文书；守卫听见响动会过来查看。',
+    badge: { text: '潜行', count: '0/2' },
+    vignette: true,
+    hint: '潜入中 · 投掷物只在这里出现',
+    progressText: '第 1 夜 · 潜入　已取目标 0/2',
+    actions: [
+      { id: 'coin', label: '金币 10G', key: '1' },
+      { id: 'torch', label: '火把', key: '2' },
+      { id: 'drink', label: '饮品 ▾', key: '3' }
+    ]
+  },
+  close: {
+    bg: 'bg_shop_day.png',
+    filter: 'sepia(.22) saturate(.92) brightness(.92)',
+    objective: '交清散客订单后关店',
+    progress: '2/3',
+    detail: '还有一单草莓奶绿没有交付。交清后关店，进入白天到夜晚的结算。',
+    badge: { text: '营业', count: '第 2 天' },
+    vignette: false,
+    hint: '关店回到场景里，不用再开菜单',
+    progressText: '第 2 天 · 傍晚　散客订单 2/3',
+    actions: [
+      { id: 'close', label: '关店 · 前往酒馆', key: 'E' }
+    ]
+  }
+};
+
+let sceneKey = 'shop';
+let wallet = 50;
+let state = { shopDelivered: false, stealthTargets: 0, closed: false };
+
+function renderWallet(){
+  el.wallet.textContent = wallet + 'G';
+  el.menuWallet.textContent = wallet + 'G';
+}
+
+function toast(text){
+  el.toast.textContent = text;
+  el.toast.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.toast.classList.remove('show'), 1800);
+}
+
+function renderActions(scene){
+  el.bar.innerHTML = '';
+  scene.actions.forEach(action => {
+    const b = document.createElement('button');
+    b.className = 'chip';
+    b.innerHTML = action.label + (action.key ? '<span class="k">' + action.key + '</span>' : '');
+    b.onclick = () => runAction(action.id);
+    el.bar.appendChild(b);
+  });
+  const hint = document.createElement('span');
+  hint.className = 'bar-hint';
+  hint.textContent = scene.hint;
+  el.bar.appendChild(hint);
+}
+
+function setScene(key){
+  sceneKey = key;
+  const scene = SCENES[key];
+  el.bg.style.opacity = 0;
+  setTimeout(() => {
+    el.bg.src = scene.bg;
+    el.bg.style.filter = scene.filter;
+    el.bg.style.opacity = 1;
+  }, 160);
+  el.objective.classList.remove('expanded');
+  el.objText.textContent = scene.objective;
+  el.objProg.textContent = scene.progress;
+  el.objDetail.textContent = scene.detail;
+  el.menuProgress.textContent = scene.progressText;
+  if (scene.badge){
+    el.badge.style.display = 'flex';
+    el.badgeText.textContent = scene.badge.text;
+    el.badgeCount.textContent = scene.badge.count;
+  } else {
+    el.badge.style.display = 'none';
+  }
+  el.vignette.classList.toggle('on', scene.vignette);
+  el.drinkPop.classList.remove('open');
+  renderActions(scene);
+  document.querySelectorAll('#sceneSeg button').forEach(b => b.classList.toggle('on', b.dataset.scene === key));
+}
+
+function runAction(id){
+  if (id === 'deliver'){
+    if (state.shopDelivered) { toast('这一单已经交付过了'); return; }
+    state.shopDelivered = true;
+    wallet += 10;
+    renderWallet();
+    el.objProg.textContent = '1/1';
+    toast('珍珠奶茶已交付 · +10G');
+  } else if (id === 'orders'){
+    toast('订单板：#001 经典珍珠奶茶 ×1');
+  } else if (id === 'coin'){
+    if (wallet < 10) { toast('金币不够，投不动了'); return; }
+    wallet -= 10;
+    renderWallet();
+    toast('金币已投出 · 守卫被引开');
+  } else if (id === 'torch'){
+    toast('火把已点亮 · 可燃目标可引燃');
+  } else if (id === 'drink'){
+    el.drinkPop.classList.toggle('open');
+  } else if (id === 'close'){
+    if (state.closed) { toast('今天已经关店了'); return; }
+    state.closed = true;
+    el.objText.textContent = '前往酒馆 · 与裂牙碰头';
+    el.objProg.textContent = '2/3';
+    toast('已关店 · 白天结束');
+  }
+}
+
+el.objective.onclick = () => el.objective.classList.toggle('expanded');
+document.getElementById('menuBtn').onclick = () => el.modal.classList.add('open');
+document.getElementById('closeMenu').onclick = () => el.modal.classList.remove('open');
+el.modal.onclick = (e) => { if (e.target === el.modal) el.modal.classList.remove('open'); };
+document.querySelectorAll('#drinkPop button').forEach(b => b.onclick = () => {
+  el.drinkPop.classList.remove('open');
+  toast('已选择 ' + b.textContent);
+});
+document.querySelectorAll('#sceneSeg button').forEach(b => b.onclick = () => {
+  state = { shopDelivered: false, stealthTargets: 0, closed: false };
+  setScene(b.dataset.scene);
+});
+document.getElementById('compareBtn').onclick = (e) => {
+  document.body.classList.toggle('compare');
+  e.currentTarget.classList.toggle('on', document.body.classList.contains('compare'));
+  e.currentTarget.textContent = document.body.classList.contains('compare') ? '回到新方案' : '对比旧版 HUD';
+};
+
+renderWallet();
+const params = new URLSearchParams(location.search);
+setScene(params.get('scene') && SCENES[params.get('scene')] ? params.get('scene') : 'shop');
+if (params.get('compare') === '1'){
+  document.body.classList.add('compare');
+  const btn = document.getElementById('compareBtn');
+  btn.classList.add('on');
+  btn.textContent = '回到新方案';
+}
+if (params.get('menu') === '1') el.modal.classList.add('open');
+</script>
+</body>
+</html>

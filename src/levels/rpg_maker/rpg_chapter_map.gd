@@ -48,6 +48,11 @@ func get_objective_position(task_id: String, objective_id: String) -> Variant:
 	var point := get_node_or_null(NodePath(objective_points[key])) as Node2D
 	return point.global_position if point != null else null
 
+## Exterior map coordinates only describe this scene when it *is* the exterior.
+## A room map draws the wider map too, but its own floor has a different origin.
+func shares_map_world() -> bool:
+	return chapter_host == &"settlement"
+
 ## The arrow follows actual saved floor passages rather than pointing through walls.
 func get_navigation_path(start: Vector2, goal: Vector2) -> PackedVector2Array:
 	var first := world_to_cell(start)

@@ -143,9 +143,24 @@ godot --path . --log-file .godot/ui-visual.log --script res://tests/verify_ui_ma
 
 聚落章节图不再显示小地图与目标箭头：`NavigationHUD` 及其 `ObjectiveNavigation` 投影已删除，`screen_ids.gd` 不再有 `navigation_hud`。右上角目标文字一并移除，当前主线目标只在任务 HUD 与任务页签查看。
 
-`RpgChapterMap.objective_points`（`task_id:objective_id → 章节场景锚点`，经 `get_objective_position` 读取）与 `get_navigation_path()` 仍保留：前者是章节场景的既有配置数据，后者继续服务路线校验测试与寻路能力，不再有常驻 HUD 消费它们。
+`RpgChapterMap.objective_points`（`task_id:objective_id → 章节场景锚点`，经 `get_objective_position` 读取）与 `get_navigation_path()` 仍保留：前者现由任务指引光标消费，后者继续服务路线校验测试与寻路能力。
 
-本次最低模块验证：`verify_map_ui.gd`、`verify_ui_manager.gd`、`verify_ui_theme.gd`、`verify_task_panel.gd`、`verify_main_game.gd` 及 `verify_settlement.gd`。窗口专项使用 `-- --capture` 在真实 `src/core/settlement.tscn` 且关闭开发工具的宿主执行键鼠、移动、暂停与知识/目标隔离夹具，截图输出到 `.godot/map_ui/`。不代表完整 S04 剧情或真实 Release 导出验收。
+地图专项最低验证：`verify_map_ui.gd`、`verify_ui_manager.gd`、`verify_ui_theme.gd`、`verify_task_panel.gd`、`verify_main_game.gd` 及 `verify_settlement.gd`。窗口专项使用 `-- --capture` 在真实 `src/core/settlement.tscn` 且关闭开发工具的宿主执行键鼠、移动、暂停与知识/目标隔离夹具，截图输出到 `.godot/map_ui/`。不代表完整 S04 剧情或真实 Release 导出验收。
+
+## 任务指引光标
+
+`src/UI/hud/quest_pointer.tscn` 是屏幕空间的任务指引，由 `MainGame._create_quest_pointer()` 在装配地图面板时一并挂到 `HudLayer`。它不是世界内精灵：奶茶店镜头接近 0.4x，世界空间的箭头会跟着镜头缩小，目标出屏后也无处可画。位置每帧用 `get_canvas_transform() * global_position` 重新投影，与 `WorldPrompt` 同一套算法。
+
+`TaskGuidance.resolve()` 是唯一的解析入口，只读任务投影，按下列顺序给出一个坐标，四步都没答案就整体隐藏——宁可没有箭头，也不给假方向：
+
+1. 章节场景的 `objective_points` 锚点（`get_objective_position`）；
+2. `delivery.target_object_id` 或目标上的 `target_point` 对应的当前场景交互点（移动中的 NPC 保留节点引用，逐帧跟随）；
+3. 区域入口，**仅当宿主自己声明 `shares_map_world()`**（聚落章节图与 `SettlementMap` 为真，酒馆、赌场、长老宅这类室内图虽也有 `get_map_data`，但它们的楼面与大地图不是同一个原点）；
+4. 目标不在本场所时，指向最近一扇 `are_conditions_met()` 通过的 `SceneExit`；目标 `location_id` 等于 `MainGame.get_current_location_id()`（本屋）且无精确点时不给指引，指门会把人送出去。
+
+显示分三种：目标在屏内给目标上方一枚纸色菱形；出屏时在安全矩形内缩 22px 处贴边显示纸片胶囊（方向箭头 + 地名 + `步`，1 步 = 48px），箭头角度按 `lerp_angle` 平滑，避免相机微动时抖动；进入交互范围（64px）立刻退场，把注意力交给 `WorldPrompt`。暂停、模态、地图、章节菜单、对话与玩家移动锁期间一律不画。`ui.quest_pointer_hidden` 旗标可整套关闭。
+
+本次最低模块验证：`verify_quest_pointer.gd`、`verify_map_ui.gd`、`verify_map_targets.gd`。改动触达任务 Schema 时另跑 `verify_task_system.gd`、`verify_task_panel.gd`。
 
 2026-10-19 图形专项由 `tests/verify_feedback_iteration.gd` 覆盖（76 项通过）：菜单拆分与入口、奶茶订单归档、一键接单后收银台结算不重复发钱、旧存档角色越界后回到店门口、出店观察后的返店路线、长老宅双卫的警戒与听觉。截图输出到 `.godot/feedback_navigation/captures/`。完整回归 99 项中 64 项通过，28 个失败与 1 个挂起均为 HEAD 基线已有项（多次在全量回归和隔离基线复现），新增项无回归。
 

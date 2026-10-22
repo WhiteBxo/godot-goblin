@@ -22,6 +22,7 @@
         {
           "id": "view",
           "text": "查看订单并接单",
+          "target_point": "orders",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -70,6 +71,7 @@
         {
           "id": "view",
           "text": "查看订单并接单",
+          "target_point": "orders",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -118,6 +120,7 @@
         {
           "id": "view",
           "text": "查看订单并接单",
+          "target_point": "orders",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -166,6 +169,7 @@
         {
           "id": "view",
           "text": "查看订单并接单",
+          "target_point": "orders",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -214,6 +218,7 @@
         {
           "id": "view",
           "text": "查看订单并接单",
+          "target_point": "orders",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -262,6 +267,7 @@
         {
           "id": "view",
           "text": "查看订单并接单",
+          "target_point": "orders",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",
@@ -310,6 +316,7 @@
         {
           "id": "view",
           "text": "查看订单并接单",
+          "target_point": "orders",
           "location_id": "settlement.shop",
           "complete_when": {
             "type": "flag",

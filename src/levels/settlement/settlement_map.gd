@@ -45,6 +45,10 @@ func set_elder_access(allowed: bool) -> void:
 func get_world_bounds() -> Rect2:
 	return global_transform * Rect2(Vector2.ZERO, world_size)
 
+## This map *is* the exterior: region positions are this scene's own coordinates.
+func shares_map_world() -> bool:
+	return true
+
 func get_camera_bounds() -> Rect2:
 	return get_world_bounds()
 

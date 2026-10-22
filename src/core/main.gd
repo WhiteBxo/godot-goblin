@@ -29,6 +29,8 @@ var _shop_ui: ShopUI
 var _shop_interaction: ShopInteraction
 var _task_journal: TaskJournal
 var _map_panel: SettlementMapPanel
+## Screen-space cursor for the current objective; the map panel is its twin.
+var _quest_pointer: QuestPointer
 ## The map lives in the menu; the HUD only teaches the shortcut once.
 var _map_access_known := false
 var _map_was_unlocked := false
@@ -1583,6 +1585,45 @@ func _create_map_ui() -> void:
 	_map_panel.close_requested.connect(func() -> void: _ui_manager.close_screen(ScreenIds.MAP))
 	get_node("/root/GameState").state_changed.connect(_refresh_map_access)
 	_refresh_map_access()
+	_create_quest_pointer()
+
+## The cursor reads the same map data the panel draws, so the two can never
+## disagree about where a place is.
+func _create_quest_pointer() -> void:
+	if not is_instance_valid(_task_journal) or not is_instance_valid(_shop_player):
+		return
+	_quest_pointer = preload("res://src/UI/hud/quest_pointer.tscn").instantiate()
+	_quest_pointer.name = "QuestPointer"
+	$HudLayer.add_child(_quest_pointer)
+	_quest_pointer.configure(self, _task_journal, get_active_level(), _shop_player,
+		_find_guidance_point, _get_known_map_locations, get_current_location_id)
+
+func get_quest_pointer() -> QuestPointer:
+	return _quest_pointer
+
+## Objective targets resolve to the same interaction points the player can use.
+func _find_guidance_point(id: StringName) -> InteractionPoint:
+	if _npc_points.has(id):
+		return _npc_points[id]
+	if _story_points.has(id):
+		return _story_points[id]
+	var level := get_active_level()
+	if level != null and level.has_method("get_interaction_points"):
+		for point: InteractionPoint in level.get_interaction_points():
+			if point.interaction_id == id:
+				return point
+	return null
+
+## Which exterior place an interior host sits in. Empty for maps that cover
+## every area themselves — they resolve targets by region instead.
+func get_current_location_id() -> String:
+	var hosts := {
+		"res://src/core/main.tscn": "settlement.shop",
+		"res://src/core/tavern.tscn": "settlement.tavern",
+		"res://src/core/casino.tscn": "settlement.casino",
+		"res://src/core/elder_house.tscn": "settlement.elder",
+	}
+	return str(hosts.get(scene_file_path, ""))
 
 func _get_known_map_locations() -> Array[String]:
 	# Only the shop is initially established. Other areas require explicit knowledge.

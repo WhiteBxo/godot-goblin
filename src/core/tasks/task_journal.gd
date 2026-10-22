@@ -109,6 +109,7 @@ func _project(task: Dictionary) -> Dictionary:
 			"hint": definition.get("hint", "") if visible_info else "",
 			"completed": _matches(definition.complete_when), "required": definition.get("required", true),
 			"revealed": visible_info, "location_id": definition.get("location_id", "") if visible_info else "",
+			"target_point": definition.get("target_point", "") if visible_info else "",
 			"progress": null, "target": null}
 		var condition: Dictionary = definition.complete_when
 		if visible_info and condition.type == "variable_at_least":

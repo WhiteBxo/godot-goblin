@@ -23,6 +23,7 @@
         {
           "id": "view",
           "text": "查看订单并接单",
+          "target_point": "orders",
           "complete_when": {
             "type": "flag",
             "key": "task.day1.daily.tea_a.active"
@@ -70,6 +71,7 @@
         {
           "id": "view",
           "text": "查看订单并接单",
+          "target_point": "orders",
           "complete_when": {
             "type": "flag",
             "key": "task.day1.daily.tea_b.active"
@@ -117,6 +119,7 @@
         {
           "id": "view",
           "text": "查看订单并接单",
+          "target_point": "orders",
           "complete_when": {
             "type": "flag",
             "key": "task.day1.daily.tea_c.active"

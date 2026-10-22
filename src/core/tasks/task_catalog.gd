@@ -114,6 +114,10 @@ func _condition(value: Variant, context: String, references: Dictionary, final: 
 func _presentation(data: Dictionary, context: String, references: Dictionary) -> bool:
 	if data.has("location_id") and (not StoryLibrary.is_namespaced(data.location_id) or data.location_id not in references.get("locations", [])):
 		return _invalid(context + "/location_id", "Unknown location reference '%s'" % data.location_id)
+	# A task objective may name the interaction point it wants the cursor to aim
+	# at; scene anchors stay the authority for chapter maps.
+	if data.has("target_point") and (not _text(data.target_point) or not data.target_point.is_valid_identifier()):
+		return _invalid(context + "/target_point", "Expected a stable interaction identifier")
 	if data.has("reveal_when") and not _condition(data.reveal_when, context + "/reveal_when", references):
 		return false
 	return true
@@ -210,7 +214,7 @@ func _objectives(value: Variant, context: String, references: Dictionary) -> boo
 		if not objective.get("id") is String or not objective.id.is_valid_identifier() or used.has(objective.id):
 			return _invalid(path + "/id", "Invalid or duplicate objective ID")
 		used[objective.id] = true
-		if not _keys(objective, ["id", "text", "hint", "complete_when", "required", "location_id", "reveal_when"], path):
+		if not _keys(objective, ["id", "text", "hint", "complete_when", "required", "location_id", "reveal_when", "target_point"], path):
 			return false
 		if not _text(objective.get("text")) or not objective.get("required", true) is bool:
 			return _invalid(path, "Expected non-empty text and bool required")

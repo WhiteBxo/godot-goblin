@@ -6,6 +6,8 @@ signal navigation_requested(id: StringName)
 
 var _page: Control
 var _navigation: Dictionary = {}
+## Same count the corner chip shows, repeated on the entry that owns the news.
+var _badges: Dictionary = {}
 ## Last known availability per menu entry. A false → true flip is the moment a
 ## new option appears, and the only moment worth nudging.
 var _access: Dictionary = {}
@@ -28,11 +30,31 @@ func _ready() -> void:
 		button.pressed.connect(func() -> void: navigation_requested.emit(id))
 		_page.get_node("Navigation").add_child(button)
 		_navigation[id] = button
+		var badge := Label.new()
+		badge.name = "Unread"
+		badge.theme_type_variation = &"UnreadBadge"
+		badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		badge.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		badge.visible = false
+		button.add_child(badge)
+		badge.set_anchors_preset(Control.PRESET_CENTER_RIGHT)
+		badge.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+		badge.offset_left = -28.0
+		badge.offset_right = -6.0
+		badge.offset_top = -7.0
+		badge.offset_bottom = 7.0
+		_badges[id] = badge
 
-func set_navigation_access(access: Dictionary) -> void:
+func set_navigation_access(access: Dictionary, unread: Dictionary = {}) -> void:
 	for id: StringName in _navigation:
 		var available: bool = access.get(id, false)
 		_navigation[id].disabled = not available
+		var count := int(unread.get(id, 0))
+		var badge: Label = _badges.get(id)
+		if badge != null:
+			badge.visible = available and count > 0
+			badge.text = "%d+" % count if count > 9 else str(maxi(1, count))
 		# An entry that just became available gets one nudge: the new option is
 		# noticed instead of merely being no longer grey.
 		if _access_known and available and not bool(_access.get(id, false)):

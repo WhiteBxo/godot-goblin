@@ -1633,6 +1633,22 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_preview_card"]
+content_margin_left = 10.0
+content_margin_top = 6.0
+content_margin_right = 10.0
+content_margin_bottom = 6.0
+bg_color = Color(0.937, 0.882, 0.761, 1.0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.29, 0.216, 0.133, 0.75)
+corner_radius_top_left = 4
+corner_radius_top_right = 6
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 6
+
 [resource]
 default_font = ExtResource("2_font")
 default_font_size = 12
@@ -2079,3 +2095,9 @@ UnreadBadge/base_type = &"Label"
 UnreadBadge/colors/font_color = Color(0.98, 0.94, 0.86, 1)
 UnreadBadge/font_sizes/font_size = 10
 UnreadBadge/styles/normal = SubResource("StyleBoxFlat_unread")
+
+PreviewCard/base_type = &"PanelContainer"
+PreviewCard/styles/panel = SubResource("StyleBoxFlat_preview_card")
+PreviewTitle/base_type = &"Label"
+PreviewTitle/colors/font_color = Color(0.227, 0.165, 0.102, 1.0)
+PreviewTitle/font_sizes/font_size = 14

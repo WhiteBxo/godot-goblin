@@ -8,14 +8,21 @@ signal confirm_requested(materials: Array[String])
 
 const Artwork = preload("res://src/UI/milk_tea/item_artwork.gd")
 
-var _images: Array[TextureRect] = []
 var _production: TeaProduction
 var _scroll: ScrollContainer
-var _slots: VBoxContainer
+var _slots: GridContainer
+var _slot_rows: Array[HBoxContainer] = []
 var _options: Array[OptionButton] = []
 var _selected: Array[String] = []
 var _ice_option: OptionButton
 var _preview: Label
+var _notice: Label
+var _preview_card: PanelContainer
+var _preview_head: HBoxContainer
+var _preview_icon: TextureRect
+var _drink_name: Label
+var _drink_meta: Label
+var _price: Label
 var _result: Label
 var _craft: Button
 var _confirm: Button
@@ -25,6 +32,8 @@ var _experiment := false
 ## 这一杯所属委托的报酬说明；宿主在跳转过来时填入，只出现在特调预览里。
 var _mission_hint := ""
 var _order_requirement: Dictionary = {}
+## Scaled-down material art, keyed by id so a refresh does not rebuild textures.
+var _icon_cache: Dictionary = {}
 
 func _ready() -> void:
 	var scroll := ScrollContainer.new()
@@ -35,15 +44,23 @@ func _ready() -> void:
 	add_child(scroll)
 	var content := VBoxContainer.new()
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	content.add_theme_constant_override("separation", 4)
 	scroll.add_child(content)
-	_slots = VBoxContainer.new()
+	# 2×2: four inputs cost two rows instead of four, which leaves the sheet
+	# enough height to be readable on a 360px screen.
+	_slots = GridContainer.new()
+	_slots.columns = 2
+	_slots.add_theme_constant_override("h_separation", 10)
+	_slots.add_theme_constant_override("v_separation", 4)
 	content.add_child(_slots)
 	var ice_row := HBoxContainer.new()
+	ice_row.name = "IceRow"
 	# 选料与预览共用滚动区，长预览不能把基底和辅料挤成零高度。
-	content.add_child(ice_row)
+	_slots.add_child(ice_row)
 	var ice_label := Label.new()
 	ice_label.text = "冰块"
-	ice_label.custom_minimum_size.x = 48
+	ice_label.custom_minimum_size.x = 40
+	ice_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	ice_row.add_child(ice_label)
 	_ice_option = OptionButton.new()
 	_ice_option.name = "IceOption"
@@ -55,9 +72,53 @@ func _ready() -> void:
 		_refresh_preview())
 	ice_row.add_child(_ice_option)
 	# 制作按钮固定在底部；配方详情与选料一起滚动。
+	# The formula reads as a recipe card: what the cup is called on top, the
+	# sheet underneath, the price at the foot.
+	_preview_card = PanelContainer.new()
+	_preview_card.name = "PreviewCard"
+	_preview_card.theme_type_variation = &"PreviewCard"
+	_preview_card.visible = false
+	content.add_child(_preview_card)
+	var card_body := VBoxContainer.new()
+	card_body.add_theme_constant_override("separation", 4)
+	_preview_card.add_child(card_body)
+	_preview_head = HBoxContainer.new()
+	_preview_head.name = "Head"
+	_preview_head.add_theme_constant_override("separation", 8)
+	card_body.add_child(_preview_head)
+	_preview_icon = Artwork.preview(32)
+	_preview_icon.name = "DrinkIcon"
+	_preview_head.add_child(_preview_icon)
+	var head_text := VBoxContainer.new()
+	head_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	head_text.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	head_text.add_theme_constant_override("separation", 2)
+	_preview_head.add_child(head_text)
+	_drink_name = Label.new()
+	_drink_name.name = "DrinkName"
+	_drink_name.theme_type_variation = &"PreviewTitle"
+	_drink_name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	head_text.add_child(_drink_name)
+	_drink_meta = Label.new()
+	_drink_meta.name = "DrinkMeta"
+	_drink_meta.theme_type_variation = &"Hint"
+	_drink_meta.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	head_text.add_child(_drink_meta)
 	_preview = Label.new()
+	_preview.name = "Details"
 	_preview.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	content.add_child(_preview)
+	# Cramped lines were half of why the sheet read as a wall of text.
+	_preview.add_theme_constant_override("line_spacing", 4)
+	card_body.add_child(_preview)
+	# "why can I not do this" is a different kind of sentence from the sheet, so
+	# it gets its own line and its own colour.
+	_notice = Label.new()
+	_notice.name = "Notice"
+	_notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	card_body.add_child(_notice)
+	_price = Label.new()
+	_price.name = "Price"
+	card_body.add_child(_price)
 	# 制作结果是一次性反馈：放在固定位置，不跟预览一起滚出可视区或被滚动区下沿切断。
 	_result = Label.new()
 	_result.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -98,28 +159,31 @@ func refresh() -> void:
 	var slot_count := _production.get_recipe_slots()
 	_selected.resize(slot_count)
 	if _options.size() != slot_count:
-		for child: Node in _slots.get_children():
-			child.free()
+		for row: Node in _slot_rows:
+			row.free()
+		_slot_rows.clear()
 		_options.clear()
-		_images.clear()
 		for index in range(slot_count):
 			var row := HBoxContainer.new()
+			row.name = "SlotRow%d" % index
+			row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			_slots.add_child(row)
+			# Keep the ice cell last: everything above it is a material slot.
+			_slots.move_child(row, index)
 			var label := Label.new()
 			label.text = "基底" if index == 0 else "辅料 %d" % index
-			label.custom_minimum_size.x = 48
+			label.custom_minimum_size.x = 40
+			label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 			row.add_child(label)
-			var image := Artwork.preview(24)
-			image.name = "IngredientImage"
-			row.add_child(image)
-			_images.append(image)
 			var option := OptionButton.new()
 			option.name = "Slot%d" % index
 			option.fit_to_longest_item = false
+			option.clip_text = true
 			option.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			option.item_selected.connect(_on_slot_selected.bind(index))
 			row.add_child(option)
 			_options.append(option)
+			_slot_rows.append(row)
 	for index in range(slot_count):
 		var option := _options[index]
 		option.clear()
@@ -128,15 +192,19 @@ func refresh() -> void:
 		var selected := 0
 		for choice: Dictionary in _production.get_formula_choices(index == 0):
 			var line := "%s · %s%s" % [choice.name, _choice_flavors(choice), "（缺货）" if choice.uses == 0 else ""]
-			option.add_item(line)
-			var item := option.item_count - 1
+			var item := option.item_count
+			# The popup is a list of things: show the thing, not just its name.
+			var icon := _choice_icon(choice.id)
+			if icon != null:
+				option.add_icon_item(icon, line)
+			else:
+				option.add_item(line)
 			option.set_item_metadata(item, choice.id)
 			option.get_popup().set_item_tooltip(item, _choice_tooltip(choice))
 			if choice.id == _selected[index]:
 				selected = item
 		option.select(selected)
 		_selected[index] = str(option.get_item_metadata(selected))
-		_refresh_slot_image(index)
 	_refreshing = false
 	_refresh_preview()
 
@@ -161,14 +229,34 @@ func _choice_tooltip(choice: Dictionary) -> String:
 
 func _on_slot_selected(item: int, slot: int) -> void:
 	_selected[slot] = str(_options[slot].get_item_metadata(item))
-	_refresh_slot_image(slot)
 	_clear_result()
 	_refresh_preview()
+	_reveal_card.call_deferred()
 
-func _refresh_slot_image(slot: int) -> void:
-	var view := _production.get_inventory().get_ingredient_view(_selected[slot])
-	_images[slot].texture = view.get("icon")
-	_images[slot].tooltip_text = str(view.get("name", ""))
+func _reveal_card() -> void:
+	if is_instance_valid(_scroll) and _preview_card.visible:
+		var card_top := _preview_card.get_global_rect().position.y
+		var view_top := _scroll.get_global_rect().position.y
+		if card_top > view_top:
+			_scroll.ensure_control_visible(_preview_head)
+
+## 32px catalog art halved for the popup row: still on the pixel grid, and short
+## enough that eleven materials fit on a 360px-tall screen without scrolling.
+func _choice_icon(id: String) -> Texture2D:
+	if id.is_empty() or not is_instance_valid(_production):
+		return null
+	if _icon_cache.has(id):
+		return _icon_cache[id]
+	var definition := _production.get_inventory().get_definition(id)
+	var source: Texture2D = definition.icon if definition != null else null
+	var texture: Texture2D = null
+	if source != null:
+		var image := source.get_image()
+		if image != null:
+			image.resize(maxi(1, image.get_width() / 2), maxi(1, image.get_height() / 2), Image.INTERPOLATE_NEAREST)
+			texture = ImageTexture.create_from_image(image)
+	_icon_cache[id] = texture
+	return texture
 
 func get_materials() -> Array[String]:
 	if _selected.is_empty() or _selected[0].is_empty():
@@ -206,7 +294,6 @@ func _refresh_preview() -> void:
 			_show_experiment_preview(special, materials)
 			return
 	var result := _production.preview_formula(materials, 1, is_iced())
-	_preview.theme_type_variation = &""
 	var quote := _production.preview_formula_price(materials, is_iced()) if not materials.is_empty() else {}
 	var priced: bool = bool(quote.get("priced", false))
 	var can_confirm := _production.can_confirm_formula(materials)
@@ -218,31 +305,78 @@ func _refresh_preview() -> void:
 	_craft.disabled = not result.ok or not priced
 	_confirm.disabled = not quote.get("ok", false) or priced or not can_confirm
 	_confirm.tooltip_text = pricing_hint
-	var lines := PackedStringArray()
+	var details := PackedStringArray()
+	var notices := PackedStringArray()
+	var drink_name := ""
+	var meta := ""
+	var price_text := ""
 	if result.has("name"):
-		lines.append(DrinkFormula.describe(result, false))
-		if priced:
-			lines.append("售价：%dG（已固定）" % int(quote.get("selling_price", 0)))
-		elif quote.get("ok", false):
-			lines.append("价格范围：%d–%dG，确认后固定" % [int(quote.get("minimum", 0)), int(quote.get("maximum", 0))])
+		var described := DrinkFormula.describe(result, false).split("\n")
+		drink_name = str(described[0]) if not described.is_empty() else ""
+		var kind := str(described[1]) if described.size() > 1 else ""
+		var taste := ""
+		for index in range(2, described.size()):
+			var line := str(described[index])
+			# The price is a decision, not a detail line: it gets its own row.
+			if line.begins_with("售价："):
+				price_text = line.trim_prefix("售价：").split(" · ")[0]
+				continue
+			# 冰块 is already on screen as a slot; 风味 and 口感 share a line so the
+			# sheet stays two rows tall instead of swallowing the whole panel.
+			if line.begins_with("冰块："):
+				continue
+			if line.begins_with("风味："):
+				taste = line
+				continue
+			if line.begins_with("口感："):
+				taste = taste + " · " + line if not taste.is_empty() else line
+				details.append(taste)
+				taste = ""
+				continue
+			if line == "特殊效果：无":
+				continue
+			details.append(line)
+		var cost := "未知" if result.get("cost") == null else "%.2fG" % float(result.get("cost"))
+		meta = "%s · 单杯成本 %s" % [kind, cost]
 	elif not (materials.is_empty() and not _result.text.is_empty()):
 		# 刚做完一杯时结果行已经说明了状态，预览不再重复喊“请选择一个基底”。
-		lines.append(str(result.get("message", "")))
+		notices.append(str(result.get("message", "")))
 	if not result.ok and result.has("name"):
-		lines.append(str(result.get("message", "")))
+		notices.append(str(result.get("message", "")))
 	if not pricing_hint.is_empty():
-		lines.append(pricing_hint)
+		notices.append(pricing_hint)
 	elif result.ok and not priced:
-		lines.append("请先确认报价，之后才能制作。")
+		notices.append("请先确认报价，之后才能制作。")
 	if not _order_requirement.is_empty():
 		var names := {}
 		for id: String in [str(_order_requirement.get("base_id", ""))]:
 			names[id] = _production.get_inventory().get_ingredient_view(id).get("name", id)
-		lines.append("当前订单 · " + DrinkFormula.requirement_text(_order_requirement, names))
+		notices.append("当前订单 · " + DrinkFormula.requirement_text(_order_requirement, names))
 		if result.ok:
-			lines.append("这杯符合当前订单，制作后可交付。" if DrinkFormula.matches(result, _order_requirement) else "这杯尚不符合当前订单，请核对基底、风味和效果。")
-	_preview.text = "\n".join(lines)
+			notices.append("这杯符合当前订单，制作后可交付。" if DrinkFormula.matches(result, _order_requirement) else "这杯尚不符合当前订单，请核对基底、风味和效果。")
+	_present_card(drink_name, meta, details, notices, price_text, priced)
+
+## One card, three levels: the cup (title), its sheet (details), what it sells
+## for (foot). Everything else stays a plain line so the eye can rank them.
+func _present_card(drink_name: String, meta: String, details: PackedStringArray, notices: PackedStringArray, price_text: String, priced: bool) -> void:
+	_preview_head.visible = not drink_name.is_empty()
+	_drink_name.text = drink_name
+	_preview_icon.texture = Artwork.DRINK_ICON
+	_drink_meta.text = meta
+	_drink_meta.visible = not meta.is_empty()
+	_preview.text = "\n".join(details)
 	_preview.visible = not _preview.text.is_empty()
+	_preview.theme_type_variation = &""
+	_notice.text = "\n".join(notices)
+	_notice.visible = not _notice.text.is_empty()
+	# A blocking sentence looks like a warning; an informational one stays quiet.
+	_notice.theme_type_variation = &"Warning" if not priced or not notices.is_empty() else &"Hint"
+	_price.text = "售价 " + price_text
+	# The price is the one number on the card, so it keeps the value colour even
+	# while it is still "未定价"; the notice above carries the ochre warning.
+	_price.theme_type_variation = &"Value"
+	_price.visible = not price_text.is_empty()
+	_preview_card.visible = _preview_head.visible or _preview.visible or _notice.visible or _price.visible
 
 ## The tracked order remains visible while freely choosing ingredients.
 func set_order_requirement(requirement: Dictionary) -> void:
@@ -270,6 +404,10 @@ func _clear_result() -> void:
 ## 委托特调按固定成品结算：配方即报价，制作后进共享库存，不需要单独确认价格。
 func _show_experiment_preview(special: Dictionary, materials: Array[String]) -> void:
 	var product_name := str(special.get("product_name", ""))
+	_preview_card.visible = true
+	_preview_head.visible = false
+	_notice.visible = false
+	_price.visible = false
 	_preview.visible = true
 	_confirm.disabled = true
 	_confirm.tooltip_text = "委托特调按配方直接制作，不需要单独报价。"
@@ -328,6 +466,18 @@ func get_ice_option() -> OptionButton:
 
 func get_preview() -> Label:
 	return _preview
+
+## The generated name is a headline of its own now; tests and hosts read it here.
+func get_drink_name() -> String:
+	return _drink_name.text
+
+func get_price_text() -> String:
+	return _price.text
+
+## Everything the card says about the *next step*: why it cannot be priced,
+## what the tracked order still wants, whether the cup matches.
+func get_notice() -> Label:
+	return _notice
 
 func get_result() -> Label:
 	return _result

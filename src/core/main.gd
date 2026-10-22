@@ -306,7 +306,12 @@ func _refresh_game_menu() -> void:
 	var summary := _task_hud.get_objective_summary() if is_instance_valid(_task_hud) else {}
 	_game_menu.set_overview(summary.get("title", ""), summary.get("objective", ""), WalletTransactions.format_money(get_transactions().get_balance()), _saved_status)
 	var pages := _handbook.get_pages()
-	_game_menu.set_navigation_access({ScreenIds.TASKS: not pages.is_tab_hidden(0), ScreenIds.ORDER_HISTORY: true, ScreenIds.HIRING: false, ScreenIds.CHRONICLE: not pages.is_tab_hidden(1), ScreenIds.DRINKS: not pages.is_tab_hidden(2), ScreenIds.CHARACTERS: not pages.is_tab_hidden(3), ScreenIds.INVENTORY: true, ScreenIds.MAP: _map_registered, ScreenIds.SETTINGS: true})
+	var unread := {}
+	if is_instance_valid(_chronicle_journal):
+		unread[ScreenIds.CHRONICLE] = _chronicle_journal.get_unread_count()
+	if is_instance_valid(_character_journal):
+		unread[ScreenIds.CHARACTERS] = _character_journal.get_unread_count()
+	_game_menu.set_navigation_access({ScreenIds.TASKS: not pages.is_tab_hidden(0), ScreenIds.ORDER_HISTORY: true, ScreenIds.HIRING: false, ScreenIds.CHRONICLE: not pages.is_tab_hidden(1), ScreenIds.DRINKS: not pages.is_tab_hidden(2), ScreenIds.CHARACTERS: not pages.is_tab_hidden(3), ScreenIds.INVENTORY: true, ScreenIds.MAP: _map_registered, ScreenIds.SETTINGS: true}, unread)
 
 func _navigate_game_menu(id: StringName) -> void:
 	_ui_manager.close_screen(ScreenIds.CHAPTER_ACTIONS)

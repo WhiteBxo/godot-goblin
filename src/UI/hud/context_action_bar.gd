@@ -9,11 +9,6 @@ const MARGIN := 16.0
 ## The stealth strip lives in the same corner; keep clear of it while it is up.
 const STEALTH_CLEARANCE := 40.0
 
-const INK := Color(0.227, 0.165, 0.102, 1)
-const PAPER := Color(0.961, 0.91, 0.812, 1)
-const WOOD := Color(0.302, 0.204, 0.118, 1)
-const CREAM := Color(0.969, 0.918, 0.824, 1)
-
 var _game: Node
 var _row: HBoxContainer
 var _signature := ""
@@ -92,44 +87,13 @@ func _rebuild(actions: Array, gameplay: Node) -> void:
 func _make_button(action: Dictionary, primary: bool, gameplay: Node) -> Button:
 	var button := Button.new()
 	button.text = str(action.get("text", ""))
-	button.add_theme_font_size_override("font_size", 11)
-	button.add_theme_color_override("font_color", CREAM if primary else INK)
-	button.add_theme_color_override("font_hover_color", Color(1, 0.878, 0.6) if primary else Color(0.71, 0.275, 0.184))
-	button.add_theme_color_override("font_pressed_color", Color(1, 0.82, 0.478) if primary else INK)
-	button.add_theme_stylebox_override("normal", _paper(primary, 0))
-	button.add_theme_stylebox_override("hover", _paper(primary, 1))
-	button.add_theme_stylebox_override("pressed", _paper(primary, 2))
-	button.add_theme_stylebox_override("focus", _paper(primary, 1))
+	# ChipButton is the paper tag; the primary action uses the gold primary.
+	button.theme_type_variation = &"PrimaryButton" if primary else &"ChipButton"
+	button.add_theme_font_size_override("font_size", 12)
 	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	var id := str(action.get("id", ""))
 	button.pressed.connect(func() -> void: gameplay.perform_user_action(id))
 	return button
-
-## Cream card with an ink border and a hard offset shadow, matching the HUD.
-func _paper(primary: bool, state: int) -> StyleBoxFlat:
-	var box := StyleBoxFlat.new()
-	box.bg_color = WOOD if primary else PAPER
-	if state == 1:
-		box.bg_color = box.bg_color.lightened(0.1)
-	elif state == 2:
-		box.bg_color = box.bg_color.darkened(0.08)
-	box.border_color = Color(0.29, 0.216, 0.133, 1)
-	box.border_width_left = 1
-	box.border_width_top = 1
-	box.border_width_right = 2
-	box.border_width_bottom = 2
-	box.corner_radius_top_left = 4
-	box.corner_radius_top_right = 6
-	box.corner_radius_bottom_right = 4
-	box.corner_radius_bottom_left = 6
-	box.content_margin_left = 12
-	box.content_margin_right = 12
-	box.content_margin_top = 6
-	box.content_margin_bottom = 6
-	box.shadow_color = Color(0.227, 0.165, 0.102, 0.32)
-	box.shadow_size = 0
-	box.shadow_offset = Vector2(2, 2)
-	return box
 
 ## The row hugs its buttons and sits above the stealth strip when that one is up.
 func _layout() -> void:

@@ -2,13 +2,13 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<title>哥布林奶茶店 · HUD 视觉重做 v3</title>
+<title>哥布林奶茶店 · HUD 视觉重做 v4</title>
 <style>
 :root{
   --ink:#3A2A1A;
   --ink-2:#7A6449;
   --ink-3:#A08A6A;
-  --paper:#F7EDD9;
+  --paper:#F5E8CF;
   --paper-2:#EFE0C3;
   --paper-edge:#4B3722;
   --line:#CDB58F;
@@ -21,6 +21,7 @@
   --badge-edge:#2F3D1F;
   --badge-ink:#F2EAD6;
   --shadow:rgba(58,42,26,.26);
+  --pixel:"fusion-pixel","PingFang SC","Microsoft YaHei",monospace;
   --serif:"Noto Serif SC","Songti SC","Source Han Serif SC","SimSun",serif;
   --sans:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,sans-serif;
 }
@@ -78,33 +79,26 @@ header .meta{font-size:12px;color:#8A7860;letter-spacing:.4px}
   color:var(--ink);
 }
 
-.daytag{position:absolute;left:30px;top:26px;display:flex;align-items:center;gap:9px;
-  font-family:var(--sans);font-size:15px;letter-spacing:2px;color:#F0E3C8;
-  text-shadow:0 2px 3px rgba(0,0,0,.85)}
-.daytag .pip{width:9px;height:9px;border-radius:2px;background:#D0A44A;border:1px solid #5A3A1C;transform:rotate(45deg)}
+.daytag{display:flex;align-items:center;gap:8px;font-family:var(--pixel);font-size:17px;letter-spacing:1.2px;color:var(--ink-2)}
+.daytag .pip{width:9px;height:9px;border-radius:2px;background:var(--gold);border:1px solid #5A3A1C;transform:rotate(45deg)}
 
 .objective{
-  position:absolute;top:20px;left:50%;transform:translateX(-50%);
-  display:flex;align-items:center;gap:16px;height:66px;padding:0 24px;
-  cursor:pointer;max-width:min(660px,calc(100% - 560px));
+  position:absolute;top:26px;left:28px;
+  display:flex;align-items:center;gap:14px;height:62px;padding:0 22px;
+  cursor:pointer;max-width:min(560px,calc(100% - 520px));
   transition:transform .12s ease,box-shadow .12s ease;
   overflow:visible;
 }
-.objective::before{
-  content:"";position:absolute;top:-11px;left:-7px;width:54px;height:17px;
-  background:var(--tape);border-left:1px solid rgba(90,66,36,.25);border-right:1px solid rgba(90,66,36,.25);
-  transform:rotate(-6deg);
-}
-.objective:hover{transform:translateX(-50%) translateY(-1px);box-shadow:4px 5px 0 var(--shadow)}
-.objective.expanded{max-width:min(880px,calc(100% - 120px));height:auto;padding:18px 24px;align-items:flex-start;flex-wrap:wrap}
+.objective:hover{transform:translateY(-1px);box-shadow:4px 5px 0 var(--shadow)}
+.objective.expanded{max-width:min(760px,calc(100% - 120px));height:auto;padding:16px 22px;align-items:flex-start;flex-wrap:wrap}
 .ring{width:34px;height:34px;flex:none;transform:rotate(-90deg)}
 .ring .track{fill:none;stroke:var(--line);stroke-width:3;stroke-dasharray:3 3.4}
 .ring .bar{fill:none;stroke:var(--green);stroke-width:3;stroke-linecap:round;stroke-dasharray:56.5;stroke-dashoffset:56.5;transition:stroke-dashoffset .5s cubic-bezier(.2,.8,.2,1)}
 .obj-main{display:flex;flex-direction:column;gap:2px;min-width:0}
-.obj-kicker{font-family:var(--sans);font-size:16px;letter-spacing:2.6px;color:var(--ink-2)}
+.obj-kicker{font-family:var(--pixel);font-size:17px;letter-spacing:1.4px;color:var(--ink-2)}
 .obj-line{display:flex;align-items:baseline;gap:12px;min-width:0}
-.obj-text{font-family:var(--serif);font-size:26px;font-weight:600;letter-spacing:.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.obj-prog{font-family:var(--sans);font-size:18px;color:var(--green);font-variant-numeric:tabular-nums;flex:none}
+.obj-text{font-family:var(--pixel);font-size:25px;font-weight:400;line-height:1.25;letter-spacing:.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.obj-prog{font-family:var(--pixel);font-size:19px;color:var(--green);font-variant-numeric:tabular-nums;flex:none}
 .chev{width:18px;height:18px;flex:none;margin-left:4px;color:var(--ink-3);transition:transform .2s ease}
 .objective.expanded .chev{transform:rotate(180deg)}
 .obj-detail{display:none;flex-basis:100%;font-family:var(--sans);font-size:18px;line-height:1.7;color:var(--ink-2);
@@ -113,16 +107,16 @@ header .meta{font-size:12px;color:#8A7860;letter-spacing:.4px}
 
 .topright{position:absolute;top:20px;right:28px;display:flex;align-items:center;gap:10px}
 .pill{height:48px;padding:0 16px;border-radius:6px 9px 5px 8px;display:flex;align-items:center;gap:9px;
-  font-family:var(--sans);font-size:20px;letter-spacing:.2px;box-shadow:2px 2px 0 var(--shadow)}
+  font-family:var(--pixel);font-size:20px;letter-spacing:.2px;box-shadow:2px 2px 0 var(--shadow)}
 .pill svg{width:19px;height:19px;flex:none}
 .pill.badge{background:var(--badge);border:1.5px solid var(--badge-edge);color:var(--badge-ink)}
 .pill.badge .dot{width:7px;height:7px;border-radius:50%;background:#E8C979;border:1px solid rgba(0,0,0,.35)}
 .pill.badge .n{color:#F0DCA6;font-variant-numeric:tabular-nums}
 .pill.wallet{background:var(--paper-2);border:1.5px solid var(--paper-edge);color:var(--ink)}
-.pill.wallet .amt{font-variant-numeric:tabular-nums;font-weight:600;font-size:22px}
+.pill.wallet .amt{font-family:var(--pixel);font-variant-numeric:tabular-nums;font-size:23px}
 .pill.wallet .cur{color:var(--ink-3);font-size:15px;margin-left:1px}
 .pill.wallet svg{color:var(--gold)}
-.menu-btn{height:48px;padding:0 18px;border-radius:6px 9px 5px 8px;font-family:var(--sans);font-size:20px;
+.menu-btn{height:48px;padding:0 18px;border-radius:6px 9px 5px 8px;font-family:var(--pixel);font-size:20px;
   display:flex;align-items:center;gap:9px;cursor:pointer;
   background:var(--wood);border:1.5px solid var(--paper-edge);color:#F7EAD2;box-shadow:2px 2px 0 var(--shadow);
   transition:transform .1s ease,filter .15s ease}
@@ -133,7 +127,7 @@ header .meta{font-size:12px;color:#8A7860;letter-spacing:.4px}
 .actionbar{position:absolute;left:30px;bottom:30px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .chip{
   height:58px;padding:0 22px;border-radius:7px 11px 6px 10px;display:flex;align-items:center;gap:12px;
-  font-family:var(--sans);font-size:21px;letter-spacing:.1px;cursor:pointer;
+  font-family:var(--pixel);font-size:22px;letter-spacing:.1px;cursor:pointer;
   background:var(--paper);border:1.5px solid var(--paper-edge);color:var(--ink);
   box-shadow:3px 3px 0 var(--shadow);transition:transform .1s ease,box-shadow .1s ease,filter .15s;
 }
@@ -148,8 +142,8 @@ header .meta{font-size:12px;color:#8A7860;letter-spacing:.4px}
   padding:5px 12px;background:rgba(28,20,13,.72);border:1px solid rgba(0,0,0,.4);border-radius:4px;letter-spacing:.3px}
 
 .toast{
-  position:absolute;top:100px;left:50%;transform:translate(-50%,-8px);opacity:0;pointer-events:none;
-  padding:12px 20px;font-family:var(--sans);font-size:19px;color:var(--ink);white-space:nowrap;
+  position:absolute;top:104px;left:50%;transform:translate(-50%,-8px);opacity:0;pointer-events:none;
+  padding:12px 20px;font-family:var(--pixel);font-size:19px;color:var(--ink);white-space:nowrap;
   background:var(--paper);border:1.5px solid var(--paper-edge);border-radius:6px 9px 5px 8px;
   box-shadow:3px 3px 0 var(--shadow);
   transition:opacity .18s ease,transform .18s ease;
@@ -172,7 +166,7 @@ header .meta{font-size:12px;color:#8A7860;letter-spacing:.4px}
   color:var(--ink)}
 .sheet::after{content:"";position:absolute;left:284px;top:26px;bottom:26px;border-left:1px dashed var(--line)}
 .sheet-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px}
-.sheet-head .t{font-family:var(--serif);font-size:30px;font-weight:600;letter-spacing:2px}
+.sheet-head .t{font-family:var(--pixel);font-size:30px;font-weight:400;letter-spacing:1px}
 .sheet-head .s{font-family:var(--sans);font-size:13px;letter-spacing:2.4px;color:var(--ink-3);margin-top:6px}
 .x{height:40px;padding:0 16px;border-radius:5px;background:var(--paper-2);border:1.5px solid var(--paper-edge);
   color:var(--ink);font-family:var(--sans);font-size:17px;cursor:pointer;box-shadow:2px 2px 0 var(--shadow)}
@@ -192,7 +186,7 @@ body.wood .block{background:rgba(255,235,200,.05)}
 .block .label{font-family:var(--sans);font-size:13px;letter-spacing:2px;color:var(--ink-3);margin-bottom:10px}
 .block .value{font-family:var(--sans);font-size:19px;line-height:1.6;color:var(--ink)}
 .block .value .mint{color:var(--green)}
-.block .value .big{font-family:var(--serif);font-size:32px;font-weight:600;font-variant-numeric:tabular-nums}
+.block .value .big{font-family:var(--pixel);font-size:32px;font-weight:400;font-variant-numeric:tabular-nums}
 .block.wide{grid-column:1/-1}
 .block .note{font-family:var(--sans);font-size:17px;line-height:1.7;color:var(--ink-2)}
 
@@ -227,7 +221,7 @@ body.compare .legacy{display:block}
 </head>
 <body>
 <header>
-  <h1>哥布林奶茶店 · HUD 视觉重做 <span class="v">v3 / 纸片手账</span></h1>
+  <h1>哥布林奶茶店 · HUD 视觉重做 <span class="v">v4 / 纸片 + 像素同调</span></h1>
   <div class="meta">640×360 实机比例 · 真实游戏截图</div>
 </header>
 
@@ -239,12 +233,10 @@ body.compare .legacy{display:block}
       <div class="vignette" id="vignette"></div>
 
       <div class="hud hud-new">
-        <div class="daytag"><span class="pip"></span><span id="dayTag">DAY 1 · 白天</span></div>
-
         <div class="objective card" id="objective" title="点击展开完整目标">
           <svg class="ring" viewBox="0 0 24 24"><circle class="track" cx="12" cy="12" r="9"/><circle class="bar" id="ringBar" cx="12" cy="12" r="9"/></svg>
           <div class="obj-main">
-            <div class="obj-kicker">当前目标</div>
+            <div class="daytag obj-kicker"><span class="pip"></span><span id="dayTag">DAY 1 · 白天</span></div>
             <div class="obj-line">
               <span class="obj-text" id="objText">做一杯珍珠奶茶交给哥布林</span>
               <span class="obj-prog" id="objProg">0/1</span>
@@ -415,7 +407,7 @@ const SCENES = {
     detail: '在收银台接第一单，到制作台投入红茶、牛奶、珍珠，做好后走到哥布林面前交付。',
     badge: null,
     vignette: false,
-    hint: '营业中 · 有交付对象时才出现按钮',
+    hint: '有交付对象时才出现',
     progressText: '第 1 天 · 白天<br>已交付 <span class="mint">0 / 1</span>',
     sheetSub: 'DAY 1 · 营业中',
     actions: [
@@ -433,7 +425,7 @@ const SCENES = {
     detail: '从门口进入长老宅邸，先在侧室找到血样，再取走书房文书；守卫听见响动会过来查看。',
     badge: { text: '潜行', count: '0/2' },
     vignette: true,
-    hint: '潜入中 · 投掷物只在这里出现',
+    hint: '投掷物只在这里出现',
     progressText: '第 1 夜 · 潜入<br>已取目标 <span class="mint">0 / 2</span>',
     sheetSub: 'DAY 1 · 夜间潜入',
     actions: [
@@ -452,7 +444,7 @@ const SCENES = {
     detail: '还有一单草莓奶绿没有交付。交清后关店，进入白天到夜晚的结算。',
     badge: { text: '营业', count: '第 2 天' },
     vignette: false,
-    hint: '关店回到场景里，不用再开菜单',
+    hint: '打烊前最后一次机会',
     progressText: '第 2 天 · 傍晚<br>散客订单 <span class="mint">2 / 3</span>',
     sheetSub: 'DAY 2 · 打烊前',
     actions: [
@@ -487,7 +479,7 @@ function renderActions(scene){
     const b = document.createElement('button');
     b.className = 'chip' + (action.primary ? ' primary' : '');
     b.innerHTML = (ICONS[action.icon] || '') +
-      '<span>' + action.label + (action.note ? '<span style="color:var(--ink-3);font-size:15px"> ' + action.note + '</span>' : '') + '</span>' +
+      '<span>' + action.label + (action.note ? '<span style="color:rgba(247,234,210,.72);font-size:16px"> ' + action.note + '</span>' : '') + '</span>' +
       (action.key ? '<span class="k">' + action.key + '</span>' : '');
     b.onclick = () => runAction(action.id);
     el.bar.appendChild(b);

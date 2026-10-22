@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://src/gameplay/gathering/gather_point.gd" id="1"]
 
@@ -7,6 +7,22 @@ radius = 85.0
 
 [sub_resource type="SystemFont" id="Font"]
 font_names = PackedStringArray("Microsoft YaHei", "Noto Sans CJK SC", "sans-serif")
+
+[sub_resource type="StyleBoxFlat" id="name_tag"]
+content_margin_left = 8.0
+content_margin_top = 3.0
+content_margin_right = 8.0
+content_margin_bottom = 3.0
+bg_color = Color(0.961, 0.91, 0.812, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.29, 0.216, 0.133, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 5
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 5
 
 [node name="GatherPoint" type="Area2D"]
 collision_layer = 0
@@ -26,10 +42,7 @@ offset_top = -50.0
 offset_right = 120.0
 offset_bottom = -15.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(1, 0.93, 0.77, 1)
-theme_override_colors/font_shadow_color = Color(0.12, 0.06, 0.03, 1)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
+theme_override_colors/font_color = Color(0.227, 0.165, 0.102, 1)
 theme_override_fonts/font = SubResource("Font")
 theme_override_font_sizes/font_size = 28
 horizontal_alignment = 1

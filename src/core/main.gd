@@ -38,6 +38,7 @@ var _game_menu: ChapterActionsHUD
 var _task_hud: TaskHUD
 var _wallet_hud: WalletHUD
 var _context_actions: ContextActionBar
+var _control_hint: ControlHint
 var _touch_controls: TouchControls
 var _touch_scroll: TouchScroll
 var _payment_fx_orders := 0
@@ -154,6 +155,7 @@ func _ready() -> void:
 		_create_scene_travel(_shop_level.get_scene_exits())
 		if day1_story_enabled:
 			_create_map_ui()
+		_create_control_hint()
 		_create_debug_components()
 		_create_save_system()
 		return
@@ -742,6 +744,7 @@ func _initialize_settlement() -> void:
 	_create_scene_travel(_settlement_level.get_scene_exits())
 	_create_stealth_system()
 	_create_map_ui()
+	_create_control_hint()
 	if DebugRuntime.is_enabled():
 		var preview := Node.new()
 		preview.name = "SettlementPreview"
@@ -1523,6 +1526,16 @@ func _register_map() -> Error:
 	var error := _ui_manager.register_screen(ScreenIds.MAP, _map_panel, &"popup", true)
 	_map_registered = error == OK
 	return error
+
+## L0 lives on the HUD layer: one line at the bottom, no input lock, no modal
+## and no save snapshot. It retires itself once the player walks or the timer
+## runs out, and records that per input device.
+func _create_control_hint() -> void:
+	if is_instance_valid(_control_hint):
+		return
+	_control_hint = preload("res://src/UI/hud/control_hint.tscn").instantiate()
+	$HudLayer.add_child(_control_hint)
+	_control_hint.bind(self)
 
 func _create_map_ui() -> void:
 	var level := get_active_level()

@@ -517,6 +517,11 @@ func _test_ui() -> void:
 	var complete := DrinkFormula.requirement_text({"base_id": "creamer_milk_tea_base", "flavors": ["辛辣"], "effects": ["发光"]}, trial_names, true)
 	_check(complete == "基底：植脂末奶茶底 · 风味：辛辣 · 特殊效果：发光", "Delivery failure can still print the complete requirement including effects")
 	_check("当前订单 · 基底：植脂末奶茶底 · 风味：辛辣" in panel.get_notice().text, "Tracked order prints labelled categories instead of a bare tag list")
+	# 固定配方型的委托：每个原料都要说人话，内部 id 不能漏到面板上。
+	panel.set_order_requirement({"formula": ["insomnia_mushroom", "mint_syrup", "red_mottled_wood"], "iced": true})
+	_check("醒神菇" in panel.get_notice().text and "insomnia_mushroom" not in panel.get_notice().text,
+		"Formula orders name every ingredient in the player's language: " + panel.get_notice().text)
+	panel.set_order_requirement({"base_id": "creamer_milk_tea_base", "flavors": ["辛辣"], "effects": ["发光"]})
 	_check(panel.get_result().get_parent() == panel and panel.get_preview().get_parent() != panel, "Craft result sits outside the scrolling preview")
 	panel.select_formula([])
 	panel.show_result({"ok": true, "message": "格里芬之血特调 ×1 制作完成，已放入库存。"})

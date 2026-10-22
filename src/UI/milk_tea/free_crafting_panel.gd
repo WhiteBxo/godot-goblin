@@ -348,16 +348,35 @@ func _refresh_preview() -> void:
 	elif result.ok and not priced:
 		notices.append("请先确认报价，之后才能制作。")
 	if not _order_requirement.is_empty():
-		var names := {}
-		for id: String in [str(_order_requirement.get("base_id", ""))]:
-			names[id] = _production.get_inventory().get_ingredient_view(id).get("name", id)
-		notices.append("当前订单 · " + DrinkFormula.requirement_text(_order_requirement, names))
+		notices.append("当前订单 · " + DrinkFormula.requirement_text(_order_requirement, _ingredient_names()))
 		if result.ok:
 			notices.append("这杯符合当前订单，制作后可交付。" if DrinkFormula.matches(result, _order_requirement) else "这杯尚不符合当前订单，请核对基底、风味和效果。")
 	_present_card(drink_name, meta, details, notices, price_text, priced)
 
 ## One card, three levels: the cup (title), its sheet (details), what it sells
 ## for (foot). Everything else stays a plain line so the eye can rank them.
+## 委托特调的配方里是原料 id；只查 base_id 会让辅料以 insomnia_mushroom
+## 这种内部名印在面板上。名字以图鉴定义为准（不受"是否已发现"限制，订单
+## 上写着要什么就该叫什么），查不到才退回 id。
+func _ingredient_names() -> Dictionary:
+	var names := {}
+	var inventory := _production.get_inventory() if _production != null else null
+	var ids: Array[String] = []
+	for id: Variant in _order_requirement.get("formula", []):
+		ids.append(str(id))
+	var base_id := str(_order_requirement.get("base_id", ""))
+	if not base_id.is_empty() and not ids.has(base_id):
+		ids.append(base_id)
+	for id: String in ids:
+		var definition: IngredientDefinition = inventory.get_definition(id) if inventory != null else null
+		if definition == null:
+			for ingredient: IngredientDefinition in WarehouseInventory.CATALOG.ingredients:
+				if ingredient.id == id:
+					definition = ingredient
+					break
+		names[id] = definition.display_name if definition != null else id
+	return names
+
 func _present_card(drink_name: String, meta: String, details: PackedStringArray, notices: PackedStringArray, price_text: String, priced: bool) -> void:
 	_preview_head.visible = not drink_name.is_empty()
 	_drink_name.text = drink_name

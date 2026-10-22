@@ -624,12 +624,6 @@ facing = 3
 [node name="day1_rest" type="Marker2D" parent="StoryPositions"]
 position = Vector2(842, 600)
 
-[node name="HumanSupply" parent="InteractionPoints" instance=ExtResource("3_xdoh7")]
-position = Vector2(590, 440)
-interaction_id = &"human_supply"
-display_name = "人类原料补给 · 0G"
-description = "C01–C10各补充一整份，每份五次。"
-
 [node name="day2_ordinary_a" type="Marker2D" parent="StoryPositions"]
 position = Vector2(1000, 590)
 

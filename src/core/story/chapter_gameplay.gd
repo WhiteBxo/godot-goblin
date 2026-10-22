@@ -170,14 +170,6 @@ func _refresh() -> void:
 			if exit.interaction_id == &"guard_return":
 				exit.visible = exit.are_conditions_met(_state)
 
-func supply_human_ingredients() -> Dictionary:
-	var items := {}
-	for ingredient: IngredientDefinition in WarehouseInventory.CATALOG.ingredients:
-		if ingredient.origin == "human" and ingredient.source_ids.size() == 1 and ingredient.source_ids[0].begins_with("C"):
-			items[ingredient.id] = 1
-	var error: Error = _state.commit_story_transaction("supply.human_%d" % Time.get_ticks_usec(), {}, {}, 0, items)
-	return {"ok": error == OK, "message": "C01–C10各补充一整份（五次用量），0G。" if error == OK else "补给失败，库存保持不变。"}
-
 func get_scheduler() -> BusinessScheduler:
 	return _scheduler
 

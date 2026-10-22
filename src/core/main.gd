@@ -1082,10 +1082,6 @@ func _route_story_interaction(id: StringName) -> Error:
 		var result := point.resolve()
 		_shop_ui.show_interaction_result(result.message)
 		return OK if result.ok else ERR_UNAVAILABLE
-	if id == &"human_supply" and is_instance_valid(_chapter_gameplay):
-		var supplied := _chapter_gameplay.supply_human_ingredients()
-		_shop_ui.show_feedback(supplied.message, supplied.ok)
-		return OK if supplied.ok else ERR_UNAVAILABLE
 	if _scene_exits.has(id):
 		return _scene_travel.request_exit(_scene_exits[id])
 	if is_instance_valid(_gathering_service) and _gathering_service.has_point(id):

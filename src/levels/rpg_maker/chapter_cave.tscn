@@ -120,7 +120,7 @@ entrance_id = &"casino_door"
 
 [node name="elder_return" type="Marker2D" parent="Entrances"]
 
-position = Vector2(2040, 552)
+position = Vector2(2000, 456)
 
 script = ExtResource("entrance")
 
@@ -197,7 +197,7 @@ unavailable_message = "目前暂未开放该区域。"
 
 [node name="ElderDoor" parent="Exits" instance=ExtResource("point")]
 
-position = Vector2(2040, 504)
+position = Vector2(2000, 408)
 
 script = ExtResource("exit")
 
@@ -270,7 +270,7 @@ position = Vector2(600, 2136)
 
 [node name="elder_entrance" type="Marker2D" parent="StoryPositions"]
 
-position = Vector2(2040, 552)
+position = Vector2(2000, 456)
 
 [node name="Interactions" type="Node2D" parent="."]
 

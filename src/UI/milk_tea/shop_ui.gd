@@ -156,7 +156,10 @@ func show_prompt(point: InteractionPoint) -> void:
 					if entry.status == "active" and entry.ready and entry.target_id == String(point.interaction_id):
 						text = "交付 · " + entry.title
 						break
-		_prompt.show_prompt(text)
+		if point.shows_world_prompt():
+			_prompt.show_silent(text)
+		else:
+			_prompt.show_prompt(text)
 
 func _refresh_order_prompt() -> void:
 	show_prompt(_prompt_point if is_instance_valid(_prompt_point) else null)

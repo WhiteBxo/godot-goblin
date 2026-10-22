@@ -116,6 +116,8 @@ func _set_target(point: InteractionPoint) -> void:
 		return
 	if _target == null and point == null:
 		return
+	# The world prompt listens to this signal: exactly one capsule on screen,
+	# attached to the object it describes.
 	_target = point
 	target_changed.emit(point)
 

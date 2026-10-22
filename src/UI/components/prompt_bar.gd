@@ -33,6 +33,14 @@ func show_prompt(text: String, key: String = "E") -> void:
 		modulate.a = 1.0
 		_pulse_key()
 
+## 世界胶囊已经说了这件事：底部只保留文字数据（测试与宿主读），不再显示，
+## 免得同一句话在物体上和屏幕底部各说一遍。
+func show_silent(text: String, key: String = "E") -> void:
+	if visible:
+		clear()
+	_key.text = key
+	_text.text = text
+
 func clear() -> void:
 	_text.text = ""
 	if _fade != null:

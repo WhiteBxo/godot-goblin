@@ -195,6 +195,12 @@ func _create_interaction_feedback(interaction: ShopInteraction) -> void:
 	feedback.name = "InteractionFeedback"
 	$World/EffectRoot.add_child(feedback)
 	feedback.configure(interaction, _audio_manager, _interaction_audio.play_sound, _interaction_audio.play_focus)
+	# 目标物体上方的那一枚胶囊。屏幕空间：世界坐标会随相机缩放，商店镜头
+	# 缩到 0.4 时 12px 的字根本看不清。
+	var prompt := preload("res://src/UI/hud/world_prompt.tscn").instantiate()
+	prompt.name = "WorldPrompt"
+	$HudLayer.add_child(prompt)
+	prompt.bind(interaction)
 	interaction.interaction_failed.connect(func(_point: InteractionPoint) -> void: _interaction_audio.play_event("interaction_failure"))
 
 func _create_soundscape() -> void:

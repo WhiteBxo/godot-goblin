@@ -2,7 +2,7 @@ class_name InteractionFeedback
 extends Node2D
 ## Scene-local world overlay. No material, texture or collision modifications.
 
-@export var focus_color := Color(1.0, 0.86, 0.56, 0.85)
+@export var focus_color := Color(1.0, 0.86, 0.56, 0.45)
 @export var success_color := Color(1.0, 0.96, 0.78)
 @export_range(0.05, 0.5) var pulse_seconds := 0.18
 ## Corner lines grow into place so a new target reads as a lock, not a static box.

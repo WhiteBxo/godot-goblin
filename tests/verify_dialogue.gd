@@ -81,7 +81,15 @@ func _run() -> void:
 	_check(root.get_node("GameState").call("to_dict") == state_before, "Dialogue components never change GameState")
 	await _test_main_input_lock()
 	state_before.flags["shop.orders_viewed"] = true
-	_check(root.get_node("GameState").call("to_dict") == state_before, "Opening the order board records viewing without implicitly accepting an order")
+	# L0 的教学记录（ui.hint.*）属于 HUD，不是对话改动：这段里玩家被传送，
+	# 走满 24px 就会把它记下来。对比时把这一族键排除。
+	var after: Dictionary = root.get_node("GameState").call("to_dict")
+	for snapshot: Dictionary in [after, state_before]:
+		var flags: Dictionary = snapshot.flags
+		for key: String in flags.keys():
+			if key.begins_with("ui.hint."):
+				flags.erase(key)
+	_check(after == state_before, "Opening the order board records viewing without implicitly accepting an order")
 	print("DIALOGUE: %s (%d checks, %d failures)" % ["PASS" if _failures.is_empty() else "FAIL", _checks, _failures.size()])
 	quit(0 if _failures.is_empty() else 1)
 

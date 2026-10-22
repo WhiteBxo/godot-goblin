@@ -6,6 +6,10 @@ signal interacted(point: InteractionPoint)
 
 @export var interaction_id: StringName
 @export var display_name := "交互地点"
+## 动作胶囊里的动词（"打开""进入""交谈"…）。留空时按交互点类型推断。
+@export var action_verb := ""
+## 胶囊底边相对交互点的高度：默认浮在物体上方，不压住美术。
+@export var prompt_anchor := Vector2(0, -30)
 @export_multiline var description := ""
 ## Local artwork bounds, independent of the reach/collision shape.
 @export var feedback_rect := Rect2(-18, -18, 36, 36)
@@ -40,6 +44,40 @@ func _input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> vo
 func hide_development_markers() -> void:
 	$Marker.hide()
 	$Label.hide()
+
+## 目标物体上方的一枚胶囊："E · 打开订单板"。只在该点被选中时出现，
+## 平时不给世界加任何字，避免每个家具都在喊自己的名字。
+## 画在屏幕空间（`WorldPrompt`）：世界里的字会跟着相机缩放，商店这种
+## 缩放到 0.4 的镜头下会小到看不清。
+func get_action_text() -> String:
+	var verb := _action_verb()
+	if verb.is_empty():
+		return display_name
+	return "%s%s" % [verb, display_name]
+
+## 世界胶囊与底部提示条只保留一个，宿主据此让底部闭嘴。
+func shows_world_prompt() -> bool:
+	return true
+
+## 动词按交互点类型推断；场景里写了 action_verb 就以它为准。
+func _action_verb() -> String:
+	if not action_verb.is_empty():
+		return action_verb
+	if "destination_scene" in self:
+		return "进入"
+	if "entry_id" in self:
+		# StoryInteractionPoint：kind 0 拾取、1 文档。
+		return "阅读" if int(get("kind")) == 1 else "拿走"
+	if "refresh_mode" in self:
+		return "采集"
+	match String(interaction_id):
+		"orders", "storage", "stock", "warehouse", "notice":
+			return "打开"
+		"tea_station", "casino_table":
+			return "使用"
+		"coins":
+			return "拿走"
+	return ""
 
 func is_available() -> bool:
 	_bodies = _bodies.filter(func(body: Node2D) -> bool:

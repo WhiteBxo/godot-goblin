@@ -5,6 +5,7 @@ var player: ShopPlayer
 var points: Array[InteractionPoint] = []
 var interaction: ShopInteraction
 var feedback: InteractionFeedback
+var world_prompt: WorldPrompt
 var ui: ShopUI
 var audio: AudioManager
 var dialogue: DialogueManager
@@ -50,6 +51,9 @@ func _ready() -> void:
 	feedback = InteractionFeedback.new()
 	_world.add_child(feedback)
 	feedback.configure(interaction, audio)
+	world_prompt = preload("res://src/UI/hud/world_prompt.tscn").instantiate()
+	hud.add_child(world_prompt)
+	world_prompt.bind(interaction)
 	var dialogue_ui: DialogueUI = preload("res://src/UI/dialogue/dialogue_ui.tscn").instantiate()
 	popup.add_child(dialogue_ui)
 	dialogue = DialogueManager.new()

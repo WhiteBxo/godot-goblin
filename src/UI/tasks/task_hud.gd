@@ -51,7 +51,9 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	get_task_button().pressed.connect(func() -> void: tasks_requested.emit())
-	_objective.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	# 目标句整句给人看：截到两三行再补省略号，等于让玩家自己去猜后半句
+	# （"……确认是否与订单相符"这类关键动词正好落在被砍掉的那截）。
+	_objective.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
 	_resize_card()
 	_refresh()
 
@@ -76,7 +78,7 @@ func _disconnect_journal() -> void:
 
 func _resize_card() -> void:
 	# A block in the corner, not a banner across the top: the day and the task
-	# share one line, the objective gets the width to wrap to two. The height is
+	# share one line, the objective gets the width to wrap. The height is
 	# whatever those lines need — the container clamps it to its own minimum, so
 	# an empty objective leaves a shorter card instead of a taller empty one.
 	var limit := maxf(180.0, get_viewport_rect().size.x * 0.45)
@@ -87,7 +89,14 @@ func _resize_card() -> void:
 
 func _fit_height() -> void:
 	var card: Control = $TaskCard
-	var height: float = card.get_combined_minimum_size().y
+	# 自动换行的 Label 只按“一行”报最小高，第三行起会被父容器裁掉；这里按
+	# 实际折行数把高度补回来，目标句子就能整句立在卡里。
+	var extra := 0.0
+	var lines := _objective.get_line_count()
+	var line_height := _objective.get_line_height()
+	if lines > 1 and line_height > 0.0:
+		extra = float(lines - 1) * line_height
+	var height: float = card.get_combined_minimum_size().y + extra
 	if height > 0.0 and not is_equal_approx(offset_bottom - offset_top, height):
 		offset_bottom = offset_top + height
 

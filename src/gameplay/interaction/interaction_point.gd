@@ -31,7 +31,13 @@ var blocked_reason_resolver: Callable
 var _bodies: Array[Node2D] = []
 
 func _ready() -> void:
+	# 世界里不挂名字牌，也不挂开发用的菱形标记：目标上方的胶囊（WorldPrompt）
+	# 才是唯一的提示。世界空间的字会跟着相机缩放（商店镜头约 0.4x），常驻的
+	# 名字牌既和胶囊重复，又会糊成大块压在屏幕上。采集点/剧情点在自己的
+	# _ready 里按可用性重新打开自己需要的标记。
 	$Label.text = display_name
+	$Label.hide()
+	$Marker.hide()
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 	if mouse_interaction_enabled:

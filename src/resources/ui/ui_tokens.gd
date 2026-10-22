@@ -15,14 +15,18 @@ const SUNKEN := Color("1e130e")
 const LINE := Color("543a27")
 const BORDER := Color("c4914d")
 const BORDER_SOFT := Color("6e4c31")
-const TEXT := Color("ffe8c4")
-const TEXT_DIM := Color("dcc5a2")
-const TEXT_MUTED := Color("c4a880")
-const ACCENT := Color("ffd17a")
-const ACCENT_STRONG := Color("ffe1a3")
-const SUCCESS := Color("bdd9a5")
-const WARNING := Color("ffd08c")
-const DANGER := Color("e08a72")
+# 文字色是**墨**，不是光：手册、任务页、结算回顾、订单票都画在纸片底
+# （theme 里 PanelContainer = 0.961/0.91/0.812）上，浅色字在那上面等于隐形。
+# 这几个值与 game_theme.tres 的 Label/font_color、Hint、Success、Warning、
+# Danger 一一对应，改色时两边一起改。
+const TEXT := Color("3a2a1a")
+const TEXT_DIM := Color("513c27")
+const TEXT_MUTED := Color("6b543f")
+const ACCENT := Color("8a5a1e")
+const ACCENT_STRONG := Color("8e351c")
+const SUCCESS := Color("376633")
+const WARNING := Color("996212")
+const DANGER := Color("a32d1b")
 const PRIMARY_TEXT := Color("241710")
 const SHADOW := Color(0, 0, 0, 0.42)
 ## HUD panels sit on busy pixel art; the extra shade keeps text readable.

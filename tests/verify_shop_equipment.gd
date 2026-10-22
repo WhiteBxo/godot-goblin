@@ -50,11 +50,16 @@ func _run() -> void:
 	var interaction: ShopInteraction = main.get_node("Systems/ShopInteraction")
 	var feedback: InteractionFeedback = main.get_node("World/EffectRoot/InteractionFeedback")
 	var ui: ShopUI = main.get_node("HudLayer/ShopUI")
-	# The prompt became a PromptBar component (keycap + text row) instead of a bare
-	# Label; text assertions go through its accessor rather than `.text`.
+	# 提示已经搬到物体上方那枚世界胶囊（WorldPrompt），底部 PromptBar 只在
+	# 没有胶囊的宿主里说话；这里断言胶囊，顺带守住"底部不重复"这条。
 	var prompt: PromptBar = ui.get_node("Prompt") as PromptBar
 	if prompt == null:
 		_check(false, "ShopUI/Prompt is not a PromptBar")
+		quit(1)
+		return
+	var capsule: WorldPrompt = main.get_node("HudLayer/WorldPrompt") as WorldPrompt
+	if capsule == null:
+		_check(false, "HudLayer/WorldPrompt is missing")
 		quit(1)
 		return
 	var counter: Node2D = level.get_node("EquipmentForeground/Counter")
@@ -97,11 +102,12 @@ func _run() -> void:
 		_check(interaction.get_target() == point and point.is_available(), "Approach selects the actual device: " + config[0])
 		_check(feedback._focus == point and feedback.z_index > counter.z_index, "Existing corner feedback stays above device art")
 		_check(not point.get_node("Marker").visible and not point.get_node("Label").visible, "No floating marker or permanent label remains")
-		_check(prompt.visible and point.display_name in prompt.get_text(), "Existing E prompt names the selected equipment")
+		_check(capsule.is_prompt_visible() and point.display_name in capsule.get_action_text(), "Existing E prompt names the selected equipment")
+		_check(not prompt.visible, "Bottom prompt bar stays silent while the capsule speaks")
 		await _capture(player, config[2])
 		await _key(KEY_E)
 		_check(ui.is_open(), "E opens existing equipment interaction: " + config[2])
-		_check(interaction.get_target() == null and not prompt.visible, "Modal hides interaction feedback and prompt")
+		_check(interaction.get_target() == null and not capsule.is_prompt_visible() and not prompt.visible, "Modal hides interaction feedback and prompt")
 		await _key(KEY_ESCAPE)
 		_check(not ui.is_open() and player.movement_enabled, "Closing restores free movement")
 	player.global_position = level.get_spawn_position()

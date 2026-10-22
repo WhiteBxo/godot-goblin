@@ -101,6 +101,12 @@ func _depart(path: String, entrance: StringName) -> void:
 	if not _requested_exit.are_conditions_met(_resolve_state()):
 		_fail(ERR_UNAVAILABLE)
 		return
+	# 换场景要建新节点、跑它的 _ready（聚落那张图要几百毫秒），这段一定在
+	# 全黑的画面上。先给一句话再让它卡，否则玩家看到的是"黑住不动"。
+	_visual.show_loading("正在前往" + _requested_exit.display_name)
+	await get_tree().process_frame
+	if not is_inside_tree():
+		return
 	var destination := _destination
 	_destination = null
 	error = GameEntry.travel_to_scene(get_tree(), destination)
@@ -137,6 +143,7 @@ func _fail(error: Error) -> void:
 	if is_instance_valid(_destination):
 		_destination.free()
 	_destination = null
+	_visual.hide_loading()
 	# 已经淡到黑了就得淡回来：直接 cancel_all()/hide() 是一刀切，玩家看到的是
 	# 一次闪屏。_reveal 会保持 busy 直到淡完，层跟着淡出而不是瞬移。
 	if _visual != null and _visual.is_black_covered() and is_inside_tree():

@@ -9,6 +9,7 @@ signal cancelled(action: TransitionAction)
 @onready var _white: ColorRect = $White
 @onready var _top: ColorRect = $TopBar
 @onready var _bottom: ColorRect = $BottomBar
+@onready var _loading: Label = $Loading
 
 var _actions: Dictionary = {}
 var _tweens: Dictionary = {}
@@ -42,6 +43,19 @@ func flash_white(duration: float = 0.25) -> TransitionAction:
 func letterbox(show_bars: bool, duration: float = 0.4, ratio: float = 0.12) -> TransitionAction:
 	return _start(&"bars", &"letterbox", ratio if show_bars else 0.0, duration, ratio)
 
+## 黑屏期间的说明文字。大场景建起来要几百毫秒，纯黑不说话等于让玩家
+## 以为卡住了；这行字在淡黑之后才出现，换场景时随旧层一起消失。
+func show_loading(text: String) -> void:
+	if not is_instance_valid(_loading):
+		return
+	_loading.text = text
+	_loading.visible = not text.is_empty()
+
+func hide_loading() -> void:
+	if is_instance_valid(_loading):
+		_loading.text = ""
+		_loading.visible = false
+
 ## 画面是否已经被黑色盖满（供宿主决定"淡回来"还是"直接切"）。
 func is_black_covered() -> bool:
 	return is_instance_valid(_black) and _black.color.a > 0.99
@@ -66,6 +80,7 @@ func cancel_all(reason: String = "Cancelled") -> void:
 	if _mutating:
 		return
 	_mutating = true
+	hide_loading()
 	for channel: StringName in [&"black", &"white", &"bars"]:
 		_set_value(channel, 0.0)
 		_stop(channel, reason)

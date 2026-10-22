@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://src/UI/screen_transition/screen_transition.gd" id="1"]
+[ext_resource type="FontFile" path="res://assets/fonts/fusion_pixel/fusion-pixel-12px-monospaced-zh_hans.otf.woff2" id="2_font"]
 
 [node name="ScreenTransition" type="Control"]
 process_mode = 3
@@ -46,3 +47,20 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
+
+[node name="Loading" type="Label" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+focus_mode = 0
+theme_override_colors/font_color = Color(0.961, 0.91, 0.812, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 12
+text = ""
+horizontal_alignment = 1
+vertical_alignment = 1

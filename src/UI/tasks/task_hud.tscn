@@ -1,14 +1,33 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://src/UI/tasks/task_hud.gd" id="1"]
 [ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="2"]
 
+[sub_resource type="StyleBoxFlat" id="paper"]
+content_margin_left = 10.0
+content_margin_top = 5.0
+content_margin_right = 10.0
+content_margin_bottom = 5.0
+bg_color = Color(0.961, 0.91, 0.812, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.29, 0.216, 0.133, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 6
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 6
+shadow_color = Color(0.227, 0.165, 0.102, 0.32)
+shadow_size = 0
+shadow_offset = Vector2(2, 2)
+
 [node name="TaskHUD" type="HBoxContainer"]
 visible = false
 offset_left = 16.0
-offset_top = 36.0
-offset_right = 316.0
-offset_bottom = 36.0
+offset_top = 12.0
+offset_right = 336.0
+offset_bottom = 44.0
 mouse_filter = 2
 theme = ExtResource("2")
 script = ExtResource("1")
@@ -17,7 +36,7 @@ script = ExtResource("1")
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 1
-theme_type_variation = &"HudPanel"
+theme_override_styles/panel = SubResource("paper")
 
 [node name="OpenTasks" type="Button" parent="TaskCard"]
 layout_mode = 2
@@ -30,23 +49,28 @@ metadata/ui_motion = false
 layout_mode = 2
 mouse_filter = 2
 
-[node name="Content" type="VBoxContainer" parent="TaskCard/Margin"]
+[node name="Content" type="HBoxContainer" parent="TaskCard/Margin"]
 layout_mode = 2
 mouse_filter = 2
+theme_override_constants/separation = 6
 
 [node name="HeadingRow" type="HBoxContainer" parent="TaskCard/Margin/Content"]
 layout_mode = 2
+size_flags_vertical = 4
 mouse_filter = 2
+theme_override_constants/separation = 4
 
 [node name="Heading" type="Label" parent="TaskCard/Margin/Content/HeadingRow"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
 mouse_filter = 2
 theme_type_variation = &"Hint"
-text = "当前主线"
+theme_override_colors/font_color = Color(0.478, 0.392, 0.286, 1)
+theme_override_font_sizes/font_size = 9
+text = "DAY 1"
 
 [node name="Shortcut" type="Label" parent="TaskCard/Margin/Content/HeadingRow"]
+visible = false
 layout_mode = 2
 mouse_filter = 2
 theme_type_variation = &"Hint"
@@ -54,11 +78,20 @@ text = "[J]"
 
 [node name="Title" type="Label" parent="TaskCard/Margin/Content"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
 mouse_filter = 2
-theme_type_variation = &"H2"
+theme_override_colors/font_color = Color(0.227, 0.165, 0.102, 1)
+theme_override_font_sizes/font_size = 12
+text = "当前任务"
+clip_text = true
 text_overrun_behavior = 3
 
 [node name="Objective" type="Label" parent="TaskCard/Margin/Content"]
+visible = false
 layout_mode = 2
 mouse_filter = 2
-autowrap_mode = 3
+theme_override_colors/font_color = Color(0.478, 0.392, 0.286, 1)
+theme_override_font_sizes/font_size = 10
+clip_text = true
+text_overrun_behavior = 3

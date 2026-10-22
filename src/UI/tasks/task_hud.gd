@@ -50,7 +50,6 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	get_task_button().pressed.connect(func() -> void: tasks_requested.emit())
-	_objective.max_lines_visible = 2
 	_objective.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_resize_card()
 	_refresh()
@@ -75,7 +74,9 @@ func _disconnect_journal() -> void:
 		_journal.projection_changed.disconnect(_refresh)
 
 func _resize_card() -> void:
-	offset_right = offset_left + minf(380.0, maxf(1.0, get_viewport_rect().size.x - 120.0))
+	# One line, left edge: the card stops well before the counter furniture, so
+	# the room stays readable. Detail lives behind the click.
+	offset_right = offset_left + minf(320.0, maxf(200.0, get_viewport_rect().size.x - 120.0))
 
 func get_objective_summary() -> Dictionary:
 	return {"title": _title.text, "objective": _objective.text}
@@ -85,34 +86,54 @@ func _refresh() -> void:
 		return
 	var task: Dictionary = _journal.get_current_main_task() if is_instance_valid(_journal) else {}
 	var entry := _orders.get_tracked_entry() if is_instance_valid(_orders) else {}
-	visible = not _obscured and (not task.is_empty() or not entry.is_empty())
-	$TaskCard.visible = not task.is_empty() or not entry.is_empty()
-	if not entry.is_empty() and task.is_empty():
+	var has_task := not task.is_empty()
+	var has_entry := not entry.is_empty()
+	visible = not _obscured and (has_task or has_entry)
+	$TaskCard.visible = has_task or has_entry
+	_heading.text = _day_label()
+	# The strip carries one sentence. Orders keep a second line only because the
+	# missing amount is a number the player acts on.
+	if has_entry and not has_task:
 		var others := -1
 		for order: Dictionary in _orders.get_entries():
 			if order.status == "active":
 				others += 1
-		_heading.text = "追踪订单" + (" · 另有 %d 单" % others if others > 0 else "")
+		_heading.text = "订单" + (" · 另有 %d 单" % others if others > 0 else "")
 		_title.text = entry.title
+		_objective.visible = true
 		_objective.text = "还缺：" + entry.missing_text if not entry.missing_text.is_empty() else entry.hint
 		_after_refresh()
 		return
-	_heading.text = "当前任务"
-	if task.is_empty():
+	_objective.visible = false
+	if not has_task:
 		_title.text = ""
 		_objective.text = ""
 		_after_refresh()
 		return
-	_title.text = task.title
 	var objective: Dictionary = task.current_objective
 	if objective.is_empty():
+		_title.text = task.title + " · 目标已达成"
 		_objective.text = "目标已达成，等待后续剧情。"
 		_after_refresh()
 		return
-	_objective.text = objective.text
+	var line := "%s · %s" % [task.title, str(objective.text)]
+	# The label keeps the plain objective for summaries and tests even though the
+	# strip shows it merged into one line.
+	_objective.text = str(objective.text)
 	if objective.target != null:
-		_objective.text += "  %s / %s" % [String.num(objective.progress).trim_suffix(".0"), String.num(objective.target).trim_suffix(".0")]
+		var progress_text := "%s / %s" % [String.num(objective.progress).trim_suffix(".0"), String.num(objective.target).trim_suffix(".0")]
+		line += "  " + progress_text.replace(" ", "")
+		_objective.text += "  " + progress_text
+	_title.text = line
 	_after_refresh()
+
+## The strip opens with where the player is in the run, not with a label that
+## repeats itself every frame.
+func _day_label() -> String:
+	var state := get_node_or_null("/root/GameState")
+	if state != null and state.get("current_day") != null:
+		return "DAY %d" % int(state.get("current_day"))
+	return "当前任务"
 
 ## Presentation only: a new objective or a new balance nudges the strip once so
 ## the change is noticed without taking the pointer away from the world.

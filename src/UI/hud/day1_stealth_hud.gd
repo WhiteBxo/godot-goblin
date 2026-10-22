@@ -57,10 +57,10 @@ func _apply_touch_layout() -> void:
 	_panel.anchor_right = 1.0
 	_panel.anchor_top = 0.0
 	_panel.anchor_bottom = 0.0
-	_panel.offset_left = -288.0
+	_panel.offset_left = -436.0
 	_panel.offset_right = -16.0
 	_panel.offset_top = 52.0
-	_panel.offset_bottom = 188.0
+	_panel.offset_bottom = 96.0
 	_panel.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	# Content taller than the authored card must grow upward, away from the pads.
 	_panel.grow_vertical = Control.GROW_DIRECTION_BEGIN
@@ -181,7 +181,8 @@ func _refresh_guards(setup: Day1StealthSetup) -> void:
 	if cleared > 0:
 		watches.append("%d 名守卫已放行" % cleared)
 	_guards.text = " · ".join(watches)
-	_guards.visible = not watches.is_empty()
+	# One strip: guard chatter belongs in the tooltip, not in a second row.
+	_guards.visible = false
 
 func _refresh_actions(setup: Day1StealthSetup) -> void:
 	var idle := not _service.can_accept_input()
@@ -193,25 +194,28 @@ func _refresh_actions(setup: Day1StealthSetup) -> void:
 	_torch.visible = not setup.wallet_coins and running
 	_drinks.visible = not setup.wallet_coins and running
 	var inventory := _service.get_inventory()
-	_coin.text = "古怪金币 %d%s" % [inventory.get_stock(setup.coin_item_id), " · 已选" if _service.selected_kind == &"coin" else ""]
+	_coin.text = "金币 %d%s" % [inventory.get_stock(setup.coin_item_id), " ✓" if _service.selected_kind == &"coin" else ""]
 	if setup.wallet_coins:
 		# The wallet price is the only cost the player can be short of. An
 		# enabled-looking button that silently refuses is what "the button does
 		# nothing" looked like, so the balance owns the label and the state.
 		var balance := _service.get_coin_balance()
 		if balance >= WalletTransactions.COIN_FACE_VALUE:
-			_coin.text = "投掷金币 · %dG%s" % [WalletTransactions.COIN_FACE_VALUE, " · 点此投出" if _service.selected_kind == &"coin" else ""]
+			_coin.text = "金币 %dG%s" % [WalletTransactions.COIN_FACE_VALUE, " ✓" if _service.selected_kind == &"coin" else ""]
 		else:
-			_coin.text = "金币不足 · 当前 %dG" % balance
+			_coin.text = "不足 %dG" % balance
 			_coin.disabled = true
-	_torch.text = "火把 %d%s" % [inventory.get_stock(setup.torch_item_id), " · 已选" if _service.selected_kind == &"torch" else ""]
+	_torch.text = "火把 %d%s" % [inventory.get_stock(setup.torch_item_id), " ✓" if _service.selected_kind == &"torch" else ""]
 	_retry.visible = _service.is_blocking()
 	_retry.text = "重新潜入" if setup.wallet_coins else "从检查点重试"
 	_start.visible = _service.status == Day1StealthService.Status.IDLE
-	_retry_hint.visible = _retry.visible
+	_retry_hint.visible = false
 	_retry_hint.text = "重试会恢复本次潜入前的钱包和物品。" if setup.wallet_coins else "重试返回检查点，已用物品不会补回。"
-	_rule.visible = _coin.visible or _retry.visible or _start.visible or _drinks.visible
+	_rule.visible = false
+	_hint.visible = false
 	_hint.text = setup.controls_hint if not setup.controls_hint.is_empty() else "鼠标瞄准落点 · F 投掷 · Ctrl 潜行"
+	_retry.tooltip_text = _retry_hint.text
+	_status.tooltip_text = "\n".join([_service.message, _guards.text, _hint.text]).strip_edges()
 
 ## One line for "why nothing happened": a fresh refusal wins over the standing
 ## block reason so the panel never explains a state the player already left.
@@ -223,7 +227,15 @@ func _refresh_feedback() -> void:
 ## Anchored to the bottom edge: the card grows upward into empty map instead of
 ## hanging off the screen when a wrapped hint adds a line.
 func _fit_panel() -> void:
-	var height := _panel.get_combined_minimum_size().y
-	if is_equal_approx(_panel.offset_top, -PANEL_MARGIN - height):
-		return
-	_panel.offset_top = -PANEL_MARGIN - height
+	var minimum := _panel.get_combined_minimum_size()
+	var height := minimum.y
+	var width: float = minf(minimum.x, get_viewport_rect().size.x - PANEL_MARGIN * 2.0)
+	if not is_equal_approx(_panel.offset_top, -PANEL_MARGIN - height):
+		_panel.offset_top = -PANEL_MARGIN - height
+	# One strip hugs its content: a fixed 420px card left a dead paper tail
+	# whenever the drink picker was hidden.
+	if _panel.anchor_left > 0.5:
+		if not is_equal_approx(_panel.offset_left, -PANEL_MARGIN - width):
+			_panel.offset_left = -PANEL_MARGIN - width
+	elif not is_equal_approx(_panel.offset_right, PANEL_MARGIN + width):
+		_panel.offset_right = PANEL_MARGIN + width

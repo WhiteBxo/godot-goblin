@@ -6,7 +6,6 @@ extends VBoxContainer
 signal craft_requested(materials: Array[String], quantity: int)
 
 const CATEGORY_ORDER: Dictionary = {"tea": 0, "milk": 1, "syrup": 2, "topping": 3, "material": 4}
-const Tokens := preload("res://src/resources/ui/ui_tokens.gd")
 
 var _production: TeaProduction
 var _selected: Array[String] = []
@@ -18,11 +17,16 @@ var _chip_rows: Dictionary = {}
 ## Derived from the recipes this session may offer; locked recipes never reach the lists.
 var _available_materials: Dictionary = {}
 var _available_products: Dictionary = {}
+## Recipe rows stay mounted between refreshes so the clicked row keeps focus.
+var _recipe_buttons: Dictionary[String, Button] = {}
+var _recipe_signature := ""
 
 @onready var _list: ItemList = $Body/Left/MaterialList
 @onready var _detail: Label = $Body/Left/ProductDetail
 @onready var _redo: Button = $Body/Left/RedoButton
-@onready var _recipe_list: ItemList = $Body/Right/RecipeList
+@onready var _recipe_list: ScrollContainer = $Body/Right/RecipeList
+@onready var _recipe_rows: GridContainer = $Body/Right/RecipeList/Rows
+@onready var _capacity: Label = $Body/Right/Batch/Capacity
 @onready var _quantity: SpinBox = $Body/Right/Batch/Quantity
 @onready var _maximum: Button = $Body/Right/Batch/Maximum
 @onready var _order_line: Label = $Body/Right/OrderLine
@@ -36,7 +40,6 @@ func _ready() -> void:
 	_list.item_clicked.connect(_on_item_clicked)
 	_list.item_activated.connect(_on_item_activated)
 	_list.item_selected.connect(_on_item_selected)
-	_recipe_list.item_selected.connect(_on_recipe_selected)
 	_quantity.value_changed.connect(func(_value: float) -> void:
 		_rebuild_chips()
 		_refresh_preview())
@@ -94,23 +97,109 @@ func select_recipe(product_id: String) -> bool:
 	UIFlourish.settle(_preview, 0.96)
 	return true
 
-func _on_recipe_selected(index: int) -> void:
+func _on_recipe_pressed(product_id: String) -> void:
 	if not _refreshing:
-		select_recipe(str(_recipe_list.get_item_metadata(index)))
+		select_recipe(product_id)
 
 func _rebuild_recipes() -> void:
+	var selected_key := TeaRecipe.key_for(_selected)
+	var recipes: Array[TeaRecipe] = _production.get_known_recipes()
+	var signature_parts: Array[String] = [selected_key]
+	for recipe: TeaRecipe in recipes:
+		signature_parts.append("%s:%d" % [recipe.product_id, _production.get_max_craftable(recipe.materials)])
+	var signature := "|".join(signature_parts)
+	if signature == _recipe_signature and _recipe_buttons.size() == recipes.size():
+		return
 	var scroll := _recipe_list.get_v_scroll_bar().value
-	_recipe_list.clear()
-	for recipe: TeaRecipe in _production.get_known_recipes():
+	var focused := _focused_recipe()
+	for child in _recipe_rows.get_children():
+		_recipe_rows.remove_child(child)
+		child.queue_free()
+	_recipe_buttons.clear()
+	for recipe: TeaRecipe in recipes:
 		var maximum := _production.get_max_craftable(recipe.materials)
-		var index := _recipe_list.add_item("%s · %s" % [_production.get_item_name(recipe.product_id), "可做 %d 杯" % maximum if maximum > 0 else "材料不足或库存已满"])
-		_recipe_list.set_item_metadata(index, recipe.product_id)
-		if maximum == 0:
-			_recipe_list.set_item_custom_fg_color(index, Tokens.WARNING)
-		_recipe_list.set_item_tooltip(index, " + ".join(_production.get_recipe_names(recipe.materials)))
-		if TeaRecipe.key_for(_selected) == recipe.get_material_key():
-			_recipe_list.select(index)
+		var row := _make_recipe_row(recipe, maximum, TeaRecipe.key_for(recipe.materials) == selected_key)
+		_recipe_rows.add_child(row)
+		_recipe_buttons[recipe.product_id] = row
+	_sync_recipe_neighbors()
+	if not focused.is_empty() and _recipe_buttons.has(focused):
+		_recipe_buttons[focused].grab_focus()
+	_recipe_signature = signature
 	_recipe_list.get_v_scroll_bar().set_deferred("value", scroll)
+
+## A recipe is a line on the menu card: the drink on the left, the number of
+## cups it still yields on the right, both on the same paper row.
+func _make_recipe_row(recipe: TeaRecipe, maximum: int, selected: bool) -> Button:
+	var button := Button.new()
+	button.custom_minimum_size = Vector2(0, 26)
+	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	button.theme_type_variation = &"RecipeRowSelected" if selected else &"RecipeRow"
+	button.tooltip_text = " + ".join(_production.get_recipe_names(recipe.materials))
+	button.pressed.connect(func() -> void: _on_recipe_pressed(recipe.product_id))
+	button.focus_entered.connect(_reveal_row.bind(button))
+	var content := HBoxContainer.new()
+	content.name = "Content"
+	content.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	content.add_theme_constant_override("separation", 6)
+	button.add_child(content)
+	content.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	content.offset_left = 9
+	content.offset_right = -9
+	var name_label := Label.new()
+	name_label.name = "Name"
+	name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	name_label.clip_text = true
+	name_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	name_label.text = _display_name(recipe.product_id)
+	content.add_child(name_label)
+	var count := Label.new()
+	count.name = "Count"
+	count.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	count.theme_type_variation = &"Value" if maximum > 0 else &"Warning"
+	count.text = "%d 杯" % maximum if maximum > 0 else "缺料"
+	content.add_child(count)
+	return button
+
+## The list is already "what I can make", so the data's "（成品）" suffix only
+## eats a third of the row width.
+func _display_name(product_id: String) -> String:
+	return _production.get_item_name(product_id).replace("（成品）", "")
+
+func _reveal_row(button: Button) -> void:
+	if is_instance_valid(button):
+		_recipe_list.ensure_control_visible(button)
+
+## Two columns, so six drinks fit a 360px-tall screen without a scroll bar.
+func _sync_recipe_neighbors() -> void:
+	if not is_instance_valid(_production):
+		return
+	var rows: Array[Button] = []
+	for recipe: TeaRecipe in _production.get_known_recipes():
+		rows.append(_recipe_buttons.get(recipe.product_id))
+	var columns := maxi(1, _recipe_rows.columns)
+	var last := rows.size() - 1
+	for index in range(rows.size()):
+		var row := rows[index]
+		if row == null:
+			continue
+		var up: Button = rows[maxi(0, index - columns)]
+		var down: Button = rows[mini(last, index + columns)]
+		var left: Button = rows[maxi(0, index - 1)]
+		var right: Button = rows[mini(last, index + 1)]
+		row.focus_neighbor_top = row.get_path_to(up)
+		row.focus_neighbor_bottom = row.get_path_to(down)
+		row.focus_neighbor_left = row.get_path_to(left)
+		row.focus_neighbor_right = row.get_path_to(right)
+
+func _focused_recipe() -> String:
+	var owner := get_viewport().gui_get_focus_owner()
+	if owner == null:
+		return ""
+	for product_id: String in _recipe_buttons:
+		if _recipe_buttons[product_id] == owner:
+			return product_id
+	return ""
 
 func add_material(id: String) -> bool:
 	if not is_instance_valid(_production) or id.is_empty():
@@ -229,15 +318,30 @@ func selection_rows() -> int:
 	return _chips.get_child_count()
 
 func grab_default_focus() -> void:
-	if is_inside_tree():
+	if not is_inside_tree():
+		return
+	var first := recipe_row(0)
+	if first != null:
+		first.grab_focus()
+	else:
 		_recipe_list.grab_focus()
 
 func get_default_focus() -> Control:
-	return _recipe_list
+	return recipe_row(0)
+
+## Rows are plain buttons over the same paper; tests and hosts address them by
+## position instead of by ItemList index.
+func recipe_count() -> int:
+	return _recipe_rows.get_child_count()
+
+func recipe_row(index: int) -> Button:
+	if index < 0 or index >= _recipe_rows.get_child_count():
+		return null
+	return _recipe_rows.get_child(index) as Button
 
 func uses_native_gui_input() -> bool:
 	var focus := get_viewport().gui_get_focus_owner()
-	return is_instance_valid(focus) and (focus == _list or focus == _recipe_list or focus == _quantity or _quantity.is_ancestor_of(focus))
+	return is_instance_valid(focus) and (focus == _list or focus == _recipe_list or _recipe_list.is_ancestor_of(focus) or focus == _quantity or _quantity.is_ancestor_of(focus))
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_visible_in_tree() or not _list.has_focus():
@@ -390,10 +494,12 @@ func _refresh_preview() -> void:
 	_quantity.max_value = maxi(1, maximum)
 	_quantity.editable = maximum > 0
 	_maximum.disabled = maximum < 1
+	_capacity.text = "最多 %d 杯" % maximum if maximum > 0 else ("原料不足" if not _selected.is_empty() else "先选一个配方")
+	_capacity.theme_type_variation = &"Warning" if maximum <= 0 and not _selected.is_empty() else &"Hint"
 	var preview := _production.preview_craft(_selected, int(_quantity.value))
 	match str(preview.code):
 		"ok":
-			_preview.text = "→ %s ×%d%s" % [preview.product_name, int(_quantity.value), "（计入当前订单）" if preview.advances_order else ""]
+			_preview.text = "→ %s ×%d%s" % [str(preview.product_name).replace("（成品）", ""), int(_quantity.value), "（计入当前订单）" if preview.advances_order else ""]
 			_preview.theme_type_variation = &"Success"
 		"empty":
 			_preview.text = "选择配方和杯数，即可制作入库"

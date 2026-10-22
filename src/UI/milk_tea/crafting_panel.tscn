@@ -45,18 +45,28 @@ text = "一键重做"
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 2
+theme_override_constants/separation = 6
 
 [node name="RecipeTitle" type="Label" parent="Body/Right"]
 layout_mode = 2
 theme_type_variation = &"H2"
 text = "选择已知配方"
+theme_override_colors/font_color = Color(0.42, 0.33, 0.25, 1)
 
-[node name="RecipeList" type="ItemList" parent="Body/Right"]
-custom_minimum_size = Vector2(0, 72)
+[node name="RecipeList" type="ScrollContainer" parent="Body/Right"]
+custom_minimum_size = Vector2(0, 78)
 layout_mode = 2
 size_flags_vertical = 3
-allow_reselect = true
+horizontal_scroll_mode = 0
+follow_focus = true
+theme_type_variation = &"ListScroll"
+
+[node name="Rows" type="GridContainer" parent="Body/Right/RecipeList"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 2
+theme_override_constants/v_separation = 2
+columns = 2
 
 [node name="OrderLine" type="Label" parent="Body/Right"]
 visible = false
@@ -107,9 +117,9 @@ layout_mode = 2
 text = "杯数"
 
 [node name="Quantity" type="SpinBox" parent="Body/Right/Batch"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(72, 24)
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 0
 min_value = 1.0
 max_value = 1.0
 value = 1.0
@@ -121,6 +131,14 @@ layout_mode = 2
 theme_type_variation = &"GhostButton"
 text = "最大"
 disabled = true
+
+[node name="Capacity" type="Label" parent="Body/Right/Batch"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_type_variation = &"Hint"
+horizontal_alignment = 2
+text = "最多 0 杯"
 
 [node name="CraftButton" type="Button" parent="Body/Right"]
 custom_minimum_size = Vector2(0, 28)

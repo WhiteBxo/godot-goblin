@@ -7,6 +7,7 @@ signal tasks_requested
 @onready var _heading: Label = %Heading
 @onready var _title: Label = $TaskCard/Margin/Content/Title
 @onready var _objective: Label = $TaskCard/Margin/Content/Objective
+@onready var _sep: Label = $TaskCard/Margin/Content/Sep
 var _journal: TaskJournal
 var _orders: OrderBoardModel
 var _signature := ""
@@ -74,9 +75,29 @@ func _disconnect_journal() -> void:
 		_journal.projection_changed.disconnect(_refresh)
 
 func _resize_card() -> void:
-	# One line, left edge: the card stops well before the counter furniture, so
-	# the room stays readable. Detail lives behind the click.
-	offset_right = offset_left + minf(320.0, maxf(200.0, get_viewport_rect().size.x - 120.0))
+	# The strip grows with its sentence up to the point where the wallet chips
+	# start, so a long "奶茶 → 顾客 · 目标" line never gets cut mid-word. Only the
+	# objective may be trimmed, and only when the task really is longer than the
+	# HUD row can afford.
+	var limit := minf(392.0, maxf(220.0, get_viewport_rect().size.x - 248.0))
+	offset_right = offset_left + clampf(_content_width(), 220.0, limit)
+
+func _content_width() -> float:
+	# Paper margins plus a couple of pixels of headroom: a label whose clip width
+	# matches its text width exactly still renders an ellipsis.
+	var total := 40.0
+	var parts: Array[Label] = [_heading, _title, _sep, _objective]
+	for label: Label in parts:
+		if label == null or not label.visible or label.text.is_empty():
+			continue
+		total += _text_width(label) + 6.0
+	return total
+
+func _text_width(label: Label) -> float:
+	var font := label.get_theme_font("font")
+	if font == null:
+		return 0.0
+	return font.get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, label.get_theme_font_size("font_size")).x
 
 func get_objective_summary() -> Dictionary:
 	return {"title": _title.text, "objective": _objective.text}
@@ -100,11 +121,9 @@ func _refresh() -> void:
 				others += 1
 		_heading.text = "订单" + (" · 另有 %d 单" % others if others > 0 else "")
 		_title.text = entry.title
-		_objective.visible = true
 		_objective.text = "还缺：" + entry.missing_text if not entry.missing_text.is_empty() else entry.hint
 		_after_refresh()
 		return
-	_objective.visible = false
 	if not has_task:
 		_title.text = ""
 		_objective.text = ""
@@ -112,19 +131,15 @@ func _refresh() -> void:
 		return
 	var objective: Dictionary = task.current_objective
 	if objective.is_empty():
-		_title.text = task.title + " · 目标已达成"
-		_objective.text = "目标已达成，等待后续剧情。"
+		_title.text = task.title
+		_objective.text = "目标已达成，等待后续剧情"
 		_after_refresh()
 		return
-	var line := "%s · %s" % [task.title, str(objective.text)]
-	# The label keeps the plain objective for summaries and tests even though the
-	# strip shows it merged into one line.
+	_title.text = task.title
 	_objective.text = str(objective.text)
 	if objective.target != null:
 		var progress_text := "%s / %s" % [String.num(objective.progress).trim_suffix(".0"), String.num(objective.target).trim_suffix(".0")]
-		line += "  " + progress_text.replace(" ", "")
 		_objective.text += "  " + progress_text
-	_title.text = line
 	_after_refresh()
 
 ## The strip opens with where the player is in the run, not with a label that
@@ -138,6 +153,9 @@ func _day_label() -> String:
 ## Presentation only: a new objective or a new balance nudges the strip once so
 ## the change is noticed without taking the pointer away from the world.
 func _after_refresh() -> void:
+	_sep.visible = not _objective.text.is_empty()
+	if visible:
+		_resize_card()
 	if not visible:
 		_shown = false
 		modulate.a = 1.0

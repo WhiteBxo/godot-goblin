@@ -308,7 +308,7 @@ func _check_panel() -> void:
 	await process_frame
 	var panel: CraftingPanel = popup.get_crafting_panel()
 	_check(panel.visible, "Crafting panel opens at the tea station")
-	_check(root.gui_get_focus_owner() == panel.get_node("Body/Right/RecipeList"), "Focus starts on the recipe list")
+	_check(root.gui_get_focus_owner() == panel.get_default_focus() and panel.get_default_focus() != null, "Focus starts on the recipe list")
 	_check(not panel.is_craft_enabled(), "Empty selection cannot be submitted")
 	panel.add_material("black_tea")
 	panel.add_material("black_tea")
@@ -345,8 +345,7 @@ func _check_panel() -> void:
 	root.size = Vector2i(1280, 720)
 	_check(panel.select_recipe("pearl_milk_tea"), "A known recipe auto-fills without owning a product")
 	_check(panel.selected_materials() == PEARL, "Recipe selection replaces all tray materials")
-	var recipe_list: ItemList = panel.get_node("Body/Right/RecipeList")
-	_check(recipe_list.item_count == main.get_tea_production().get_available_recipes().size(), "All unlocked recipes are visible on opening")
+	_check(panel.recipe_count() == main.get_tea_production().get_available_recipes().size(), "All unlocked recipes are visible on opening")
 	var quantity_input: LineEdit = panel.get_node("Body/Right/Batch/Quantity").get_line_edit()
 	quantity_input.text = "2"
 	quantity_input.text_changed.emit("2")
@@ -361,7 +360,7 @@ func _check_panel() -> void:
 	panel.select_recipe("plain_milk_tea")
 	panel.get_node("Body/Right/Batch/Maximum").pressed.emit()
 	_check(panel.batch_quantity() == main.get_tea_production().get_max_craftable(PLAIN), "Maximum button fills the available batch quantity")
-	recipe_list.item_selected.emit(0)
+	panel.recipe_row(0).pressed.emit()
 	_check(panel.batch_quantity() == 1 and panel.selected_materials() == PEARL, "Switching recipes resets quantity and replaces the tray")
 	var inventory := main.get_warehouse_inventory()
 	inventory.try_consume({"pearl": inventory.get_stock("pearl")})

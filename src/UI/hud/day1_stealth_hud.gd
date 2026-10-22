@@ -218,7 +218,7 @@ func _refresh_actions(setup: Day1StealthSetup) -> void:
 	_retry_hint.text = "重试会恢复本次潜入前的钱包和物品。" if setup.wallet_coins else "重试返回检查点，已用物品不会补回。"
 	_rule.visible = false
 	_hint.visible = false
-	_hint.text = setup.controls_hint if not setup.controls_hint.is_empty() else "鼠标瞄准落点 · F 投掷 · Ctrl 潜行"
+	_hint.text = setup.controls_hint if not setup.controls_hint.is_empty() else "鼠标瞄准落点 · F 投掷 · Shift 奔跑 · Ctrl 潜行"
 	_retry.tooltip_text = _retry_hint.text
 	_status.tooltip_text = "\n".join([_service.message, _guards.text, _hint.text]).strip_edges()
 

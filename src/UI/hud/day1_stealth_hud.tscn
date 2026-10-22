@@ -171,4 +171,4 @@ mouse_filter = 2
 clip_text = true
 text_overrun_behavior = 3
 theme_type_variation = &"Muted"
-text = "鼠标瞄准落点 · F 投掷 · Ctrl 潜行"
+text = "鼠标瞄准落点 · F 投掷 · Shift 奔跑 · Ctrl 潜行"

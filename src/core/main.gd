@@ -1613,7 +1613,7 @@ func _announce_stealth_controls() -> void:
 	if _stealth_service.status != Day1StealthService.Status.RUNNING:
 		return
 	_stealth_controls_taught = true
-	var text := "瞄准后点右下「投掷」· 长按方向可潜行" if MobileSupport.is_touch_ui() else "鼠标瞄准落点 · F 投掷 · Ctrl 潜行"
+	var text := "瞄准后点右下「投掷」· 长按方向可潜行" if MobileSupport.is_touch_ui() else "鼠标瞄准落点 · F 投掷 · Shift 奔跑 · Ctrl 潜行"
 	_control_hint.show_tip(text, "ui.hint.throw")
 
 func open_map() -> Error:

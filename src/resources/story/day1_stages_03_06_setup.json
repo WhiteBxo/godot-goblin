@@ -151,7 +151,7 @@
         "goblin_a": null,
         "goblin_b": null,
         "goblin_c": null,
-        "fat_goblin": null,
+        "fat_goblin": "day1_counter",
         "goblin_d": null,
         "goblin_e": null
       }
@@ -165,7 +165,7 @@
         "goblin_a": null,
         "goblin_b": null,
         "goblin_c": null,
-        "fat_goblin": null,
+        "fat_goblin": "day1_counter",
         "goblin_d": null,
         "goblin_e": null
       }

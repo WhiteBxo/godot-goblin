@@ -13,6 +13,18 @@ extends InteractionPoint
 ## 胶囊上的一行短原因（"长老还没答应见你"）。留空时用通用说法。
 @export var blocked_hint := ""
 
+## 门自己带着方向：'走出奶茶店' / '进入奶茶店'。基类会给所有出口补一个
+## '进入'，于是胶囊上出现'进入进入奶茶店'这种话；没写方向的门才补一个。
+const _MOTION_PREFIXES := ["走出", "进入", "前往", "离开", "回到", "返回", "下到", "爬上"]
+
+func get_action_text() -> String:
+	if not action_verb.is_empty():
+		return super.get_action_text()
+	for prefix: String in _MOTION_PREFIXES:
+		if display_name.begins_with(prefix):
+			return display_name
+	return "前往" + display_name
+
 ## Empty conditions always pass; a missing state fails closed.
 func are_conditions_met(state: Node) -> bool:
 	if required_flags.is_empty() and allowed_stages.is_empty():

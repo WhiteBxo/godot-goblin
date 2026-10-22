@@ -137,10 +137,15 @@ func _fail(error: Error) -> void:
 	if is_instance_valid(_destination):
 		_destination.free()
 	_destination = null
-	_visual.cancel_all()
-	_visual.get_parent().hide()
-	_busy = false
-	busy_changed.emit()
+	# 已经淡到黑了就得淡回来：直接 cancel_all()/hide() 是一刀切，玩家看到的是
+	# 一次闪屏。_reveal 会保持 busy 直到淡完，层跟着淡出而不是瞬移。
+	if _visual != null and _visual.is_black_covered() and is_inside_tree():
+		_reveal()
+	else:
+		_visual.cancel_all()
+		_visual.get_parent().hide()
+		_busy = false
+		busy_changed.emit()
 	travel_failed.emit(_requested_exit, error)
 
 func _exit_tree() -> void:

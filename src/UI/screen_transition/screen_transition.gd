@@ -42,6 +42,10 @@ func flash_white(duration: float = 0.25) -> TransitionAction:
 func letterbox(show_bars: bool, duration: float = 0.4, ratio: float = 0.12) -> TransitionAction:
 	return _start(&"bars", &"letterbox", ratio if show_bars else 0.0, duration, ratio)
 
+## 画面是否已经被黑色盖满（供宿主决定"淡回来"还是"直接切"）。
+func is_black_covered() -> bool:
+	return is_instance_valid(_black) and _black.color.a > 0.99
+
 func is_busy() -> bool:
 	return not _actions.is_empty()
 

@@ -672,6 +672,10 @@ func _finish_session_initialization(error: Error) -> void:
 func _create_scene_travel(exits: Array[SceneExit]) -> void:
 	for point: SceneExit in exits:
 		_scene_exits[point.interaction_id] = point
+		# 门推不推得开是宿主说了算（剧情阶段、潜行、演出），出口自己不知道。
+		# 把这一关接到胶囊上：站在门口就该看到"为什么还走不了"，而不是按了
+		# E 之后什么都没发生。
+		point.blocked_reason_resolver = _exit_blocked_reason
 		# Walking into the door's reach is the earliest honest warm-up point.
 		point.availability_changed.connect(_on_exit_availability_changed)
 	var visual: ScreenTransition = preload("res://src/UI/screen_transition/screen_transition.tscn").instantiate()
@@ -709,6 +713,21 @@ func _can_leave_scene() -> bool:
 		and not _shop_player.is_performance_controlled()
 		and not _story_director.is_busy() and not _dialogue_manager.is_active()
 		and _gameplay_bridge.allows_scene_travel())
+
+## 胶囊上的一行原因。只报"结构性"的那几条：弹窗、演出这类瞬时状态本来
+## 就不显示胶囊，不必在门上报一句每帧都在变的话。
+func _exit_blocked_reason(point: SceneExit) -> String:
+	var state := get_node_or_null("/root/GameState")
+	# 店里的门在第一天是"剧情还没开门"：can_leave_shop 管的是这个，门自己的
+	# required_flags 管的是另一层。两道都过不去才轮到胶囊说话。
+	var can_leave := _shop_level == null or Day1Access.can_leave_shop(state)
+	if point.are_conditions_met(state) and can_leave:
+		return ""
+	if not point.blocked_hint.is_empty():
+		return point.blocked_hint
+	if not can_leave:
+		return "先把今天的活儿干完，再出门"
+	return "" # 纯粹是出口自己的阶段条件：让它自己说。
 
 func _on_scene_travel_failed(point: SceneExit, error: Error) -> void:
 	if get_tree().paused or _ui_manager.has_modal():

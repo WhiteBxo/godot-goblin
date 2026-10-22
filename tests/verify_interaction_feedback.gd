@@ -61,6 +61,15 @@ func _run() -> void:
 	player.facing = PlayerController.Facing.RIGHT
 	await _frames()
 	_check(interaction.get_target() == points[1], "Facing right selects right object at equal distance")
+	# 鼠标指向压过朝向前后：指到谁就是谁，指开后退回朝向。
+	_check(interaction.point_at(points[0].global_position) == points[0], "Pointer picks the area under it")
+	_check(interaction.point_at(Vector2(-4000, -4000)) == null, "Pointer over empty space picks nothing")
+	interaction.set_hover(points[0])
+	_check(interaction.get_target() == points[0] and prompt.get_action_text() == "打开订单板", "Hovered target wins over the faced one")
+	_check(interaction.get_hover() == points[0], "Hovering remembers the pointed object")
+	interaction.set_hover(null)
+	_check(interaction.get_target() == points[1], "Releasing the pointer returns to facing selection")
+	_check(interaction.get_hover() == null, "Leaving the object clears the hover")
 	var before_changes := _changes
 	for index in range(12):
 		player.position.x = 275 + (1 if index % 2 else -1)

@@ -20,6 +20,10 @@ var _dispatching := false
 var _last_dispatch_frame := -1
 var _armed := true
 var _priority_resolver: Callable
+## 鼠标下的交互点。它压过"离谁近"，因为指针是玩家最明确的一次指向；
+## 离开物体就清掉，键盘选择立刻回到按距离/朝向算出来的目标。
+var _hover: InteractionPoint
+var _hand_cursor := false
 
 func set_priority_resolver(resolver: Callable) -> void:
 	_priority_resolver = resolver
@@ -62,6 +66,7 @@ func get_target() -> InteractionPoint:
 func _process(_delta: float) -> void:
 	if not Input.is_action_pressed("interact"):
 		_armed = true
+	_update_hover()
 	refresh_target()
 
 func _notification(what: int) -> void:
@@ -98,11 +103,58 @@ func refresh_target() -> void:
 			if _priority(point) > _priority(best) or (_priority(point) == _priority(best) and _score(point) < _score(best)):
 				best = point
 		best_score = _score(best)
-	if is_instance_valid(_target) and _target.is_available() and best != _target:
+	# 指针指到的那个优先：鼠标比"最近"更能表达"我要这个"。
+	if is_instance_valid(_hover) and _hover.is_available() and _points.has(_hover):
+		best = _hover
+		best_score = _score(_hover)
+	# 指针明确指向的东西不参与滞后：鼠标没有"抖"，玩家指的就是要的。
+	var hovered := is_instance_valid(_hover) and best == _hover
+	if not hovered and is_instance_valid(_target) and _target.is_available() and best != _target:
 		var priority_changed := best != null and best.selection_group != &"" and best.selection_group == _target.selection_group and _priority(best) > _priority(_target)
 		if not priority_changed and best_score + switch_margin >= _score(_target):
 			best = _target
 	_set_target(best)
+
+## 逐帧查一次指针下的交互点（layer 8，只有 mouse_interaction_enabled 的点在里面）。
+func _update_hover() -> void:
+	var found: InteractionPoint
+	if _can_interact():
+		var viewport := get_viewport()
+		if viewport != null:
+			found = point_at(viewport.get_canvas_transform().affine_inverse() * viewport.get_mouse_position())
+	set_hover(found)
+
+## 世界坐标上有什么可交互的东西。够得着（玩家在半径内）才算，避免隔墙指。
+func point_at(world_position: Vector2) -> InteractionPoint:
+	if not is_inside_tree():
+		return null
+	var query := PhysicsPointQueryParameters2D.new()
+	query.position = world_position
+	query.collide_with_areas = true
+	query.collide_with_bodies = false
+	query.collision_mask = 1 << 7
+	for hit: Dictionary in get_viewport().world_2d.direct_space_state.intersect_point(query, 8):
+		var candidate := hit.get("collider") as InteractionPoint
+		if candidate != null and _points.has(candidate) and candidate.is_available():
+			return candidate
+	return null
+
+func set_hover(point: InteractionPoint) -> void:
+	if point == _hover:
+		return
+	_hover = point if is_instance_valid(point) else null
+	_update_cursor()
+	refresh_target()
+
+func get_hover() -> InteractionPoint:
+	return _hover if is_instance_valid(_hover) else null
+
+func _update_cursor() -> void:
+	var wanted := _hover != null
+	if wanted == _hand_cursor:
+		return
+	_hand_cursor = wanted
+	Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND if wanted else Input.CURSOR_ARROW)
 
 func _score(point: InteractionPoint) -> float:
 	var offset := point.global_position - _player.global_position
@@ -126,6 +178,18 @@ func _input(event: InputEvent) -> void:
 		_armed = true
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		# 左键点物体就是互动：和悬停共用拾取，因此同样受"够得着"和
+		# "没有弹窗/演出"的约束，也不依赖 Area2D 的物理拾取。
+		var click := event as InputEventMouseButton
+		if click.button_index != MOUSE_BUTTON_LEFT or not click.pressed or not _can_interact():
+			return
+		var point := point_at(get_viewport().get_canvas_transform().affine_inverse() * click.position)
+		if point == null:
+			return
+		get_viewport().set_input_as_handled()
+		point.interact()
+		return
 	if not event.is_action_pressed("interact") or event.is_echo():
 		return
 	# Refresh at the input boundary too: a lock, deletion or exit can precede this frame's process.

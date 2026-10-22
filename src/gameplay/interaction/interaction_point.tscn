@@ -27,6 +27,7 @@ corner_radius_bottom_left = 5
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("1")
+mouse_interaction_enabled = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("Reach")

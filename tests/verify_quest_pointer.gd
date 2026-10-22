@@ -18,7 +18,7 @@ class FakeMap extends Node2D:
 	func shares_map_world() -> bool:
 		return shares
 
-	func get_map_data(_known: Array) -> Dictionary:
+	func get_map_data(_known: Array[String]) -> Dictionary:
 		return data
 
 	func get_scene_exits() -> Array:
@@ -96,6 +96,10 @@ func check_region() -> void:
 	check(str(result.get("label")) == "集市", "Region labels drop the branch tail")
 	check(TaskGuidance.resolve(_task("settlement.elder"), map, null, Callable(), Callable(), "").is_empty(),
 		"An unknown area is hidden instead of aimed at a door")
+	var loose := func() -> Array: return ["settlement.yard"]
+	map.shares = true
+	check(not TaskGuidance.resolve(_task("settlement.yard"), map, null, Callable(), loose, "").is_empty(),
+		"An untyped known-location array still reaches a typed map query")
 	map.shares = false
 	check(TaskGuidance.resolve(_task("settlement.yard"), map, null, Callable(), Callable(), "").is_empty(),
 		"An interior host never projects an exterior coordinate")

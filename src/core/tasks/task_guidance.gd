@@ -81,8 +81,10 @@ static func _exact_point(task: Dictionary, objective: Dictionary, lookup: Callab
 static func _regions(level: Object, known: Callable) -> Array:
 	if not level.has_method("get_map_data"):
 		return []
-	var ids: Array = known.call() if known.is_valid() else []
-	var data: Variant = level.call("get_map_data", ids)
+	# Hosts declare Array[String]; a plain array from a caller would be rejected.
+	var known_locations: Array[String] = []
+	known_locations.assign(known.call() if known.is_valid() else [])
+	var data: Variant = level.call("get_map_data", known_locations)
 	return data.get("regions", []) if data is Dictionary else []
 
 static func _nearest_door(level: Object, player: Node2D) -> Dictionary:

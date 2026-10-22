@@ -22,6 +22,9 @@ var _running := false
 ## Which fact marks this lesson as taught. L0 has one per device; later tips
 ## (map, throwing) pass their own key.
 var _flag_key := ""
+## L0 waits for the first frame the player can actually act: an opening
+## performance or a locked intro would otherwise teach keys nobody can press yet.
+var _waiting_for_control := false
 ## L0 folds away as soon as the player walks. A tip about a key he is already
 ## pressing must not vanish the moment he moves.
 var _dismiss_on_walk := true
@@ -47,7 +50,8 @@ func bind(game: Node) -> void:
 	_player = game.get_player() if game.has_method("get_player") else null
 	if _state == null or _state.get_flag(_record_key()):
 		return
-	_start(KEYBOARD_TEXT if not MobileSupport.is_touch_ui() else TOUCH_TEXT, _record_key(), SHOW_SECONDS, true)
+	_waiting_for_control = true
+	set_process(true)
 
 ## One lesson, shown once per save. The map and the throw controls are not
 ## permanent HUD furniture: they are taught here, then they live in the menu or
@@ -61,6 +65,7 @@ func show_tip(text: String, key: String, seconds: float = 7.0, dismiss_on_walk: 
 	_start(text, key, seconds, dismiss_on_walk)
 
 func _start(text: String, key: String, seconds: float, dismiss_on_walk: bool) -> void:
+	_waiting_for_control = false
 	_flag_key = key
 	_dismiss_on_walk = dismiss_on_walk
 	_label.text = text
@@ -78,7 +83,22 @@ func _start(text: String, key: String, seconds: float, dismiss_on_walk: bool) ->
 func _record_key() -> String:
 	return "ui.hint.l0.touch" if MobileSupport.is_touch_ui() else "ui.hint.l0.keyboard"
 
+## Free control means the player can walk and is not being puppeteered; the L0
+## sentence is only true once that holds, so the timer starts then, not at load.
+func _can_act() -> bool:
+	if not is_instance_valid(_player):
+		return false
+	if not bool(_player.get("movement_enabled")):
+		return false
+	if _player.has_method("is_performance_controlled") and _player.is_performance_controlled():
+		return false
+	return true
+
 func _process(delta: float) -> void:
+	if _waiting_for_control:
+		if not _can_act():
+			return
+		_start(KEYBOARD_TEXT if not MobileSupport.is_touch_ui() else TOUCH_TEXT, _record_key(), SHOW_SECONDS, true)
 	if not _running:
 		return
 	_clock -= delta

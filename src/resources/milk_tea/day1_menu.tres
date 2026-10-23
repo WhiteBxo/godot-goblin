@@ -41,6 +41,9 @@
 [ext_resource type="Texture2D" uid="uid://332ohufkmik3" path="res://assets/ui/milk_tea/ingredients/pearl.svg" id="icon_pearl"]
 [ext_resource type="Texture2D" uid="uid://ieiegoikaomh" path="res://assets/ui/milk_tea/ingredients/syrup.svg" id="icon_syrup"]
 [ext_resource type="Script" uid="uid://b1nr765u71rxs" path="res://src/resources/milk_tea/ingredient_definition.gd" id="ingredient"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/variants/sugar_yam_b1d70e61.png" id="icon_sugar_yam"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/variants/firefly_cap_2615bab7.png" id="icon_firefly_cap"]
+[ext_resource type="Texture2D" path="res://assets/ui/story/scroll_icon.png" id="icon_elder_document"]
 
 [sub_resource type="Resource" id="Ingredient_black_tea"]
 script = ExtResource("ingredient")
@@ -564,7 +567,7 @@ script = ExtResource("ingredient")
 id = "sugar_yam"
 display_name = "窟窟糖芋"
 source_ids = PackedStringArray("F02")
-icon = ExtResource("icon_coconut")
+icon = ExtResource("icon_sugar_yam")
 origin = "otherworld"
 category = "material"
 flavor_tags = PackedStringArray("软糯绵密", "带有淡淡甜味")
@@ -596,7 +599,7 @@ script = ExtResource("ingredient")
 id = "firefly_cap"
 display_name = "萤火伞"
 source_ids = PackedStringArray("F04")
-icon = ExtResource("icon_insomnia")
+icon = ExtResource("icon_firefly_cap")
 origin = "otherworld"
 category = "material"
 rarity = "稀有"
@@ -904,7 +907,7 @@ source_ids = PackedStringArray("W05")
 script = ExtResource("ingredient")
 id = "day1_elder_document"
 display_name = "关于黄金乡的记录"
-icon = ExtResource("icon_custom_drink")
+icon = ExtResource("icon_elder_document")
 category = "story_item"
 description = "从长老居所带走的残破文书。"
 economy_scope = "quest"

@@ -44,6 +44,12 @@
 [ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/variants/sugar_yam_b1d70e61.png" id="icon_sugar_yam"]
 [ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/variants/firefly_cap_2615bab7.png" id="icon_firefly_cap"]
 [ext_resource type="Texture2D" path="res://assets/ui/story/scroll_icon.png" id="icon_elder_document"]
+[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_030_00.png" id="icon_moss_atlas"]
+
+[sub_resource type="AtlasTexture" id="Icon_moss_green"]
+atlas = ExtResource("icon_moss_atlas")
+region = Rect2(1392, 288, 48, 48)
+filter_clip = true
 
 [sub_resource type="Resource" id="Ingredient_black_tea"]
 script = ExtResource("ingredient")
@@ -535,7 +541,7 @@ script = ExtResource("ingredient")
 id = "moss_green"
 display_name = "苔痕青"
 source_ids = PackedStringArray("F01")
-icon = ExtResource("icon_green_tea")
+icon = SubResource("Icon_moss_green")
 origin = "otherworld"
 category = "material"
 flavor_tags = PackedStringArray("黏稠微酸", "略带发酵气息")

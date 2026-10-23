@@ -6,8 +6,10 @@ const T := preload("res://src/resources/ui/ui_tokens.gd")
 
 
 func _ready() -> void:
+	# 主题已经整体搬到纸色 palette：字是墨色、面板是纸片。画廊若仍铺深色底，
+	# 裸放在背景上的标题与正文就成了深底上的墨字——那是配错底，不是字体变了。
 	var background := ColorRect.new()
-	background.color = T.SCREEN
+	background.color = T.PAPER
 	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(background)
 	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

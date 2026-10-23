@@ -90,7 +90,7 @@ F05 与 W02、F06 与 W04 是同一件东西在两张表各登记一次。运行
 ## 消费方
 
 - [WarehouseInventory](../../src/gameplay/milk_tea/warehouse_inventory.gd) 按菜单建立物品目录，负责数量与发现状态；`get_ingredient_view` 一并给出形态、加工、标价与图鉴描述。
-- [WarehousePanel](../../src/UI/milk_tea/warehouse_panel.gd) 展示上述字段；风味、战斗属性、效果、获取方式仍按发现组遮罩，未解锁显示 `???`。
+- [WarehousePanel](../../src/UI/milk_tea/warehouse_panel.gd) 展示上述字段；详情按两列排版（左列弱化的字段名、右列值），风味与获取方式在取得实物时揭示，战斗属性与效果仍按发现组遮罩，未解锁显示 `???`，目录里为空的组不显示。
 - [TeaProduction](../../src/gameplay/milk_tea/tea_production.gd) 允许把新材料当作自由组合原料；六款人类配方引用 C 系原料，异世界原料已可进入三槽自由配方（F09 等禁止项除外）；自由杯与固定 H 成品分别记录。
 - [GatheringService](../../src/gameplay/gathering/gathering_service.gd) 已支持把采集点接到任意目录内原料；现有八个夜光菌丛采集点仍是醒神菇，未改动，因为酒馆委托 `tavern.insomnia_order` 依赖它们。
 - [TeaRecipe](../../src/resources/milk_tea/tea_recipe.gd) 的 `required_flag` 决定配方是否进入会话目录：六款人类配方挂 `business.profile.day1`，[GameState](../../src/core/game_state.gd) 选到 day1 档案时发布该事实，教学会话看不到它们；血液特调同时要求 day1.s05.blood_acquired、day1.s05.returned_shop 和 S06 阶段；材料实际消耗仍由制作服务校验。

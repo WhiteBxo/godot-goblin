@@ -163,10 +163,10 @@ func _test_discovery_ui() -> void:
 	panel._filter.select(2)
 	panel._filter.item_selected.emit(2)
 	_check(panel._list.item_count == 1 and "缺货" in panel._list.get_item_text(0), "Otherworld filter displays discovered zero-stock material")
-	_check("???" in panel._details.text and not "测试隐藏" in panel._details.text and not "测试风味" in panel._details.text, "UI masks all unknown property groups")
+	_check("???" in panel.get_detail_text() and not "测试隐藏" in panel.get_detail_text() and not "测试风味" in panel.get_detail_text(), "UI masks all unknown property groups")
 	_check(not inventory.discover_property("test_otherworld", "unknown"), "Unknown property group is rejected")
 	_check(inventory.discover_property("test_otherworld", "flavor_tags") and not inventory.discover_property("test_otherworld", "flavor_tags"), "Property discovery is explicit and idempotent")
-	_check("测试风味" in panel._details.text and not "测试隐藏效果" in panel._details.text, "Discovery refresh reveals only the unlocked group")
+	_check("测试风味" in panel.get_detail_text() and not "测试隐藏效果" in panel.get_detail_text(), "Discovery refresh reveals only the unlocked group")
 	_check(inventory.add_ingredient("test_otherworld", 2) and "2" in panel._list.get_item_text(0), "Inventory change automatically refreshes an open list")
 	var restored := WarehouseInventory.new(_fixture_menu())
 	_check(restored.restore_state(JSON.parse_string(JSON.stringify(inventory.to_dict()))) == OK and restored.is_property_known("test_otherworld", "flavor_tags") and not restored.is_property_known("test_otherworld", "special_effects"), "Discovery state round-trips independently of static attributes")
@@ -179,6 +179,20 @@ func _test_discovery_ui() -> void:
 	panel.free()
 	restored.free()
 	inventory.free()
+	# The catalog ships no combat or effect text, so those rows must not claim a
+	# mystery that was never authored.
+	var live := WarehouseInventory.new()
+	live.add_ingredient("moss_green", 1)
+	var moss := live.get_ingredient_view("moss_green")
+	_check(moss.flavor_tags.size() == 2 and moss.acquisition_sources.size() == 1, "Holding a material reveals its flavour and where it came from")
+	_check(moss.combat_attributes.is_empty() and moss.special_effects.is_empty(), "Property columns nobody authored stay empty instead of masked")
+	# A save written before goods revealed themselves gains the sensory rows on load.
+	var legacy := live.to_dict()
+	legacy.ingredients.moss_green.known_properties = []
+	var reloaded := WarehouseInventory.new()
+	_check(reloaded.restore_state(legacy) == OK and reloaded.is_property_known("moss_green", "flavor_tags") and reloaded.is_property_known("moss_green", "acquisition_sources"), "Loading an older save restores what holding the goods would tell you")
+	reloaded.free()
+	live.free()
 	await process_frame
 
 func _test_session(scene_path: String) -> void:
@@ -210,7 +224,13 @@ func _test_session(scene_path: String) -> void:
 	ui.close()
 	_check((main.get_player() as PlayerController).movement_enabled, "Closing warehouse restores movement")
 	ui.open(points[&"tea_station"])
-	_check(popup.get_page().get_order_crafting_page().visible and not popup.get_warehouse_panel().visible, "Station defaults to guided order production")
+	var page := popup.get_page()
+	# No order is accepted in this scene, so the station opens 已知配方 instead of the
+	# order page; the guided order page only exists once an order is tracked.
+	var craft_modes := page.get_node("CraftModes")
+	_check(craft_modes.visible and craft_modes.current_tab == 1
+		and not page.get_node("Body/OrderCrafting").is_visible_in_tree()
+		and not popup.get_warehouse_panel().visible, "Station opens known recipes when no order is accepted")
 	popup.get_page().select_crafting_mode(true)
 	_check(popup.get_crafting_panel().visible, "Free mixing remains available beside guided production")
 	inventory.try_consume({"pearl": 8})

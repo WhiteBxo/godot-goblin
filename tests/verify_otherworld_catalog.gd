@@ -218,17 +218,18 @@ func _check_warehouse_view() -> void:
 	_check(index >= 0, "Formal material appears in the warehouse list")
 	if index >= 0:
 		panel._select_item(index)
-		var text: String = panel._details.text
+		var text: String = panel.get_detail_text()
 		_check(text.contains("形态：液体") and text.contains("加工：免加工"), "Details show form and processing")
 		_check(text.contains("标价：4G"), "Details show the spreadsheet price")
 		_check(text.contains("用途：原料") and text.contains("稀有度：优秀"), "Details label the material category and rarity")
-		_check(text.contains("获取方式：???"), "Unexplored property groups stay masked")
-		inventory.discover_property("goblin_firebrew", "acquisition_sources")
-		for row_index in range(panel._list.item_count):
-			if panel._list.get_item_metadata(row_index) == "goblin_firebrew":
-				index = row_index
-		panel._select_item(index)
-		_check(panel._details.text.contains("获取方式：在酒馆直接购买"), "Revealed acquisition source comes from the spreadsheet")
+		_check(text.contains("获取方式：在酒馆直接购买"), "Holding a traded good already reveals where it came from")
+		_check(not text.contains("战斗属性") and not text.contains("特殊效果"), "A column nobody authored is not shown as a mystery")
+	var secret := inventory.get_ingredient_view("day1_griffin_blood")
+	_check(secret.acquisition_sources == PackedStringArray(["???"]) and secret.flavor_tags == PackedStringArray(["???"]),
+		"Quest goods keep every property group masked until the story reveals them")
+	_check(inventory.discover_property("day1_griffin_blood", "acquisition_sources")
+		and inventory.get_ingredient_view("day1_griffin_blood").acquisition_sources == PackedStringArray(["day1偷窃任务。从长老住所偷窃"]),
+		"A story reveal uncovers the masked source")
 	var snapshot := inventory.to_dict()
 	var restored := WarehouseInventory.new(menu)
 	_check(restored.restore_state(JSON.parse_string(JSON.stringify(snapshot))) == OK and restored.get_stock("goblin_firebrew") == 2, "Formal stock survives a session snapshot")

@@ -6,7 +6,7 @@
 
 origin 为 human / otherworld；category 为 tea / milk / syrup / topping / product / material / story_item。固定成品使用 product，金币使用 story_item，新表原料与酒品按目录定义；动态配方杯单独存 drinks，不伪造为静态 IngredientDefinition。描述性战斗属性不会自动执行效果，饮品投掷只消费明确生成的 throw 参数。
 
-六种教学食材初始为 12 / 12 / 12 / 8 / 8 / 10 份，已发现并知晓原属性；C01–C10 初始各五份，且提供 0G 整份补给；异世界食材、酒品及剧情材料按实际取得入库。醒神菇已不是唯一异世界条目；采集示例仍使用它，见[采集](gathering.md)。入库会发现材料，但不会自动揭示四个属性组。
+六种教学食材初始为 12 / 12 / 12 / 8 / 8 / 10 份，已发现并知晓原属性；C01–C10 初始各五份，且提供 0G 整份补给；异世界食材、酒品及剧情材料按实际取得入库。醒神菇已不是唯一异世界条目；采集示例仍使用它，见[采集](gathering.md)。入库会发现材料并揭示风味与获取方式；战斗属性与特殊效果仍需显式揭示，`economy_scope` 为 `quest` 的剧情物品整组留给剧情。
 
 原料表内的 22 种原料现支持每份 5 次，旧教学原料、成品与剧情物品仍为每份 1 次。库存新增 `get_uses`、`has_uses`、`try_spend_uses`，仓库显示当前份与总剩余次数；正式固定配方和自由配方经 GameState 按次扣原料，成品交付按杯；教学隔离服务保留整份兼容路径。字段、换份规则和迁移详见[奶茶配方数据层](milk_tea_recipe_data.md)。
 
@@ -31,8 +31,8 @@ basic_menu.tres → WarehouseInventory（数量、发现、已知属性组）
 | `get_stock(id)` | 返回份数；未知 ID 查询返回 0，不创建条目 |
 | `is_discovered(id)` / `get_discovery(id)` | 查询发现状态及已知属性组；未知 ID 返回 false / 空字典 |
 | `get_ingredients(origin = "")` | 返回该来源下所有已发现材料的展示 view，包括零库存 |
-| `get_ingredient_view(id)` | 未发现返回空字典；未知属性组返回 `["???"]` |
-| `add_ingredient(id, amount)` | 增加正整数份数，同时发现材料，不自动揭示属性 |
+| `get_ingredient_view(id)` | 未发现返回空字典；已写内容但未揭示的属性组返回 `["???"]`，目录里为空的组返回空数组 |
+| `add_ingredient(id, amount)` | 增加正整数份数，同时发现材料并揭示风味与获取方式（剧情物品不自动揭示） |
 | `has_materials({id: amount})` | 整组检查，拒绝空组、未知 ID、未发现材料、非法数量或不足 |
 | `try_consume({id: amount})` | 全部检查通过后统一扣料；成功仅发出一次 changed |
 | `discover(id)` | 登记发现，不增加数量；已发现返回 false |
@@ -41,7 +41,7 @@ basic_menu.tres → WarehouseInventory（数量、发现、已知属性组）
 
 变更 API 失败返回 false，恢复失败返回 `ERR_INVALID_DATA`，都不改状态、不发出通知。ID 必须为目录中的 String，数量必须为 int，拒绝 bool、float、字符串、零、负数及超出安全计数范围的值；每项最大计数为 2147483647，只用于防溢出，不存在仓库容量玩法。定义、发现查询和快照使用副本，调用者不能通过返回的容器修改库存或共享 Resource。
 
-发现粒度为四个属性组：`flavor_tags`、`combat_attributes`、`special_effects`、`acquisition_sources`。每组独立解锁；已知的空组显示「无」，未知组显示 `???`。仓库只使用服务返回的脱敏 view，不读取静态隐藏描述。发现一种材料不会自动揭示其特殊效果或获取来源。
+发现粒度为四个属性组：`flavor_tags`、`combat_attributes`、`special_effects`、`acquisition_sources`。取得实物（份数大于 0）即揭示风味与获取方式——手里拿着就能闻到、也知道从哪来；`economy_scope` 为 `quest` 的剧情物品不自动揭示任何一组，关键属性交给剧情。战斗属性与特殊效果只能由 `discover_property` 显式揭示，本阶段没有游戏内触发点。目录里没写内容的属性组返回空数组，UI 既不显示值也不显示 `???`——没有这项资料不等于有秘密；已写内容但未揭示的组仍返回 `???`。仓库只使用服务返回的脱敏 view，不读取静态隐藏描述。
 
 ## 制作提交与 UI
 
@@ -51,7 +51,7 @@ TeaProduction 保留 `get_stock`、`get_ingredients`、`get_order`、`get_comple
 
 各提交入口在同步通知前完成整组扣料、成品及对应制作记录；失败不留部分修改，通知期间拒绝重入。制作不写交付事实。TaskDelivery 的正式交付通过 GameState.commit_delivery 合并扣物品 / 配方杯、钱与物品奖励、完成事实和回执；独立测试库存保留 try_exchange 兼容路径。详见[成品交付](task_delivery.md)。
 
-WarehousePanel 位于现有 ShopPopup 内，使用现有 theme、返回按钮、UIManager focus 和移动锁。筛选项为全部 / 人类食材 / 异世界食材 / 剧情物品；动态配方成品列在“全部”中。左侧图标、名称、数量，右侧详情可滚动；缺货仍可查看详情。库存 changed 自动刷新仓库列表及制作台选项，订单变化刷新订单板。UI 不保存或修改库存。图标使用目录绑定的 SVG 或用户导入 PNG，食材与成品分别位于 assets/ui/milk_tea/ingredients/ 和 products/；来源与未匹配素材见[导入记录](../assets/imports/user_assets_2026_10_18.md)。仓库与图鉴列表图标为 32×32，详情显示 64 像素等比预览；动态配方使用中性杯 custom_drink.svg 并展示已知原料缩略图，不借用另一款固定饮品立绘。
+WarehousePanel 位于现有 ShopPopup 内，使用现有 theme、返回按钮、UIManager focus 和移动锁。筛选项为全部 / 人类食材 / 异世界食材 / 剧情物品；动态配方成品列在“全部”中。左侧图标、名称、数量，右侧详情可滚动；缺货仍可查看详情。库存 changed 自动刷新仓库列表及制作台选项，订单变化刷新订单板。UI 不保存或修改库存。图标使用目录绑定的 SVG 或用户导入 PNG，食材与成品分别位于 assets/ui/milk_tea/ingredients/ 和 products/；来源与未匹配素材见[导入记录](../assets/imports/user_assets_2026_10_18.md)。仓库与图鉴列表图标为 32×32，详情显示 64 像素等比预览；详情正文按两列排版——左列是右对齐的弱化字段名（固定 60px，最长「可用次数」），右列是墨色值，长值自动换行并由富文本自行报高，物品名用 24px `Title`，图鉴描述与 `???` 走次级墨色；动态配方使用中性杯 custom_drink.svg 并展示已知原料缩略图，不借用另一款固定饮品立绘。
 
 ## 原料图鉴入口
 

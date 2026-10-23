@@ -3,6 +3,8 @@ extends VBoxContainer
 ## Read-only presentation; state and discovery masking belong to the service.
 
 const Artwork = preload("res://src/UI/milk_tea/item_artwork.gd")
+## Five 12px glyphs including the colon: 可用次数 / 已知风味 / 获取方式.
+const FIELD_WIDTH: int = 60
 
 var _image: TextureRect
 var _materials: HBoxContainer
@@ -10,7 +12,8 @@ var _inventory: WarehouseInventory
 var _filter: OptionButton
 var _list: ItemList
 var _name: Label
-var _details: Label
+var _details: VBoxContainer
+var _detail_lines: PackedStringArray = []
 var _detail: Control
 var _selected_id: String = ""
 ## 原料图鉴只收原料：成品杯和调饮基底不进这一页，店里的仓库照旧看全部库存。
@@ -39,6 +42,7 @@ func _ready() -> void:
 	_list.item_selected.connect(_select_item)
 	row.add_child(_list)
 	var scroll := ScrollContainer.new()
+	scroll.name = "DetailScroll"
 	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -47,21 +51,23 @@ func _ready() -> void:
 	details_column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(details_column)
 	# A fixed preview keeps the pixel art crisp instead of stretching it to the pane.
-	_image = Artwork.preview(88)
+	_image = Artwork.preview(64)
 	_image.name = "ItemImage"
 	_image.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	details_column.add_child(_image)
 	_name = Label.new()
 	_name.name = "ItemName"
-	_name.theme_type_variation = &"H2"
+	_name.theme_type_variation = &"Title"
 	_name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	details_column.add_child(_name)
 	_materials = HBoxContainer.new()
 	details_column.add_child(_materials)
-	_details = Label.new()
+	# Two columns: the field name is a quiet right-aligned gutter, the value gets
+	# the room to wrap. A page of names and values reads as a table, not a block.
+	_details = VBoxContainer.new()
 	_details.name = "IngredientDetails"
 	_details.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_details.add_theme_constant_override("separation", 4)
 	details_column.add_child(_details)
 	_detail = details_column
 
@@ -87,8 +93,12 @@ func _is_encyclopedia_entry(id: String) -> bool:
 	var definition := _inventory.get_definition(id)
 	return definition != null and definition.category != "product" and definition.show_in_encyclopedia
 
-func get_details() -> Label:
+func get_details() -> VBoxContainer:
 	return _details
+
+## The pane's words as one readable string, for tests and tooltips.
+func get_detail_text() -> String:
+	return "\n".join(_detail_lines)
 
 ## Hosts that put this page straight into a modal shell need a focus target.
 func get_default_focus() -> Control:
@@ -124,7 +134,8 @@ func refresh() -> void:
 		_image.texture = null
 		_name.text = ""
 		Artwork.show_materials(_materials, _inventory, [])
-		_details.text = "暂无已发现物品。"
+		_clear_details()
+		_add_note("暂无已发现物品。")
 		_open_detail()
 		return
 	selected = maxi(selected, 0)
@@ -145,12 +156,14 @@ func _open_detail() -> void:
 		UIFlourish.reveal(_detail, 0.99)
 
 func _fill_detail() -> void:
+	_clear_details()
 	var drink := _inventory.get_drink_record(_selected_id)
 	if not drink.is_empty():
 		_image.texture = Artwork.DRINK_ICON
 		Artwork.show_materials(_materials, _inventory, drink.ingredients)
 		_name.text = str(drink.name)
-		_details.text = DrinkFormula.describe(drink) + "\n库存：%d 杯" % drink.quantity
+		_add_note(DrinkFormula.describe(drink), UITokens.TEXT)
+		_add_row("库存", "%d 杯" % drink.quantity)
 		return
 	var ingredient := _inventory.get_ingredient_view(_selected_id)
 	_image.texture = ingredient.icon
@@ -159,35 +172,85 @@ func _fill_detail() -> void:
 		# Each story item carries its own note; never borrow another item's words.
 		var note := str(ingredient.description)
 		_name.text = str(ingredient.name)
-		_details.text = "剧情物品 · %d 枚" % ingredient.quantity
+		_add_row("用途", "剧情物品")
+		_add_row("数量", "%d 枚" % ingredient.quantity)
 		if not note.is_empty():
-			_details.text += "\n" + note
+			_add_gap()
+			_add_note(note)
 		return
 	var category: String = {"tea": "茶底", "milk": "奶基底", "syrup": "糖浆", "topping": "小料", "product": "成品", "material": "原料"}.get(ingredient.category, ingredient.category)
 	_name.text = str(ingredient.name)
-	var lines: PackedStringArray = ["数量：%d 份%s" % [ingredient.quantity, " · 缺货" if ingredient.quantity == 0 else ""],
-		"来源：%s · 用途：%s" % ["人类食材" if ingredient.origin == "human" else "异世界食材", category],
-		"稀有度：%s" % ingredient.rarity]
+	_add_row("数量", "%d 份%s" % [ingredient.quantity, " · 缺货" if ingredient.quantity == 0 else ""],
+		UITokens.DANGER if ingredient.quantity == 0 else UITokens.TEXT)
+	_add_row("来源", "人类食材" if ingredient.origin == "human" else "异世界食材")
+	_add_row("用途", category)
+	_add_row("稀有度", str(ingredient.rarity))
 	if int(ingredient.uses_per_portion) > 1:
-		lines.append("每份 %d 次 · 本份剩余 %d 次 · 总剩余 %d 次" % [ingredient.uses_per_portion, ingredient.current_portion_uses, ingredient.uses])
+		_add_row("可用次数", "每份 %d 次 · 本份剩余 %d 次 · 总剩余 %d 次" % [ingredient.uses_per_portion, ingredient.current_portion_uses, ingredient.uses])
 	# Spreadsheet-only fields stay hidden until the item itself is discovered.
 	if not str(ingredient.form).is_empty():
-		lines.append("形态：%s · 加工：%s" % [ingredient.form, _property_text(ingredient.processing_methods)])
+		_add_row("形态", "%s · 加工：%s" % [ingredient.form, _property_text(ingredient.processing_methods)])
 	if int(ingredient.price) > 0:
-		lines.append("标价：%s" % WalletTransactions.format_money(int(ingredient.price)))
-	_append_if_any(lines, "已知风味", ingredient.flavor_tags)
-	_append_if_any(lines, "战斗属性", ingredient.combat_attributes)
-	_append_if_any(lines, "特殊效果", ingredient.special_effects)
-	_append_if_any(lines, "获取方式", ingredient.acquisition_sources)
+		_add_row("标价", WalletTransactions.format_money(int(ingredient.price)))
+	_append_if_any("已知风味", ingredient.flavor_tags)
+	_append_if_any("战斗属性", ingredient.combat_attributes)
+	_append_if_any("特殊效果", ingredient.special_effects)
+	_append_if_any("获取方式", ingredient.acquisition_sources)
 	if not str(ingredient.description).is_empty():
-		lines.append("\n%s" % ingredient.description)
-	_details.text = "\n".join(lines)
+		_add_gap()
+		_add_note(str(ingredient.description))
+
+func _clear_details() -> void:
+	for child: Node in _details.get_children():
+		child.free()
+	_detail_lines.clear()
+
+## A field row: the name is a quiet right-aligned gutter, the value takes the
+## rest of the line. A rich label reports its wrapped height, so a long value
+## grows the row instead of being clipped.
+func _add_row(label: String, value: String, color: Color = UITokens.TEXT) -> void:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 6)
+	var field := Label.new()
+	field.text = label + "："
+	field.theme_type_variation = &"Muted"
+	field.custom_minimum_size = Vector2(FIELD_WIDTH, 0)
+	field.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	field.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	row.add_child(field)
+	row.add_child(_wrapped(value, color))
+	_details.add_child(row)
+	_detail_lines.append("%s：%s" % [label, value])
+
+func _add_note(text: String, color: Color = UITokens.TEXT_DIM) -> void:
+	_details.add_child(_wrapped(text, color))
+	_detail_lines.append(text)
+
+func _wrapped(text: String, color: Color) -> RichTextLabel:
+	var content := RichTextLabel.new()
+	content.bbcode_enabled = false
+	content.fit_content = true
+	content.scroll_active = false
+	content.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	content.add_theme_color_override("default_color", color)
+	content.text = text
+	return content
+
+func _add_gap() -> void:
+	var gap := Control.new()
+	gap.custom_minimum_size = Vector2(0, 6)
+	_details.add_child(gap)
 
 ## An empty property is not information; a column of "无" only pushes the real
 ## lines off the pane.
-func _append_if_any(lines: PackedStringArray, label: String, values: PackedStringArray) -> void:
-	if not values.is_empty():
-		lines.append("%s：%s" % [label, "、".join(values)])
+func _append_if_any(label: String, values: PackedStringArray) -> void:
+	if values.is_empty():
+		return
+	if values.size() == 1 and values[0] == "???":
+		_add_row(label, "???", UITokens.TEXT_MUTED)
+	else:
+		_add_row(label, "、".join(values))
 
 func _property_text(values: PackedStringArray) -> String:
 	return "、".join(values) if not values.is_empty() else "无"

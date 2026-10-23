@@ -66,7 +66,7 @@ func _test_catalog() -> void:
 		for choice: Dictionary in inventory.get_formula_choices():
 			if choice.id == ITEM:
 				flavors = choice.flavors
-		_check(flavors == PackedStringArray(["薄荷", "甜味"]) and not inventory.is_property_known(ITEM, "flavor_tags"), "Crafting discloses spreadsheet flavors before property discovery")
+		_check(flavors == PackedStringArray(["薄荷", "甜味"]) and flavors != inventory.get_definition(ITEM).flavor_tags, "Recipe choices expose pairing tags, not the compendium flavour column")
 		_check(inventory.to_dict() == snapshot, "Reading crafting flavors never writes discovery facts")
 		inventory.free()
 
@@ -215,11 +215,11 @@ func _test_ui() -> void:
 			panel.get_list().select(index)
 			panel.get_list().item_selected.emit(index)
 			_check("本份余 3 次" in panel.get_list().get_item_text(index), "Warehouse list shows the current portion's remaining uses")
-	_check("本份剩余 3 次" in panel.get_details().text and "总剩余 8 次" in panel.get_details().text, "Warehouse details distinguish current and total uses")
+	_check("本份剩余 3 次" in panel.get_detail_text() and "总剩余 8 次" in panel.get_detail_text(), "Warehouse details distinguish current and total uses")
 	inventory.try_spend_uses({ITEM: 3})
-	_check("本份剩余 5 次" in panel.get_details().text and "总剩余 5 次" in panel.get_details().text, "Inventory notifications advance the displayed current portion")
+	_check("本份剩余 5 次" in panel.get_detail_text() and "总剩余 5 次" in panel.get_detail_text(), "Inventory notifications advance the displayed current portion")
 	inventory.try_spend_uses({ITEM: 5})
-	_check("缺货" in panel.get_details().text and "总剩余 0 次" in panel.get_details().text, "Exhausted ingredient remains visible with zero uses")
+	_check("缺货" in panel.get_detail_text() and "总剩余 0 次" in panel.get_detail_text(), "Exhausted ingredient remains visible with zero uses")
 	panel.free()
 	inventory.free()
 	await process_frame

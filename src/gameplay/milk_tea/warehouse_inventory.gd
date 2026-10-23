@@ -13,6 +13,9 @@ const SCHEMA_VERSION: int = 6
 const MAX_QUANTITY: int = 2147483647
 const PRICING_STATES: PackedStringArray = ["priced", "legacy_unpriced", "legacy_readonly"]
 const PROPERTY_GROUPS: PackedStringArray = ["flavor_tags", "combat_attributes", "special_effects", "acquisition_sources"]
+## Holding the goods already tells you how they taste and where they came from;
+## quest goods keep the source line masked because it doubles as a task hint.
+const SIGHT_PROPERTIES: PackedStringArray = ["flavor_tags", "acquisition_sources"]
 
 var _definitions: Dictionary = {}
 var _state: Dictionary = {}
@@ -57,6 +60,8 @@ func _init(menu: TeaMenu = CATALOG) -> void:
 		var amount: int = menu.initial_stock.get(id, 0)
 		_state[id] = {"quantity": amount, "used": 0, "discovered": amount > 0 or menu.initial_discovery.has(id),
 			"known_properties": Array(menu.initial_discovery.get(id, [])).duplicate()}
+		if amount > 0:
+			_mark_discovered(id)
 
 func get_definition(id: Variant) -> IngredientDefinition:
 	if not _has_id(id):
@@ -234,7 +239,7 @@ func try_spend_uses(uses: Variant, acquired: Variant = {}) -> bool:
 		_set_uses(id, get_uses(id) - int(uses[id]))
 	for id: String in acquired:
 		_state[id].quantity += acquired[id]
-		_state[id].discovered = true
+		_mark_discovered(id)
 	changed.emit()
 	return true
 
@@ -271,7 +276,10 @@ func get_ingredient_view(id: Variant) -> Dictionary:
 		"quantity": get_stock(id), "uses": get_uses(id), "uses_per_portion": definition.uses_per_portion,
 		"current_portion_uses": definition.uses_per_portion - _state[id].used if get_stock(id) > 0 else 0}
 	for property: String in PROPERTY_GROUPS:
-		view[property] = definition.get(property).duplicate() if is_property_known(id, property) else PackedStringArray(["???"])
+		var values: PackedStringArray = definition.get(property).duplicate()
+		# A column nobody authored is not a secret; only written values can be
+		# masked as still unknown, otherwise a blank sheet reads as a mystery.
+		view[property] = values if is_property_known(id, property) or values.is_empty() else PackedStringArray(["???"])
 	return view
 
 func get_ingredients(origin: String = "") -> Array[Dictionary]:
@@ -285,9 +293,22 @@ func add_ingredient(id: Variant, amount: Variant) -> bool:
 	if _session_locked or not _has_id(id) or not _is_quantity(amount) or get_stock(id) > MAX_QUANTITY - amount:
 		return false
 	_state[id].quantity += amount
-	_state[id].discovered = true
+	_mark_discovered(id)
 	changed.emit()
 	return true
+
+## Registration alone is hearing the name; only goods you actually hold reveal
+## what a hand, a nose or a ledger entry would already show.
+func _mark_discovered(id: String) -> void:
+	_state[id].discovered = true
+	for property: String in _sights(id):
+		if property not in _state[id].known_properties:
+			_state[id].known_properties.append(property)
+
+## Quest goods keep every group masked: their flavour and source are the reveal
+## the story is saving, not something a hand or a nose settles.
+func _sights(id: String) -> PackedStringArray:
+	return PackedStringArray() if _definitions[id].economy_scope == "quest" else SIGHT_PROPERTIES
 
 func discover(id: Variant) -> bool:
 	if _session_locked or not _has_id(id) or is_discovered(id):
@@ -335,7 +356,7 @@ func try_exchange(materials: Variant, acquired: Variant) -> bool:
 			_state[id].used = 0
 	for id: String in acquired:
 		_state[id].quantity += acquired[id]
-		_state[id].discovered = true
+		_mark_discovered(id)
 	changed.emit()
 	return true
 
@@ -469,8 +490,15 @@ func restore_state(data: Variant, notify: bool = true) -> Error:
 	var restored: Dictionary = {}
 	for id: String in data.ingredients:
 		var entry: Dictionary = data.ingredients[id]
+		var known: Array = Array(entry.known_properties).duplicate()
+		# Saves written before goods revealed themselves keep their mystery; a
+		# stocked entry gains what the holder would already know.
+		if entry.discovered and int(entry.quantity) > 0:
+			for property: String in _sights(id):
+				if property not in known:
+					known.append(property)
 		restored[id] = {"quantity": int(entry.quantity), "used": int(entry.used), "discovered": entry.discovered,
-			"known_properties": Array(entry.known_properties).duplicate()}
+			"known_properties": known}
 	var drinks := {}
 	for id: String in data.drinks:
 		drinks[id] = int(data.drinks[id])

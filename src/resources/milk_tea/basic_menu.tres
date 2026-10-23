@@ -31,25 +31,21 @@
 [ext_resource type="Texture2D" uid="uid://1cstg8vjh4xi" path="res://assets/ui/milk_tea/ingredients/sour_moss_ale.png" id="icon_art_sour_moss_ale"]
 [ext_resource type="Texture2D" uid="uid://r7sy8krgxyhm" path="res://assets/ui/milk_tea/ingredients/strawberry_jam.png" id="icon_art_strawberry_jam"]
 [ext_resource type="Texture2D" uid="uid://d20h1ly85kbmy" path="res://assets/ui/milk_tea/products/strawberry_milk_green_tea.png" id="icon_art_strawberry_milk_green_tea"]
-[ext_resource type="Texture2D" uid="uid://dkyno761fh0d1" path="res://assets/ui/milk_tea/ingredients/black_tea.svg" id="icon_black_tea"]
-[ext_resource type="Texture2D" uid="uid://bsd6djbcbkb1x" path="res://assets/ui/milk_tea/ingredients/coconut.svg" id="icon_coconut"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/black_tea.png" id="icon_black_tea"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/coconut.png" id="icon_coconut"]
 [ext_resource type="Texture2D" uid="uid://db3nwh2pstjhq" path="res://assets/ui/milk_tea/ingredients/strange_coin.svg" id="icon_coin"]
-[ext_resource type="Texture2D" uid="uid://dutwxmuh1qd5s" path="res://assets/ui/milk_tea/ingredients/creamer.svg" id="icon_creamer"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/creamer.png" id="icon_creamer"]
 [ext_resource type="Texture2D" uid="uid://beqtuvwvlr6gi" path="res://assets/ui/milk_tea/products/custom_drink.svg" id="icon_custom_drink"]
-[ext_resource type="Texture2D" uid="uid://ipw40gedu5f4" path="res://assets/ui/milk_tea/ingredients/green_tea.svg" id="icon_green_tea"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/green_tea.png" id="icon_green_tea"]
 [ext_resource type="Texture2D" uid="uid://uuxe6bup28u1" path="res://assets/ui/milk_tea/ingredients/insomnia_mushroom.svg" id="icon_insomnia"]
-[ext_resource type="Texture2D" uid="uid://332ohufkmik3" path="res://assets/ui/milk_tea/ingredients/pearl.svg" id="icon_pearl"]
-[ext_resource type="Texture2D" uid="uid://ieiegoikaomh" path="res://assets/ui/milk_tea/ingredients/syrup.svg" id="icon_syrup"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/pearl.png" id="icon_pearl"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/syrup.png" id="icon_syrup"]
 [ext_resource type="Script" uid="uid://b1nr765u71rxs" path="res://src/resources/milk_tea/ingredient_definition.gd" id="ingredient"]
 [ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/variants/sugar_yam_b1d70e61.png" id="icon_sugar_yam"]
 [ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/variants/firefly_cap_2615bab7.png" id="icon_firefly_cap"]
 [ext_resource type="Texture2D" path="res://assets/ui/story/scroll_icon.png" id="icon_elder_document"]
-[ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_030_00.png" id="icon_moss_atlas"]
-
-[sub_resource type="AtlasTexture" id="Icon_moss_green"]
-atlas = ExtResource("icon_moss_atlas")
-region = Rect2(1392, 288, 48, 48)
-filter_clip = true
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/moss_green.png" id="icon_moss_green"]
+[ext_resource type="Texture2D" path="res://assets/ui/milk_tea/ingredients/apple_jam.png" id="icon_apple_jam"]
 
 [sub_resource type="Resource" id="Ingredient_black_tea"]
 script = ExtResource("ingredient")
@@ -384,7 +380,7 @@ script = ExtResource("ingredient")
 id = "apple_jam"
 display_name = "苹果果酱"
 source_ids = PackedStringArray("C09")
-icon = ExtResource("icon_pearl")
+icon = ExtResource("icon_apple_jam")
 category = "topping"
 flavor_tags = PackedStringArray("苹果甜香明显", "酸味较淡", "甜度偏高")
 description = "金黄色浓稠果酱。"
@@ -500,7 +496,7 @@ script = ExtResource("ingredient")
 id = "moss_green"
 display_name = "苔痕青"
 source_ids = PackedStringArray("F01")
-icon = SubResource("Icon_moss_green")
+icon = ExtResource("icon_moss_green")
 origin = "otherworld"
 category = "material"
 flavor_tags = PackedStringArray("黏稠微酸", "略带发酵气息")

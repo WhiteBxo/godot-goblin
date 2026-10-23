@@ -110,6 +110,7 @@
 | --- | --- |
 | [游戏人物与美术接入](assets/characters.md) | `characters.md` |
 | [主角对话立绘：平静 / 说话](assets/imports/player_dialogue_portraits.md) | `imports/player_dialogue_portraits.md` |
+| [2026-10-23 补充食材贴图导入](assets/imports/supplement_ingredient_icons_2026_10_23.md) | 8 张原始 PNG、来源散列及物品图标绑定。 |
 | [2026-10-19 古文书与洞窟全图](assets/imports/elder_feedback_2026_10_19.md) | 用户原图、来源散列与显示接入。 |
 | [2026-10-18 奶茶与原料素材更新](assets/imports/user_assets_2026_10_18.md) | 36 张 PNG、来源映射与接入边界。 |
 | [2026-10-18 卷轴与格里芬剧情物品素材导入](assets/imports/2026-10-18_story_and_creature_assets.md) | 22 个文件、归类与未接线边界。 |

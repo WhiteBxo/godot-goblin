@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="TeaRecipeBook" format=3]
+[gd_resource type="Resource" script_class="TeaRecipeBook" format=3 uid="uid://bnykjk14fkdq8"]
 
 [ext_resource type="Script" uid="uid://cde2l7pm4we15" path="res://src/resources/milk_tea/tea_recipe_book.gd" id="book"]
 [ext_resource type="Script" uid="uid://684xsibk555u" path="res://src/resources/milk_tea/tea_recipe.gd" id="recipe"]

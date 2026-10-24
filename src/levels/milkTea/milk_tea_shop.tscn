@@ -51,7 +51,7 @@ size = Vector2(188, 26)
 size = Vector2(29.200012, 64)
 
 [sub_resource type="RectangleShape2D" id="Shape_StorageEastWall"]
-size = Vector2(34, 296)
+size = Vector2(36.600037, 296)
 
 [sub_resource type="RectangleShape2D" id="Shape_StorageSouthWall"]
 size = Vector2(72, 38)
@@ -60,7 +60,7 @@ size = Vector2(72, 38)
 size = Vector2(65.99997, 104)
 
 [sub_resource type="RectangleShape2D" id="Shape_HallPanelEast"]
-size = Vector2(12, 104)
+size = Vector2(16.399994, 104)
 
 [sub_resource type="RectangleShape2D" id="Shape_BathroomNorthWall"]
 size = Vector2(170, 112)
@@ -72,7 +72,7 @@ size = Vector2(35, 113)
 size = Vector2(37, 118)
 
 [sub_resource type="RectangleShape2D" id="Shape_ServiceDivider"]
-size = Vector2(97.19995, 122)
+size = Vector2(104.80002, 122)
 
 [sub_resource type="RectangleShape2D" id="Shape_HallPlant"]
 size = Vector2(39, 41)
@@ -221,7 +221,8 @@ scale = Vector2(0.99999994, 0.99999994)
 shape = SubResource("Shape_BedroomDoorJamb")
 
 [node name="StorageEastWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=523461112]
-position = Vector2(634, 229)
+position = Vector2(635.3, 228.99997)
+scale = Vector2(0.99999994, 0.99999994)
 shape = SubResource("Shape_StorageEastWall")
 
 [node name="StorageSouthWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=229429730]
@@ -234,7 +235,8 @@ scale = Vector2(0.9999998, 0.9999998)
 shape = SubResource("Shape_HallPanelWest")
 
 [node name="HallPanelEast" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1036112723]
-position = Vector2(460, 402)
+position = Vector2(462.19998, 401.99994)
+scale = Vector2(0.99999994, 0.99999994)
 shape = SubResource("Shape_HallPanelEast")
 
 [node name="BathroomNorthWall" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=1229471626]
@@ -250,8 +252,8 @@ position = Vector2(630.5, 619)
 shape = SubResource("Shape_HallSouthDivider")
 
 [node name="ServiceDivider" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=543647688]
-position = Vector2(601.3999, 438.99994)
-scale = Vector2(0.99999994, 0.99999994)
+position = Vector2(602.8, 438.99994)
+scale = Vector2(0.99999976, 0.99999976)
 shape = SubResource("Shape_ServiceDivider")
 
 [node name="HallPlant" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=971914904]
@@ -302,7 +304,7 @@ shape = SubResource("Shape_StorageBox")
 position = Vector2(254.5, 555)
 shape = SubResource("Shape_BathroomSink")
 
-[node name="BathroomShower" type="CollisionShape2D" parent="WallsAndFurniture"]
+[node name="BathroomShower" type="CollisionShape2D" parent="WallsAndFurniture" unique_id=582325242]
 position = Vector2(176, 563)
 shape = SubResource("Shape_BathroomShower")
 
@@ -508,16 +510,15 @@ uv = PackedVector2Array(550, 154, 615, 154, 615, 292, 550, 292)
 [node name="OrderBoard" parent="InteractionPoints" unique_id=1304020900 instance=ExtResource("3_xdoh7")]
 position = Vector2(844, 447)
 interaction_id = "orders"
-selection_group = &"orders"
-success_sound = "shop.order_open"
-sound_bus = "SFX"
 display_name = "收银台"
 description = "今日订单 #001
 珍珠奶茶 × 1 · 常温 · 少糖
 
 制作流程：查看订单 → 仓库备料 → 制作台调配。"
 feedback_rect = Rect2(-26, -53, 52, 52)
-
+success_sound = "shop.order_open"
+sound_bus = "SFX"
+selection_group = &"orders"
 mouse_interaction_enabled = true
 
 [node name="Marker" parent="InteractionPoints/OrderBoard" index="1"]
@@ -529,8 +530,6 @@ visible = false
 [node name="Storage" parent="InteractionPoints" unique_id=762435014 instance=ExtResource("3_xdoh7")]
 position = Vector2(490, 286)
 interaction_id = "storage"
-success_sound = "shop.bottle_open"
-sound_bus = "SFX"
 display_name = "储物柜"
 description = "原料库存
 红茶 12 份　牛奶 12 份
@@ -538,6 +537,8 @@ description = "原料库存
 
 货架原料充足，可以开始今日营业。"
 feedback_rect = Rect2(-54, -152, 108, 152)
+success_sound = "shop.bottle_open"
+sound_bus = "SFX"
 
 [node name="Marker" parent="InteractionPoints/Storage" index="1"]
 visible = false
@@ -548,8 +549,6 @@ visible = false
 [node name="TeaStation" parent="InteractionPoints" unique_id=840788172 instance=ExtResource("3_xdoh7")]
 position = Vector2(841, 296)
 interaction_id = "tea_station"
-success_sound = "shop.stir"
-sound_bus = "SFX"
 display_name = "奶茶制作台"
 description = "珍珠奶茶 · 配方
 红茶 × 1 + 牛奶 × 1 + 珍珠 × 1
@@ -559,6 +558,8 @@ description = "珍珠奶茶 · 配方
 
 成功制作扣除原料，携带成品交给指定顾客。"
 feedback_rect = Rect2(-74, -147, 148, 145)
+success_sound = "shop.stir"
+sound_bus = "SFX"
 
 [node name="Marker" parent="InteractionPoints/TeaStation" index="1"]
 visible = false
@@ -589,6 +590,27 @@ position = Vector2(850, 550)
 [node name="day1_group_c" type="Marker2D" parent="StoryPositions" unique_id=1239892911]
 position = Vector2(940, 550)
 
+[node name="day1_rest" type="Marker2D" parent="StoryPositions" unique_id=1651140591]
+position = Vector2(842, 600)
+
+[node name="day2_ordinary_a" type="Marker2D" parent="StoryPositions" unique_id=984259858]
+position = Vector2(1000, 590)
+
+[node name="day2_ordinary_b" type="Marker2D" parent="StoryPositions" unique_id=1271001523]
+position = Vector2(1080, 590)
+
+[node name="day2_ordinary_c" type="Marker2D" parent="StoryPositions" unique_id=84315493]
+position = Vector2(1160, 590)
+
+[node name="day1_group_d" type="Marker2D" parent="StoryPositions" unique_id=1215089152]
+position = Vector2(1030, 550)
+
+[node name="day1_group_e" type="Marker2D" parent="StoryPositions" unique_id=1908096473]
+position = Vector2(1120, 550)
+
+[node name="day2_bedroom_rest" type="Marker2D" parent="StoryPositions" unique_id=1187420674]
+position = Vector2(285, 350)
+
 [node name="SceneExits" type="Node2D" parent="." unique_id=1849825946]
 
 [node name="ShopDoor" parent="SceneExits" unique_id=140925277 instance=ExtResource("3_xdoh7")]
@@ -597,15 +619,11 @@ script = ExtResource("travel_exit")
 destination_scene = "res://src/core/settlement.tscn"
 destination_entrance = &"shop_door"
 required_flags = Array[StringName]([])
+allowed_stages = Array[StringName]([])
+unavailable_message = "暂时无法通过这扇门，请重试。"
 interaction_id = &"shop_exit"
 display_name = "走出奶茶店"
 feedback_rect = Rect2(-30, -55, 60, 60)
-
-[node name="Marker" parent="SceneExits/ShopDoor" index="1"]
-visible = false
-
-[node name="Label" parent="SceneExits/ShopDoor" index="2"]
-visible = false
 
 [node name="SceneEntrances" type="Node2D" parent="." unique_id=1596705659]
 
@@ -620,24 +638,3 @@ facing = 3
 [editable path="InteractionPoints/OrderBoard"]
 [editable path="InteractionPoints/Storage"]
 [editable path="InteractionPoints/TeaStation"]
-
-[node name="day1_rest" type="Marker2D" parent="StoryPositions"]
-position = Vector2(842, 600)
-
-[node name="day2_ordinary_a" type="Marker2D" parent="StoryPositions"]
-position = Vector2(1000, 590)
-
-[node name="day2_ordinary_b" type="Marker2D" parent="StoryPositions"]
-position = Vector2(1080, 590)
-
-[node name="day2_ordinary_c" type="Marker2D" parent="StoryPositions"]
-position = Vector2(1160, 590)
-
-[node name="day1_group_d" type="Marker2D" parent="StoryPositions"]
-position = Vector2(1030, 550)
-
-[node name="day1_group_e" type="Marker2D" parent="StoryPositions"]
-position = Vector2(1120, 550)
-
-[node name="day2_bedroom_rest" type="Marker2D" parent="StoryPositions"]
-position = Vector2(285, 350)

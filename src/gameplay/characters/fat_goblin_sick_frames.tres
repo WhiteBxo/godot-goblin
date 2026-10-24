@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" format=3]
+[gd_resource type="SpriteFrames" format=3 uid="uid://bpulvkavujpbt"]
 
 [ext_resource type="Texture2D" uid="uid://crkba5cdtvshd" path="res://assets/characters/npc/fat_goblin/sick_retch_sheet.png" id="retch"]
 [ext_resource type="Texture2D" uid="uid://d2e4k7ql3eskb" path="res://assets/characters/npc/fat_goblin/sick_sit_sheet.png" id="sit"]

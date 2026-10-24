@@ -42,7 +42,7 @@ def main() -> None:
             animations[name] = {
                 "source": f"run_{side}" if moving or side != "down" else "idle_down",
                 "frame_count": 4, "first_only": not moving and side != "down",
-                "fps": 8 if moving else 4,
+                "fps": 5 if moving else 4,
             }
     catalog = ROOT / "src/gameplay/characters/drunken_guard_catalog.json"
     save_text(catalog, json.dumps([{"id": "drunken_guard", "animations": animations}], indent=2))

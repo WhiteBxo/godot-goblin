@@ -12,7 +12,7 @@
         "source": "run_down",
         "frame_count": 4,
         "first_only": false,
-        "fps": 8
+        "fps": 5
       },
       "idle_up": {
         "source": "run_up",
@@ -24,7 +24,7 @@
         "source": "run_up",
         "frame_count": 4,
         "first_only": false,
-        "fps": 8
+        "fps": 5
       },
       "idle_right": {
         "source": "run_right",
@@ -36,7 +36,7 @@
         "source": "run_right",
         "frame_count": 4,
         "first_only": false,
-        "fps": 8
+        "fps": 5
       },
       "idle_left": {
         "source": "run_right",
@@ -48,7 +48,7 @@
         "source": "run_right",
         "frame_count": 4,
         "first_only": false,
-        "fps": 8
+        "fps": 5
       }
     }
   }

@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="我的奶茶店连通异世界"
-config/version="0.1.0"
+config/version="0.1.1"
 run/main_scene="res://src/UI/title/title_menu.tscn"
 config/quit_on_go_back=false
 config/features=PackedStringArray("4.7", "Forward Plus")

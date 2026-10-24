@@ -33,9 +33,8 @@ window/size/viewport_height=360
 window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="canvas_items"
-; 16:9 及更窄的窗口钉死 640×360 逻辑视口、整数倍居中：UI 与世界层永远同一个
-; 倍率，最大化不会变成「人物变大、UI 变小」。比 16:9 更宽（手机）才扩展视野，
-; 具体用 keep 还是 expand 由 DisplayScaling 按窗口尺寸决定。
+; DisplayScaling 按真实窗口计算整数倍率与逻辑视野，768p / 900p 等尺寸充分利用
+; 额外空间；不足 2 倍的小窗口保留设计布局，优先构图与界面可读性。
 window/stretch/aspect="keep"
 window/stretch/scale_mode="integer"
 ; SCREEN_SENSOR_LANDSCAPE: either landscape direction, never portrait.

@@ -230,9 +230,15 @@ func _screen_factor() -> float:
 	var logical := get_viewport_rect().size
 	if logical.x <= 0.0:
 		return 1.0
-	return maxf(1.0, floorf(float(window.size.x) / logical.x))
+	var factor := minf(float(window.size.x) / logical.x, float(window.size.y) / logical.y)
+	if window.content_scale_stretch == Window.CONTENT_SCALE_STRETCH_FRACTIONAL:
+		return factor
+	return maxf(1.0, floorf(factor + 0.0001))
 
 func _floor_aligned(value: float) -> float:
+	# Small windows keep the authored framing instead of rounding far out.
+	if get_window().content_scale_stretch == Window.CONTENT_SCALE_STRETCH_FRACTIONAL:
+		return value
 	# 一美术像素 → 整数屏幕像素的最小 zoom 步长。房间密度是 1.25 时步长是 0.4
 	# （1.25 × 0.4 × 2 倍窗口 = 1.0），密度是 1 时仍是 0.5。
 	var step := 1.0 / (maxf(1.0, _screen_factor()) * maxf(0.25, art_scale))

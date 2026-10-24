@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_guard.tscn" id="base"]
+[ext_resource type="SpriteFrames" path="res://src/gameplay/characters/drunken_guard_frames.tres" id="frames"]
+
+[node name="DrunkenGuard" instance=ExtResource("base")]
+actor_id = &"drunken_guard"
+display_name = "醉酒守卫"
+story_role = "戴铁桶盔、提酒桶的醉酒守卫，与对话立绘一致。"
+
+[node name="AnimatedSprite2D" parent="Visual"]
+sprite_frames = ExtResource("frames")
+animation = &"idle_down"
+scale = Vector2(1, 1)
+offset = Vector2(0, -64)

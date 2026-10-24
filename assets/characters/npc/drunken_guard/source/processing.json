@@ -1,0 +1,25 @@
+{
+  "source_sha256": "4126491572334683fccc847d88362ae670fa58a4a21cd323d809401585931239",
+  "identity_reference": "res://assets/characters/dialogue/guard_portrait.png",
+  "source_grid": [
+    4,
+    4
+  ],
+  "source_cell": 313.5,
+  "crop": [
+    0,
+    0,
+    314,
+    314
+  ],
+  "uniform_scale": 0.36942675159235666,
+  "target_frame": 128,
+  "feet_anchor": 126,
+  "sampling": "nearest",
+  "rows": [
+    "idle_down",
+    "run_down",
+    "run_right",
+    "run_up"
+  ]
+}

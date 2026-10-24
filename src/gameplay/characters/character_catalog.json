@@ -129,7 +129,12 @@
             51,
             60
           ],
-          "scale": 1.0175438596491229,
+          "scale": 1.0,
+          "translation": [
+            0,
+            2
+          ],
+          "native_pixels": true,
           "mirror": true
         },
         "fps": 8,
@@ -147,7 +152,12 @@
             49,
             59
           ],
-          "scale": 1.0175438596491229,
+          "scale": 1.0,
+          "translation": [
+            1,
+            3
+          ],
+          "native_pixels": true,
           "mirror": true
         },
         "fps": 6,
@@ -165,7 +175,12 @@
             50,
             59
           ],
-          "scale": 1.0175438596491229,
+          "scale": 1.0,
+          "translation": [
+            0,
+            3
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 6,
@@ -183,7 +198,12 @@
             49,
             59
           ],
-          "scale": 1.0175438596491229,
+          "scale": 1.0,
+          "translation": [
+            0,
+            3
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 6,
@@ -202,6 +222,11 @@
             60
           ],
           "scale": 1.0,
+          "translation": [
+            0,
+            2
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 6,
@@ -219,7 +244,12 @@
             53,
             59
           ],
-          "scale": 1.0175438596491229,
+          "scale": 1.0,
+          "translation": [
+            0,
+            3
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 6,
@@ -237,7 +267,12 @@
             54,
             59
           ],
-          "scale": 1.0740740740740742,
+          "scale": 1.0,
+          "translation": [
+            0,
+            3
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 6,
@@ -255,7 +290,12 @@
             49,
             59
           ],
-          "scale": 1.0175438596491229,
+          "scale": 1.0,
+          "translation": [
+            1,
+            3
+          ],
+          "native_pixels": true,
           "mirror": true
         },
         "fps": 6,
@@ -273,7 +313,12 @@
             53,
             59
           ],
-          "scale": 1.0175438596491229,
+          "scale": 1.0,
+          "translation": [
+            0,
+            3
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 6,

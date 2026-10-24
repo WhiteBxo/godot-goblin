@@ -1,0 +1,20 @@
+Generated with the built-in imagegen tool on 2026-10-24.
+Identity reference: assets/characters/dialogue/guard_portrait.png.
+
+Create a production transparent RGBA pixel-art sprite sheet matching this exact
+drunken goblin guard: olive pale-green thin goblin, enormous round yellow eyes
+with purple tired eyelids, battered gray-green cylindrical bucket helmet with
+irregular metal tabs/spikes and ear flaps, long pointed ears, ragged dark-brown
+belted leather tunic, skinny wrapped legs, pointed boots, holding a brown wooden
+beer keg by his side. No spear or shield. Clear near-black pixel outlines and
+simple flat limited-color clusters, no soft blur, no background or ground shadow.
+
+Regular 4-by-4 grid, complete character in each cell, consistent scale and feet
+anchor. Row 1: four south/front idle frames (breathing, blink). Row 2: four
+south/front walking frames. Row 3: four east/right walking frames. Row 4: four
+north/back walking frames. Keep helmet, barrel, proportions and clothing consistent.
+Orthographic oblique top-down RPG view. No text, labels, gutters or dividers.
+Request 1024-square canvas, 256px cells, crisp native 128px sprites displayed 2x.
+
+Retained tool output is 1254-square, not the requested canvas size. The builder
+uses rounded quarter boundaries rather than assuming a 256px source cell.

@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import io
 import json
 import tempfile
 from pathlib import Path
@@ -14,7 +15,7 @@ from pathlib import Path
 from PIL import Image
 
 from build_character_frames import build
-from import_supplement_npcs import ROOT, normalize, save_text, source_entries
+from import_supplement_npcs import ROOT, save_text, source_entries
 
 REVISION = "supplement_2026_10_24"
 ARCHIVE = "像素小人补充.zip"
@@ -64,6 +65,38 @@ CATALOGS = {
 }
 
 
+def normalize_native(data: bytes) -> tuple[Image.Image, int, int, dict]:
+    """Repack native cells; translate the whole animation without resampling pixels."""
+    image = Image.open(io.BytesIO(data)).convert("RGBA")
+    if image.width not in (504, 888):
+        raise ValueError(f"Unexpected native sheet width: {image.width}")
+    size, stride = (128, 152) if image.width == 888 else (64, 88)
+    frames = []
+    for y in range(0, image.height - size + 1, stride):
+        for x in range(0, image.width - size + 1, stride):
+            frame = image.crop((x, y, x + size, y + size))
+            if frame.getchannel("A").getbbox() is not None:
+                frames.append(frame)
+    if not frames:
+        raise ValueError("Empty native animation sheet")
+    boxes = [frame.getchannel("A").getbbox() for frame in frames]
+    crop = (min(b[0] for b in boxes), min(b[1] for b in boxes),
+            max(b[2] for b in boxes), max(b[3] for b in boxes))
+    # Share the translation across all frames, preserving source foot bounce.
+    dx = (size - crop[2] + crop[0]) // 2 - crop[0]
+    dy = size - 2 - crop[3]
+    if crop[1] + dy < 0:
+        raise ValueError("Native artwork does not fit above the feet anchor")
+    rows = (len(frames) + 5) // 6
+    output = Image.new("RGBA", (6 * stride - 24, rows * stride - 24))
+    for index, frame in enumerate(frames):
+        output.paste(frame.crop(crop), (index % 6 * stride + crop[0] + dx,
+                                         index // 6 * stride + crop[1] + dy))
+    return output, len(frames), size, {
+        "crop": crop, "scale": 1.0, "translation": [dx, dy], "native_pixels": True,
+    }
+
+
 def animation(sheet: dict, moving: bool = False, first_only: bool = False) -> dict:
     return {**sheet, "fps": 8 if moving else 6, "first_only": first_only}
 
@@ -105,12 +138,13 @@ def main(archive: Path | None) -> None:
                 if images is None:
                     raise ValueError(f"No provenance record for retained source: {raw}")
                 manifest.append(record)
-            sheet, count, source_size, transform = normalize(data)
+            sheet, count, source_size, transform = normalize_native(data)
             if mirror:
                 # Flip individual cells, preserving row order and the shared feet anchor.
                 for index in range(count):
-                    x, y = index % 6 * 88, index // 6 * 88
-                    cell = sheet.crop((x, y, x + 64, y + 64))
+                    stride = source_size + 24
+                    x, y = index % 6 * stride, index // 6 * stride
+                    cell = sheet.crop((x, y, x + source_size, y + source_size))
                     sheet.paste(cell.transpose(Image.Transpose.FLIP_LEFT_RIGHT), (x, y))
             source = f"{REVISION}_{key}"
             sheet.save(directory / f"{source}.png")

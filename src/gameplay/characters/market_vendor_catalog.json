@@ -18,7 +18,12 @@
             107,
             125
           ],
-          "scale": 0.464,
+          "scale": 1.0,
+          "translation": [
+            4,
+            1
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 6,
@@ -36,7 +41,12 @@
             107,
             125
           ],
-          "scale": 0.464,
+          "scale": 1.0,
+          "translation": [
+            4,
+            1
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 8,
@@ -54,7 +64,12 @@
             107,
             125
           ],
-          "scale": 0.464,
+          "scale": 1.0,
+          "translation": [
+            4,
+            1
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 6,
@@ -72,7 +87,12 @@
             107,
             125
           ],
-          "scale": 0.464,
+          "scale": 1.0,
+          "translation": [
+            4,
+            1
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 8,
@@ -90,7 +110,12 @@
             107,
             125
           ],
-          "scale": 0.464,
+          "scale": 1.0,
+          "translation": [
+            4,
+            1
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 6,
@@ -108,7 +133,12 @@
             107,
             125
           ],
-          "scale": 0.464,
+          "scale": 1.0,
+          "translation": [
+            4,
+            1
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 8,
@@ -126,7 +156,12 @@
             107,
             125
           ],
-          "scale": 0.464,
+          "scale": 1.0,
+          "translation": [
+            4,
+            1
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 6,
@@ -144,7 +179,12 @@
             107,
             125
           ],
-          "scale": 0.464,
+          "scale": 1.0,
+          "translation": [
+            4,
+            1
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 8,
@@ -172,7 +212,12 @@
             106,
             124
           ],
-          "scale": 0.47540983606557374,
+          "scale": 1.0,
+          "translation": [
+            0,
+            2
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 6,
@@ -190,7 +235,12 @@
             106,
             124
           ],
-          "scale": 0.47540983606557374,
+          "scale": 1.0,
+          "translation": [
+            0,
+            2
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 8,
@@ -208,7 +258,12 @@
             106,
             124
           ],
-          "scale": 0.47540983606557374,
+          "scale": 1.0,
+          "translation": [
+            0,
+            2
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 6,
@@ -226,7 +281,12 @@
             106,
             124
           ],
-          "scale": 0.47540983606557374,
+          "scale": 1.0,
+          "translation": [
+            0,
+            2
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 8,
@@ -244,7 +304,12 @@
             106,
             124
           ],
-          "scale": 0.47540983606557374,
+          "scale": 1.0,
+          "translation": [
+            0,
+            2
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 6,
@@ -262,7 +327,12 @@
             106,
             124
           ],
-          "scale": 0.47540983606557374,
+          "scale": 1.0,
+          "translation": [
+            0,
+            2
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 8,
@@ -280,7 +350,12 @@
             106,
             124
           ],
-          "scale": 0.47540983606557374,
+          "scale": 1.0,
+          "translation": [
+            0,
+            2
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 6,
@@ -298,7 +373,12 @@
             106,
             124
           ],
-          "scale": 0.47540983606557374,
+          "scale": 1.0,
+          "translation": [
+            0,
+            2
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 8,
@@ -326,7 +406,12 @@
             111,
             123
           ],
-          "scale": 0.48739495798319327,
+          "scale": 1.0,
+          "translation": [
+            2,
+            3
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 6,
@@ -344,7 +429,12 @@
             111,
             123
           ],
-          "scale": 0.48739495798319327,
+          "scale": 1.0,
+          "translation": [
+            2,
+            3
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 8,
@@ -362,7 +452,12 @@
             111,
             123
           ],
-          "scale": 0.48739495798319327,
+          "scale": 1.0,
+          "translation": [
+            2,
+            3
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 6,
@@ -380,7 +475,12 @@
             111,
             123
           ],
-          "scale": 0.48739495798319327,
+          "scale": 1.0,
+          "translation": [
+            2,
+            3
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 8,
@@ -398,7 +498,12 @@
             111,
             123
           ],
-          "scale": 0.48739495798319327,
+          "scale": 1.0,
+          "translation": [
+            2,
+            3
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 6,
@@ -416,7 +521,12 @@
             111,
             123
           ],
-          "scale": 0.48739495798319327,
+          "scale": 1.0,
+          "translation": [
+            2,
+            3
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 8,
@@ -434,7 +544,12 @@
             111,
             123
           ],
-          "scale": 0.48739495798319327,
+          "scale": 1.0,
+          "translation": [
+            2,
+            3
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 6,
@@ -452,7 +567,12 @@
             111,
             123
           ],
-          "scale": 0.48739495798319327,
+          "scale": 1.0,
+          "translation": [
+            2,
+            3
+          ],
+          "native_pixels": true,
           "mirror": false
         },
         "fps": 8,

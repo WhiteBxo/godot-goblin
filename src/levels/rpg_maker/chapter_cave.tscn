@@ -41,6 +41,7 @@
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_prayer_elder.tscn" id="prayer_elder"]
 
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_tavern_drunk.tscn" id="tavern_drunk"]
+[ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_drunken_guard.tscn" id="drunken_guard"]
 
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_goblin_boy.tscn" id="goblin_boy"]
 [ext_resource type="PackedScene" path="res://src/gameplay/characters/rpg_goblin_girl.tscn" id="goblin_girl"]
@@ -391,7 +392,7 @@ visible = false
 active_phase = "night"
 facing = 0
 
-[node name="DrunkenGuard" parent="Characters" instance=ExtResource("guard")]
+[node name="DrunkenGuard" parent="Characters" instance=ExtResource("drunken_guard")]
 position = Vector2(1416, 456)
 actor_id = &"drunken_guard"
 display_name = "醉酒守卫"

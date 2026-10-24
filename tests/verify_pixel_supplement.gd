@@ -46,7 +46,7 @@ func _run() -> void:
 				check(texture != null and Rect2(Vector2.ZERO, texture.atlas.get_size()).encloses(texture.region), "Frame fits its original atlas")
 				if texture != null:
 					var used := texture.get_image().get_used_rect()
-					check(used.has_area() and used.end.y <= 62, "Every frame has visible artwork above the feet anchor")
+					check(used.has_area() and used.end.y <= texture.get_height() - 2, "Every native frame has visible artwork above the feet anchor")
 		for direction: String in ["down", "up", "right", "left"]:
 			await director.actor_face(actor.actor_id, StringName(direction)).wait()
 			check(actor.animated_sprite.flip_h == ((direction == "right") if actor.side_faces_left else (direction == "left")), "Direction uses the actor's own mirror convention")

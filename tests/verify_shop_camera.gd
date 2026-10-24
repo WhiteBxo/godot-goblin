@@ -44,7 +44,17 @@ func _run() -> void:
 	var fit_zoom := maxf(camera.preferred_zoom, maxf(
 		camera.get_viewport_rect().size.x / camera_bounds.size.x,
 		camera.get_viewport_rect().size.y / camera_bounds.size.y))
-	_check(is_equal_approx(camera.zoom.x, fit_zoom) and is_equal_approx(camera.zoom.x, camera.zoom.y), "Default zoom fills the camera bounds without exposing the outer frame")
+	# 相机只接受「整数个屏幕像素 / 美术像素」的倍率：headless 窗口是 1 倍，
+	# 所以合法值只能是整数，0.727 这类必然糊的倍率会被向上抬到 1.0。
+	# 断言"至少铺满"与"落在屏幕像素栅格上"，而不是某个具体小数。
+	var logical := Vector2(root.content_scale_size)
+	if logical.x <= 0.0:
+		logical = root.get_viewport().get_visible_rect().size
+	var screen_factor := maxf(1.0, float(root.size.x) / logical.x)
+	_check(camera.zoom.x >= fit_zoom - 0.001 and is_equal_approx(camera.zoom.x, camera.zoom.y),
+		"Default zoom fills the camera bounds without exposing the outer frame")
+	_check(is_equal_approx(camera.zoom.x * screen_factor, roundf(camera.zoom.x * screen_factor)),
+		"Default zoom lands on whole screen pixels")
 	_check(camera.is_current() and camera.get_parent() == player, "The active camera follows the player")
 	_check_view(camera, camera_bounds, "Spawn view excludes the outer frame")
 	player.global_position = level.to_global(Vector2(690, 545))

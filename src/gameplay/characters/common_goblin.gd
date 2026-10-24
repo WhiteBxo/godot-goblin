@@ -15,8 +15,11 @@ static var _backpack_frames: SpriteFrames
 func _ready() -> void:
 	if appearance == Appearance.RANDOM:
 		appearance = Appearance.WITH_BACKPACK + CharacterAppearance.choose(self, actor_id, "goblin", 2)
-	side_faces_left = appearance == Appearance.WITH_BACKPACK
-	animated_sprite.sprite_frames = _get_backpack_frames() if side_faces_left else _get_unpacked_frames()
+	# 两套侧面帧都朝左（walk_sheet_02 与 supplement_..._unpacked_walk_side 同向），
+	# 所以朝向跟"有没有背包"无关。此前把 side_faces_left 当成背包开关，无背包
+	# 那一支左右走路整体反了。
+	side_faces_left = true
+	animated_sprite.sprite_frames = _get_backpack_frames() if appearance == Appearance.WITH_BACKPACK else _get_unpacked_frames()
 	super._ready()
 
 static func _get_backpack_frames() -> SpriteFrames:

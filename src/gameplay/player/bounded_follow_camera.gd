@@ -36,7 +36,7 @@ func _ready() -> void:
 	process_callback = Camera2D.CAMERA2D_PROCESS_PHYSICS
 	process_physics_priority = 1
 	get_viewport().size_changed.connect(_update_zoom)
-	zoom = Vector2.ONE * preferred_zoom
+	zoom = Vector2.ONE * _floor_aligned(preferred_zoom)
 
 func _process(_delta: float) -> void:
 	if _focus_target != null:
@@ -175,12 +175,19 @@ func _apply_shake() -> void:
 	force_update_scroll()
 
 func _update_zoom() -> void:
+	# 像素画只有在 zoom 恰好等于「整数个屏幕像素 / 美术像素」时才不会被重采样。
+	# 1280×720 窗口 + 640×360 逻辑视口意味着倍率是 2，合法 zoom 是
+	# 0.5 / 1.0 / 1.5……；1.15 会让每个美术像素落在 2.3 个屏幕像素上，边缘出现
+	# 宽窄不一的毛边——演出推近时小人一团糊就是这么来的。
+	var requested := _floor_aligned(_requested_zoom)
 	if not _world_bounds.has_area():
-		zoom = Vector2.ONE * _requested_zoom
+		zoom = Vector2.ONE * requested
 		return
 	var viewport_size := get_viewport_rect().size
+	# 「必须铺满」的那一侧不做对齐：它决定能不能看到整间店，为锐利把视野裁掉
+	# 是笔亏本买卖。（1280×720 下这个值本来就是 0.5，天然落在栅格上。）
 	var minimum_zoom := maxf(viewport_size.x / _world_bounds.size.x, viewport_size.y / _world_bounds.size.y)
-	zoom = Vector2.ONE * maxf(_requested_zoom, minimum_zoom)
+	zoom = Vector2.ONE * maxf(requested, minimum_zoom)
 	if mode == Mode.CINEMATIC:
 		_apply_cinematic_position()
 	else:
@@ -188,6 +195,21 @@ func _update_zoom() -> void:
 	if not _shake_pixels.is_zero_approx():
 		_apply_shake()
 	force_update_scroll()
+
+## 一个美术像素对应的屏幕像素数（1280×720 窗口对 640×360 逻辑视口是 2）。
+## 注意 `Window.content_scale_factor` 是玩家的额外缩放偏好，默认 1，不是这个比值。
+func _screen_factor() -> float:
+	var window := get_window()
+	if window == null:
+		return 1.0
+	var logical := Vector2(window.content_scale_size)
+	if logical.x <= 0.0:
+		logical = get_viewport_rect().size
+	return maxf(1.0, float(window.size.x) / maxf(1.0, logical.x))
+
+func _floor_aligned(value: float) -> float:
+	var factor := _screen_factor()
+	return maxf(1.0 / factor, floorf(value * factor) / factor)
 
 func _update_follow_target() -> void:
 	if not _world_bounds.has_area():

@@ -34,17 +34,17 @@ signal line_changed(line_id: String)
 	"围观的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
 	"凑热闹的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
 	"哥布林顾客": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
-	# 第一天逐位接待的顾客：素材只有一张普通哥布林立绘，其余个体由
-	# tools/art/tint_goblin_portraits.py 只换上衣与包袱的配色派生（皮肤/裤子/道具不重绘），
-	# 赌徒保留原图——他手里那叠牌正好对上身份。
-	"哥布林": preload("res://assets/characters/dialogue/goblin_timid_portrait.png"),
-	"胆小的哥布林": preload("res://assets/characters/dialogue/goblin_timid_portrait.png"),
+	# 第一天逐位接待的顾客共用同一张普通哥布林立绘：个体靠名字与台词区分，
+	# 不靠衣服配色。早先按 tools/art/tint_goblin_portraits.py 派生的六套彩色
+	# 立绘并排出现时像六个不同种族，已经弃用（素材文件保留，不再引用）。
+	"哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	"胆小的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
 	"赌徒哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
-	"说教的哥布林": preload("res://assets/characters/dialogue/goblin_preacher_portrait.png"),
-	"爱收集的哥布林": preload("res://assets/characters/dialogue/goblin_collector_portrait.png"),
-	"领工钱的哥布林": preload("res://assets/characters/dialogue/goblin_worker_portrait.png"),
-	"倒霉的哥布林": preload("res://assets/characters/dialogue/goblin_unlucky_portrait.png"),
-	"跑腿的哥布林": preload("res://assets/characters/dialogue/goblin_runner_portrait.png"),
+	"说教的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	"爱收集的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	"领工钱的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	"倒霉的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
+	"跑腿的哥布林": preload("res://assets/characters/dialogue/common_goblin_portrait.png"),
 }
 
 var last_error: String = ""

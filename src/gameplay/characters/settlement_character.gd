@@ -38,6 +38,10 @@ func _update_animation(moving: bool, movement_ratio: float = 1.0) -> void:
 	var texture := animated_sprite.sprite_frames.get_frame_texture(animated_sprite.animation, animated_sprite.frame)
 	if texture != null:
 		# Both source grids retain their aspect ratio and produce a 128px frame canvas.
+		# 像素画只能整数倍放大：帧高 64 → 2x、128 → 1x。若直接用 128/height，
+		# 80 或 96 高的帧会得到 1.6 / 1.33 倍，边缘被重采样成半透明毛边。
 		var frame_height := float(texture.get_height())
-		animated_sprite.scale = Vector2.ONE * (128.0 / frame_height)
+		var factor := maxf(1.0, roundf(128.0 / frame_height))
+		animated_sprite.scale = Vector2.ONE * factor
+		# offset 是缩放前的本地单位，乘 scale 后正好落到半个帧高处。
 		animated_sprite.offset = Vector2(0, -frame_height * 0.5)

@@ -1090,13 +1090,18 @@ func _with_npc_points(points: Array[InteractionPoint]) -> Array[InteractionPoint
 		point.interaction_id = entity.actor_id
 		point.display_name = entity.display_name
 		point.description = entity.story_role
+		# 顾客点靠"交谈"而不是光秃秃的名字：动词为空时胶囊只剩一个人名，
+		# 玩家看不出这里能做什么。
+		point.action_verb = "交谈"
 		if _shop_level != null:
 			point.selection_group = &"orders"
 		entity.add_child(point)
 		# NPC identity is shown by the focused interaction prompt, never debug markers.
 		point.hide_development_markers()
 		if day1_story_enabled and _shop_level != null and entity.actor_id != &"fat_goblin":
-			point.position = Vector2(0, -150)
+			# 柜台后方的顾客要能被隔着柜台够到，但胶囊不能浮到屏幕顶上：
+			# 150px 上移会让名字飘离人物一个身位，收到 88 仍在头顶附近。
+			point.position = Vector2(0, -88)
 		point.feedback_rect = point.transform.affine_inverse() * entity.get_interaction_feedback_rect().grow(4.0)
 		points.append(point)
 		_npc_points[point.interaction_id] = point

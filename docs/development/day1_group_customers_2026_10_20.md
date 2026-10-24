@@ -60,25 +60,22 @@
 ## 立绘
 
 五个哥布林顾客说话人（赌徒 / 说教的 / 爱收集的 / 领工钱的 / 倒霉的）、跑腿的哥布林，
-以及第一场里的泛称「哥布林」，原先没有任何立绘。素材包里普通哥布林只有一张原画，
-所以用 `tools/art/tint_goblin_portraits.py` 从它派生出五个变体：**只换上衣与包袱的配色**，
-皮肤、裤子、描边、木桶、纸牌、鞋都不动，不是重绘也不覆盖原图。
+以及第一场里的泛称「哥布林」，原先没有任何立绘。素材包里普通哥布林只有一张原画。
 
-| 说话人 | 立绘 | 布料 |
-| --- | --- | --- |
-| 赌徒哥布林 | `common_goblin_portrait.png`（原画） | 棕——他手里那叠牌正好对上身份 |
-| 胆小的哥布林 / 泛称「哥布林」 | `goblin_timid_portrait.png` | 冷蓝灰 |
-| 说教的哥布林 | `goblin_preacher_portrait.png` | 暗紫 |
-| 爱收集的哥布林 | `goblin_collector_portrait.png` | 酒红 |
-| 领工钱的哥布林 | `goblin_worker_portrait.png` | 赭黄 |
-| 倒霉的哥布林 | `goblin_unlucky_portrait.png` | 原色带褪成脏灰 |
-| 跑腿的哥布林 | `goblin_runner_portrait.png` | 深青 |
+**现行：全部统一用原画 `common_goblin_portrait.png`。** 个体靠名字、台词与站位区分，
+不靠衣服颜色。此前用 `tools/art/tint_goblin_portraits.py` 从原画派生过五套变色版本
+（只换上衣与包袱的配色，皮肤/裤子/描边/道具不动），几个人并排出现时像六个不同种族，
+在纸色对话框里尤其花，已经撤下；派生素材与脚本留在仓库，需要时可重新引用。
 
-判定布料用的是「R − G > 16」（皮肤的 R≈G、裤子只差 9、描边是黑），
-再加一条 `y ≥ 1080` 的分界把裤子和手里提的东西整段排除。
-七个并排见 [立绘变体对照](../../assets/captures/goblin_portrait_variants.png)，
-按 240×272 立绘框缩放后的效果见 [对话尺寸对照](../../assets/captures/goblin_portrait_dialogue_size.png)。
-补画独立立绘后改 `speaker_portraits` 的键即可，剧情数据不用动。
+| 说话人 | 立绘 |
+| --- | --- |
+| 赌徒哥布林 / 胆小的哥布林 / 泛称「哥布林」 | `common_goblin_portrait.png` |
+| 说教的哥布林 / 爱收集的哥布林 | `common_goblin_portrait.png` |
+| 领工钱的哥布林 / 倒霉的哥布林 | `common_goblin_portrait.png` |
+| 跑腿的哥布林 | `common_goblin_portrait.png` |
+
+要再给某个个体单独立绘，补画独立原画后改 `src/core/dialogue/dialogue_manager.gd`
+的 `speaker_portraits` 键即可，剧情数据不用动。
 
 ## 验证
 

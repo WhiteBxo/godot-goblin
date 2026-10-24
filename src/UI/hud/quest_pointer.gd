@@ -8,7 +8,10 @@ extends Control
 ## a visible target, a paper chip pinned to the edge when it is not.
 ##
 ## The arrow retires within interaction range, where WorldPrompt takes over.
-## A tracked NPC keeps a separate screen-space identity above its head.
+##
+## A tracked NPC never gets a name of its own: the world only speaks through the
+## E capsule, and a second identity line above someone's head reads as a
+## permanent nameplate that never goes away.
 
 const MARGIN := 22.0
 const MARKER_LIFT := 44.0
@@ -33,8 +36,6 @@ var _enabled := true
 @onready var _arrow: Control = $Chip/Row/Arrow
 @onready var _name: Label = $Chip/Row/Lines/Name
 @onready var _distance: Label = $Chip/Row/Lines/Distance
-@onready var _actor_name: PanelContainer = $ActorName
-@onready var _actor_text: Label = $ActorName/Text
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -72,10 +73,12 @@ func get_target() -> Dictionary:
 	return _target.duplicate(true)
 
 func is_pointing() -> bool:
-	return _chip.visible or _marker.visible or _actor_name.visible
+	return _chip.visible or _marker.visible
 
+## 任务目标不再在头顶挂名字牌（见文件头）。保留这个查询是为了让"世界里不许
+## 出现常驻名字"这条规则仍然可以被测试断言。
 func is_actor_name_visible() -> bool:
-	return _actor_name.visible
+	return false
 
 func _resolve() -> void:
 	_target = {}
@@ -89,8 +92,6 @@ func _resolve() -> void:
 		_hide_all()
 		return
 	_name.text = str(_target.get("label", ""))
-	_actor_text.text = _name.text
-	_actor_name.hide()
 	_name.visible = not _name.text.is_empty()
 	_apply_hidden_flag()
 
@@ -117,25 +118,12 @@ func _process(delta: float) -> void:
 	var screen := get_viewport().get_canvas_transform() * world
 	var limit := get_viewport_rect().size
 	var safe := Rect2(Vector2.ZERO, limit).grow(-MARGIN)
-	# Task targets keep their identity readable even when the E capsule takes over.
-	# These are quest labels, never a second interaction selector or NPC name list.
-	_actor_name.visible = safe.has_point(screen) and _target.get("source") == "actor" and not _actor_text.text.is_empty()
-	if _actor_name.visible:
-		var name_size := _actor_name.get_combined_minimum_size()
-		_actor_name.size = name_size
-		_actor_name.position = Vector2(
-			clampf(screen.x - name_size.x * 0.5, MARGIN, maxf(MARGIN, limit.x - name_size.x - MARGIN)),
-			maxf(MARGIN, screen.y - MARKER_LIFT - name_size.y - 28.0)).round()
 	if distance <= ARRIVE_RADIUS:
 		_chip.hide()
 		_marker.hide()
 		return
 	if safe.has_point(screen):
-		if _actor_name.visible:
-			_chip.hide()
-			_marker.hide()
-		else:
-			_show_marker(screen, limit)
+		_show_marker(screen, limit)
 		return
 	_show_chip(screen, distance, limit, delta)
 
@@ -212,7 +200,6 @@ func _edge_point(center: Vector2, safe: Rect2, angle: float) -> Vector2:
 func _hide_all() -> void:
 	_chip.visible = false
 	_marker.visible = false
-	_actor_name.visible = false
 	_heading_ready = false
 
 ## The marker sits on the world itself, so it is a scrap of paper with an ink

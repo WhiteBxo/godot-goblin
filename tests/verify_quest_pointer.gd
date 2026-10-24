@@ -201,12 +201,11 @@ func check_actor_identity() -> void:
 	root.add_child(point)
 	var pointer := _pointer(player, point.global_position)
 	pointer._target = {"kind": 0, "position": point.global_position, "label": point.display_name, "source": "actor", "node": point}
-	pointer._actor_text.text = point.display_name
 	await process_frame
 	pointer._process(0.016)
-	check(pointer.is_actor_name_visible(), "A nearby task NPC keeps its identity while the E prompt takes over")
-	check(pointer.get_node("ActorName/Text").text == "醉酒守卫", "The name comes from the real interaction point")
-	check(not pointer.get_node("Chip").visible and not pointer.get_node("Marker").visible, "Near identity does not duplicate the navigation arrow")
+	check(not pointer.is_actor_name_visible(), "A task NPC gets no permanent nameplate above its head")
+	check(pointer.get_node_or_null("ActorName") == null, "The identity chip is gone from the scene, not merely hidden")
+	check(not pointer.get_node("Chip").visible and not pointer.get_node("Marker").visible, "Near a target the navigation arrow retires")
 	point.hide()
 	pointer._process(0.016)
 	check(not pointer.is_actor_name_visible(), "A hidden NPC cannot leave a floating quest name behind")

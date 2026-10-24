@@ -409,6 +409,15 @@ texture = ExtResource("2_map")
 polygon = PackedVector2Array(388, 352, 400, 346, 400, 455, 388, 455)
 uv = PackedVector2Array(388, 352, 400, 346, 400, 455, 388, 455)
 
+[node name="StorageThreshold" type="Node2D" parent="Doorframes" unique_id=517731420]
+script = ExtResource("9_frame")
+baseline_y = 352.0
+
+[node name="Threshold" type="Polygon2D" parent="Doorframes/StorageThreshold" unique_id=831190264]
+texture = ExtResource("2_map")
+polygon = PackedVector2Array(438, 331, 562, 331, 562, 352, 438, 352)
+uv = PackedVector2Array(438, 331, 562, 331, 562, 352, 438, 352)
+
 [node name="BathroomUpper" type="Node2D" parent="Doorframes" unique_id=36242341]
 script = ExtResource("9_frame")
 baseline_y = 612.0

@@ -10,6 +10,10 @@ enum Mode { FOLLOW, CINEMATIC }
 ## 世界像素 / 美术像素：房间节点 scale 1.25 就填 1.25。它把「整数屏幕像素」的
 ## 栅格从「屏幕倍率的倒数」换算成「屏幕倍率 × 房间密度 的倒数」——奶茶店在
 ## 1280×720 下的合法 zoom 因此是 0.4 / 0.8 / 1.2，而不是 0.5 / 1.0。
+## 角色贴图本身还有一层密度（精灵 scale 2 就是每 texel 2 世界像素），它才是
+## 玩家真正盯着看的那个栅格：聚落用 rpg_player 时美术密度是 1.0，一旦误填成
+## 奶茶店的 1.25，preferred_zoom 1.0 会被量化到 0.8，角色每 texel 落到 3.2 个
+## 屏幕像素上——背景是画的还能忍，人物立刻糊成一团。
 @export_range(0.25, 4.0, 0.05) var art_scale := 1.0
 @export var cinematic_pixel_snap := true
 ## Leads the follow target in its movement direction, in world pixels. Zero

@@ -27,6 +27,7 @@ shape = SubResource("Feet")
 position = Vector2(0, -24)
 zoom = Vector2(1, 1)
 preferred_zoom = 1.0
+art_scale = 1.0
 follow_look_ahead = 8.0
 
 [node name="HeldItemVisual" parent="."]

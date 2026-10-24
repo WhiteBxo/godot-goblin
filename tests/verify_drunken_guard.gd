@@ -160,7 +160,7 @@ func _run() -> void:
 	await ticks()
 	var point := game.get_delivery_point(&"drunken_guard")
 	check(point.is_available() and game.get_shop_interaction().get_target() == point, "Real collision range and selector find the guard")
-	check(game.get_quest_pointer().is_actor_name_visible(), "Visible quest identity remains readable at interaction distance")
+	check(not game.get_quest_pointer().is_actor_name_visible(), "No permanent name hangs over the guard at interaction distance")
 	if "--capture" in OS.get_cmdline_user_args() and DisplayServer.get_name() != "headless":
 		await RenderingServer.frame_post_draw
 		DirAccess.make_dir_recursive_absolute("res://.godot/drunken_guard")
@@ -175,7 +175,7 @@ func _run() -> void:
 	check(inventory.get_stock("day2_guard_milk_tea") == before - 1, "Real E delivery consumes exactly one special")
 	check(state.get_transactions().get_balance() == balance, "Guard hospitality does not change the wallet")
 	check(not game.get_task_delivery().try_submit("day2_guard_special", "drunken_guard").ok, "Repeated submission cannot consume a second cup")
-	check(not game.get_quest_pointer().is_actor_name_visible(), "Identity label retires once the guard objective ends")
+	check(not game.get_quest_pointer().is_actor_name_visible(), "No identity label survives the guard objective")
 	var shop_door: SceneExit
 	for exit: SceneExit in game.get_active_level().get_scene_exits():
 		if exit.interaction_id == &"shop_enter":

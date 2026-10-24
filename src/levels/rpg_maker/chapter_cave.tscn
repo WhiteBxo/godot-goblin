@@ -26,6 +26,7 @@
 
 [ext_resource type="Script" path="res://src/levels/rpg_maker/chapter_wayfinding.gd" id="sign_visibility"]
 [ext_resource type="Script" path="res://src/gameplay/characters/ambient_wander.gd" id="wander"]
+[ext_resource type="Script" path="res://src/gameplay/stealth/mansion_payment_point.gd" id="mansion_payment_point"]
 [ext_resource type="Texture2D" path="res://assets/map/rpg_maker/tileset_030_00.png" id="gather_atlas"]
 [ext_resource type="Script" path="res://src/gameplay/story_interaction/signature_discovery_point.gd" id="signature"]
 
@@ -249,11 +250,11 @@ position = Vector2(1176, 456)
 
 [node name="mansion_lure" type="Marker2D" parent="StoryPositions"]
 
-position = Vector2(1704, 456)
+position = Vector2(1944, 456)
 
 [node name="mansion_gate" type="Marker2D" parent="StoryPositions"]
 
-position = Vector2(1800, 456)
+position = Vector2(2040, 456)
 
 [node name="day1_checkpoint" type="Marker2D" parent="StoryPositions"]
 
@@ -399,7 +400,7 @@ active_phase = "night"
 facing = 1
 
 [node name="MansionLure" parent="Characters" instance=ExtResource("guard")]
-position = Vector2(1704, 456)
+position = Vector2(1944, 456)
 actor_id = &"mansion_lure"
 display_name = "宅邸左卫"
 visible = false
@@ -408,7 +409,7 @@ facing = 1
 gives_interaction_point = false
 
 [node name="MansionGate" parent="Characters" instance=ExtResource("guard")]
-position = Vector2(1800, 456)
+position = Vector2(2040, 456)
 actor_id = &"mansion_gate"
 display_name = "宅邸右卫"
 visible = false
@@ -509,12 +510,13 @@ position = Vector2(0, 48)
 shape = SubResource("encounter_shape")
 
 [node name="MansionPayment" parent="Interactions" node_paths=PackedStringArray("required_actors") instance=ExtResource("point")]
+script = ExtResource("mansion_payment_point")
 required_actors = Array[NodePath]([NodePath("../../Characters/MansionLure"), NodePath("../../Characters/MansionGate")])
-position = Vector2(1752, 504)
+position = Vector2(1992, 504)
 feedback_rect = Rect2(-64, -112, 128, 112)
 interaction_id = &"mansion_payment"
 display_name = "宅邸双卫 · 10G"
-description = "沿主街向北，到长老宅邸门前，再向西找醉酒守卫交涉；之后回这里支付10G给两名守卫，放行后向东进入长老居所。"
+description = "沿主街向北，到长老宅邸门前，再向西找醉酒守卫交涉；之后回这里支付10G给两名守卫，放行后从双卫中间向北上台阶，进入长老居所。"
 
 [node name="CollisionShape2D" parent="Interactions/MansionPayment"]
 scale = Vector2(1.6, 1.6)

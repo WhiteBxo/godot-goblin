@@ -935,7 +935,7 @@
 					"data": {
 						"command": "title_card",
 						"text": "宅邸双卫放行",
-						"subtitle": "沿宅前道路向东，走上门前台阶按 E 进入长老居所",
+						"subtitle": "从双卫中间向北上台阶，按 E 进入长老居所",
 						"seconds": 1.2,
 						"when": {
 							"choice": {

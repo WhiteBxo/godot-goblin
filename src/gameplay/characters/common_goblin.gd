@@ -22,7 +22,8 @@ func _ready() -> void:
 static func _get_backpack_frames() -> SpriteFrames:
 	if _backpack_frames == null:
 		_backpack_frames = BACKPACK_FRAMES.duplicate()
-		_replace_idle(_backpack_frames, &"up", &"backpack_idle_up")
+		for direction: StringName in DIRECTION_NAMES:
+			_replace_idle(_backpack_frames, direction, StringName("backpack_idle_%s" % direction))
 	return _backpack_frames
 
 static func _replace_idle(frames: SpriteFrames, direction: StringName, source: StringName) -> void:
@@ -44,10 +45,11 @@ static func _get_unpacked_frames() -> SpriteFrames:
 			var animation := StringName("%s_%s" % ["run" if moving else "idle", direction])
 			_unpacked_frames.add_animation(animation)
 			_unpacked_frames.set_animation_speed(animation, 8.0 if moving else 6.0)
-			# Side idle retains the matching walk's first frame; front/back are replaced below.
-			var count := UNPACKED_ACTIONS.get_frame_count(source) if moving else 1
+			var frames := IDLE_FRAMES if direction in [&"left", &"right"] else UNPACKED_ACTIONS
+			var source_animation := &"unpacked_walk_side" if direction in [&"left", &"right"] else source
+			var count := frames.get_frame_count(source_animation) if moving else 1
 			for index in count:
-				_unpacked_frames.add_frame(animation, UNPACKED_ACTIONS.get_frame_texture(source, index), UNPACKED_ACTIONS.get_frame_duration(source, index))
-	for direction: StringName in [&"down", &"up"]:
+				_unpacked_frames.add_frame(animation, frames.get_frame_texture(source_animation, index), frames.get_frame_duration(source_animation, index))
+	for direction: StringName in DIRECTION_NAMES:
 		_replace_idle(_unpacked_frames, direction, StringName("unpacked_idle_%s" % direction))
 	return _unpacked_frames

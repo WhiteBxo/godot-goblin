@@ -17,5 +17,11 @@
       1189
     ],
     "derive": "alpha trim + 4px margin"
+  },
+  {
+    "archive": "像素小人补充.zip",
+    "entry": "像素小人补充/诗人/诗人待机.png",
+    "path": "assets/characters/npc/casino_poet/source/supplement_2026_10_24/idle.png",
+    "sha256": "cac9341fa50c7e33cd2ddaedd58efb1522c8260cb3b5da7365aa423530ae163b"
   }
 ]

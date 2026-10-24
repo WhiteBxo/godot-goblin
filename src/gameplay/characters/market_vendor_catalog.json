@@ -3,56 +3,152 @@
     "id": "market_vendor_1",
     "display_name": "吆喝的摊主",
     "role": "集市上吆喝着卖食材的摊主。",
-    "active_archive": "哥布林npc：有特定对话，不能重复利用的npc(1).zip",
+    "active_archive": "像素小人补充.zip",
     "side_faces_left": false,
     "animations": {
       "idle_down": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人1待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            12,
+            0,
+            107,
+            125
+          ],
+          "scale": 0.464,
+          "mirror": false
+        },
         "fps": 6,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": false
       },
       "run_down": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人1待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            12,
+            0,
+            107,
+            125
+          ],
+          "scale": 0.464,
+          "mirror": false
+        },
         "fps": 8,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": true
       },
       "idle_up": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人1待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            12,
+            0,
+            107,
+            125
+          ],
+          "scale": 0.464,
+          "mirror": false
+        },
         "fps": 6,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": false
       },
       "run_up": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人1待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            12,
+            0,
+            107,
+            125
+          ],
+          "scale": 0.464,
+          "mirror": false
+        },
         "fps": 8,
-        "first_only": true,
-        "frame_count": 1
-      },
-      "idle_left": {
-        "source": "idle_sheet",
-        "fps": 6,
-        "first_only": true,
-        "frame_count": 1
-      },
-      "run_left": {
-        "source": "idle_sheet",
-        "fps": 8,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": true
       },
       "idle_right": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人1待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            12,
+            0,
+            107,
+            125
+          ],
+          "scale": 0.464,
+          "mirror": false
+        },
         "fps": 6,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": false
       },
       "run_right": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人1待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            12,
+            0,
+            107,
+            125
+          ],
+          "scale": 0.464,
+          "mirror": false
+        },
         "fps": 8,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": true
+      },
+      "idle_left": {
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人1待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            12,
+            0,
+            107,
+            125
+          ],
+          "scale": 0.464,
+          "mirror": false
+        },
+        "fps": 6,
+        "first_only": false
+      },
+      "run_left": {
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人1待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            12,
+            0,
+            107,
+            125
+          ],
+          "scale": 0.464,
+          "mirror": false
+        },
+        "fps": 8,
+        "first_only": true
       }
     },
     "source_entry": "哥布林npc：有特定对话，不能重复利用的npc/其他可对话npc/小贩/小贩1/job_5aec32b66fe2407696340c48399b2c91_00.png"
@@ -61,56 +157,152 @@
     "id": "market_vendor_2",
     "display_name": "懂行的摊主",
     "role": "集市上熟悉食材的摊主。",
-    "active_archive": "哥布林npc：有特定对话，不能重复利用的npc(1).zip",
+    "active_archive": "像素小人补充.zip",
     "side_faces_left": false,
     "animations": {
       "idle_down": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人2待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            21,
+            2,
+            106,
+            124
+          ],
+          "scale": 0.47540983606557374,
+          "mirror": false
+        },
         "fps": 6,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": false
       },
       "run_down": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人2待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            21,
+            2,
+            106,
+            124
+          ],
+          "scale": 0.47540983606557374,
+          "mirror": false
+        },
         "fps": 8,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": true
       },
       "idle_up": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人2待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            21,
+            2,
+            106,
+            124
+          ],
+          "scale": 0.47540983606557374,
+          "mirror": false
+        },
         "fps": 6,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": false
       },
       "run_up": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人2待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            21,
+            2,
+            106,
+            124
+          ],
+          "scale": 0.47540983606557374,
+          "mirror": false
+        },
         "fps": 8,
-        "first_only": true,
-        "frame_count": 1
-      },
-      "idle_left": {
-        "source": "idle_sheet",
-        "fps": 6,
-        "first_only": true,
-        "frame_count": 1
-      },
-      "run_left": {
-        "source": "idle_sheet",
-        "fps": 8,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": true
       },
       "idle_right": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人2待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            21,
+            2,
+            106,
+            124
+          ],
+          "scale": 0.47540983606557374,
+          "mirror": false
+        },
         "fps": 6,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": false
       },
       "run_right": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人2待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            21,
+            2,
+            106,
+            124
+          ],
+          "scale": 0.47540983606557374,
+          "mirror": false
+        },
         "fps": 8,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": true
+      },
+      "idle_left": {
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人2待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            21,
+            2,
+            106,
+            124
+          ],
+          "scale": 0.47540983606557374,
+          "mirror": false
+        },
+        "fps": 6,
+        "first_only": false
+      },
+      "run_left": {
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人2待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            21,
+            2,
+            106,
+            124
+          ],
+          "scale": 0.47540983606557374,
+          "mirror": false
+        },
+        "fps": 8,
+        "first_only": true
       }
     },
     "source_entry": "哥布林npc：有特定对话，不能重复利用的npc/其他可对话npc/小贩/小贩2/job_9dc7ae9bd2804d12b8001e32084aa120_00.png"
@@ -119,56 +311,152 @@
     "id": "market_vendor_3",
     "display_name": "老练的摊主",
     "role": "集市上老练的摊主。",
-    "active_archive": "哥布林npc：有特定对话，不能重复利用的npc(1).zip",
+    "active_archive": "像素小人补充.zip",
     "side_faces_left": false,
     "animations": {
       "idle_down": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人3待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            12,
+            4,
+            111,
+            123
+          ],
+          "scale": 0.48739495798319327,
+          "mirror": false
+        },
         "fps": 6,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": false
       },
       "run_down": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人3待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            12,
+            4,
+            111,
+            123
+          ],
+          "scale": 0.48739495798319327,
+          "mirror": false
+        },
         "fps": 8,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": true
       },
       "idle_up": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人3待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            12,
+            4,
+            111,
+            123
+          ],
+          "scale": 0.48739495798319327,
+          "mirror": false
+        },
         "fps": 6,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": false
       },
       "run_up": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人3待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            12,
+            4,
+            111,
+            123
+          ],
+          "scale": 0.48739495798319327,
+          "mirror": false
+        },
         "fps": 8,
-        "first_only": true,
-        "frame_count": 1
-      },
-      "idle_left": {
-        "source": "idle_sheet",
-        "fps": 6,
-        "first_only": true,
-        "frame_count": 1
-      },
-      "run_left": {
-        "source": "idle_sheet",
-        "fps": 8,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": true
       },
       "idle_right": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人3待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            12,
+            4,
+            111,
+            123
+          ],
+          "scale": 0.48739495798319327,
+          "mirror": false
+        },
         "fps": 6,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": false
       },
       "run_right": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人3待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            12,
+            4,
+            111,
+            123
+          ],
+          "scale": 0.48739495798319327,
+          "mirror": false
+        },
         "fps": 8,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": true
+      },
+      "idle_left": {
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人3待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            12,
+            4,
+            111,
+            123
+          ],
+          "scale": 0.48739495798319327,
+          "mirror": false
+        },
+        "fps": 6,
+        "first_only": false
+      },
+      "run_left": {
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/商人/商人3待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            12,
+            4,
+            111,
+            123
+          ],
+          "scale": 0.48739495798319327,
+          "mirror": false
+        },
+        "fps": 8,
+        "first_only": true
       }
     },
     "source_entry": "哥布林npc：有特定对话，不能重复利用的npc/其他可对话npc/小贩/小贩3/job_f5bba401c3f6462b84fc3af50dd678c5_01.png"

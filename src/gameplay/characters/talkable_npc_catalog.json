@@ -3,56 +3,152 @@
     "id": "casino_poet",
     "display_name": "哥布林诗人",
     "role": "赌场里为黄金与格里芬吟诗、听不进人话的诗人。",
-    "active_archive": "哥布林npc：有特定对话，不能重复利用的npc(1).zip",
+    "active_archive": "像素小人补充.zip",
     "side_faces_left": false,
     "animations": {
       "idle_down": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/诗人/诗人待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            21,
+            1,
+            106,
+            123
+          ],
+          "scale": 0.47540983606557374,
+          "mirror": false
+        },
         "fps": 6,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": false
       },
       "run_down": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/诗人/诗人待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            21,
+            1,
+            106,
+            123
+          ],
+          "scale": 0.47540983606557374,
+          "mirror": false
+        },
         "fps": 8,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": true
       },
       "idle_up": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/诗人/诗人待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            21,
+            1,
+            106,
+            123
+          ],
+          "scale": 0.47540983606557374,
+          "mirror": false
+        },
         "fps": 6,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": false
       },
       "run_up": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/诗人/诗人待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            21,
+            1,
+            106,
+            123
+          ],
+          "scale": 0.47540983606557374,
+          "mirror": false
+        },
         "fps": 8,
-        "first_only": true,
-        "frame_count": 1
-      },
-      "idle_left": {
-        "source": "idle_sheet",
-        "fps": 6,
-        "first_only": true,
-        "frame_count": 1
-      },
-      "run_left": {
-        "source": "idle_sheet",
-        "fps": 8,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": true
       },
       "idle_right": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/诗人/诗人待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            21,
+            1,
+            106,
+            123
+          ],
+          "scale": 0.47540983606557374,
+          "mirror": false
+        },
         "fps": 6,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": false
       },
       "run_right": {
-        "source": "idle_sheet",
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/诗人/诗人待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            21,
+            1,
+            106,
+            123
+          ],
+          "scale": 0.47540983606557374,
+          "mirror": false
+        },
         "fps": 8,
-        "first_only": true,
-        "frame_count": 1
+        "first_only": true
+      },
+      "idle_left": {
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/诗人/诗人待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            21,
+            1,
+            106,
+            123
+          ],
+          "scale": 0.47540983606557374,
+          "mirror": false
+        },
+        "fps": 6,
+        "first_only": false
+      },
+      "run_left": {
+        "source": "supplement_2026_10_24_idle",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/诗人/诗人待机.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            21,
+            1,
+            106,
+            123
+          ],
+          "scale": 0.47540983606557374,
+          "mirror": false
+        },
+        "fps": 8,
+        "first_only": true
       }
     },
     "source_entry": "哥布林npc：有特定对话，不能重复利用的npc/其他可对话npc/诗人/job_d1b53dba84ef481abb7dc696cc746272_01.png"

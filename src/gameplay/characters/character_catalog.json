@@ -115,6 +115,170 @@
         "first_only": true,
         "frame_count": 10
       }
+    },
+    "supplemental_animations": {
+      "unpacked_walk_side": {
+        "source": "supplement_2026_10_24_unpacked_walk_side",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/普通哥布林/左走路.png",
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            12,
+            3,
+            51,
+            60
+          ],
+          "scale": 1.0175438596491229,
+          "mirror": true
+        },
+        "fps": 8,
+        "first_only": false
+      },
+      "unpacked_idle_right": {
+        "source": "supplement_2026_10_24_unpacked_idle_right",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/普通哥布林/待机1.png",
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            13,
+            2,
+            49,
+            59
+          ],
+          "scale": 1.0175438596491229,
+          "mirror": true
+        },
+        "fps": 6,
+        "first_only": false
+      },
+      "unpacked_idle_down": {
+        "source": "supplement_2026_10_24_unpacked_idle_down",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/普通哥布林/待机2.png",
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            14,
+            2,
+            50,
+            59
+          ],
+          "scale": 1.0175438596491229,
+          "mirror": false
+        },
+        "fps": 6,
+        "first_only": false
+      },
+      "unpacked_idle_up": {
+        "source": "supplement_2026_10_24_unpacked_idle_up",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/普通哥布林/待机3.png",
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            15,
+            2,
+            49,
+            59
+          ],
+          "scale": 1.0175438596491229,
+          "mirror": false
+        },
+        "fps": 6,
+        "first_only": false
+      },
+      "backpack_idle_down": {
+        "source": "supplement_2026_10_24_backpack_idle_down",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/普通哥布林/背包/背包待机1.png",
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            13,
+            2,
+            51,
+            60
+          ],
+          "scale": 1.0,
+          "mirror": false
+        },
+        "fps": 6,
+        "first_only": false
+      },
+      "backpack_idle_right": {
+        "source": "supplement_2026_10_24_backpack_idle_right",
+        "frame_count": 14,
+        "source_entry": "像素小人补充/普通哥布林/背包/背包待机3.png",
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            11,
+            2,
+            53,
+            59
+          ],
+          "scale": 1.0175438596491229,
+          "mirror": false
+        },
+        "fps": 6,
+        "first_only": false
+      },
+      "backpack_idle_up": {
+        "source": "supplement_2026_10_24_backpack_idle_up",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/普通哥布林/背包/背包待机2.png",
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            10,
+            5,
+            54,
+            59
+          ],
+          "scale": 1.0740740740740742,
+          "mirror": false
+        },
+        "fps": 6,
+        "first_only": false
+      },
+      "unpacked_idle_left": {
+        "source": "supplement_2026_10_24_unpacked_idle_right",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/普通哥布林/待机1.png",
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            13,
+            2,
+            49,
+            59
+          ],
+          "scale": 1.0175438596491229,
+          "mirror": true
+        },
+        "fps": 6,
+        "first_only": false
+      },
+      "backpack_idle_left": {
+        "source": "supplement_2026_10_24_backpack_idle_right",
+        "frame_count": 14,
+        "source_entry": "像素小人补充/普通哥布林/背包/背包待机3.png",
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            11,
+            2,
+            53,
+            59
+          ],
+          "scale": 1.0175438596491229,
+          "mirror": false
+        },
+        "fps": 6,
+        "first_only": false
+      }
     }
   },
   {

@@ -1,5 +1,7 @@
 # 赌场侍卫素材
 
+2026-10-24 新补充包已替换行走，新增正面／背面待机及大笑、坐姿动作；当前帧数、保留原图和重建方式见[补充接入记录](../../../../docs/assets/imports/pixel_npc_supplement_2026_10_24.md)。立绘及角色身份仍沿用本说明，侧面待机仍用行走首帧。
+
 2026-10-19 用户附件 `侍卫2(1).zip`。身份依据最新[聚落补充稿](../../../../docs/design/settlement_dialogue_supplement_revised.md)“赌场：侍卫”，正文说话人名为“护卫”。独立 Actor ID 为 `casino_sentry`，不替换醉酒守卫、宅邸守卫或守卫长。
 
 附件中的四张 PNG 逐字节保存，忽略 `__MACOSX`；文件映射与 SHA-256 见 [来源表](source/sources.json)。附件由用户提供供本项目使用，未附独立许可证文件。

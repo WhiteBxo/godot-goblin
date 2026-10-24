@@ -16,5 +16,41 @@
     "entry": "妇女/妇女1走路.png",
     "path": "assets/characters/npc/market_mother/source/update_2026_10_20/walk.png",
     "sha256": "39ff0e17f3dec53a8a260f432ff9bcf455eeb7d4980c6ca3e147da0455903238"
+  },
+  {
+    "archive": "像素小人补充.zip",
+    "entry": "像素小人补充/妇女/妇女走路2.png",
+    "path": "assets/characters/npc/market_mother/source/supplement_2026_10_24/run_up.png",
+    "sha256": "c927a38959ead8be96d46d9e44c21bc0c5807226d6c6d2f7a425b77f1b2b7b33"
+  },
+  {
+    "archive": "像素小人补充.zip",
+    "entry": "像素小人补充/妇女/妇女走路3.png",
+    "path": "assets/characters/npc/market_mother/source/supplement_2026_10_24/run_right.png",
+    "sha256": "2ba432fb768030d8c9a37fcb83b2d2ec1d804a7348b20b20e0a9ef648ecfa297"
+  },
+  {
+    "archive": "像素小人补充.zip",
+    "entry": "像素小人补充/妇女/妇女走路1.png",
+    "path": "assets/characters/npc/market_mother/source/supplement_2026_10_24/run_down.png",
+    "sha256": "954186dec1a96c7f213309fd0743b99b89b66f007a71d91284479c6d5d575f86"
+  },
+  {
+    "archive": "像素小人补充.zip",
+    "entry": "像素小人补充/妇女/妇女待机2.png",
+    "path": "assets/characters/npc/market_mother/source/supplement_2026_10_24/idle_right.png",
+    "sha256": "ce761dd981ff6775dea66db1df6a05c3f42f8e7a867e91a28dbf1c04db1b43ef"
+  },
+  {
+    "archive": "像素小人补充.zip",
+    "entry": "像素小人补充/妇女/妇女待机3.png",
+    "path": "assets/characters/npc/market_mother/source/supplement_2026_10_24/idle_down.png",
+    "sha256": "0e2f09db13349e8e7c7dc4fc51c703666d8ccd6d2bae92ce7858c2e4b9de7d1c"
+  },
+  {
+    "archive": "像素小人补充.zip",
+    "entry": "像素小人补充/妇女/妇女待机1.png",
+    "path": "assets/characters/npc/market_mother/source/supplement_2026_10_24/idle_up.png",
+    "sha256": "b4c5374a5517f3f4b18d2eb303ff353aa3ae530d8dc03d4b4fc5459eecabf56d"
   }
 ]

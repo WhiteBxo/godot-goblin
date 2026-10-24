@@ -1497,396 +1497,152 @@
     "id": "market_mother",
     "display_name": "哥布林母亲",
     "role": "带孩子逛集市的母亲。",
-    "active_archive": "妇女(1).zip",
+    "active_archive": "像素小人补充.zip",
     "side_faces_left": true,
     "animations": {
-      "idle_right": {
-        "source": "idle_right",
-        "source_entry": "妇女/妇女1待机.png",
-        "fps": 6,
-        "first_only": false,
-        "frame_count": 8,
+      "idle_down": {
+        "source": "supplement_2026_10_24_idle_down",
+        "frame_count": 11,
+        "source_entry": "像素小人补充/妇女/妇女待机3.png",
+        "source_frame_size": 128,
         "transform": {
-          "grid": [
-            4,
-            2
-          ],
-          "source_indices": [
-            0,
-            1,
+          "crop": [
+            23,
             2,
-            3,
-            4,
-            5,
-            6,
-            7
+            105,
+            124
           ],
-          "mirror_indices": [],
-          "source_boxes": [
-            [
-              11,
-              2,
-              53,
-              61
-            ],
-            [
-              20,
-              1,
-              63,
-              61
-            ],
-            [
-              29,
-              1,
-              73,
-              61
-            ],
-            [
-              27,
-              1,
-              71,
-              62
-            ],
-            [
-              18,
-              5,
-              62,
-              67
-            ],
-            [
-              24,
-              7,
-              67,
-              67
-            ],
-            [
-              19,
-              5,
-              61,
-              64
-            ],
-            [
-              21,
-              14,
-              63,
-              73
-            ]
-          ],
-          "alignment": "cell artwork centered, feet at y=62",
-          "scale": 0.9354838709677419
-        }
-      },
-      "run_up": {
-        "source": "run_up",
-        "source_entry": "妇女/妇女1走路.png",
-        "fps": 8,
-        "first_only": false,
-        "frame_count": 3,
-        "transform": {
-          "grid": [
-            4,
-            2
-          ],
-          "source_indices": [
-            0,
-            1,
-            7
-          ],
-          "mirror_indices": [],
-          "source_boxes": [
-            [
-              12,
-              3,
-              51,
-              61
-            ],
-            [
-              18,
-              5,
-              57,
-              63
-            ],
-            [
-              31,
-              13,
-              70,
-              71
-            ]
-          ],
-          "alignment": "cell artwork centered, feet at y=62",
-          "scale": 1.0
-        }
+          "scale": 0.47540983606557374,
+          "mirror": false
+        },
+        "fps": 6,
+        "first_only": false
       },
       "run_down": {
-        "source": "run_down",
-        "source_entry": "妇女/妇女1走路.png",
-        "fps": 8,
-        "first_only": false,
-        "frame_count": 3,
+        "source": "supplement_2026_10_24_run_down",
+        "frame_count": 10,
+        "source_entry": "像素小人补充/妇女/妇女走路1.png",
+        "source_frame_size": 128,
         "transform": {
-          "grid": [
-            4,
-            2
+          "crop": [
+            26,
+            7,
+            100,
+            122
           ],
-          "source_indices": [
-            3,
-            4,
-            6
-          ],
-          "mirror_indices": [],
-          "source_boxes": [
-            [
-              21,
-              9,
-              62,
-              67
-            ],
-            [
-              13,
-              9,
-              53,
-              68
-            ],
-            [
-              30,
-              17,
-              71,
-              75
-            ]
-          ],
-          "alignment": "cell artwork centered, feet at y=62",
-          "scale": 0.9830508474576272
-        }
-      },
-      "run_right": {
-        "source": "run_right",
-        "source_entry": "妇女/妇女1走路.png",
+          "scale": 0.5043478260869565,
+          "mirror": false
+        },
         "fps": 8,
-        "first_only": false,
-        "frame_count": 2,
-        "transform": {
-          "grid": [
-            4,
-            2
-          ],
-          "source_indices": [
-            2,
-            5
-          ],
-          "mirror_indices": [
-            5
-          ],
-          "source_boxes": [
-            [
-              24,
-              5,
-              63,
-              64
-            ],
-            [
-              25,
-              11,
-              64,
-              70
-            ]
-          ],
-          "alignment": "cell artwork centered, feet at y=62",
-          "scale": 0.9830508474576272
-        }
-      },
-      "idle_down": {
-        "source": "run_down",
-        "source_entry": "妇女/妇女1走路.png",
-        "fps": 8,
-        "first_only": true,
-        "frame_count": 3,
-        "transform": {
-          "grid": [
-            4,
-            2
-          ],
-          "source_indices": [
-            3,
-            4,
-            6
-          ],
-          "mirror_indices": [],
-          "source_boxes": [
-            [
-              21,
-              9,
-              62,
-              67
-            ],
-            [
-              13,
-              9,
-              53,
-              68
-            ],
-            [
-              30,
-              17,
-              71,
-              75
-            ]
-          ],
-          "alignment": "cell artwork centered, feet at y=62",
-          "scale": 0.9830508474576272
-        }
+        "first_only": false
       },
       "idle_up": {
-        "source": "run_up",
-        "source_entry": "妇女/妇女1走路.png",
-        "fps": 8,
-        "first_only": true,
-        "frame_count": 3,
+        "source": "supplement_2026_10_24_idle_up",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/妇女/妇女待机1.png",
+        "source_frame_size": 128,
         "transform": {
-          "grid": [
-            4,
-            2
-          ],
-          "source_indices": [
+          "crop": [
+            22,
             0,
-            1,
-            7
+            105,
+            122
           ],
-          "mirror_indices": [],
-          "source_boxes": [
-            [
-              12,
-              3,
-              51,
-              61
-            ],
-            [
-              18,
-              5,
-              57,
-              63
-            ],
-            [
-              31,
-              13,
-              70,
-              71
-            ]
+          "scale": 0.47540983606557374,
+          "mirror": false
+        },
+        "fps": 6,
+        "first_only": false
+      },
+      "run_up": {
+        "source": "supplement_2026_10_24_run_up",
+        "frame_count": 10,
+        "source_entry": "像素小人补充/妇女/妇女走路2.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            28,
+            7,
+            100,
+            123
           ],
-          "alignment": "cell artwork centered, feet at y=62",
-          "scale": 1.0
-        }
+          "scale": 0.5,
+          "mirror": false
+        },
+        "fps": 8,
+        "first_only": false
+      },
+      "idle_right": {
+        "source": "supplement_2026_10_24_idle_right",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/妇女/妇女待机2.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            21,
+            3,
+            105,
+            122
+          ],
+          "scale": 0.48739495798319327,
+          "mirror": true
+        },
+        "fps": 6,
+        "first_only": false
+      },
+      "run_right": {
+        "source": "supplement_2026_10_24_run_right",
+        "frame_count": 10,
+        "source_entry": "像素小人补充/妇女/妇女走路3.png",
+        "source_frame_size": 128,
+        "transform": {
+          "crop": [
+            27,
+            6,
+            101,
+            119
+          ],
+          "scale": 0.5132743362831859,
+          "mirror": false
+        },
+        "fps": 8,
+        "first_only": false
       },
       "idle_left": {
-        "source": "idle_right",
-        "source_entry": "妇女/妇女1待机.png",
-        "fps": 6,
-        "first_only": false,
-        "frame_count": 8,
+        "source": "supplement_2026_10_24_idle_right",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/妇女/妇女待机2.png",
+        "source_frame_size": 128,
         "transform": {
-          "grid": [
-            4,
-            2
-          ],
-          "source_indices": [
-            0,
-            1,
-            2,
+          "crop": [
+            21,
             3,
-            4,
-            5,
-            6,
-            7
+            105,
+            122
           ],
-          "mirror_indices": [],
-          "source_boxes": [
-            [
-              11,
-              2,
-              53,
-              61
-            ],
-            [
-              20,
-              1,
-              63,
-              61
-            ],
-            [
-              29,
-              1,
-              73,
-              61
-            ],
-            [
-              27,
-              1,
-              71,
-              62
-            ],
-            [
-              18,
-              5,
-              62,
-              67
-            ],
-            [
-              24,
-              7,
-              67,
-              67
-            ],
-            [
-              19,
-              5,
-              61,
-              64
-            ],
-            [
-              21,
-              14,
-              63,
-              73
-            ]
-          ],
-          "alignment": "cell artwork centered, feet at y=62",
-          "scale": 0.9354838709677419
-        }
+          "scale": 0.48739495798319327,
+          "mirror": true
+        },
+        "fps": 6,
+        "first_only": false
       },
       "run_left": {
-        "source": "run_right",
-        "source_entry": "妇女/妇女1走路.png",
-        "fps": 8,
-        "first_only": false,
-        "frame_count": 2,
+        "source": "supplement_2026_10_24_run_right",
+        "frame_count": 10,
+        "source_entry": "像素小人补充/妇女/妇女走路3.png",
+        "source_frame_size": 128,
         "transform": {
-          "grid": [
-            4,
-            2
+          "crop": [
+            27,
+            6,
+            101,
+            119
           ],
-          "source_indices": [
-            2,
-            5
-          ],
-          "mirror_indices": [
-            5
-          ],
-          "source_boxes": [
-            [
-              24,
-              5,
-              63,
-              64
-            ],
-            [
-              25,
-              11,
-              64,
-              70
-            ]
-          ],
-          "alignment": "cell artwork centered, feet at y=62",
-          "scale": 0.9830508474576272
-        }
+          "scale": 0.5132743362831859,
+          "mirror": false
+        },
+        "fps": 8,
+        "first_only": false
       }
     },
     "appearance_notes": "Front/back idle use the first matching walk pose; side source faces left."

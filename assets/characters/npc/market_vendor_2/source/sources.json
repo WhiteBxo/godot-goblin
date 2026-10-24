@@ -16,5 +16,11 @@
       855,
       1232
     ]
+  },
+  {
+    "archive": "像素小人补充.zip",
+    "entry": "像素小人补充/商人/商人2待机.png",
+    "path": "assets/characters/npc/market_vendor_2/source/supplement_2026_10_24/idle.png",
+    "sha256": "15eceee4e7b6f163266dacedf2d70b6a7395a54244f65b0af9b16fbb15164295"
   }
 ]

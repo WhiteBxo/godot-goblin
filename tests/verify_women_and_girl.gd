@@ -43,7 +43,8 @@ func _run() -> void:
 				var image := texture.get_image()
 				var rect := image.get_used_rect()
 				check(Rect2i(Vector2i.ZERO, texture.atlas.get_size()).encloses(Rect2i(texture.region)), "Frame stays inside atlas")
-				check(rect.has_area() and rect.position.x >= 2 and rect.end.x <= 62 and rect.end.y == 62, "Artwork is nonempty with aligned feet and clear edges")
+				var bottom_min := 60 if id == "market_mother" and String(animation).begins_with("run_") else 62
+				check(rect.has_area() and rect.position.x >= 2 and rect.end.x <= 62 and rect.end.y >= bottom_min and rect.end.y <= 62, "Artwork stays aligned, retaining the supplied walk's two-pixel foot bounce")
 		for direction: String in ["down", "up", "right", "left"]:
 			check(resource.has_animation("idle_" + direction) and resource.has_animation("run_" + direction), "Four-way movement contract")
 			await director.actor_face(actor.actor_id, StringName(direction)).wait()

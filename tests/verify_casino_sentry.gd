@@ -27,7 +27,8 @@ func _run() -> void:
 		var counts := {"down": 13, "right": 15, "left": 15, "up": 10}
 		for direction: String in counts:
 			check(frames.get_frame_count("run_" + direction) == counts[direction], "Keep every supplied walk frame: " + direction)
-			check(frames.get_frame_count("idle_" + direction) == 1, "Missing idle uses one matching walk frame")
+			var idle_counts := {"down": 13, "up": 16, "right": 1, "left": 1}
+			check(frames.get_frame_count("idle_" + direction) == idle_counts[direction], "Supplied front/back idle loops and side fallback use the right frames")
 			for index in frames.get_frame_count("run_" + direction):
 				var texture := frames.get_frame_texture("run_" + direction, index) as AtlasTexture
 				var image := texture.atlas.get_image()

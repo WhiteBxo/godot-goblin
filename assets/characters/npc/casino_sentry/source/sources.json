@@ -21,6 +21,48 @@
       "source_entry": "侍卫2/合并图片 3.png",
       "path": "assets/characters/npc/casino_sentry/run_right.png",
       "sha256": "b93dc7aad586662a7d67fe0020041c06f6faad107d7958d4b05caabb7abe5f3e"
+    },
+    {
+      "archive": "像素小人补充.zip",
+      "entry": "像素小人补充/守卫2/大笑.png",
+      "path": "assets/characters/npc/casino_sentry/source/supplement_2026_10_24/emote_laugh.png",
+      "sha256": "27db2ec621eaa76c0491fb87dddaaad9a34791d69411272acc1a5ef3a8b78be9"
+    },
+    {
+      "archive": "像素小人补充.zip",
+      "entry": "像素小人补充/守卫2/坐着.png",
+      "path": "assets/characters/npc/casino_sentry/source/supplement_2026_10_24/emote_sit.png",
+      "sha256": "46b23cfb8d2aa8a9100256cfcc21c99628ccc9cba011c3a316d0e535f3358c16"
+    },
+    {
+      "archive": "像素小人补充.zip",
+      "entry": "像素小人补充/守卫2/走路1.png",
+      "path": "assets/characters/npc/casino_sentry/source/supplement_2026_10_24/run_down.png",
+      "sha256": "b4249101edc4fb35232c3a707f00afc218d3b66a724ead3d08d44073f4b22f87"
+    },
+    {
+      "archive": "像素小人补充.zip",
+      "entry": "像素小人补充/守卫2/走路2.png",
+      "path": "assets/characters/npc/casino_sentry/source/supplement_2026_10_24/run_right.png",
+      "sha256": "b93dc7aad586662a7d67fe0020041c06f6faad107d7958d4b05caabb7abe5f3e"
+    },
+    {
+      "archive": "像素小人补充.zip",
+      "entry": "像素小人补充/守卫2/走路3.png",
+      "path": "assets/characters/npc/casino_sentry/source/supplement_2026_10_24/run_up.png",
+      "sha256": "2408f51ac6649e29bdd928f8d310a3ad7b1daf607108ceb5c21a904271467d86"
+    },
+    {
+      "archive": "像素小人补充.zip",
+      "entry": "像素小人补充/守卫2/待机1.png",
+      "path": "assets/characters/npc/casino_sentry/source/supplement_2026_10_24/idle_up.png",
+      "sha256": "19ca055b83639c756b4b2ec68f856b649347ccfd430fc1a40d6fe85911ee5055"
+    },
+    {
+      "archive": "像素小人补充.zip",
+      "entry": "像素小人补充/守卫2/待机2.png",
+      "path": "assets/characters/npc/casino_sentry/source/supplement_2026_10_24/idle_down.png",
+      "sha256": "d0838254c620724f85187f6d5d2c2cd3c8b67939a55db9869e1f65fafa961a99"
     }
   ],
   "portrait_crop": [

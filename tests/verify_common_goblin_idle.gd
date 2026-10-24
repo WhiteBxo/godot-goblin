@@ -15,7 +15,6 @@ func check(ok: bool, message: String) -> void:
 
 func _run() -> void:
 	_test_original_palettes()
-	_test_front_eye_contrast()
 	for path: String in ["res://src/gameplay/characters/common_goblin.tscn", "res://src/gameplay/characters/rpg_common_goblin.tscn"]:
 		for appearance: int in [GOBLIN.Appearance.WITH_BACKPACK, GOBLIN.Appearance.WITHOUT_BACKPACK]:
 			var actor = load(path).instantiate()
@@ -35,7 +34,7 @@ func _run() -> void:
 				var animation := StringName("idle_" + suffix)
 				check(sprite.animation == animation and not sprite.flip_h, "Stopping selects front/back idle without mirroring")
 				var count := frames.get_frame_count(animation)
-				check(count == (16 if appearance == GOBLIN.Appearance.WITH_BACKPACK and direction == PlayerController.Facing.DOWN else 8), "Both variants have real front/back idle sequences")
+				check(count == 16, "Both variants retain all sixteen supplied front/back idle frames")
 				check(frames.get_animation_loop_mode(animation) == SpriteFrames.LOOP_LINEAR, "Idle loops continuously")
 				var distinct: Dictionary = {}
 				for index in count:
@@ -43,8 +42,7 @@ func _run() -> void:
 					check(image.get_size() == Vector2i(64, 64), "Idle retains native 64px canvas")
 					check(image.get_used_rect().has_area(), "Idle frame contains visible art")
 					distinct[image.get_data().hex_encode().sha256_text()] = true
-					if count == 8:
-						check(image.get_used_rect().end.y == 59, "Generated idle feet remain at source baseline")
+					check(image.get_used_rect().end.y == 62, "Supplied idle feet remain at the NPC baseline")
 				check(distinct.size() > 1, "Idle changes artwork rather than repeating a walk still")
 				sprite.set_frame_and_progress(0, 0.0)
 				await create_timer(0.24).timeout
@@ -62,9 +60,9 @@ func _run() -> void:
 
 func _test_original_palettes() -> void:
 	var sources := {
-		&"backpack_idle_up": "res://assets/characters/npc/common_goblin/walk_sheet_03.png",
-		&"unpacked_idle_down": "res://assets/characters/goblin_actions/goblin_walk_down.png",
-		&"unpacked_idle_up": "res://assets/characters/goblin_actions/goblin_walk_up.png",
+		&"backpack_idle_up": "res://assets/characters/npc/common_goblin/source/supplement_2026_10_24/backpack_idle_up.png",
+		&"unpacked_idle_down": "res://assets/characters/npc/common_goblin/source/supplement_2026_10_24/unpacked_idle_down.png",
+		&"unpacked_idle_up": "res://assets/characters/npc/common_goblin/source/supplement_2026_10_24/unpacked_idle_up.png",
 	}
 	for animation: StringName in sources:
 		var original: Image = load(sources[animation]).get_image()
@@ -82,23 +80,4 @@ func _test_original_palettes() -> void:
 				var color := image.get_pixel(x, y)
 				if color.a >= 0.5 and not palette.has(color):
 					foreign_colors += 1
-		check(foreign_colors == 0, String(animation) + " uses only exact original walk-sheet RGB colors")
-
-func _test_front_eye_contrast() -> void:
-	for index in GOBLIN.IDLE_FRAMES.get_frame_count(&"unpacked_idle_down"):
-		var image := GOBLIN.IDLE_FRAMES.get_frame_texture(&"unpacked_idle_down", index).get_image()
-		# Frame 4 is the intentional blink; all other frames need two readable eyes
-		# on the native 64px canvas, including the smaller RPG scene's display size.
-		for area: Rect2i in [Rect2i(22, 13, 7, 6), Rect2i(34, 13, 7, 6)]:
-			var eye_whites := 0
-			var dark_details := 0
-			for y in range(area.position.y, area.end.y):
-				for x in range(area.position.x, area.end.x):
-					var color := image.get_pixel(x, y)
-					if color.a < 0.5:
-						continue
-					if color.v >= 0.75:
-						eye_whites += 1
-					elif color.v <= 0.12:
-						dark_details += 1
-			check(eye_whites == 0 if index == 4 else eye_whites >= 2 and dark_details >= 1, "Front idle frame %d keeps visible eyes or the intended blink" % index)
+		check(foreign_colors == 0, String(animation) + " preserves the supplied original RGB palette without recoloring eyes")

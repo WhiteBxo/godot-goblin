@@ -5,62 +5,187 @@
     "role": "赌场的侍卫，负责看守赌场。",
     "side_faces_left": false,
     "animations": {
-      "run_down": {
-        "source": "run_down",
-        "fps": 8,
-        "first_only": false,
-        "frame_count": 13,
-        "source_entry": "侍卫2/合并图片 2.png"
-      },
       "idle_down": {
-        "source": "run_down",
-        "fps": 6,
-        "first_only": true,
+        "source": "supplement_2026_10_24_idle_down",
         "frame_count": 13,
-        "source_entry": "侍卫2/合并图片 2.png"
-      },
-      "run_right": {
-        "source": "run_right",
-        "fps": 8,
-        "first_only": false,
-        "frame_count": 15,
-        "source_entry": "侍卫2/合并图片 3.png"
-      },
-      "idle_right": {
-        "source": "run_right",
+        "source_entry": "像素小人补充/守卫2/待机2.png",
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            7,
+            1,
+            55,
+            61
+          ],
+          "scale": 0.9666666666666667,
+          "mirror": false
+        },
         "fps": 6,
-        "first_only": true,
-        "frame_count": 15,
-        "source_entry": "侍卫2/合并图片 3.png"
+        "first_only": false
       },
-      "run_left": {
-        "source": "run_right",
+      "run_down": {
+        "source": "supplement_2026_10_24_run_down",
+        "frame_count": 13,
+        "source_entry": "像素小人补充/守卫2/走路1.png",
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            2,
+            1,
+            56,
+            62
+          ],
+          "scale": 0.9508196721311475,
+          "mirror": false
+        },
         "fps": 8,
-        "first_only": false,
-        "frame_count": 15,
-        "source_entry": "侍卫2/合并图片 3.png"
-      },
-      "idle_left": {
-        "source": "run_right",
-        "fps": 6,
-        "first_only": true,
-        "frame_count": 15,
-        "source_entry": "侍卫2/合并图片 3.png"
-      },
-      "run_up": {
-        "source": "run_up",
-        "fps": 8,
-        "first_only": false,
-        "frame_count": 10,
-        "source_entry": "侍卫2/合并图片.png"
+        "first_only": false
       },
       "idle_up": {
-        "source": "run_up",
+        "source": "supplement_2026_10_24_idle_up",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/守卫2/待机1.png",
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            9,
+            3,
+            54,
+            61
+          ],
+          "scale": 1.0,
+          "mirror": false
+        },
         "fps": 6,
-        "first_only": true,
+        "first_only": false
+      },
+      "run_up": {
+        "source": "supplement_2026_10_24_run_up",
         "frame_count": 10,
-        "source_entry": "侍卫2/合并图片.png"
+        "source_entry": "像素小人补充/守卫2/走路3.png",
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            8,
+            2,
+            54,
+            62
+          ],
+          "scale": 0.9666666666666667,
+          "mirror": false
+        },
+        "fps": 8,
+        "first_only": false
+      },
+      "idle_right": {
+        "source": "supplement_2026_10_24_run_right",
+        "frame_count": 15,
+        "source_entry": "像素小人补充/守卫2/走路2.png",
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            11,
+            2,
+            57,
+            61
+          ],
+          "scale": 0.9830508474576272,
+          "mirror": false
+        },
+        "fps": 6,
+        "first_only": true
+      },
+      "run_right": {
+        "source": "supplement_2026_10_24_run_right",
+        "frame_count": 15,
+        "source_entry": "像素小人补充/守卫2/走路2.png",
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            11,
+            2,
+            57,
+            61
+          ],
+          "scale": 0.9830508474576272,
+          "mirror": false
+        },
+        "fps": 8,
+        "first_only": false
+      },
+      "idle_left": {
+        "source": "supplement_2026_10_24_run_right",
+        "frame_count": 15,
+        "source_entry": "像素小人补充/守卫2/走路2.png",
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            11,
+            2,
+            57,
+            61
+          ],
+          "scale": 0.9830508474576272,
+          "mirror": false
+        },
+        "fps": 6,
+        "first_only": true
+      },
+      "run_left": {
+        "source": "supplement_2026_10_24_run_right",
+        "frame_count": 15,
+        "source_entry": "像素小人补充/守卫2/走路2.png",
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            11,
+            2,
+            57,
+            61
+          ],
+          "scale": 0.9830508474576272,
+          "mirror": false
+        },
+        "fps": 8,
+        "first_only": false
+      },
+      "emote_laugh": {
+        "source": "supplement_2026_10_24_emote_laugh",
+        "frame_count": 16,
+        "source_entry": "像素小人补充/守卫2/大笑.png",
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            14,
+            1,
+            49,
+            62
+          ],
+          "scale": 0.9508196721311475,
+          "mirror": false
+        },
+        "fps": 6,
+        "first_only": false
+      },
+      "emote_sit": {
+        "source": "supplement_2026_10_24_emote_sit",
+        "frame_count": 15,
+        "source_entry": "像素小人补充/守卫2/坐着.png",
+        "source_frame_size": 64,
+        "transform": {
+          "crop": [
+            4,
+            5,
+            60,
+            55
+          ],
+          "scale": 1.0714285714285714,
+          "mirror": false
+        },
+        "fps": 6,
+        "first_only": false
       }
-    }
+    },
+    "active_archive": "像素小人补充.zip"
   }
 ]

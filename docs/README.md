@@ -109,6 +109,7 @@
 | 文档 | 文件 / 说明 |
 | --- | --- |
 | [游戏人物与美术接入](assets/characters.md) | `characters.md` |
+| [2026-10-24 像素小人补充接入](assets/imports/pixel_npc_supplement_2026_10_24.md) | 24 张原图、七类角色动画、重建工具与验证。 |
 | [主角对话立绘：平静 / 说话](assets/imports/player_dialogue_portraits.md) | `imports/player_dialogue_portraits.md` |
 | [2026-10-23 补充食材贴图导入](assets/imports/supplement_ingredient_icons_2026_10_23.md) | 8 张原始 PNG、来源散列及物品图标绑定。 |
 | [2026-10-19 古文书与洞窟全图](assets/imports/elder_feedback_2026_10_19.md) | 用户原图、来源散列与显示接入。 |

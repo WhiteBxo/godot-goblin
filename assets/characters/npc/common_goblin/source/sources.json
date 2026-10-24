@@ -1,0 +1,44 @@
+[
+  {
+    "archive": "像素小人补充.zip",
+    "entry": "像素小人补充/普通哥布林/左走路.png",
+    "path": "assets/characters/npc/common_goblin/source/supplement_2026_10_24/unpacked_walk_side.png",
+    "sha256": "29ff01af032d24c4192189e30c227495f9c1867cb42bd554d40e060778694b9d"
+  },
+  {
+    "archive": "像素小人补充.zip",
+    "entry": "像素小人补充/普通哥布林/待机1.png",
+    "path": "assets/characters/npc/common_goblin/source/supplement_2026_10_24/unpacked_idle_right.png",
+    "sha256": "9a3ee8b0d7e90946cc430896c34ba58f277dad432af0dbd7bb5b857877055006"
+  },
+  {
+    "archive": "像素小人补充.zip",
+    "entry": "像素小人补充/普通哥布林/待机2.png",
+    "path": "assets/characters/npc/common_goblin/source/supplement_2026_10_24/unpacked_idle_down.png",
+    "sha256": "22c30a4ec5f5b282db0a32eb525ed12f6a267f5a1c8ddfbc441b3053e8435030"
+  },
+  {
+    "archive": "像素小人补充.zip",
+    "entry": "像素小人补充/普通哥布林/待机3.png",
+    "path": "assets/characters/npc/common_goblin/source/supplement_2026_10_24/unpacked_idle_up.png",
+    "sha256": "1bf73d78474a283b5501c9e29cb3724d5d65de5193ae48f2e0dc3ca08eef9cef"
+  },
+  {
+    "archive": "像素小人补充.zip",
+    "entry": "像素小人补充/普通哥布林/背包/背包待机1.png",
+    "path": "assets/characters/npc/common_goblin/source/supplement_2026_10_24/backpack_idle_down.png",
+    "sha256": "2a6911ff67d9c60414ed4125bfbfeb6027530731883188cff91aafe3a58b4463"
+  },
+  {
+    "archive": "像素小人补充.zip",
+    "entry": "像素小人补充/普通哥布林/背包/背包待机3.png",
+    "path": "assets/characters/npc/common_goblin/source/supplement_2026_10_24/backpack_idle_right.png",
+    "sha256": "095c76fe87f440a4b88bd2fc86f3841f7547915325fc68bf7a73ce9e914e444b"
+  },
+  {
+    "archive": "像素小人补充.zip",
+    "entry": "像素小人补充/普通哥布林/背包/背包待机2.png",
+    "path": "assets/characters/npc/common_goblin/source/supplement_2026_10_24/backpack_idle_up.png",
+    "sha256": "8610f3ea899b19f1feb0e8403ec8b081dc271dca2f4eb2b3631f231812a08ec1"
+  }
+]

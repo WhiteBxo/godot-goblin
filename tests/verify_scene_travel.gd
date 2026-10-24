@@ -23,6 +23,33 @@ func _frames() -> void:
 		await physics_frame
 	await process_frame
 
+## One-time control hints are stored as story flags but they are presentation
+## bookkeeping: the first frame a hint is allowed to show writes one, and that
+## can land inside a travel. Stock, cups, queue, wallet, tasks and story are
+## what these checks are about, so hint flags stay out of the comparison.
+func _comparable(data: Dictionary) -> Dictionary:
+	var copy: Dictionary = data.duplicate(true)
+	var flags: Dictionary = copy.get("flags", {})
+	for key in flags.keys():
+		if String(key).begins_with("ui.hint."):
+			flags.erase(key)
+	copy["flags"] = flags
+	return copy
+
+## Snapshot comparison that names the drifted keys instead of only reporting
+## that "the session changed" — the whole point of these checks is which part.
+func _check_state(expected: Dictionary, message: String) -> void:
+	var now: Dictionary = _comparable(_state.to_dict())
+	var want: Dictionary = _comparable(expected)
+	if now == want:
+		_checks += 1
+		return
+	var parts: Array[String] = []
+	for key: String in now:
+		if now[key] != want.get(key):
+			parts.append("%s expected %s got %s" % [key, str(want.get(key)), str(now[key])])
+	_check(false, message + " [" + "; ".join(parts) + "]")
+
 func _key(pressed: bool, echo: bool = false) -> void:
 	var event := InputEventKey.new()
 	event.keycode = KEY_E
@@ -159,7 +186,7 @@ func _run() -> void:
 	_check(game.get_player().claim_performance_control(self), "Actor control can reserve the player")
 	_check(game.get_scene_travel().request_exit(exit) == ERR_BUSY, "Performance-controlled player refuses travel")
 	game.get_player().release_performance_control(self)
-	_check(_state.to_dict() == snapshot, "All rejected requests preserve the entire session")
+	_check_state(snapshot, "All rejected requests preserve the entire session")
 	# Pause during fade cancels safely and leaves pause owned by the source UI.
 	_check(game.get_scene_travel().request_exit(exit) == OK, "Begin travel before pause interruption")
 	game.get_ui_manager().set_paused(true)
@@ -184,7 +211,7 @@ func _run() -> void:
 	await _frames()
 	game = current_scene as MainGame
 	_check(not game.get_scene_travel().is_busy() and game.get_player().movement_enabled, "Source disposal leaves no navigation or input lock")
-	_check(_state.to_dict() == snapshot, "Interrupted navigation never changes the session")
+	_check_state(snapshot, "Interrupted navigation never changes the session")
 	for index in range(3):
 		game = await _cross(game, STREET)
 		if game == null:
@@ -192,7 +219,7 @@ func _run() -> void:
 			return
 		await _check_landing(game, &"shop_door")
 		_check(game.get_warehouse_inventory() == inventory and game.get_tea_production() == production, "Street reuses the same session services")
-		_check(_state.to_dict() == snapshot, "Leaving preserves stock, cups, queue, wallet, tasks and story")
+		_check_state(snapshot, "Leaving preserves stock, cups, queue, wallet, tasks and story")
 		if index == 0:
 			await _snapshot(game, "street")
 		game = await _cross(game, SHOP)
@@ -200,7 +227,7 @@ func _run() -> void:
 			quit(1)
 			return
 		await _check_landing(game, &"street_door")
-		_check(_state.to_dict() == snapshot, "Returning preserves the entire session")
+		_check_state(snapshot, "Returning preserves the entire session")
 		_check(_state.state_changed.get_connections().size() == subscriptions, "Round trip does not accumulate state subscriptions")
 		if index == 0:
 			await _snapshot(game, "shop")
@@ -214,7 +241,7 @@ func _run() -> void:
 	await _frames()
 	game = current_scene as MainGame
 	_check(game.get_player().global_position == game.get_active_level().get_spawn_position(), "Arrival request is local to one instance and never leaks into reload")
-	_check(_state.to_dict() == snapshot, "Reload still preserves session")
+	_check_state(snapshot, "Reload still preserves session")
 	_check(GameEntry.return_to_title(self) == OK, "Title navigation remains available after travel and interruptions")
 	await scene_changed
 	_check(current_scene is TitleMenu and not paused and _state.to_dict() == snapshot, "Returning to title preserves session and releases pause")

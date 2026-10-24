@@ -89,7 +89,13 @@ func _run() -> void:
 		player.global_position = point.global_position
 		await _frames(3)
 		_check(point.is_available(), "Point must detect player: " + point.display_name)
-		_check(ui.get_node("Prompt").visible, "Approach must display the interaction prompt")
+		# The capsule that names the action lives in the HUD layer for points that
+		# carry their own prompt (WorldPrompt); the shop panel keeps its own bar
+		# for the rest. Either way a reachable point must say something.
+		var shop_prompt: Control = ui.get_node("Prompt")
+		var world_prompt := main.get_node_or_null("HudLayer/WorldPrompt") as WorldPrompt
+		var shown := shop_prompt.visible or (is_instance_valid(world_prompt) and world_prompt.is_prompt_visible())
+		_check(shown, "Approach must display the interaction prompt: " + point.display_name)
 		await _key(KEY_E)
 		_check(ui.is_open(), "E must open UI: " + point.display_name)
 		_check(ui.get_popup().get_title() == ("今日订单" if point.interaction_id == &"orders" else point.display_name), "UI title identifies the active page")

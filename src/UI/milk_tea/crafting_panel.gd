@@ -204,7 +204,12 @@ func _sync_recipe_neighbors() -> void:
 		row.focus_neighbor_right = row.get_path_to(right)
 
 func _focused_recipe() -> String:
-	var owner := get_viewport().gui_get_focus_owner()
+	# Inventory signals also fire while a session is being replaced, which can
+	# catch this panel outside the tree; there is no focus to read then.
+	var viewport := get_viewport()
+	if viewport == null:
+		return ""
+	var owner := viewport.gui_get_focus_owner()
 	if owner == null:
 		return ""
 	for product_id: String in _recipe_buttons:

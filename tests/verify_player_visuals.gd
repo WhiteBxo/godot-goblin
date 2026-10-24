@@ -13,7 +13,8 @@ func _check(condition: bool, message: String) -> void:
 func _run() -> void:
 	var player: PlayerController = load("res://src/gameplay/player/shop_player.tscn").instantiate()
 	root.add_child(player)
-	_check(player.animated_sprite.global_scale.is_equal_approx(Vector2.ONE), "Standalone shop retains its full-size player")
+	var camera := player.get_node("Camera2D")
+	_check(player.animated_sprite.global_scale.is_equal_approx(Vector2.ONE * camera.art_scale), "Standalone shop player is drawn at the shop's art scale, so its screen size matches the artwork")
 	player.queue_free()
 	await process_frame
 	var viewport := SubViewport.new()

@@ -24,10 +24,12 @@ func _process(_delta: float) -> bool:
 			dialogue.select_choice(0)
 	return false
 ## Story props sit on the prop itself; walk up to whichever side is free instead
-## of assuming the floor below is always open.
+## of assuming the floor below is always open. A door sits on the wall tile, so
+## its own position is never standable: the 48 px offsets are what let the walk
+## stop on the floor in front of it.
 func approach(point: InteractionPoint) -> Vector2:
 	var map := game.get_active_level() as RpgChapterMap
-	for offset: Vector2 in [Vector2(0, 32), Vector2(0, 24), Vector2(0, -32), Vector2(32, 0), Vector2(-32, 0)]:
+	for offset: Vector2 in [Vector2(0, 32), Vector2(0, 24), Vector2(0, 48), Vector2(0, -48), Vector2(0, -32), Vector2(32, 0), Vector2(-32, 0)]:
 		var spot := point.global_position + offset
 		if map.can_stand_at(spot, Vector2(8, 4)):
 			return spot
@@ -78,7 +80,7 @@ func exit_through(id: String) -> bool:
 	var point: SceneExit
 	for exit: SceneExit in game.get_active_level().get_scene_exits():
 		if String(exit.interaction_id) == id: point = exit
-	if point == null or not await walk_to(point.global_position): return false
+	if point == null or not await walk_to(approach(point)): return false
 	var error := game.get_scene_travel().request_exit(point)
 	check(error == OK,"Actual scene travel through " + id)
 	if error != OK:return false
@@ -109,13 +111,19 @@ func run() -> void:
 		quit(1);return
 	await wait_quiet()
 	check(state.get_flag("day1.s05.drunken_paid"),"Physical approach triggers and pays the drunken guard")
-	if not await walk_to(Vector2(1752,504)):
-		quit(1);return
-	await frames(4)
+	var payment: InteractionPoint
 	var gate_ids := PackedStringArray()
 	for point: InteractionPoint in game.get_active_level().get_interaction_points():
 		gate_ids.append(String(point.interaction_id))
+		if String(point.interaction_id) == "mansion_payment":
+			payment = point
+	check(payment != null, "The bribe point stands in front of the elder door")
 	check(not "mansion_lure" in gate_ids and not "mansion_gate" in gate_ids, "The two mansion guards keep no talk points of their own")
+	if payment == null:
+		quit(1);return
+	if not await walk_to(approach(payment)):
+		quit(1);return
+	await frames(4)
 	var gate_target := game.get_shop_interaction().get_target()
 	check(gate_target != null and String(gate_target.interaction_id) == "mansion_payment", "Standing between the two guards selects the bribe point, not a guard")
 	check(game.get_story_director().request_interaction("mansion_payment") == OK,"Reach the real pair payment position")

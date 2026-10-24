@@ -207,8 +207,8 @@ func _hide_all() -> void:
 func _draw_marker() -> void:
 	var middle := _marker.size * 0.5
 	var points := PackedVector2Array([
-		middle + Vector2(0.0, -7.0), middle + Vector2(7.0, 0.0),
-		middle + Vector2(0.0, 7.0), middle + Vector2(-7.0, 0.0)])
+		middle + Vector2(0.0, -4.0), middle + Vector2(4.0, 0.0),
+		middle + Vector2(0.0, 4.0), middle + Vector2(-4.0, 0.0)])
 	_marker.draw_colored_polygon(points, UITokens.PAPER)
 	var outline := points.duplicate()
 	outline.append(points[0])

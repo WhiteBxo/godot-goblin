@@ -91,6 +91,21 @@ func _run() -> void:
 			_check(customer.z_index < level.get_node("Rooms/Bedroom/Occlusion").z_index, "Room roofs remain above characters")
 	_check(main.get_node("World/EntityRoot").y_sort_enabled, "Characters sharing a furniture band sort by their feet")
 	customer.hide()
+	var doorway: DoorframeForeground = level.get_node("Doorframes/StorageDoorway")
+	for piece: Polygon2D in doorway.get_children():
+		_check(piece.texture == level.get_node("Background").texture and piece.polygon == piece.uv, "Storage frame preserves original map texels: " + piece.name)
+		for sample: Vector2 in [Vector2(500, 334), Vector2(500, 400)]:
+			_check(not Geometry2D.is_point_in_polygon(sample, piece.polygon), "Storage doorframe leaves the floor uncovered: " + str(sample))
+	for sample: Vector2 in [Vector2(500, 345), Vector2(463, 400), Vector2(556, 400)]:
+		var covered := false
+		for piece: Polygon2D in doorway.get_children():
+			covered = covered or Geometry2D.is_point_in_polygon(sample, piece.polygon)
+		_check(covered, "Storage lintel and both posts cover their art: " + str(sample))
+	for local_position: Vector2 in [Vector2(478, 400), Vector2(542, 400), Vector2(490, 460), Vector2(490, 332)]:
+		player.global_position = level.to_global(local_position)
+		await _frames()
+		_check((doorway.z_index > player.z_index) == (local_position.y < 455.0), "Storage frame sorts at the bottom of its posts: " + str(local_position))
+		await _capture(player, "storage_door_%d_%d" % [local_position.x, local_position.y])
 	for group in level.get_node("EquipmentForeground").get_children():
 		for piece: Polygon2D in group.get_children():
 			_check(piece.texture == level.get_node("Background").texture and piece.polygon == piece.uv, "Equipment uses original map texels at matching coordinates: " + piece.name)

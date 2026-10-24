@@ -409,14 +409,24 @@ texture = ExtResource("2_map")
 polygon = PackedVector2Array(388, 352, 400, 346, 400, 455, 388, 455)
 uv = PackedVector2Array(388, 352, 400, 346, 400, 455, 388, 455)
 
-[node name="StorageThreshold" type="Node2D" parent="Doorframes" unique_id=517731420]
+[node name="StorageDoorway" type="Node2D" parent="Doorframes" unique_id=517731420]
 script = ExtResource("9_frame")
-baseline_y = 352.0
+baseline_y = 455.0
 
-[node name="Threshold" type="Polygon2D" parent="Doorframes/StorageThreshold" unique_id=831190264]
+[node name="Lintel" type="Polygon2D" parent="Doorframes/StorageDoorway" unique_id=831190264]
 texture = ExtResource("2_map")
-polygon = PackedVector2Array(438, 331, 562, 331, 562, 352, 438, 352)
-uv = PackedVector2Array(438, 331, 562, 331, 562, 352, 438, 352)
+polygon = PackedVector2Array(459, 339, 560, 339, 560, 350, 550, 350, 550, 352, 470, 352, 470, 350, 459, 350)
+uv = PackedVector2Array(459, 339, 560, 339, 560, 350, 550, 350, 550, 352, 470, 352, 470, 350, 459, 350)
+
+[node name="LeftPost" type="Polygon2D" parent="Doorframes/StorageDoorway"]
+texture = ExtResource("2_map")
+polygon = PackedVector2Array(457, 341, 459, 341, 459, 350, 470, 350, 470, 451, 468, 455, 457, 455)
+uv = PackedVector2Array(457, 341, 459, 341, 459, 350, 470, 350, 470, 451, 468, 455, 457, 455)
+
+[node name="RightPost" type="Polygon2D" parent="Doorframes/StorageDoorway"]
+texture = ExtResource("2_map")
+polygon = PackedVector2Array(550, 350, 560, 350, 560, 344, 562, 344, 562, 455, 552, 455, 550, 452)
+uv = PackedVector2Array(550, 350, 560, 350, 560, 344, 562, 344, 562, 455, 552, 455, 550, 452)
 
 [node name="BathroomUpper" type="Node2D" parent="Doorframes" unique_id=36242341]
 script = ExtResource("9_frame")

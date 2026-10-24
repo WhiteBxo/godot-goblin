@@ -19,6 +19,10 @@ static func is_day2_placeholder(state: Node) -> bool:
 static func can_leave_shop(state: Node) -> bool:
 	if state.get_business_profile() != "day1":
 		return true
+	# The guard delivery is a specific errand, including recovered daylight saves.
+	# It must not require waiting for night again after the special cup is ready.
+	if state.current_day == 2 and (at_stage(state, "day2.s05.deliver_guard") or at_stage(state, "day2.s05.wait_guard_delivery")):
+		return true
 	if is_day2_placeholder(state) or at_stage(state, "day3"):
 		return state.current_day == 3 or (state.current_day == 2 and DayPhase.is_night(state))
 	if at_stage(state, "day1.s05"):

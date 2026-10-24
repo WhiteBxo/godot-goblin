@@ -428,7 +428,24 @@ func _run() -> void:
 	check(state.get_warehouse_inventory().get_uses("day1_griffin_blood") == 2, "Blood remains excluded from the later special")
 	await travel("shop_exit")
 	check(not game.get_task_delivery().try_submit("day2_guard_special", "drunken_guard").ok, "Cannot hand over before the three greeting lines")
-	check(game.get_story_director().request_interaction("drunken_guard") == OK, "Player greets the real guard")
+	var guard := game.get_actor_director().get_actor(&"drunken_guard")
+	var guard_point := game.get_delivery_point(&"drunken_guard")
+	check(guard != null and guard.is_visible_in_tree(), "Delivery guard is actually visible after leaving the shop")
+	check(guard_point != null and guard_point.interaction_enabled, "Delivery guard has an enabled player interaction")
+	if guard == null or guard_point == null or not guard.is_visible_in_tree():
+		quit(1)
+		return
+	game.get_player().teleport_to(guard.global_position + Vector2(0, 30))
+	for tick in range(5):
+		await physics_frame
+	check(guard_point.is_available(), "The player can physically approach the guard")
+	check(game.get_shop_interaction().get_target() == guard_point, "The real selector targets the guard")
+	for pressed: bool in [true, false]:
+		var interact := InputEventAction.new()
+		interact.action = &"interact"
+		interact.pressed = pressed
+		Input.parse_input_event(interact)
+		await frames(2)
 	await wait_event("day2.s05.guard_greet")
 	await capture("wait_guard")
 	check(not game.get_task_delivery().try_submit("day2_guard_special", "casino").ok, "Wrong recipient cannot consume the special")

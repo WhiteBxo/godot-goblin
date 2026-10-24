@@ -21,6 +21,16 @@ offset_right = 16.0
 offset_bottom = 16.0
 mouse_filter = 2
 
+[node name="ActorName" type="PanelContainer" parent="."]
+visible = false
+mouse_filter = 2
+theme_type_variation = &"CardPanel"
+
+[node name="Text" type="Label" parent="ActorName"]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"Hint"
+
 [node name="Chip" type="PanelContainer" parent="."]
 visible = false
 layout_mode = 0

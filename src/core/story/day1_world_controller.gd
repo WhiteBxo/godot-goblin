@@ -51,6 +51,11 @@ func configure(state: Node, level: Node2D, actors: Array[SettlementCharacter], p
 	_level = level
 	_actors = actors
 	_points = points
+	# Chapter staging may show an actor after this controller's initial refresh.
+	# Keep the existing interaction point in sync even without a new state fact.
+	for actor: SettlementCharacter in _actors:
+		if not actor.visibility_changed.is_connected(_schedule_refresh):
+			actor.visibility_changed.connect(_schedule_refresh)
 	_shop_door = level.get_scene_entrance(&"shop_door")
 	_state.state_changed.connect(_schedule_refresh)
 	_refresh()

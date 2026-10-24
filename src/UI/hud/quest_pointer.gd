@@ -7,9 +7,8 @@ extends Control
 ## leaves the viewport. One instance covers the whole frame — a small diamond on
 ## a visible target, a paper chip pinned to the edge when it is not.
 ##
-## The cursor retires itself as soon as the target is within interaction range,
-## because that is where WorldPrompt takes over; two prompts competing for the
-## same glance is worse than none.
+## The arrow retires within interaction range, where WorldPrompt takes over.
+## A tracked NPC keeps a separate screen-space identity above its head.
 
 const MARGIN := 22.0
 const MARKER_LIFT := 44.0
@@ -34,6 +33,8 @@ var _enabled := true
 @onready var _arrow: Control = $Chip/Row/Arrow
 @onready var _name: Label = $Chip/Row/Lines/Name
 @onready var _distance: Label = $Chip/Row/Lines/Distance
+@onready var _actor_name: PanelContainer = $ActorName
+@onready var _actor_text: Label = $ActorName/Text
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -71,7 +72,10 @@ func get_target() -> Dictionary:
 	return _target.duplicate(true)
 
 func is_pointing() -> bool:
-	return _chip.visible or _marker.visible
+	return _chip.visible or _marker.visible or _actor_name.visible
+
+func is_actor_name_visible() -> bool:
+	return _actor_name.visible
 
 func _resolve() -> void:
 	_target = {}
@@ -85,6 +89,8 @@ func _resolve() -> void:
 		_hide_all()
 		return
 	_name.text = str(_target.get("label", ""))
+	_actor_text.text = _name.text
+	_actor_name.hide()
 	_name.visible = not _name.text.is_empty()
 	_apply_hidden_flag()
 
@@ -101,16 +107,35 @@ func _process(delta: float) -> void:
 	if not is_instance_valid(_player):
 		_hide_all()
 		return
+	if _target.get("source") == "actor":
+		var point: Variant = _target.get("node")
+		if not is_instance_valid(point) or not point is Node2D or not point.is_visible_in_tree():
+			_hide_all()
+			return
 	var world := _world_position()
 	var distance := _player.global_position.distance_to(world)
-	if distance <= ARRIVE_RADIUS:
-		_hide_all()
-		return
 	var screen := get_viewport().get_canvas_transform() * world
 	var limit := get_viewport_rect().size
 	var safe := Rect2(Vector2.ZERO, limit).grow(-MARGIN)
+	# Task targets keep their identity readable even when the E capsule takes over.
+	# These are quest labels, never a second interaction selector or NPC name list.
+	_actor_name.visible = safe.has_point(screen) and _target.get("source") == "actor" and not _actor_text.text.is_empty()
+	if _actor_name.visible:
+		var name_size := _actor_name.get_combined_minimum_size()
+		_actor_name.size = name_size
+		_actor_name.position = Vector2(
+			clampf(screen.x - name_size.x * 0.5, MARGIN, maxf(MARGIN, limit.x - name_size.x - MARGIN)),
+			maxf(MARGIN, screen.y - MARKER_LIFT - name_size.y - 28.0)).round()
+	if distance <= ARRIVE_RADIUS:
+		_chip.hide()
+		_marker.hide()
+		return
 	if safe.has_point(screen):
-		_show_marker(screen, limit)
+		if _actor_name.visible:
+			_chip.hide()
+			_marker.hide()
+		else:
+			_show_marker(screen, limit)
 		return
 	_show_chip(screen, distance, limit, delta)
 
@@ -187,6 +212,7 @@ func _edge_point(center: Vector2, safe: Rect2, angle: float) -> Vector2:
 func _hide_all() -> void:
 	_chip.visible = false
 	_marker.visible = false
+	_actor_name.visible = false
 	_heading_ready = false
 
 ## The marker sits on the world itself, so it is a scrap of paper with an ink

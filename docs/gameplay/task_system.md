@@ -71,6 +71,8 @@ Task view 包含 id/type/status/revealed/title/description/location_id/difficult
 
 任务日志的详情把两者分开显示：text 是任务项目（要做什么），hint 是任务指引（按哪个键、找谁、走哪条路）。目标行只写叙事目标，按键步骤不混进 text，避免把设计者视角的操作说明当成任务内容剧透。
 
+当前目标通过 `target_point` 指向 NPC 时，QuestPointer 跟随真实交互点的位置：离屏时显示带名字的方向提示，进入画面后显示任务姓名牌，靠近后由原有 WorldPrompt 提供 E 交互。姓名牌只标记当前任务目标；角色隐藏、任务转移或打开模态界面时收起，不给所有 NPC 增加常驻名字。第一天醉酒守卫交涉完成后目标转到宅邸双卫，第二天交付完成后转回奶茶店。
+
 ## 验证与试玩
 
 候选检查：verify_task_system.gd、verify_task_delivery.gd、verify_task_panel.gd、verify_order_board.gd；真实界面使用 verify_order_ui.gd，动态订单使用 verify_free_recipes.gd。按[验证分级](../../tests/AGENTS.md)选最小相关范围，本轮文档维护未运行这些测试。

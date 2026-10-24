@@ -223,7 +223,7 @@
       "id": "day2.main.guard",
       "type": "main",
       "title": "第二天 · 守卫的特殊奶茶",
-      "description": "返回店里制作守卫指定的特殊奶茶，送到醉酒守卫处，最后实际返回奶茶店结束今天。",
+      "description": "回店手调守卫特调。出店沿主街向北，到长老宅邸门前，再向西找醉酒守卫，交付后返回奶茶店。",
       "reveal_when": {
         "type": "flag",
         "key": "day2.s04.casino_reward_received"
@@ -267,8 +267,9 @@
         },
         {
           "id": "greet",
-          "text": "带着奶茶前往长老居所支路的醉酒守卫处",
-          "hint": "出店后靠近守卫按 E 交谈",
+          "text": "带上特调，沿主街向北，到长老宅邸门前，再向西找醉酒守卫",
+          "hint": "找头顶标有「醉酒守卫」的人，靠近按 E 交谈；不是酒馆外的醉鬼",
+          "target_point": "drunken_guard",
           "location_id": "settlement.elder",
           "complete_when": {
             "type": "flag",
@@ -277,7 +278,8 @@
         },
         {
           "id": "deliver",
-          "text": "将奶茶提交给守卫",
+          "text": "将特调交给醉酒守卫",
+          "target_point": "drunken_guard",
           "location_id": "settlement.elder",
           "complete_when": {
             "type": "flag",

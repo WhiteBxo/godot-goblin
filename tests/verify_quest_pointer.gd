@@ -46,6 +46,7 @@ func _run() -> void:
 	check_doors()
 	await check_pointer()
 	await check_near_hidden()
+	await check_actor_identity()
 	print("QUEST_POINTER: %s (%d checks, %d failures)" % ["PASS" if failures.is_empty() else "FAIL", checks, failures.size()])
 	quit(0 if failures.is_empty() else 1)
 
@@ -190,3 +191,28 @@ func check_near_hidden() -> void:
 	pointer._process(0.016)
 	check(not pointer.is_pointing(), "A target within interaction range retires the cursor")
 	pointer.queue_free()
+
+func check_actor_identity() -> void:
+	var player := _player()
+	player.global_position = Vector2(250, 250)
+	var point: InteractionPoint = load(POINT_SCENE).instantiate()
+	point.position = Vector2(260, 250)
+	point.display_name = "醉酒守卫"
+	root.add_child(point)
+	var pointer := _pointer(player, point.global_position)
+	pointer._target = {"kind": 0, "position": point.global_position, "label": point.display_name, "source": "actor", "node": point}
+	pointer._actor_text.text = point.display_name
+	await process_frame
+	pointer._process(0.016)
+	check(pointer.is_actor_name_visible(), "A nearby task NPC keeps its identity while the E prompt takes over")
+	check(pointer.get_node("ActorName/Text").text == "醉酒守卫", "The name comes from the real interaction point")
+	check(not pointer.get_node("Chip").visible and not pointer.get_node("Marker").visible, "Near identity does not duplicate the navigation arrow")
+	point.hide()
+	pointer._process(0.016)
+	check(not pointer.is_actor_name_visible(), "A hidden NPC cannot leave a floating quest name behind")
+	point.show()
+	pointer._process(0.016)
+	pointer.set_enabled(false)
+	check(not pointer.is_actor_name_visible(), "Disabling guidance also hides the quest name")
+	pointer.queue_free()
+	point.queue_free()

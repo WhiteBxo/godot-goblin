@@ -246,12 +246,16 @@
     {
       "host": "settlement",
       "stage": "day2.s05.deliver_guard",
-      "actors": {}
+      "actors": {
+        "drunken_guard": "drunken_guard"
+      }
     },
     {
       "host": "settlement",
       "stage": "day2.s05.wait_guard_delivery",
-      "actors": {}
+      "actors": {
+        "drunken_guard": "drunken_guard"
+      }
     },
     {
       "host": "shop",

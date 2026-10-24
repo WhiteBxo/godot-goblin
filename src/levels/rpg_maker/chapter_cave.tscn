@@ -84,7 +84,7 @@ market_observation_area = Rect2(336, 2304, 1128, 336)
 market_music_area = Rect2(336, 2184, 1440, 576)
 first_visit_blocked_message = "主角·内心：黑灯瞎火的、谁知道里面有什么？不去。"
 
-objective_points = {"day1.s03.explore:market": "Interactions/day1_s03_yard", "day1.s03.explore:return": "Exits/ShopDoor", "day1.s05.infiltration:approach": "StoryPositions/drunken_guard", "day1.s05.infiltration:pair": "Interactions/MansionPayment", "day1.s05.infiltration:document": "Exits/ElderDoor", "day1.s05.infiltration:blood": "Exits/ElderDoor", "day1.s05.infiltration:escape": "Exits/ShopDoor"}
+objective_points = {"day1.s03.explore:market": "Interactions/day1_s03_yard", "day1.s03.explore:return": "Exits/ShopDoor", "day1.s05.infiltration:pair": "Interactions/MansionPayment", "day1.s05.infiltration:document": "Exits/ElderDoor", "day1.s05.infiltration:blood": "Exits/ElderDoor", "day1.s05.infiltration:escape": "Exits/ShopDoor", "day2.main.guard:return": "Exits/ShopDoor"}
 
 [node name="Entrances" type="Node2D" parent="."]
 
@@ -431,7 +431,7 @@ throw_range = 230.0
 effect_scale = 0.5
 guards = Array[NodePath]([NodePath("Entrance"), NodePath("Lure"), NodePath("Gate"), NodePath("Drunken"), NodePath("StreetWatchA"), NodePath("StreetWatchB")])
 objective_names = {"day1.s05.document_read": "探索长老宅邸", "day1.s05.blood_acquired": "格里芬之血"}
-approach_hint = "先到西侧找醉卫交涉（10G），再回宅门前，在双卫之间按 E 支付 10G。投币只能引开守卫。"
+approach_hint = "沿主街向北，到长老宅邸门前，再向西找醉酒守卫（交涉10G）；之后在宅邸双卫之间按 E 支付10G。投币只能引开守卫。"
 escape_hint = "取得血液后，直接返回奶茶店；书房探索可选。"
 controls_hint = "鼠标瞄准落点 · F 投掷 · Shift 奔跑 · Ctrl 潜行 · 失败后点「重新潜入」"
 checkpoint = NodePath("../StoryPositions/day1_checkpoint")
@@ -514,7 +514,7 @@ position = Vector2(1752, 504)
 feedback_rect = Rect2(-64, -112, 128, 112)
 interaction_id = &"mansion_payment"
 display_name = "宅邸双卫 · 10G"
-description = "先与西侧醉酒守卫完成交涉，再在这里支付10G给两名守卫；放行后沿道路向东进入长老居所。"
+description = "沿主街向北，到长老宅邸门前，再向西找醉酒守卫交涉；之后回这里支付10G给两名守卫，放行后向东进入长老居所。"
 
 [node name="CollisionShape2D" parent="Interactions/MansionPayment"]
 scale = Vector2(1.6, 1.6)

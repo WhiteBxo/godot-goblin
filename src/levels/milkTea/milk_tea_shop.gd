@@ -1,8 +1,17 @@
 class_name MilkTeaShop
 extends Node2D
 
-## Exclude the painted outer frame from the camera without changing furniture coordinates.
-@export var camera_insets := Vector4(112.0, 54.0, 112.0, 10.0)
+## 相机边界相对背景图四边的内缩（美术像素）。
+##
+## 背景 1376×768 美术像素、节点 scale 1.25；镜头 zoom 0.4 时一个美术像素正好占
+## 一个屏幕像素，1280×720 的屏幕正好装下 1280×720 美术像素。四边各裁 48/24 之后
+## 整间店刚好铺满一屏——镜头因此没有横向移动的余地，跟拍在店里变成静止画（本来
+## 也全在屏内）；受击摇屏改用「允许溢出边界」的写法保住手感，见 _apply_shake。
+@export var camera_insets := Vector4(48.0, 24.0, 48.0, 24.0)
+
+## 镜头为「整间店一屏」退到 0.4，小人同步放大 1.25 倍才能保住 2 屏幕像素/美术
+## 像素；不乘的话每个美术像素落在 0.8 个屏幕像素上，整只哥布林都在抖。
+const ACTOR_VISUAL_SCALE := 1.25
 
 var _character_root: Node2D
 var _foreground: Array[DoorframeForeground] = []
@@ -34,6 +43,11 @@ func _refresh_depth_sort() -> void:
 	for character in _character_root.get_children():
 		if not character is PlayerController:
 			continue
+		# 剧情里临时进店的哥布林也挂在这一层：逐帧对齐，进店当帧就归位。
+		var actor := character as SettlementCharacter
+		if actor != null and not is_equal_approx(actor.visual_scale, ACTOR_VISUAL_SCALE):
+			actor.visual_scale = ACTOR_VISUAL_SCALE
+			actor.refresh_visual_scale()
 		var layer := 1
 		for foreground: DoorframeForeground in _foreground:
 			if character.global_position.y >= foreground.get_baseline_position().y:

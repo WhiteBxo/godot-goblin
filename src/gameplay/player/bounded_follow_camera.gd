@@ -7,6 +7,10 @@ signal focus_target_lost
 enum Mode { FOLLOW, CINEMATIC }
 
 @export_range(0.1, 4.0, 0.05) var preferred_zoom := 0.5
+## 世界像素 / 美术像素：房间节点 scale 1.25 就填 1.25。它把「整数屏幕像素」的
+## 栅格从「屏幕倍率的倒数」换算成「屏幕倍率 × 房间密度 的倒数」——奶茶店在
+## 1280×720 下的合法 zoom 因此是 0.4 / 0.8 / 1.2，而不是 0.5 / 1.0。
+@export_range(0.25, 4.0, 0.05) var art_scale := 1.0
 @export var cinematic_pixel_snap := true
 ## Leads the follow target in its movement direction, in world pixels. Zero
 ## keeps the original centred follow for hosts that do not opt in.
@@ -171,8 +175,14 @@ func _apply_shake() -> void:
 	var desired := _shake_pixels / zoom
 	var safe_current := _clamp_center(base_center + desired) - base_center
 	var safe_destination := _clamp_center(destination + desired) - destination
+	var half_view := get_viewport_rect().size / (zoom * 2.0)
 	# Intersection of the permitted ranges, with whole viewport-pixel offsets.
 	for axis in range(2):
+		# 房间比视口还小的那根轴（奶茶店：整间店正好一屏）没有可移动的余地，
+		# 钳制会把摇屏整条抹平。这里宁可让画面探出边界几个像素——边界外面是
+		# 画框，不是虚空。
+		if _world_bounds.size[axis] <= half_view[axis] * 2.0:
+			continue
 		if desired[axis] > 0.0:
 			desired[axis] = maxf(0.0, minf(safe_current[axis], safe_destination[axis]))
 		else:
@@ -183,8 +193,8 @@ func _apply_shake() -> void:
 
 func _update_zoom() -> void:
 	# 像素画只有在 zoom 恰好等于「整数个屏幕像素 / 美术像素」时才不会被重采样。
-	# 1280×720 窗口 + 640×360 逻辑视口意味着倍率是 2，合法 zoom 是
-	# 0.5 / 1.0 / 1.5……；1.15 会让每个美术像素落在 2.3 个屏幕像素上，边缘出现
+	# 房间密度由 art_scale 给出：奶茶店是 1.25，所以在 2 倍窗口下合法 zoom 是
+	# 0.4 / 0.8 / 1.2……；1.15 会让每个美术像素落在 2.3 个屏幕像素上，边缘出现
 	# 宽窄不一的毛边——演出推近时小人一团糊就是这么来的。
 	var requested := _floor_aligned(_requested_zoom)
 	if not _world_bounds.has_area():
@@ -192,7 +202,7 @@ func _update_zoom() -> void:
 		return
 	var viewport_size := get_viewport_rect().size
 	# 「必须铺满」的那一侧不做对齐：它决定能不能看到整间店，为锐利把视野裁掉
-	# 是笔亏本买卖。（1280×720 下这个值本来就是 0.5，天然落在栅格上。）
+	# 是笔亏本买卖。（奶茶店的 camera_insets 就是按 fit_zoom 反推出来的。）
 	var minimum_zoom := maxf(viewport_size.x / _world_bounds.size.x, viewport_size.y / _world_bounds.size.y)
 	zoom = Vector2.ONE * maxf(requested, minimum_zoom)
 	if mode == Mode.CINEMATIC:
@@ -204,19 +214,23 @@ func _update_zoom() -> void:
 	force_update_scroll()
 
 ## 一个美术像素对应的屏幕像素数（1280×720 窗口对 640×360 逻辑视口是 2）。
-## 注意 `Window.content_scale_factor` 是玩家的额外缩放偏好，默认 1，不是这个比值。
+## 注意 `Window.content_scale_factor` 是玩家的额外缩放偏好，默认 1，不是这个比值；
+## 也不能用 `content_scale_size`——`aspect="expand"` 会把逻辑视口撑大（1706×960 的
+## 窗口实际按 2 倍画 853×480），只有真实视口尺寸才是被画出来的那个。
 func _screen_factor() -> float:
 	var window := get_window()
 	if window == null:
 		return 1.0
-	var logical := Vector2(window.content_scale_size)
+	var logical := get_viewport_rect().size
 	if logical.x <= 0.0:
-		logical = get_viewport_rect().size
-	return maxf(1.0, float(window.size.x) / maxf(1.0, logical.x))
+		return 1.0
+	return maxf(1.0, float(window.size.x) / logical.x)
 
 func _floor_aligned(value: float) -> float:
-	var factor := _screen_factor()
-	return maxf(1.0 / factor, floorf(value * factor) / factor)
+	# 一美术像素 → 整数屏幕像素的最小 zoom 步长。房间密度是 1.25 时步长是 0.4
+	# （1.25 × 0.4 × 2 倍窗口 = 1.0），密度是 1 时仍是 0.5。
+	var step := 1.0 / (maxf(1.0, _screen_factor()) * maxf(0.25, art_scale))
+	return maxf(step, floorf(value / step + 0.0001) * step)
 
 func _update_follow_target() -> void:
 	if not _world_bounds.has_area():

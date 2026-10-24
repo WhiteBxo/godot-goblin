@@ -28,6 +28,7 @@ script = ExtResource("6_feel")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Visual" unique_id=696907619]
 material = ExtResource("4_material")
+scale = Vector2(1.25, 1.25)
 sprite_frames = ExtResource("2")
 animation = &"idle_down"
 offset = Vector2(0, -76)
@@ -38,11 +39,14 @@ shape = SubResource("Feet")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=630693110]
 position = Vector2(0, -48)
-zoom = Vector2(0.5, 0.5)
+zoom = Vector2(0.4, 0.4)
 position_smoothing_enabled = true
 position_smoothing_speed = 8.0
 script = ExtResource("3_camera")
+preferred_zoom = 0.4
+art_scale = 1.25
 
 [node name="HeldItemVisual" type="Node2D" parent="." unique_id=1950531110]
-position = Vector2(24, -52)
+position = Vector2(30, -65)
+scale = Vector2(1.25, 1.25)
 script = ExtResource("5_d63da")

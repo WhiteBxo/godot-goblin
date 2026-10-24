@@ -37,7 +37,9 @@ func _run() -> void:
 	var bounds := level.get_world_bounds()
 	var camera_bounds := level.get_camera_bounds()
 	_check(bounds.size.is_equal_approx(Vector2(1720, 960)), "Bounds come from the replacement texture")
-	_check(camera_bounds.position.is_equal_approx(Vector2(140, 67.5)) and camera_bounds.size.is_equal_approx(Vector2(1440, 880)), "Camera excludes the painted outer frame")
+	# 相机边界现在正好是一屏：1280×720 美术像素 × 节点 1.25 = 1600×900 世界像素，
+	# 四边各裁 48/24 个美术像素的外框。整间店因此一屏装下、每像素都在栅格上。
+	_check(camera_bounds.position.is_equal_approx(Vector2(60, 30)) and camera_bounds.size.is_equal_approx(Vector2(1600, 900)), "Camera bounds are exactly one 1280x720 screen of room art")
 	# Headless renders a square 640x640 viewport while the shipping window is 16:9,
 	# so the camera fills the bounds along whichever axis is tightest. Assert the
 	# fit rule rather than a fixed 0.5 that only held for the wide window.
@@ -53,7 +55,10 @@ func _run() -> void:
 	var screen_factor := maxf(1.0, float(root.size.x) / logical.x)
 	_check(camera.zoom.x >= fit_zoom - 0.001 and is_equal_approx(camera.zoom.x, camera.zoom.y),
 		"Default zoom fills the camera bounds without exposing the outer frame")
-	_check(is_equal_approx(camera.zoom.x * screen_factor, roundf(camera.zoom.x * screen_factor)),
+	# 一条美术像素要换整数个屏幕像素：房间密度 1.25 也要乘进去。
+	var art_scale: float = camera.art_scale
+	var pixels_per_art := camera.zoom.x * screen_factor * art_scale
+	_check(is_equal_approx(pixels_per_art, roundf(pixels_per_art)),
 		"Default zoom lands on whole screen pixels")
 	_check(camera.is_current() and camera.get_parent() == player, "The active camera follows the player")
 	_check_view(camera, camera_bounds, "Spawn view excludes the outer frame")
@@ -64,7 +69,11 @@ func _run() -> void:
 	Input.action_press("move_right")
 	await _frames(25)
 	Input.action_release("move_right")
-	_check(camera.get_screen_center_position().x > start_center.x + 20.0, "The camera scrolls during player movement")
+	# 整间店一屏之后镜头没有可移动的余地（这正是「兼得」的代价）：跟拍退化成
+	# 静止，要求房间始终完整留在画面里、小人也在画面里。
+	_check(camera.get_screen_center_position().distance_to(start_center) < 0.5,
+		"The fixed shop view does not drift while the player walks")
+	_check_view(camera, camera_bounds, "Walking keeps the whole shop on screen")
 	await _frames(15)
 	# Test limits throughout smoothing, including abrupt direction changes at all corners.
 	for target in [Vector2(130, 880), Vector2(1540, 880), Vector2(1500, 180), Vector2(130, 180)]:
@@ -118,7 +127,9 @@ func _run() -> void:
 			break
 	Input.action_release("move_up")
 	await _frames(30)
-	_check(camera.get_screen_center_position().y < bottom_center_y - 10.0, "Camera resumes following when leaving the bottom")
+	var view_size: Vector2 = camera.get_viewport_rect().size / camera.zoom
+	var view_rect := Rect2(camera.get_screen_center_position() - view_size * 0.5, view_size)
+	_check(view_rect.has_point(player.global_position), "Leaving the bottom keeps the player inside the fixed shop view")
 	# Viewport resizing must increase zoom when one dimension exceeds the map.
 	for window_size in [Vector2i(1800, 500), Vector2i(500, 1400), Vector2i(1280, 720)]:
 		root.size = window_size

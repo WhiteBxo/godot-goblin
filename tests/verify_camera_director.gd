@@ -66,7 +66,10 @@ func _run() -> void:
 	await _wait(focus)
 	marker.global_position += Vector2(80, 30)
 	await _frames()
-	_check(_camera.global_position.distance_to(marker.global_position) < 2.0, "Completed focus tracks moving live target")
+	# 整间店正好一屏，推镜没有横向余地：镜头停在边界允许的位置，目标仍然在画面里。
+	var view_size: Vector2 = _camera.get_viewport_rect().size / _camera.zoom
+	var view_rect := Rect2(_camera.get_screen_center_position() - view_size * 0.5, view_size)
+	_check(view_rect.has_point(marker.global_position), "Completed focus keeps the live target on screen")
 	marker.queue_free()
 	await _frames(5)
 	_check(_camera.mode == BoundedFollowCamera.Mode.FOLLOW, "Held target deletion restores follow")

@@ -57,6 +57,10 @@ func _run() -> void:
 	check(theme.get_font_size("font_size", "Title") == 24, "Title uses 24px")
 	check(theme.get_font_size("font_size", "H2") == 12, "H2 uses 12px")
 	check(theme.get_color("font_color", "Hint") != theme.get_color("font_color", "Label"), "Hint is visually distinct")
+	# 像素字体只有 12px 一份字模：10/11/14 会让每一行设计像素落到 0.83 / 1.17
+	# 个设备像素上，笔画宽窄忽变。字号必须走 12 的整数倍。主题自己也查一遍。
+	for size: int in _font_sizes(FileAccess.get_file_as_string(THEME_PATH)):
+		check(size in ALLOWED_FONT_SIZES, "Theme font size %d uses the type scale" % size)
 
 	var scenes: Array[String] = []
 	_scan(UI_ROOT, scenes, ".tscn")
@@ -68,6 +72,10 @@ func _run() -> void:
 		if path not in THEME_ALLOWLIST:
 			check(source.contains("type=\"Theme\""), "UI root references the shared theme: " + path)
 		check(not source.contains("SubResource(\"ListStyle\")"), "No duplicated ListStyle in " + path)
+		# 场景里的 theme_override_font_sizes 也走同一套字号标尺：脚本查不到它，
+		# 之前 10/11 就是这么漏进 HUD 的。
+		for size: int in _font_sizes(source):
+			check(size in ALLOWED_FONT_SIZES, "Font size %d uses the type scale: %s" % [size, path])
 		for type: String in _node_types(source):
 			seen_types[type] = true
 	for type: String in seen_types:

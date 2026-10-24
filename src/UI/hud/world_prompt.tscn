@@ -4,10 +4,10 @@
 [ext_resource type="Theme" path="res://src/resources/ui/game_theme.tres" id="2"]
 
 [sub_resource type="StyleBoxFlat" id="keycap"]
-content_margin_left = 4.0
-content_margin_top = 1.0
-content_margin_right = 4.0
-content_margin_bottom = 1.0
+content_margin_left = 3.0
+content_margin_top = 0.0
+content_margin_right = 3.0
+content_margin_bottom = 0.0
 bg_color = Color(0.894, 0.816, 0.663, 1)
 border_width_left = 1
 border_width_top = 1
@@ -20,10 +20,10 @@ corner_radius_bottom_right = 2
 corner_radius_bottom_left = 3
 
 [sub_resource type="StyleBoxFlat" id="paper"]
-content_margin_left = 8.0
-content_margin_top = 3.0
-content_margin_right = 9.0
-content_margin_bottom = 3.0
+content_margin_left = 5.0
+content_margin_top = 1.0
+content_margin_right = 6.0
+content_margin_bottom = 1.0
 bg_color = Color(0.961, 0.91, 0.812, 1)
 border_width_left = 1
 border_width_top = 1
@@ -36,7 +36,7 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 6
 shadow_color = Color(0.227, 0.165, 0.102, 0.32)
 shadow_size = 0
-shadow_offset = Vector2(2, 2)
+shadow_offset = Vector2(1, 1)
 
 [node name="WorldPrompt" type="Control"]
 layout_mode = 3
@@ -62,13 +62,14 @@ theme_override_constants/separation = 1
 [node name="Row" type="HBoxContainer" parent="Bar/Content"]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 
 [node name="Key" type="Label" parent="Bar/Content/Row"]
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
 theme_type_variation = &"Keycap"
+theme_override_font_sizes/font_size = 12
 theme_override_styles/normal = SubResource("keycap")
 text = "E"
 
@@ -84,4 +85,5 @@ visible = false
 layout_mode = 2
 mouse_filter = 2
 theme_type_variation = &"Danger"
+theme_override_font_sizes/font_size = 12
 text = ""

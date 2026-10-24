@@ -64,7 +64,7 @@ mouse_filter = 2
 clip_text = true
 text_overrun_behavior = 3
 theme_override_colors/font_color = Color(0.227, 0.165, 0.102, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 12
 text = "夜间潜入"
 
 [node name="Objectives" type="Label" parent="Panel/Content/HeadRow"]
@@ -73,7 +73,7 @@ size_flags_vertical = 4
 mouse_filter = 2
 theme_type_variation = &"BadgeMuted"
 theme_override_colors/font_color = Color(0.341, 0.439, 0.227, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 12
 text = "0/2"
 
 [node name="Guards" type="Label" parent="Panel/Content"]
@@ -120,7 +120,7 @@ theme_type_variation = &"GhostButton"
 theme_override_colors/font_color = Color(0.227, 0.165, 0.102, 1)
 theme_override_colors/font_hover_color = Color(0.71, 0.275, 0.184, 1)
 theme_override_colors/font_pressed_color = Color(0.71, 0.275, 0.184, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 12
 text = "金币 0"
 
 [node name="Torch" type="Button" parent="Panel/Content/Actions"]
@@ -129,21 +129,21 @@ layout_mode = 2
 theme_type_variation = &"GhostButton"
 theme_override_colors/font_color = Color(0.227, 0.165, 0.102, 1)
 theme_override_colors/font_hover_color = Color(0.71, 0.275, 0.184, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 12
 text = "火把 0"
 
 [node name="Retry" type="Button" parent="Panel/Content/Actions"]
 visible = false
 layout_mode = 2
 theme_type_variation = &"PrimaryButton"
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 12
 text = "重新潜入"
 
 [node name="Start" type="Button" parent="Panel/Content/Actions"]
 visible = false
 layout_mode = 2
 theme_type_variation = &"PrimaryButton"
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 12
 text = "开始潜入"
 
 [node name="Feedback" type="Label" parent="Panel/Content"]

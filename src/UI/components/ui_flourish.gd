@@ -130,7 +130,7 @@ static func cups(anchor: Control, icon: Texture2D, count: int, from := Vector2(0
 		cup.z_index = CUP_OVERLAY_Z
 		cup.pivot_offset = cup.size * 0.5
 		cup.position = origin + Vector2(spacing * (index - (shown - 1) * 0.5) - CUP_SIZE * 0.5, -CUP_SIZE * 0.5)
-		cup.scale = Vector2(0.45, 0.45)
+		cup.scale = Vector2(0.5, 0.5)
 		cup.modulate.a = 0.0
 		host.add_child(cup)
 		var delay := CUP_STAGGER * index

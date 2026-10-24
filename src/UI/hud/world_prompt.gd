@@ -8,7 +8,6 @@ extends Control
 ## unreadable). One instance, one capsule: nothing else in the world labels
 ## itself, so the room stays clean until something is actually reachable.
 
-const GAP := 18.0
 const MARGIN := 4.0
 
 var _target: InteractionPoint
@@ -93,9 +92,12 @@ func _process(_delta: float) -> void:
 func _place() -> void:
 	var size := _bar.get_combined_minimum_size()
 	_bar.size = size
-	var screen := get_viewport().get_canvas_transform() * _target.global_position
+	# 锚点由交互点自己给：触发区在脚下、标签在头顶的情况很常见（高个子 NPC），
+	# 只按 Area2D 的中心画会把名字盖在人脸上。
+	var anchor := _target.global_position + _target.prompt_anchor
+	var screen := get_viewport().get_canvas_transform() * anchor
 	var limit := get_viewport_rect().size
-	var position := screen - Vector2(size.x * 0.5, size.y + GAP)
+	var position := screen - Vector2(size.x * 0.5, size.y)
 	position.x = clampf(position.x, MARGIN, maxf(MARGIN, limit.x - size.x - MARGIN))
 	position.y = clampf(position.y, MARGIN, maxf(MARGIN, limit.y - size.y - MARGIN))
 	_bar.position = position.round()

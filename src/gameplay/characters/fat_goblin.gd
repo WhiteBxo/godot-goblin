@@ -103,6 +103,8 @@ func _update_animation(moving: bool, movement_ratio: float = 1.0) -> void:
 	animated_sprite.speed_scale = animation_speed
 	if texture != null:
 		var frame_height := float(texture.get_height())
-		animated_sprite.scale = Vector2.ONE * (128.0 / frame_height)
+		# 和 settlement_character 一样取整：帧高不是 64/128 时 128/96=1.33 这种
+		# 倍率会把整只哥布林糊成一片毛边。
+		animated_sprite.scale = Vector2.ONE * maxf(1.0, roundf(128.0 / frame_height))
 		animated_sprite.offset = Vector2(0, -frame_height * 0.5)
 	animated_sprite.play(animation)

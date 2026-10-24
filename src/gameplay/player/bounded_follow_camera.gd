@@ -154,6 +154,13 @@ func _clamp_center(value: Vector2) -> Vector2:
 	var half_view := get_viewport_rect().size / (zoom * 2.0)
 	var minimum := Vector2(limit_left, limit_top) + half_view
 	var maximum := Vector2(limit_right, limit_bottom) - half_view
+	# 房间比视口还小的时候没有可滚动的余地：两头钳制会互相穿过，把镜头顶到
+	# 房间一角（画面偏一边）。这种情况直接居中，房间自己铺满一屏。
+	var center := _world_bounds.get_center()
+	if _world_bounds.size.x <= half_view.x * 2.0:
+		value.x = center.x
+	if _world_bounds.size.y <= half_view.y * 2.0:
+		value.y = center.y
 	return value.clamp(minimum, maximum.max(minimum))
 
 func _apply_shake() -> void:
@@ -214,10 +221,7 @@ func _floor_aligned(value: float) -> float:
 func _update_follow_target() -> void:
 	if not _world_bounds.has_area():
 		return
-	var half_view := get_viewport_rect().size / zoom * 0.5
-	var minimum := Vector2(limit_left, limit_top) + half_view
-	var maximum := Vector2(limit_right, limit_bottom) - half_view
-	var target := (_follow_target.global_position + _follow_offset + _look_ahead).clamp(minimum, maximum.max(minimum))
+	var target := _clamp_center(_follow_target.global_position + _follow_offset + _look_ahead)
 	if global_position.distance_squared_to(target) > 0.000001:
 		global_position = target
 		_settled = false

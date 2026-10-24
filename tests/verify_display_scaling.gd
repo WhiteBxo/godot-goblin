@@ -1,5 +1,5 @@
 extends SceneTree
-## 整数缩放基准：非整数倍窗口不再留黑边，极端比例退回小数缩放保住构图。
+## 整数缩放基准：非整数倍窗口不再留黑边，放不下 2 倍时退 1 倍整数而不是小数拉伸。
 
 var checks := 0
 var failures: Array[String] = []
@@ -35,19 +35,20 @@ func _run() -> void:
 		"1366x768 laptop fills instead of letterboxing")
 	_expect(scaling, Vector2i(3840, 2160), Vector2i(640, 360), 6, true,
 		"4K keeps the design resolution")
-	_expect(scaling, Vector2i(1280, 600), Vector2i(640, 360), 1, false,
-		"a window too short for 2x falls back to fractional")
-	_expect(scaling, Vector2i(640, 360), Vector2i(640, 360), 1, false,
-		"the design size has no room for an integer plan")
-	_expect(scaling, Vector2i(2400, 1016), Vector2i(640, 360), 1, false,
-		"a status-bar crop keeps the original composition")
+	_expect(scaling, Vector2i(1280, 600), Vector2i(1280, 600), 1, true,
+		"a window too short for 2x drops to 1x instead of stretching")
+	_expect(scaling, Vector2i(640, 360), Vector2i(640, 360), 1, true,
+		"the design size is served by 1x, not a fractional scale")
+	_expect(scaling, Vector2i(2400, 1016), Vector2i(2400, 1016), 1, true,
+		"a status-bar crop drops to 1x rather than sampling unevenly")
 
-	# 小数缩放必须仍然铺满，而且基准不能跟着窗口乱涨。
-	var fractional: Dictionary = scaling.plan_for(Vector2i(1280, 600))
-	check(fractional.stretch == Window.CONTENT_SCALE_STRETCH_FRACTIONAL,
-		"fractional plan selects fractional stretching")
-	check(fractional.base == Vector2i(640, 360),
-		"fractional plan keeps the design resolution")
+	# 退路必须是 1 倍整数：逻辑分辨率等于窗口，一个美术像素正好一个屏幕像素。
+	# 非整数倍（1.5625）会把 12px 点阵字糊成灰边，那是不能接受的降级。
+	var unit: Dictionary = scaling.plan_for(Vector2i(1280, 600))
+	check(unit.stretch == Window.CONTENT_SCALE_STRETCH_INTEGER,
+		"the fallback still uses integer stretching")
+	check(unit.base == Vector2i(1280, 600),
+		"the fallback puts one art pixel on one screen pixel")
 
 	# 整数缩放的硬性不变式：base × scale 必须等于窗口，最多差 1px。
 	for window_size: Vector2i in [Vector2i(1600, 900), Vector2i(1366, 768),

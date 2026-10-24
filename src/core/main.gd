@@ -1099,9 +1099,14 @@ func _with_npc_points(points: Array[InteractionPoint]) -> Array[InteractionPoint
 		# NPC identity is shown by the focused interaction prompt, never debug markers.
 		point.hide_development_markers()
 		if day1_story_enabled and _shop_level != null and entity.actor_id != &"fat_goblin":
-			# 柜台后方的顾客要能被隔着柜台够到，但胶囊不能浮到屏幕顶上：
-			# 150px 上移会让名字飘离人物一个身位，收到 88 仍在头顶附近。
+			# 柜台后方的顾客要能被隔着柜台够到：触发区必须留在手边的高度，
+			# 150px 上移会让它够不着柜台，88 是隔着柜台仍然有效的上限。
 			point.position = Vector2(0, -88)
+		# 胶囊本身另给一个锚点，量的是这一帧真正画出来的像素（去掉透明留白）：
+		# 高个子被自己的名字压住脸、矮个子名字飘在半空，都是因为只按触发区画。
+		var art: Rect2 = entity.get_interaction_feedback_rect()
+		if art.has_area():
+			point.prompt_anchor = Vector2(0, art.position.y - 6.0 - point.position.y)
 		point.feedback_rect = point.transform.affine_inverse() * entity.get_interaction_feedback_rect().grow(4.0)
 		points.append(point)
 		_npc_points[point.interaction_id] = point

@@ -2093,11 +2093,11 @@ RecipeRowSelected/styles/normal = SubResource("StyleBoxFlat_recipe_selected")
 RecipeRowSelected/styles/pressed = SubResource("StyleBoxFlat_recipe_pressed")
 UnreadBadge/base_type = &"Label"
 UnreadBadge/colors/font_color = Color(0.98, 0.94, 0.86, 1)
-UnreadBadge/font_sizes/font_size = 10
+UnreadBadge/font_sizes/font_size = 12
 UnreadBadge/styles/normal = SubResource("StyleBoxFlat_unread")
 
 PreviewCard/base_type = &"PanelContainer"
 PreviewCard/styles/panel = SubResource("StyleBoxFlat_preview_card")
 PreviewTitle/base_type = &"Label"
 PreviewTitle/colors/font_color = Color(0.227, 0.165, 0.102, 1.0)
-PreviewTitle/font_sizes/font_size = 14
+PreviewTitle/font_sizes/font_size = 12

@@ -11,8 +11,9 @@ signal interacted(point: InteractionPoint)
 ## 运行期条件（宿主注入）：返回一句话说明为什么现在按不动，空串表示可用。
 ## 子类可以覆写 get_blocked_reason() 用自己已有的字段（门看通行条件）。
 var blocked_reason_resolver: Callable
-## 胶囊底边相对交互点的高度：默认浮在物体上方，不压住美术。
-@export var prompt_anchor := Vector2(0, -30)
+## 动作胶囊的视觉锚点，相对交互点自身。触发区（为什么够得到）和标签位置是
+## 两件事：柜台后的顾客触发区得留在手边，标签却要浮到头顶，所以分开配。
+@export var prompt_anchor := Vector2(0, -10)
 @export_multiline var description := ""
 ## Local artwork bounds, independent of the reach/collision shape.
 @export var feedback_rect := Rect2(-18, -18, 36, 36)

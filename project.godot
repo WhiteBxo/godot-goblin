@@ -33,9 +33,10 @@ window/size/viewport_height=360
 window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="canvas_items"
-; Touch devices are wider than 16:9; expanding the viewport keeps the HUD on the
-; physical edges instead of letterboxing the game.
-window/stretch/aspect="expand"
+; 16:9 及更窄的窗口钉死 640×360 逻辑视口、整数倍居中：UI 与世界层永远同一个
+; 倍率，最大化不会变成「人物变大、UI 变小」。比 16:9 更宽（手机）才扩展视野，
+; 具体用 keep 还是 expand 由 DisplayScaling 按窗口尺寸决定。
+window/stretch/aspect="keep"
 window/stretch/scale_mode="integer"
 ; SCREEN_SENSOR_LANDSCAPE: either landscape direction, never portrait.
 window/handheld/orientation=4
@@ -151,5 +152,7 @@ textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/vram_compression/import_etc2_astc=true
-environment/defaults/default_clear_color=Color(0, 0, 0, 1)
+; 与房间底板同色：16:9 窗口不是整数倍时四周会留边，用底色而不是纯黑，
+; 视觉上是「画面居中」而不是「画面没铺满」。
+environment/defaults/default_clear_color=Color(0.572, 0.486, 0.392, 1)
 2d/snap/snap_2d_transforms_to_pixel=true

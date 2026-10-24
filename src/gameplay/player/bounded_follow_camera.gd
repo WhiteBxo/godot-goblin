@@ -214,9 +214,11 @@ func _update_zoom() -> void:
 	force_update_scroll()
 
 ## 一个美术像素对应的屏幕像素数（1280×720 窗口对 640×360 逻辑视口是 2）。
-## 注意 `Window.content_scale_factor` 是玩家的额外缩放偏好，默认 1，不是这个比值；
-## 也不能用 `content_scale_size`——`aspect="expand"` 会把逻辑视口撑大（1706×960 的
-## 窗口实际按 2 倍画 853×480），只有真实视口尺寸才是被画出来的那个。
+## 注意 `Window.content_scale_factor` 是玩家的额外缩放偏好，默认 1，不是这个比值。
+##
+## 取整是必须的：`stretch=integer` 下 1706×960 的窗口只按 2 倍画 640×360 逻辑视口
+## 并居中留边，直接相除会得到 2.666 —— 那是个并不存在的倍率，栅格步长会算错、
+## 相机以为自己能对齐到 1/3 像素。
 func _screen_factor() -> float:
 	var window := get_window()
 	if window == null:
@@ -224,7 +226,7 @@ func _screen_factor() -> float:
 	var logical := get_viewport_rect().size
 	if logical.x <= 0.0:
 		return 1.0
-	return maxf(1.0, float(window.size.x) / logical.x)
+	return maxf(1.0, floorf(float(window.size.x) / logical.x))
 
 func _floor_aligned(value: float) -> float:
 	# 一美术像素 → 整数屏幕像素的最小 zoom 步长。房间密度是 1.25 时步长是 0.4

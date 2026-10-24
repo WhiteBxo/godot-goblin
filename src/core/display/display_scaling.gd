@@ -1,29 +1,25 @@
 extends Node
-## 让整数缩放在任意窗口尺寸下都能铺满：基准分辨率跟着窗口走。
+## 位图 UI 只有在整数倍缩放下才清晰；而「逻辑视口随窗口伸缩」会让 UI 和世界各自
+## 按不同倍率绘制——窗口一放大，人物变大、UI 变小，两张截图看着像两个游戏。
 ##
-## 问题：`scale_mode = integer` 会把缩放倍数向下取整，而 `aspect = expand`
-## 只扩展逻辑视口、取整后不会回填。于是 1600×900（2.5 倍）、1366×768（2.13 倍）
-## 这类窗口四周会留下黑边，1280×600 更是被钳到 1 倍、只占屏幕一小块。
+## 所以核心判据是「窗口高度是否接近 360 的整数倍」，而不是宽高比：
 ##
-## 做法：把基准分辨率改成「窗口尺寸 ÷ 能放大的整数倍」，倍数因此总是整数，
-## 画面铺满且每个逻辑像素都是整齐的 N×N。
+## - **高度是整数倍**（1280×720 / 1920×1080 / 1920×1061 带标题栏 / 20:9 手机）：
+##   倍率 k 由高度定，宽度按 window/k 给逻辑视口。16:9 时 base 正好 640×360 铺满；
+##   更宽的手机多看到两侧。这条分支下 UI 的物理尺寸与设计稿严格一致。
+## - **高度不是整数倍**（1706×960、1600×900、1366×768、16:10）：逻辑视口钉死
+##   640×360，按整数倍居中、四周留边。构图、字号、人物大小与 1280×720 完全一致。
 ##
-## 放不下 2 倍时（窗口小于 1280×720，或比例离谱到基准会超出设计面积）不再退
-## 小数缩放，改为 1 倍整数：逻辑分辨率等于窗口，铺满但字变小。**任何情况下都
-## 不做非整数拉伸**——像素字和像素美术一旦落在半个屏幕像素上就是一片灰边，
-## 那比字小得多难受。窗口最小尺寸也因此钉在 1280×720。
-##
-## 主流手机（1080p / 2K 横屏）算出来就是 800×360 / 792×360，与 expand
-## 原本的行为一致，所以手机端不会有任何变化。
+## 任何情况下都不做非整数拉伸：12px 点阵字一旦落在半个屏幕上就是一片灰边。
 
 const BASE_SIZE := Vector2i(640, 360)
-const BASE_AREA := 640.0 * 360.0
 ## 低于这个倍数就没有整数缩放可用，改用 1 倍整数（不是小数）。
 const MIN_INTEGER_SCALE := 2
-## 动态基准最多允许比设计分辨率大这么多（面积倍数）。超过它说明窗口比例
-## 离谱（导航栏占位后的 2400×1016、折叠屏内屏等），硬撑整数倍会把视野放到
-## 设计范围之外，同样退回 1 倍整数。
-const MAX_AREA_RATIO := 1.6
+## 窗口与「整数倍高度」的允许偏差。标题栏、任务栏会吃掉几十像素：
+## 1920×1061 相对 3 倍（1080）只差 1.8%，必须仍然认作 3 倍。
+const HEIGHT_TOLERANCE := 0.04
+## 逻辑视口最宽放到设计宽度的这么多倍（32:9 超宽屏正好 2 倍）。
+const WIDE_MAX := 2.0
 ## 拖动窗口时尺寸连续变化，等停稳再重排界面。
 const RESIZE_DEBOUNCE := 0.12
 
@@ -68,47 +64,68 @@ func _process(_delta: float) -> void:
 
 
 ## 给定窗口尺寸，算出该用的基准分辨率与缩放模式。
-## 返回 {base: Vector2i, scale: int, stretch: int, integer: bool}。
+## 返回 {base: Vector2i, scale: int, stretch: int, aspect: int, integer: bool}。
 func plan_for(window_size: Vector2i) -> Dictionary:
-	if window_size.x < BASE_SIZE.x or window_size.y < BASE_SIZE.y:
-		return _unit_plan(window_size)
-	var k := mini(
-		floori(float(window_size.x) / float(BASE_SIZE.x)),
-		floori(float(window_size.y) / float(BASE_SIZE.y)),
-	)
-	if k < MIN_INTEGER_SCALE:
-		return _unit_plan(window_size)
-	# 整数除法：k 能整除时 base × k 正好等于窗口，余数最多 1px。
+	# 倍率由高度定。高度落在 360 的整数倍上，才谈得上「UI 与世界层同一个倍率」；
+	# 这时宽度多出来的部分才是真正值得扩展的视野（手机、超宽屏）。
+	var k := roundi(float(window_size.y) / float(BASE_SIZE.y))
+	var ideal_height := BASE_SIZE.y * k
+	var height_ok := k >= MIN_INTEGER_SCALE and absf(float(window_size.y - ideal_height)) <= float(ideal_height) * HEIGHT_TOLERANCE
 	@warning_ignore("integer_division")
-	var base := Vector2i(window_size.x / k, window_size.y / k)
-	if float(base.x * base.y) > BASE_AREA * MAX_AREA_RATIO:
-		return _unit_plan(window_size)
-	return {
-		"base": base,
-		"scale": k,
-		"stretch": Window.CONTENT_SCALE_STRETCH_INTEGER,
-		"integer": true,
-	}
+	var base := Vector2i(window_size.x / maxi(1, k), window_size.y / maxi(1, k))
+	if height_ok and base.x >= BASE_SIZE.x and float(base.x) <= float(BASE_SIZE.x) * WIDE_MAX:
+		return {
+			"base": base,
+			"scale": k,
+			"stretch": Window.CONTENT_SCALE_STRETCH_INTEGER,
+			"aspect": Window.CONTENT_SCALE_ASPECT_EXPAND,
+			"integer": true,
+		}
+	return _fixed_plan(window_size)
 
 
 func apply_to(window: Window, window_size: Vector2i) -> void:
 	var plan := plan_for(window_size)
 	window.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
-	window.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_EXPAND
+	window.content_scale_aspect = plan.aspect
 	window.content_scale_stretch = plan.stretch
 	window.content_scale_size = plan.base
 	_applied_size = window_size
 
 
+## 高度不是整数倍：逻辑视口钉死 640×360，按整数倍居中，四周留边。
+##
+## 1706×960 这类窗口最容易翻车：它是 16:9，只是不是 1280 的整数倍。若按
+## 「窗口 ÷ 整数倍」动态推基准，逻辑视口会被撑到 853×480 —— 世界层为了铺满把
+## 房间放大约 33%，而 UI 仍是固定逻辑尺寸、相对屏幕小了 25%，于是同一屏里
+## 人物偏大、字偏小。宁可留边也不让两套倍率并存。
+##
+## 1280×720 / 1920×1080 / 2560×1440 这些真·整数倍窗口在这里是 100% 铺满的，
+## 留边只发生在窗口被拖成任意尺寸时。
+func _fixed_plan(window_size: Vector2i) -> Dictionary:
+	@warning_ignore("integer_division")
+	var k := mini(window_size.x / BASE_SIZE.x, window_size.y / BASE_SIZE.y)
+	if k < MIN_INTEGER_SCALE:
+		return _unit_plan(window_size)
+	return {
+		"base": BASE_SIZE,
+		"scale": k,
+		"stretch": Window.CONTENT_SCALE_STRETCH_INTEGER,
+		"aspect": Window.CONTENT_SCALE_ASPECT_KEEP,
+		"integer": true,
+	}
+
+
 ## 放不下 2 倍时的退路：不缩，逻辑分辨率直接等于窗口，每个美术像素正好对应
 ## 一个屏幕像素。字会变小，但**不会再被非整数拉伸**——1.5625 倍会把 12px 点阵
-## 字糊成一片灰边，那是像素 UI 最不能接受的降级。铺满与锐利之间只能二选一，
-## 这里选锐利；`min_size` 才是真正拦住小窗口的那道闸。
+## 字糊成一片灰边，那是像素 UI 最不能接受的降级。`min_size` 才是真正拦住小窗口
+## 的那道闸。
 func _unit_plan(window_size: Vector2i) -> Dictionary:
 	return {
 		"base": window_size.max(BASE_SIZE),
 		"scale": 1,
 		"stretch": Window.CONTENT_SCALE_STRETCH_INTEGER,
+		"aspect": Window.CONTENT_SCALE_ASPECT_EXPAND,
 		"integer": true,
 	}
 
